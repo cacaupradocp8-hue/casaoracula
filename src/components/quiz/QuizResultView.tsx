@@ -59,40 +59,51 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
       className="space-y-16 md:space-y-24"
     >
       {/* ══ BLOCO DE IDENTIDADE SIMBÓLICA (HERO) ══ */}
-      <motion.section variants={itemVariants} className="relative pt-8 pb-12 overflow-hidden">
-        {/* Subtle Background Glows */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+      <motion.section variants={itemVariants} className="relative pt-12 pb-20 overflow-hidden rounded-[3rem] border border-gold/10 bg-black/20">
+        {/* Background Image / Glows */}
+        {primaryResult.imagem_url ? (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={primaryResult.imagem_url} 
+              alt="" 
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/80 to-background" />
+          </div>
+        ) : (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 blur-[120px] rounded-full pointer-events-none" />
+        )}
         
-        <div className="relative z-10 text-center space-y-8">
-          <div className="space-y-3">
+        <div className="relative z-10 text-center space-y-10 px-6">
+          <div className="space-y-4">
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.4 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 text-gold text-[10px] uppercase tracking-[0.3em] font-medium backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gold/5 border border-gold/10 text-gold text-[11px] uppercase tracking-[0.4em] font-medium backdrop-blur-md"
             >
-              <Sparkles className="w-3 h-3" />
-              Sua Identidade Revelada
+              <Sparkles className="w-4 h-4" />
+              Manifestação Revelada
             </motion.div>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-foreground font-bold tracking-tighter leading-[0.9]">
+            <h1 className="font-display text-6xl md:text-8xl lg:text-9xl text-foreground font-bold tracking-tighter leading-[0.85] py-4">
               {primaryResult.titulo_simbolico.split(' ').map((word, i) => (
-                <span key={i} className={i === 0 ? "block" : "block text-gold/90"}>
+                <span key={i} className={i === 0 ? "block" : "block text-gold/90 drop-shadow-[0_0_30px_rgba(212,175,55,0.2)]"}>
                   {word}
                 </span>
               ))}
             </h1>
           </div>
           
-          <div className="max-w-3xl mx-auto px-4">
-            <p className="text-xl md:text-2xl text-muted-foreground/90 leading-relaxed font-serif italic font-light">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-2xl md:text-3xl text-muted-foreground/80 leading-relaxed font-serif italic font-extralight tracking-tight">
               "{primaryResult.texto_interpretativo}"
             </p>
           </div>
 
-          <div className="flex justify-center items-center gap-4">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-gold/20" />
-            <div className="w-2 h-2 rounded-full bg-gold/30" />
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-gold/20" />
+          <div className="flex justify-center items-center gap-6 pt-6">
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+            <div className="w-1.5 h-1.5 rounded-full bg-gold/40 animate-pulse" />
+            <div className="h-px w-24 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
           </div>
         </div>
       </motion.section>
