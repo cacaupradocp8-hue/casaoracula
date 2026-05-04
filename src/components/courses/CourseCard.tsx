@@ -44,9 +44,10 @@ export function CourseCard({ course, showProgress = true }: CourseCardProps) {
       {/* Cover Image */}
       <div className="relative aspect-[16/10] overflow-hidden">
         {course.capa_url ? (
-          <img 
+          <OptimizedImage 
             src={course.capa_url} 
             alt={course.titulo}
+            containerClassName="w-full h-full"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
         ) : (
