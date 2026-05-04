@@ -587,7 +587,7 @@ export default function QuizPage() {
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={prevResult.titulo_simbolico}
           subtitle={prevResult.categoria || undefined}
-          maxWidth="4xl"
+          maxWidth="6xl"
           showNavigation={false}
         >
           <QuizResultView
@@ -601,46 +601,63 @@ export default function QuizPage() {
           <DirectMediaContent result={prevResult} />
 
           {/* Blocos modulares EXTRAS do Admin */}
-          <ModularPageRenderer
-            contextType="quiz_result"
-            contextId={prevResult.id}
-            contextData={{
-              arquetipo: prevResult.titulo_simbolico,
-              categoria: prevResult.categoria,
-            }}
-            blockSpacing="lg"
-            showLoading={false}
-          />
-
-          {/* Ver minha Voz button */}
-          {(() => {
-            const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-4">
-                <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
-                >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
-                </Button>
-              </div>
-            ) : null;
-          })()}
-
-          {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer Quiz
-            </Button>
+          <div className="mt-20">
+            <ModularPageRenderer
+              contextType="quiz_result"
+              contextId={prevResult.id}
+              contextData={{
+                arquetipo: prevResult.titulo_simbolico,
+                categoria: prevResult.categoria,
+              }}
+              blockSpacing="lg"
+              showLoading={false}
+            />
           </div>
+
+          {/* Action Hub - Botões de navegação secundária */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col items-center gap-8 py-16 border-t border-border/10 mt-20"
+          >
+            <div className="flex flex-wrap gap-4 justify-center">
+              {(() => {
+                const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
+                return vozId ? (
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                    className="gap-2 border-primary/20 text-primary/70 hover:bg-primary/5 hover:text-primary transition-all rounded-full px-8"
+                  >
+                    <AudioLines className="w-5 h-5" />
+                    Aprofundar na Voz
+                  </Button>
+                ) : null;
+              })()}
+              
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => navigate(-1)}
+                className="rounded-full px-8 border-border/20 text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="lg"
+                onClick={handleRestart}
+                className="rounded-full px-8 text-gold/60 hover:text-gold hover:bg-gold/5"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refazer Quiz
+              </Button>
+            </div>
+          </motion.div>
         </ContentPageLayout>
 
         <DebugPanel resultId={prevResult.id} />
@@ -662,7 +679,7 @@ export default function QuizPage() {
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
           title={finalResult.titulo_simbolico}
           subtitle={finalResult.categoria || undefined}
-          maxWidth="4xl"
+          maxWidth="6xl"
           showNavigation={false}
         >
           <QuizResultView
@@ -676,69 +693,79 @@ export default function QuizPage() {
           <DirectMediaContent result={finalResult} />
 
           {/* Blocos modulares EXTRAS do Admin */}
-          <ModularPageRenderer
-            contextType="quiz_result"
-            contextId={finalResult.id}
-            contextData={{
-              arquetipo: finalResult.titulo_simbolico,
-              categoria: finalResult.categoria,
-            }}
-            blockSpacing="lg"
-            showLoading={false}
-          />
+          <div className="mt-20">
+            <ModularPageRenderer
+              contextType="quiz_result"
+              contextId={finalResult.id}
+              contextData={{
+                arquetipo: finalResult.titulo_simbolico,
+                categoria: finalResult.categoria,
+              }}
+              blockSpacing="lg"
+              showLoading={false}
+            />
+          </div>
 
           {saving && (
-            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <div className="flex items-center justify-center gap-2 text-muted-foreground my-8">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>Salvando resultado...</span>
             </div>
           )}
 
-         {/* Syntheia Chat Button */}
-         <div className="flex justify-center">
-           <Button
-             variant="gold"
-             size="lg"
-             onClick={() => setShowSyntheiaChat(true)}
-             className="gap-2"
-           >
-             <MessageCircle className="w-5 h-5" />
-             Explorar com Syntheia
-           </Button>
-         </div>
-
-         {/* Ver minha Voz button */}
-          {(() => {
-            const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-2">
+          {/* Action Hub - Final State */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+            className="flex flex-col items-center gap-12 py-16 border-t border-border/10 mt-20"
+          >
+            <div className="space-y-4 text-center">
+              <h3 className="text-xl font-display text-foreground/80">O que você deseja fazer agora?</h3>
+              <div className="flex flex-wrap gap-4 justify-center">
                 <Button
-                  variant="outline"
-                  size="lg"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                  variant="gold"
+                  size="xl"
+                  onClick={() => setShowSyntheiaChat(true)}
+                  className="gap-2 shadow-lg shadow-gold/20 rounded-full px-10"
+                  data-syntheia-trigger="true"
                 >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
+                  <MessageCircle className="w-6 h-6" />
+                  Explorar com Syntheia
                 </Button>
-              </div>
-            ) : null;
-          })()}
 
-         {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer
-            </Button>
-          </div>
+                {(() => {
+                  const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
+                  return vozId ? (
+                    <Button
+                      variant="outline"
+                      size="xl"
+                      onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
+                      className="gap-2 border-primary/20 text-primary/70 hover:bg-primary/5 hover:text-primary rounded-full px-10"
+                    >
+                      <AudioLines className="w-6 h-6" />
+                      Aprofundar na Voz
+                    </Button>
+                  ) : null;
+                })()}
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="text-muted-foreground">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Voltar
+              </Button>
+              <Button variant="ghost" size="sm" onClick={handleRestart} className="text-gold/50">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Refazer
+              </Button>
+            </div>
+          </motion.div>
         </ContentPageLayout>
 
         <DebugPanel resultId={finalResult.id} />
+
 
        {/* Syntheia Chat Modal */}
        <SyntheiaChatModal
