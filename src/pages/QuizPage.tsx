@@ -468,40 +468,15 @@ export default function QuizPage() {
     if (!result.imagem_url) return null;
     
     return (
-      <div className="rounded-xl overflow-hidden -mx-4 sm:mx-0 mb-8">
-        <img 
-          src={result.imagem_url} 
-          alt={result.titulo_simbolico}
-          className="w-full h-auto max-h-[400px] object-cover"
-        />
+      <div className="rounded-xl overflow-hidden -mx-4 sm:mx-0 mb-8 opacity-0 pointer-events-none absolute h-0">
+        {/* Deprecated in favor of QuizResultView Hero */}
       </div>
     );
   };
 
   // CTA Button Component (separate for clarity)
   const ResultCTA = ({ result }: { result: Resultado }) => {
-    if (!result.cta_texto || !result.cta_rota) return null;
-    
-    return (
-      <div className="flex justify-center pt-4">
-        <Button 
-          variant="gold" 
-          size="lg"
-          onClick={() => {
-            if (result.cta_rota?.startsWith('http')) {
-              window.open(result.cta_rota, '_blank');
-            } else {
-              navigate(result.cta_rota || '/');
-            }
-          }}
-        >
-          {result.cta_texto}
-          {result.cta_rota?.startsWith('http') && (
-            <ExternalLink className="w-4 h-4 ml-2" />
-          )}
-        </Button>
-      </div>
-    );
+    return null; // Deprecated in favor of QuizResultView Bento Grid
   };
 
   // Debug Panel Component (Admin Only)
