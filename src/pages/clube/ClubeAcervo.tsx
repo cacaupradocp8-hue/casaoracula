@@ -4,7 +4,7 @@ import { useAllBooks, type Book } from '@/hooks/useBooks';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { BookOpen, ArrowLeft, Search, FlaskConical } from 'lucide-react';
+import { BookOpen, ArrowLeft, Search, FlaskConical, ArrowRight } from 'lucide-react';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
