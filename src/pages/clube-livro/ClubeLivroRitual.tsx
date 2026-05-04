@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useClubeCicloDetalhe, useRitualAceite } from '@/hooks/useClubeLivro';
@@ -61,13 +62,13 @@ export default function ClubeLivroRitual() {
   if (!ciclo) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-2xl text-center">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20 text-center">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-display mb-2">Ciclo não encontrado</h2>
           <Button variant="outline" onClick={() => navigate('/clube-livro')}>
             Voltar ao Clube
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
@@ -76,7 +77,7 @@ export default function ClubeLivroRitual() {
     <AppLayout>
       <div className="min-h-screen bg-background">
         {/* Dark ritual container */}
-        <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <ResponsiveContainer size="narrow" className="py-12">
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-12">
             <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -145,7 +146,7 @@ export default function ClubeLivroRitual() {
               {isSubmitting ? 'Entrando...' : 'Entrar no Ciclo'}
             </Button>
           </div>
-        </div>
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );

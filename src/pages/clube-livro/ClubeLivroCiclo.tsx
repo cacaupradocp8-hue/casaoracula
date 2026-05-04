@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -136,7 +137,7 @@ export default function ClubeLivroCiclo() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-gradient-to-br from-mystic/10 via-gold/5 to-transparent blur-3xl animate-breathe pointer-events-none" />
           <div className="absolute top-1/4 right-1/4 w-40 h-40 rounded-full bg-gold/5 blur-2xl animate-breathe-subtle pointer-events-none" />
 
-          <div className="relative z-10 container mx-auto px-6 max-w-4xl">
+          <ResponsiveContainer size="default" className="relative z-10">
             {/* Breadcrumb */}
             <motion.nav
               initial={{ opacity: 0 }}
@@ -163,11 +164,11 @@ export default function ClubeLivroCiclo() {
             >
               <CicloHeaderBlock ciclo={ciclo} />
             </motion.div>
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* ── Content Area ── */}
-        <div className="container mx-auto px-6 pb-28 max-w-4xl">
+        <ResponsiveContainer size="default" className="pb-28">
           {/* Régua Simbólica */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -425,7 +426,7 @@ export default function ClubeLivroCiclo() {
               </TabsContent>
             </Tabs>
           </motion.div>
-        </div>
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );

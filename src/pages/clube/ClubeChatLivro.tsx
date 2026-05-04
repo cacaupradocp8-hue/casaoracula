@@ -311,7 +311,7 @@ Laboratório 80/20 da Obra:
       <div className="min-h-screen flex flex-col bg-background">
         {/* ── HEADER ── */}
         <div className="sticky top-0 z-20 border-b border-[#2A2340] bg-background/95 backdrop-blur-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <Button variant="ghost" size="icon" onClick={() => navigate('/clube/ciclo')} className="h-10 w-10 shrink-0">
                 <ArrowLeft className="w-5 h-5" />
@@ -375,7 +375,7 @@ Laboratório 80/20 da Obra:
           {/* Cartografia Bar */}
           {pontoAtual && (
             <div className="bg-gold/5 border-t border-gold/10 py-1.5">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar">
+              <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center gap-6 overflow-x-auto no-scrollbar">
                 {[
                   { label: 'Porta', value: pontoAtual.porta || '...' },
                   { label: 'Campo', value: pontoAtual.campo || '...' },
@@ -392,7 +392,7 @@ Laboratório 80/20 da Obra:
         </div>
 
         {/* ── MAIN ── */}
-        <div className="flex-1 flex max-w-7xl mx-auto w-full overflow-hidden">
+        <div className="flex-1 flex max-w-[1440px] mx-auto w-full overflow-hidden">
           {/* ── SUGGESTIONS COLUMN (desktop) ── */}
           {!isMobile && (
             <div className="w-64 border-r border-[#2A2340] p-6 space-y-8 overflow-y-auto hidden lg:block">

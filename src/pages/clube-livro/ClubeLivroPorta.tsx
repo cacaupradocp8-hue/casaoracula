@@ -10,6 +10,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -231,13 +232,13 @@ export default function ClubeLivroPorta() {
   if (!porta) {
     return (
       <AppLayout>
-        <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+        <ResponsiveContainer size="narrow" className="py-12 text-center">
           <BookOpen className="w-10 h-10 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground">Porta não encontrada.</p>
           <Button variant="ghost" className="mt-4" onClick={() => navigate(`/clube-livro/${cicloId}`)}>
             <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
@@ -250,7 +251,7 @@ export default function ClubeLivroPorta() {
       <style>{resonanceKeyframes}</style>
       <audio ref={audioRef} preload="metadata" />
 
-      <div className="container mx-auto px-4 py-6 pb-20 max-w-2xl">
+      <ResponsiveContainer size="narrow" className="py-6 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-5 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -485,7 +486,7 @@ export default function ClubeLivroPorta() {
             <ClubeMateriaisTab cicloId={cicloId!} livroTitulo={ciclo?.titulo || ''} />
           </TabsContent>
         </Tabs>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

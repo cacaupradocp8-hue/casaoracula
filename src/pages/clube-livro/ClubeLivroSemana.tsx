@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { Card, CardContent } from '@/components/ui/card';
 import { Loader2, BookOpen, Headphones, Scroll, HelpCircle, Flower2 } from 'lucide-react';
@@ -40,7 +41,7 @@ export default function ClubeLivroSemana() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         <SectionHeader
           title="Ritual da Semana"
           subtitle="Travessia simbólica do Clube de Leitura Oracular"
@@ -131,7 +132,7 @@ export default function ClubeLivroSemana() {
             )}
           </div>
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

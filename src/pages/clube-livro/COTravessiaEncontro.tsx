@@ -16,6 +16,7 @@ import {
   useCORespostas,
   useSalvarResposta,
 } from '@/hooks/useCOTravessias';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function COTravessiaEncontro() {
@@ -78,7 +79,7 @@ export default function COTravessiaEncontro() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <ResponsiveContainer size="narrow" className="py-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-muted-foreground/60 mb-8 flex-wrap">
           <Link to="/clube-livro/travessias" className="hover:text-foreground transition-colors">Travessias</Link>
@@ -260,7 +261,7 @@ export default function COTravessiaEncontro() {
             Voltar para a travessia
           </Button>
         </div>
-      </div>
+      </ResponsiveContainer>
     </div>
   );
 }

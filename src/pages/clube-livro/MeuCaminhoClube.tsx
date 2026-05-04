@@ -5,6 +5,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,7 +36,7 @@ export default function MeuCaminhoClube() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-2xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -150,7 +151,7 @@ export default function MeuCaminhoClube() {
             </CardContent>
           </Card>
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
