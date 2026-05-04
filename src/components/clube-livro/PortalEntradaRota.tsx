@@ -224,8 +224,8 @@ export function PortalEntradaRota({
         </div>
 
         {/* 3D Carousel Stage */}
-        <div className="flex-1 relative perspective-[2500px] flex items-center justify-center">
-          <div className="relative w-full h-full max-h-[600px] flex items-center justify-center">
+        <div className="flex-1 relative perspective-[2000px] flex items-center justify-center">
+          <div className="relative w-full h-full max-h-[500px] flex items-center justify-center">
             <AnimatePresence mode="popLayout">
               {slides.map((slide, i) => {
                 const diff = i - current;
@@ -256,7 +256,7 @@ export function PortalEntradaRota({
                       mass: 0.8
                     }}
                     className={cn(
-                      'absolute w-[300px] md:w-[420px] aspect-[10/14] preserve-3d',
+                      'absolute w-[280px] md:w-[380px] aspect-[10/14] preserve-3d',
                       !isActive && 'cursor-pointer pointer-events-none'
                     )}
                     onClick={() => !isActive && goTo(i)}
