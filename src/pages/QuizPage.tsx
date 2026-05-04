@@ -300,21 +300,24 @@ export default function QuizPage() {
     );
   }
 
-  const currentP = perguntas && currentIndex >= 0 && currentIndex < perguntas.length ? perguntas[currentIndex] : null;
+  const currentP = perguntas && currentIndex >= 0 && currentIndex < perguntas.length ? perguntas[currentIndex] : (perguntas?.[0] ?? null);
   
   if (!currentP) {
-    return (
-      <AppLayout>
-        <div className="flex flex-col h-[60vh] items-center justify-center text-center px-4">
-          <Bug className="w-12 h-12 text-gold/40 mb-4" />
-          <h2 className="font-display text-xl text-white">Conteúdo em preparação</h2>
-          <p className="text-white/40 text-sm mt-2 max-w-xs">Este quiz ainda não possui perguntas ativas. Por favor, tente novamente mais tarde.</p>
-          <Button variant="outline" onClick={() => navigate(-1)} className="mt-8 rounded-full border-white/10">
-            Voltar
-          </Button>
-        </div>
-      </AppLayout>
-    );
+    if (perguntas.length === 0) {
+      return (
+        <AppLayout>
+          <div className="flex flex-col h-[60vh] items-center justify-center text-center px-4">
+            <Bug className="w-12 h-12 text-gold/40 mb-4" />
+            <h2 className="font-display text-xl text-white">Conteúdo em preparação</h2>
+            <p className="text-white/40 text-sm mt-2 max-w-xs">Este quiz ainda não possui perguntas ativas. Por favor, tente novamente mais tarde.</p>
+            <Button variant="outline" onClick={() => navigate(-1)} className="mt-8 rounded-full border-white/10">
+              Voltar
+            </Button>
+          </div>
+        </AppLayout>
+      );
+    }
+    return <AppLayout><div className="flex h-[60vh] items-center justify-center"><Loader2 className="animate-spin text-gold" /></div></AppLayout>;
   }
 
   const currentO = (currentP?.id && opcoesByPergunta[currentP.id]) || [];
