@@ -62,6 +62,13 @@ export default function ClubeRotaPremium() {
 
   const [pergunta, setPergunta] = useState('');
 
+  // Portal interativo de entrada — mostra na primeira visita por slug
+  const portalKey = slug ? `clube:portal-entrada:${slug}` : '';
+  const [showPortal, setShowPortal] = useState<boolean>(() => {
+    if (!slug) return false;
+    try { return localStorage.getItem(`clube:portal-entrada:${slug}`) !== '1'; } catch { return true; }
+  });
+
   // Marca o ponto como em_andamento ao entrar (se ainda não tem registro)
   useEffect(() => {
     if (ponto && ponto.estado === 'available') {
