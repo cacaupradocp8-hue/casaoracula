@@ -7,6 +7,7 @@ import { Lock, Play, Clock, BarChart3, Star } from 'lucide-react';
 import { CourseWithProgress } from '@/types/course';
 import { useCourseAccess } from '@/hooks/useCourseAccess';
 import { motion } from 'framer-motion';
+import { OptimizedImage } from '@/components/shared/OptimizedImage';
 
 interface CourseCardProps {
   course: CourseWithProgress;
