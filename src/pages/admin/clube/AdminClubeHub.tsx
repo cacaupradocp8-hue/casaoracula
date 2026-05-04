@@ -140,6 +140,7 @@ export default function AdminClubeHub() {
       case 'acervo': return `${stats.books} Obras`;
       case 'chat': return `${stats.chat} Prompts`;
       case 'treinamento': return `Operacional`;
+      case 'laboratorio': return `${stats.essencias} Essências`;
       default: return '';
     }
   };
