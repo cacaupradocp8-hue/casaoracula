@@ -168,10 +168,11 @@
     overflow-wrap: break-word;
   }
 
-  /* Fluid Spacing Utilities */
+  /* Fluid Spacing & UX Utilities */
   :root {
-    --section-gap: clamp(2rem, 5vh, 5rem);
-    --container-gap: clamp(1rem, 3vw, 2.5rem);
+    --section-gap: clamp(2rem, 8vh, 6rem);
+    --container-gap: clamp(1rem, 4vw, 3rem);
+    --card-padding: clamp(1rem, 5%, 2rem);
   }
 
   /* Touch targets — min 44x44 on mobile per WCAG */
@@ -182,26 +183,21 @@
     }
   }
 
-  h1 {
-    font-size: clamp(1.875rem, 5vw, 3.5rem);
-  }
-  h2 {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-  }
-  h3 {
-    font-size: clamp(1.25rem, 3vw, 1.75rem);
-  }
+  /* Improved Typography Scaling */
+  h1 { font-size: clamp(2rem, 6vw, 4rem); }
+  h2 { font-size: clamp(1.75rem, 5vw, 3rem); }
+  h3 { font-size: clamp(1.35rem, 4vw, 2rem); }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
     font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
     text-wrap: balance;
   }
 
   p, li, span, label, td {
-    line-height: 1.7;
+    line-height: 1.75;
   }
 
   /* Prevent images/media from breaking responsive layout */
@@ -209,6 +205,19 @@
     max-width: 100%;
     height: auto;
     object-fit: cover;
+  }
+
+  /* Adaptive Grid Layouts */
+  .grid-adaptive {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+    gap: var(--container-gap);
+  }
+
+  .grid-adaptive-sm {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+    gap: 1.25rem;
   }
 }
 
