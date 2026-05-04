@@ -686,7 +686,7 @@ export default function AdminModulosFormativos() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <ResponsiveContainer className="py-8">
       {/* Banner Configuration */}
       <BannerConfigPanel />
 
@@ -902,7 +902,5 @@ export default function AdminModulosFormativos() {
         </DialogContent>
       </Dialog>
     </ResponsiveContainer>
-    </div>
   );
-}
 }

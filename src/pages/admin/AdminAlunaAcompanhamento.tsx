@@ -468,4 +468,3 @@ function MetricCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ 
     </div>
   );
 }
-}
