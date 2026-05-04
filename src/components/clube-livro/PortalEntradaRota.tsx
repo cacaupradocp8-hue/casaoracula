@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import {
-  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Quote, Eye, ShieldAlert, FlaskConical, Target, GraduationCap
+  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Eye, ShieldAlert, FlaskConical, Target, GraduationCap, Sparkles, ArrowRight
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -55,16 +55,10 @@ const DEFAULT_PROFUNDAS = [
 const DEFAULT_CHIPS = ['Nada é demolido', 'Tudo é reconhecido', 'Tempo psíquico'];
 
 const GRADIENTS = [
-  'linear-gradient(135deg, hsl(270 60% 8%), hsl(280 70% 25%))',
-  'linear-gradient(135deg, hsl(250 50% 6%), hsl(260 55% 22%))',
-  'linear-gradient(135deg, hsl(240 50% 5%), hsl(40 60% 18%))',
+  'radial-gradient(circle at 20% 20%, hsl(270 60% 12%), hsl(280 70% 5%))',
+  'radial-gradient(circle at 80% 80%, hsl(250 50% 10%), hsl(260 55% 4%))',
+  'radial-gradient(circle at 50% 50%, hsl(240 50% 8%), hsl(220 60% 3%))',
 ];
-
-function gradientForIndex(i: number, total: number) {
-  if (i <= 1) return GRADIENTS[0];
-  if (i <= Math.floor(total * 0.6)) return GRADIENTS[1];
-  return GRADIENTS[2];
-}
 
 export function PortalEntradaRota({
   slug,
@@ -90,7 +84,6 @@ export function PortalEntradaRota({
     if (propSlides) return propSlides;
     if (!essencia) return DEFAULT_SLIDES;
 
-    // Gera slides baseados na Essência 80/20 do livro
     return [
       { 
         icon: <BookOpen className="w-12 h-12" />, 
@@ -164,165 +157,223 @@ export function PortalEntradaRota({
   };
 
   const microcopy = microList[microIdx % microList.length];
-  const bg = useMemo(() => gradientForIndex(current, total), [current, total]);
+  const bg = useMemo(() => GRADIENTS[current % GRADIENTS.length], [current]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.5 }}
-      className="fixed inset-0 z-[100] overflow-hidden"
+      transition={{ duration: 0.8 }}
+      className="fixed inset-0 z-[100] overflow-hidden bg-midnight select-none"
     >
+      {/* Cinematic Background */}
       <motion.div
         className="absolute inset-0"
         animate={{ background: bg }}
-        transition={{ duration: 0.9, ease: 'easeInOut' }}
-        style={{ background: bg }}
+        transition={{ duration: 1.5, ease: 'easeInOut' }}
       />
+      
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')] opacity-[0.05] pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-midnight/90 pointer-events-none" />
 
       {/* Floating particles */}
       <FloatingParticles />
 
-      {/* Skip */}
+      {/* Skip button with luxury styling */}
       <button
         onClick={skip}
-        className="absolute top-4 right-4 z-20 text-white/50 hover:text-white/90 transition-colors flex items-center gap-1 text-xs uppercase tracking-widest"
+        className="absolute top-8 right-8 z-[110] flex items-center gap-3 text-white/40 hover:text-gold transition-all duration-500 group"
       >
-        Pular <X className="w-4 h-4" />
+        <span className="text-[9px] uppercase tracking-[0.4em] font-bold opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">Sair da Revelação</span>
+        <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/40 group-hover:rotate-90 transition-all duration-500">
+          <X className="w-4 h-4" />
+        </div>
       </button>
 
-      <div className="relative z-10 h-full flex flex-col safe-area-inset px-4 py-6 md:py-10">
-        {/* Header */}
-        <div className="text-center pt-4 md:pt-6">
-          <div className="text-[11px] md:text-xs tracking-[0.4em] font-bold text-gold/90">
-            CASA ORÁCULA
-          </div>
-          <div className="mt-2 text-lg md:text-2xl font-display font-black text-white/95">
-            {portalNumero ? `Portal ${portalNumero} · ` : ''}{portalTitulo ?? 'O Chamado'}
-          </div>
-        </div>
-
-        {/* Carousel */}
-        <div className="flex-1 flex items-center justify-center my-6 md:my-8 overflow-hidden">
-          <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
-            {slides.map((slide, i) => {
-              const diff = i - current;
-              const abs = Math.abs(diff);
-              if (abs > 2) return null;
-              const isActive = diff === 0;
-              return (
-                <motion.div
-                  key={i}
-                  drag={isActive ? 'x' : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.2}
-                  onDragEnd={handleDragEnd}
-                  onClick={() => !isActive && goTo(i)}
-                  animate={{
-                    x: `${diff * 78}%`,
-                    scale: isActive ? 1 : 1 - abs * 0.12,
-                    opacity: isActive ? 1 : Math.max(0.35, 1 - abs * 0.4),
-                    zIndex: 10 - abs,
-                  }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 28 }}
-                  className={cn(
-                    'absolute w-[85%] sm:w-[70%] md:w-[480px] max-w-[480px]',
-                    !isActive && 'cursor-pointer'
-                  )}
-                >
-                  <SlideCard slide={slide} isActive={isActive} chips={ethicalChips} />
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-1.5 mb-5">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              className={cn(
-                'h-1.5 rounded-full transition-all duration-500',
-                i === current ? 'w-8 bg-gold' : 'w-1.5 bg-white/25 hover:bg-white/50'
-              )}
-            />
-          ))}
-        </div>
-
-        {/* Microcopy */}
-        <div className="px-2 max-w-2xl mx-auto w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={microcopy}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.55 }}
-              className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur px-5 py-4 text-center"
-            >
-              <p className="text-gold/95 font-semibold text-sm md:text-base leading-snug">
-                "{microcopy}"
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* CTA */}
-        <div className="px-2 max-w-2xl mx-auto w-full mt-5 pb-2">
-          <Button
-            onClick={finish}
-            className="w-full h-14 rounded-2xl bg-gold text-midnight hover:bg-gold/90 font-black tracking-[0.15em] text-sm shadow-[0_12px_40px_-8px_hsl(var(--gold)/0.6)]"
+      <div className="relative z-10 h-full flex flex-col pt-12 pb-8 px-6 md:px-20 lg:px-32">
+        {/* Header - Editorial Style */}
+        <div className="max-w-4xl mx-auto w-full mb-8 md:mb-12">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="flex items-center gap-6 mb-4"
           >
-            {current >= total - 1 ? ctaLabel : 'CONTINUAR'}
-          </Button>
-          {current < total - 1 && (
-            <button
-              onClick={() => goTo(current + 1)}
-              className="block mx-auto mt-3 text-white/50 hover:text-white/80 text-[11px] uppercase tracking-widest"
+            <span className="text-[10px] tracking-[0.6em] font-black text-gold uppercase">
+              Casa Orácula
+            </span>
+            <div className="h-[1px] flex-1 bg-gradient-to-r from-gold/40 to-transparent" />
+          </motion.div>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col md:flex-row md:items-end gap-2 md:gap-6"
+          >
+            <h1 className="font-display text-5xl md:text-8xl text-white font-black leading-[0.8] tracking-tighter">
+              {portalTitulo ?? 'O Chamado'}
+            </h1>
+            {portalNumero && (
+              <span className="font-serif italic text-2xl md:text-4xl text-gold/30 mb-1 md:mb-2">
+                Fase {String(portalNumero).padStart(2, '0')}
+              </span>
+            )}
+          </motion.div>
+        </div>
+
+        {/* 3D Carousel Stage */}
+        <div className="flex-1 relative perspective-[2500px] flex items-center justify-center">
+          <div className="relative w-full h-full max-h-[600px] flex items-center justify-center">
+            <AnimatePresence mode="popLayout">
+              {slides.map((slide, i) => {
+                const diff = i - current;
+                const absDiff = Math.abs(diff);
+                if (absDiff > 2) return null;
+                const isActive = diff === 0;
+
+                return (
+                  <motion.div
+                    key={i}
+                    drag={isActive ? 'x' : false}
+                    dragConstraints={{ left: 0, right: 0 }}
+                    dragElastic={0.15}
+                    onDragEnd={handleDragEnd}
+                    initial={{ opacity: 0, scale: 0.8, x: diff * 400, rotateY: diff * 60 }}
+                    animate={{
+                      x: diff * (window.innerWidth < 768 ? 280 : 420),
+                      z: isActive ? 0 : -absDiff * 400,
+                      rotateY: diff * -45,
+                      scale: isActive ? 1 : 0.8,
+                      opacity: isActive ? 1 : 0.35 - (absDiff * 0.1),
+                      filter: isActive ? 'blur(0px)' : 'blur(4px)',
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 180,
+                      damping: 25,
+                      mass: 0.8
+                    }}
+                    className={cn(
+                      'absolute w-[300px] md:w-[420px] aspect-[10/14] preserve-3d',
+                      !isActive && 'cursor-pointer pointer-events-none'
+                    )}
+                    onClick={() => !isActive && goTo(i)}
+                  >
+                    <SlideCard slide={slide} isActive={isActive} />
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Navigation Bar - Minimalist Luxury */}
+        <div className="mt-8 md:mt-12 max-w-4xl mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-10">
+          {/* Microcopy - The Whisper */}
+          <div className="flex-1 max-w-md order-2 md:order-1">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={microcopy}
+                initial={{ opacity: 0, y: 10, filter: 'blur(10px)' }}
+                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, y: -10, filter: 'blur(10px)' }}
+                transition={{ duration: 0.8 }}
+                className="flex flex-col gap-1"
+              >
+                <span className="text-[8px] tracking-[0.4em] text-gold/40 uppercase font-bold">Frequência Oracular</span>
+                <p className="text-white/60 font-serif italic text-base md:text-lg leading-relaxed">
+                  "{microcopy}"
+                </p>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Action Center */}
+          <div className="flex flex-col items-center md:items-end gap-6 order-1 md:order-2 shrink-0">
+            {/* Dots */}
+            <div className="flex items-center gap-3">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => goTo(i)}
+                  className="relative h-6 w-1 flex items-center justify-center group"
+                >
+                  <motion.div
+                    animate={{
+                      height: i === current ? 24 : 6,
+                      backgroundColor: i === current ? 'hsl(var(--gold))' : 'rgba(255,255,255,0.15)',
+                    }}
+                    className="w-[2px] transition-all duration-500 rounded-full"
+                  />
+                </button>
+              ))}
+            </div>
+
+            <Button
+              onClick={current >= total - 1 ? finish : () => goTo(current + 1)}
+              className="group relative overflow-hidden bg-white text-midnight h-16 px-10 rounded-full font-bold tracking-[0.25em] text-[10px] transition-all duration-700 shadow-2xl hover:bg-gold hover:text-midnight"
             >
-              Avançar slide
-            </button>
-          )}
+              <div className="absolute inset-0 bg-gold translate-x-full group-hover:translate-x-0 transition-transform duration-700 ease-in-out" />
+              <span className="relative z-10 flex items-center gap-3">
+                {current >= total - 1 ? ctaLabel : 'PRÓXIMO PORTAL'}
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
+              </span>
+            </Button>
+          </div>
         </div>
       </div>
     </motion.div>
   );
 }
 
-function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: boolean; chips: string[] }) {
+function SlideCard({ slide, isActive }: { slide: PortalSlide; isActive: boolean }) {
   return (
     <div
       className={cn(
-        'rounded-[2rem] border border-white/20 bg-white/[0.07] backdrop-blur-xl p-7 md:p-9',
-        'shadow-[0_30px_80px_-20px_hsl(var(--gold)/0.25)]',
-        'flex flex-col items-center text-center'
+        'relative w-full h-full rounded-[2rem] overflow-hidden transition-all duration-700',
+        'border border-white/10 bg-white/[0.02] backdrop-blur-3xl',
+        'shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)]',
+        isActive ? 'ring-1 ring-gold/20' : ''
       )}
     >
-      <motion.div
-        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -8 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-        className="text-gold mb-5"
-      >
-        {slide.icon}
-      </motion.div>
-      <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase leading-tight tracking-wide">
-        {slide.title}
-      </h3>
-      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md line-clamp-4">
-        {slide.subtitle}
-      </p>
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
-        {chips.map((c) => (
-          <span
-            key={c}
-            className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-[11px] font-semibold"
-          >
-            {c}
-          </span>
-        ))}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent pointer-events-none" />
+      
+      <div className="relative h-full flex flex-col items-center justify-center p-10 md:p-14 text-center">
+        {/* Decorative mask */}
+        <div className="absolute top-0 left-0 w-24 h-24 bg-gold/5 blur-3xl rounded-full -translate-x-12 -translate-y-12" />
+        
+        <motion.div
+          animate={{ 
+            y: isActive ? [0, -12, 0] : 0,
+            scale: isActive ? 1.15 : 0.9,
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+          className="relative mb-12"
+        >
+          <div className="absolute inset-0 bg-gold/30 blur-3xl rounded-full" />
+          <div className="relative text-gold drop-shadow-[0_0_20px_rgba(234,179,8,0.6)]">
+            {slide.icon}
+          </div>
+        </motion.div>
+
+        <motion.h3 
+          className="font-display font-black text-white text-3xl md:text-4xl uppercase tracking-[0.1em] mb-8 leading-[0.9]"
+        >
+          {slide.title}
+        </motion.h3>
+
+        <div className="w-16 h-[1px] bg-gradient-to-r from-transparent via-gold/40 to-transparent mb-8" />
+
+        <p className="text-white/50 text-base md:text-lg leading-relaxed font-body tracking-wide line-clamp-6">
+          {slide.subtitle}
+        </p>
+
+        {/* Decorative corner element */}
+        <div className="absolute bottom-8 right-8 opacity-30">
+          <Sparkles className="w-5 h-5 text-gold" />
+        </div>
       </div>
     </div>
   );
@@ -330,13 +381,13 @@ function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: b
 
 function FloatingParticles() {
   const particles = useRef(
-    Array.from({ length: 22 }, (_, i) => ({
+    Array.from({ length: 40 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: 2 + Math.random() * 6,
-      duration: 14 + Math.random() * 16,
-      opacity: 0.1 + Math.random() * 0.3,
+      size: 0.5 + Math.random() * 2,
+      duration: 15 + Math.random() * 25,
+      opacity: 0.1 + Math.random() * 0.4,
     }))
   );
 
@@ -345,17 +396,25 @@ function FloatingParticles() {
       {particles.current.map((p) => (
         <motion.div
           key={p.id}
-          className="absolute rounded-full bg-white"
+          className="absolute rounded-full bg-gold/30"
           style={{
             left: `${p.x}%`,
             top: `${p.y}%`,
             width: p.size,
             height: p.size,
             opacity: p.opacity,
-            boxShadow: `0 0 ${p.size * 3}px hsl(var(--gold) / ${p.opacity})`,
+            boxShadow: `0 0 ${p.size * 6}px hsl(var(--gold) / 0.4)`,
           }}
-          animate={{ y: [-20, -80, -20], x: [0, 10, 0] }}
-          transition={{ duration: p.duration, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ 
+            y: [0, -150, 0], 
+            x: [0, Math.random() * 30 - 15, 0],
+            opacity: [p.opacity, p.opacity * 2, p.opacity]
+          }}
+          transition={{ 
+            duration: p.duration, 
+            repeat: Infinity, 
+            ease: 'linear' 
+          }}
         />
       ))}
     </div>
