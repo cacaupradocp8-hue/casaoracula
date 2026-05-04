@@ -62,7 +62,7 @@ export function SalaLayout({
             cursos={cursos}
           />
           <SidebarInset className="flex-1 min-w-0">
-            <div className="h-full max-w-[1440px] mx-auto w-full">
+            <div className="h-full max-w-[1440px] mx-auto w-full px-4 sm:px-6 lg:px-8 xl:px-10 py-6 sm:py-8 lg:py-10">
               {children}
             </div>
           </SidebarInset>

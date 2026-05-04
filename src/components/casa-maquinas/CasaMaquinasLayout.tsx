@@ -11,7 +11,8 @@ interface CasaMaquinasLayoutProps {
 }
 
 export function CasaMaquinasLayout({ children, title, subtitle }: CasaMaquinasLayoutProps) {
-  // Default sidebar open only on xl+ to preserve content width on 13"–15" screens at 100% zoom
+  // Intelligent sidebar behavior: Default sidebar open only on xl+ screens (>= 1280px).
+  // This preserves critical horizontal real estate on 13" and 15" laptops at 100% zoom.
   const defaultOpen = typeof window !== 'undefined' ? window.innerWidth >= 1280 : false;
 
   return (
@@ -33,7 +34,7 @@ export function CasaMaquinasLayout({ children, title, subtitle }: CasaMaquinasLa
                 </div>
               )}
             </div>
-            <div className="p-4 sm:p-6 lg:p-8 min-h-[calc(100vh-8rem)] space-y-6 max-w-[1440px] mx-auto w-full">
+            <div className="p-4 sm:p-6 lg:p-8 xl:p-10 min-h-[calc(100vh-8rem)] space-y-8 max-w-[1440px] mx-auto w-full min-w-0">
               <CasaMaquinasTrialBanner />
               {children}
             </div>

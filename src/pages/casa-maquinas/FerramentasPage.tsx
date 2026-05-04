@@ -116,7 +116,7 @@ export default function FerramentasPage() {
   return (
     <CasaMaquinasLayout title="Ferramentas Clínicas" subtitle="Instrumentos clínicos do Método Orácula">
       {/* Category filter */}
-      <div className="flex gap-2 mb-6 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-thin md:flex-wrap md:overflow-visible">
+      <div className="flex gap-2 mb-8 overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0 md:flex-wrap">
         {CATEGORIES.map(cat => {
           const Icon = cat.icon;
           return (
@@ -138,7 +138,7 @@ export default function FerramentasPage() {
       </div>
 
       {/* Tools grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 xl:gap-6">
         {filtered.map(t => {
           const accessible = hasAccess(t.portalMinimo);
           const catMeta = CATEGORIES.find(c => c.key === t.categoria);
