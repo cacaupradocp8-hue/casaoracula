@@ -64,13 +64,13 @@ export default function ClubeLivroFase() {
   if (isLoading) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-muted rounded w-1/2" />
             <div className="h-32 bg-muted rounded" />
             <div className="h-32 bg-muted rounded" />
           </div>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }

@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -167,7 +168,7 @@ export default function ClubeLivroCiclo() {
         </section>
 
         {/* ── Content Area ── */}
-        <div className="container mx-auto px-6 pb-28 max-w-4xl">
+        <ResponsiveContainer size="default" className="pb-28">
           {/* Régua Simbólica */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -425,7 +426,7 @@ export default function ClubeLivroCiclo() {
               </TabsContent>
             </Tabs>
           </motion.div>
-        </div>
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );

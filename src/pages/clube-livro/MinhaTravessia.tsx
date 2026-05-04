@@ -93,7 +93,7 @@ export default function MinhaTravessia() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -242,7 +242,7 @@ export default function MinhaTravessia() {
 
         {/* Histórico de Laboratórios 80/20 */}
         <LabHistorySection />
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
