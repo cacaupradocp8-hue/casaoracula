@@ -216,7 +216,14 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
   static getDerivedStateFromError(error: Error): RootErrorBoundaryState {
     return { hasError: true, errorMessage: error?.message || 'Ocorreu um erro inesperado.' };
   }
-  componentDidCatch(error: Error, info: React.ErrorInfo) { console.error('[root-error-boundary]', error, info); }
+  componentDidCatch(error: Error, info: React.ErrorInfo) {
+    console.error('[root-error-boundary][critical]', {
+      error,
+      componentStack: info.componentStack,
+      timestamp: new Date().toISOString(),
+      url: window.location.href
+    });
+  }
   render() {
     if (!this.state.hasError) return this.props.children;
     return <AppRouteError title="Aconteceu um erro na abertura" message={this.state.errorMessage || 'Erro desconhecido.'} />;
@@ -225,8 +232,8 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
 
 // ─── Route guards ─────────────────────────────────────────────
 
-function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: PortalType }) {
-  const result = useRouteGuard(minPortal);
+function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: string }) {
+  const result = useRouteGuard(minPortal as PortalType);
   if (result.status === 'loading') return <AuthLoading />;
   if (result.status === 'error') return <AppRouteError title="Erro na autenticação" message={result.errorMessage} />;
   if (result.status === 'redirect') return <Navigate to={result.to} replace />;
