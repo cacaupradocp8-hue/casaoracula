@@ -38,16 +38,36 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
   const hasAlunaAccess = user ? canAccessFeature(user.portal, 'aluna') : false;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
 
-      {/* ══ BLOCO DE ABERTURA ══ */}
-      <motion.section {...fade(0)}>
+      {/* ══ BLOCO DE IDENTIDADE SIMBÓLICA ══ */}
+      <motion.section {...fade(0)} className="text-center space-y-6">
+        <div className="space-y-2">
+          <p className="text-xs uppercase tracking-[0.2em] text-gold/60 font-medium">Sua Identidade Revelada</p>
+          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground font-bold tracking-tight">
+            {primaryResult.titulo_simbolico}
+          </h1>
+        </div>
+        
+        <div className="max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed font-serif italic">
+            {primaryResult.texto_interpretativo}
+          </p>
+        </div>
+
+        <div className="flex justify-center py-4">
+          <div className="h-px w-24 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+        </div>
+      </motion.section>
+
+      {/* ══ BLOCO DE TRANSIÇÃO ══ */}
+      <motion.section {...fade(0.1)}>
         <div className="text-center space-y-3">
           <p className="text-sm text-muted-foreground leading-relaxed">
-            Com base nas suas respostas, este é o seu ponto de partida na Casa.
+            Com base nesta força que habita em você, este é o seu ponto de partida recomendado na Casa.
           </p>
-          <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
-            Seu próximo passo recomendado:
+          <h2 className="font-display text-2xl text-foreground tracking-wide font-semibold">
+            Próximos Passos:
           </h2>
         </div>
       </motion.section>
