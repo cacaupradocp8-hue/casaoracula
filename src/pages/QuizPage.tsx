@@ -300,7 +300,7 @@ export default function QuizPage() {
     );
   }
 
-  const currentP = perguntas[currentIndex];
+  const currentP = perguntas && currentIndex >= 0 && currentIndex < perguntas.length ? perguntas[currentIndex] : null;
   
   if (!currentP) {
     return (
@@ -317,7 +317,7 @@ export default function QuizPage() {
     );
   }
 
-  const currentO = opcoesByPergunta[currentP.id] || [];
+  const currentO = (currentP?.id && opcoesByPergunta[currentP.id]) || [];
 
   return (
     <AppLayout>

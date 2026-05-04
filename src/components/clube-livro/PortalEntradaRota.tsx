@@ -88,37 +88,37 @@ export function PortalEntradaRota({
       { 
         icon: <BookOpen className="w-12 h-12" />, 
         title: 'Núcleo Vivo', 
-        subtitle: essencia.nucleo_vivo || DEFAULT_SLIDES[0].subtitle 
+        subtitle: essencia?.nucleo_vivo || DEFAULT_SLIDES[0].subtitle 
       },
       { 
         icon: <Eye className="w-12 h-12" />, 
         title: 'Imagem Organizadora', 
-        subtitle: essencia.imagem_organizadora || DEFAULT_SLIDES[1].subtitle 
+        subtitle: essencia?.imagem_organizadora || DEFAULT_SLIDES[1].subtitle 
       },
       { 
         icon: <Flame className="w-12 h-12" />, 
         title: 'Tensão Central', 
-        subtitle: essencia.tensao_central || DEFAULT_SLIDES[2].subtitle 
+        subtitle: essencia?.tensao_central || DEFAULT_SLIDES[2].subtitle 
       },
       { 
         icon: <Target className="w-12 h-12" />, 
         title: 'Habilidade Central', 
-        subtitle: essencia.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle 
+        subtitle: essencia?.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle 
       },
       { 
         icon: <ShieldAlert className="w-12 h-12" />, 
         title: 'Distorção Comum', 
-        subtitle: essencia.distorcao_comum || DEFAULT_SLIDES[4].subtitle 
+        subtitle: essencia?.distorcao_comum || DEFAULT_SLIDES[4].subtitle 
       },
       { 
         icon: <FlaskConical className="w-12 h-12" />, 
         title: 'Exercício Integrativo', 
-        subtitle: essencia.exercicio || DEFAULT_SLIDES[5].subtitle 
+        subtitle: essencia?.exercicio || DEFAULT_SLIDES[5].subtitle 
       },
       { 
         icon: <GraduationCap className="w-12 h-12" />, 
         title: 'Riscos Éticos', 
-        subtitle: essencia.riscos_eticos || DEFAULT_SLIDES[6].subtitle 
+        subtitle: essencia?.riscos_eticos || DEFAULT_SLIDES[6].subtitle 
       },
     ];
   }, [propSlides, essencia]);
@@ -212,11 +212,11 @@ export function PortalEntradaRota({
             transition={{ delay: 0.5, duration: 1, ease: [0.22, 1, 0.36, 1] }}
             className="flex flex-col md:flex-row md:items-end gap-2 md:gap-6"
           >
-            <h1 className="font-display text-5xl md:text-8xl text-white font-black leading-[0.8] tracking-tighter">
+            <h1 className="font-display text-4xl md:text-7xl text-white font-black leading-[0.8] tracking-tighter">
               {portalTitulo ?? 'O Chamado'}
             </h1>
             {portalNumero && (
-              <span className="font-serif italic text-2xl md:text-4xl text-gold/30 mb-1 md:mb-2">
+              <span className="font-serif italic text-xl md:text-3xl text-gold/30 mb-1 md:mb-2">
                 Fase {String(portalNumero).padStart(2, '0')}
               </span>
             )}
@@ -224,8 +224,8 @@ export function PortalEntradaRota({
         </div>
 
         {/* 3D Carousel Stage */}
-        <div className="flex-1 relative perspective-[2500px] flex items-center justify-center">
-          <div className="relative w-full h-full max-h-[600px] flex items-center justify-center">
+        <div className="flex-1 relative perspective-[1500px] flex items-center justify-center">
+          <div className="relative w-full h-full max-h-[450px] flex items-center justify-center">
             <AnimatePresence mode="popLayout">
               {slides.map((slide, i) => {
                 const diff = i - current;
@@ -238,25 +238,25 @@ export function PortalEntradaRota({
                     key={i}
                     drag={isActive ? 'x' : false}
                     dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.15}
+                    dragElastic={0.1}
                     onDragEnd={handleDragEnd}
-                    initial={{ opacity: 0, scale: 0.8, x: diff * 400, rotateY: diff * 60 }}
+                    initial={{ opacity: 0, scale: 0.8, x: diff * 300, rotateY: diff * 45 }}
                     animate={{
-                      x: diff * (window.innerWidth < 768 ? 280 : 420),
-                      z: isActive ? 0 : -absDiff * 400,
-                      rotateY: diff * -45,
-                      scale: isActive ? 1 : 0.8,
-                      opacity: isActive ? 1 : 0.35 - (absDiff * 0.1),
-                      filter: isActive ? 'blur(0px)' : 'blur(4px)',
+                      x: diff * (window.innerWidth < 768 ? 200 : 320),
+                      z: isActive ? 0 : -absDiff * 250,
+                      rotateY: diff * -30,
+                      scale: isActive ? 1 : 0.85,
+                      opacity: isActive ? 1 : 0.4 - (absDiff * 0.1),
+                      filter: isActive ? 'blur(0px)' : 'blur(2px)',
                     }}
                     transition={{
                       type: 'spring',
-                      stiffness: 180,
-                      damping: 25,
-                      mass: 0.8
+                      stiffness: 200,
+                      damping: 30,
+                      mass: 1
                     }}
                     className={cn(
-                      'absolute w-[300px] md:w-[420px] aspect-[10/14] preserve-3d',
+                      'absolute w-[260px] md:w-[340px] aspect-[10/14] preserve-3d',
                       !isActive && 'cursor-pointer pointer-events-none'
                     )}
                     onClick={() => !isActive && goTo(i)}
