@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { DiarioBordoAula } from '@/components/shared/DiarioBordoAula';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { useTravessiaUnlock } from '@/hooks/useTravessiaUnlock';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 // Blocos modulares independentes
 import {
@@ -211,7 +212,7 @@ export default function AulaPage() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-6 pb-28 max-w-4xl">
+      <ResponsiveContainer size="narrow" className="py-6 pb-28">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4 flex-wrap">
           <button onClick={() => navigate('/travessias')} className="hover:text-gold transition-colors">
@@ -283,7 +284,7 @@ export default function AulaPage() {
           isNextLocked={isNextLocked}
           onNavigate={(path) => navigate(path)}
         />
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

@@ -16,6 +16,7 @@ import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
 import { ProximoPasso } from "@/components/dashboard/ProximoPasso";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 export default function DashboardMembro() {
   const navigate = useNavigate();
@@ -57,7 +58,7 @@ export default function DashboardMembro() {
 
   return (
     <AppLayout>
-      <div className="mx-auto w-full max-w-2xl xl:max-w-6xl 2xl:max-w-[1240px] px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8 pb-24">
+      <ResponsiveContainer size="wide" className="py-6 md:py-8 pb-24">
         {/* Banner de boas-vindas (pós-compra) */}
         <AnimatePresence>
           {showBanner && (
@@ -103,7 +104,7 @@ export default function DashboardMembro() {
             <AlertaOracular alertas={bussola.alertas} />
           </div>
         </div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

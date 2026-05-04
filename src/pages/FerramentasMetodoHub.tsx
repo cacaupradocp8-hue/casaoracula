@@ -24,6 +24,7 @@ import {
   Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface FerramentaCard {
   id: string;
@@ -116,7 +117,7 @@ export default function FerramentasMetodoHub() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-5xl">
+      <ResponsiveContainer className="py-8 pb-20">
         {/* Back Button */}
         <Button
           variant="ghost"
@@ -331,7 +332,7 @@ export default function FerramentasMetodoHub() {
             </Card>
           </div>
         </motion.div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

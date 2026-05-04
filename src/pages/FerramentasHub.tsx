@@ -12,6 +12,7 @@ import {
   Stethoscope, Drama, Eclipse, BookOpen, Sparkles, Map,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { canAccessFeature, PortalType } from '@/types/portal';
 
 // ═══════════════════════════════════════════════════════════════
@@ -154,7 +155,7 @@ export default function FerramentasHub() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-6xl">
+      <ResponsiveContainer className="py-8 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
           <Link to="/dashboard-membro" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -281,7 +282,7 @@ export default function FerramentasHub() {
             })}
           </div>
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

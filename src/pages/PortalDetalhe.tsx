@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature, PortalType } from '@/types/portal';
 import { cn } from '@/lib/utils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface Portal {
   id: string;
@@ -177,7 +178,7 @@ export default function PortalDetalhe() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
+      <ResponsiveContainer className="py-8 pb-20">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <button 
@@ -356,7 +357,7 @@ export default function PortalDetalhe() {
             </Link>
           )}
         </div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

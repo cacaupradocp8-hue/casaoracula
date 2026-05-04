@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Loader2, Leaf } from "lucide-react";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 interface JardimEntry {
   id: string;
@@ -153,7 +154,7 @@ export default function JardimHeroina() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="w-full max-w-3xl xl:max-w-4xl mx-auto px-6 sm:px-8 py-12 md:py-16">
+      <ResponsiveContainer className="py-12 md:py-16">
         <header className="mb-12 text-center">
           <Leaf className="h-8 w-8 mx-auto text-primary mb-4 opacity-70" />
           <h1 className="font-serif text-3xl md:text-4xl text-foreground mb-3">
@@ -225,7 +226,7 @@ export default function JardimHeroina() {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="rounded-full px-8"
+              className="rounded-full px-8 min-h-[44px]"
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Guardar no jardim"}
             </Button>
@@ -254,7 +255,7 @@ export default function JardimHeroina() {
             </div>
           </section>
         )}
-      </div>
+      </ResponsiveContainer>
     </div>
   );
 }

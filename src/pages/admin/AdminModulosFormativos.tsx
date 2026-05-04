@@ -34,6 +34,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload, Music, Link } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 // ── Route Options Hook ────────────────────────────────
 
@@ -685,7 +686,7 @@ export default function AdminModulosFormativos() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-5xl">
+    <ResponsiveContainer className="py-8">
       {/* Banner Configuration */}
       <BannerConfigPanel />
 
@@ -900,6 +901,6 @@ export default function AdminModulosFormativos() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </ResponsiveContainer>
   );
 }

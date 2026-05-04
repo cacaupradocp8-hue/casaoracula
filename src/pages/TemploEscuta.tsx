@@ -8,6 +8,7 @@ import { Loader2, Music, Headphones, BookOpen, Heart, Sparkles, Flower2 } from '
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { getPublicAudioUrl } from '@/lib/audioUtils';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface AudioAsset {
   id: string;
@@ -126,7 +127,7 @@ export default function TemploEscuta() {
             <p className="text-sm text-muted-foreground/50">Nenhum áudio disponível no momento.</p>
           </div>
         ) : (
-          <div className="max-w-6xl mx-auto px-4 pb-24 space-y-12">
+          <ResponsiveContainer className="pb-24 space-y-12">
             {/* ══════ CATEGORY FILTERS ══════ */}
             {categorias.length > 1 && (
               <div className="flex flex-wrap gap-2 justify-center">
@@ -256,7 +257,7 @@ export default function TemploEscuta() {
                 ))}
               </div>
             )}
-          </div>
+          </ResponsiveContainer>
         )}
       </div>
     </AppLayout>

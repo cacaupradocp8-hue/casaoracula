@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { canAccessFeature, PortalType } from "@/types/portal";
 import { cn } from "@/lib/utils";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 import * as LucideIcons from "lucide-react";
 import type { Course } from "@/types/course";
 import { useCopy } from "@/hooks/useCopy";
@@ -223,7 +224,7 @@ export default function SalaDetalhe() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20">
+      <ResponsiveContainer className="py-8 pb-20">
         <SectionHeader
           title={sala.nome_exibicao}
           subtitle={sala.texto_entrada}
@@ -453,7 +454,7 @@ export default function SalaDetalhe() {
             className="mt-8"
           />
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
