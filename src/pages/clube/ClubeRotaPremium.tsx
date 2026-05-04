@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Play,
   ArrowRight,
@@ -21,6 +21,7 @@ import {
   ArrowDown,
   Lock,
   Check,
+  FlaskConical,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -29,6 +30,8 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
+import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
+import { useAllBooks } from '@/hooks/useBooks';
 
 /**
  * ClubeRotaPremium — Página de Rota nível Netflix + Apple + Jung
@@ -39,6 +42,7 @@ export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
+  const { data: allBooks = [] } = useAllBooks();
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
@@ -49,6 +53,11 @@ export default function ClubeRotaPremium() {
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
     [pontos, ponto]
   );
+
+  const matchedBook = useMemo(() => {
+    if (!estacaoAtual?.livro_titulo) return null;
+    return allBooks.find(b => b.title.toLowerCase().includes(estacaoAtual.livro_titulo.toLowerCase()));
+  }, [allBooks, estacaoAtual?.livro_titulo]);
 
   const [pergunta, setPergunta] = useState('');
 
@@ -155,13 +164,32 @@ export default function ClubeRotaPremium() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 1 }}
-              className="flex items-center justify-center gap-3"
+              className="flex flex-col items-center justify-center gap-4"
             >
-              <span className="h-px w-10 bg-gold/40" />
-              <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70">
-                {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-              </span>
-              <span className="h-px w-10 bg-gold/40" />
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-gold/40" />
+                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70">
+                  {estacaoAtual?.livro_titulo || 'Estação Oracular'}
+                </span>
+                <span className="h-px w-10 bg-gold/40" />
+              </div>
+
+              {matchedBook && (
+                <Laboratorio8020Modal
+                  bookId={matchedBook.id}
+                  bookTitle={matchedBook.title}
+                  trigger={
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-widest hover:bg-gold/20 transition-all shadow-[0_0_20px_rgba(234,179,8,0.1)]"
+                    >
+                      <FlaskConical className="w-3 h-3" />
+                      Laboratório 80/20
+                    </motion.button>
+                  }
+                />
+              )}
             </motion.div>
 
             <h1
@@ -451,6 +479,59 @@ export default function ClubeRotaPremium() {
                   </div>
                 </CardContent>
               </Card>
+            </Section>
+          )}
+
+          {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
+          {matchedBook && (
+            <Section icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
+              <Laboratorio8020Modal
+                bookId={matchedBook.id}
+                bookTitle={matchedBook.title}
+                trigger={
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="cursor-pointer group relative overflow-hidden rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-8 md:p-14 shadow-2xl transition-all duration-500"
+                  >
+                    <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
+                      <FlaskConical className="w-60 h-60 text-gold" />
+                    </div>
+                    <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+                    
+                    <div className="relative z-10 space-y-8 max-w-3xl">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="outline" className="bg-gold/10 text-gold border-gold/30 uppercase tracking-[0.2em] text-[10px] py-1 px-4 rounded-full font-bold">
+                          Módulo Oficial
+                        </Badge>
+                        <div className="flex items-center gap-1.5 text-white/40">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Caminho Crítico</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
+                          Acesse o núcleo simbólico e clínico desta obra.
+                        </h3>
+                        <p className="text-white/50 text-lg md:text-xl font-serif italic leading-relaxed">
+                          Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
+                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-10 h-14 font-bold text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
+                          Abrir Laboratório 80/20
+                          <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                        <div className="flex items-center gap-2 text-white/30 text-xs font-medium uppercase tracking-widest">
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          Disponível nesta rota
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                }
+              />
             </Section>
           )}
 
