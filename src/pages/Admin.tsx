@@ -102,6 +102,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-chat': AdminClubeChat,
   'clube-portais': AdminPortalCMS,
   'clube-premium-editor': AdminPremiumEditor,
+  'clube-laboratorio-8020': AdminLaboratorio8020,
   
   // FORMAÇÃO
   'cursos': AdminCursosTab,
