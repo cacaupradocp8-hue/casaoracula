@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { useCOTravessias, useProgressoTravessia, type COTravessia } from '@/hooks/useCOTravessias';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 const nivelConfig = {
   iniciante: { label: 'Iniciante', icon: Compass, color: 'text-emerald-400' },
@@ -69,7 +70,7 @@ export default function COTravessiasList() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-4xl mx-auto px-4 py-10">
+      <ResponsiveContainer size="default" className="py-10">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-xs text-muted-foreground/60 mb-8">
           <Link to="/" className="hover:text-foreground transition-colors">Início</Link>
@@ -100,7 +101,7 @@ export default function COTravessiasList() {
             ))}
           </div>
         )}
-      </div>
+      </ResponsiveContainer>
     </div>
   );
 }
