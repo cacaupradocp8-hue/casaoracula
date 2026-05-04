@@ -227,7 +227,7 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 mx-auto w-full max-w-3xl xl:max-w-4xl 2xl:max-w-5xl px-4 sm:px-6 lg:px-8 xl:px-10 space-y-24 md:space-y-32 pb-32 pt-12 md:pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-5xl xl:max-w-6xl 2xl:max-w-7xl px-4 sm:px-6 lg:px-8 xl:px-10 space-y-24 md:space-y-32 pb-32 pt-12 md:pt-20">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="Cartografia da alma" titulo="Mapa vivo">
