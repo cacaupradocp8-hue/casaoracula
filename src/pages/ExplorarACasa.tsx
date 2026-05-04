@@ -40,8 +40,8 @@ export default function ExplorarACasa() {
     <AppLayout>
       <div className="min-h-screen">
         {/* HERO */}
-        <section className="relative py-20 md:py-32">
-          <ResponsiveContainer size="narrow" className="text-center">
+        <section className="relative py-20 md:py-32 xl:py-48 overflow-hidden">
+          <ResponsiveContainer size="narrow" className="text-center relative z-10">
             <motion.h1 {...fadeIn(0)} className="font-display text-3xl md:text-5xl font-light text-foreground leading-tight mb-6">
               Uma plataforma para terapeutas conduzirem transformação com método simbólico
             </motion.h1>
@@ -85,7 +85,7 @@ export default function ExplorarACasa() {
             <motion.h2 {...fadeIn()} className="font-display text-2xl md:text-3xl text-foreground mb-10 text-center">
               O que você encontra
             </motion.h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div className="grid-adaptive">
               {O_QUE_ENCONTRA.map((item, i) => (
                 <motion.div key={i} {...fadeIn(i * 0.1)} className="p-6 rounded-2xl bg-card/60 border border-border/20 space-y-3">
                   <item.icon className="w-6 h-6 text-primary" />

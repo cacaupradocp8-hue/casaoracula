@@ -248,12 +248,12 @@ export default function Vitrine() {
     <AppLayout>
       <div className="min-h-screen">
         {/* Header */}
-        <section className="py-12 md:py-20">
+        <section className="py-16 md:py-24 xl:py-32">
           <ResponsiveContainer size="default" className="text-center">
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="font-display text-3xl md:text-4xl font-light text-foreground mb-4"
+              className="mb-4"
             >
               Vitrine da Casa Orácula
             </motion.h1>
@@ -261,7 +261,7 @@ export default function Vitrine() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="text-muted-foreground text-base max-w-lg mx-auto"
+              className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto"
             >
               Todo o ecossistema em um só lugar. Explore, descubra e escolha seu caminho.
             </motion.p>
@@ -281,7 +281,7 @@ export default function Vitrine() {
 
         {/* Grid */}
         <section className="pb-24">
-          <ResponsiveContainer size="wide" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
+          <ResponsiveContainer size="wide" className="grid-adaptive">
             {VITRINE_ITEMS.map((item) => {
               const canAccess = checkAccess(item.minPortal);
               return (
