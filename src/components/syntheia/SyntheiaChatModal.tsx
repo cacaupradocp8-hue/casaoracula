@@ -116,11 +116,18 @@ import { SyntheiaChatMode, RoutingContext } from '@/services/syntheiaChat';
          {/* Messages area */}
          <ScrollArea className="flex-1 p-4" ref={scrollRef}>
            <div className="space-y-4">
-              {messages.filter(m => {
-                // Filtro de segurança para não expor prompts
-                const promptKeywords = ['VOZ ATIVA', '## Personalidade', '## Instruções', 'IDENTIDADE DO SISTEMA'];
-                return !(m.role === 'assistant' && promptKeywords.some(k => m.content.includes(k)) && m.content.length > 300);
-              }).map((message) => (
+               {messages.filter(m => {
+                 // Filtro de segurança robusto para não expor prompts ou instruções do sistema
+                 const promptKeywords = [
+                   'VOZ ATIVA', '## Personalidade', '## Instruções', 'IDENTIDADE DO SISTEMA', 
+                   'SISTEMA:', 'PROMPT:', 'COMMAND:', 'INSTRUÇÕES:', 'REGULAMENTAÇÃO:',
+                   'configuração de voz', 'instruções internas', 'prompt de sistema'
+                 ];
+                 const contentUpper = m.content.toUpperCase();
+                 const containsKeywords = promptKeywords.some(k => contentUpper.includes(k));
+                 // Se for do assistente e contiver keywords suspeitas em texto longo, filtra
+                 return !(m.role === 'assistant' && containsKeywords && m.content.length > 200);
+               }).map((message) => (
                 <div
                   key={message.id}
                   className={cn(
