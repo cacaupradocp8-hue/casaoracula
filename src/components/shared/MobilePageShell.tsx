@@ -2,6 +2,7 @@ import { ReactNode, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 interface CollapsibleBlockProps {
   title: string;
@@ -116,59 +117,63 @@ export function MobilePageShell({
 }: MobilePageShellProps) {
   return (
     <div className={cn('flex flex-col min-h-[calc(100vh-4rem)]', className)}>
-      {/* Header */}
-      <div className="px-4 pt-6 pb-4 space-y-3">
-        {badge && (
-          <p className="text-xs uppercase tracking-widest text-gold font-medium">{badge}</p>
-        )}
-        <h1 className="font-display text-2xl md:text-3xl text-foreground leading-tight">{title}</h1>
-        {subtitle && (
-          <p className="text-sm text-muted-foreground leading-relaxed">{subtitle}</p>
-        )}
-        {primaryAction && (
-          <Button
-            variant="gold"
-            size="sm"
-            onClick={primaryAction.onClick}
-            className="gap-2 mt-1"
-          >
-            {primaryAction.icon}
-            {primaryAction.label}
-          </Button>
-        )}
-        {headerExtra}
-      </div>
-
-      {/* Collapsible Blocks */}
-      {collapsibles && collapsibles.length > 0 && (
-        <div className="px-4 pb-4 space-y-2">
-          {collapsibles.map((block, i) => (
-            <CollapsibleBlock key={i} {...block} />
-          ))}
+      <ResponsiveContainer>
+        {/* Header */}
+        <div className="pt-6 pb-4 space-y-3">
+          {badge && (
+            <p className="text-xs uppercase tracking-widest text-gold font-medium">{badge}</p>
+          )}
+          <h1 className="font-display text-2xl md:text-3xl lg:text-4xl text-foreground leading-tight">{title}</h1>
+          {subtitle && (
+            <p className="text-sm md:text-base text-muted-foreground leading-relaxed max-w-2xl">{subtitle}</p>
+          )}
+          {primaryAction && (
+            <Button
+              variant="gold"
+              size="sm"
+              onClick={primaryAction.onClick}
+              className="gap-2 mt-1 min-h-[40px]"
+            >
+              {primaryAction.icon}
+              {primaryAction.label}
+            </Button>
+          )}
+          {headerExtra}
         </div>
-      )}
 
-      {/* Tabs or Main Content */}
-      <div className="flex-1 px-4 pb-4">
-        {tabs && tabs.length > 0 ? (
-          <MobileTabs tabs={tabs} defaultTab={defaultTab} />
-        ) : (
-          children
+        {/* Collapsible Blocks */}
+        {collapsibles && collapsibles.length > 0 && (
+          <div className="pb-4 space-y-2 max-w-2xl">
+            {collapsibles.map((block, i) => (
+              <CollapsibleBlock key={i} {...block} />
+            ))}
+          </div>
         )}
-      </div>
+
+        {/* Tabs or Main Content */}
+        <div className="flex-1 pb-4">
+          {tabs && tabs.length > 0 ? (
+            <MobileTabs tabs={tabs} defaultTab={defaultTab} />
+          ) : (
+            children
+          )}
+        </div>
+      </ResponsiveContainer>
 
       {/* Fixed Bottom Action */}
       {fixedAction && (
         <div className="sticky bottom-0 left-0 right-0 z-20 bg-background/95 backdrop-blur-sm border-t border-border/30 px-4 py-3 safe-area-bottom">
-          <Button
-            variant={fixedAction.variant || 'gold'}
-            className="w-full gap-2"
-            onClick={fixedAction.onClick}
-            disabled={fixedAction.disabled}
-          >
-            {fixedAction.icon}
-            {fixedAction.label}
-          </Button>
+          <ResponsiveContainer className="px-0">
+            <Button
+              variant={fixedAction.variant || 'gold'}
+              className="w-full gap-2 min-h-[44px]"
+              onClick={fixedAction.onClick}
+              disabled={fixedAction.disabled}
+            >
+              {fixedAction.icon}
+              {fixedAction.label}
+            </Button>
+          </ResponsiveContainer>
         </div>
       )}
     </div>

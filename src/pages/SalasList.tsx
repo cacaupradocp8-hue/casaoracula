@@ -12,6 +12,7 @@ import {
   Sparkles, Home, ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 // Types and interfaces
 type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
@@ -151,7 +152,7 @@ export default function SalasList() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-12 pb-24 max-w-4xl">
+      <ResponsiveContainer size="narrow" className="py-12 pb-24">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-10">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -369,7 +370,7 @@ export default function SalasList() {
             </div>
           </DialogContent>
         </Dialog>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

@@ -10,6 +10,7 @@ import { PlanosExplicacao } from '@/components/planos/PlanosExplicacao';
 import { PlanosClubeCards } from '@/components/planos/PlanosClubeCards';
 import { PlanosFormacao } from '@/components/planos/PlanosFormacao';
 import { PlanosFooter } from '@/components/planos/PlanosFooter';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 export default function Planos() {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ export default function Planos() {
 
         {/* 4-7. Clube — Planos + CTA principal */}
         <section className="py-20 md:py-28">
-          <div className="container mx-auto px-6">
+          <ResponsiveContainer className="px-6">
             {isLoading ? (
               <div className="flex items-center justify-center py-16">
                 <Loader2 className="w-8 h-8 animate-spin text-gold" />
@@ -71,7 +72,7 @@ export default function Planos() {
             ) : (
               <PlanosClubeCards ofertas={ofertas} onSelect={handleSelectOferta} />
             )}
-          </div>
+          </ResponsiveContainer>
         </section>
 
         {/* 8. Formação — upgrade estratégico */}

@@ -31,6 +31,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { CourseLesson } from '@/types/course';
 import { ModularPageRenderer } from '@/components/modular/ModularPageRenderer';
 import { motion } from 'framer-motion';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 export default function CursoDetalhe() {
   const { id } = useParams<{ id: string }>();
@@ -99,7 +100,7 @@ export default function CursoDetalhe() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-6xl">
+      <ResponsiveContainer size="wide" className="py-8 pb-20">
         {/* Back Button */}
         <Link 
           to="/cursos" 
@@ -301,7 +302,7 @@ export default function CursoDetalhe() {
             <ModularPageRenderer contextType="course" contextId={course.id} fallback={null} blockSpacing="lg" className="mt-8" />
           )}
         </section>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
