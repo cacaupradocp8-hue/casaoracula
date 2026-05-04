@@ -136,8 +136,8 @@ export default function ClubeRotaPremium() {
           <PortalEntradaRota
             slug={slug!}
             bookId={matchedBook?.id}
-            portalNumero={ponto.ordem}
-            portalTitulo={ponto.nome}
+            portalNumero={ponto?.ordem}
+            portalTitulo={ponto?.nome}
             storageKey={portalKey}
             onComplete={() => setShowPortal(false)}
           />
