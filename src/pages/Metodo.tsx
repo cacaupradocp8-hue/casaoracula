@@ -14,6 +14,7 @@ import { MetodoFooter } from '@/components/metodo/MetodoFooter';
 import { MetodoOraculaSection } from '@/components/sales/metodologia/MetodoOraculaSection';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -48,7 +49,7 @@ export default function Metodo() {
         {/* 1. Hero — único lugar com breathing orb */}
         <MetodoHero />
 
-        <div className="mx-auto w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10">
+        <ResponsiveContainer size="wide">
           <RitualDivider />
 
           {/* 2. O que é + Para quem é */}
@@ -85,12 +86,12 @@ export default function Metodo() {
               </CardContent>
             </Card>
           </motion.section>
-        </div>
+        </ResponsiveContainer>
 
         {/* 4. Método ORÁCULA (Mapa, Espelho, Travessia) */}
         <MetodoOraculaSection />
 
-        <div className="mx-auto w-full max-w-4xl xl:max-w-5xl 2xl:max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-10">
+        <ResponsiveContainer size="wide">
           <RitualDivider />
 
           {/* 5. Pilares */}
@@ -130,7 +131,7 @@ export default function Metodo() {
 
           {/* 12. CTA final */}
           <MetodoCTA />
-        </div>
+        </ResponsiveContainer>
 
         {/* 13. Footer */}
         <MetodoFooter />
