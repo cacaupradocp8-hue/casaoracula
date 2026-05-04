@@ -35,7 +35,7 @@ export function RotaAtualHero({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="relative overflow-hidden rounded-[28px] border border-gold/15 bg-midnight"
+      className="relative overflow-hidden rounded-[28px] border border-gold/30 bg-midnight shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]"
     >
       {/* Background atmospheric */}
       <div className="absolute inset-0 pointer-events-none">
@@ -43,10 +43,10 @@ export function RotaAtualHero({
           <img
             src={estacao.banner_url || estacao.livro_imagem_banner_url || ''}
             alt=""
-            className="w-full h-full object-cover opacity-30 scale-110"
+            className="w-full h-full object-cover opacity-20 scale-110"
           />
         ) : null}
-        <div className="absolute inset-0 bg-gradient-to-b from-midnight/50 via-midnight/80 to-midnight" />
+        <div className="absolute inset-0 bg-gradient-to-b from-midnight/70 via-midnight/90 to-midnight" />
         <div className="absolute -top-40 -right-20 w-[420px] h-[420px] bg-gold/[0.08] rounded-full blur-[120px]" />
         <div className="absolute -bottom-40 -left-20 w-[360px] h-[360px] bg-[hsl(206_70%_30%/0.25)] rounded-full blur-[120px]" />
       </div>
