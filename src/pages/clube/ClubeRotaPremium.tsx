@@ -482,6 +482,59 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
+          {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
+          {matchedBook && (
+            <Section icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
+              <Laboratorio8020Modal
+                bookId={matchedBook.id}
+                bookTitle={matchedBook.title}
+                trigger={
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="cursor-pointer group relative overflow-hidden rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-8 md:p-14 shadow-2xl transition-all duration-500"
+                  >
+                    <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
+                      <FlaskConical className="w-60 h-60 text-gold" />
+                    </div>
+                    <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+                    
+                    <div className="relative z-10 space-y-8 max-w-3xl">
+                      <div className="flex items-center gap-3">
+                        <Badge variant="outline" className="bg-gold/10 text-gold border-gold/30 uppercase tracking-[0.2em] text-[10px] py-1 px-4 rounded-full font-bold">
+                          Módulo Oficial
+                        </Badge>
+                        <div className="flex items-center gap-1.5 text-white/40">
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Caminho Crítico</span>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h3 className="text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
+                          Acesse o núcleo simbólico e clínico desta obra.
+                        </h3>
+                        <p className="text-white/50 text-lg md:text-xl font-serif italic leading-relaxed">
+                          Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
+                        </p>
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
+                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-10 h-14 font-bold text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
+                          Abrir Laboratório 80/20
+                          <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                        <div className="flex items-center gap-2 text-white/30 text-xs font-medium uppercase tracking-widest">
+                          <Check className="w-3.5 h-3.5 text-emerald-500" />
+                          Disponível nesta rota
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                }
+              />
+            </Section>
+          )}
+
           {/* ═══════════ 5. TREINAMENTO ═══════════ */}
           {simulacaoTexto && (
             <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
