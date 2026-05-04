@@ -243,7 +243,7 @@ export default function QuizPage() {
 
              <QuizResultView 
                primaryResult={activeResult} 
-               secondaryResult={showResult ? secondaryResult : (resultados.find(r => r.id !== activeResult.id) || null)}
+               secondaryResult={showResult ? secondaryResult : (resultados.find(r => r.id !== activeResult?.id) || null)}
                allResults={resultados}
                quizTitle={quiz?.titulo || ''}
              />
