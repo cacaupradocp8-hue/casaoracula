@@ -86,6 +86,7 @@ const PREMIUM_CARDS: HubCard[] = [
     tab: 'clube-laboratorio-8020',
     color: 'text-primary',
     bg: 'bg-primary/10',
+    statType: 'laboratorio',
   },
 ];
 
