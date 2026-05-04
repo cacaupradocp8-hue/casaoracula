@@ -5,6 +5,7 @@
 
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useClubeLivro, useRitualAceite } from '@/hooks/useClubeLivro';
 import { useAuth } from '@/contexts/AuthContext';
@@ -27,14 +28,14 @@ export default function ClubeLivroApresentacao() {
   if (!hasAccess) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20">
           <SectionHeader
             title="Círculo de Leitura Oracular"
             subtitle="Este espaço é exclusivo para alunas e assinantes."
             icon={<BookOpen className="w-5 h-5" />}
           />
           <LockedForVisitor />
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
@@ -50,7 +51,7 @@ export default function ClubeLivroApresentacao() {
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         <SectionHeader
           title="Círculo de Leitura Oracular"
           subtitle="Território de leitura viva e atravessamento simbólico."
@@ -115,7 +116,7 @@ export default function ClubeLivroApresentacao() {
             )}
           </div>
         )}
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }

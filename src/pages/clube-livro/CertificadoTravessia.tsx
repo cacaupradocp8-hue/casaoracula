@@ -6,6 +6,7 @@
 import { useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useClubeCicloDetalhe } from '@/hooks/useClubeLivro';
@@ -52,13 +53,13 @@ export default function CertificadoTravessia() {
   if (!ciclo) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl text-center">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20 text-center">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-display mb-2">Livro não encontrado</h2>
           <Button variant="outline" onClick={() => navigate('/clube-livro')}>
             Voltar ao Círculo
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
@@ -66,7 +67,7 @@ export default function CertificadoTravessia() {
   if (!travessiaCompleta) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl text-center">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20 text-center">
           <Award className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-display mb-2">Travessia ainda em curso</h2>
           <p className="text-sm text-muted-foreground mb-4 max-w-md mx-auto">
@@ -76,7 +77,7 @@ export default function CertificadoTravessia() {
           <Button variant="outline" onClick={() => navigate(`/clube-livro/${cicloId}`)}>
             Voltar ao Livro
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }

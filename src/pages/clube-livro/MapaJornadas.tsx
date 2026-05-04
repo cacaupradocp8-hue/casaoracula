@@ -5,6 +5,7 @@
 
 import { Link, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { SectionHeader } from '@/components/shared/SectionHeader';
 import { useClubeLivro } from '@/hooks/useClubeLivro';
 import { Card, CardContent } from '@/components/ui/card';

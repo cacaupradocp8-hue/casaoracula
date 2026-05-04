@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -77,20 +78,20 @@ export default function ClubeLivroFase() {
   if (!ciclo || !faseAtual) {
     return (
       <AppLayout>
-        <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl text-center">
+        <ResponsiveContainer size="narrow" className="py-8 pb-20 text-center">
           <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="text-xl font-display mb-2">Fase não encontrada</h2>
           <Button variant="outline" onClick={() => navigate(`/clube-livro/${cicloId}`)}>
             Voltar ao Livro
           </Button>
-        </div>
+        </ResponsiveContainer>
       </AppLayout>
     );
   }
 
   return (
     <AppLayout>
-      <div className="container mx-auto px-4 py-8 pb-20 max-w-3xl">
+      <ResponsiveContainer size="narrow" className="py-8 pb-20">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-muted-foreground mb-6 flex-wrap">
           <Link to="/jornada" className="hover:text-foreground transition-colors flex items-center gap-1">
@@ -217,7 +218,7 @@ export default function ClubeLivroFase() {
             </Button>
           )}
         </div>
-      </div>
+      </ResponsiveContainer>
     </AppLayout>
   );
 }
