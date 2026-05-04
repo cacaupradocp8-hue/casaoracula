@@ -164,13 +164,32 @@ export default function ClubeRotaPremium() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 1 }}
-              className="flex items-center justify-center gap-3"
+              className="flex flex-col items-center justify-center gap-4"
             >
-              <span className="h-px w-10 bg-gold/40" />
-              <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70">
-                {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-              </span>
-              <span className="h-px w-10 bg-gold/40" />
+              <div className="flex items-center gap-3">
+                <span className="h-px w-10 bg-gold/40" />
+                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70">
+                  {estacaoAtual?.livro_titulo || 'Estação Oracular'}
+                </span>
+                <span className="h-px w-10 bg-gold/40" />
+              </div>
+
+              {matchedBook && (
+                <Laboratorio8020Modal
+                  bookId={matchedBook.id}
+                  bookTitle={matchedBook.title}
+                  trigger={
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-gold/10 border border-gold/30 text-gold text-[10px] font-bold uppercase tracking-widest hover:bg-gold/20 transition-all shadow-[0_0_20px_rgba(234,179,8,0.1)]"
+                    >
+                      <FlaskConical className="w-3 h-3" />
+                      Laboratório 80/20
+                    </motion.button>
+                  }
+                />
+              )}
             </motion.div>
 
             <h1
