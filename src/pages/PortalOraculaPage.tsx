@@ -67,8 +67,8 @@ export default function PortalOraculaPage() {
       <AppLayout>
         <div className="container mx-auto px-4 py-8 flex items-center justify-center min-h-[50vh]">
           <div className="animate-pulse text-gold/60">Carregando...</div>
-      </ResponsiveContainer>
-    </AppLayout>
+        </div>
+      </AppLayout>
     );
   }
 

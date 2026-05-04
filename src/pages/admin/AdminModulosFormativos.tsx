@@ -29,12 +29,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Slider } from "@/components/ui/slider";
 import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Upload, Music, Link } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 // ── Route Options Hook ────────────────────────────────
 
@@ -901,6 +901,7 @@ export default function AdminModulosFormativos() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </ResponsiveContainer>
     </div>
   );
 }

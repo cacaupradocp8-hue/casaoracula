@@ -453,7 +453,7 @@ export default function AdminAlunaAcompanhamento() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </ResponsiveContainer>
   );
 }
 
@@ -465,6 +465,7 @@ function MetricCard({ icon: Icon, label, value }: { icon: React.ComponentType<{ 
         <span className="text-xs text-muted-foreground">{label}</span>
       </div>
       <p className="text-xl font-bold">{value}</p>
-    </ResponsiveContainer>
+    </div>
+  );
   );
 }
