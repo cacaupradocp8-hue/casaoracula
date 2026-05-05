@@ -120,7 +120,7 @@ export default function ClubeChatLivro() {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
-        content: `Olá! Estou aqui para te ajudar a transformar a leitura de **${book.title}** em prática terapêutica.\n\nCompartilhe um trecho, uma dúvida ou um campo que quer explorar.`,
+        content: `Olá! Estou aqui para te ajudar a transformar a leitura de **${book.titulo}** em prática terapêutica.\n\nCompartilhe um trecho, uma dúvida ou um campo que quer explorar.`,
       }]);
     }
   }, [book]);
