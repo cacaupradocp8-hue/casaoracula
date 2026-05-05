@@ -164,7 +164,7 @@ export default function ClubeChatLivro() {
 
     try {
       const bookContext = book
-        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Descrição: ${book.description || ''}.`
+        ? `Livro atual: ${book.titulo} de ${book.autor_livro || 'autor desconhecido'}. Subtítulo: ${book.subtitulo || ''}.`
         : '';
       
       const cycleContext = cycle 
