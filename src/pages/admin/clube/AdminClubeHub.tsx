@@ -117,7 +117,7 @@ export default function AdminClubeHub() {
   const queryClient = useQueryClient();
   const togglePublishMutation = useMutation({
     mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
-      const { error } = await supabase.from('clube_v3_stations').update({ status: published ? 'active' : 'draft' }).eq('id', id);
+      const { error } = await supabase.from('clube_v3_stations').update({ status: published ? 'published' : 'draft' }).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -130,13 +130,12 @@ export default function AdminClubeHub() {
   const getStatText = (type?: string) => {
     if (!stats) return '...';
     switch (type) {
-      case 'ciclos': return `${stats.ciclos} Ativos`;
+      case 'ciclos': return `${stats.ciclos} Estações`;
       case 'portais': return `${stats.portais} Mapeados`;
-      case 'acervo': return `${stats.books} Obras`;
-      case 'chat': return `${stats.chat} Prompts`;
+      case 'acervo': return `${stats.books} Rotas`;
+      case 'chat': return `${stats.chat} Conteúdos`;
       case 'treinamento': return `Operacional`;
-      case 'laboratorio': return `${stats.essencias} Essências`;
-      case 'carrosseis': return `${stats.carrosseis} Itens`;
+      case 'carrosseis': return `${stats.acervo} Áudios`;
       default: return '';
     }
   };
