@@ -507,7 +507,7 @@ export default function ClubeRotaPremium() {
                 trigger={
                   <motion.div
                     whileHover={{ scale: 1.01 }}
-                    className="cursor-pointer group relative overflow-hidden rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-8 md:p-14 shadow-2xl transition-all duration-500"
+                    className="cursor-pointer group relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-6 sm:p-8 md:p-14 shadow-2xl transition-all duration-500 min-h-[44px]"
                   >
                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
                       <FlaskConical className="w-60 h-60 text-gold" />
