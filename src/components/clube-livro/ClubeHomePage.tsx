@@ -115,23 +115,3 @@ export function ClubeHomePage() {
   );
 }
 
-                  ))}
-                  
-                  {estacoesPrevias.length > 3 && (
-                    <Button 
-                      variant="ghost" 
-                      className="w-full text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-gold"
-                      onClick={() => navigate('/clube/rotas')}
-                    >
-                      Ver Histórico Completo
-                    </Button>
-                  )}
-                </div>
-              </motion.div>
-            )}
-          </aside>
-        </div>
-      </ResponsiveContainer>
-    </AppLayout>
-  );
-}
