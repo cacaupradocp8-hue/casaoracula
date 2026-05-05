@@ -1,22 +1,15 @@
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BookOpen, Loader2, MapPin, Calendar, ExternalLink, ListOrdered, Sparkles, FlaskConical } from 'lucide-react';
+import { ArrowRight, Loader2, Calendar, ExternalLink, Sparkles } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { RotaEstrada } from '@/components/clube-livro/RotaEstrada';
 import { RotaEntrada } from '@/components/clube-livro/RotaEntrada';
-import { RotaImersao } from '@/components/clube-livro/RotaImersao';
-import { RotaAplicacao } from '@/components/clube-livro/RotaAplicacao';
-import { RotaLaboratorio } from '@/components/clube-livro/RotaLaboratorio';
-import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
-import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
-import { Laboratorio8020Card } from '@/components/clube/Laboratorio8020Card';
 import { useAllBooks } from '@/hooks/useBooks';
 import { RotaAtualHero } from '@/components/clube-livro/RotaAtualHero';
 import { InsightPortalBlock } from '@/components/clube-livro/blocks';
@@ -24,7 +17,8 @@ import { ClubeStationAudios } from './ClubeStationAudios';
 
 /**
  * ClubeHomePage — Rota Oracular
- * Experiência de navegação viva em formato de estrada.
+ * Experiência de navegação focada na Estrada e no Progresso Visual.
+ * Limpa e livre de redundâncias.
  */
 export function ClubeHomePage() {
   const { user } = useAuth();
@@ -66,8 +60,6 @@ export function ClubeHomePage() {
     );
   }
 
-  const matchedBook = allBooks.find(b => b.title === estacaoAtual?.livro_titulo);
-
   return (
     <AppLayout>
       <ResponsiveContainer size="full" className="py-8 md:py-12 px-4 sm:px-6 lg:px-10 xl:px-16 2xl:px-24 max-w-[1680px]">
@@ -79,10 +71,10 @@ export function ClubeHomePage() {
               ============================================ */}
           <div className="lg:col-span-8 space-y-12">
             
-            {/* INSIGHT DO PORTAL — Inspiracional (Mantido como respiro) */}
+            {/* INSIGHT DO PORTAL — Inspiracional */}
             <InsightPortalBlock />
 
-            {/* HERO PREMIUM — ROTA ATUAL */}
+            {/* HERO PREMIUM — ROTA ATUAL (Inclui Progresso Visual) */}
             <RotaAtualHero
               estacao={estacaoAtual}
               pontos={pontos}
@@ -102,7 +94,7 @@ export function ClubeHomePage() {
               </motion.p>
             )}
 
-            {/* CAMADA 1: INICIAÇÃO (Destaque se no início) */}
+            {/* CAMADA 1: INICIAÇÃO (Manifesto de Abertura) */}
             {(!pontoAtual || pontoAtual.ordem <= 10) && (
               <div className="space-y-8">
                 {estacaoAtual?.livro_titulo?.includes("Mulheres que correm com os lobos") && (
@@ -158,7 +150,7 @@ export function ClubeHomePage() {
                   />
                 </div>
 
-                {/* Passo Ativo em Destaque (Estilo Netflix) */}
+                {/* Próximo Passo em Destaque */}
                 {pontoAtual && (
                   <motion.div
                     initial={{ opacity: 0, scale: 0.98 }}
@@ -205,64 +197,16 @@ export function ClubeHomePage() {
               </div>
             )}
 
-            {/* LABORATÓRIO 80/20 — MÓDULO OFICIAL (PROEMINENTE) */}
-            {matchedBook && (
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="flex items-center gap-3 mb-6 px-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-                  <h3 className="text-[10px] font-display uppercase tracking-[0.4em] text-gold/60">Módulo Oficial do Clube</h3>
-                </div>
-                <Laboratorio8020Card
-                  bookId={matchedBook.id}
-                  bookTitle={matchedBook.title}
-                />
-              </motion.div>
-            )}
-
-            {/* RECURSOS ADICIONAIS (Mergulho Semanal) */}
-            <div className="pt-8">
-              <RotaImersao estacaoId={estacaoAtual?.id} />
-            </div>
-
-            {/* APLICAÇÕES (Ocultas se houver pontos na rota para focar no fluxo sequencial) */}
-            {(!pontos || pontos.length === 0) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <RotaAplicacao />
-                <RotaLaboratorio
-                  estacaoId={estacaoAtual?.id}
-                  livroTitulo={estacaoAtual?.livro_titulo}
-                />
-              </div>
-            )}
+            {/* ÁUDIOS DA ESTAÇÃO — Consolidado e direto */}
+            <ClubeStationAudios />
           </div>
 
           {/* ============================================
               COLUNA LATERAL (DIREITA) — 4/12
-              Meta-info, Cidadela, Encontros, Histórico
+              Encontros e Histórico de Estações
               ============================================ */}
           <aside className="lg:col-span-4 space-y-10">
             
-            {/* MINI CIDADELA — O Mapa da Alma */}
-            {user?.id && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="space-y-4"
-              >
-                <h4 className="text-[10px] uppercase tracking-[0.3em] text-gold/60 font-bold px-1">
-                  Sua Cartografia
-                </h4>
-                <div className="rounded-[2rem] border border-border/20 bg-card/40 p-1 backdrop-blur-sm overflow-hidden">
-                  <MiniMandalaCidadela clienteId={user.id} />
-                </div>
-              </motion.div>
-            )}
-
             {/* ENCONTRO AO VIVO */}
             {encontro && (
               <motion.div
@@ -319,7 +263,6 @@ export function ClubeHomePage() {
               </motion.div>
             )}
 
-
             {/* ESTAÇÕES ANTERIORES (PORTAIS) */}
             {estacoesPrevias.length > 0 && (
               <motion.div
@@ -332,7 +275,7 @@ export function ClubeHomePage() {
                   Portais Atravessados
                 </h4>
                 <div className="space-y-2">
-                  {estacoesPrevias.slice(0, 3).map(est => (
+                  {estacoesPrevias.slice(0, 5).map(est => (
                     <button
                       key={est.id}
                       onClick={() => navigate(`/clube-livro/porta/${est.id}`)}
@@ -347,16 +290,6 @@ export function ClubeHomePage() {
                       <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40 group-hover:text-gold transition-colors shrink-0" />
                     </button>
                   ))}
-                  
-                  {estacoesPrevias.length > 3 && (
-                    <Button 
-                      variant="ghost" 
-                      className="w-full text-[10px] uppercase tracking-[0.2em] text-muted-foreground/60 hover:text-gold"
-                      onClick={() => navigate('/clube/rotas')}
-                    >
-                      Ver Histórico Completo
-                    </Button>
-                  )}
                 </div>
               </motion.div>
             )}
