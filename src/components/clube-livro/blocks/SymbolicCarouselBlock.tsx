@@ -37,7 +37,7 @@ export function SymbolicCarouselBlock({
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<any>(null);
   
   const { data: dbSlides, isLoading } = useClubeCarrosselSlides({ 
     rota_slug: rotaSlug, 
@@ -49,7 +49,7 @@ export function SymbolicCarouselBlock({
         titulo: s.titulo || undefined,
         frase_simbolica: s.texto || undefined,
         image_url: s.icone || undefined,
-        legenda: s.legenda || undefined
+        legenda: s.subtitulo || undefined
       }))
     : initialSlides;
 
