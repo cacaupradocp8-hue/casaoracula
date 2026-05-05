@@ -498,7 +498,7 @@ function AppRoutes() {
       <Route path="/jardim-da-psique/:id" element={<ProtectedRoute><JardimPsiqueDetalhe /></ProtectedRoute>} />
 
       {/* Canteiro */}
-      <Route path="/canteiro" element={<ProtectedRoute><Canteiro /></ProtectedRoute>} />
+      
       <Route path="/minha-biblioteca" element={<ProtectedRoute><Navigate to="/biblioteca?aba=pessoal" replace /></ProtectedRoute>} />
 
       {/* Oráculos */}
