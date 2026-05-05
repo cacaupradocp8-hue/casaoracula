@@ -526,16 +526,16 @@ export default function ClubeRotaPremium() {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
+                        <h3 className="text-2xl sm:text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
                           Acesse o núcleo simbólico e clínico desta obra.
                         </h3>
-                        <p className="text-white/50 text-lg md:text-xl font-serif italic leading-relaxed">
+                        <p className="text-white/50 text-base sm:text-lg md:text-xl font-serif italic leading-relaxed">
                           Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
                         </p>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
-                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-10 h-14 font-bold text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 pt-2">
+                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-8 sm:px-10 h-12 sm:h-14 font-bold text-sm sm:text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
                           Abrir Laboratório 80/20
                           <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
