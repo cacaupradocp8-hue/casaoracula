@@ -13,7 +13,6 @@ export interface ProgressaoStep {
 export function useCirculoProgressao(cicloId: string | undefined) {
   const { user } = useAuth();
   const userId = user?.id;
-  const isAdmin = user?.portal === 'admin';
 
   // Total de áudios V3
   const { data: totalEscutas } = useQuery({
@@ -42,10 +41,11 @@ export function useCirculoProgressao(cicloId: string | undefined) {
     enabled: !!userId && !!cicloId,
   });
 
-  const travessiaPercent = totalEscutas && totalEscutas > 0 ? (v3Progress?.filter(p => p.audio_completed).length / totalEscutas) * 100 : 0;
-  const lab8020Done = v3Progress?.some(p => p.practice_completed);
-  const hasRegistro = v3Progress?.some(p => p.letter_completed);
-  const integracaoDone = v3Progress?.some(p => p.reflection_completed);
+  const completedAudios = v3Progress?.filter(p => (p as any).audio_completed).length || 0;
+  const travessiaPercent = totalEscutas && totalEscutas > 0 ? (completedAudios / totalEscutas) * 100 : 0;
+  const lab8020Done = v3Progress?.some(p => (p as any).practice_completed);
+  const hasRegistro = v3Progress?.some(p => (p as any).letter_completed);
+  const integracaoDone = v3Progress?.some(p => (p as any).reflection_completed);
 
   const steps: ProgressaoStep[] = [
     { key: 'portal', label: 'Portal', emoji: '🌑', concluido: true, desbloqueado: true },
