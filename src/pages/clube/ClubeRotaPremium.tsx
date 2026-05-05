@@ -322,7 +322,7 @@ export default function ClubeRotaPremium() {
                       >
                         <div
                           className={cn(
-                            'absolute -left-[24px] md:-left-[28px] top-7 w-4 h-4 rounded-full border-[1px] transition-all flex items-center justify-center',
+                            'absolute -left-[19px] sm:-left-[24px] md:-left-[28px] top-6 sm:top-7 w-3 h-3 sm:w-4 sm:h-4 rounded-full border-[1px] transition-all flex items-center justify-center',
                             isCurrent &&
                               'bg-gold border-gold shadow-[0_0_20px_rgba(212,175,55,0.5)] scale-125 z-10',
                             !isCurrent && isCompleted && 'bg-gold/20 border-gold/40',
@@ -336,7 +336,7 @@ export default function ClubeRotaPremium() {
                           )}
                         </div>
                         <div className={cn(
-                          "flex items-center justify-between gap-6 p-4 rounded-2xl transition-all duration-500",
+                          "flex items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-500 min-h-[44px]",
                           isCurrent ? "bg-white/[0.04] border border-white/10" : "bg-transparent border border-transparent hover:bg-white/[0.02]"
                         )}>
                           <div className="min-w-0 space-y-1">
