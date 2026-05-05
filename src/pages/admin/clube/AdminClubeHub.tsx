@@ -96,25 +96,20 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas, activeStation, essencias, slides, insights] = await Promise.all([
+      const [routes, stations, activeStation, tracks, chatPerguntas] = await Promise.all([
+        supabase.from('clube_v3_routes').select('id', { count: 'exact', head: true }),
         supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('books').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('*').eq('status', 'active').maybeSingle(),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_v3_stations').select('*').eq('status', 'published').order('display_order', { ascending: true }).limit(1).maybeSingle(),
+        supabase.from('clube_v3_station_audios').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_v3_station_content').select('id', { count: 'exact', head: true }),
       ]);
       return {
-        ciclos: estacoes.count || 0,
-        books: books.count || 0,
-        portais: portais.count || 0,
-        chat: perguntas.count || 0,
+        ciclos: stations.count || 0,
+        books: routes.count || 0,
+        portais: stations.count || 0,
+        chat: chatPerguntas.count || 0,
         activeStation: activeStation.data,
-        essencias: essencias.count || 0,
-        carrosseis: (slides.count || 0) + (insights.count || 0),
+        acervo: tracks.count || 0,
       };
     },
   });
@@ -122,7 +117,7 @@ export default function AdminClubeHub() {
   const queryClient = useQueryClient();
   const togglePublishMutation = useMutation({
     mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
-      const { error } = await supabase.from('clube_v3_stations').update({ status: published ? 'active' : 'draft' }).eq('id', id);
+      const { error } = await supabase.from('clube_v3_stations').update({ status: published ? 'published' : 'draft' }).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -135,13 +130,12 @@ export default function AdminClubeHub() {
   const getStatText = (type?: string) => {
     if (!stats) return '...';
     switch (type) {
-      case 'ciclos': return `${stats.ciclos} Ativos`;
+      case 'ciclos': return `${stats.ciclos} Estações`;
       case 'portais': return `${stats.portais} Mapeados`;
-      case 'acervo': return `${stats.books} Obras`;
-      case 'chat': return `${stats.chat} Prompts`;
+      case 'acervo': return `${stats.books} Rotas`;
+      case 'chat': return `${stats.chat} Conteúdos`;
       case 'treinamento': return `Operacional`;
-      case 'laboratorio': return `${stats.essencias} Essências`;
-      case 'carrosseis': return `${stats.carrosseis} Itens`;
+      case 'carrosseis': return `${stats.acervo} Áudios`;
       default: return '';
     }
   };
@@ -170,14 +164,14 @@ export default function AdminClubeHub() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      {/* Header Editorial */}
+      {/* Header Admin */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10">
         <div className="space-y-2">
           <Badge variant="outline" className="text-gold border-gold/30 bg-gold/5 px-3 py-1 text-[10px] uppercase tracking-[0.2em] font-bold">
-            Editorial Admin Premium
+            Gestão do Clube
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif text-foreground tracking-tight">
-            Clube de Leitura <span className="text-gold italic">Oracular</span>
+            Clube <span className="text-gold italic">Oracular</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl text-lg font-light leading-relaxed">
             Painel operacional para gestão de jornadas simbólicas, 
@@ -195,7 +189,7 @@ export default function AdminClubeHub() {
            </Button>
            <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => handleTabChange('clube-jornadas')}>
              <Plus className="w-4 h-4" />
-             Novo Ciclo
+             Nova Estação
            </Button>
         </div>
       </div>
