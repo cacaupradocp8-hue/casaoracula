@@ -99,18 +99,16 @@ export async function retrieveBookKnowledge(params: RetrievalParams): Promise<Kn
     .eq('ativo', true)
     .maybeSingle();
 
-  // Fetch knowledge entries for this book
-  const knowledgeQuery = (supabase as any)
-    .from('club_knowledge_entries')
-    .select('source_type, content, chapter_title, tags, archetypes, symbols')
-    .eq('book_id', bookId)
-    .order('chapter_order', { ascending: true, nullsFirst: false })
-    .limit(10);
+  // Tabela `club_knowledge_entries` foi depreciada (vazia, geração legada).
+  // Knowledge agora vem de `lessons_album` e `clube_livro_fases` mais abaixo.
+  const knowledgeRes = { data: [] as Array<{
+    source_type: string; content: string; chapter_title?: string;
+    tags?: string[]; archetypes?: string[]; symbols?: string[];
+  }> };
 
-  const [cicloRes, tourRes, knowledgeRes] = await Promise.all([
+  const [cicloRes, tourRes] = await Promise.all([
     cicloQuery,
     tourQuery,
-    knowledgeQuery,
   ]);
 
   // Process cycle
