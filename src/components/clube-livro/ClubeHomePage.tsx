@@ -21,6 +21,7 @@ import { useAllBooks } from '@/hooks/useBooks';
 import { FlaskConical } from 'lucide-react';
 import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
 import { RotaAtualHero } from '@/components/clube-livro/RotaAtualHero';
+import { InsightPortalBlock } from '@/components/clube-livro/blocks';
 
 /**
  * ClubeHomePage — Rota Oracular
