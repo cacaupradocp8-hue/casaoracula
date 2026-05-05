@@ -314,79 +314,88 @@ export default function ClubeRotaPremium() {
                 ))}
               </div>
 
-            {/* Timeline da rota */}
-            <div className="relative mt-10 pl-6 md:pl-8">
-              <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-px bg-gradient-to-b from-gold/40 via-gold/15 to-transparent" />
-              {pontos.map((item, idx) => {
-                const isCurrent = item.id === ponto.id;
-                const isCompleted = item.estado === 'completed';
-                const isLocked = item.estado === 'locked';
-                const isInteractive = !isLocked && !isCurrent;
-                return (
-                  <motion.button
-                    key={item.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.05 }}
-                    disabled={isLocked}
-                    onClick={() => !isLocked && navigate(`/clube/rota/${item.slug}`)}
-                    className={cn(
-                      'relative block w-full text-left group py-3',
-                      isLocked && 'cursor-not-allowed'
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        'absolute -left-[22px] md:-left-[26px] top-4 w-3.5 h-3.5 md:w-4 md:h-4 rounded-full border-2 transition-all flex items-center justify-center',
-                        isCurrent &&
-                          'bg-gold border-gold shadow-[0_0_16px_hsl(43_47%_56%/0.6)] scale-110',
-                        !isCurrent && isCompleted && 'bg-gold/40 border-gold/60',
-                        !isCurrent && !isCompleted && !isLocked &&
-                          'bg-midnight border-gold/40 group-hover:border-gold',
-                        !isCurrent && isLocked && 'bg-midnight border-foreground/10'
-                      )}
-                    >
-                      {isCompleted && !isCurrent && (
-                        <Check className="w-2 h-2 md:w-2.5 md:h-2.5 text-gold" strokeWidth={3} />
-                      )}
-                    </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="min-w-0">
-                        <p
+              </div>
+
+              {/* Coluna da Timeline — Direita */}
+              <div className="lg:col-span-7">
+                <div className="relative pl-8 md:pl-12">
+                  <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-[1px] bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
+                  {pontos.map((item, idx) => {
+                    const isCurrent = item.id === ponto.id;
+                    const isCompleted = item.estado === 'completed';
+                    const isLocked = item.estado === 'locked';
+                    const isInteractive = !isLocked && !isCurrent;
+                    return (
+                      <motion.button
+                        key={item.id}
+                        initial={{ opacity: 0, x: 10 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: idx * 0.05, duration: 0.6 }}
+                        disabled={isLocked}
+                        onClick={() => !isLocked && navigate(`/clube/rota/${item.slug}`)}
+                        className={cn(
+                          'relative block w-full text-left group py-5 transition-all',
+                          isLocked && 'cursor-not-allowed grayscale-[0.8]'
+                        )}
+                      >
+                        <div
                           className={cn(
-                            'text-[9px] tracking-[0.3em] uppercase mb-0.5 flex items-center gap-1.5',
-                            isLocked ? 'text-foreground/25' : 'text-foreground/70'
-                          )}
-                        >
-                          Fase 0{idx + 1}
-                          {isCurrent && <span className="text-gold/80">· Você está aqui</span>}
-                          {isCompleted && !isCurrent && <span className="text-gold/60">· Concluído</span>}
-                        </p>
-                        <p
-                          className={cn(
-                            'font-display text-base md:text-lg transition-colors truncate',
-                            isCurrent && 'text-foreground',
-                            !isCurrent && isCompleted && 'text-foreground/75',
+                            'absolute -left-[24px] md:-left-[28px] top-7 w-4 h-4 rounded-full border-[1px] transition-all flex items-center justify-center',
+                            isCurrent &&
+                              'bg-gold border-gold shadow-[0_0_20px_rgba(212,175,55,0.5)] scale-125 z-10',
+                            !isCurrent && isCompleted && 'bg-gold/20 border-gold/40',
                             !isCurrent && !isCompleted && !isLocked &&
-                              'text-foreground/55 group-hover:text-foreground/85',
-                            isLocked && 'text-foreground/30'
+                              'bg-midnight border-white/20 group-hover:border-gold group-hover:scale-110',
+                            !isCurrent && isLocked && 'bg-midnight border-white/5'
                           )}
                         >
-                          {item.nome}
-                        </p>
-                      </div>
-                      {isLocked ? (
-                        <Lock className="w-3.5 h-3.5 text-foreground/25 shrink-0" />
-                      ) : isInteractive ? (
-                        <ChevronRight className="w-4 h-4 text-foreground/20 group-hover:text-gold transition-colors shrink-0" />
-                      ) : null}
-                    </div>
-                  </motion.button>
-                );
-              })}
+                          {isCompleted && !isCurrent && (
+                            <Check className="w-2 h-2 text-gold/80" strokeWidth={3} />
+                          )}
+                        </div>
+                        <div className={cn(
+                          "flex items-center justify-between gap-6 p-4 rounded-2xl transition-all duration-500",
+                          isCurrent ? "bg-white/[0.04] border border-white/10" : "bg-transparent border border-transparent hover:bg-white/[0.02]"
+                        )}>
+                          <div className="min-w-0 space-y-1">
+                            <p
+                              className={cn(
+                                'text-[8px] tracking-[0.4em] uppercase font-bold flex items-center gap-2',
+                                isLocked ? 'text-white/10' : 'text-white/30'
+                              )}
+                            >
+                              Fase 0{idx + 1}
+                              {isCurrent && <span className="text-gold/60">· Presença</span>}
+                              {isCompleted && !isCurrent && <span className="text-gold/40">· Passagem</span>}
+                            </p>
+                            <p
+                              className={cn(
+                                'font-display text-lg md:text-xl transition-colors truncate tracking-tight',
+                                isCurrent && 'text-white',
+                                !isCurrent && isCompleted && 'text-white/60',
+                                !isCurrent && !isCompleted && !isLocked &&
+                                  'text-white/40 group-hover:text-white/80',
+                                isLocked && 'text-white/20'
+                              )}
+                            >
+                              {item.nome}
+                            </p>
+                          </div>
+                          {isLocked ? (
+                            <Lock className="w-3.5 h-3.5 text-white/10 shrink-0" />
+                          ) : isInteractive ? (
+                            <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-gold/60 transition-colors shrink-0" />
+                          ) : null}
+                        </div>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           </Section>
+
 
           {/* ═══════════ 3. ÁUDIOS ═══════════ */}
           {audios.length > 0 && (
