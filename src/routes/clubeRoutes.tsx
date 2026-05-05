@@ -31,6 +31,8 @@ export function renderClubeRoutes(ProtectedRoute: PR) {
     <>
       {/* ═══ ROTAS PRINCIPAIS DO CLUBE ═══ */}
       <Route key="clube-home" path="/clube" element={<ProtectedRoute minPortal="visitante"><ClubeHome /></ProtectedRoute>} />
+      <Route key="clube-estacao" path="/clube/estacao/:id" element={<ProtectedRoute minPortal="mentorada"><StationDetail /></ProtectedRoute>} />
+
       <Route key="clube-rotas-catalogo" path="/clube/rotas" element={<ProtectedRoute minPortal="mentorada"><ClubeRotasCatalogo /></ProtectedRoute>} />
       <Route key="clube-rota-premium" path="/clube/rota/:slug" element={<ProtectedRoute minPortal="mentorada"><ClubeRotaPremium /></ProtectedRoute>} />
       <Route key="clube-ciclo" path="/clube/ciclo" element={<ProtectedRoute minPortal="mentorada"><ClubeCiclo /></ProtectedRoute>} />
