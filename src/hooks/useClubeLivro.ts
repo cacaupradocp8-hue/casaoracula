@@ -70,7 +70,6 @@ export function useClubeLivro() {
       return (data || []).map(r => ({
         id: r.id,
         titulo: r.title,
-        subtitulo: r.subtitle,
         publicado: r.status === 'active',
         ativo: r.status === 'active',
         capa_url: (r as any).cover_image_url,

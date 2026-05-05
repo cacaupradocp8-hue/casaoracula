@@ -96,7 +96,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube': AdminClubeHub,
   'clube-jornadas': AdminCentralJornadas,
   'clube-acervo': AdminClubeAcervo,
-  'clube-chat': AdminClubeChat,
+  'clube-chat': AdminClubeHub,
   'clube-carrosseis-insights': AdminCarrosseisInsights,
   
   // FORMAÇÃO

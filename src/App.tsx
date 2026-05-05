@@ -112,7 +112,7 @@ const Tarot = React.lazy(() => import("./pages/salas/Tarot"));
 const Constelacao = React.lazy(() => import("./pages/salas/Constelacao"));
 const Syntheia = React.lazy(() => import("./pages/Syntheia"));
 const FerramentaDinamica = React.lazy(() => import("./pages/FerramentaDinamica"));
-const Canteiro = React.lazy(() => import("./pages/Canteiro"));
+
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
 const EneagramaFeminino = React.lazy(() => import("./pages/EneagramaFeminino"));

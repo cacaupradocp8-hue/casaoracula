@@ -206,9 +206,9 @@ export default function AdminClubeHub() {
           <CardContent className="p-0 overflow-hidden">
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-48 h-48 md:h-auto relative bg-muted">
-                {stats.activeStation.cover_image_url ? (
+                {(stats.activeStation as any).cover_image_url ? (
                   <img 
-                    src={stats.activeStation.cover_image_url} 
+                    src={(stats.activeStation as any).cover_image_url} 
                     alt="Capa do Livro" 
                     className="w-full h-full object-cover"
                   />
