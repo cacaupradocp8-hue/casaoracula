@@ -79,6 +79,9 @@ export function ClubeHomePage() {
               ============================================ */}
           <div className="lg:col-span-8 space-y-12">
             
+            {/* INSIGHT DO PORTAL — Inspiracional */}
+            <InsightPortalBlock />
+
             {/* HERO PREMIUM — ROTA ATUAL */}
             <RotaAtualHero
               estacao={estacaoAtual}
