@@ -19,7 +19,8 @@ import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { Laboratorio8020Card } from '@/components/clube/Laboratorio8020Card';
 import { useAllBooks } from '@/hooks/useBooks';
 import { RotaAtualHero } from '@/components/clube-livro/RotaAtualHero';
-import { InsightPortalBlock, SymbolicCarouselBlock } from '@/components/clube-livro/blocks';
+import { InsightPortalBlock } from '@/components/clube-livro/blocks';
+import { ClubeStationAudios } from './ClubeStationAudios';
 
 /**
  * ClubeHomePage — Rota Oracular
@@ -78,18 +79,8 @@ export function ClubeHomePage() {
               ============================================ */}
           <div className="lg:col-span-8 space-y-12">
             
-            {/* INSIGHT DO PORTAL — Inspiracional */}
+            {/* INSIGHT DO PORTAL — Inspiracional (Mantido como respiro) */}
             <InsightPortalBlock />
-
-            {/* CARROSSEL DA ROTA — Instruções e Simbolismos da Estação */}
-            {estacaoAtual && (
-              <SymbolicCarouselBlock 
-                title="Sementes da Estação"
-                icon={<Sparkles className="w-4 h-4" />}
-                estacaoId={estacaoAtual.id}
-                className="mb-12 border-gold/20"
-              />
-            )}
 
             {/* HERO PREMIUM — ROTA ATUAL */}
             <RotaAtualHero
@@ -328,33 +319,6 @@ export function ClubeHomePage() {
               </motion.div>
             )}
 
-            {/* LABORATÓRIO 80/20 QUICK ACCESS */}
-            {matchedBook && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <Laboratorio8020Modal
-                  bookId={matchedBook.id}
-                  bookTitle={matchedBook.title}
-                  trigger={
-                    <button className="w-full flex items-center justify-between p-5 rounded-2xl border border-gold/20 bg-gold/5 hover:bg-gold/10 transition-all group">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center border border-gold/20 text-gold">
-                          <FlaskConical className="w-5 h-5" />
-                        </div>
-                        <div className="text-left">
-                          <p className="text-[9px] uppercase tracking-[0.2em] text-gold/70 font-bold">Essência</p>
-                          <p className="text-sm font-medium text-foreground/90">Laboratório 80/20</p>
-                        </div>
-                      </div>
-                      <ArrowRight className="w-4 h-4 text-gold/40 group-hover:translate-x-1 transition-transform" />
-                    </button>
-                  }
-                />
-              </motion.div>
-            )}
 
             {/* ESTAÇÕES ANTERIORES (PORTAIS) */}
             {estacoesPrevias.length > 0 && (
