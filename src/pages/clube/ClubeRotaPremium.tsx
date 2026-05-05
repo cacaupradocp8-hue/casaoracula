@@ -32,7 +32,7 @@ import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
-import { PortalEntradaRota } from '@/components/clube-livro/PortalEntradaRota';
+
 
 /**
  * ClubeRotaPremium — Página de Rota nível Netflix + Apple + Jung
@@ -62,12 +62,6 @@ export default function ClubeRotaPremium() {
 
   const [pergunta, setPergunta] = useState('');
 
-  // Portal interativo de entrada — mostra na primeira visita por slug
-  const portalKey = slug ? `clube:portal-entrada:${slug}` : '';
-  const [showPortal, setShowPortal] = useState<boolean>(() => {
-    if (!slug) return false;
-    try { return localStorage.getItem(`clube:portal-entrada:${slug}`) !== '1'; } catch { return true; }
-  });
 
   // Marca o ponto como em_andamento ao entrar (se ainda não tem registro)
   useEffect(() => {
@@ -131,17 +125,6 @@ export default function ClubeRotaPremium() {
 
   return (
     <AppLayout>
-      <AnimatePresence>
-        {showPortal && (
-          <PortalEntradaRota
-            slug={slug!}
-            portalNumero={ponto.ordem}
-            portalTitulo={ponto.nome}
-            storageKey={portalKey}
-            onComplete={() => setShowPortal(false)}
-          />
-        )}
-      </AnimatePresence>
       {/* Wrapper de fundo cinematográfico */}
       <div className="relative bg-midnight text-foreground overflow-hidden">
         {/* Gradiente atmosférico fixo de fundo */}
@@ -312,8 +295,6 @@ export default function ClubeRotaPremium() {
                     </div>
                   </motion.div>
                 ))}
-              </div>
-
               </div>
 
               {/* Coluna da Timeline — Direita */}
