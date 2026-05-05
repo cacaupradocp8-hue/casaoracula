@@ -189,7 +189,7 @@ export default function AdminClubeHub() {
            </Button>
            <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => handleTabChange('clube-jornadas')}>
              <Plus className="w-4 h-4" />
-             Novo Ciclo
+             Nova Estação
            </Button>
         </div>
       </div>
