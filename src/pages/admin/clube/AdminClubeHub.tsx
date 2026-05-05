@@ -96,25 +96,20 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas, activeStation, essencias, slides, insights] = await Promise.all([
+      const [routes, stations, activeStation, tracks, chatPerguntas] = await Promise.all([
+        supabase.from('clube_v3_routes').select('id', { count: 'exact', head: true }),
         supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('books').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('*').eq('status', 'active').maybeSingle(),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_v3_stations').select('*').eq('status', 'published').order('display_order', { ascending: true }).limit(1).maybeSingle(),
+        supabase.from('clube_v3_station_audios').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_v3_station_content').select('id', { count: 'exact', head: true }),
       ]);
       return {
-        ciclos: estacoes.count || 0,
-        books: books.count || 0,
-        portais: portais.count || 0,
-        chat: perguntas.count || 0,
+        ciclos: stations.count || 0,
+        books: routes.count || 0,
+        portais: stations.count || 0,
+        chat: chatPerguntas.count || 0,
         activeStation: activeStation.data,
-        essencias: essencias.count || 0,
-        carrosseis: (slides.count || 0) + (insights.count || 0),
+        acervo: tracks.count || 0,
       };
     },
   });
