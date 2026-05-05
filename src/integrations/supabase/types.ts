@@ -6532,6 +6532,215 @@ export type Database = {
           },
         ]
       }
+      clube_v3_routes: {
+        Row: {
+          cover_image_url: string | null
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          cover_image_url?: string | null
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      clube_v3_station_audios: {
+        Row: {
+          audio_url: string
+          created_at: string
+          display_order: number | null
+          id: string
+          station_id: string | null
+          status: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audio_url: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          station_id?: string | null
+          status?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audio_url?: string
+          created_at?: string
+          display_order?: number | null
+          id?: string
+          station_id?: string | null
+          status?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v3_station_audios_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "clube_v3_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_v3_station_content: {
+        Row: {
+          contemplative_question: string | null
+          created_at: string
+          id: string
+          jungian_reflection: string | null
+          letter_content: string | null
+          station_id: string | null
+          support_material: string | null
+          therapeutic_practice: string | null
+          updated_at: string
+        }
+        Insert: {
+          contemplative_question?: string | null
+          created_at?: string
+          id?: string
+          jungian_reflection?: string | null
+          letter_content?: string | null
+          station_id?: string | null
+          support_material?: string | null
+          therapeutic_practice?: string | null
+          updated_at?: string
+        }
+        Update: {
+          contemplative_question?: string | null
+          created_at?: string
+          id?: string
+          jungian_reflection?: string | null
+          letter_content?: string | null
+          station_id?: string | null
+          support_material?: string | null
+          therapeutic_practice?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v3_station_content_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: true
+            referencedRelation: "clube_v3_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_v3_stations: {
+        Row: {
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          route_id: string | null
+          status: string | null
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          route_id?: string | null
+          status?: string | null
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          route_id?: string | null
+          status?: string | null
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v3_stations_route_id_fkey"
+            columns: ["route_id"]
+            isOneToOne: false
+            referencedRelation: "clube_v3_routes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_v3_user_progress: {
+        Row: {
+          audio_completed: boolean | null
+          created_at: string
+          id: string
+          letter_completed: boolean | null
+          practice_completed: boolean | null
+          question_completed: boolean | null
+          reflection_completed: boolean | null
+          station_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          audio_completed?: boolean | null
+          created_at?: string
+          id?: string
+          letter_completed?: boolean | null
+          practice_completed?: boolean | null
+          question_completed?: boolean | null
+          reflection_completed?: boolean | null
+          station_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          audio_completed?: boolean | null
+          created_at?: string
+          id?: string
+          letter_completed?: boolean | null
+          practice_completed?: boolean | null
+          question_completed?: boolean | null
+          reflection_completed?: boolean | null
+          station_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v3_user_progress_station_id_fkey"
+            columns: ["station_id"]
+            isOneToOne: false
+            referencedRelation: "clube_v3_stations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       co_ai_recommendations: {
         Row: {
           campo_psiquico: string | null
