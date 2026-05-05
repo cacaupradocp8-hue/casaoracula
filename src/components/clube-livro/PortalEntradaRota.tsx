@@ -163,7 +163,7 @@ export function PortalEntradaRota({
       </div>
 
       {/* Container — contained, not full-screen */}
-      <div className="relative w-full max-w-4xl mx-auto rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] overflow-hidden">
+      <div className="relative w-full max-w-4xl mx-auto rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] overflow-hidden min-h-[640px] md:min-h-[720px] flex flex-col justify-center">
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
 
@@ -207,8 +207,8 @@ export function PortalEntradaRota({
           {/* Carousel stage */}
           <div
             ref={stageRef}
-            className="relative w-full h-[320px] md:h-[380px] flex items-center justify-center"
-            style={{ perspective: '1400px' }}
+            className="relative w-full h-[360px] md:h-[420px] flex items-center justify-center my-4 md:my-6"
+            style={{ perspective: '1600px' }}
           >
             {/* Side hints (desktop only) */}
             {current > 0 && (
@@ -247,10 +247,11 @@ export function PortalEntradaRota({
                     initial={{ opacity: 0, scale: 0.85 }}
                     animate={{
                       x: diff * offsetStep,
-                      rotateY: isCompact ? 0 : diff * -18,
-                      scale: isActive ? 1 : 0.84,
-                      opacity: isActive ? 1 : 0.28,
-                      filter: isActive ? 'blur(0px)' : 'blur(3px)',
+                      rotateY: isCompact ? 0 : diff * -22,
+                      scale: isActive ? 1 : 0.82,
+                      z: isActive ? 0 : -100,
+                      opacity: isActive ? 1 : 0.22,
+                      filter: isActive ? 'blur(0px)' : 'blur(4px)',
                       zIndex: 10 - absDiff,
                     }}
                     transition={{ type: 'spring', stiffness: 220, damping: 32, mass: 0.9 }}
