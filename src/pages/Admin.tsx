@@ -60,15 +60,12 @@ const AdminNarroterapiaTab = lazy(() => import('@/components/admin/AdminNarroter
 const AdminNarroterapiaAutorizacaoTab = lazy(() => import('@/components/admin/AdminNarroterapiaAutorizacaoTab'));
 const AdminClubeHub = lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
 const AdminCentralJornadas = lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
-const AdminPortalCMS = lazy(() => import('@/pages/admin/clube/AdminPortalCMS'));
-const AdminClubeTreinamento = lazy(() => import('@/pages/admin/clube/AdminClubeTreinamento'));
-const AdminClubeChat = lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
 const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
-const AdminLaboratorio8020 = lazy(() => import('@/pages/admin/clube/AdminLaboratorio8020'));
+
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
 // AdminClubeLivroTab removed as it is legacy all-in-one component
-const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
+
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
 const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
@@ -76,7 +73,7 @@ const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPorta
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
 const AdminFounderDashboardTab = lazy(() => import('@/components/admin/AdminFounderDashboardTab'));
-const AdminPremiumEditor = lazy(() => import('@/components/admin/AdminPremiumEditor').then(m => ({ default: m.AdminPremiumEditor })));
+
 
 
 
@@ -99,11 +96,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube': AdminClubeHub,
   'clube-jornadas': AdminCentralJornadas,
   'clube-acervo': AdminClubeAcervo,
-  'clube-treinamento': AdminClubeTreinamento,
   'clube-chat': AdminClubeChat,
-  'clube-portais': AdminPortalCMS,
-  'clube-premium-editor': AdminPremiumEditor,
-  'clube-laboratorio-8020': AdminLaboratorio8020,
   'clube-carrosseis-insights': AdminCarrosseisInsights,
   
   // FORMAÇÃO
@@ -124,7 +117,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   
   // ESTÚDIO
   'estudio-oracular': AdminEstudioOracular,
-  'gerador-semanal': AdminGeradorSemanal,
+  
   'audios': AdminAudiosTab,
   'galeria': AdminGaleriaTab,
   'vitrine': AdminVitrineCards,
