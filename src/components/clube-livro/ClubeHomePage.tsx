@@ -21,7 +21,7 @@ import { useAllBooks } from '@/hooks/useBooks';
 import { FlaskConical } from 'lucide-react';
 import { RotaExecutavelMes1 } from '@/components/clube-livro/RotaMês1';
 import { RotaAtualHero } from '@/components/clube-livro/RotaAtualHero';
-import { InsightPortalBlock } from '@/components/clube-livro/blocks';
+import { InsightPortalBlock, SymbolicCarouselBlock } from '@/components/clube-livro/blocks';
 
 /**
  * ClubeHomePage — Rota Oracular
@@ -82,6 +82,16 @@ export function ClubeHomePage() {
             
             {/* INSIGHT DO PORTAL — Inspiracional */}
             <InsightPortalBlock />
+
+            {/* CARROSSEL DA ROTA — Instruções e Simbolismos da Estação */}
+            {estacaoAtual && (
+              <SymbolicCarouselBlock 
+                title="Sementes da Estação"
+                icon={<Sparkles className="w-4 h-4" />}
+                estacaoId={estacaoAtual.id}
+                className="mb-12 border-gold/20"
+              />
+            )}
 
             {/* HERO PREMIUM — ROTA ATUAL */}
             <RotaAtualHero
