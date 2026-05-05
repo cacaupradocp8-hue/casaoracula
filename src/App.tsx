@@ -39,6 +39,8 @@ function OracleRedirect({ suffix = '' }: { suffix?: string }) {
 
 // Lazy-loaded pages
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
+const ClubeRotasCatalogo = React.lazy(() => import("./pages/clube/ClubeRotasCatalogo"));
+const ClubeRotaPremium = React.lazy(() => import("./pages/clube/ClubeRotaPremium"));
 const Welcome = React.lazy(() => import("./pages/Welcome"));
 const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
 const Mentoria = React.lazy(() => import("./pages/Mentoria"));
@@ -371,8 +373,8 @@ function AppRoutes() {
       <Route path="/narroterapia/ritual" element={<ProtectedRoute minPortal="aluna_formacao"><RitualAutorizacao /></ProtectedRoute>} />
       <Route path="/narroterapia/audios" element={<ProtectedRoute minPortal="aluna_formacao"><AudiosNarracao /></ProtectedRoute>} />
 
-      {/* ═══ Clube do Livro (extracted) ═══ */}
-      
+      <Route path="/clube" element={<ProtectedRoute><ClubeRotasCatalogo /></ProtectedRoute>} />
+      <Route path="/clube/rota/:slug" element={<ProtectedRoute><ClubeRotaPremium /></ProtectedRoute>} />
 
       {/* Biblioteca & Ferramentas */}
       <Route path="/biblioteca" element={<ProtectedRoute><BibliotecaUnificada /></ProtectedRoute>} />
