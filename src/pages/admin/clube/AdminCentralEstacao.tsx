@@ -5,7 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, Route, Calendar, Layers, Users, Loader2, Sparkles, Layout, ListOrdered, Pencil, Image as ImageIcon, BookOpen, ExternalLink, Eye, Headphones, ListMusic } from 'lucide-react';
+import { ArrowLeft, BookOpen, Pencil, ImageIcon, ListMusic, ListOrdered, Sparkles, Layers, Users, Eye, Loader2, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { AulaAlbumTab } from '@/components/admin/central-jornadas/AulaAlbumTab';
@@ -17,17 +17,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { ImageUpload } from '@/components/admin/ImageUpload';
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const qc = useQueryClient();
-  const { estacaoId: paramId } = useParams<{ estacaoId: string }>();
-  const activeAdminTab = (window as any).Admin_ActiveTab || '';
-  const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
+  const { estacaoId } = useParams<{ estacaoId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'album';
 
@@ -75,13 +71,18 @@ export default function AdminCentralEstacao() {
   const updateStationMutation = useMutation({
     mutationFn: async (data: typeof stationForm) => {
       const { error } = await supabase
-        .from('clube_estacoes')
-        .update(data)
+        .from('clube_v3_stations')
+        .update({
+          title: data.title,
+          subtitle: data.subtitle,
+          description: data.description,
+          status: data.status
+        })
         .eq('id', estacaoId);
       if (error) throw error;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['admin-estacao-detail', estacaoId] });
+      qc.invalidateQueries({ queryKey: ['admin-v3-estacao-detail', estacaoId] });
       setEditStationOpen(false);
       toast({ title: 'Estação atualizada com sucesso!' });
     },
@@ -102,7 +103,7 @@ export default function AdminCentralEstacao() {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
         <p className="text-muted-foreground">Estação não encontrada.</p>
-        <Button variant="outline" className="mt-4" onClick={() => (window as any).Admin_SetActiveTab?.('clube-jornadas')}>Voltar</Button>
+        <Button variant="outline" className="mt-4" onClick={() => navigate('/admin/clube')}>Voltar</Button>
       </div>
     );
   }
@@ -112,10 +113,10 @@ export default function AdminCentralEstacao() {
         {/* Header Consolidado e Operacional */}
         <div className="flex flex-col md:flex-row md:items-stretch justify-between gap-6 mb-8 p-0 bg-card border border-primary/5 rounded-2xl shadow-sm overflow-hidden">
           <div className="flex flex-col md:flex-row flex-1 min-w-0">
-            {/* Book Preview / Quick Upload Zone */}
+            {/* Book Preview */}
             <div className="w-full md:w-32 h-32 md:h-auto bg-muted group relative cursor-pointer overflow-hidden" onClick={() => setEditStationOpen(true)}>
-              {estacao.livro_capa_url ? (
-                <img src={estacao.livro_capa_url} alt="Capa" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              {estacao.route?.cover_image_url ? (
+                <img src={estacao.route.cover_image_url} alt="Capa" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-[10px] text-muted-foreground p-2 text-center">
                   <ImageIcon className="w-6 h-6 mb-1 opacity-20" />
@@ -129,39 +130,35 @@ export default function AdminCentralEstacao() {
 
             <div className="flex-1 p-6 flex flex-col justify-center">
               <div className="flex items-center gap-4 mb-4">
-                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => {
-                  (window as any).Admin_SetActiveTab?.('clube-jornadas');
-                  navigate('/admin/clube/ciclos');
-                }}>
+                <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => navigate('/admin/clube')}>
                   <ArrowLeft className="h-4 w-4" />
                 </Button>
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
                     <h1 className="text-2xl font-serif text-foreground truncate">
-                      {estacao.titulo}
+                      {estacao.title}
                     </h1>
-                    <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
-                      {estacao.publicada ? 'Publicado' : 'Rascunho'}
+                    <Badge variant={estacao.status === 'published' ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.status === 'published' ? "bg-emerald-500/10 text-emerald-500" : "")}>
+                      {estacao.status === 'published' ? 'Publicado' : 'Rascunho'}
                     </Badge>
-                    {estacao.ativa && <Badge variant="outline" className="text-[9px] border-gold text-gold uppercase tracking-widest bg-gold/5">Ativa</Badge>}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-gold" />
-                    {estacao.livro_titulo} {estacao.livro_autor ? `— ${estacao.livro_autor}` : ''}
+                    {estacao.route?.title} — {estacao.subtitle}
                   </p>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-4 md:pt-0 border-t md:border-t-0 border-primary/5">
+          <div className="flex flex-wrap items-center gap-3 pt-4 md:pt-0 p-6 border-t md:border-t-0 border-primary/5">
             <div className="flex items-center gap-3 px-3 py-1.5 bg-muted/30 rounded-full border border-primary/5">
               <Label htmlFor="station-publish" className="text-[10px] font-bold uppercase tracking-wider cursor-pointer">Visibilidade</Label>
               <Switch 
                 id="station-publish"
-                checked={estacao.publicada} 
-                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, publicada: v})}
+                checked={estacao.status === 'published'} 
+                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, status: v ? 'published' : 'draft'})}
                 disabled={updateStationMutation.isPending}
               />
             </div>
@@ -182,76 +179,30 @@ export default function AdminCentralEstacao() {
         <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Editar Detalhes da Estação</DialogTitle>
+              <DialogTitle>Editar Detalhes da Estação (v3)</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Título da Estação</Label>
-                  <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
+                  <Input value={stationForm.title} onChange={e => setStationForm({...stationForm, title: e.target.value})} />
                 </div>
                 <div className="space-y-2">
-                  <Label>Subtítulo</Label>
-                  <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
+                  <Label>Subtítulo / Temas</Label>
+                  <Input value={stationForm.subtitle} onChange={e => setStationForm({...stationForm, subtitle: e.target.value})} />
                 </div>
               </div>
               
               <div className="space-y-2">
                 <Label>Descrição da Estação</Label>
-                <Textarea value={stationForm.descricao} onChange={e => setStationForm({...stationForm, descricao: e.target.value})} rows={3} />
+                <Textarea value={stationForm.description} onChange={e => setStationForm({...stationForm, description: e.target.value})} rows={3} />
               </div>
 
-              <div className="grid grid-cols-2 gap-6 pt-2">
-                <ImageUpload 
-                  label="Banner da Estação" 
-                  value={stationForm.banner_url} 
-                  onChange={url => setStationForm({...stationForm, banner_url: url})} 
-                  folder="estacoes"
-                  aspectRatio="banner"
-                />
-                <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2">
-                      <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
-                      <Label>Ativa</Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
-                      <Label>Publicada</Label>
-                    </div>
-                  </div>
+              <div className="flex items-center gap-4 pt-2">
+                <div className="flex items-center gap-2">
+                  <Switch checked={stationForm.status === 'published'} onCheckedChange={v => setStationForm({...stationForm, status: v ? 'published' : 'draft'})} />
+                  <Label>Publicada</Label>
                 </div>
-              </div>
-
-              <Separator className="my-4" />
-              <h3 className="font-semibold text-sm flex items-center gap-2"><BookOpen className="w-4 h-4 text-gold" /> Dados do Livro</h3>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Título do Livro</Label>
-                  <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Autora/Autor</Label>
-                  <Input value={stationForm.livro_autor} onChange={e => setStationForm({...stationForm, livro_autor: e.target.value})} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <ImageUpload 
-                  label="Capa do Livro" 
-                  value={stationForm.livro_capa_url} 
-                  onChange={url => setStationForm({...stationForm, livro_capa_url: url})} 
-                  folder="livros"
-                  aspectRatio="square"
-                />
-                <ImageUpload 
-                  label="Banner do Livro" 
-                  value={stationForm.livro_imagem_banner_url} 
-                  onChange={url => setStationForm({...stationForm, livro_imagem_banner_url: url})} 
-                  folder="livros"
-                  aspectRatio="banner"
-                />
               </div>
             </div>
             <DialogFooter>
@@ -263,16 +214,16 @@ export default function AdminCentralEstacao() {
           </DialogContent>
         </Dialog>
 
-        {/* Tabs - Alinhadas com as 4 Camadas da Aluna */}
+        {/* Tabs - Alinhadas com a nova estrutura v3 */}
         <Tabs value={activeTab} onValueChange={onTabChange}>
           <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+            <TabsTrigger type="button" value="album" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+              <ListMusic className="w-3.5 h-3.5" />
+              Aula-Álbum (Áudios)
+            </TabsTrigger>
             <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <ListOrdered className="w-3.5 h-3.5" />
               Rota (Passos)
-            </TabsTrigger>
-            <TabsTrigger type="button" value="semanas" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <Headphones className="w-3.5 h-3.5" />
-              Conteúdo (Áudios)
             </TabsTrigger>
             <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
               <Sparkles className="w-3.5 h-3.5" />
@@ -288,7 +239,12 @@ export default function AdminCentralEstacao() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="album">
+            <AulaAlbumTab estacaoId={estacao.id} />
+          </TabsContent>
+
           <TabsContent value="passos">
+            {/* We might need to migrate PassosRotaTab to v3 eventually, but for now we keep the layout consistent */}
             <PassosRotaTab estacaoId={estacao.id} />
           </TabsContent>
 
@@ -296,16 +252,9 @@ export default function AdminCentralEstacao() {
             <EntradaTab estacaoId={estacao.id} />
           </TabsContent>
           
-          <TabsContent value="semanas">
-            <SemanasTab estacaoId={estacao.id} />
-          </TabsContent>
-          
-          <TabsContent value="estrada">
-            <EstradaTab estacaoId={estacao.id} />
-          </TabsContent>
-          
           <TabsContent value="aplicacao">
-            <AplicacaoTab estacao={estacao} />
+            {/* The old AplicacaoTab expects the full estacao object, we pass it but it might need field adjustments */}
+            <AplicacaoTab estacao={estacao as any} />
           </TabsContent>
           
           <TabsContent value="encontro">
