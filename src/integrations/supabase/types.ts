@@ -311,6 +311,327 @@ export type Database = {
           },
         ]
       }
+      _deprecated_clube_v2_ciclos: {
+        Row: {
+          chat_knowledge_base: string | null
+          chat_prompt: string | null
+          configuracoes: Json | null
+          created_at: string
+          data_fim: string | null
+          data_inicio: string | null
+          descricao: string | null
+          id: string
+          obra_id: string | null
+          status: string | null
+          subtitulo: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
+          configuracoes?: Json | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          obra_id?: string | null
+          status?: string | null
+          subtitulo?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          chat_knowledge_base?: string | null
+          chat_prompt?: string | null
+          configuracoes?: Json | null
+          created_at?: string
+          data_fim?: string | null
+          data_inicio?: string | null
+          descricao?: string | null
+          id?: string
+          obra_id?: string | null
+          status?: string | null
+          subtitulo?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v2_ciclos_obra_id_fkey"
+            columns: ["obra_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_clube_v2_obras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_clube_v2_conteudos: {
+        Row: {
+          ciclo_id: string | null
+          conteudo_html: string | null
+          created_at: string
+          dados_dinamicos: Json | null
+          descricao: string | null
+          id: string
+          image_url: string | null
+          media_type: string | null
+          media_url: string | null
+          ordem: number | null
+          portal_id: string | null
+          status: string | null
+          tipo: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ciclo_id?: string | null
+          conteudo_html?: string | null
+          created_at?: string
+          dados_dinamicos?: Json | null
+          descricao?: string | null
+          id?: string
+          image_url?: string | null
+          media_type?: string | null
+          media_url?: string | null
+          ordem?: number | null
+          portal_id?: string | null
+          status?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ciclo_id?: string | null
+          conteudo_html?: string | null
+          created_at?: string
+          dados_dinamicos?: Json | null
+          descricao?: string | null
+          id?: string
+          image_url?: string | null
+          media_type?: string | null
+          media_url?: string | null
+          ordem?: number | null
+          portal_id?: string | null
+          status?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v2_conteudos_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_clube_v2_ciclos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_v2_conteudos_portal_id_fkey"
+            columns: ["portal_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_clube_v2_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_clube_v2_encontros: {
+        Row: {
+          ciclo_id: string | null
+          created_at: string
+          data_hora: string | null
+          descricao: string | null
+          id: string
+          link_gravacao: string | null
+          link_reuniao: string | null
+          status: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ciclo_id?: string | null
+          created_at?: string
+          data_hora?: string | null
+          descricao?: string | null
+          id?: string
+          link_gravacao?: string | null
+          link_reuniao?: string | null
+          status?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ciclo_id?: string | null
+          created_at?: string
+          data_hora?: string | null
+          descricao?: string | null
+          id?: string
+          link_gravacao?: string | null
+          link_reuniao?: string | null
+          status?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v2_encontros_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_clube_v2_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_clube_v2_ferramentas: {
+        Row: {
+          ativa: boolean | null
+          config_ia: Json | null
+          created_at: string
+          descricao: string | null
+          id: string
+          nome: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean | null
+          config_ia?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean | null
+          config_ia?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      _deprecated_clube_v2_obras: {
+        Row: {
+          autor: string | null
+          banner_url: string | null
+          capa_url: string | null
+          created_at: string
+          descricao: string | null
+          id: string
+          metadados: Json | null
+          status: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          autor?: string | null
+          banner_url?: string | null
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          metadados?: Json | null
+          status?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          autor?: string | null
+          banner_url?: string | null
+          capa_url?: string | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          metadados?: Json | null
+          status?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      _deprecated_clube_v2_portais: {
+        Row: {
+          ciclo_id: string | null
+          configuracoes: Json | null
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number | null
+          status: string | null
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ciclo_id?: string | null
+          configuracoes?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number | null
+          status?: string | null
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          ciclo_id?: string | null
+          configuracoes?: Json | null
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number | null
+          status?: string | null
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_v2_portais_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_clube_v2_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_clube_v2_registros_usuario: {
+        Row: {
+          created_at: string
+          entidade_id: string
+          entidade_tipo: string
+          id: string
+          tipo_registro: string
+          updated_at: string
+          user_id: string
+          valor: Json
+        }
+        Insert: {
+          created_at?: string
+          entidade_id: string
+          entidade_tipo: string
+          id?: string
+          tipo_registro: string
+          updated_at?: string
+          user_id: string
+          valor: Json
+        }
+        Update: {
+          created_at?: string
+          entidade_id?: string
+          entidade_tipo?: string
+          id?: string
+          tipo_registro?: string
+          updated_at?: string
+          user_id?: string
+          valor?: Json
+        }
+        Relationships: []
+      }
       academy_progress: {
         Row: {
           badges_json: Json
@@ -6113,327 +6434,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      clube_v2_ciclos: {
-        Row: {
-          chat_knowledge_base: string | null
-          chat_prompt: string | null
-          configuracoes: Json | null
-          created_at: string
-          data_fim: string | null
-          data_inicio: string | null
-          descricao: string | null
-          id: string
-          obra_id: string | null
-          status: string | null
-          subtitulo: string | null
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          chat_knowledge_base?: string | null
-          chat_prompt?: string | null
-          configuracoes?: Json | null
-          created_at?: string
-          data_fim?: string | null
-          data_inicio?: string | null
-          descricao?: string | null
-          id?: string
-          obra_id?: string | null
-          status?: string | null
-          subtitulo?: string | null
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          chat_knowledge_base?: string | null
-          chat_prompt?: string | null
-          configuracoes?: Json | null
-          created_at?: string
-          data_fim?: string | null
-          data_inicio?: string | null
-          descricao?: string | null
-          id?: string
-          obra_id?: string | null
-          status?: string | null
-          subtitulo?: string | null
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_v2_ciclos_obra_id_fkey"
-            columns: ["obra_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v2_obras"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_v2_conteudos: {
-        Row: {
-          ciclo_id: string | null
-          conteudo_html: string | null
-          created_at: string
-          dados_dinamicos: Json | null
-          descricao: string | null
-          id: string
-          image_url: string | null
-          media_type: string | null
-          media_url: string | null
-          ordem: number | null
-          portal_id: string | null
-          status: string | null
-          tipo: string
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          ciclo_id?: string | null
-          conteudo_html?: string | null
-          created_at?: string
-          dados_dinamicos?: Json | null
-          descricao?: string | null
-          id?: string
-          image_url?: string | null
-          media_type?: string | null
-          media_url?: string | null
-          ordem?: number | null
-          portal_id?: string | null
-          status?: string | null
-          tipo: string
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          ciclo_id?: string | null
-          conteudo_html?: string | null
-          created_at?: string
-          dados_dinamicos?: Json | null
-          descricao?: string | null
-          id?: string
-          image_url?: string | null
-          media_type?: string | null
-          media_url?: string | null
-          ordem?: number | null
-          portal_id?: string | null
-          status?: string | null
-          tipo?: string
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_v2_conteudos_ciclo_id_fkey"
-            columns: ["ciclo_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v2_ciclos"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "clube_v2_conteudos_portal_id_fkey"
-            columns: ["portal_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v2_portais"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_v2_encontros: {
-        Row: {
-          ciclo_id: string | null
-          created_at: string
-          data_hora: string | null
-          descricao: string | null
-          id: string
-          link_gravacao: string | null
-          link_reuniao: string | null
-          status: string | null
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          ciclo_id?: string | null
-          created_at?: string
-          data_hora?: string | null
-          descricao?: string | null
-          id?: string
-          link_gravacao?: string | null
-          link_reuniao?: string | null
-          status?: string | null
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          ciclo_id?: string | null
-          created_at?: string
-          data_hora?: string | null
-          descricao?: string | null
-          id?: string
-          link_gravacao?: string | null
-          link_reuniao?: string | null
-          status?: string | null
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_v2_encontros_ciclo_id_fkey"
-            columns: ["ciclo_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v2_ciclos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_v2_ferramentas: {
-        Row: {
-          ativa: boolean | null
-          config_ia: Json | null
-          created_at: string
-          descricao: string | null
-          id: string
-          nome: string
-          slug: string
-          updated_at: string
-        }
-        Insert: {
-          ativa?: boolean | null
-          config_ia?: Json | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          nome: string
-          slug: string
-          updated_at?: string
-        }
-        Update: {
-          ativa?: boolean | null
-          config_ia?: Json | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          nome?: string
-          slug?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      clube_v2_obras: {
-        Row: {
-          autor: string | null
-          banner_url: string | null
-          capa_url: string | null
-          created_at: string
-          descricao: string | null
-          id: string
-          metadados: Json | null
-          status: string | null
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          autor?: string | null
-          banner_url?: string | null
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          metadados?: Json | null
-          status?: string | null
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          autor?: string | null
-          banner_url?: string | null
-          capa_url?: string | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          metadados?: Json | null
-          status?: string | null
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      clube_v2_portais: {
-        Row: {
-          ciclo_id: string | null
-          configuracoes: Json | null
-          created_at: string
-          descricao: string | null
-          id: string
-          ordem: number | null
-          status: string | null
-          titulo: string
-          updated_at: string
-        }
-        Insert: {
-          ciclo_id?: string | null
-          configuracoes?: Json | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          ordem?: number | null
-          status?: string | null
-          titulo: string
-          updated_at?: string
-        }
-        Update: {
-          ciclo_id?: string | null
-          configuracoes?: Json | null
-          created_at?: string
-          descricao?: string | null
-          id?: string
-          ordem?: number | null
-          status?: string | null
-          titulo?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "clube_v2_portais_ciclo_id_fkey"
-            columns: ["ciclo_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v2_ciclos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      clube_v2_registros_usuario: {
-        Row: {
-          created_at: string
-          entidade_id: string
-          entidade_tipo: string
-          id: string
-          tipo_registro: string
-          updated_at: string
-          user_id: string
-          valor: Json
-        }
-        Insert: {
-          created_at?: string
-          entidade_id: string
-          entidade_tipo: string
-          id?: string
-          tipo_registro: string
-          updated_at?: string
-          user_id: string
-          valor: Json
-        }
-        Update: {
-          created_at?: string
-          entidade_id?: string
-          entidade_tipo?: string
-          id?: string
-          tipo_registro?: string
-          updated_at?: string
-          user_id?: string
-          valor?: Json
-        }
-        Relationships: []
       }
       co_ai_recommendations: {
         Row: {

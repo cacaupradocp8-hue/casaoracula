@@ -25,15 +25,26 @@ export default function ClubeOracular() {
   const { cicloAtual, loadingCiclos } = useClubeLivro();
   const { voz_primaria, loading: vozLoading } = useUserVoz();
 
-  // Check if user has completed cartografia
+  // Check if user has completed cartografia (prioritize canonical profile)
   const { data: cartografiaData, isLoading: loadingCarto } = useQuery({
     queryKey: ['clube-cartografia-full', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      const [{ data: carto }, { data: mapa }] = await Promise.all([
+      
+      const [
+        { data: profiles },
+        { data: cartoPsiquica }, 
+        { data: mapa }
+      ] = await Promise.all([
+        supabase
+          .from('co_cartografia_profile')
+          .select('profile_json, created_at')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: false })
+          .limit(1),
         supabase
           .from('cartografia_psiquica')
-          .select('territorios_principais, cor_predominante, simbolo_pessoal, resumo_narrativo')
+          .select('territorios_principais, cor_predominante, simbolo_pessoal, resumo_narrativo, created_at')
           .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1),
@@ -43,7 +54,22 @@ export default function ClubeOracular() {
           .eq('user_id', user.id)
           .maybeSingle(),
       ]);
-      const cartoRow = (carto as any[])?.[0] || null;
+
+      const canonical = (profiles as any[])?.[0];
+      const legacy = (cartoPsiquica as any[])?.[0];
+
+      // Merge data: prioritize canonical JSONB, fallback to legacy flat columns
+      const cartoRow = canonical?.profile_json?.leitura_simbolica ? {
+        territorios_principais: canonical.profile_json.derivacao?.distritos ? 
+          Object.entries(canonical.profile_json.derivacao.distritos)
+            .filter(([_, v]) => v === 'alto')
+            .map(([k]) => k) : [],
+        cor_predominante: canonical.profile_json.leitura_clinica?.clima_texto || '#D4AF37',
+        simbolo_pessoal: canonical.profile_json.leitura_simbolica?.frase_semente || 'CidaDELA',
+        resumo_narrativo: canonical.profile_json.leitura_simbolica?.convite_inicial || '',
+        isCanonical: true
+      } : (legacy || null);
+
       return { carto: cartoRow, mapa: mapa as any };
     },
     enabled: !!user?.id,

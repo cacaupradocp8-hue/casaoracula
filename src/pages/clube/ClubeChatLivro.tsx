@@ -99,8 +99,9 @@ export default function ClubeChatLivro() {
     queryKey: ['club-active-cycle-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clube_v2_ciclos' as any)
-        .select('*, chat_prompt, chat_knowledge_base, clube_v2_obras(*)')
+        .from('clube_livro_ciclos')
+        .select('*, chat_prompt, chat_knowledge_base')
+        .eq('ativo', true)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -110,7 +111,7 @@ export default function ClubeChatLivro() {
     },
   });
 
-  const book = (cycle as any)?.clube_v2_obras?.[0];
+  const book = cycle;
   const matchedBook = allBooksData.find(b => b.title === book?.titulo);
   const { data: essencia } = useEssencia8020(matchedBook?.id);
 
@@ -119,7 +120,7 @@ export default function ClubeChatLivro() {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
-        content: `Olá! Estou aqui para te ajudar a transformar a leitura de **${book.title}** em prática terapêutica.\n\nCompartilhe um trecho, uma dúvida ou um campo que quer explorar.`,
+        content: `Olá! Estou aqui para te ajudar a transformar a leitura de **${book.titulo}** em prática terapêutica.\n\nCompartilhe um trecho, uma dúvida ou um campo que quer explorar.`,
       }]);
     }
   }, [book]);
@@ -163,7 +164,7 @@ export default function ClubeChatLivro() {
 
     try {
       const bookContext = book
-        ? `Livro atual: ${book.title} de ${book.author || 'autor desconhecido'}. Descrição: ${book.description || ''}.`
+        ? `Livro atual: ${book.titulo} de ${book.autor_livro || 'autor desconhecido'}. Subtítulo: ${book.subtitulo || ''}.`
         : '';
       
       const cycleContext = cycle 
@@ -257,13 +258,8 @@ Laboratório 80/20 da Obra:
         } as any).eq('user_id', user.id).order('created_at', { ascending: false }).limit(1);
         if (error) throw error;
       } else if (builderTipo === 'ferramenta_forja') {
-        const { error } = await supabase.from('clube_v2_ferramentas').insert({
-          user_id: user.id,
-          obra_id: book?.id,
-          tipo: tool.tipo,
-          config: tool
-        } as any);
-        if (error) throw error;
+        // Feature moved to specialized tool creation - using interactions log for now
+        toast.info('Sugestão enviada para curadoria.');
       }
       
       // Atualiza a interação original
@@ -318,8 +314,8 @@ Laboratório 80/20 da Obra:
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center gap-4">
-                {(estacaoAtual?.livro_capa_url || book?.cover_url) ? (
-                  <img src={estacaoAtual?.livro_capa_url || book?.cover_url} alt={estacaoAtual?.livro_titulo || book?.title} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
+                {(estacaoAtual?.livro_capa_url || book?.capa_url) ? (
+                  <img src={estacaoAtual?.livro_capa_url || book?.capa_url} alt={estacaoAtual?.livro_titulo || book?.titulo} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
                 ) : (
                   <div className="w-12 h-16 bg-muted/50 rounded flex items-center justify-center border border-white/5">
                     <BookOpen className="w-6 h-6 text-muted-foreground opacity-20" />
@@ -327,11 +323,11 @@ Laboratório 80/20 da Obra:
                 )}
                 <div>
                   <h1 className="text-lg font-serif text-foreground leading-tight flex items-center gap-2">
-                    {estacaoAtual?.livro_titulo || book?.title || 'Converse com o Livro'}
+                    {estacaoAtual?.livro_titulo || book?.titulo || 'Converse com o Livro'}
                   </h1>
                   <div className="flex items-center gap-3">
                     <p className="text-xs text-gold font-medium uppercase tracking-wider">
-                      {estacaoAtual?.livro_autor || book?.author}
+                      {estacaoAtual?.livro_autor || book?.autor_livro}
                     </p>
                     {matchedBook && (
                       <Laboratorio8020Modal 
