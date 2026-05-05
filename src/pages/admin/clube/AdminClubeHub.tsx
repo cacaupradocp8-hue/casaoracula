@@ -30,8 +30,8 @@ interface HubCard {
 const PREMIUM_CARDS: HubCard[] = [
   {
     key: 'ciclos',
-    title: 'Ciclos & Estações',
-    description: 'Gestão de jornadas temporais e livros ativos.',
+    title: 'Estações & Rotas',
+    description: 'Gestão da jornada principal e livros ativos do Clube.',
     icon: RefreshCw,
     tab: 'clube-jornadas',
     color: 'text-gold',
@@ -40,8 +40,8 @@ const PREMIUM_CARDS: HubCard[] = [
   },
   {
     key: 'portais',
-    title: 'Portais Simbólicos',
-    description: 'Configuração da cartografia: Porta, Campo, Torre e Labirinto.',
+    title: 'Portais de Acesso',
+    description: 'Configuração dos portais dentro de cada estação.',
     icon: DoorOpen,
     tab: 'clube-portais',
     color: 'text-amber-500',
@@ -51,7 +51,7 @@ const PREMIUM_CARDS: HubCard[] = [
   {
     key: 'conteudos',
     title: 'Acervo & Biblioteca',
-    description: 'Gestão de livros, áudios e materiais de apoio.',
+    description: 'Gestão de áudios (Spotify style) e materiais de apoio.',
     icon: Library,
     tab: 'clube-acervo',
     color: 'text-emerald-500',
@@ -61,7 +61,7 @@ const PREMIUM_CARDS: HubCard[] = [
   {
     key: 'treinamento',
     title: 'Sala de Treinamento',
-    description: 'Configuração de simulações clínicas e orientações éticas.',
+    description: 'Configuração de orientações éticas e simulações clínicas.',
     icon: GraduationCap,
     tab: 'clube-treinamento',
     color: 'text-blue-500',
@@ -70,8 +70,8 @@ const PREMIUM_CARDS: HubCard[] = [
   },
   {
     key: 'chat',
-    title: 'Chat com o Livro',
-    description: 'Perguntas guiadas e base de conhecimento da IA.',
+    title: 'Converse com o Livro',
+    description: 'Base de conhecimento da IA para perguntas das alunas.',
     icon: MessageSquare,
     tab: 'clube-chat',
     color: 'text-pink-500',
@@ -79,19 +79,9 @@ const PREMIUM_CARDS: HubCard[] = [
     statType: 'chat',
   },
   {
-    key: 'laboratorio-8020',
-    title: 'Laboratório 80/20',
-    description: 'Edite o núcleo simbólico e aplicável de cada obra.',
-    icon: FlaskConical,
-    tab: 'clube-laboratorio-8020',
-    color: 'text-primary',
-    bg: 'bg-primary/10',
-    statType: 'laboratorio',
-  },
-  {
     key: 'carrosseis-insights',
-    title: 'Carrosséis & Insights',
-    description: 'Gerencie slides de rota e frases do portal na Home do Clube.',
+    title: 'Visual & Insights',
+    description: 'Gerencie slides de rota e frases do portal.',
     icon: LayoutPanelLeft,
     tab: 'clube-carrosseis-insights',
     color: 'text-indigo-400',
@@ -269,26 +259,12 @@ export default function AdminClubeHub() {
                   
                   <div className="flex gap-2">
                     <Button 
-                      variant="outline" 
                       size="sm"
-                      className="gap-2 border-gold/20 text-gold hover:bg-gold/5"
-                      onClick={() => {
-                        // Navigate to Premium Editor for this station
-                        const id = stats.activeStation?.id;
-                        navigate(`/admin/clube?tab=clube-premium-editor${id ? `&estacaoId=${id}` : ''}`, { replace: true });
-                      }}
-                    >
-                      <Zap className="w-4 h-4" />
-                      Máquina Editorial
-                    </Button>
-                    <Button 
-                      size="sm"
-                      variant="ghost"
-                      className="gap-2 text-muted-foreground hover:text-foreground"
+                      className="gap-2 bg-gold hover:bg-gold/80 text-black font-semibold"
                       onClick={() => stats?.activeStation?.id && navigate(`/admin/clube/central/${stats.activeStation.id}`)}
                     >
                       <Settings className="w-4 h-4" />
-                      Central da Estação
+                      Gerenciar Estação
                     </Button>
                   </div>
                 </div>
@@ -355,32 +331,6 @@ export default function AdminClubeHub() {
           </div>
         ))}
 
-        {/* Card Especial: Ateliê IA */}
-        <div 
-          onClick={() => handleTabChange('gerador-semanal')}
-          className="group relative cursor-pointer md:col-span-1"
-        >
-          <Card className="h-full bg-gradient-to-br from-gold/10 to-transparent border-gold/20 hover:border-gold/50 transition-all duration-500 overflow-hidden">
-            <CardContent className="p-8 flex flex-col h-full relative">
-              <Sparkles className="absolute top-4 right-4 w-12 h-12 text-gold/20 animate-pulse" />
-              <div className="mb-8">
-                <div className="p-4 rounded-2xl bg-gold/20 w-fit">
-                  <Wrench className="w-7 h-7 text-gold" />
-                </div>
-              </div>
-              <div className="space-y-2 mb-8">
-                <h3 className="text-2xl font-serif text-gold">Ateliê de Conteúdo IA</h3>
-                <p className="text-sm text-muted-foreground/80 leading-relaxed font-light">
-                  Gere rascunhos de cartas, roteiros de podcasts e práticas clínicas usando inteligência artificial narrativa.
-                </p>
-              </div>
-              <div className="mt-auto pt-6 flex items-center justify-between">
-                <span className="text-[10px] uppercase tracking-widest text-gold font-bold">Laboratório 80/20</span>
-                <Button size="sm" variant="ghost" className="text-gold hover:bg-gold/10" onClick={() => navigate('/admin/atelie-conteudo')}>Acessar Ferramenta</Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
 
       {/* Rodapé Operacional Minimalista */}

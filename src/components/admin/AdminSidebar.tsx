@@ -35,7 +35,6 @@ export const adminNavGroups: AdminNavGroup[] = [
     icon: Sparkles,
     items: [
       { key: 'clube', label: 'Hub do Clube', icon: Sparkles, route: '/admin/clube' },
-      { key: 'clube-premium-editor', label: 'Máquina Editorial Pro', icon: Zap },
       { key: 'clube-jornadas', label: 'Estações & Rotas', icon: RefreshCw, route: '/admin/clube/ciclos' },
       { key: 'clube-acervo', label: 'Acervo Oracular', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com o Livro', icon: MessageSquare, route: '/admin/clube/chat' },
@@ -77,7 +76,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     icon: Headphones,
     items: [
       { key: 'estudio-oracular', label: 'Estúdio Oracular', icon: Headphones },
-      { key: 'gerador-semanal', label: 'Ateliê IA', icon: Sparkles },
+      
       { key: 'audios', label: 'Áudios & Sons', icon: Headphones },
       { key: 'galeria', label: 'Galeria de Mídias', icon: GalleryIcon },
       { key: 'vitrine', label: 'Vitrine de Cards', icon: LayoutGrid },
