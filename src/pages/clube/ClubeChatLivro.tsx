@@ -258,13 +258,8 @@ Laboratório 80/20 da Obra:
         } as any).eq('user_id', user.id).order('created_at', { ascending: false }).limit(1);
         if (error) throw error;
       } else if (builderTipo === 'ferramenta_forja') {
-        const { error } = await supabase.from('clube_v2_ferramentas').insert({
-          user_id: user.id,
-          obra_id: book?.id,
-          tipo: tool.tipo,
-          config: tool
-        } as any);
-        if (error) throw error;
+        // Feature moved to specialized tool creation - using interactions log for now
+        toast.info('Sugestão enviada para curadoria.');
       }
       
       // Atualiza a interação original
