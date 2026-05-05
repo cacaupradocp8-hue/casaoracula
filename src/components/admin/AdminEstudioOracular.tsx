@@ -244,7 +244,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
   useEffect(() => {
     supabase.from('studio_method_axes').select('*').eq('ativo', true).order('ordem')
       .then(({ data }) => setAxes(data || []));
-    supabase.from('clube_livro_ciclos').select('id, titulo, autor_livro, ativo').order('ordem')
+    supabase.from('clube_v3_routes').select('id, title').order('title')
       .then(({ data }) => setCiclos(data || []));
   }, []);
 
@@ -422,7 +422,7 @@ function EpisodeEditor({ episode, onSaved }: { episode?: any; onSaved: () => voi
           <Select value={form.tipo_episodio} onValueChange={(v) => setForm(p => ({ ...p, tipo_episodio: v }))}>
             <SelectTrigger><SelectValue /></SelectTrigger>
             <SelectContent>
-              <SelectItem value="clube_livro">📖 Clube do Livro</SelectItem>
+              <SelectItem value="clube_livro">📖 Clube de Leitura</SelectItem>
               <SelectItem value="podcast">🎙️ Podcast Público</SelectItem>
               <SelectItem value="formacao">🎓 Formação</SelectItem>
             </SelectContent>
