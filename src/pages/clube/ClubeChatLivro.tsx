@@ -319,8 +319,8 @@ Laboratório 80/20 da Obra:
                 <ArrowLeft className="w-5 h-5" />
               </Button>
               <div className="flex items-center gap-4">
-                {(estacaoAtual?.livro_capa_url || book?.cover_url) ? (
-                  <img src={estacaoAtual?.livro_capa_url || book?.cover_url} alt={estacaoAtual?.livro_titulo || book?.title} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
+                {(estacaoAtual?.livro_capa_url || book?.capa_url) ? (
+                  <img src={estacaoAtual?.livro_capa_url || book?.capa_url} alt={estacaoAtual?.livro_titulo || book?.titulo} className="w-12 h-16 object-cover rounded shadow-lg border border-white/10" />
                 ) : (
                   <div className="w-12 h-16 bg-muted/50 rounded flex items-center justify-center border border-white/5">
                     <BookOpen className="w-6 h-6 text-muted-foreground opacity-20" />
@@ -328,11 +328,11 @@ Laboratório 80/20 da Obra:
                 )}
                 <div>
                   <h1 className="text-lg font-serif text-foreground leading-tight flex items-center gap-2">
-                    {estacaoAtual?.livro_titulo || book?.title || 'Converse com o Livro'}
+                    {estacaoAtual?.livro_titulo || book?.titulo || 'Converse com o Livro'}
                   </h1>
                   <div className="flex items-center gap-3">
                     <p className="text-xs text-gold font-medium uppercase tracking-wider">
-                      {estacaoAtual?.livro_autor || book?.author}
+                      {estacaoAtual?.livro_autor || book?.autor_livro}
                     </p>
                     {matchedBook && (
                       <Laboratorio8020Modal 
