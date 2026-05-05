@@ -459,18 +459,18 @@ export default function ClubeRotaPremium() {
                               }
                             }}
                             placeholder="Escreva sua inquietação..."
-                            className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+                            className="bg-midnight/60 border-foreground/10 h-12 sm:h-13 pl-4 sm:pl-5 pr-12 sm:pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all text-sm sm:text-base"
                           />
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
+                            className="absolute right-1 sm:right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10 sm:h-11 sm:w-11"
                             onClick={() =>
                               navigate(
                                 pergunta.trim()
                                   ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
                                   : '/clube/chat-livro'
-                              )
+                               )
                             }
                           >
                             <ArrowRight className="w-4 h-4" />
