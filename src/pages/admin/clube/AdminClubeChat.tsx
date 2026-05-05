@@ -57,16 +57,7 @@ export default function AdminClubeChat() {
         .eq('id', selectedCiclo);
       if (err1) throw err1;
 
-      // 2. Update v2 table (by title match to ensure student page sees it)
-      const { error: err2 } = await supabase
-        .from('clube_v2_ciclos')
-        .update({
-          chat_prompt: chatPrompt,
-          chat_knowledge_base: chatKnowledge,
-        })
-        .eq('titulo', ciclo.titulo);
-      // We don't throw if v2 update fails (maybe it doesn't exist yet)
-      if (err2) console.warn('v2 sync failed', err2);
+      // v2 sync removed - using canonical clube_livro_ciclos only
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-ciclos-chat'] });
