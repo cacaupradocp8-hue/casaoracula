@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info, Quote } from 'lucide-react';
 import { AudioOracular } from '@/components/audio/AudioOracular';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ export interface CarouselSlide {
   titulo?: string;
   frase_simbolica?: string;
   image_url?: string;
+  legenda?: string;
 }
 
 interface SymbolicCarouselBlockProps {
@@ -34,6 +35,9 @@ export function SymbolicCarouselBlock({
   className,
 }: SymbolicCarouselBlockProps) {
   const [current, setCurrent] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   
   const { data: dbSlides, isLoading } = useClubeCarrosselSlides({ 
     rota_slug: rotaSlug, 
@@ -44,29 +48,36 @@ export function SymbolicCarouselBlock({
     ? dbSlides.map(s => ({
         titulo: s.titulo || undefined,
         frase_simbolica: s.texto || undefined,
-        image_url: s.icone || undefined // Using icone as image_url for now if image_url doesn't exist in DB
+        image_url: s.icone || undefined,
+        legenda: s.legenda || undefined
       }))
     : initialSlides;
 
   const total = slides.length;
 
-  const next = useCallback(() => {
-    if (total > 1) setCurrent((c) => (c + 1) % total);
+  const paginate = useCallback((newDirection: number) => {
+    if (total <= 1) return;
+    setDirection(newDirection);
+    setCurrent((prev) => (prev + newDirection + total) % total);
   }, [total]);
 
-  const prev = useCallback(() => {
-    if (total > 1) setCurrent((c) => (c - 1 + total) % total);
-  }, [total]);
+  const resetTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    if (!isPaused && total > 1) {
+      timerRef.current = setInterval(() => paginate(1), 5000);
+    }
+  }, [isPaused, paginate, total]);
 
   useEffect(() => {
-    if (total <= 1) return;
-    const timer = setInterval(next, 8000);
-    return () => clearInterval(timer);
-  }, [next, total]);
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [resetTimer, current]);
 
   if (isLoading) {
     return (
-      <div className={cn("h-[400px] flex items-center justify-center bg-card/20 rounded-2xl border border-white/5", className)}>
+      <div className={cn("h-[400px] flex items-center justify-center bg-card/10 rounded-3xl border border-white/5", className)}>
         <Info className="w-5 h-5 text-gold/40 animate-pulse" />
       </div>
     );
@@ -75,25 +86,24 @@ export function SymbolicCarouselBlock({
   if (!slides.length && fallbackText) {
     return (
       <div className={cn(
-        'relative rounded-2xl overflow-hidden',
-        'bg-gradient-to-br from-card/90 via-card to-secondary/50',
-        'border border-border/20 p-8 min-h-[300px]',
+        'relative rounded-3xl overflow-hidden',
+        'bg-gradient-to-br from-card/80 via-card to-background',
+        'border border-white/10 p-10 md:p-16 min-h-[400px] flex flex-col justify-center',
         className
       )}>
-        <div className="absolute -top-20 -right-20 w-60 h-60 rounded-full bg-gold/5 blur-[80px] pointer-events-none" />
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-primary/5 blur-[60px] pointer-events-none" />
-
-        <div className="relative z-10 h-full flex flex-col">
-          <div className="flex items-center gap-3 mb-6">
-            <span className="text-gold">{icon}</span>
-            <h3 className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-gold/80 font-medium">{title}</h3>
+        <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gold/5 blur-[100px] pointer-events-none" />
+        
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-8">
+            <span className="text-gold/60">{icon}</span>
+            <h3 className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-gold/50 font-medium">{title}</h3>
           </div>
-          <div className="h-px w-full bg-gradient-to-r from-gold/30 via-gold/10 to-transparent mb-6" />
-          <p className="text-foreground/80 leading-relaxed text-base font-body italic flex-grow">
+          <div className="h-px w-24 bg-gradient-to-r from-gold/40 to-transparent mb-8" />
+          <p className="text-foreground/70 leading-relaxed text-xl font-serif italic max-w-2xl">
             {fallbackText}
           </p>
           {audioUrl && (
-            <div className="mt-6 pt-4 border-t border-border/10">
+            <div className="mt-12 pt-8 border-t border-white/5">
               <AudioOracular audioUrl={audioUrl} titulo={title} compact />
             </div>
           )}
@@ -104,106 +114,177 @@ export function SymbolicCarouselBlock({
 
   if (!slides.length) return null;
 
-  const slide = slides[current];
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+      filter: 'blur(4px)'
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      filter: 'blur(0px)'
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+      filter: 'blur(4px)'
+    })
+  };
 
   return (
-    <div className={cn(
-      'relative rounded-2xl overflow-hidden flex flex-col',
-      'border border-border/30 bg-card/20 backdrop-blur-sm shadow-xl',
-      className
-    )}>
-      {/* Content area with fixed aspect ratio for stability */}
-      <div className="relative aspect-video md:aspect-[21/9] min-h-[350px] md:min-h-[400px] overflow-hidden bg-black/40">
-        <AnimatePresence mode="wait">
+    <div 
+      className={cn('group relative w-full overflow-hidden flex flex-col gap-6', className)}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      {/* Block Header */}
+      <div className="flex items-center gap-3 px-4">
+        <span className="text-gold/60">{icon}</span>
+        <span className="text-[10px] uppercase tracking-[0.4em] text-gold/40 font-medium">
+          {title}
+        </span>
+      </div>
+
+      {/* Carousel Main Container */}
+      <div className="relative min-h-[420px] md:min-h-[480px] w-full flex items-center justify-center">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={current}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="absolute inset-0 flex flex-col"
-          >
-            {/* Background (Image or Gradient) */}
-            {slide.image_url ? (
-              <div className="absolute inset-0 z-0">
-                <img
-                  src={slide.image_url}
-                  alt={slide.titulo || ""}
-                  className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-              </div>
-            ) : (
-              <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-primary/5" />
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{
+              x: { type: "spring", stiffness: 300, damping: 30 },
+              opacity: { duration: 0.4 },
+              scale: { duration: 0.4 },
+              filter: { duration: 0.4 }
+            }}
+            className={cn(
+              "absolute inset-0 mx-auto max-w-5xl rounded-3xl overflow-hidden",
+              "bg-card/30 backdrop-blur-xl border border-white/10",
+              "shadow-[0_20px_50px_rgba(0,0,0,0.3)]",
+              "flex flex-col items-center justify-center text-center p-8 md:p-16"
             )}
+          >
+            {/* Background Decoration */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-transparent to-black/20" />
+              {slides[current].image_url && (
+                <img 
+                  src={slides[current].image_url} 
+                  className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay scale-110" 
+                  alt="" 
+                />
+              )}
+            </div>
 
-            {/* Content Overlay */}
-            <div className="relative z-10 flex-grow flex flex-col justify-center p-8 md:p-16 max-w-4xl mx-auto w-full">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-gold/60">{icon}</span>
-                <span className="text-[10px] uppercase tracking-[0.3em] text-gold/50 font-medium">{title}</span>
-              </div>
+            {/* Content Container */}
+            <div className="relative z-10 w-full flex flex-col items-center gap-8">
+              {slides[current].titulo && (
+                <motion.h4 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="font-display text-2xl md:text-5xl font-semibold text-white tracking-tight leading-tight max-w-3xl"
+                >
+                  {slides[current].titulo}
+                </motion.h4>
+              )}
 
-              <div className="space-y-6">
-                {slide.titulo && (
-                  <h3 className="font-display text-2xl md:text-4xl font-semibold text-white tracking-tight leading-tight">
-                    {slide.titulo}
-                  </h3>
-                )}
-                {slide.frase_simbolica && (
-                  <div className="relative">
-                    <div className="absolute -left-6 top-0 bottom-0 w-1 bg-gold/30 rounded-full" />
-                    <p className="text-base md:text-xl text-white/80 italic leading-relaxed font-serif pl-4">
-                      {slide.frase_simbolica}
+              {slides[current].frase_simbolica && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="relative flex flex-col items-center gap-4"
+                >
+                  <Quote className="w-6 h-6 text-gold/20 mb-2" />
+                  <div className="flex items-center gap-4 max-w-2xl px-4">
+                    <div className="hidden md:block w-[1px] h-12 bg-gold/30 self-start mt-1" />
+                    <p className="text-lg md:text-2xl text-white/80 font-serif italic leading-relaxed">
+                      {slides[current].frase_simbolica}
                     </p>
                   </div>
-                )}
-              </div>
+                  
+                  {slides[current].legenda && (
+                    <span className="mt-4 text-[11px] uppercase tracking-[0.25em] text-white/30 font-medium">
+                      — {slides[current].legenda}
+                    </span>
+                  )}
+                </motion.div>
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
 
-        {/* Navigation - Hidden on mobile, visible on hover/touch on tablet+ */}
-        <div className="absolute inset-y-0 left-0 right-0 flex items-center justify-between px-4 z-20 pointer-events-none">
+        {/* Desktop Peek Effects (pseudo-elements) */}
+        <div className="hidden lg:block absolute left-0 w-32 h-[80%] bg-gradient-to-r from-background to-transparent z-10 pointer-events-none opacity-50" />
+        <div className="hidden lg:block absolute right-0 w-32 h-[80%] bg-gradient-to-l from-background to-transparent z-10 pointer-events-none opacity-50" />
+
+        {/* Navigation Arrows - Desktop Only */}
+        <div className="hidden md:flex absolute inset-y-0 left-0 right-0 items-center justify-between px-4 z-20 pointer-events-none">
           <Button
             variant="ghost"
             size="icon"
-            onClick={prev}
-            className="w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 border border-white/10 pointer-events-auto backdrop-blur-sm opacity-0 md:opacity-100 transition-opacity"
+            onClick={() => paginate(-1)}
+            className={cn(
+              "w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white/60",
+              "hover:bg-gold/10 hover:border-gold/30 hover:text-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]",
+              "transition-all duration-300 pointer-events-auto backdrop-blur-md opacity-0 group-hover:opacity-100"
+            )}
           >
-            <ChevronLeft className="w-5 h-5 text-white/70" />
+            <ChevronLeft className="w-6 h-6" />
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            onClick={next}
-            className="w-10 h-10 rounded-full bg-black/20 hover:bg-black/40 border border-white/10 pointer-events-auto backdrop-blur-sm opacity-0 md:opacity-100 transition-opacity"
+            onClick={() => paginate(1)}
+            className={cn(
+              "w-12 h-12 rounded-full bg-white/5 border border-white/10 text-white/60",
+              "hover:bg-gold/10 hover:border-gold/30 hover:text-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.2)]",
+              "transition-all duration-300 pointer-events-auto backdrop-blur-md opacity-0 group-hover:opacity-100"
+            )}
           >
-            <ChevronRight className="w-5 h-5 text-white/70" />
+            <ChevronRight className="w-6 h-6" />
           </Button>
         </div>
       </div>
 
-      {/* Footer controls (Desktop-friendly, no overlap) */}
-      <div className="p-6 border-t border-white/5 bg-black/20 flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
+      {/* Indicators & Audio Controls */}
+      <div className="px-4 flex flex-col md:flex-row items-center justify-between gap-8 pt-4">
+        {/* Pagination Dots */}
+        <div className="flex items-center gap-2.5">
           {slides.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrent(i)}
+              onClick={() => {
+                setDirection(i > current ? 1 : -1);
+                setCurrent(i);
+              }}
               className={cn(
-                "h-1.5 rounded-full transition-all duration-300",
-                i === current ? "w-8 bg-gold" : "w-1.5 bg-white/20 hover:bg-white/40"
+                "h-1 rounded-full transition-all duration-500",
+                i === current 
+                  ? "w-6 bg-gold shadow-[0_0_10px_rgba(212,175,55,0.4)]" 
+                  : "w-1.5 bg-white/10 hover:bg-white/30"
               )}
             />
           ))}
-          <span className="ml-4 text-[10px] font-mono text-white/30 tracking-widest uppercase">
-            {current + 1} / {total}
+          <span className="ml-4 text-[10px] font-mono text-white/20 tracking-widest uppercase tabular-nums">
+            {String(current + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
           </span>
         </div>
 
+        {/* Audio Footer */}
         {audioUrl && (
-          <div className="w-full md:w-auto md:min-w-[300px]">
+          <div className="w-full md:w-auto md:min-w-[340px] bg-black/20 rounded-2xl p-2 border border-white/5">
             <AudioOracular audioUrl={audioUrl} titulo={title} compact />
           </div>
         )}
@@ -211,3 +292,4 @@ export function SymbolicCarouselBlock({
     </div>
   );
 }
+
