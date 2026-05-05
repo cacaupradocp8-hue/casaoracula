@@ -238,33 +238,52 @@ export function PortalEntradaRota({
   );
 }
 
-function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: boolean; chips: string[] }) {
+function SlideCard({ slide, isActive, chips, microcopy }: { slide: PortalSlide; isActive: boolean; chips: string[]; microcopy?: string }) {
   return (
     <div
       className={cn(
-        'rounded-[2rem] border border-white/20 bg-white/[0.07] backdrop-blur-xl p-7 md:p-9',
-        'shadow-[0_30px_80px_-20px_hsl(var(--gold)/0.25)]',
-        'flex flex-col items-center text-center'
+        'rounded-[2rem] border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-8 md:p-12',
+        'shadow-[0_40px_100px_-30px_hsl(var(--gold)/0.3)]',
+        'flex flex-col items-center text-center min-h-[440px] md:min-h-[480px] justify-center gap-6'
       )}
     >
       <motion.div
-        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -8 }}
+        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -6 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-        className="text-gold mb-5"
+        className="text-gold/90"
       >
         {slide.icon}
       </motion.div>
-      <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase leading-tight tracking-wide">
-        {slide.title}
-      </h3>
-      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md">
-        {slide.subtitle}
-      </p>
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
+      <div className="space-y-3">
+        <h3 className="font-display font-light text-white text-2xl md:text-3xl tracking-tight leading-tight">
+          {slide.title}
+        </h3>
+        <div className="h-px w-12 bg-gold/30 mx-auto" />
+        <p className="text-white/65 text-sm md:text-base leading-relaxed font-serif italic max-w-md">
+          {slide.subtitle}
+        </p>
+      </div>
+
+      {isActive && microcopy && (
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={microcopy}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.6 }}
+            className="text-gold/80 text-xs md:text-sm font-serif italic leading-relaxed max-w-sm pt-2 border-t border-white/5"
+          >
+            "{microcopy}"
+          </motion.p>
+        </AnimatePresence>
+      )}
+
+      <div className="flex flex-wrap justify-center gap-1.5 pt-2">
         {chips.map((c) => (
           <span
             key={c}
-            className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-[11px] font-semibold"
+            className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/50 text-[10px] tracking-[0.15em] uppercase"
           >
             {c}
           </span>
