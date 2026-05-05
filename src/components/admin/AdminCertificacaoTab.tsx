@@ -84,9 +84,9 @@ export function AdminCertificacaoTab() {
       (audioProgress || []).forEach(ap => {
         audioMap.set(ap.user_id, (audioMap.get(ap.user_id) || 0) + 1);
       });
-      const labSet = new Set((userProgress || []).filter(p => p.therapeutic_completed).map(l => l.user_id));
-      const registroSet = new Set((userProgress || []).filter(p => p.letter_completed).map(r => r.user_id));
-      const integracaoSet = new Set((userProgress || []).filter(p => p.reflection_completed).map(i => i.user_id));
+      const labSet = new Set((userProgress || []).filter(p => (p as any).practice_completed).map(l => (l as any).user_id));
+      const registroSet = new Set((userProgress || []).filter(p => (p as any).letter_completed).map(r => (r as any).user_id));
+      const integracaoSet = new Set((userProgress || []).filter(p => (p as any).reflection_completed).map(i => (i as any).user_id));
       const certMap = new Map<string, { id: string; status: string }>();
       (certs || []).forEach(c => certMap.set(c.user_id, { id: c.id, status: c.status || 'elegivel' }));
 

@@ -10,6 +10,14 @@ export interface ClubeCiclo {
   subtitulo?: string;
   publicado: boolean;
   ativo: boolean;
+  autor_livro?: string;
+  capa_url?: string;
+  tema_simbolico?: string;
+  orientacao_clinica_uso?: string;
+  orientacao_clinica_evitar?: string;
+  orientacao_clinica_riscos?: string;
+  orientacao_clinica_indicado?: string;
+  orientacao_clinica_contraindicado?: string;
 }
 
 export interface ClubeFase {
@@ -18,6 +26,16 @@ export interface ClubeFase {
   titulo: string;
   descricao?: string;
   status?: string;
+  numero_semana?: number;
+  tipo_fase?: string;
+  orientacao_curta?: string;
+  leitura_orientada?: string;
+  observacao_clinica?: string;
+  alerta_clinico?: string;
+  lista_uso_inadequado?: string[];
+  texto_fechamento?: string;
+  ponte_sala_id?: string;
+  ponte_sala_texto?: string;
 }
 
 export interface ClubeEscuta {
@@ -25,6 +43,15 @@ export interface ClubeEscuta {
   station_id: string;
   titulo: string;
   audio_url?: string;
+  texto_conteudo?: string;
+  descricao?: string;
+}
+
+export interface ClubeEncontro {
+  id: string;
+  ciclo_id: string;
+  titulo: string;
+  data_encontro?: string;
 }
 
 // Hook principal usando V3
@@ -46,6 +73,8 @@ export function useClubeLivro() {
         subtitulo: r.subtitle,
         publicado: r.status === 'active',
         ativo: r.status === 'active',
+        capa_url: (r as any).cover_url,
+        autor_livro: (r as any).author,
       })) as unknown as ClubeCiclo[];
     },
     enabled: !!user,
@@ -81,6 +110,8 @@ export function useClubeCicloDetalhe(cicloId: string | undefined) {
         id: data.id,
         titulo: data.title,
         subtitulo: data.subtitle,
+        capa_url: (data as any).cover_url,
+        autor_livro: (data as any).author,
       } as unknown as ClubeCiclo;
     },
     enabled: !!cicloId && !!user,
