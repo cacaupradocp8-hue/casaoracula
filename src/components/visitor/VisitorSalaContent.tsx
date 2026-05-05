@@ -1,13 +1,14 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Compass, Shield, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { BreathingMandala } from '@/components/visitor/BreathingMandala';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
+import { PortalEntradaRota, type PortalSlide } from '@/components/clube-livro/PortalEntradaRota';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
@@ -24,6 +25,14 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [showPortal, setShowPortal] = useState(false);
+
+  const visitorSlides: PortalSlide[] = useMemo(() => [
+    { icon: <Sparkles />, title: 'Sua Essência', subtitle: 'Não buscamos respostas prontas, mas as perguntas certas.' },
+    { icon: <Compass />, title: 'O Caminho', subtitle: 'Uma jornada simbólica através dos seus próprios portais.' },
+    { icon: <Shield />, title: 'Sustentação', subtitle: 'Aprenda a sustentar o campo antes de conduzir o outro.' },
+    { icon: <Heart />, title: 'A Voz', subtitle: 'Sua voz não precisa de permissão para existir.' },
+  ], []);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
@@ -31,6 +40,11 @@ export function VisitorSalaContent() {
   ) : null;
 
   const handleStartQuiz = useCallback(() => {
+    setShowPortal(true);
+  }, []);
+
+  const handlePortalComplete = useCallback(() => {
+    setShowPortal(false);
     setIsTransitioning(true);
     setTimeout(() => {
       navigate('/quiz/descubra-seu-eixo');
@@ -39,6 +53,18 @@ export function VisitorSalaContent() {
 
   return (
     <>
+      <AnimatePresence>
+        {showPortal && (
+          <PortalEntradaRota 
+            slug="visitante-v1"
+            portalTitulo="O Primeiro Limiar"
+            slides={visitorSlides}
+            onComplete={handlePortalComplete}
+            ctaLabel="INICIAR REVELAÇÃO"
+          />
+        )}
+      </AnimatePresence>
+
       {/* Transition overlay — sensação de passagem */}
       <AnimatePresence>
         {isTransitioning && (
