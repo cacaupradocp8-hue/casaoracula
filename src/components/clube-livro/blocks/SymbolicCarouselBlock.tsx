@@ -1,8 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Info, Quote } from 'lucide-react';
 import { AudioOracular } from '@/components/audio/AudioOracular';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useClubeCarrosselSlides } from '@/hooks/useClubeCarrosselSlides';
 
@@ -24,6 +24,78 @@ interface SymbolicCarouselBlockProps {
   className?: string;
 }
 
+/**
+ * CarouselParticles - Subcomponente para o fundo "respirando"
+ */
+function CarouselParticles() {
+  const shouldReduceMotion = useReducedMotion();
+  
+  const particles = useMemo(() => {
+    return Array.from({ length: 12 }).map((_, i) => ({
+      id: i,
+      size: Math.random() * 2 + 1,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      duration: Math.random() * 6 + 8,
+      delay: Math.random() * 5
+    }));
+  }, []);
+
+  if (shouldReduceMotion) {
+    return (
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        {particles.map((p) => (
+          <div
+            key={p.id}
+            style={{
+              position: 'absolute',
+              width: p.size,
+              height: p.size,
+              left: p.left,
+              top: p.top,
+              backgroundColor: 'rgb(212, 175, 55)',
+              opacity: 0.1,
+              borderRadius: '50%',
+              filter: 'blur(0.5px)'
+            }}
+          />
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          initial={{ opacity: 0.1 }}
+          animate={{
+            y: [0, -20, 0],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "easeInOut"
+          }}
+          style={{
+            position: 'absolute',
+            width: p.size,
+            height: p.size,
+            left: p.left,
+            top: p.top,
+            backgroundColor: 'rgb(212, 175, 55)',
+            borderRadius: '50%',
+            filter: 'blur(0.5px)'
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function SymbolicCarouselBlock({
   title,
   icon,
@@ -38,6 +110,7 @@ export function SymbolicCarouselBlock({
   const [direction, setDirection] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef<any>(null);
+  const shouldReduceMotion = useReducedMotion();
   
   const { data: dbSlides, isLoading } = useClubeCarrosselSlides({ 
     rota_slug: rotaSlug, 
@@ -184,15 +257,20 @@ export function SymbolicCarouselBlock({
                   alt="" 
                 />
               )}
+              <CarouselParticles />
             </div>
 
             {/* Content Container */}
             <div className="relative z-10 w-full flex flex-col items-center gap-8">
               {slides[current].titulo && (
                 <motion.h4 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
+                  initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 14, filter: shouldReduceMotion ? 'blur(0px)' : 'blur(6px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  transition={{ 
+                    duration: 0.8,
+                    delay: 0.15,
+                    ease: [0.22, 1, 0.36, 1]
+                  }}
                   className="font-display text-2xl md:text-5xl font-semibold text-white tracking-tight leading-tight max-w-3xl"
                 >
                   {slides[current].titulo}
@@ -200,33 +278,50 @@ export function SymbolicCarouselBlock({
               )}
 
               {slides[current].frase_simbolica && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="relative flex flex-col items-center gap-4"
-                >
-                  <Quote className="w-6 h-6 text-gold/20 mb-2" />
-                  <div className="flex items-center gap-4 max-w-2xl px-4">
+                <div className="relative flex flex-col items-center gap-4">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                    className="flex flex-col items-center"
+                  >
+                    <Quote className="w-6 h-6 text-gold/20 mb-2" />
+                  </motion.div>
+                  
+                  <motion.div 
+                    initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 10, filter: shouldReduceMotion ? 'blur(0px)' : 'blur(4px)' }}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                    transition={{ 
+                      duration: 0.9,
+                      delay: 0.4,
+                      ease: [0.22, 1, 0.36, 1]
+                    }}
+                    className="flex items-center gap-4 max-w-2xl px-4"
+                  >
                     <div className="hidden md:block w-[1px] h-12 bg-gold/30 self-start mt-1" />
                     <p className="text-lg md:text-2xl text-white/80 font-serif italic leading-relaxed">
                       {slides[current].frase_simbolica}
                     </p>
-                  </div>
+                  </motion.div>
                   
                   {slides[current].legenda && (
-                    <span className="mt-4 text-[11px] uppercase tracking-[0.25em] text-white/30 font-medium">
+                    <motion.span 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.6, duration: 0.6 }}
+                      className="mt-4 text-[11px] uppercase tracking-[0.25em] text-white/30 font-medium"
+                    >
                       — {slides[current].legenda}
-                    </span>
+                    </motion.span>
                   )}
-                </motion.div>
+                </div>
               )}
 
               {/* Action Button - Subtle and Elegant */}
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
+                initial={{ opacity: 0, y: shouldReduceMotion ? 0 : 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.75, duration: 0.6 }}
                 className="mt-4"
               >
                 <Button
@@ -313,4 +408,3 @@ export function SymbolicCarouselBlock({
     </div>
   );
 }
-
