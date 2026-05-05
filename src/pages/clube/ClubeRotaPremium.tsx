@@ -126,7 +126,7 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       {/* Wrapper de fundo cinematográfico */}
-      <div className="relative bg-midnight text-foreground overflow-hidden">
+      <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
         {/* Gradiente atmosférico fixo de fundo */}
         <div className="pointer-events-none fixed inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(206_60%_18%/0.6),transparent_60%)]" />
@@ -134,7 +134,7 @@ export default function ClubeRotaPremium() {
         </div>
 
         {/* ═══════════ 1. HERO FULL SCREEN ═══════════ */}
-        <section className="relative min-h-[100svh] flex items-center justify-center px-6 z-10">
+        <section className="relative min-h-[100svh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
             className="absolute inset-0 pointer-events-none"
@@ -153,27 +153,27 @@ export default function ClubeRotaPremium() {
               />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/60 to-midnight" />
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[160px]" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[100px] sm:blur-[160px]" />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 text-center max-w-4xl mx-auto space-y-10"
+            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6 sm:space-y-10"
           >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 1.2 }}
-              className="flex flex-col items-center justify-center gap-5"
+              className="flex flex-col items-center justify-center gap-4 sm:gap-5"
             >
-              <div className="flex items-center gap-4">
-                <span className="h-[1px] w-12 bg-gradient-to-r from-transparent to-gold/40" />
-                <span className="text-[10px] tracking-[0.6em] uppercase text-gold/60 font-medium">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="h-[px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
+                <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
                   {estacaoAtual?.livro_titulo || 'Estação Oracular'}
                 </span>
-                <span className="h-[1px] w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
               </div>
 
               {matchedBook && (
@@ -184,7 +184,7 @@ export default function ClubeRotaPremium() {
                     <motion.button
                       whileHover={{ scale: 1.02, backgroundColor: 'rgba(212, 175, 55, 0.15)' }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex items-center gap-2.5 px-5 py-2 rounded-full bg-gold/5 border border-gold/20 text-gold/80 text-[9px] font-bold uppercase tracking-[0.2em] transition-all"
+                      className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-gold/5 border border-gold/20 text-gold/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] transition-all min-h-[44px]"
                     >
                       <FlaskConical className="w-3 h-3" />
                       Módulo 80/20
@@ -194,12 +194,12 @@ export default function ClubeRotaPremium() {
               )}
             </motion.div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 px-2 sm:px-0">
               <h1
                 className="font-display font-light leading-[0.95] tracking-tighter"
-                style={{ fontSize: 'clamp(3rem, 10vw, 8rem)' }}
+                style={{ fontSize: 'clamp(2.5rem, 12vw, 8rem)' }}
               >
-                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent block">
                   {ponto.nome}
                 </span>
               </h1>
@@ -209,7 +209,7 @@ export default function ClubeRotaPremium() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 1 }}
-                  className="font-serif italic text-xl md:text-3xl text-white/40 max-w-2xl mx-auto leading-relaxed"
+                  className="font-serif italic text-lg sm:text-2xl md:text-3xl text-white/40 max-w-2xl mx-auto leading-relaxed"
                 >
                   "{ponto.subtitulo}"
                 </motion.p>
@@ -220,12 +220,12 @@ export default function ClubeRotaPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 1 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 sm:pt-10 px-4 sm:px-0"
             >
               <Button
                 size="lg"
                 variant="gold"
-                className="w-full sm:w-auto h-16 px-12 text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
+                className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
                 onClick={() => {
                   const el = document.getElementById('mapa-vivo');
                   el?.scrollIntoView({ behavior: 'smooth' });
@@ -237,7 +237,7 @@ export default function ClubeRotaPremium() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto h-16 px-10 text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                  className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
                 >
                   <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
                 </Button>
@@ -250,25 +250,25 @@ export default function ClubeRotaPremium() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5, duration: 1.5 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10"
+            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="flex flex-col items-center gap-3 text-white/20"
+              className="flex flex-col items-center gap-2 sm:gap-3 text-white/20"
             >
-              <span className="text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
-              <div className="w-[1px] h-12 bg-gradient-to-b from-gold/40 to-transparent" />
+              <span className="text-[7px] sm:text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
+              <div className="w-[1px] h-8 sm:h-12 bg-gradient-to-b from-gold/40 to-transparent" />
             </motion.div>
           </motion.div>
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12 space-y-32 md:space-y-48 pb-48 pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 sm:space-y-32 md:space-y-48 pb-24 sm:pb-48 pt-10 sm:pt-20">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Mapa da Travessia">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-start">
               {/* Coluna de Cards de Cartografia — Bento Style */}
               <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                 {cartografia.map((item, i) => (
@@ -278,17 +278,17 @@ export default function ClubeRotaPremium() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ delay: i * 0.1, duration: 0.8 }}
-                    className="group relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-md p-6 transition-all hover:border-gold/20 hover:bg-white/[0.04]"
+                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-md p-5 sm:p-6 transition-all hover:border-gold/20 hover:bg-white/[0.04]"
                   >
-                    <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-2xl border border-gold/10 bg-gold/[0.03] flex items-center justify-center shrink-0 group-hover:bg-gold/10 transition-colors">
-                        <item.icon className="w-5 h-5 text-gold/60" />
+                    <div className="flex items-center gap-4 sm:gap-5">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl border border-gold/10 bg-gold/[0.03] flex items-center justify-center shrink-0 group-hover:bg-gold/10 transition-colors">
+                        <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-gold/60" />
                       </div>
                       <div className="min-w-0 flex-1 space-y-0.5">
-                        <p className="text-[8px] tracking-[0.4em] uppercase text-white/30 font-bold">
+                        <p className="text-[7px] sm:text-[8px] tracking-[0.4em] uppercase text-white/30 font-bold">
                           {item.label}
                         </p>
-                        <p className="font-display text-lg text-white/90 leading-tight truncate">
+                        <p className="font-display text-base sm:text-lg text-white/90 leading-tight truncate">
                           {item.value}
                         </p>
                       </div>
@@ -299,8 +299,8 @@ export default function ClubeRotaPremium() {
 
               {/* Coluna da Timeline — Direita */}
               <div className="lg:col-span-7">
-                <div className="relative pl-8 md:pl-12">
-                  <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-[1px] bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
+                <div className="relative pl-6 sm:pl-8 md:pl-12">
+                  <div className="absolute left-[6px] sm:left-[7px] md:left-[11px] top-1 bottom-1 w-[1px] bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
                   {pontos.map((item, idx) => {
                     const isCurrent = item.id === ponto.id;
                     const isCompleted = item.estado === 'completed';
@@ -322,7 +322,7 @@ export default function ClubeRotaPremium() {
                       >
                         <div
                           className={cn(
-                            'absolute -left-[24px] md:-left-[28px] top-7 w-4 h-4 rounded-full border-[1px] transition-all flex items-center justify-center',
+                            'absolute -left-[19px] sm:-left-[24px] md:-left-[28px] top-6 sm:top-7 w-3 h-3 sm:w-4 sm:h-4 rounded-full border-[1px] transition-all flex items-center justify-center',
                             isCurrent &&
                               'bg-gold border-gold shadow-[0_0_20px_rgba(212,175,55,0.5)] scale-125 z-10',
                             !isCurrent && isCompleted && 'bg-gold/20 border-gold/40',
@@ -336,13 +336,13 @@ export default function ClubeRotaPremium() {
                           )}
                         </div>
                         <div className={cn(
-                          "flex items-center justify-between gap-6 p-4 rounded-2xl transition-all duration-500",
+                          "flex items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-500 min-h-[44px]",
                           isCurrent ? "bg-white/[0.04] border border-white/10" : "bg-transparent border border-transparent hover:bg-white/[0.02]"
                         )}>
-                          <div className="min-w-0 space-y-1">
+                          <div className="min-w-0 space-y-0.5 sm:space-y-1">
                             <p
                               className={cn(
-                                'text-[8px] tracking-[0.4em] uppercase font-bold flex items-center gap-2',
+                                'text-[7px] sm:text-[8px] tracking-[0.4em] uppercase font-bold flex items-center gap-2',
                                 isLocked ? 'text-white/10' : 'text-white/30'
                               )}
                             >
@@ -352,7 +352,7 @@ export default function ClubeRotaPremium() {
                             </p>
                             <p
                               className={cn(
-                                'font-display text-lg md:text-xl transition-colors truncate tracking-tight',
+                                'font-display text-base sm:text-lg md:text-xl transition-colors truncate tracking-tight',
                                 isCurrent && 'text-white',
                                 !isCurrent && isCompleted && 'text-white/60',
                                 !isCurrent && !isCompleted && !isLocked &&
@@ -392,20 +392,20 @@ export default function ClubeRotaPremium() {
                   >
                     <button
                       onClick={() => audio.url && window.open(audio.url, '_blank')}
-                      className="w-full text-left group flex items-center gap-4 p-4 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-gold/20 transition-all"
+                      className="w-full text-left group flex items-center gap-4 p-4 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-gold/20 transition-all min-h-[44px]"
                     >
-                      <div className="relative w-14 h-14 shrink-0 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                        <Play className="w-5 h-5 text-gold fill-gold/80 ml-0.5" />
+                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
+                        <Play className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold/80 ml-0.5" />
                         <span className="absolute inset-0 rounded-full ring-1 ring-gold/0 group-hover:ring-gold/30 group-hover:scale-110 transition-all" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
+                        <p className="text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-0.5 sm:mb-1">
                           {audio.tipo || 'Áudio de integração'}
                         </p>
-                        <h4 className="font-display text-base md:text-lg text-foreground/90 group-hover:text-foreground transition-colors truncate">
+                        <h4 className="font-display text-sm sm:text-base md:text-lg text-foreground/90 group-hover:text-foreground transition-colors truncate">
                           {audio.titulo}
                         </h4>
-                        <span className="flex items-center gap-1.5 text-[10px] text-foreground/70 mt-1">
+                        <span className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-foreground/70 mt-0.5 sm:mt-1">
                           <Clock className="w-3 h-3" /> {audio.duracao || '—'}
                         </span>
                       </div>
@@ -459,18 +459,18 @@ export default function ClubeRotaPremium() {
                               }
                             }}
                             placeholder="Escreva sua inquietação..."
-                            className="bg-midnight/60 border-foreground/10 h-13 pl-5 pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all"
+                            className="bg-midnight/60 border-foreground/10 h-12 sm:h-13 pl-4 sm:pl-5 pr-12 sm:pr-14 rounded-full focus-visible:border-gold/40 focus-visible:ring-gold/10 transition-all text-sm sm:text-base"
                           />
                           <Button
                             size="icon"
                             variant="ghost"
-                            className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10"
+                            className="absolute right-1 sm:right-1.5 top-1/2 -translate-y-1/2 rounded-full text-gold/70 hover:text-gold hover:bg-gold/10 h-10 w-10 sm:h-11 sm:w-11"
                             onClick={() =>
                               navigate(
                                 pergunta.trim()
                                   ? `/clube/chat-livro?q=${encodeURIComponent(pergunta)}`
                                   : '/clube/chat-livro'
-                              )
+                               )
                             }
                           >
                             <ArrowRight className="w-4 h-4" />
@@ -507,7 +507,7 @@ export default function ClubeRotaPremium() {
                 trigger={
                   <motion.div
                     whileHover={{ scale: 1.01 }}
-                    className="cursor-pointer group relative overflow-hidden rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-8 md:p-14 shadow-2xl transition-all duration-500"
+                    className="cursor-pointer group relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-6 sm:p-8 md:p-14 shadow-2xl transition-all duration-500 min-h-[44px]"
                   >
                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
                       <FlaskConical className="w-60 h-60 text-gold" />
@@ -526,16 +526,16 @@ export default function ClubeRotaPremium() {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
+                        <h3 className="text-2xl sm:text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
                           Acesse o núcleo simbólico e clínico desta obra.
                         </h3>
-                        <p className="text-white/50 text-lg md:text-xl font-serif italic leading-relaxed">
+                        <p className="text-white/50 text-base sm:text-lg md:text-xl font-serif italic leading-relaxed">
                           Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
                         </p>
                       </div>
 
-                      <div className="flex flex-col sm:flex-row items-center gap-6 pt-2">
-                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-10 h-14 font-bold text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
+                      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 sm:gap-6 pt-2">
+                        <Button variant="gold" size="lg" className="w-full sm:w-auto rounded-full px-8 sm:px-10 h-12 sm:h-14 font-bold text-sm sm:text-base shadow-[0_10px_30px_rgba(234,179,8,0.2)] group-hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all duration-500">
                           Abrir Laboratório 80/20
                           <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Button>
@@ -618,7 +618,7 @@ export default function ClubeRotaPremium() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9 }}
-              className="relative overflow-hidden rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-8 md:p-14"
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 sm:p-8 md:p-14"
             >
               <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
               <div className="relative space-y-6 max-w-xl">
@@ -674,7 +674,7 @@ export default function ClubeRotaPremium() {
                   disabled={proxLocked}
                   onClick={() => !proxLocked && navigate(`/clube/rota/${proximoPonto.slug}`)}
                   className={cn(
-                    'group w-full text-left relative overflow-hidden rounded-3xl border p-8 md:p-12 transition-all duration-700',
+                    'group w-full text-left relative overflow-hidden rounded-2xl sm:rounded-3xl border p-6 sm:p-8 md:p-12 transition-all duration-700 min-h-[44px]',
                     proxLocked
                       ? 'border-foreground/[0.06] bg-foreground/[0.02] cursor-not-allowed'
                       : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
@@ -688,7 +688,7 @@ export default function ClubeRotaPremium() {
                     <div className="min-w-0 flex-1">
                       <h2
                         className={cn(
-                          'font-display text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
+                          'font-display text-2xl sm:text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
                           proxLocked
                             ? 'text-foreground/35'
                             : 'text-foreground/70 group-hover:text-foreground'
@@ -709,7 +709,7 @@ export default function ClubeRotaPremium() {
                     </div>
                     <div
                       className={cn(
-                        'w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
+                        'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
                         proxLocked
                           ? 'border-foreground/10 bg-foreground/[0.02]'
                           : 'border-foreground/15 group-hover:border-gold group-hover:bg-gold'
@@ -754,7 +754,7 @@ function Section({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          className="mb-8 md:mb-10 space-y-3"
+          className="mb-6 sm:mb-8 md:mb-10 space-y-2 sm:space-y-3"
         >
           {kicker && (
             <div className="flex items-center gap-3">
@@ -763,7 +763,7 @@ function Section({
             </div>
           )}
           {titulo && (
-            <h2 className="font-display text-3xl md:text-4xl text-foreground leading-tight">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground leading-tight">
               {titulo}
             </h2>
           )}
