@@ -339,10 +339,10 @@ export default function ClubeRotaPremium() {
                           "flex items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-xl sm:rounded-2xl transition-all duration-500 min-h-[44px]",
                           isCurrent ? "bg-white/[0.04] border border-white/10" : "bg-transparent border border-transparent hover:bg-white/[0.02]"
                         )}>
-                          <div className="min-w-0 space-y-1">
+                          <div className="min-w-0 space-y-0.5 sm:space-y-1">
                             <p
                               className={cn(
-                                'text-[8px] tracking-[0.4em] uppercase font-bold flex items-center gap-2',
+                                'text-[7px] sm:text-[8px] tracking-[0.4em] uppercase font-bold flex items-center gap-2',
                                 isLocked ? 'text-white/10' : 'text-white/30'
                               )}
                             >
@@ -352,7 +352,7 @@ export default function ClubeRotaPremium() {
                             </p>
                             <p
                               className={cn(
-                                'font-display text-lg md:text-xl transition-colors truncate tracking-tight',
+                                'font-display text-base sm:text-lg md:text-xl transition-colors truncate tracking-tight',
                                 isCurrent && 'text-white',
                                 !isCurrent && isCompleted && 'text-white/60',
                                 !isCurrent && !isCompleted && !isLocked &&
