@@ -40,7 +40,7 @@ export default function Onboarding() {
     // If archetype already saved but not completed, complete and redirect to quiz
     if (entryArchetype) {
       completeOnboarding().then(() => {
-        navigate('/quiz/descubra-seu-eixo', { replace: true });
+        navigate('/sala-da-visitante', { replace: true });
       });
     }
   }, [onboardingLoading, onboardingCompleted, entryArchetype, navigate, completeOnboarding]);
@@ -52,7 +52,7 @@ export default function Onboarding() {
 
     if (success) {
       await completeOnboarding();
-      navigate('/quiz/descubra-seu-eixo', { replace: true });
+      navigate('/sala-da-visitante', { replace: true });
     }
     setIsProcessing(false);
   }, [saveArchetype, completeOnboarding, navigate]);

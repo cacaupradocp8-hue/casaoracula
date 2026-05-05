@@ -104,10 +104,11 @@ export default function QuizPage() {
 
   const fetchQuizData = async () => {
     try {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(quizId || "");
       const { data: quizData } = await supabase
         .from("quizzes")
         .select("*")
-        .or(`id.eq.${quizId},slug.eq.${quizId}`)
+        .or(isUuid ? `id.eq.${quizId},slug.eq.${quizId}` : `slug.eq.${quizId}`)
         .eq("ativo", true)
         .maybeSingle();
 
@@ -151,7 +152,7 @@ export default function QuizPage() {
 
       if (resultadosData) setResultados(resultadosData);
 
-      if (user) {
+      if (user?.id) {
         const { data: prevResponse } = await supabase
           .from("quiz_respostas_usuario")
           .select("*, resultado:quiz_resultados(*)")
@@ -207,7 +208,7 @@ export default function QuizPage() {
     setSecondaryResult(secondary);
     setShowResult(true);
 
-    if (user) {
+    if (user?.id) {
       setSaving(true);
       try {
         await supabase.from("quiz_respostas_usuario").insert({
@@ -303,21 +304,42 @@ export default function QuizPage() {
   const currentP = perguntas && currentIndex >= 0 && currentIndex < perguntas.length ? perguntas[currentIndex] : (perguntas?.[0] ?? null);
   
   if (!currentP) {
-    if (perguntas.length === 0) {
+    if (perguntas.length === 0 && !loading) {
       return (
         <AppLayout>
           <div className="flex flex-col h-[60vh] items-center justify-center text-center px-4">
-            <Bug className="w-12 h-12 text-gold/40 mb-4" />
-            <h2 className="font-display text-xl text-white">Conteúdo em preparação</h2>
-            <p className="text-white/40 text-sm mt-2 max-w-xs">Este quiz ainda não possui perguntas ativas. Por favor, tente novamente mais tarde.</p>
-            <Button variant="outline" onClick={() => navigate(-1)} className="mt-8 rounded-full border-white/10">
-              Voltar
-            </Button>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-6"
+            >
+              <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="w-10 h-10 text-gold animate-pulse" />
+              </div>
+              <h2 className="font-display text-2xl text-white tracking-wide">Conteúdo em preparação</h2>
+              <p className="text-white/50 text-base mt-2 max-w-sm mx-auto leading-relaxed">
+                Este portal está sendo sintonizado para sua chegada. <br/>Por favor, aguarde um instante ou retorne em breve.
+              </p>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate(-1)} 
+                className="mt-8 rounded-full border-white/10 px-8 hover:bg-white/5"
+              >
+                Voltar
+              </Button>
+            </motion.div>
           </div>
         </AppLayout>
       );
     }
-    return <AppLayout><div className="flex h-[60vh] items-center justify-center"><Loader2 className="animate-spin text-gold" /></div></AppLayout>;
+    return (
+      <AppLayout>
+        <div className="flex h-[80vh] flex-col items-center justify-center gap-4">
+          <Loader2 className="animate-spin text-gold w-8 h-8" />
+          <p className="text-white/40 text-[10px] tracking-[0.3em] uppercase">Sintonizando frequências...</p>
+        </div>
+      </AppLayout>
+    );
   }
 
   const currentO = (currentP?.id && opcoesByPergunta[currentP.id]) || [];
