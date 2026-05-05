@@ -4462,6 +4462,56 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_carrossel_slides: {
+        Row: {
+          created_at: string
+          estacao_id: string | null
+          icone: string | null
+          id: string
+          ordem: number
+          rota_slug: string | null
+          status: string
+          subtitulo: string | null
+          texto: string | null
+          titulo: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          estacao_id?: string | null
+          icone?: string | null
+          id?: string
+          ordem?: number
+          rota_slug?: string | null
+          status?: string
+          subtitulo?: string | null
+          texto?: string | null
+          titulo?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          estacao_id?: string | null
+          icone?: string | null
+          id?: string
+          ordem?: number
+          rota_slug?: string | null
+          status?: string
+          subtitulo?: string | null
+          texto?: string | null
+          titulo?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_carrossel_slides_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "oracular_seasons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_conteudo_semanal: {
         Row: {
           aplicacao_clinica: string | null
@@ -6139,6 +6189,53 @@ export type Database = {
             columns: ["portal_id"]
             isOneToOne: false
             referencedRelation: "clube_portais"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_portal_insights: {
+        Row: {
+          created_at: string
+          estacao_id: string | null
+          frase: string
+          frequencia: string | null
+          id: string
+          intensidade: string | null
+          ordem: number
+          rota_slug: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          estacao_id?: string | null
+          frase: string
+          frequencia?: string | null
+          id?: string
+          intensidade?: string | null
+          ordem?: number
+          rota_slug?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          estacao_id?: string | null
+          frase?: string
+          frequencia?: string | null
+          id?: string
+          intensidade?: string | null
+          ordem?: number
+          rota_slug?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_portal_insights_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "oracular_seasons"
             referencedColumns: ["id"]
           },
         ]

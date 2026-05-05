@@ -66,6 +66,7 @@ const AdminClubeChat = lazy(() => import('@/pages/admin/clube/AdminClubeChat'));
 const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminLaboratorio8020 = lazy(() => import('@/pages/admin/clube/AdminLaboratorio8020'));
+const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
 // AdminClubeLivroTab removed as it is legacy all-in-one component
 const AdminGeradorSemanal = lazy(() => import('@/components/admin/AdminGeradorSemanal'));
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
@@ -103,6 +104,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-portais': AdminPortalCMS,
   'clube-premium-editor': AdminPremiumEditor,
   'clube-laboratorio-8020': AdminLaboratorio8020,
+  'clube-carrosseis-insights': AdminCarrosseisInsights,
   
   // FORMAÇÃO
   'cursos': AdminCursosTab,
@@ -160,6 +162,7 @@ export default function Admin() {
     if (path === '/admin/clube/treinamento') return 'clube-treinamento';
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path === '/admin/clube/laboratorio-8020') return 'clube-laboratorio-8020';
+    if (path === '/admin/clube/carrosseis-insights') return 'clube-carrosseis-insights';
     if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/')) {
       return 'clube-jornadas'; 
     }

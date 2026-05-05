@@ -6,7 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   BookOpen, RefreshCw, DoorOpen, GraduationCap, MessageSquare, Library,
   ArrowRight, Wrench, Settings, Sparkles, Plus, Clock, Layout, LucideIcon,
-  Eye, EyeOff, ExternalLink, ImageIcon, Users, Zap, FlaskConical
+  Eye, EyeOff, ExternalLink, ImageIcon, Users, Zap, FlaskConical, LayoutPanelLeft
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +24,7 @@ interface HubCard {
   tab: string;
   color: string;
   bg: string;
-  statType?: 'ciclos' | 'portais' | 'acervo' | 'treinamento' | 'chat' | 'laboratorio';
+  statType?: 'ciclos' | 'portais' | 'acervo' | 'treinamento' | 'chat' | 'laboratorio' | 'carrosseis';
 }
 
 const PREMIUM_CARDS: HubCard[] = [
@@ -88,6 +88,16 @@ const PREMIUM_CARDS: HubCard[] = [
     bg: 'bg-primary/10',
     statType: 'laboratorio',
   },
+  {
+    key: 'carrosseis-insights',
+    title: 'Carrosséis & Insights',
+    description: 'Gerencie slides de rota e frases do portal na Home do Clube.',
+    icon: LayoutPanelLeft,
+    tab: 'clube-carrosseis-insights',
+    color: 'text-indigo-400',
+    bg: 'bg-indigo-400/10',
+    statType: 'carrosseis',
+  },
 ];
 
 export default function AdminClubeHub() {
@@ -96,7 +106,7 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [ciclos, books, estacoes, portais, perguntas, activeStation, essencias] = await Promise.all([
+      const [ciclos, books, estacoes, portais, perguntas, activeStation, essencias, slides, insights] = await Promise.all([
         supabase.from('clube_livro_ciclos').select('id', { count: 'exact', head: true }),
         supabase.from('books').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
@@ -104,6 +114,8 @@ export default function AdminClubeHub() {
         supabase.from('clube_livro_perguntas').select('id', { count: 'exact', head: true }),
         supabase.from('clube_estacoes').select('*').eq('ativa', true).maybeSingle(),
         supabase.from('clube_obras_essencia_8020').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_carrossel_slides').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_portal_insights').select('id', { count: 'exact', head: true }),
       ]);
       return {
         ciclos: cycles_count(estacoes.count, ciclos.count),
@@ -112,6 +124,7 @@ export default function AdminClubeHub() {
         chat: perguntas.count || 0,
         activeStation: activeStation.data,
         essencias: essencias.count || 0,
+        carrosseis: (slides.count || 0) + (insights.count || 0),
       };
     },
   });
@@ -141,6 +154,7 @@ export default function AdminClubeHub() {
       case 'chat': return `${stats.chat} Prompts`;
       case 'treinamento': return `Operacional`;
       case 'laboratorio': return `${stats.essencias} Essências`;
+      case 'carrosseis': return `${stats.carrosseis} Itens`;
       default: return '';
     }
   };
@@ -155,6 +169,7 @@ export default function AdminClubeHub() {
       case 'clube-treinamento': navigate('/admin/clube/treinamento', { replace: true }); break;
       case 'clube-chat': navigate('/admin/clube/chat', { replace: true }); break;
       case 'clube-laboratorio-8020': navigate('/admin/clube/laboratorio-8020', { replace: true }); break;
+      case 'clube-carrosseis-insights': navigate('/admin/clube/carrosseis-insights', { replace: true }); break;
       case 'settings': navigate('/admin?tab=settings', { replace: true }); break;
       case 'gerador-semanal': navigate('/admin?tab=gerador-semanal', { replace: true }); break;
       default:
