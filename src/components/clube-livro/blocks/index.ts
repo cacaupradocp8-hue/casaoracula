@@ -15,3 +15,4 @@ export { UsoClinicalBlock } from './UsoClinicalBlock';
 export { AulasEncontrosBlock } from './AulasEncontrosBlock';
 export { EscutaSimbolticaChat } from './EscutaSimbolticaChat';
 export { BookTourBlock } from './BookTourBlock';
+export { InsightPortalBlock } from './InsightPortalBlock';
