@@ -164,14 +164,14 @@ export default function AdminClubeHub() {
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
-      {/* Header Editorial */}
+      {/* Header Admin */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-primary/10">
         <div className="space-y-2">
           <Badge variant="outline" className="text-gold border-gold/30 bg-gold/5 px-3 py-1 text-[10px] uppercase tracking-[0.2em] font-bold">
-            Editorial Admin Premium
+            Gestão do Clube
           </Badge>
           <h1 className="text-4xl md:text-5xl font-serif text-foreground tracking-tight">
-            Clube de Leitura <span className="text-gold italic">Oracular</span>
+            Clube <span className="text-gold italic">Oracular</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl text-lg font-light leading-relaxed">
             Painel operacional para gestão de jornadas simbólicas, 
