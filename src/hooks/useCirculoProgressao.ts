@@ -30,11 +30,19 @@ export function useCirculoProgressao(cicloId: string | undefined) {
   const { data: totalEscutas } = useQuery({
     queryKey: ['progressao-total-escutas', cicloId],
     queryFn: async () => {
+      // In V3, we use stations to get audios
+      const { data: stations } = await supabase
+        .from('clube_v3_stations')
+        .select('id')
+        .eq('route_id', cicloId!)
+        .eq('status', 'active');
+      const stationIds = stations?.map(s => s.id) || [];
+      
       const { count } = await supabase
-        .from('clube_livro_escutas')
+        .from('clube_v3_station_audios')
         .select('*', { count: 'exact', head: true })
-        .eq('ciclo_id', cicloId!)
-        .eq('ativo', true);
+        .in('station_id', stationIds.length > 0 ? stationIds : ['00000000-0000-0000-0000-000000000000'])
+        .eq('status', 'active');
       return count || 0;
     },
     enabled: !!cicloId,
@@ -45,18 +53,26 @@ export function useCirculoProgressao(cicloId: string | undefined) {
     queryKey: ['progressao-completed-tracks', cicloId, userId],
     queryFn: async () => {
       if (!userId) return 0;
-      const { data: escutas } = await supabase
-        .from('clube_livro_escutas')
+      const { data: stations } = await supabase
+        .from('clube_v3_stations')
         .select('id')
-        .eq('ciclo_id', cicloId!)
-        .eq('ativo', true);
-      if (!escutas?.length) return 0;
+        .eq('route_id', cicloId!)
+        .eq('status', 'active');
+      const stationIds = stations?.map(s => s.id) || [];
+
+      const { data: audios } = await supabase
+        .from('clube_v3_station_audios')
+        .select('id')
+        .in('station_id', stationIds.length > 0 ? stationIds : ['00000000-0000-0000-0000-000000000000'])
+        .eq('status', 'active');
+      if (!audios?.length) return 0;
+
       const { count } = await supabase
         .from('clube_audio_progress')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('concluido', true)
-        .in('track_id', escutas.map(e => e.id));
+        .in('track_id', audios.map(a => a.id));
       return count || 0;
     },
     enabled: !!cicloId && !!userId,
@@ -77,51 +93,30 @@ export function useCirculoProgressao(cicloId: string | undefined) {
   });
 
   // 4. Check Lab 80/20 completion (uses season_id, so we check broadly)
-  const { data: lab8020Done } = useQuery({
-    queryKey: ['progressao-lab8020', userId],
+  const { data: v3Progress } = useQuery({
+    queryKey: ['progressao-v3-status', cicloId, userId],
     queryFn: async () => {
-      if (!userId) return false;
+      if (!userId || !cicloId) return null;
+      // Get all station IDs for this route
+      const { data: stations } = await supabase
+        .from('clube_v3_stations')
+        .select('id')
+        .eq('route_id', cicloId);
+      const stationIds = stations?.map(s => s.id) || [];
+      
       const { data } = await supabase
-        .from('lab_8020_progress')
-        .select('concluido')
+        .from('clube_v3_user_progress')
+        .select('*')
         .eq('user_id', userId)
-        .eq('concluido', true)
-        .limit(1);
-      return (data?.length || 0) > 0;
+        .in('station_id', stationIds.length > 0 ? stationIds : ['00000000-0000-0000-0000-000000000000']);
+      return data || [];
     },
-    enabled: !!userId,
+    enabled: !!userId && !!cicloId,
   });
 
-  // 5. Check if user has registros
-  const { data: hasRegistro } = useQuery({
-    queryKey: ['progressao-registro', cicloId, userId],
-    queryFn: async () => {
-      if (!userId) return false;
-      const { count } = await supabase
-        .from('clube_estacao_registros')
-        .select('*', { count: 'exact', head: true })
-        .eq('user_id', userId);
-      return (count || 0) > 0;
-    },
-    enabled: !!userId,
-  });
-
-  // 6. Check integration completion
-  const { data: integracaoDone } = useQuery({
-    queryKey: ['progressao-integracao', cicloId, userId],
-    queryFn: async () => {
-      if (!userId || !cicloId) return false;
-      const { data } = await supabase
-        .from('clube_livro_integracoes')
-        .select('status')
-        .eq('user_id', userId)
-        .eq('ciclo_id', cicloId)
-        .eq('status', 'concluida')
-        .maybeSingle();
-      return !!data;
-    },
-    enabled: !!cicloId && !!userId,
-  });
+  const lab8020Done = v3Progress?.some(p => p.therapeutic_completed);
+  const hasRegistro = v3Progress?.some(p => p.letter_completed);
+  const integracaoDone = v3Progress?.some(p => p.reflection_completed);
 
   // Calculate progression
   const travessiaPercent = totalEscutas && totalEscutas > 0
