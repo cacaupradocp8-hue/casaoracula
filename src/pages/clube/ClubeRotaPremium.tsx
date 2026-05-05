@@ -709,7 +709,7 @@ export default function ClubeRotaPremium() {
                     </div>
                     <div
                       className={cn(
-                        'w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
+                        'w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 shrink-0 rounded-full border flex items-center justify-center transition-all duration-700',
                         proxLocked
                           ? 'border-foreground/10 bg-foreground/[0.02]'
                           : 'border-foreground/15 group-hover:border-gold group-hover:bg-gold'
