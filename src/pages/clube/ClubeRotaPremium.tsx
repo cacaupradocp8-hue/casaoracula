@@ -674,7 +674,7 @@ export default function ClubeRotaPremium() {
                   disabled={proxLocked}
                   onClick={() => !proxLocked && navigate(`/clube/rota/${proximoPonto.slug}`)}
                   className={cn(
-                    'group w-full text-left relative overflow-hidden rounded-3xl border p-8 md:p-12 transition-all duration-700',
+                    'group w-full text-left relative overflow-hidden rounded-2xl sm:rounded-3xl border p-6 sm:p-8 md:p-12 transition-all duration-700 min-h-[44px]',
                     proxLocked
                       ? 'border-foreground/[0.06] bg-foreground/[0.02] cursor-not-allowed'
                       : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
