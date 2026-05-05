@@ -1,27 +1,37 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { ClubeAudioCardImersivo } from '@/components/clube/ClubeAudioCardImersivo';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useClubeCicloDetalhe, type ClubeEscuta } from '@/hooks/useClubeLivro';
 import { useAudioProgress } from '@/hooks/useAudioProgress';
 import { getPublicAudioUrl, formatAudioTime } from '@/lib/audioUtils';
 import { Slider } from '@/components/ui/slider';
-import { ArrowLeft, Headphones, Play, Pause, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, Headphones, Play, Pause, Loader2, SkipForward, SkipBack, AlertCircle, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ImmersiveBreathingScene } from '@/components/audio/ImmersiveBreathingScene';
+
+// Estrutura editorial das 5 faixas (Aula-Álbum Oracular)
+const FAIXA_META: Record<string, { numero: number; tempo: string; funcao: string }> = {
+  'Abertura do Campo':       { numero: 1, tempo: '2–3 min',  funcao: 'Preparação da escuta' },
+  'Aula Falada':             { numero: 2, tempo: '18–25 min', funcao: 'Eixo simbólico' },
+  'Aplicação Profissional':  { numero: 3, tempo: '10–12 min', funcao: 'Uso clínico' },
+  'Integração Oracular':     { numero: 4, tempo: '5–7 min',   funcao: 'Pergunta-mãe e gesto' },
+  'Fechamento Aberto':       { numero: 5, tempo: '2–3 min',   funcao: 'Campo permanece' },
+};
+
+function getMeta(titulo: string, ordem: number) {
+  return FAIXA_META[titulo] ?? { numero: ordem || 0, tempo: '', funcao: '' };
+}
 
 export default function ClubeEscutaImersiva() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const cicloId = searchParams.get('ciclo');
-  const [selectedEscuta, setSelectedEscuta] = useState<ClubeEscuta | null>(null);
 
-  const { escutas: cicloEscutas, isLoading: loadingCiclo } = useClubeCicloDetalhe(cicloId || undefined);
+  const { ciclo, escutas: cicloEscutas, isLoading: loadingCiclo } = useClubeCicloDetalhe(cicloId || undefined);
 
   const { data: audioAssets, isLoading: loadingAssets } = useQuery({
     queryKey: ['clube-audio-assets'],
@@ -36,8 +46,9 @@ export default function ClubeEscutaImersiva() {
     enabled: !cicloId,
   });
 
+  // IMPORTANTE: incluir TODAS as escutas (mesmo sem audio_url) para mostrar a estrutura da Aula-Álbum
   const escutas: ClubeEscuta[] = cicloId
-    ? (cicloEscutas || []).filter(e => e.tipo === 'audio' && e.audio_url)
+    ? (cicloEscutas || []).filter(e => e.tipo === 'audio')
     : (audioAssets || []).map((a: any) => ({
         id: a.id,
         ciclo_id: '',
@@ -50,39 +61,60 @@ export default function ClubeEscutaImersiva() {
         ativo: true,
       }));
 
+  // Selecionar primeira faixa com áudio disponível como inicial
+  const firstPlayable = useMemo(() => escutas.find(e => !!e.audio_url), [escutas]);
+  const [currentId, setCurrentId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!currentId && firstPlayable) setCurrentId(firstPlayable.id);
+  }, [firstPlayable, currentId]);
+
+  const current = escutas.find(e => e.id === currentId) || null;
+
   const escutaIds = escutas.map(e => e.id);
   const { isCompleted } = useAudioProgress(escutaIds);
   const isLoading = cicloId ? loadingCiclo : loadingAssets;
 
-  if (selectedEscuta) {
-    return (
-      <PlayerImersivo
-        escuta={selectedEscuta}
-        onBack={() => setSelectedEscuta(null)}
-      />
-    );
-  }
+  const handleNext = useCallback(() => {
+    if (!current) return;
+    const idx = escutas.findIndex(e => e.id === current.id);
+    const next = escutas.slice(idx + 1).find(e => !!e.audio_url);
+    if (next) setCurrentId(next.id);
+  }, [current, escutas]);
+
+  const handlePrev = useCallback(() => {
+    if (!current) return;
+    const idx = escutas.findIndex(e => e.id === current.id);
+    const prev = [...escutas.slice(0, idx)].reverse().find(e => !!e.audio_url);
+    if (prev) setCurrentId(prev.id);
+  }, [current, escutas]);
 
   return (
     <AppLayout>
-      <ResponsiveContainer size="default" className="py-10 md:py-16 space-y-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" className="rounded-full border-border/40" onClick={() => navigate('/clube')}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="h-px w-6 bg-gold/40" />
-                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70 font-bold">Templo do Som</span>
-              </div>
-              <h1 className="font-display text-3xl md:text-5xl text-foreground tracking-tight leading-none">
-                Escuta Contemplativa
-              </h1>
-              <p className="text-muted-foreground/70 text-sm font-serif italic mt-2">
-                {escutas.length} áudio{escutas.length !== 1 ? 's' : ''} para o seu mergulho interior
-              </p>
+      <ResponsiveContainer size="default" className="py-8 md:py-12">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full border-border/40 shrink-0"
+            onClick={() => navigate(cicloId ? `/clube?ciclo=${cicloId}` : '/clube')}
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="h-px w-6 bg-gold/40" />
+              <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70 font-bold">Aula-Álbum Oracular</span>
             </div>
+            <h1 className="font-display text-2xl md:text-4xl text-foreground tracking-tight leading-tight truncate">
+              {ciclo?.titulo || 'Escuta Contemplativa'}
+            </h1>
+            {ciclo?.autor_livro && (
+              <p className="text-muted-foreground/60 text-xs font-serif italic mt-1">
+                {ciclo.autor_livro}
+              </p>
+            )}
           </div>
         </div>
 
@@ -100,22 +132,94 @@ export default function ClubeEscutaImersiva() {
         ) : escutas.length === 0 ? (
           <div className="text-center py-32 space-y-4">
             <Headphones className="w-12 h-12 text-muted-foreground/20 mx-auto" />
-            <p className="text-muted-foreground/60 font-serif italic">Nenhum sussurro captado nesta estação.</p>
+            <p className="text-muted-foreground/60 font-serif italic">Nenhuma faixa cadastrada nesta estação.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {escutas.map((escuta, i) => (
-              <ClubeAudioCardImersivo
-                key={escuta.id}
-                id={escuta.id}
-                titulo={escuta.titulo}
-                descricao={escuta.descricao}
-                duracaoSegundos={escuta.duracao_segundos}
-                concluido={isCompleted(escuta.id)}
-                onClick={() => setSelectedEscuta(escuta)}
-                index={i}
-              />
-            ))}
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-6 lg:gap-10">
+            {/* TRACKLIST — Spotify style */}
+            <aside className="space-y-1.5">
+              <div className="flex items-center justify-between px-2 mb-3">
+                <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/60 font-bold">
+                  Faixas
+                </span>
+                <span className="text-[10px] text-muted-foreground/40 tabular-nums">
+                  {escutas.filter(e => !!e.audio_url).length}/{escutas.length}
+                </span>
+              </div>
+              {escutas.map((escuta) => {
+                const meta = getMeta(escuta.titulo, escuta.ordem);
+                const isActive = current?.id === escuta.id;
+                const hasAudio = !!escuta.audio_url;
+                const done = isCompleted(escuta.id);
+                return (
+                  <button
+                    key={escuta.id}
+                    onClick={() => hasAudio && setCurrentId(escuta.id)}
+                    disabled={!hasAudio}
+                    className={cn(
+                      "w-full text-left rounded-xl px-4 py-3 flex items-center gap-3 transition-all border",
+                      isActive
+                        ? "bg-gold/8 border-gold/30"
+                        : "bg-card/40 border-border/20 hover:border-border/40 hover:bg-card/60",
+                      !hasAudio && "opacity-50 cursor-not-allowed"
+                    )}
+                  >
+                    {/* Número / status */}
+                    <div className={cn(
+                      "shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-xs font-mono tabular-nums",
+                      isActive ? "bg-gold/15 text-gold" :
+                      done ? "bg-emerald-500/10 text-emerald-400/80" :
+                      hasAudio ? "bg-muted/40 text-foreground/70" :
+                      "bg-muted/20 text-muted-foreground/40"
+                    )}>
+                      {done ? <Check className="w-3.5 h-3.5" /> :
+                       !hasAudio ? <AlertCircle className="w-3.5 h-3.5" /> :
+                       isActive ? <Play className="w-3.5 h-3.5 ml-0.5" /> :
+                       String(meta.numero).padStart(2, '0')}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <p className={cn(
+                        "text-sm font-medium truncate leading-tight",
+                        isActive ? "text-gold" : "text-foreground/85"
+                      )}>
+                        {escuta.titulo}
+                      </p>
+                      <p className="text-[10.5px] text-muted-foreground/55 truncate mt-0.5">
+                        {meta.funcao || escuta.descricao || '—'}
+                      </p>
+                    </div>
+
+                    <span className="shrink-0 text-[10px] text-muted-foreground/45 tabular-nums">
+                      {!hasAudio ? 'pendente' :
+                       escuta.duracao_segundos ? formatAudioTime(escuta.duracao_segundos) :
+                       meta.tempo}
+                    </span>
+                  </button>
+                );
+              })}
+            </aside>
+
+            {/* PLAYER */}
+            <section className="lg:sticky lg:top-24 self-start">
+              {current ? (
+                <PlayerEditorial
+                  escuta={current}
+                  onNext={handleNext}
+                  onPrev={handlePrev}
+                />
+              ) : (
+                <div className="rounded-2xl border border-dashed border-border/30 bg-card/30 p-10 text-center">
+                  <AlertCircle className="w-8 h-8 mx-auto text-muted-foreground/40 mb-3" />
+                  <p className="text-sm text-muted-foreground/70 font-serif italic">
+                    Áudios ainda não publicados para este ciclo.
+                  </p>
+                  <p className="text-xs text-muted-foreground/40 mt-2">
+                    A estrutura da Aula-Álbum está reservada — as faixas aparecerão aqui assim que forem disponibilizadas.
+                  </p>
+                </div>
+              )}
+            </section>
           </div>
         )}
       </ResponsiveContainer>
@@ -123,31 +227,43 @@ export default function ClubeEscutaImersiva() {
   );
 }
 
-// ── Immersive Full-Screen Player ──
-function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () => void }) {
+// ── Player editorial (não fullscreen) ──
+function PlayerEditorial({
+  escuta,
+  onNext,
+  onPrev,
+}: {
+  escuta: ClubeEscuta;
+  onNext: () => void;
+  onPrev: () => void;
+}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
 
-  const resolvedUrl = getPublicAudioUrl(escuta.audio_url);
+  const resolvedUrl = useMemo(() => getPublicAudioUrl(escuta.audio_url), [escuta.audio_url]);
+  const meta = getMeta(escuta.titulo, escuta.ordem);
 
-  // Lock scroll
+  // Reset ao trocar de faixa
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
+    setIsPlaying(false);
+    setProgress(0);
+    setDuration(0);
+    setIsLoading(true);
+    setHasError(false);
+  }, [escuta.id]);
 
-  // Audio events
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    const onMeta = () => { setDuration(audio.duration); setIsLoading(false); };
+    const onMeta = () => { setDuration(audio.duration || 0); setIsLoading(false); };
     const onCanPlay = () => setIsLoading(false);
     const onTime = () => setProgress(audio.currentTime);
-    const onEnded = () => setIsPlaying(false);
-    const onError = () => setIsLoading(false);
+    const onEnded = () => { setIsPlaying(false); onNext(); };
+    const onError = () => { setIsLoading(false); setHasError(true); };
     audio.addEventListener('loadedmetadata', onMeta);
     audio.addEventListener('canplay', onCanPlay);
     audio.addEventListener('timeupdate', onTime);
@@ -160,13 +276,16 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
       audio.removeEventListener('ended', onEnded);
       audio.removeEventListener('error', onError);
     };
-  }, []);
+  }, [escuta.id, onNext]);
 
   const togglePlay = useCallback(async () => {
     const audio = audioRef.current;
     if (!audio) return;
     if (isPlaying) { audio.pause(); setIsPlaying(false); }
-    else { try { await audio.play(); setIsPlaying(true); } catch (e) { console.error(e); } }
+    else {
+      try { await audio.play(); setIsPlaying(true); }
+      catch (e) { console.error('Audio play failed:', e); setHasError(true); }
+    }
   }, [isPlaying]);
 
   const handleSeek = useCallback((v: number[]) => {
@@ -177,93 +296,98 @@ function PlayerImersivo({ escuta, onBack }: { escuta: ClubeEscuta; onBack: () =>
   }, []);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.2 }}
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center overflow-hidden bg-background"
-    >
+    <div className="rounded-2xl bg-gradient-to-br from-card/80 via-card/40 to-background/60 border border-border/30 p-7 md:p-10 backdrop-blur-sm">
       <audio ref={audioRef} src={resolvedUrl || ''} preload="metadata" />
 
-      {/* Immersive breathing background with mandala */}
-      <ImmersiveBreathingScene isPlaying={isPlaying} />
-
-      {/* Back button — very discreet */}
-      <button
-        onClick={onBack}
-        className="absolute top-5 left-5 z-20 p-2.5 text-muted-foreground/20 hover:text-foreground/75 transition-colors duration-500"
-        aria-label="Voltar"
-      >
-        <ArrowLeft className="w-4 h-4" />
-      </button>
-
-      {/* Content — minimal, centered below mandala */}
-      <div className="relative z-10 flex flex-col items-center gap-10 w-full max-w-sm px-6 mt-32 md:mt-40">
-        {/* Title — small, understated */}
+      {/* Cabeçalho da faixa */}
+      <div className="flex items-start gap-5 mb-8">
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8, duration: 1 }}
-          className="text-center space-y-1.5"
+          animate={isPlaying ? { scale: [1, 1.04, 1], opacity: [0.7, 1, 0.7] } : { scale: 1, opacity: 0.6 }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+          className="shrink-0 w-20 h-20 md:w-24 md:h-24 rounded-2xl bg-gradient-to-br from-gold/15 via-mystic/10 to-background border border-gold/15 flex items-center justify-center"
         >
-          <h1 className="font-display text-base md:text-lg text-foreground/80 tracking-wider leading-relaxed">
+          <span className="font-display text-2xl md:text-3xl text-gold/80 tabular-nums">
+            {String(meta.numero).padStart(2, '0')}
+          </span>
+        </motion.div>
+        <div className="flex-1 min-w-0 pt-1">
+          <p className="text-[10px] uppercase tracking-[0.35em] text-gold/60 font-bold mb-2">
+            Faixa {meta.numero} · {meta.tempo}
+          </p>
+          <h2 className="font-display text-xl md:text-2xl text-foreground leading-tight">
             {escuta.titulo}
-          </h1>
-          {escuta.descricao && (
-            <p className="text-[11px] text-muted-foreground/35 italic font-body">
-              {escuta.descricao}
+          </h2>
+          {(escuta.descricao || meta.funcao) && (
+            <p className="text-xs md:text-sm text-muted-foreground/70 font-serif italic mt-2 leading-relaxed">
+              {escuta.descricao || meta.funcao}
             </p>
           )}
-        </motion.div>
-
-        {/* Progress bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 0.8 }}
-          className="w-full space-y-2"
-        >
-          <Slider
-            value={[progress]}
-            max={duration || 100}
-            step={0.1}
-            onValueChange={handleSeek}
-            className="cursor-pointer"
-          />
-          <div className="flex justify-between text-[10px] text-muted-foreground/70 font-body tabular-nums">
-            <span>{formatAudioTime(progress)}</span>
-            <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
-          </div>
-        </motion.div>
-
-        {/* Play/Pause — single central button */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-        >
-          <button
-            onClick={togglePlay}
-            disabled={isLoading}
-            className={cn(
-              "relative w-16 h-16 rounded-full flex items-center justify-center",
-              "bg-gold/6 border border-gold/12 text-gold/70",
-              "hover:bg-gold/10 hover:border-gold/20",
-              "active:scale-95 transition-all duration-500",
-              isPlaying && "shadow-[0_0_40px_hsl(var(--gold)/0.08)]"
-            )}
-          >
-            {isLoading ? (
-              <Loader2 className="w-5 h-5 animate-spin text-gold/40" />
-            ) : isPlaying ? (
-              <Pause className="w-5 h-5" />
-            ) : (
-              <Play className="w-5 h-5 ml-0.5" />
-            )}
-          </button>
-        </motion.div>
+        </div>
       </div>
-    </motion.div>
+
+      {/* Erro / sem áudio */}
+      {hasError && (
+        <div className="flex items-center gap-2 text-xs text-destructive/80 bg-destructive/8 border border-destructive/20 rounded-lg px-3 py-2 mb-5">
+          <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+          <span>Não foi possível carregar este áudio. Verifique se o arquivo foi publicado.</span>
+        </div>
+      )}
+
+      {/* Progresso */}
+      <div className="space-y-2 mb-7">
+        <Slider
+          value={[progress]}
+          max={duration || 100}
+          step={0.1}
+          onValueChange={handleSeek}
+          disabled={!resolvedUrl || hasError}
+          className="cursor-pointer"
+        />
+        <div className="flex justify-between text-[10px] text-muted-foreground/65 font-body tabular-nums">
+          <span>{formatAudioTime(progress)}</span>
+          <span>{duration > 0 ? formatAudioTime(duration) : '--:--'}</span>
+        </div>
+      </div>
+
+      {/* Controles */}
+      <div className="flex items-center justify-center gap-6">
+        <button
+          onClick={onPrev}
+          className="p-2 text-muted-foreground/60 hover:text-foreground transition-colors"
+          aria-label="Faixa anterior"
+        >
+          <SkipBack className="w-5 h-5" />
+        </button>
+
+        <button
+          onClick={togglePlay}
+          disabled={isLoading || hasError || !resolvedUrl}
+          className={cn(
+            "relative w-14 h-14 rounded-full flex items-center justify-center",
+            "bg-gold/10 border border-gold/25 text-gold",
+            "hover:bg-gold/15 hover:border-gold/40 active:scale-95",
+            "disabled:opacity-40 disabled:cursor-not-allowed",
+            "transition-all duration-300",
+            isPlaying && "shadow-[0_0_30px_hsl(var(--gold)/0.15)]"
+          )}
+        >
+          {isLoading && resolvedUrl && !hasError ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : isPlaying ? (
+            <Pause className="w-5 h-5" />
+          ) : (
+            <Play className="w-5 h-5 ml-0.5" />
+          )}
+        </button>
+
+        <button
+          onClick={onNext}
+          className="p-2 text-muted-foreground/60 hover:text-foreground transition-colors"
+          aria-label="Próxima faixa"
+        >
+          <SkipForward className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
   );
 }
