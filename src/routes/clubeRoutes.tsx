@@ -14,7 +14,6 @@ const ClubeTreinamento = React.lazy(() => import('@/pages/clube/CamaraDoSussurro
 const ClubeEscutaImersiva = React.lazy(() => import('@/pages/clube/ClubeEscutaImersiva'));
 const ClubeLaboratorio = React.lazy(() => import('@/pages/clube/ClubeLaboratorio'));
 const ClubeLaboratorioObra = React.lazy(() => import('@/pages/clube/ClubeLaboratorioObra'));
-const StationDetail = React.lazy(() => import('@/pages/clube/StationDetail'));
 
 
 // ─── Novas Telas Premium de Rota ───
