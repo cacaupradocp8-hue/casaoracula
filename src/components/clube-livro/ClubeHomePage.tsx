@@ -88,8 +88,8 @@ export function ClubeHomePage() {
               welcomeName={welcomeName}
             />
 
-            {/* Station incomplete notice — apenas quando há estação atribuída mas sem pontos */}
-            {estacaoIncompleta && estacaoAtual && pontos.length > 0 && (
+            {/* Station incomplete notice */}
+            {estacaoIncompleta && estacaoAtual && (
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}

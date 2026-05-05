@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import {
-  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Eye, ShieldAlert, FlaskConical, Target, GraduationCap, Sparkles, ArrowRight, ChevronLeft, ChevronRight
+  Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useEssencia8020 } from '@/hooks/useEssencia8020';
 
 export interface PortalSlide {
   icon: React.ReactNode;
@@ -15,7 +14,6 @@ export interface PortalSlide {
 
 interface PortalEntradaRotaProps {
   slug: string;
-  bookId?: string;
   portalNumero?: number | string;
   portalTitulo?: string;
   slides?: PortalSlide[];
@@ -29,13 +27,13 @@ interface PortalEntradaRotaProps {
 }
 
 const DEFAULT_SLIDES: PortalSlide[] = [
-  { icon: <Circle className="w-8 h-8" />, title: 'Bem-vinda à Rota', subtitle: 'Esta obra não inicia. Ela desdomestica.' },
-  { icon: <Compass className="w-8 h-8" />, title: 'Tour pela Obra', subtitle: 'Um mapa simbólico para atravessar com cuidado.' },
-  { icon: <Flame className="w-8 h-8" />, title: 'Eixo da Travessia', subtitle: 'Instinto e Sombra Viva após a ruptura inicial.' },
-  { icon: <Gem className="w-8 h-8" />, title: 'Habilidade Central', subtitle: 'Reconstruir confiança no instinto como orientação psíquica.' },
-  { icon: <AlertTriangle className="w-8 h-8" />, title: 'O que Não Fazer', subtitle: 'Não transforme "selvagem" em identidade ou impulsividade.' },
-  { icon: <Building2 className="w-8 h-8" />, title: 'Como Atravessar', subtitle: 'Leitura não linear, 1 símbolo por semana e prática real.' },
-  { icon: <Leaf className="w-8 h-8" />, title: 'Quando Encerrar', subtitle: 'Quando a escuta interna começa a funcionar sem o livro.' },
+  { icon: <Circle className="w-12 h-12" />, title: 'Bem-vinda à Rota', subtitle: 'Esta obra não inicia. Ela desdomestica.' },
+  { icon: <Compass className="w-12 h-12" />, title: 'Tour pela Obra', subtitle: 'Um mapa simbólico para atravessar com cuidado.' },
+  { icon: <Flame className="w-12 h-12" />, title: 'Eixo da Travessia', subtitle: 'Instinto e Sombra Viva após a ruptura inicial.' },
+  { icon: <Gem className="w-12 h-12" />, title: 'Habilidade Central', subtitle: 'Reconstruir confiança no instinto como orientação psíquica.' },
+  { icon: <AlertTriangle className="w-12 h-12" />, title: 'O que Não Fazer', subtitle: 'Não transforme "selvagem" em identidade ou impulsividade.' },
+  { icon: <Building2 className="w-12 h-12" />, title: 'Como Atravessar', subtitle: 'Leitura não linear, 1 símbolo por semana e prática real.' },
+  { icon: <Leaf className="w-12 h-12" />, title: 'Quando Encerrar', subtitle: 'Quando a escuta interna começa a funcionar sem o livro.' },
 ];
 
 const DEFAULT_CALMAS = [
@@ -54,12 +52,23 @@ const DEFAULT_PROFUNDAS = [
 
 const DEFAULT_CHIPS = ['Nada é demolido', 'Tudo é reconhecido', 'Tempo psíquico'];
 
+const GRADIENTS = [
+  'linear-gradient(135deg, hsl(270 60% 8%), hsl(280 70% 25%))',
+  'linear-gradient(135deg, hsl(250 50% 6%), hsl(260 55% 22%))',
+  'linear-gradient(135deg, hsl(240 50% 5%), hsl(40 60% 18%))',
+];
+
+function gradientForIndex(i: number, total: number) {
+  if (i <= 1) return GRADIENTS[0];
+  if (i <= Math.floor(total * 0.6)) return GRADIENTS[1];
+  return GRADIENTS[2];
+}
+
 export function PortalEntradaRota({
   slug,
-  bookId,
   portalNumero,
   portalTitulo,
-  slides: propSlides,
+  slides = DEFAULT_SLIDES,
   microcopiesCalmas = DEFAULT_CALMAS,
   microcopiesProfundas = DEFAULT_PROFUNDAS,
   ethicalChips = DEFAULT_CHIPS,
@@ -71,41 +80,13 @@ export function PortalEntradaRota({
   const [current, setCurrent] = useState(0);
   const [swipes, setSwipes] = useState(0);
   const [microIdx, setMicroIdx] = useState(0);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const [stageWidth, setStageWidth] = useState(0);
-
-  const { data: essencia } = useEssencia8020(bookId);
-
-  const slides = useMemo(() => {
-    if (propSlides) return propSlides;
-    if (!essencia) return DEFAULT_SLIDES;
-    return [
-      { icon: <BookOpen className="w-8 h-8" />, title: 'Núcleo Vivo', subtitle: essencia?.nucleo_vivo || DEFAULT_SLIDES[0].subtitle },
-      { icon: <Eye className="w-8 h-8" />, title: 'Imagem Organizadora', subtitle: essencia?.imagem_organizadora || DEFAULT_SLIDES[1].subtitle },
-      { icon: <Flame className="w-8 h-8" />, title: 'Tensão Central', subtitle: essencia?.tensao_central || DEFAULT_SLIDES[2].subtitle },
-      { icon: <Target className="w-8 h-8" />, title: 'Habilidade Central', subtitle: essencia?.aplicacao_terapeutica || DEFAULT_SLIDES[3].subtitle },
-      { icon: <ShieldAlert className="w-8 h-8" />, title: 'Distorção Comum', subtitle: essencia?.distorcao_comum || DEFAULT_SLIDES[4].subtitle },
-      { icon: <FlaskConical className="w-8 h-8" />, title: 'Exercício Integrativo', subtitle: essencia?.exercicio || DEFAULT_SLIDES[5].subtitle },
-      { icon: <GraduationCap className="w-8 h-8" />, title: 'Riscos Éticos', subtitle: essencia?.riscos_eticos || DEFAULT_SLIDES[6].subtitle },
-    ];
-  }, [propSlides, essencia]);
-
   const total = slides.length;
+
   const microList = swipes >= 3 ? microcopiesProfundas : microcopiesCalmas;
 
   useEffect(() => {
     const t = setInterval(() => setMicroIdx(i => i + 1), 5000);
     return () => clearInterval(t);
-  }, []);
-
-  // Track stage width for responsive offsets
-  useEffect(() => {
-    if (!stageRef.current) return;
-    const update = () => setStageWidth(stageRef.current?.offsetWidth ?? 0);
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(stageRef.current);
-    return () => ro.disconnect();
   }, []);
 
   const goTo = (i: number) => {
@@ -114,288 +95,226 @@ export function PortalEntradaRota({
     setCurrent(next);
   };
 
-  // Keyboard navigation
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') goTo(current + 1);
-      else if (e.key === 'ArrowLeft') goTo(current - 1);
-      else if (e.key === 'Escape') skip();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [current, total]);
-
   const handleDragEnd = (_: any, info: PanInfo) => {
     if (info.offset.x < -60) goTo(current + 1);
     else if (info.offset.x > 60) goTo(current - 1);
   };
 
   const finish = () => {
-    if (storageKey) { try { localStorage.setItem(storageKey, '1'); } catch {} }
+    if (storageKey) {
+      try { localStorage.setItem(storageKey, '1'); } catch {}
+    }
     onComplete();
   };
 
   const skip = () => {
-    if (storageKey) { try { localStorage.setItem(storageKey, '1'); } catch {} }
+    if (storageKey) {
+      try { localStorage.setItem(storageKey, '1'); } catch {}
+    }
     (onSkip ?? onComplete)();
   };
 
   const microcopy = microList[microIdx % microList.length];
-
-  // Responsive card metrics computed from stage width
-  const isCompact = stageWidth > 0 && stageWidth < 560;
-  const cardWidth = Math.min(Math.max(stageWidth * 0.62, 200), 300);
-  const offsetStep = cardWidth * 0.62;
+  const bg = useMemo(() => gradientForIndex(current, total), [current, total]);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.6 }}
-      className="fixed inset-0 z-[100] overflow-y-auto bg-midnight/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-8"
+      transition={{ duration: 0.5 }}
+      className="fixed inset-0 z-[100] overflow-hidden"
     >
-      {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gold/[0.04] blur-[140px]" />
-        <div className="absolute bottom-0 right-0 w-[400px] h-[400px] rounded-full bg-primary/[0.05] blur-[120px]" />
-      </div>
+      <motion.div
+        className="absolute inset-0"
+        animate={{ background: bg }}
+        transition={{ duration: 0.9, ease: 'easeInOut' }}
+        style={{ background: bg }}
+      />
 
-      {/* Container — contained, not full-screen */}
-      <div className="relative w-full max-w-4xl mx-auto rounded-[2rem] border border-white/10 bg-gradient-to-b from-white/[0.03] to-white/[0.01] shadow-[0_60px_120px_-30px_rgba(0,0,0,0.9)] overflow-hidden min-h-[640px] md:min-h-[720px] flex flex-col justify-center">
-        {/* Top accent line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      {/* Floating particles */}
+      <FloatingParticles />
 
-        {/* Skip */}
-        <button
-          onClick={skip}
-          aria-label="Sair"
-          className="absolute top-4 right-4 md:top-6 md:right-6 z-20 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center text-white/50 hover:text-gold hover:border-gold/40 transition-all duration-300"
-        >
-          <X className="w-4 h-4" />
-        </button>
+      {/* Skip */}
+      <button
+        onClick={skip}
+        className="absolute top-4 right-4 z-20 text-white/50 hover:text-white/90 transition-colors flex items-center gap-1 text-xs uppercase tracking-widest"
+      >
+        Pular <X className="w-4 h-4" />
+      </button>
 
-        <div className="relative px-5 py-8 md:px-12 md:py-12 flex flex-col gap-7 md:gap-9">
-          {/* Header */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.2, duration: 0.7 }}
-              className="flex items-center gap-3 mb-3"
-            >
-              <span className="text-[9px] tracking-[0.4em] font-bold text-gold uppercase">Casa Orácula</span>
-              <div className="h-px flex-1 bg-gradient-to-r from-gold/30 to-transparent" />
-              {portalNumero && (
-                <span className="font-serif italic text-xs text-gold/40">
-                  Fase {String(portalNumero).padStart(2, '0')}
-                </span>
-              )}
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35, duration: 0.8 }}
-              className="font-display text-3xl md:text-5xl text-white font-black leading-[0.95] tracking-tight"
-            >
-              {portalTitulo ?? 'O Chamado'}
-            </motion.h1>
+      <div className="relative z-10 h-full flex flex-col safe-area-inset px-4 py-6 md:py-10">
+        {/* Header */}
+        <div className="text-center pt-4 md:pt-6">
+          <div className="text-[11px] md:text-xs tracking-[0.4em] font-bold text-gold/90">
+            CASA ORÁCULA
           </div>
+          <div className="mt-2 text-lg md:text-2xl font-display font-black text-white/95">
+            {portalNumero ? `Portal ${portalNumero} · ` : ''}{portalTitulo ?? 'O Chamado'}
+          </div>
+        </div>
 
-          {/* Carousel stage */}
-          <div
-            ref={stageRef}
-            className="relative w-full h-[360px] md:h-[420px] flex items-center justify-center my-4 md:my-6"
-            style={{ perspective: '1600px' }}
+        {/* Carousel */}
+        <div className="flex-1 flex items-center justify-center my-6 md:my-8 overflow-hidden">
+          <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
+            {slides.map((slide, i) => {
+              const diff = i - current;
+              const abs = Math.abs(diff);
+              if (abs > 2) return null;
+              const isActive = diff === 0;
+              return (
+                <motion.div
+                  key={i}
+                  drag={isActive ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={handleDragEnd}
+                  onClick={() => !isActive && goTo(i)}
+                  animate={{
+                    x: `${diff * 78}%`,
+                    scale: isActive ? 1 : 1 - abs * 0.12,
+                    opacity: isActive ? 1 : Math.max(0.35, 1 - abs * 0.4),
+                    zIndex: 10 - abs,
+                  }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 28 }}
+                  className={cn(
+                    'absolute w-[85%] sm:w-[70%] md:w-[480px] max-w-[480px]',
+                    !isActive && 'cursor-pointer'
+                  )}
+                >
+                  <SlideCard slide={slide} isActive={isActive} chips={ethicalChips} />
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Dots */}
+        <div className="flex justify-center gap-1.5 mb-5">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              className={cn(
+                'h-1.5 rounded-full transition-all duration-500',
+                i === current ? 'w-8 bg-gold' : 'w-1.5 bg-white/25 hover:bg-white/50'
+              )}
+            />
+          ))}
+        </div>
+
+        {/* Microcopy */}
+        <div className="px-2 max-w-2xl mx-auto w-full">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={microcopy}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.55 }}
+              className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur px-5 py-4 text-center"
+            >
+              <p className="text-gold/95 font-semibold text-sm md:text-base leading-snug">
+                "{microcopy}"
+              </p>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* CTA */}
+        <div className="px-2 max-w-2xl mx-auto w-full mt-5 pb-2">
+          <Button
+            onClick={finish}
+            className="w-full h-14 rounded-2xl bg-gold text-midnight hover:bg-gold/90 font-black tracking-[0.15em] text-sm shadow-[0_12px_40px_-8px_hsl(var(--gold)/0.6)]"
           >
-            {/* Side hints (desktop only) */}
-            {current > 0 && (
-              <button
-                onClick={() => goTo(current - 1)}
-                aria-label="Anterior"
-                className="hidden md:flex absolute left-2 z-10 w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/40 hover:text-gold hover:border-gold/40 transition"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-            )}
+            {current >= total - 1 ? ctaLabel : 'CONTINUAR'}
             {current < total - 1 && (
               <button
-                onClick={() => goTo(current + 1)}
-                aria-label="Próximo"
-                className="hidden md:flex absolute right-2 z-10 w-10 h-10 rounded-full border border-white/10 items-center justify-center text-white/40 hover:text-gold hover:border-gold/40 transition"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
+                onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
+                className="sr-only"
+              >next</button>
             )}
-
-            <AnimatePresence mode="popLayout">
-              {slides.map((slide, i) => {
-                const diff = i - current;
-                const absDiff = Math.abs(diff);
-                if (absDiff > 2) return null;
-                const isActive = diff === 0;
-
-                return (
-                  <motion.div
-                    key={i}
-                    drag={isActive ? 'x' : false}
-                    dragConstraints={{ left: 0, right: 0 }}
-                    dragElastic={0.12}
-                    onDragEnd={handleDragEnd}
-                    initial={{ opacity: 0, scale: 0.85 }}
-                    animate={{
-                      x: diff * offsetStep,
-                      rotateY: isCompact ? 0 : diff * -22,
-                      scale: isActive ? 1 : 0.82,
-                      z: isActive ? 0 : -100,
-                      opacity: isActive ? 1 : 0.22,
-                      filter: isActive ? 'blur(0px)' : 'blur(4px)',
-                      zIndex: 10 - absDiff,
-                    }}
-                    transition={{ type: 'spring', stiffness: 220, damping: 32, mass: 0.9 }}
-                    className={cn(
-                      'absolute',
-                      !isActive && 'cursor-pointer'
-                    )}
-                    style={{ width: cardWidth, height: cardWidth * 1.32 }}
-                    onClick={() => !isActive && goTo(i)}
-                  >
-                    <SlideCard slide={slide} isActive={isActive} />
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-
-          {/* Microcopy */}
-          <div className="text-center min-h-[44px]">
-            <AnimatePresence mode="wait">
-              <motion.p
-                key={microcopy}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.6 }}
-                className="text-white/55 font-serif italic text-sm md:text-base leading-relaxed max-w-md mx-auto"
-              >
-                "{microcopy}"
-              </motion.p>
-            </AnimatePresence>
-          </div>
-
-          {/* Dots */}
-          <div className="flex items-center justify-center gap-2">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => goTo(i)}
-                aria-label={`Ir para slide ${i + 1}`}
-                className="h-1 flex items-center"
-              >
-                <motion.span
-                  animate={{
-                    width: i === current ? 24 : 6,
-                    opacity: i === current ? 1 : 0.3,
-                  }}
-                  transition={{ duration: 0.4 }}
-                  className="block h-[2px] rounded-full bg-gold"
-                />
-              </button>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div className="flex flex-col items-center gap-4">
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={current >= total - 1 ? finish : () => goTo(current + 1)}
-              className="rounded-full px-10 h-12 text-[11px] font-bold tracking-[0.25em] gap-2 shadow-xl"
+          </Button>
+          {current < total - 1 && (
+            <button
+              onClick={() => goTo(current + 1)}
+              className="block mx-auto mt-3 text-white/50 hover:text-white/80 text-[11px] uppercase tracking-widest"
             >
-              {current >= total - 1 ? ctaLabel : 'PRÓXIMO'}
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-
-            {/* Ethical chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-              {ethicalChips.map((chip) => (
-                <span
-                  key={chip}
-                  className="text-[9px] tracking-[0.2em] uppercase text-white/35 px-2.5 py-1 rounded-full border border-white/10"
-                >
-                  {chip}
-                </span>
-              ))}
-            </div>
-          </div>
+              Avançar slide
+            </button>
+          )}
         </div>
       </div>
     </motion.div>
   );
 }
 
-function SlideCard({ slide, isActive }: { slide: PortalSlide; isActive: boolean }) {
+function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: boolean; chips: string[] }) {
   return (
     <div
       className={cn(
-        'relative w-full h-full rounded-[2.5rem] overflow-hidden transition-all duration-700',
-        'border border-white/10 bg-gradient-to-b from-white/[0.08] to-transparent backdrop-blur-3xl',
-        'shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]',
-        isActive ? 'ring-2 ring-gold/40 scale-100' : 'ring-1 ring-white/5 scale-95 opacity-40'
+        'rounded-[2rem] border border-white/20 bg-white/[0.07] backdrop-blur-xl p-7 md:p-9',
+        'shadow-[0_30px_80px_-20px_hsl(var(--gold)/0.25)]',
+        'flex flex-col items-center text-center'
       )}
     >
-      {/* Corner glows with animations */}
-      <motion.div 
-        animate={{ 
-          opacity: isActive ? [0.1, 0.2, 0.1] : 0,
-          scale: isActive ? [1, 1.2, 1] : 1
-        }}
-        transition={{ duration: 4, repeat: Infinity }}
-        className="absolute -top-16 -left-16 w-48 h-48 bg-gold/20 blur-[80px] rounded-full pointer-events-none" 
-      />
-      <motion.div 
-        animate={{ 
-          opacity: isActive ? [0.1, 0.15, 0.1] : 0,
-          scale: isActive ? [1, 1.1, 1] : 1
-        }}
-        transition={{ duration: 5, repeat: Infinity, delay: 1 }}
-        className="absolute -bottom-16 -right-16 w-48 h-48 bg-primary/20 blur-[80px] rounded-full pointer-events-none" 
-      />
-
-      <div className="relative h-full flex flex-col items-center justify-center px-8 py-10 md:px-10 md:py-14 text-center">
-        <motion.div
-          animate={{ 
-            y: isActive ? [0, -12, 0] : 0,
-            rotate: isActive ? [0, 5, -5, 0] : 0
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="mb-8 relative"
-        >
-          <div className="absolute inset-0 bg-gold/30 blur-3xl rounded-full opacity-50" />
-          <div className="relative w-20 h-20 rounded-2xl border border-gold/30 bg-midnight/40 flex items-center justify-center text-gold shadow-2xl backdrop-blur-md">
-            {/* Cloned icon with larger size */}
-            {React.isValidElement(slide.icon) 
-              ? React.cloneElement(slide.icon as React.ReactElement<any>, { className: 'w-10 h-10' }) 
-              : slide.icon}
-          </div>
-        </motion.div>
-
-        <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase tracking-[0.12em] mb-4 leading-[1.1]">
-          {slide.title}
-        </h3>
-
-        <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent mb-6" />
-
-        <p className="text-white/60 text-sm md:text-base leading-relaxed font-serif italic max-w-[240px] mx-auto">
-          "{slide.subtitle}"
-        </p>
-
-        <div className="absolute bottom-6 right-8 opacity-40">
-          <Sparkles className="w-5 h-5 text-gold animate-pulse" />
-        </div>
+      <motion.div
+        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -8 }}
+        transition={{ type: 'spring', stiffness: 200, damping: 18 }}
+        className="text-gold mb-5"
+      >
+        {slide.icon}
+      </motion.div>
+      <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase leading-tight tracking-wide">
+        {slide.title}
+      </h3>
+      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md">
+        {slide.subtitle}
+      </p>
+      <div className="mt-6 flex flex-wrap justify-center gap-2">
+        {chips.map((c) => (
+          <span
+            key={c}
+            className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-[11px] font-semibold"
+          >
+            {c}
+          </span>
+        ))}
       </div>
+    </div>
+  );
+}
+
+function FloatingParticles() {
+  const particles = useRef(
+    Array.from({ length: 22 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: 2 + Math.random() * 6,
+      duration: 14 + Math.random() * 16,
+      opacity: 0.1 + Math.random() * 0.3,
+    }))
+  );
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {particles.current.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full bg-white"
+          style={{
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            width: p.size,
+            height: p.size,
+            opacity: p.opacity,
+            boxShadow: `0 0 ${p.size * 3}px hsl(var(--gold) / ${p.opacity})`,
+          }}
+          animate={{ y: [-20, -80, -20], x: [0, 10, 0] }}
+          transition={{ duration: p.duration, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      ))}
     </div>
   );
 }

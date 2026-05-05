@@ -39,7 +39,7 @@ interface ContentPageLayoutProps {
   headerActions?: ReactNode;
   
   // Styling
-  maxWidth?: 'md' | 'lg' | 'xl' | '2xl' | '4xl' | '6xl' | 'full';
+  maxWidth?: 'md' | 'lg' | 'xl' | '2xl' | '4xl';
   className?: string;
 }
 
@@ -49,8 +49,6 @@ const maxWidthClasses = {
   xl: 'max-w-xl',
   '2xl': 'max-w-2xl',
   '4xl': 'max-w-4xl',
-  '6xl': 'max-w-6xl',
-  full: 'max-w-full',
 };
 
 export function ContentPageLayout({
