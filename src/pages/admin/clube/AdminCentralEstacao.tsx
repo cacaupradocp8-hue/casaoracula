@@ -29,20 +29,14 @@ export default function AdminCentralEstacao() {
   const activeAdminTab = (window as any).Admin_ActiveTab || '';
   const estacaoId = paramId || (activeAdminTab.startsWith('central-estacao-') ? activeAdminTab.replace('central-estacao-', '') : null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'passos';
+  const activeTab = searchParams.get('tab') || 'album';
 
   const [editStationOpen, setEditStationOpen] = useState(false);
   const [stationForm, setStationForm] = useState({
-    titulo: '',
-    subtitulo: '',
-    descricao: '',
-    banner_url: '',
-    livro_titulo: '',
-    livro_autor: '',
-    livro_capa_url: '',
-    livro_imagem_banner_url: '',
-    ativa: false,
-    publicada: false
+    title: '',
+    subtitle: '',
+    description: '',
+    status: 'draft'
   });
 
   const onTabChange = (val: string) => {
@@ -50,12 +44,15 @@ export default function AdminCentralEstacao() {
   };
 
   const { data: estacao, isLoading } = useQuery({
-    queryKey: ['admin-estacao-detail', estacaoId],
+    queryKey: ['admin-v3-estacao-detail', estacaoId],
     queryFn: async () => {
       if (!estacaoId) return null;
       const { data, error } = await supabase
-        .from('clube_estacoes')
-        .select('*')
+        .from('clube_v3_stations')
+        .select(`
+          *,
+          route:clube_v3_routes(*)
+        `)
         .eq('id', estacaoId)
         .maybeSingle();
       if (error) throw error;
@@ -67,16 +64,10 @@ export default function AdminCentralEstacao() {
   useEffect(() => {
     if (estacao) {
       setStationForm({
-        titulo: estacao.titulo || '',
-        subtitulo: estacao.subtitulo || '',
-        descricao: estacao.descricao || '',
-        banner_url: estacao.banner_url || '',
-        livro_titulo: estacao.livro_titulo || '',
-        livro_autor: estacao.livro_autor || '',
-        livro_capa_url: estacao.livro_capa_url || '',
-        livro_imagem_banner_url: estacao.livro_imagem_banner_url || '',
-        ativa: estacao.ativa || false,
-        publicada: estacao.publicada || false
+        title: estacao.title || '',
+        subtitle: estacao.subtitle || '',
+        description: estacao.description || '',
+        status: estacao.status || 'draft'
       });
     }
   }, [estacao]);
