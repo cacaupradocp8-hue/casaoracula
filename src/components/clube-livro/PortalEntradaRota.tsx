@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import {
   Compass, Flame, Gem, AlertTriangle, Building2, Leaf, Circle, X, BookOpen, Eye, ShieldAlert, FlaskConical, Target, GraduationCap, Sparkles, ArrowRight, ChevronLeft, ChevronRight
@@ -340,40 +340,60 @@ function SlideCard({ slide, isActive }: { slide: PortalSlide; isActive: boolean 
   return (
     <div
       className={cn(
-        'relative w-full h-full rounded-[1.75rem] overflow-hidden',
-        'border border-white/10 bg-gradient-to-b from-white/[0.05] to-white/[0.01] backdrop-blur-2xl',
-        'shadow-[0_40px_80px_-20px_rgba(0,0,0,0.8)]',
-        isActive && 'ring-1 ring-gold/25'
+        'relative w-full h-full rounded-[2.5rem] overflow-hidden transition-all duration-700',
+        'border border-white/10 bg-gradient-to-b from-white/[0.08] to-transparent backdrop-blur-3xl',
+        'shadow-[0_40px_100px_-20px_rgba(0,0,0,0.8)]',
+        isActive ? 'ring-2 ring-gold/40 scale-100' : 'ring-1 ring-white/5 scale-95 opacity-40'
       )}
     >
-      {/* corner glow */}
-      <div className="absolute -top-12 -left-12 w-32 h-32 bg-gold/10 blur-3xl rounded-full pointer-events-none" />
-      <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-primary/10 blur-3xl rounded-full pointer-events-none" />
+      {/* Corner glows with animations */}
+      <motion.div 
+        animate={{ 
+          opacity: isActive ? [0.1, 0.2, 0.1] : 0,
+          scale: isActive ? [1, 1.2, 1] : 1
+        }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="absolute -top-16 -left-16 w-48 h-48 bg-gold/20 blur-[80px] rounded-full pointer-events-none" 
+      />
+      <motion.div 
+        animate={{ 
+          opacity: isActive ? [0.1, 0.15, 0.1] : 0,
+          scale: isActive ? [1, 1.1, 1] : 1
+        }}
+        transition={{ duration: 5, repeat: Infinity, delay: 1 }}
+        className="absolute -bottom-16 -right-16 w-48 h-48 bg-primary/20 blur-[80px] rounded-full pointer-events-none" 
+      />
 
-      <div className="relative h-full flex flex-col items-center justify-center px-6 py-8 md:px-8 md:py-10 text-center">
+      <div className="relative h-full flex flex-col items-center justify-center px-8 py-10 md:px-10 md:py-14 text-center">
         <motion.div
-          animate={{ y: isActive ? [0, -6, 0] : 0 }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          className="mb-6 relative"
+          animate={{ 
+            y: isActive ? [0, -12, 0] : 0,
+            rotate: isActive ? [0, 5, -5, 0] : 0
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="mb-8 relative"
         >
-          <div className="absolute inset-0 bg-gold/25 blur-2xl rounded-full" />
-          <div className="relative w-14 h-14 rounded-full border border-gold/30 bg-gold/[0.06] flex items-center justify-center text-gold">
-            {slide.icon}
+          <div className="absolute inset-0 bg-gold/30 blur-3xl rounded-full opacity-50" />
+          <div className="relative w-20 h-20 rounded-2xl border border-gold/30 bg-midnight/40 flex items-center justify-center text-gold shadow-2xl backdrop-blur-md">
+            {/* Cloned icon with larger size */}
+            {React.isValidElement(slide.icon) 
+              ? React.cloneElement(slide.icon as React.ReactElement<any>, { className: 'w-10 h-10' }) 
+              : slide.icon}
           </div>
         </motion.div>
 
-        <h3 className="font-display font-bold text-white text-lg md:text-xl uppercase tracking-[0.08em] mb-3 leading-tight">
+        <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase tracking-[0.12em] mb-4 leading-[1.1]">
           {slide.title}
         </h3>
 
-        <div className="w-10 h-px bg-gold/30 mb-4" />
+        <div className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent mb-6" />
 
-        <p className="text-white/55 text-sm leading-relaxed line-clamp-5">
-          {slide.subtitle}
+        <p className="text-white/60 text-sm md:text-base leading-relaxed font-serif italic max-w-[240px] mx-auto">
+          "{slide.subtitle}"
         </p>
 
-        <div className="absolute bottom-4 right-4 opacity-25">
-          <Sparkles className="w-3.5 h-3.5 text-gold" />
+        <div className="absolute bottom-6 right-8 opacity-40">
+          <Sparkles className="w-5 h-5 text-gold animate-pulse" />
         </div>
       </div>
     </div>
