@@ -264,11 +264,11 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 md:px-12 space-y-32 md:space-y-48 pb-48 pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 sm:space-y-32 md:space-y-48 pb-24 sm:pb-48 pt-10 sm:pt-20">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Mapa da Travessia">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-start">
               {/* Coluna de Cards de Cartografia — Bento Style */}
               <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
                 {cartografia.map((item, i) => (
@@ -278,17 +278,17 @@ export default function ClubeRotaPremium() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true, margin: '-50px' }}
                     transition={{ delay: i * 0.1, duration: 0.8 }}
-                    className="group relative overflow-hidden rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-md p-6 transition-all hover:border-gold/20 hover:bg-white/[0.04]"
+                    className="group relative overflow-hidden rounded-2xl sm:rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-md p-5 sm:p-6 transition-all hover:border-gold/20 hover:bg-white/[0.04]"
                   >
-                    <div className="flex items-center gap-5">
-                      <div className="w-12 h-12 rounded-2xl border border-gold/10 bg-gold/[0.03] flex items-center justify-center shrink-0 group-hover:bg-gold/10 transition-colors">
-                        <item.icon className="w-5 h-5 text-gold/60" />
+                    <div className="flex items-center gap-4 sm:gap-5">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl border border-gold/10 bg-gold/[0.03] flex items-center justify-center shrink-0 group-hover:bg-gold/10 transition-colors">
+                        <item.icon className="w-4 h-4 sm:w-5 sm:h-5 text-gold/60" />
                       </div>
                       <div className="min-w-0 flex-1 space-y-0.5">
-                        <p className="text-[8px] tracking-[0.4em] uppercase text-white/30 font-bold">
+                        <p className="text-[7px] sm:text-[8px] tracking-[0.4em] uppercase text-white/30 font-bold">
                           {item.label}
                         </p>
-                        <p className="font-display text-lg text-white/90 leading-tight truncate">
+                        <p className="font-display text-base sm:text-lg text-white/90 leading-tight truncate">
                           {item.value}
                         </p>
                       </div>
@@ -299,8 +299,8 @@ export default function ClubeRotaPremium() {
 
               {/* Coluna da Timeline — Direita */}
               <div className="lg:col-span-7">
-                <div className="relative pl-8 md:pl-12">
-                  <div className="absolute left-[7px] md:left-[11px] top-1 bottom-1 w-[1px] bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
+                <div className="relative pl-6 sm:pl-8 md:pl-12">
+                  <div className="absolute left-[6px] sm:left-[7px] md:left-[11px] top-1 bottom-1 w-[1px] bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" />
                   {pontos.map((item, idx) => {
                     const isCurrent = item.id === ponto.id;
                     const isCompleted = item.estado === 'completed';
