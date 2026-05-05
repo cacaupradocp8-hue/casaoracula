@@ -221,6 +221,27 @@ export function SymbolicCarouselBlock({
                   )}
                 </motion.div>
               )}
+
+              {/* Action Button - Subtle and Elegant */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mt-4"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => paginate(1)}
+                  className={cn(
+                    "h-9 px-8 rounded-full border-white/10 bg-white/5 text-white/60 text-[10px] uppercase tracking-[0.2em]",
+                    "hover:bg-gold/10 hover:border-gold/30 hover:text-gold hover:shadow-[0_0_15px_rgba(212,175,55,0.15)]",
+                    "transition-all duration-500"
+                  )}
+                >
+                  Continuar
+                </Button>
+              </motion.div>
             </div>
           </motion.div>
         </AnimatePresence>
