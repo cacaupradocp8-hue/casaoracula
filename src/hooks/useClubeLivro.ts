@@ -73,7 +73,7 @@ export function useClubeLivro() {
         subtitulo: r.subtitle,
         publicado: r.status === 'active',
         ativo: r.status === 'active',
-        capa_url: (r as any).cover_url,
+        capa_url: (r as any).cover_image_url,
         autor_livro: (r as any).author,
       })) as unknown as ClubeCiclo[];
     },
@@ -109,8 +109,7 @@ export function useClubeCicloDetalhe(cicloId: string | undefined) {
       return {
         id: data.id,
         titulo: data.title,
-        subtitulo: data.subtitle,
-        capa_url: (data as any).cover_url,
+        capa_url: (data as any).cover_image_url,
         autor_livro: (data as any).author,
       } as unknown as ClubeCiclo;
     },

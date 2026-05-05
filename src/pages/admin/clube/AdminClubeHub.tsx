@@ -108,7 +108,7 @@ export default function AdminClubeHub() {
         supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
       ]);
       return {
-        ciclos: cycles_count(estacoes.count, ciclos.count),
+        ciclos: estacoes.count || 0,
         books: books.count || 0,
         portais: portais.count || 0,
         chat: perguntas.count || 0,
@@ -131,9 +131,6 @@ export default function AdminClubeHub() {
     }
   });
 
-  function cycles_count(est: number | null | undefined, cic: number | null | undefined) {
-    return (Number(est) || 0) + (Number(cic) || 0);
-  }
 
   const getStatText = (type?: string) => {
     if (!stats) return '...';
@@ -229,7 +226,7 @@ export default function AdminClubeHub() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h2 className="text-2xl font-serif text-foreground leading-tight">
-                      {stats.activeStation.titulo}
+                      {stats.activeStation.title}
                     </h2>
                     <Badge variant={stats.activeStation.status === 'active' ? "default" : "secondary"} className={cn("text-[9px] uppercase tracking-wider", stats.activeStation.status === 'active' ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "")}>
                       {stats.activeStation.status === 'active' ? 'Publicado' : 'Rascunho'}

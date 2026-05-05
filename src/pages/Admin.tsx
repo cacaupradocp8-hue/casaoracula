@@ -258,10 +258,6 @@ export default function Admin() {
             {/* Copy tab special header */}
             {activeTab === 'copy' && (
               <div className="mb-4 flex justify-end">
-                <a href="/admin/atelie-conteudo" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gold bg-gold/10 hover:bg-gold/20 rounded-md transition-colors">
-                  <Sparkles className="w-4 h-4" />
-                  Ateliê de Conteúdo (IA)
-                </a>
               </div>
             )}
 

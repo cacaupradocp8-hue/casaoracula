@@ -22,7 +22,6 @@ import { Suspense } from "react";
 
 // Extracted route groups
 import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
-import { renderClubeRoutes } from "@/routes/clubeRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
 import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 
@@ -373,7 +372,7 @@ function AppRoutes() {
       <Route path="/narroterapia/audios" element={<ProtectedRoute minPortal="aluna_formacao"><AudiosNarracao /></ProtectedRoute>} />
 
       {/* ═══ Clube do Livro (extracted) ═══ */}
-      {renderClubeRoutes(ProtectedRoute)}
+      
 
       {/* Biblioteca & Ferramentas */}
       <Route path="/biblioteca" element={<ProtectedRoute><BibliotecaUnificada /></ProtectedRoute>} />
