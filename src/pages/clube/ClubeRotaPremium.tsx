@@ -688,7 +688,7 @@ export default function ClubeRotaPremium() {
                     <div className="min-w-0 flex-1">
                       <h2
                         className={cn(
-                          'font-display text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
+                          'font-display text-2xl sm:text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
                           proxLocked
                             ? 'text-foreground/35'
                             : 'text-foreground/70 group-hover:text-foreground'
