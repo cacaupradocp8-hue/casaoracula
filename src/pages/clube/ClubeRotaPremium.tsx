@@ -126,7 +126,7 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       {/* Wrapper de fundo cinematográfico */}
-      <div className="relative bg-midnight text-foreground overflow-hidden">
+      <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
         {/* Gradiente atmosférico fixo de fundo */}
         <div className="pointer-events-none fixed inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(206_60%_18%/0.6),transparent_60%)]" />
@@ -134,7 +134,7 @@ export default function ClubeRotaPremium() {
         </div>
 
         {/* ═══════════ 1. HERO FULL SCREEN ═══════════ */}
-        <section className="relative min-h-[100svh] flex items-center justify-center px-6 z-10">
+        <section className="relative min-h-[100svh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
             className="absolute inset-0 pointer-events-none"
@@ -153,27 +153,27 @@ export default function ClubeRotaPremium() {
               />
             ) : null}
             <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/60 to-midnight" />
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[160px]" />
+            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[100px] sm:blur-[160px]" />
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 text-center max-w-4xl mx-auto space-y-10"
+            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6 sm:space-y-10"
           >
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 1.2 }}
-              className="flex flex-col items-center justify-center gap-5"
+              className="flex flex-col items-center justify-center gap-4 sm:gap-5"
             >
-              <div className="flex items-center gap-4">
-                <span className="h-[1px] w-12 bg-gradient-to-r from-transparent to-gold/40" />
-                <span className="text-[10px] tracking-[0.6em] uppercase text-gold/60 font-medium">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <span className="h-[px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
+                <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
                   {estacaoAtual?.livro_titulo || 'Estação Oracular'}
                 </span>
-                <span className="h-[1px] w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
               </div>
 
               {matchedBook && (
@@ -184,7 +184,7 @@ export default function ClubeRotaPremium() {
                     <motion.button
                       whileHover={{ scale: 1.02, backgroundColor: 'rgba(212, 175, 55, 0.15)' }}
                       whileTap={{ scale: 0.98 }}
-                      className="flex items-center gap-2.5 px-5 py-2 rounded-full bg-gold/5 border border-gold/20 text-gold/80 text-[9px] font-bold uppercase tracking-[0.2em] transition-all"
+                      className="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full bg-gold/5 border border-gold/20 text-gold/80 text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.2em] transition-all min-h-[44px]"
                     >
                       <FlaskConical className="w-3 h-3" />
                       Módulo 80/20
@@ -194,12 +194,12 @@ export default function ClubeRotaPremium() {
               )}
             </motion.div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 px-2 sm:px-0">
               <h1
                 className="font-display font-light leading-[0.95] tracking-tighter"
-                style={{ fontSize: 'clamp(3rem, 10vw, 8rem)' }}
+                style={{ fontSize: 'clamp(2.5rem, 12vw, 8rem)' }}
               >
-                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent block">
                   {ponto.nome}
                 </span>
               </h1>
@@ -209,7 +209,7 @@ export default function ClubeRotaPremium() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8, duration: 1 }}
-                  className="font-serif italic text-xl md:text-3xl text-white/40 max-w-2xl mx-auto leading-relaxed"
+                  className="font-serif italic text-lg sm:text-2xl md:text-3xl text-white/40 max-w-2xl mx-auto leading-relaxed"
                 >
                   "{ponto.subtitulo}"
                 </motion.p>
@@ -220,12 +220,12 @@ export default function ClubeRotaPremium() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 1 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 sm:pt-10 px-4 sm:px-0"
             >
               <Button
                 size="lg"
                 variant="gold"
-                className="w-full sm:w-auto h-16 px-12 text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
+                className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
                 onClick={() => {
                   const el = document.getElementById('mapa-vivo');
                   el?.scrollIntoView({ behavior: 'smooth' });
@@ -237,7 +237,7 @@ export default function ClubeRotaPremium() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="w-full sm:w-auto h-16 px-10 text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                  className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
                 >
                   <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
                 </Button>
@@ -250,15 +250,15 @@ export default function ClubeRotaPremium() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5, duration: 1.5 }}
-            className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10"
+            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="flex flex-col items-center gap-3 text-white/20"
+              className="flex flex-col items-center gap-2 sm:gap-3 text-white/20"
             >
-              <span className="text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
-              <div className="w-[1px] h-12 bg-gradient-to-b from-gold/40 to-transparent" />
+              <span className="text-[7px] sm:text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
+              <div className="w-[1px] h-8 sm:h-12 bg-gradient-to-b from-gold/40 to-transparent" />
             </motion.div>
           </motion.div>
         </section>
