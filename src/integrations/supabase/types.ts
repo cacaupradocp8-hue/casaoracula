@@ -14,6 +14,303 @@ export type Database = {
   }
   public: {
     Tables: {
+      _deprecated_club_books: {
+        Row: {
+          author: string | null
+          cover_url: string | null
+          cycle_id: string | null
+          description: string | null
+          id: string
+          title: string | null
+        }
+        Insert: {
+          author?: string | null
+          cover_url?: string | null
+          cycle_id?: string | null
+          description?: string | null
+          id?: string
+          title?: string | null
+        }
+        Update: {
+          author?: string | null
+          cover_url?: string | null
+          cycle_id?: string | null
+          description?: string | null
+          id?: string
+          title?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_books_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_club_cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_club_cartography: {
+        Row: {
+          arquetipos: string[] | null
+          created_at: string | null
+          cycle_id: string | null
+          id: string
+          labirinto: string | null
+          notas: string | null
+          porta: string | null
+          torre: string | null
+          user_id: string
+        }
+        Insert: {
+          arquetipos?: string[] | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          labirinto?: string | null
+          notas?: string | null
+          porta?: string | null
+          torre?: string | null
+          user_id: string
+        }
+        Update: {
+          arquetipos?: string[] | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          labirinto?: string | null
+          notas?: string | null
+          porta?: string | null
+          torre?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      _deprecated_club_cycles: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          id: string
+          portal: string | null
+          start_date: string | null
+          title: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          portal?: string | null
+          start_date?: string | null
+          title?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          portal?: string | null
+          start_date?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
+      _deprecated_club_knowledge_entries: {
+        Row: {
+          archetypes: string[] | null
+          book_id: string
+          chapter_order: number | null
+          chapter_title: string | null
+          ciclo_id: string | null
+          content: string
+          created_at: string
+          excerpt_text: string | null
+          excerpt_title: string | null
+          id: string
+          source_type: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols: string[] | null
+          tags: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          archetypes?: string[] | null
+          book_id: string
+          chapter_order?: number | null
+          chapter_title?: string | null
+          ciclo_id?: string | null
+          content: string
+          created_at?: string
+          excerpt_text?: string | null
+          excerpt_title?: string | null
+          id?: string
+          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          archetypes?: string[] | null
+          book_id?: string
+          chapter_order?: number | null
+          chapter_title?: string | null
+          ciclo_id?: string | null
+          content?: string
+          created_at?: string
+          excerpt_text?: string | null
+          excerpt_title?: string | null
+          id?: string
+          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
+          symbols?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_knowledge_entries_book_id_fkey"
+            columns: ["book_id"]
+            isOneToOne: false
+            referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "club_knowledge_entries_ciclo_id_fkey"
+            columns: ["ciclo_id"]
+            isOneToOne: false
+            referencedRelation: "clube_livro_ciclos"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_club_meetings: {
+        Row: {
+          completed: boolean | null
+          cycle_id: string | null
+          date: string | null
+          id: string
+          roteiro: Json | null
+        }
+        Insert: {
+          completed?: boolean | null
+          cycle_id?: string | null
+          date?: string | null
+          id?: string
+          roteiro?: Json | null
+        }
+        Update: {
+          completed?: boolean | null
+          cycle_id?: string | null
+          date?: string | null
+          id?: string
+          roteiro?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_meetings_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_club_cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      _deprecated_club_reflections: {
+        Row: {
+          arquetipo: string | null
+          campo_clientes: string | null
+          created_at: string | null
+          cycle_id: string | null
+          id: string
+          intervencao: string | null
+          postura: string | null
+          user_id: string
+        }
+        Insert: {
+          arquetipo?: string | null
+          campo_clientes?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          intervencao?: string | null
+          postura?: string | null
+          user_id: string
+        }
+        Update: {
+          arquetipo?: string | null
+          campo_clientes?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          intervencao?: string | null
+          postura?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      _deprecated_club_tools: {
+        Row: {
+          conteudo: string | null
+          contexto_uso: string | null
+          created_at: string | null
+          cycle_id: string | null
+          id: string
+          limite_etico: string | null
+          tipo: string | null
+          user_id: string
+        }
+        Insert: {
+          conteudo?: string | null
+          contexto_uso?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          limite_etico?: string | null
+          tipo?: string | null
+          user_id: string
+        }
+        Update: {
+          conteudo?: string | null
+          contexto_uso?: string | null
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          limite_etico?: string | null
+          tipo?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      _deprecated_club_user_cycles: {
+        Row: {
+          created_at: string | null
+          cycle_id: string | null
+          id: string
+          status: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          status?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          cycle_id?: string | null
+          id?: string
+          status?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "club_user_cycles_cycle_id_fkey"
+            columns: ["cycle_id"]
+            isOneToOne: false
+            referencedRelation: "_deprecated_club_cycles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       academy_progress: {
         Row: {
           badges_json: Json
@@ -3678,303 +3975,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
-      }
-      club_books: {
-        Row: {
-          author: string | null
-          cover_url: string | null
-          cycle_id: string | null
-          description: string | null
-          id: string
-          title: string | null
-        }
-        Insert: {
-          author?: string | null
-          cover_url?: string | null
-          cycle_id?: string | null
-          description?: string | null
-          id?: string
-          title?: string | null
-        }
-        Update: {
-          author?: string | null
-          cover_url?: string | null
-          cycle_id?: string | null
-          description?: string | null
-          id?: string
-          title?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "club_books_cycle_id_fkey"
-            columns: ["cycle_id"]
-            isOneToOne: false
-            referencedRelation: "club_cycles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      club_cartography: {
-        Row: {
-          arquetipos: string[] | null
-          created_at: string | null
-          cycle_id: string | null
-          id: string
-          labirinto: string | null
-          notas: string | null
-          porta: string | null
-          torre: string | null
-          user_id: string
-        }
-        Insert: {
-          arquetipos?: string[] | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          labirinto?: string | null
-          notas?: string | null
-          porta?: string | null
-          torre?: string | null
-          user_id: string
-        }
-        Update: {
-          arquetipos?: string[] | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          labirinto?: string | null
-          notas?: string | null
-          porta?: string | null
-          torre?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      club_cycles: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          end_date: string | null
-          id: string
-          portal: string | null
-          start_date: string | null
-          title: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          end_date?: string | null
-          id?: string
-          portal?: string | null
-          start_date?: string | null
-          title?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          end_date?: string | null
-          id?: string
-          portal?: string | null
-          start_date?: string | null
-          title?: string | null
-        }
-        Relationships: []
-      }
-      club_knowledge_entries: {
-        Row: {
-          archetypes: string[] | null
-          book_id: string
-          chapter_order: number | null
-          chapter_title: string | null
-          ciclo_id: string | null
-          content: string
-          created_at: string
-          excerpt_text: string | null
-          excerpt_title: string | null
-          id: string
-          source_type: Database["public"]["Enums"]["club_knowledge_source_type"]
-          symbols: string[] | null
-          tags: string[] | null
-          updated_at: string
-        }
-        Insert: {
-          archetypes?: string[] | null
-          book_id: string
-          chapter_order?: number | null
-          chapter_title?: string | null
-          ciclo_id?: string | null
-          content: string
-          created_at?: string
-          excerpt_text?: string | null
-          excerpt_title?: string | null
-          id?: string
-          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
-          symbols?: string[] | null
-          tags?: string[] | null
-          updated_at?: string
-        }
-        Update: {
-          archetypes?: string[] | null
-          book_id?: string
-          chapter_order?: number | null
-          chapter_title?: string | null
-          ciclo_id?: string | null
-          content?: string
-          created_at?: string
-          excerpt_text?: string | null
-          excerpt_title?: string | null
-          id?: string
-          source_type?: Database["public"]["Enums"]["club_knowledge_source_type"]
-          symbols?: string[] | null
-          tags?: string[] | null
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "club_knowledge_entries_book_id_fkey"
-            columns: ["book_id"]
-            isOneToOne: false
-            referencedRelation: "books"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "club_knowledge_entries_ciclo_id_fkey"
-            columns: ["ciclo_id"]
-            isOneToOne: false
-            referencedRelation: "clube_livro_ciclos"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      club_meetings: {
-        Row: {
-          completed: boolean | null
-          cycle_id: string | null
-          date: string | null
-          id: string
-          roteiro: Json | null
-        }
-        Insert: {
-          completed?: boolean | null
-          cycle_id?: string | null
-          date?: string | null
-          id?: string
-          roteiro?: Json | null
-        }
-        Update: {
-          completed?: boolean | null
-          cycle_id?: string | null
-          date?: string | null
-          id?: string
-          roteiro?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "club_meetings_cycle_id_fkey"
-            columns: ["cycle_id"]
-            isOneToOne: false
-            referencedRelation: "club_cycles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      club_reflections: {
-        Row: {
-          arquetipo: string | null
-          campo_clientes: string | null
-          created_at: string | null
-          cycle_id: string | null
-          id: string
-          intervencao: string | null
-          postura: string | null
-          user_id: string
-        }
-        Insert: {
-          arquetipo?: string | null
-          campo_clientes?: string | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          intervencao?: string | null
-          postura?: string | null
-          user_id: string
-        }
-        Update: {
-          arquetipo?: string | null
-          campo_clientes?: string | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          intervencao?: string | null
-          postura?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      club_tools: {
-        Row: {
-          conteudo: string | null
-          contexto_uso: string | null
-          created_at: string | null
-          cycle_id: string | null
-          id: string
-          limite_etico: string | null
-          tipo: string | null
-          user_id: string
-        }
-        Insert: {
-          conteudo?: string | null
-          contexto_uso?: string | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          limite_etico?: string | null
-          tipo?: string | null
-          user_id: string
-        }
-        Update: {
-          conteudo?: string | null
-          contexto_uso?: string | null
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          limite_etico?: string | null
-          tipo?: string | null
-          user_id?: string
-        }
-        Relationships: []
-      }
-      club_user_cycles: {
-        Row: {
-          created_at: string | null
-          cycle_id: string | null
-          id: string
-          status: string | null
-          user_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          status?: string | null
-          user_id: string
-        }
-        Update: {
-          created_at?: string | null
-          cycle_id?: string | null
-          id?: string
-          status?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "club_user_cycles_cycle_id_fkey"
-            columns: ["cycle_id"]
-            isOneToOne: false
-            referencedRelation: "club_cycles"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       clube_audio_albums: {
         Row: {
