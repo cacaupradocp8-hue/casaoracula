@@ -143,20 +143,30 @@ export function PortalEntradaRota({
         Pular <X className="w-4 h-4" />
       </button>
 
-      <div className="relative z-10 h-full flex flex-col safe-area-inset px-4 py-6 md:py-10">
-        {/* Header */}
-        <div className="text-center pt-4 md:pt-6">
-          <div className="text-[11px] md:text-xs tracking-[0.4em] font-bold text-gold/90">
-            CASA ORÁCULA
+      <div className="relative z-10 h-full flex flex-col safe-area-inset px-4 py-8 md:py-12">
+        {/* Header — refinado, ar entre as linhas */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="text-center pt-2 md:pt-4 space-y-3"
+        >
+          <div className="flex items-center justify-center gap-3">
+            <span className="h-px w-8 bg-gold/40" />
+            <span className="text-[10px] tracking-[0.5em] font-medium text-gold/80">
+              CASA ORÁCULA
+            </span>
+            <span className="h-px w-8 bg-gold/40" />
           </div>
-          <div className="mt-2 text-lg md:text-2xl font-display font-black text-white/95">
-            {portalNumero ? `Portal ${portalNumero} · ` : ''}{portalTitulo ?? 'O Chamado'}
+          <div className="font-display text-xl md:text-3xl font-light text-white/95 tracking-tight">
+            {portalNumero ? <span className="text-gold/70 font-serif italic mr-2">{`Portal ${portalNumero}`}</span> : null}
+            {portalTitulo ?? 'O Chamado'}
           </div>
-        </div>
+        </motion.div>
 
-        {/* Carousel */}
-        <div className="flex-1 flex items-center justify-center my-6 md:my-8 overflow-hidden">
-          <div className="relative w-full max-w-5xl h-full flex items-center justify-center">
+        {/* Carousel — peek lateral e respiro generoso */}
+        <div className="flex-1 flex items-center justify-center my-4 md:my-8 overflow-hidden">
+          <div className="relative w-full max-w-6xl h-full flex items-center justify-center">
             {slides.map((slide, i) => {
               const diff = i - current;
               const abs = Math.abs(diff);
@@ -171,111 +181,109 @@ export function PortalEntradaRota({
                   onDragEnd={handleDragEnd}
                   onClick={() => !isActive && goTo(i)}
                   animate={{
-                    x: `${diff * 78}%`,
-                    scale: isActive ? 1 : 1 - abs * 0.12,
-                    opacity: isActive ? 1 : Math.max(0.35, 1 - abs * 0.4),
+                    x: `${diff * 72}%`,
+                    scale: isActive ? 1 : 1 - abs * 0.15,
+                    opacity: isActive ? 1 : Math.max(0.2, 1 - abs * 0.5),
+                    filter: isActive ? 'blur(0px)' : `blur(${abs * 2}px)`,
                     zIndex: 10 - abs,
                   }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 28 }}
+                  transition={{ type: 'spring', stiffness: 220, damping: 30 }}
                   className={cn(
-                    'absolute w-[85%] sm:w-[70%] md:w-[480px] max-w-[480px]',
+                    'absolute w-[88%] sm:w-[72%] md:w-[520px] max-w-[520px]',
                     !isActive && 'cursor-pointer'
                   )}
                 >
-                  <SlideCard slide={slide} isActive={isActive} chips={ethicalChips} />
+                  <SlideCard slide={slide} isActive={isActive} chips={ethicalChips} microcopy={isActive ? microcopy : undefined} />
                 </motion.div>
               );
             })}
           </div>
         </div>
 
-        {/* Dots */}
-        <div className="flex justify-center gap-1.5 mb-5">
+        {/* Dots — minimalistas */}
+        <div className="flex justify-center items-center gap-2 mb-6">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
               className={cn(
-                'h-1.5 rounded-full transition-all duration-500',
-                i === current ? 'w-8 bg-gold' : 'w-1.5 bg-white/25 hover:bg-white/50'
+                'h-[3px] rounded-full transition-all duration-700 ease-out',
+                i === current
+                  ? 'w-10 bg-gold shadow-[0_0_12px_hsl(var(--gold)/0.5)]'
+                  : 'w-1.5 bg-white/15 hover:bg-white/40'
               )}
             />
           ))}
+          <span className="ml-3 text-[9px] font-mono tracking-[0.3em] text-white/30 tabular-nums">
+            {String(current + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
         </div>
 
-        {/* Microcopy */}
-        <div className="px-2 max-w-2xl mx-auto w-full">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={microcopy}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.55 }}
-              className="rounded-2xl border border-white/15 bg-black/25 backdrop-blur px-5 py-4 text-center"
-            >
-              <p className="text-gold/95 font-semibold text-sm md:text-base leading-snug">
-                "{microcopy}"
-              </p>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* CTA */}
-        <div className="px-2 max-w-2xl mx-auto w-full mt-5 pb-2">
+        {/* CTA — sutil e elegante */}
+        <div className="px-2 max-w-md mx-auto w-full pb-2">
           <Button
-            onClick={finish}
-            className="w-full h-14 rounded-2xl bg-gold text-midnight hover:bg-gold/90 font-black tracking-[0.15em] text-sm shadow-[0_12px_40px_-8px_hsl(var(--gold)/0.6)]"
-          >
-            {current >= total - 1 ? ctaLabel : 'CONTINUAR'}
-            {current < total - 1 && (
-              <button
-                onClick={(e) => { e.stopPropagation(); goTo(current + 1); }}
-                className="sr-only"
-              >next</button>
+            onClick={current >= total - 1 ? finish : () => goTo(current + 1)}
+            variant="outline"
+            className={cn(
+              'w-full h-12 rounded-full border-gold/30 bg-gold/5 text-gold uppercase tracking-[0.3em] text-[11px] font-semibold',
+              'hover:bg-gold hover:text-midnight hover:border-gold transition-all duration-500',
+              'hover:shadow-[0_0_30px_-5px_hsl(var(--gold)/0.6)]'
             )}
+          >
+            {current >= total - 1 ? ctaLabel : 'Continuar'}
           </Button>
-          {current < total - 1 && (
-            <button
-              onClick={() => goTo(current + 1)}
-              className="block mx-auto mt-3 text-white/50 hover:text-white/80 text-[11px] uppercase tracking-widest"
-            >
-              Avançar slide
-            </button>
-          )}
         </div>
       </div>
     </motion.div>
   );
 }
 
-function SlideCard({ slide, isActive, chips }: { slide: PortalSlide; isActive: boolean; chips: string[] }) {
+function SlideCard({ slide, isActive, chips, microcopy }: { slide: PortalSlide; isActive: boolean; chips: string[]; microcopy?: string }) {
   return (
     <div
       className={cn(
-        'rounded-[2rem] border border-white/20 bg-white/[0.07] backdrop-blur-xl p-7 md:p-9',
-        'shadow-[0_30px_80px_-20px_hsl(var(--gold)/0.25)]',
-        'flex flex-col items-center text-center'
+        'rounded-[2rem] border border-white/10 bg-white/[0.04] backdrop-blur-2xl p-8 md:p-12',
+        'shadow-[0_40px_100px_-30px_hsl(var(--gold)/0.3)]',
+        'flex flex-col items-center text-center min-h-[440px] md:min-h-[480px] justify-center gap-6'
       )}
     >
       <motion.div
-        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -8 }}
+        animate={{ scale: isActive ? 1 : 0.85, rotate: isActive ? 0 : -6 }}
         transition={{ type: 'spring', stiffness: 200, damping: 18 }}
-        className="text-gold mb-5"
+        className="text-gold/90"
       >
         {slide.icon}
       </motion.div>
-      <h3 className="font-display font-black text-white text-xl md:text-2xl uppercase leading-tight tracking-wide">
-        {slide.title}
-      </h3>
-      <p className="mt-4 text-white/75 text-sm md:text-base leading-relaxed font-medium max-w-md">
-        {slide.subtitle}
-      </p>
-      <div className="mt-6 flex flex-wrap justify-center gap-2">
+      <div className="space-y-3">
+        <h3 className="font-display font-light text-white text-2xl md:text-3xl tracking-tight leading-tight">
+          {slide.title}
+        </h3>
+        <div className="h-px w-12 bg-gold/30 mx-auto" />
+        <p className="text-white/65 text-sm md:text-base leading-relaxed font-serif italic max-w-md">
+          {slide.subtitle}
+        </p>
+      </div>
+
+      {isActive && microcopy && (
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={microcopy}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.6 }}
+            className="text-gold/80 text-xs md:text-sm font-serif italic leading-relaxed max-w-sm pt-2 border-t border-white/5"
+          >
+            "{microcopy}"
+          </motion.p>
+        </AnimatePresence>
+      )}
+
+      <div className="flex flex-wrap justify-center gap-1.5 pt-2">
         {chips.map((c) => (
           <span
             key={c}
-            className="px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-white/80 text-[11px] font-semibold"
+            className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/50 text-[10px] tracking-[0.15em] uppercase"
           >
             {c}
           </span>
