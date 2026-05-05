@@ -29,22 +29,28 @@ export function AdminCertificacaoTab() {
   const [validating, setValidating] = useState<string | null>(null);
 
   useEffect(() => {
-    supabase.from('clube_livro_ciclos').select('id, titulo, autor_livro, ativo')
-      .order('ordem')
+    supabase.from('clube_v3_routes').select('id, title')
       .then(({ data }) => setCiclos(data || []));
   }, []);
 
   const fetchProgress = async (cicloId: string) => {
     setLoading(true);
     try {
-      // Get all escutas for this ciclo
-      const { data: escutas } = await supabase
-        .from('clube_livro_escutas')
+      // Get all stations for this route
+      const { data: stations } = await supabase
+        .from('clube_v3_stations')
         .select('id')
-        .eq('ciclo_id', cicloId)
-        .eq('ativo', true);
-      const totalEscutas = escutas?.length || 0;
-      const escutaIds = escutas?.map(e => e.id) || [];
+        .eq('route_id', cicloId)
+        .eq('status', 'active');
+      const stationIds = stations?.map(s => s.id) || [];
+
+      // Get all audios for these stations
+      const { data: audios } = await supabase
+        .from('clube_v3_station_audios')
+        .select('id')
+        .in('station_id', stationIds.length > 0 ? stationIds : ['00000000-0000-0000-0000-000000000000']);
+      const totalEscutas = audios?.length || 0;
+      const audioTrackIds = audios?.map(a => a.id) || [];
 
       // Get all non-visitor users
       const { data: users } = await supabase
@@ -59,25 +65,13 @@ export function AdminCertificacaoTab() {
         .from('clube_audio_progress')
         .select('user_id, track_id, concluido')
         .eq('concluido', true)
-        .in('track_id', escutaIds.length > 0 ? escutaIds : ['00000000-0000-0000-0000-000000000000']);
+        .in('track_id', audioTrackIds.length > 0 ? audioTrackIds : ['00000000-0000-0000-0000-000000000000']);
 
-      // Get lab progress
-      const { data: labProgress } = await supabase
-        .from('lab_8020_progress')
-        .select('user_id, concluido')
-        .eq('concluido', true);
-
-      // Get registros
-      const { data: registros } = await supabase
-        .from('clube_estacao_registros')
-        .select('user_id');
-
-      // Get integracoes
-      const { data: integracoes } = await supabase
-        .from('clube_livro_integracoes')
-        .select('user_id, status')
-        .eq('ciclo_id', cicloId)
-        .eq('status', 'concluida');
+      // Get lab progress (using v3 user_progress)
+      const { data: userProgress } = await supabase
+        .from('clube_v3_user_progress')
+        .select('user_id, station_id, letter_completed, reflection_completed, question_completed, therapeutic_completed')
+        .in('station_id', stationIds.length > 0 ? stationIds : ['00000000-0000-0000-0000-000000000000']);
 
       // Get certificates
       const { data: certs } = await supabase
@@ -90,9 +84,9 @@ export function AdminCertificacaoTab() {
       (audioProgress || []).forEach(ap => {
         audioMap.set(ap.user_id, (audioMap.get(ap.user_id) || 0) + 1);
       });
-      const labSet = new Set((labProgress || []).map(l => l.user_id));
-      const registroSet = new Set((registros || []).map(r => r.user_id));
-      const integracaoSet = new Set((integracoes || []).map(i => i.user_id));
+      const labSet = new Set((userProgress || []).filter(p => (p as any).practice_completed).map(l => (l as any).user_id));
+      const registroSet = new Set((userProgress || []).filter(p => (p as any).letter_completed).map(r => (r as any).user_id));
+      const integracaoSet = new Set((userProgress || []).filter(p => (p as any).reflection_completed).map(i => (i as any).user_id));
       const certMap = new Map<string, { id: string; status: string }>();
       (certs || []).forEach(c => certMap.set(c.user_id, { id: c.id, status: c.status || 'elegivel' }));
 
@@ -219,7 +213,7 @@ export function AdminCertificacaoTab() {
                 <SelectContent>
                   {ciclos.map(c => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.titulo} {c.autor_livro ? `— ${c.autor_livro}` : ''} {c.ativo ? '✅' : ''}
+                      {c.title}
                     </SelectItem>
                   ))}
                 </SelectContent>

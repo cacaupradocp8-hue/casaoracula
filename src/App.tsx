@@ -22,7 +22,6 @@ import { Suspense } from "react";
 
 // Extracted route groups
 import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
-import { renderClubeRoutes } from "@/routes/clubeRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
 import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 
@@ -113,7 +112,7 @@ const Tarot = React.lazy(() => import("./pages/salas/Tarot"));
 const Constelacao = React.lazy(() => import("./pages/salas/Constelacao"));
 const Syntheia = React.lazy(() => import("./pages/Syntheia"));
 const FerramentaDinamica = React.lazy(() => import("./pages/FerramentaDinamica"));
-const Canteiro = React.lazy(() => import("./pages/Canteiro"));
+
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
 const EneagramaFeminino = React.lazy(() => import("./pages/EneagramaFeminino"));
@@ -373,7 +372,7 @@ function AppRoutes() {
       <Route path="/narroterapia/audios" element={<ProtectedRoute minPortal="aluna_formacao"><AudiosNarracao /></ProtectedRoute>} />
 
       {/* ═══ Clube do Livro (extracted) ═══ */}
-      {renderClubeRoutes(ProtectedRoute)}
+      
 
       {/* Biblioteca & Ferramentas */}
       <Route path="/biblioteca" element={<ProtectedRoute><BibliotecaUnificada /></ProtectedRoute>} />
@@ -499,7 +498,7 @@ function AppRoutes() {
       <Route path="/jardim-da-psique/:id" element={<ProtectedRoute><JardimPsiqueDetalhe /></ProtectedRoute>} />
 
       {/* Canteiro */}
-      <Route path="/canteiro" element={<ProtectedRoute><Canteiro /></ProtectedRoute>} />
+      
       <Route path="/minha-biblioteca" element={<ProtectedRoute><Navigate to="/biblioteca?aba=pessoal" replace /></ProtectedRoute>} />
 
       {/* Oráculos */}
