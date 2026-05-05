@@ -99,8 +99,9 @@ export default function ClubeChatLivro() {
     queryKey: ['club-active-cycle-chat'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clube_v2_ciclos' as any)
-        .select('*, chat_prompt, chat_knowledge_base, clube_v2_obras(*)')
+        .from('clube_livro_ciclos')
+        .select('*, chat_prompt, chat_knowledge_base')
+        .eq('ativo', true)
         .order('created_at', { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -110,7 +111,7 @@ export default function ClubeChatLivro() {
     },
   });
 
-  const book = (cycle as any)?.clube_v2_obras?.[0];
+  const book = cycle;
   const matchedBook = allBooksData.find(b => b.title === book?.titulo);
   const { data: essencia } = useEssencia8020(matchedBook?.id);
 
