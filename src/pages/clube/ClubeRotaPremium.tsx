@@ -763,7 +763,7 @@ function Section({
             </div>
           )}
           {titulo && (
-            <h2 className="font-display text-3xl md:text-4xl text-foreground leading-tight">
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl text-foreground leading-tight">
               {titulo}
             </h2>
           )}
