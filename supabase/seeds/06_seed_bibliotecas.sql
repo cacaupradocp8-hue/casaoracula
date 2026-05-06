@@ -1,0 +1,6 @@
+-- 06_seed_bibliotecas.sql
+-- Domínio: Bibliotecas e Acervo
+-- Objetivo: Casos de estudo e links de livros.
+
+-- INSERT INTO public.books (id, title, author, cover_url) VALUES ...
+-- INSERT INTO public.biblioteca_casos (id, title, content) VALUES ...
