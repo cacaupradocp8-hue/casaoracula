@@ -1,0 +1,6 @@
+-- 07_seed_automation_ai.sql
+-- Domínio: Automação e IA (Agentes)
+-- Objetivo: Personas e fluxos de automação.
+
+-- INSERT INTO public.agentes (id, name, system_prompt, model) VALUES ...
+-- INSERT INTO public.automation_rules (id, trigger, action) VALUES ...
