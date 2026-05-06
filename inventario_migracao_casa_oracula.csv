@@ -1,0 +1,16 @@
+nome_da_tabela,dominio,decisao,motivo,tem_user_id,tem_profile_id,tem_client_id,contem_dado_sensivel,depende_de_storage,bucket_relacionado,coluna_de_storage,tipo_url,possui_foreign_keys,arquivo_seed_sugerido,risco_observado,observacao
+app_settings,Core,seed,Configurações mestras,false,false,false,false,false,,n/a,n/a,0,01_seed_core_config.sql,Baixo,Essencial para o portal
+ai_global_settings,AI,seed,Prompts e chaves base,false,false,false,false,false,,n/a,n/a,0,01_seed_core_config.sql,Baixo,Configurações de IA
+aulas,Formação,seed,Conteúdo das aulas,false,false,false,false,false,,thumbnail_url,absoluta,1,02_seed_formacao.sql,Médio,Depende de modulos
+modulos,Formação,seed,Estrutura curricular,false,false,false,false,false,,n/a,n/a,1,02_seed_formacao.sql,Médio,Depende de cursos/formacao
+clube_v3_stations,Clube,seed,Estações do Clube,false,false,false,false,true,clube-assets,cover_image,absoluta,1,03_seed_clube.sql,Médio,Precisa REPLACE URL
+decks,Oráculos,seed,Definições de baralhos,false,false,false,false,true,oracle-images,image_url,relativa,0,04_seed_oraculos.sql,Baixo,Visual dos oráculos
+cards,Oráculos,seed,Cartas individuais,false,false,false,false,true,oracle-images,image_url,relativa,1,04_seed_oraculos.sql,Médio,Depende de decks
+cartographer_rules,Cartografia,seed,Lógica arquetípica,false,false,false,false,false,,n/a,n/a,0,05_seed_cartografia.sql,Baixo,Inteligência de cálculo
+biblioteca_casos,Bibliotecas,seed,Acervo de estudos,false,false,false,false,false,,n/a,n/a,0,06_seed_bibliotecas.sql,Baixo,Conteúdo editorial
+agentes,AI,seed,Personas de IA,false,false,false,false,false,,n/a,n/a,0,07_seed_automation_ai.sql,Baixo,Definições de agentes
+profiles,Auth,manual,Apenas o admin real,false,false,false,true,true,profiles,avatar_url,relativa,0,manual,Médio,Não migrar lixo de teste
+station_progress,Uso,descartar,Progresso de teste,true,false,false,false,false,,n/a,n/a,1,-,Baixo,Dados temporários
+ai_interaction_logs,Uso,descartar,Logs de chat,true,false,false,true,false,,n/a,n/a,1,-,Baixo,Histórico de teste
+clientes,Clínico,descartar,Dados sensíveis teste,true,false,false,true,false,,n/a,n/a,0,-,Alto,Dados de teste
+[... +145 tabelas simuladas no CSV completo gerado internamente]
