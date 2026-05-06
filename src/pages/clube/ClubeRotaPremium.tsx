@@ -620,7 +620,7 @@ export default function ClubeRotaPremium() {
                 <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
                   Próximo nível
                 </Badge>
-                <h3 className="font-display text-3xl md:text-5xl leading-[1.05]">
+                <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
                   Você percebe os padrões.
                   <br />
                   <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
