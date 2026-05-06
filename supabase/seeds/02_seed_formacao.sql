@@ -27,8 +27,8 @@ VALUES
 ('9fc4d42f-5bfc-45df-85a7-aa2f2beeac0e', '181fe90c-b556-4865-ba7c-686f283a7419', 'A CHEGADA', 'O QUE FALTA', 8, 'visitante', true, 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1769449302095-0rqxhl.ogg', 'O ENCONTRO COM A LINGUGEM SIMBOLICA')
 ON CONFLICT (id) DO UPDATE SET titulo = EXCLUDED.titulo;
 
--- 4. Cursos (Exemplo com placeholder para imagens não oficiais)
+-- 4. Cursos (Usando placeholder interno para cursos que ainda não possuem capa oficial)
 INSERT INTO public.courses (id, titulo, subtitulo, capa_url, publicado, ordem, portal_minimo)
 VALUES 
-('d69b1378-8095-4429-9cd6-2deaa7978300', 'ORÁCULA — Especialização', 'Leitura Simbólica', 'https://images.unsplash.com/photo-1518005020251-58296b864c3d?q=80&w=800', true, 1, 'aluna')
+('d69b1378-8095-4429-9cd6-2deaa7978300', 'ORÁCULA — Especialização', 'Leitura Simbólica', 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/cursos/1769016564057-k2m4zd.png', true, 1, 'aluna')
 ON CONFLICT (id) DO UPDATE SET titulo = EXCLUDED.titulo;
