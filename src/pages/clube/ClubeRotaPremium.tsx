@@ -32,6 +32,7 @@ import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
+import { AudioOracular } from '@/components/audio/AudioOracular';
 
 
 /**
@@ -133,8 +134,8 @@ export default function ClubeRotaPremium() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(206_70%_8%/0.9),transparent_70%)]" />
         </div>
 
-        {/* ═══════════ 1. HERO FULL SCREEN ═══════════ */}
-        <section className="relative min-h-[100svh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
+        {/* ═══════════ 1. HERO ═══════════ */}
+        <section className="relative min-h-[78svh] md:min-h-[70vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
             className="absolute inset-0 pointer-events-none"
@@ -160,7 +161,7 @@ export default function ClubeRotaPremium() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6 sm:space-y-10"
+            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-5 sm:space-y-6"
           >
             <motion.div
               initial={{ opacity: 0 }}
@@ -197,7 +198,7 @@ export default function ClubeRotaPremium() {
             <div className="space-y-4 px-2 sm:px-0">
               <h1
                 className="font-display font-light leading-[0.95] tracking-tighter"
-                style={{ fontSize: 'clamp(2.5rem, 12vw, 8rem)' }}
+                style={{ fontSize: 'clamp(2.25rem, 7vw, 5.5rem)' }}
               >
                 <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent block">
                   {ponto.nome}
@@ -250,7 +251,7 @@ export default function ClubeRotaPremium() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 2.5, duration: 1.5 }}
-            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10"
+            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10 md:hidden"
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -264,7 +265,7 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 sm:space-y-32 md:space-y-48 pb-24 sm:pb-48 pt-10 sm:pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Mapa da Travessia">
@@ -316,7 +317,7 @@ export default function ClubeRotaPremium() {
                         disabled={isLocked}
                         onClick={() => !isLocked && navigate(`/clube/rota/${item.slug}`)}
                         className={cn(
-                          'relative block w-full text-left group py-5 transition-all',
+                          'relative block w-full text-left group py-3 md:py-4 transition-all',
                           isLocked && 'cursor-not-allowed grayscale-[0.8]'
                         )}
                       >
@@ -378,39 +379,33 @@ export default function ClubeRotaPremium() {
           </Section>
 
 
-          {/* ═══════════ 3. ÁUDIOS ═══════════ */}
+          {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
           {audios.length > 0 && (
-            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da travessia">
-              <div className="space-y-3">
+            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
+              <div className="space-y-4">
                 {audios.map((audio: any, i: number) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5"
                   >
-                    <button
-                      onClick={() => audio.url && window.open(audio.url, '_blank')}
-                      className="w-full text-left group flex items-center gap-4 p-4 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-gold/20 transition-all min-h-[44px]"
-                    >
-                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                        <Play className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold/80 ml-0.5" />
-                        <span className="absolute inset-0 rounded-full ring-1 ring-gold/0 group-hover:ring-gold/30 group-hover:scale-110 transition-all" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-0.5 sm:mb-1">
-                          {audio.tipo || 'Áudio de integração'}
-                        </p>
-                        <h4 className="font-display text-sm sm:text-base md:text-lg text-foreground/90 group-hover:text-foreground transition-colors truncate">
-                          {audio.titulo}
-                        </h4>
-                        <span className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-foreground/70 mt-0.5 sm:mt-1">
-                          <Clock className="w-3 h-3" /> {audio.duracao || '—'}
-                        </span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-foreground/20 group-hover:text-gold transition-colors shrink-0" />
-                    </button>
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-[9px] tracking-[0.3em] uppercase text-gold/60">
+                        Áudio {i + 1}{audio.tipo ? ` · ${audio.tipo}` : ''}
+                      </span>
+                    </div>
+                    {audio.url ? (
+                      <AudioOracular
+                        audioUrl={audio.url}
+                        titulo={audio.titulo || `Áudio ${i + 1}`}
+                        hideInsight
+                      />
+                    ) : (
+                      <p className="text-sm text-foreground/50 italic">Áudio em preparação.</p>
+                    )}
                   </motion.div>
                 ))}
               </div>
@@ -507,7 +502,7 @@ export default function ClubeRotaPremium() {
                 trigger={
                   <motion.div
                     whileHover={{ scale: 1.01 }}
-                    className="cursor-pointer group relative overflow-hidden rounded-2xl sm:rounded-[2.5rem] border border-gold/20 bg-[#0F0D15] p-6 sm:p-8 md:p-14 shadow-2xl transition-all duration-500 min-h-[44px]"
+                    className="cursor-pointer group relative overflow-hidden rounded-2xl sm:rounded-[2rem] border border-gold/20 bg-[#0F0D15] p-6 md:p-10 shadow-2xl transition-all duration-500 min-h-[44px]"
                   >
                     <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.08] transition-opacity duration-700">
                       <FlaskConical className="w-60 h-60 text-gold" />
@@ -526,7 +521,7 @@ export default function ClubeRotaPremium() {
                       </div>
 
                       <div className="space-y-4">
-                        <h3 className="text-2xl sm:text-3xl md:text-5xl font-display text-white leading-[1.1] tracking-tight">
+                        <h3 className="text-2xl md:text-4xl font-display text-white leading-[1.1] tracking-tight">
                           Acesse o núcleo simbólico e clínico desta obra.
                         </h3>
                         <p className="text-white/50 text-base sm:text-lg md:text-xl font-serif italic leading-relaxed">
@@ -618,14 +613,14 @@ export default function ClubeRotaPremium() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.9 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 sm:p-8 md:p-14"
+              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 md:p-8"
             >
               <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
               <div className="relative space-y-6 max-w-xl">
                 <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
                   Próximo nível
                 </Badge>
-                <h3 className="font-display text-3xl md:text-5xl leading-[1.05]">
+                <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
                   Você percebe os padrões.
                   <br />
                   <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
@@ -674,7 +669,7 @@ export default function ClubeRotaPremium() {
                   disabled={proxLocked}
                   onClick={() => !proxLocked && navigate(`/clube/rota/${proximoPonto.slug}`)}
                   className={cn(
-                    'group w-full text-left relative overflow-hidden rounded-2xl sm:rounded-3xl border p-6 sm:p-8 md:p-12 transition-all duration-700 min-h-[44px]',
+                    'group w-full text-left relative overflow-hidden rounded-2xl sm:rounded-3xl border p-6 md:p-8 transition-all duration-700 min-h-[44px]',
                     proxLocked
                       ? 'border-foreground/[0.06] bg-foreground/[0.02] cursor-not-allowed'
                       : 'border-foreground/[0.06] hover:border-gold/30 bg-foreground/[0.02] hover:bg-foreground/[0.04]'
@@ -688,7 +683,7 @@ export default function ClubeRotaPremium() {
                     <div className="min-w-0 flex-1">
                       <h2
                         className={cn(
-                          'font-display text-2xl sm:text-3xl md:text-5xl transition-colors duration-700 leading-[1.1]',
+                          'font-display text-2xl md:text-4xl transition-colors duration-700 leading-[1.1]',
                           proxLocked
                             ? 'text-foreground/35'
                             : 'text-foreground/70 group-hover:text-foreground'
@@ -754,7 +749,7 @@ function Section({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          className="mb-6 sm:mb-8 md:mb-10 space-y-2 sm:space-y-3"
+          className="mb-4 md:mb-6 space-y-2 sm:space-y-3"
         >
           {kicker && (
             <div className="flex items-center gap-3">

@@ -1,13 +1,15 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Check, Compass, ArrowRight, Sparkles } from 'lucide-react';
+import { Lock, Check, Compass, ArrowRight, Sparkles, Play, MapPin } from 'lucide-react';
 import { useTodasRotas, type EstacaoCatalogo, type EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
+import { VozTag } from '@/components/voz/VozTag';
 import {
   Dialog,
   DialogContent,
@@ -22,8 +24,20 @@ export default function ClubeRotasCatalogo() {
   const navigate = useNavigate();
   const { isAdmin } = useEffectivePortal();
   const { data: estacoes, isLoading } = useTodasRotas({ isAdmin });
+  const { estado: cidadelaEstado, isLoading: loadingCidadela } = useCidadelaEstado();
   const [filtro, setFiltro] = useState<Filtro>('todas');
   const [bloqueada, setBloqueada] = useState<EstacaoCatalogo | null>(null);
+
+  const temCidadela = !!(cidadelaEstado && (cidadelaEstado.distrito_atual || (cidadelaEstado.distritos_ativados?.length ?? 0) > 0));
+
+  const estacaoEmCurso = useMemo(
+    () => estacoes?.find((e) => e.status === 'in_progress') ?? null,
+    [estacoes],
+  );
+  const proximaDisponivel = useMemo(
+    () => estacoes?.find((e) => e.status === 'available' || e.status === 'in_progress') ?? null,
+    [estacoes],
+  );
 
   const filtradas = useMemo(() => {
     if (!estacoes) return [];
@@ -54,26 +68,137 @@ export default function ClubeRotasCatalogo() {
           <div className="absolute -top-40 -right-20 w-[520px] h-[520px] bg-gold/[0.06] rounded-full blur-[140px]" />
           <div className="absolute -bottom-40 -left-20 w-[460px] h-[460px] bg-[hsl(206_70%_30%/0.18)] rounded-full blur-[140px]" />
         </div>
-        <ResponsiveContainer size="wide" className="relative py-14 md:py-20">
+        <ResponsiveContainer size="wide" className="relative py-12 md:py-16">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="space-y-5 max-w-3xl"
           >
-            <div className="flex items-center gap-2">
-              <span className="h-px w-6 bg-gold/40" />
-              <span className="text-[9px] tracking-[0.4em] uppercase text-gold/70">
-                Mapa das travessias
-              </span>
+            <div className="flex items-center justify-between gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <span className="h-px w-6 bg-gold/40" />
+                <span className="text-[9px] tracking-[0.4em] uppercase text-gold/70">
+                  Bem-vinda ao Clube Oracular
+                </span>
+              </div>
+              <VozTag size="sm" />
             </div>
-            <h1 className="font-display text-4xl md:text-5xl text-foreground leading-[1.05]">
+            <h1 className="font-display text-3xl md:text-5xl text-foreground leading-[1.05]">
               A jornada não cabe em um livro só.
             </h1>
-            <p className="font-serif italic text-base md:text-lg text-foreground/55 max-w-xl">
-              Cada estação é uma porta. Você atravessa uma — outra se abre. O que vem depois
-              já está esperando.
+            <p className="font-serif italic text-base md:text-lg text-foreground/65 max-w-xl">
+              Este espaço não é sobre acumular conteúdo. É sobre atravessar experiências.
             </p>
+          </motion.div>
+
+          {/* Bloco de boas-vindas: Cidadela + Continuar + Iniciar */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.15 }}
+            className="mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-3 gap-4"
+          >
+            {/* Cidadela */}
+            <div className="rounded-2xl border border-gold/15 bg-foreground/[0.02] p-5 flex flex-col justify-between min-h-[160px]">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-gold/70">
+                  <Compass className="w-4 h-4" />
+                  <span className="text-[9px] tracking-[0.3em] uppercase">Sua Cidadela</span>
+                </div>
+                {temCidadela ? (
+                  <p className="font-display text-lg text-foreground/90 leading-tight">
+                    Mapa criado.
+                  </p>
+                ) : (
+                  <p className="font-display text-lg text-foreground/90 leading-tight">
+                    Toda jornada começa pela sua cartografia interna.
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                variant={temCidadela ? 'outline' : 'gold'}
+                className="mt-4 self-start gap-2"
+                onClick={() =>
+                  navigate(temCidadela ? '/cidadela/revelacao' : '/ferramenta/cartografia-psiquica-oracula')
+                }
+                disabled={loadingCidadela}
+              >
+                {temCidadela ? 'Acessar minha Cidadela' : 'Criar minha Cidadela'}
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
+            </div>
+
+            {/* Continuar */}
+            <div className="rounded-2xl border border-foreground/10 bg-foreground/[0.02] p-5 flex flex-col justify-between min-h-[160px]">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-gold/70">
+                  <Play className="w-4 h-4" />
+                  <span className="text-[9px] tracking-[0.3em] uppercase">Continuar</span>
+                </div>
+                {estacaoEmCurso ? (
+                  <>
+                    <p className="font-display text-lg text-foreground/90 leading-tight line-clamp-2">
+                      {estacaoEmCurso.livro_titulo}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">
+                      Estação {estacaoEmCurso.numero} · {estacaoEmCurso.progresso_pct}%
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-foreground/55 italic font-serif">
+                    Nenhuma travessia em curso.
+                  </p>
+                )}
+              </div>
+              {estacaoEmCurso && estacaoEmCurso.primeiro_slug && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="mt-4 self-start gap-2"
+                  onClick={() => navigate(`/clube/rota/${estacaoEmCurso.primeiro_slug}`)}
+                >
+                  Continuar de onde parei
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              )}
+            </div>
+
+            {/* Iniciar */}
+            <div className="rounded-2xl border border-gold/15 bg-gradient-to-br from-gold/[0.06] to-transparent p-5 flex flex-col justify-between min-h-[160px]">
+              <div className="space-y-2">
+                <div className="flex items-center gap-2 text-gold/70">
+                  <Sparkles className="w-4 h-4" />
+                  <span className="text-[9px] tracking-[0.3em] uppercase">Iniciar</span>
+                </div>
+                {proximaDisponivel ? (
+                  <>
+                    <p className="font-display text-lg text-foreground/90 leading-tight line-clamp-2">
+                      {proximaDisponivel.livro_titulo}
+                    </p>
+                    <p className="text-[11px] text-foreground/50">
+                      Estação {proximaDisponivel.numero}
+                    </p>
+                  </>
+                ) : (
+                  <p className="text-sm text-foreground/55 italic font-serif">
+                    Você completou todas as estações disponíveis.
+                  </p>
+                )}
+              </div>
+              {proximaDisponivel && proximaDisponivel.primeiro_slug && (
+                <Button
+                  size="sm"
+                  variant="gold"
+                  className="mt-4 self-start gap-2"
+                  onClick={() => navigate(`/clube/rota/${proximaDisponivel.primeiro_slug}`)}
+                >
+                  Iniciar minha jornada
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Button>
+              )}
+            </div>
           </motion.div>
         </ResponsiveContainer>
       </section>
