@@ -264,7 +264,7 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* Conteúdo principal */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 sm:space-y-32 md:space-y-48 pb-24 sm:pb-48 pt-10 sm:pt-20">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Mapa da Travessia">
