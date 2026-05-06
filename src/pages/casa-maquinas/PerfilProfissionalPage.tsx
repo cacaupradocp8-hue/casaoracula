@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { AudioLines, Star, Heart, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { VozTag } from '@/components/voz/VozTag';
 
 export default function PerfilProfissionalPage() {
   const { user } = useAuth();
