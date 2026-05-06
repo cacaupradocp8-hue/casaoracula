@@ -24,6 +24,7 @@ import { Suspense } from "react";
 import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
 import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
+import { renderJornadaRoutes } from "@/routes/jornadaRoutes";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
@@ -310,9 +311,8 @@ function AppRoutes() {
 
       {/* Core navigation */}
       <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
-      <Route path="/jornada" element={<ProtectedRoute><Navigate to="/minha-jornada" replace /></ProtectedRoute>} />
+      {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
-      <Route path="/minha-jornada" element={<ProtectedRoute><MinhaJornada /></ProtectedRoute>} />
       <Route path="/comece-aqui" element={<ProtectedRoute><Navigate to="/sala-da-visitante" replace /></ProtectedRoute>} />
       <Route path="/convite-clube" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
@@ -324,9 +324,7 @@ function AppRoutes() {
       <Route path="/portal/:id" element={<ProtectedRoute><PortalDetalhe /></ProtectedRoute>} />
       <Route path="/aulas/:id" element={<ProtectedRoute><AulaPage /></ProtectedRoute>} />
 
-      {/* Travessias & Portais */}
-      <Route path="/travessias" element={<ProtectedRoute><Travessias /></ProtectedRoute>} />
-      <Route path="/travessia/:slug" element={<ProtectedRoute><TravessiaDetalhe /></ProtectedRoute>} />
+      {/* Travessias & Portais - As rotas de travessia estão no jornadaRoutes */}
       <Route path="/portais" element={<ProtectedRoute><Portais /></ProtectedRoute>} />
       <Route path="/portal-junguiano" element={<ProtectedRoute minPortal="aluna_formacao"><PortalJunguiano /></ProtectedRoute>} />
       <Route path="/portal-junguiano/porta/:id" element={<ProtectedRoute minPortal="aluna_formacao"><PortalJunguianoPorta /></ProtectedRoute>} />
@@ -373,8 +371,7 @@ function AppRoutes() {
       <Route path="/narroterapia/ritual" element={<ProtectedRoute minPortal="aluna_formacao"><RitualAutorizacao /></ProtectedRoute>} />
       <Route path="/narroterapia/audios" element={<ProtectedRoute minPortal="aluna_formacao"><AudiosNarracao /></ProtectedRoute>} />
 
-      <Route path="/clube" element={<ProtectedRoute><ClubeRotasCatalogo /></ProtectedRoute>} />
-      <Route path="/clube/rota/:slug" element={<ProtectedRoute><ClubeRotaPremium /></ProtectedRoute>} />
+      {/* As rotas do Clube agora estão no jornadaRoutes */}
 
       {/* Biblioteca & Ferramentas */}
       <Route path="/biblioteca" element={<ProtectedRoute><BibliotecaUnificada /></ProtectedRoute>} />
@@ -479,6 +476,9 @@ function AppRoutes() {
       <Route path="/minhas-clientes" element={<ProtectedRoute minPortal="mentorada"><MinhasClientes /></ProtectedRoute>} />
       <Route path="/cliente/:clienteId" element={<ProtectedRoute minPortal="mentorada"><ClientePerfil /></ProtectedRoute>} />
 
+      {/* ═══ Jornada & Clube (extracted) ═══ */}
+      {renderJornadaRoutes(ProtectedRoute)}
+
       {/* ═══ Casa das Máquinas (extracted) ═══ */}
       {renderCasaMaquinasRoutes(({ children, ...props }: any) => (
         <ProtectedRoute {...props}>
@@ -528,8 +528,7 @@ function AppRoutes() {
       {/* Biblioteca Travessias */}
 
 
-      <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
-      <Route path="/biblioteca-das-travessias/:slug" element={<ProtectedRoute><BibliotecaTravessiaDetalhe /></ProtectedRoute>} />
+      {/* As rotas de Biblioteca de Travessias estão no jornadaRoutes */}
 
       {/* Labirinto das 39 Portas */}
       <Route path="/labirinto" element={<ProtectedRoute minPortal="mentorada"><LabirintoHome /></ProtectedRoute>} />
@@ -557,8 +556,7 @@ function AppRoutes() {
       <Route path="/notificacoes" element={<ProtectedRoute><Notificacoes /></ProtectedRoute>} />
       <Route path="/templo-de-escuta" element={<ProtectedRoute><TemploEscuta /></ProtectedRoute>} />
 
-      <Route path="/biblioteca-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
-      <Route path="/biblioteca-travessias/:familiaSlug" element={<ProtectedRoute><BibliotecaTravessiasFamilia /></ProtectedRoute>} />
+      {/* As rotas de Biblioteca de Travessias estão no jornadaRoutes */}
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />

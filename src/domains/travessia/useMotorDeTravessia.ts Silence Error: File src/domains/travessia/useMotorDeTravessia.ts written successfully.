@@ -1,0 +1,37 @@
+/**
+ * Hook que expõe o Motor de Travessia para os componentes.
+ * Atua como uma fachada (Facade) para as regras do domínio.
+ */
+
+import { useState, useCallback } from 'react';
+import { TravessiaEvent, ProgressEvent } from './types';
+import * as rules from './rules';
+
+export const useMotorDeTravessia = (userId: string) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const trackEvent = useCallback(async (event: TravessiaEvent, resourceId: string, metadata?: Record<string, any>) => {
+    const progressEvent: ProgressEvent = {
+      type: event,
+      resourceId,
+      timestamp: new Date().toISOString(),
+      metadata
+    };
+
+    console.log(`[MotorDeTravessia] Evento rastreado: ${event}`, progressEvent);
+    
+    // Aqui virá a integração com Supabase/Analytics no futuro
+    return progressEvent;
+  }, []);
+
+  const checkAccess = useCallback((resourceId: string) => {
+    // Por enquanto, apenas um placeholder consumindo as rules
+    return true; 
+  }, []);
+
+  return {
+    trackEvent,
+    checkAccess,
+    isLoading
+  };
+};
