@@ -754,7 +754,7 @@ function Section({
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
-          className="mb-6 sm:mb-8 md:mb-10 space-y-2 sm:space-y-3"
+          className="mb-4 md:mb-6 space-y-2 sm:space-y-3"
         >
           {kicker && (
             <div className="flex items-center gap-3">
