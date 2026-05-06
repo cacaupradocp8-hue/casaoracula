@@ -50,9 +50,12 @@ export default function PerfilProfissionalPage() {
               </Avatar>
               <div>
                 <h1 className="text-2xl font-display text-foreground">{user?.name || 'Facilitadora'}</h1>
-                <div className="flex items-center justify-center gap-2 mt-2">
+                <div className="flex items-center justify-center gap-2 mt-2 flex-wrap">
                   <span className="text-2xl">{currentLevel.icon}</span>
                   <span className="text-gold font-semibold">{currentLevel.name}</span>
+                </div>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <VozTag size="sm" />
                 </div>
                 <p className="text-sm text-muted-foreground mt-1">Nível {currentLevel.level} • {progress?.points || 0} pontos</p>
               </div>
