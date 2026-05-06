@@ -133,8 +133,8 @@ export default function ClubeRotaPremium() {
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(206_70%_8%/0.9),transparent_70%)]" />
         </div>
 
-        {/* ═══════════ 1. HERO FULL SCREEN ═══════════ */}
-        <section className="relative min-h-[100svh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
+        {/* ═══════════ 1. HERO ═══════════ */}
+        <section className="relative min-h-[78svh] md:min-h-[70vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
           <motion.div
             style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
             className="absolute inset-0 pointer-events-none"
