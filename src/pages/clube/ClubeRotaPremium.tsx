@@ -160,7 +160,7 @@ export default function ClubeRotaPremium() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6 sm:space-y-10"
+            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-5 sm:space-y-6"
           >
             <motion.div
               initial={{ opacity: 0 }}
