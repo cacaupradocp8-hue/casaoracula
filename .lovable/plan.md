@@ -1,100 +1,105 @@
-## Plano de Correção e Auditoria — Débito Técnico de Tabelas Sobrepostas
+# Ajustes do Clube Oracular — refinamento de UX
 
-### Mudança de regra confirmada
-- **Big5 OCEAN permanece ATIVO** (`big5_oracular_*` e `big5_*` em uso pelas alunas).
-- Removida a regra ética que bania Big5/diagnóstico acadêmico — Big5 é ferramenta formativa permitida.
-- A memória `mem://business/product-constraints-negative` será atualizada para refletir: **apenas Eneagrama permanece banido**; Big5 é aceito.
+Foco: deixar a rota mais compacta no desktop, organizar a home do clube com boas-vindas + Cidadela + retomada, agrupar áudios da estação e expor a Voz Dominante como identidade. Sem novas features complexas — só ajuste do que já existe.
 
 ---
 
-### Fase 1 — Auditoria de Dependências (read-only)
-Antes de qualquer alteração destrutiva, mapear o que ainda referencia as tabelas suspeitas:
+## 1. Página da Rota — versão compacta (desktop)
+Arquivo: `src/pages/clube/ClubeRotaPremium.tsx`
 
-1. **Clube legado (`club_*` sem prefixo `clube_`)**
-   - Buscar imports/queries em `src/`, `supabase/functions/`, hooks, DAL.
-   - Listar quais views/triggers do Postgres ainda apontam para essas tabelas.
+Hoje cada bloco "respira" muito (hero 100svh, espaçamentos `space-y-48`, paddings gigantes), o que faz o conteúdo parecer "pesado" no desktop. Ajustes:
 
-2. **Cartografia sobreposta**
-   - `cartographies`, `cartografia_psiquica`, `cartografia_complexos`, `co_cartografia_profile`.
-   - Confirmar que `co_cartografia_profile` é canônica (memória aponta).
-   - Mapear leituras/escritas das outras 3 no código.
+- **Hero (linha 137)**: trocar `min-h-[100svh]` por algo proporcional — `min-h-[70svh] md:min-h-[75vh]` no desktop, `min-h-[80svh]` no mobile. Reduzir `space-y` interno de `sm:space-y-10` para `sm:space-y-6`.
+- **Tipografia do título (linha 200)**: `clamp(2.5rem, 12vw, 8rem)` → `clamp(2.25rem, 7vw, 5.5rem)`. Mantém presença, evita ocupar a tela inteira.
+- **Container principal (linha 267)**: `space-y-24 sm:space-y-32 md:space-y-48` → `space-y-16 md:space-y-24`. Padding vertical `pt-10 sm:pt-20 pb-24 sm:pb-48` → `pt-8 md:pt-12 pb-16 md:pb-24`.
+- **Section helper (linha 757)**: margem do header `mb-6 sm:mb-8 md:mb-10` → `mb-4 md:mb-6`.
+- **Bloco Laboratório 80/20 (linha 510)**: paddings `p-6 sm:p-8 md:p-14` → `p-6 md:p-10`; título `text-5xl` → `text-3xl md:text-4xl`.
+- **CTA Formação (linha 621)** e **Próxima Rota (linha 677)**: `p-6 sm:p-8 md:p-14` → `p-6 md:p-8`; títulos `md:text-5xl` → `md:text-4xl`.
+- **Indicador de scroll (linha 253)**: ocultar em `md+` (`hidden md:hidden`? não — `md:hidden` mantém só em mobile).
+- **Coluna timeline (linha 302)**: reduzir `py-5` dos itens para `py-3 md:py-4`.
 
-3. **Big5 — separar legado acadêmico vs. ativo**
-   - **MANTER**: `big5_oracular_fatores`, `big5_oracular_perguntas`, `big5_oracular_registros`, `big5_symbolic_*`, `big5_funcional_*`.
-   - Auditar apenas: `big5_registros` e `big5_dimensoes` (versão antiga genérica) — verificar se algum hook/edge function ainda escreve nelas.
-   - Se houver dependência viva, **NÃO depreciar**; apenas documentar.
-
-4. **Tabelas largas (`clube_portais` 52 cols, `clube_livro_ciclos` 46 cols)**
-   - Listar colunas realmente usadas vs. mortas via `rg` em todo o frontend.
-
-**Entregável da Fase 1:** relatório markdown em `/mnt/documents/auditoria-debito-tecnico.md` com tabela: `tabela | refs no código | refs em DB (views/triggers/FKs) | recomendação`.
+Resultado: no desktop, com um único scroll já se vê hero + mapa vivo, e os blocos seguintes ocupam ~70% da viewport em vez de 100%.
 
 ---
 
-### Fase 2 — Isolamento Seguro (migration reversível)
-Para cada tabela confirmada como **órfã** (zero referências):
+## 3 + 4. Home do Clube — Boas-vindas, Cidadela e Continuar
+Arquivo: `src/pages/clube/ClubeRotasCatalogo.tsx`
 
-1. **Renomear** com prefixo `_deprecated_` (não dropar):
-   ```sql
-   ALTER TABLE public.club_old RENAME TO _deprecated_club_old;
-   ```
-2. **Revogar grants** públicos e do role `authenticated`.
-3. **Manter RLS** ativa para evitar leitura acidental.
-4. **Adicionar comentário** SQL: `COMMENT ON TABLE ... IS 'Deprecated YYYY-MM-DD — pending drop after 30d observation.'`.
+Adicionar **uma seção de boas-vindas no topo do hero existente** com 3 blocos lado a lado (stack em mobile):
 
-Tabelas candidatas (a confirmar na Fase 1):
-- `club_*` (geração 1 do Clube), se não houver refs.
-- `cartographies`, `cartografia_psiquica` (se sobrepostas a `co_cartografia_profile`).
-- `big5_registros`/`big5_dimensoes` **somente** se sem refs (Big5 OCEAN das alunas usa `big5_oracular_*`, não essas).
-
----
-
-### Fase 3 — Consolidação da Cartografia
-- Confirmar `co_cartografia_profile` como canônica (já está na memória).
-- Migrar dados úteis de `cartografia_complexos` para JSONB dentro de `co_cartografia_profile.complexos` (se houver dados).
-- Adicionar VIEW de compatibilidade `cartografia_complexos_v` apontando para o JSONB (evita quebrar o componente `TelaSintese.tsx`).
-
----
-
-### Fase 4 — Normalização de Tabelas Largas (opcional, fase futura)
-- `clube_portais` (52 cols) → propor extração de blocos em `clube_portal_blocks` (já existe `clube_portais_blocos`?).
-- `clube_livro_ciclos` (46 cols) → extrair metadata sazonal para `clube_livro_ciclos_meta`.
-- **NÃO executar agora** — apenas documentar débito.
-
----
-
-### Fase 5 — Atualização de Memória do Projeto
-- `mem://business/product-constraints-negative`: remover Big5 da lista de banidos; manter apenas Eneagrama.
-- `mem://index.md` (Core): substituir "Big Five e Eneagrama são BANIDOS" por "Eneagrama é BANIDO. Big5 OCEAN é permitido como ferramenta formativa simbólica."
-- Criar `mem://architecture/deprecated-tables-registry` listando o que foi renomeado e quando dropar.
-
----
-
-### Detalhes Técnicos (para devs)
-
-**Comandos de auditoria que rodarei:**
-```bash
-rg -l "from\(['\"]club_" src/ supabase/functions/
-rg -l "cartograph(ies|ia_psiquica|ia_complexos)" src/ supabase/functions/
-rg -l "big5_registros|big5_dimensoes" src/ supabase/functions/
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  Bem-vinda ao Clube Oracular                                │
+│  Este espaço não é sobre acumular conteúdo. É sobre         │
+│  atravessar experiências.                                   │
+│                                                             │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐         │
+│  │ 🧭 Cidadela  │ │ ▶ Continuar  │ │ ✨ Iniciar   │         │
+│  │ (status ou   │ │ (rota em     │ │ (próxima     │         │
+│  │  CTA criar)  │ │  curso)      │ │  rota)       │         │
+│  └──────────────┘ └──────────────┘ └──────────────┘         │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-**SQL de inspeção (via supabase--read_query):**
-- `pg_views` que referenciam tabelas alvo.
-- `pg_trigger` ligados a essas tabelas.
-- `information_schema.referential_constraints` para FKs.
+### 3a. Bloco Cidadela (lógica condicional)
+- Buscar via `useCartografiaProfile` (ou hook equivalente já existente — verificar `src/hooks/useCartografiaProfile.ts`) se a aluna tem mapa.
+- **Sem mapa**: card com título "Toda jornada começa pela sua cartografia interna." + botão `Criar minha Cidadela` → navega para `/ferramenta/cartografia-psiquica-oracula`.
+- **Com mapa**: card com status "Mapa criado" + botão `Acessar minha Cidadela` → navega para `/cidadela/revelacao`. Mini-preview opcional usando `MiniMapaCidadela` em versão reduzida (sem texto de descrição).
 
-**Reversão:** todo `RENAME TO _deprecated_*` é trivialmente reversível com `RENAME TO` reverso. Nenhum DROP nesta fase.
+### 3b. Bloco "Continuar de onde parei"
+- Pegar primeira estação com `status === 'in_progress'` da lista `estacoes` (já carregada). Se houver, CTA navega para `/clube/rota/{primeiro_slug}`. Se não houver, esconde o bloco ou mostra "Iniciar minha jornada" apontando para a primeira estação `available`.
 
----
+### 3c. Bloco "Iniciar minha jornada"
+- Sempre visível: aponta para a primeira estação não-locked.
 
-### O que NÃO será tocado
-- `big5_oracular_*` (ferramenta ativa das alunas) — preservada integralmente.
-- `big5_symbolic_*`, `big5_funcional_*` — preservadas.
-- Componentes `Big5InterpretacaoCard`, `Big5TemplateEditor`, hook `useBig5Oracular` — preservados.
-- Rotas e páginas existentes (regra `preservation-first`).
+A seção fica antes dos filtros existentes. Os filtros e o grid de estações continuam intocados (preserva descoberta).
 
 ---
 
-### Próximo passo após aprovação
-Executar Fase 1 (auditoria read-only) e entregar o relatório antes de qualquer migration.
+## 5 + 6. Estação do Livro — Bloco único de áudios
+Arquivo: `src/pages/clube/ClubeRotaPremium.tsx` (linhas 382–418)
+
+A seção de áudios já existe, mas o player é só "abre em nova aba". Ajustes:
+
+- Renomear título da Section para **"Áudios da Estação"** (kicker mantém "Escutas de poder").
+- Trocar o `<button onClick={window.open}>` pelo componente `AudioOracular` (`src/components/audio/AudioOracular`, já usado em `AudioBlock` e `PortaAudioPlayer`) — player funcional inline com controle real.
+- Layout em lista vertical: cada item mostra título do áudio + player abaixo. Mantém `audio.tipo` como subtítulo.
+- Demais módulos da estação (carta, reflexão, pergunta, prática) continuam nos blocos existentes (Mapa Vivo, Chat Livro, Jardim, Treinamento) — sem alteração.
+
+---
+
+## 7. Tag "Voz Dominante" no perfil + topo da home
+Hook: `src/hooks/useUserVoz.ts` (já existe, expõe `voz_primaria`).
+Mapeamento simbólico: `src/utils/vozMapping.ts` (verificar nomes).
+
+### 7a. Componente novo: `<VozTag />`
+`src/components/voz/VozTag.tsx` — pill compacta:
+```text
+[ ✦ Voz: Guardiã ]
+```
+Visual: borda gold/30, fundo gold/5, ícone Sparkles, tracking widget. Se `voz_primaria` estiver vazia, esconde.
+
+### 7b. Onde aparecer
+- **Perfil da aluna** (`src/pages/casa-maquinas/PerfilProfissionalPage.tsx` — já lê voz; só garantir que a tag aparece visualmente destacada no topo do header do perfil).
+- **Home do Clube** (`ClubeRotasCatalogo.tsx`): inserir a tag no canto superior direito do hero existente, ao lado do kicker "Mapa das travessias".
+
+---
+
+## 8. Regra de experiência (já em vigor; só validar)
+- Onboarding = mapa + progresso → já é gerenciado por `useJourneyGuard`.
+- Estação = conteúdo + prática → garantido pela rota `/clube/rota/:slug`.
+- Cidadela = base da jornada → reforçado pelo bloco novo na home.
+
+Sem mudanças de roteamento. Apenas garantir que o CTA "Criar minha Cidadela" da home aponta para `/ferramenta/cartografia-psiquica-oracula` e o "Acessar minha Cidadela" para `/cidadela/revelacao` (ambos já existentes).
+
+---
+
+## Resumo de arquivos tocados
+- `src/pages/clube/ClubeRotaPremium.tsx` — compactação visual + áudios com player inline.
+- `src/pages/clube/ClubeRotasCatalogo.tsx` — boas-vindas + bloco Cidadela + continuar + tag voz.
+- `src/components/voz/VozTag.tsx` — novo, pill da Voz Dominante.
+- `src/pages/casa-maquinas/PerfilProfissionalPage.tsx` — exibir `<VozTag />` em destaque.
+
+Sem migrações de banco, sem novas rotas, sem novos hooks.
+
+Posso prosseguir com a implementação?
