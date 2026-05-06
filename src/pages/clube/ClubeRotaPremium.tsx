@@ -197,7 +197,7 @@ export default function ClubeRotaPremium() {
             <div className="space-y-4 px-2 sm:px-0">
               <h1
                 className="font-display font-light leading-[0.95] tracking-tighter"
-                style={{ fontSize: 'clamp(2.5rem, 12vw, 8rem)' }}
+                style={{ fontSize: 'clamp(2.25rem, 7vw, 5.5rem)' }}
               >
                 <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent block">
                   {ponto.nome}
