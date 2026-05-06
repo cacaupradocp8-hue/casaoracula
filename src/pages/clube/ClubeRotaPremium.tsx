@@ -378,39 +378,33 @@ export default function ClubeRotaPremium() {
           </Section>
 
 
-          {/* ═══════════ 3. ÁUDIOS ═══════════ */}
+          {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
           {audios.length > 0 && (
-            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da travessia">
-              <div className="space-y-3">
+            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
+              <div className="space-y-4">
                 {audios.map((audio: any, i: number) => (
                   <motion.div
                     key={i}
-                    initial={{ opacity: 0, y: 16 }}
+                    initial={{ opacity: 0, y: 12 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: i * 0.08 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5"
                   >
-                    <button
-                      onClick={() => audio.url && window.open(audio.url, '_blank')}
-                      className="w-full text-left group flex items-center gap-4 p-4 rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] hover:bg-foreground/[0.05] hover:border-gold/20 transition-all min-h-[44px]"
-                    >
-                      <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center group-hover:bg-gold/20 transition-colors">
-                        <Play className="w-4 h-4 sm:w-5 sm:h-5 text-gold fill-gold/80 ml-0.5" />
-                        <span className="absolute inset-0 rounded-full ring-1 ring-gold/0 group-hover:ring-gold/30 group-hover:scale-110 transition-all" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[8px] sm:text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-0.5 sm:mb-1">
-                          {audio.tipo || 'Áudio de integração'}
-                        </p>
-                        <h4 className="font-display text-sm sm:text-base md:text-lg text-foreground/90 group-hover:text-foreground transition-colors truncate">
-                          {audio.titulo}
-                        </h4>
-                        <span className="flex items-center gap-1.5 text-[9px] sm:text-[10px] text-foreground/70 mt-0.5 sm:mt-1">
-                          <Clock className="w-3 h-3" /> {audio.duracao || '—'}
-                        </span>
-                      </div>
-                      <ChevronRight className="w-4 h-4 text-foreground/20 group-hover:text-gold transition-colors shrink-0" />
-                    </button>
+                    <div className="mb-3 flex items-center gap-2">
+                      <span className="text-[9px] tracking-[0.3em] uppercase text-gold/60">
+                        Áudio {i + 1}{audio.tipo ? ` · ${audio.tipo}` : ''}
+                      </span>
+                    </div>
+                    {audio.url ? (
+                      <AudioOracular
+                        audioUrl={audio.url}
+                        titulo={audio.titulo || `Áudio ${i + 1}`}
+                        hideInsight
+                      />
+                    ) : (
+                      <p className="text-sm text-foreground/50 italic">Áudio em preparação.</p>
+                    )}
                   </motion.div>
                 ))}
               </div>
