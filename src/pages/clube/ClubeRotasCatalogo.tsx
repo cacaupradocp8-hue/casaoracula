@@ -24,8 +24,20 @@ export default function ClubeRotasCatalogo() {
   const navigate = useNavigate();
   const { isAdmin } = useEffectivePortal();
   const { data: estacoes, isLoading } = useTodasRotas({ isAdmin });
+  const { estado: cidadelaEstado, isLoading: loadingCidadela } = useCidadelaEstado();
   const [filtro, setFiltro] = useState<Filtro>('todas');
   const [bloqueada, setBloqueada] = useState<EstacaoCatalogo | null>(null);
+
+  const temCidadela = !!(cidadelaEstado && (cidadelaEstado.distrito_atual || (cidadelaEstado.distritos_ativados?.length ?? 0) > 0));
+
+  const estacaoEmCurso = useMemo(
+    () => estacoes?.find((e) => e.status === 'in_progress') ?? null,
+    [estacoes],
+  );
+  const proximaDisponivel = useMemo(
+    () => estacoes?.find((e) => e.status === 'available' || e.status === 'in_progress') ?? null,
+    [estacoes],
+  );
 
   const filtradas = useMemo(() => {
     if (!estacoes) return [];
