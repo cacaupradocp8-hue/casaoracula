@@ -317,7 +317,7 @@ export default function ClubeRotaPremium() {
                         disabled={isLocked}
                         onClick={() => !isLocked && navigate(`/clube/rota/${item.slug}`)}
                         className={cn(
-                          'relative block w-full text-left group py-5 transition-all',
+                          'relative block w-full text-left group py-3 md:py-4 transition-all',
                           isLocked && 'cursor-not-allowed grayscale-[0.8]'
                         )}
                       >
