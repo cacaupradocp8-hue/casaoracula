@@ -1,13 +1,15 @@
 import { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Check, Compass, ArrowRight, Sparkles } from 'lucide-react';
+import { Lock, Check, Compass, ArrowRight, Sparkles, Play, MapPin } from 'lucide-react';
 import { useTodasRotas, type EstacaoCatalogo, type EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
+import { VozTag } from '@/components/voz/VozTag';
 import {
   Dialog,
   DialogContent,
