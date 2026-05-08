@@ -9,9 +9,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'academy_progress_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'access_expiration_logs_user_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'academy_progress') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'access_expiration_logs') INTO v_source_exists;
         -- Check Target Table
         IF 'profiles' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -21,7 +21,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'academy_progress' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: access_expiration_logs access_expiration_logs_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.access_expiration_logs ADD CONSTRAINT access_expiration_logs_user_id_fkey FOREIGN KEY (user_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'access_expiration_logs' AND column_name = 'user_id') INTO v_source_col_exists;
             
             IF 'profiles' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -31,17 +31,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.academy_progress ADD CONSTRAINT academy_progress_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: access_expiration_logs access_expiration_logs_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.access_expiration_logs ADD CONSTRAINT access_expiration_logs_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK academy_progress_user_id_fkey';
+                    ALTER TABLE public.access_expiration_logs ADD CONSTRAINT access_expiration_logs_user_id_fkey 
+                    FOREIGN KEY (user_id) REFERENCES public.profiles(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK access_expiration_logs_user_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK academy_progress_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK access_expiration_logs_user_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for academy_progress_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for access_expiration_logs_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for academy_progress_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for access_expiration_logs_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -53,7 +53,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'admin_action_history_sent_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'admin_action_history_user_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'admin_action_history') INTO v_source_exists;
         -- Check Target Table
@@ -65,7 +65,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'admin_action_history' AND column_name = 'sent_by) REFERENCES auth.users(id); -- -- Name: admin_action_history admin_action_history_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.admin_action_history ADD CONSTRAINT admin_action_history_user_id_fkey FOREIGN KEY (user_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'admin_action_history' AND column_name = 'user_id') INTO v_source_col_exists;
             
             IF 'profiles' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -75,17 +75,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.admin_action_history ADD CONSTRAINT admin_action_history_sent_by_fkey 
-                    FOREIGN KEY (sent_by) REFERENCES auth.users(id); -- -- Name: admin_action_history admin_action_history_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.admin_action_history ADD CONSTRAINT admin_action_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.profiles(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK admin_action_history_sent_by_fkey';
+                    ALTER TABLE public.admin_action_history ADD CONSTRAINT admin_action_history_user_id_fkey 
+                    FOREIGN KEY (user_id) REFERENCES public.profiles(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK admin_action_history_user_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK admin_action_history_sent_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK admin_action_history_user_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for admin_action_history_sent_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for admin_action_history_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for admin_action_history_sent_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for admin_action_history_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -97,7 +97,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'admin_automation_audit_admin_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'admin_automation_audit_rule_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'admin_automation_audit') INTO v_source_exists;
         -- Check Target Table
@@ -109,7 +109,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'admin_automation_audit' AND column_name = 'admin_id) REFERENCES auth.users(id); -- -- Name: admin_automation_audit admin_automation_audit_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.admin_automation_audit ADD CONSTRAINT admin_automation_audit_rule_id_fkey FOREIGN KEY (rule_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'admin_automation_audit' AND column_name = 'rule_id') INTO v_source_col_exists;
             
             IF 'admin_automation_rules' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -119,17 +119,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.admin_automation_audit ADD CONSTRAINT admin_automation_audit_admin_id_fkey 
-                    FOREIGN KEY (admin_id) REFERENCES auth.users(id); -- -- Name: admin_automation_audit admin_automation_audit_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.admin_automation_audit ADD CONSTRAINT admin_automation_audit_rule_id_fkey FOREIGN KEY (rule_id) REFERENCES public.admin_automation_rules(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK admin_automation_audit_admin_id_fkey';
+                    ALTER TABLE public.admin_automation_audit ADD CONSTRAINT admin_automation_audit_rule_id_fkey 
+                    FOREIGN KEY (rule_id) REFERENCES public.admin_automation_rules(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK admin_automation_audit_rule_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK admin_automation_audit_admin_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK admin_automation_audit_rule_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for admin_automation_audit_admin_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for admin_automation_audit_rule_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for admin_automation_audit_admin_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for admin_automation_audit_rule_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -185,9 +185,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agente_conversas_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agente_mensagens_conversa_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'agente_conversas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'agente_mensagens') INTO v_source_exists;
         -- Check Target Table
         IF 'agente_conversas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -197,7 +197,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'agente_conversas' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: agente_mensagens agente_mensagens_conversa_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.agente_mensagens ADD CONSTRAINT agente_mensagens_conversa_id_fkey FOREIGN KEY (conversa_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'agente_mensagens' AND column_name = 'conversa_id') INTO v_source_col_exists;
             
             IF 'agente_conversas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -207,17 +207,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.agente_conversas ADD CONSTRAINT agente_conversas_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: agente_mensagens agente_mensagens_conversa_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.agente_mensagens ADD CONSTRAINT agente_mensagens_conversa_id_fkey FOREIGN KEY (conversa_id) REFERENCES public.agente_conversas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK agente_conversas_user_id_fkey';
+                    ALTER TABLE public.agente_mensagens ADD CONSTRAINT agente_mensagens_conversa_id_fkey 
+                    FOREIGN KEY (conversa_id) REFERENCES public.agente_conversas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK agente_mensagens_conversa_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK agente_conversas_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK agente_mensagens_conversa_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for agente_conversas_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for agente_mensagens_conversa_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for agente_conversas_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for agente_mensagens_conversa_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -581,7 +581,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'atelie_conteudos_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'atelie_conteudos_template_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'atelie_conteudos') INTO v_source_exists;
         -- Check Target Table
@@ -593,7 +593,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'atelie_conteudos' AND column_name = 'created_by) REFERENCES auth.users(id); -- -- Name: atelie_conteudos atelie_conteudos_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.atelie_conteudos ADD CONSTRAINT atelie_conteudos_template_id_fkey FOREIGN KEY (template_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'atelie_conteudos' AND column_name = 'template_id') INTO v_source_col_exists;
             
             IF 'atelie_templates' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -603,17 +603,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.atelie_conteudos ADD CONSTRAINT atelie_conteudos_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: atelie_conteudos atelie_conteudos_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.atelie_conteudos ADD CONSTRAINT atelie_conteudos_template_id_fkey FOREIGN KEY (template_id) REFERENCES public.atelie_templates(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK atelie_conteudos_created_by_fkey';
+                    ALTER TABLE public.atelie_conteudos ADD CONSTRAINT atelie_conteudos_template_id_fkey 
+                    FOREIGN KEY (template_id) REFERENCES public.atelie_templates(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK atelie_conteudos_template_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK atelie_conteudos_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK atelie_conteudos_template_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for atelie_conteudos_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for atelie_conteudos_template_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for atelie_conteudos_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for atelie_conteudos_template_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -669,7 +669,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'aulas_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'aulas_portal_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'aulas') INTO v_source_exists;
         -- Check Target Table
@@ -681,7 +681,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'aulas' AND column_name = 'created_by) REFERENCES auth.users(id); -- -- Name: aulas aulas_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.aulas ADD CONSTRAINT aulas_portal_id_fkey FOREIGN KEY (portal_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'aulas' AND column_name = 'portal_id') INTO v_source_col_exists;
             
             IF 'portais' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -691,17 +691,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.aulas ADD CONSTRAINT aulas_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: aulas aulas_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.aulas ADD CONSTRAINT aulas_portal_id_fkey FOREIGN KEY (portal_id) REFERENCES public.portais(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK aulas_created_by_fkey';
+                    ALTER TABLE public.aulas ADD CONSTRAINT aulas_portal_id_fkey 
+                    FOREIGN KEY (portal_id) REFERENCES public.portais(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK aulas_portal_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK aulas_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK aulas_portal_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for aulas_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for aulas_portal_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for aulas_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for aulas_portal_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -713,9 +713,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'auto_mapeamento_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'biblioteca_casos_porta_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'auto_mapeamento') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'biblioteca_casos') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_portas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -725,7 +725,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'auto_mapeamento' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: automation_settings automation_settings_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.automation_settings ADD CONSTRAINT automation_settings_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id); -- -- Name: biblioteca_casos biblioteca_casos_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.biblioteca_casos ADD CONSTRAINT biblioteca_casos_porta_id_fkey FOREIGN KEY (porta_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'biblioteca_casos' AND column_name = 'porta_id') INTO v_source_col_exists;
             
             IF 'labirinto_portas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -735,17 +735,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.auto_mapeamento ADD CONSTRAINT auto_mapeamento_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: automation_settings automation_settings_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.automation_settings ADD CONSTRAINT automation_settings_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id); -- -- Name: biblioteca_casos biblioteca_casos_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.biblioteca_casos ADD CONSTRAINT biblioteca_casos_porta_id_fkey FOREIGN KEY (porta_id) REFERENCES public.labirinto_portas(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK auto_mapeamento_user_id_fkey';
+                    ALTER TABLE public.biblioteca_casos ADD CONSTRAINT biblioteca_casos_porta_id_fkey 
+                    FOREIGN KEY (porta_id) REFERENCES public.labirinto_portas(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK biblioteca_casos_porta_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK auto_mapeamento_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK biblioteca_casos_porta_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for auto_mapeamento_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for biblioteca_casos_porta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for auto_mapeamento_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for biblioteca_casos_porta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -889,9 +889,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'big5_registros_cliente_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'big5_ritual_registros_big5_registro_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'big5_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'big5_ritual_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'big5_oracular_registros' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -901,7 +901,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'big5_registros' AND column_name = 'cliente_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: big5_registros big5_registros_therapist_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_registros ADD CONSTRAINT big5_registros_therapist_id_fkey FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id); -- -- Name: big5_registros big5_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_registros ADD CONSTRAINT big5_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: big5_ritual_registros big5_ritual_registros_big5_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_ritual_registros ADD CONSTRAINT big5_ritual_registros_big5_registro_id_fkey FOREIGN KEY (big5_registro_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'big5_ritual_registros' AND column_name = 'big5_registro_id') INTO v_source_col_exists;
             
             IF 'big5_oracular_registros' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -911,17 +911,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.big5_registros ADD CONSTRAINT big5_registros_cliente_id_fkey 
-                    FOREIGN KEY (cliente_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: big5_registros big5_registros_therapist_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_registros ADD CONSTRAINT big5_registros_therapist_id_fkey FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id); -- -- Name: big5_registros big5_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_registros ADD CONSTRAINT big5_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: big5_ritual_registros big5_ritual_registros_big5_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.big5_ritual_registros ADD CONSTRAINT big5_ritual_registros_big5_registro_id_fkey FOREIGN KEY (big5_registro_id) REFERENCES public.big5_oracular_registros(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK big5_registros_cliente_id_fkey';
+                    ALTER TABLE public.big5_ritual_registros ADD CONSTRAINT big5_ritual_registros_big5_registro_id_fkey 
+                    FOREIGN KEY (big5_registro_id) REFERENCES public.big5_oracular_registros(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK big5_ritual_registros_big5_registro_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK big5_registros_cliente_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK big5_ritual_registros_big5_registro_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for big5_registros_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for big5_ritual_registros_big5_registro_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for big5_registros_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for big5_ritual_registros_big5_registro_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -1725,7 +1725,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'casa_circulo_replies_autor_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'casa_circulo_replies_thread_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'casa_circulo_replies') INTO v_source_exists;
         -- Check Target Table
@@ -1737,7 +1737,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'casa_circulo_replies' AND column_name = 'autor_id) REFERENCES auth.users(id); -- -- Name: casa_circulo_replies casa_circulo_replies_thread_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.casa_circulo_replies ADD CONSTRAINT casa_circulo_replies_thread_id_fkey FOREIGN KEY (thread_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'casa_circulo_replies' AND column_name = 'thread_id') INTO v_source_col_exists;
             
             IF 'casa_circulo_threads' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -1747,17 +1747,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.casa_circulo_replies ADD CONSTRAINT casa_circulo_replies_autor_id_fkey 
-                    FOREIGN KEY (autor_id) REFERENCES auth.users(id); -- -- Name: casa_circulo_replies casa_circulo_replies_thread_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.casa_circulo_replies ADD CONSTRAINT casa_circulo_replies_thread_id_fkey FOREIGN KEY (thread_id) REFERENCES public.casa_circulo_threads(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK casa_circulo_replies_autor_id_fkey';
+                    ALTER TABLE public.casa_circulo_replies ADD CONSTRAINT casa_circulo_replies_thread_id_fkey 
+                    FOREIGN KEY (thread_id) REFERENCES public.casa_circulo_threads(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK casa_circulo_replies_thread_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK casa_circulo_replies_autor_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK casa_circulo_replies_thread_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for casa_circulo_replies_autor_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for casa_circulo_replies_thread_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for casa_circulo_replies_autor_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for casa_circulo_replies_thread_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -1769,9 +1769,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'casa_circulo_threads_autor_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'cidadela_oracle_cards_district_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'casa_circulo_threads') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'cidadela_oracle_cards') INTO v_source_exists;
         -- Check Target Table
         IF 'districts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -1781,7 +1781,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'casa_circulo_threads' AND column_name = 'autor_id) REFERENCES auth.users(id); -- -- Name: casa_posts casa_posts_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.casa_posts ADD CONSTRAINT casa_posts_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id); -- -- Name: certificates certificates_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.certificates ADD CONSTRAINT certificates_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: cidadela_mapa_vivo cidadela_mapa_vivo_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.cidadela_mapa_vivo ADD CONSTRAINT cidadela_mapa_vivo_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: cidadela_oracle_cards cidadela_oracle_cards_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.cidadela_oracle_cards ADD CONSTRAINT cidadela_oracle_cards_district_id_fkey FOREIGN KEY (district_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'cidadela_oracle_cards' AND column_name = 'district_id') INTO v_source_col_exists;
             
             IF 'districts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -1791,17 +1791,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.casa_circulo_threads ADD CONSTRAINT casa_circulo_threads_autor_id_fkey 
-                    FOREIGN KEY (autor_id) REFERENCES auth.users(id); -- -- Name: casa_posts casa_posts_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.casa_posts ADD CONSTRAINT casa_posts_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id); -- -- Name: certificates certificates_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.certificates ADD CONSTRAINT certificates_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: cidadela_mapa_vivo cidadela_mapa_vivo_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.cidadela_mapa_vivo ADD CONSTRAINT cidadela_mapa_vivo_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: cidadela_oracle_cards cidadela_oracle_cards_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.cidadela_oracle_cards ADD CONSTRAINT cidadela_oracle_cards_district_id_fkey FOREIGN KEY (district_id) REFERENCES public.districts(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK casa_circulo_threads_autor_id_fkey';
+                    ALTER TABLE public.cidadela_oracle_cards ADD CONSTRAINT cidadela_oracle_cards_district_id_fkey 
+                    FOREIGN KEY (district_id) REFERENCES public.districts(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK cidadela_oracle_cards_district_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK casa_circulo_threads_autor_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK cidadela_oracle_cards_district_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for casa_circulo_threads_autor_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for cidadela_oracle_cards_district_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for casa_circulo_threads_autor_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for cidadela_oracle_cards_district_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -1945,9 +1945,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'circulo_oracular_registros_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'client_archetype_state_arquitipo_evolucao_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'circulo_oracular_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'client_archetype_state') INTO v_source_exists;
         -- Check Target Table
         IF 'founding_archetypes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -1957,7 +1957,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'circulo_oracular_registros' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: client_archetype_state client_archetype_state_arquitipo_evolucao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.client_archetype_state ADD CONSTRAINT client_archetype_state_arquitipo_evolucao_id_fkey FOREIGN KEY (arquitipo_evolucao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'client_archetype_state' AND column_name = 'arquitipo_evolucao_id') INTO v_source_col_exists;
             
             IF 'founding_archetypes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -1967,17 +1967,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.circulo_oracular_registros ADD CONSTRAINT circulo_oracular_registros_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: client_archetype_state client_archetype_state_arquitipo_evolucao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.client_archetype_state ADD CONSTRAINT client_archetype_state_arquitipo_evolucao_id_fkey FOREIGN KEY (arquitipo_evolucao_id) REFERENCES public.founding_archetypes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK circulo_oracular_registros_user_id_fkey';
+                    ALTER TABLE public.client_archetype_state ADD CONSTRAINT client_archetype_state_arquitipo_evolucao_id_fkey 
+                    FOREIGN KEY (arquitipo_evolucao_id) REFERENCES public.founding_archetypes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK client_archetype_state_arquitipo_evolucao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK circulo_oracular_registros_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK client_archetype_state_arquitipo_evolucao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for circulo_oracular_registros_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for client_archetype_state_arquitipo_evolucao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for circulo_oracular_registros_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for client_archetype_state_arquitipo_evolucao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -2561,9 +2561,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clientes_client_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'club_books_cycle_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clientes') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '_deprecated_club_books') INTO v_source_exists;
         -- Check Target Table
         IF '_deprecated_club_cycles' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -2573,7 +2573,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clientes' AND column_name = 'client_user_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: clientes clientes_invited_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes ADD CONSTRAINT clientes_invited_by_fkey FOREIGN KEY (invited_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: clientes_piloto clientes_piloto_supervisor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes_piloto ADD CONSTRAINT clientes_piloto_supervisor_id_fkey FOREIGN KEY (supervisor_id) REFERENCES auth.users(id); -- -- Name: clientes_piloto clientes_piloto_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes_piloto ADD CONSTRAINT clientes_piloto_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: _deprecated_club_books club_books_cycle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public._deprecated_club_books ADD CONSTRAINT club_books_cycle_id_fkey FOREIGN KEY (cycle_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '_deprecated_club_books' AND column_name = 'cycle_id') INTO v_source_col_exists;
             
             IF '_deprecated_club_cycles' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -2583,17 +2583,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.clientes ADD CONSTRAINT clientes_client_user_id_fkey 
-                    FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: clientes clientes_invited_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes ADD CONSTRAINT clientes_invited_by_fkey FOREIGN KEY (invited_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: clientes_piloto clientes_piloto_supervisor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes_piloto ADD CONSTRAINT clientes_piloto_supervisor_id_fkey FOREIGN KEY (supervisor_id) REFERENCES auth.users(id); -- -- Name: clientes_piloto clientes_piloto_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clientes_piloto ADD CONSTRAINT clientes_piloto_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: _deprecated_club_books club_books_cycle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public._deprecated_club_books ADD CONSTRAINT club_books_cycle_id_fkey FOREIGN KEY (cycle_id) REFERENCES public._deprecated_club_cycles(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK clientes_client_user_id_fkey';
+                    ALTER TABLE public._deprecated_club_books ADD CONSTRAINT club_books_cycle_id_fkey 
+                    FOREIGN KEY (cycle_id) REFERENCES public._deprecated_club_cycles(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK club_books_cycle_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK clientes_client_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK club_books_cycle_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for clientes_client_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for club_books_cycle_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for clientes_client_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for club_books_cycle_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -3221,9 +3221,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_livro_chat_interactions_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_livro_encontros_estacao_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_livro_chat_interactions') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_livro_encontros') INTO v_source_exists;
         -- Check Target Table
         IF 'clube_estacoes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -3233,7 +3233,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_livro_chat_interactions' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_livro_encontros clube_livro_encontros_estacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_livro_encontros ADD CONSTRAINT clube_livro_encontros_estacao_id_fkey FOREIGN KEY (estacao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_livro_encontros' AND column_name = 'estacao_id') INTO v_source_col_exists;
             
             IF 'clube_estacoes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -3243,17 +3243,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.clube_livro_chat_interactions ADD CONSTRAINT clube_livro_chat_interactions_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_livro_encontros clube_livro_encontros_estacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_livro_encontros ADD CONSTRAINT clube_livro_encontros_estacao_id_fkey FOREIGN KEY (estacao_id) REFERENCES public.clube_estacoes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK clube_livro_chat_interactions_user_id_fkey';
+                    ALTER TABLE public.clube_livro_encontros ADD CONSTRAINT clube_livro_encontros_estacao_id_fkey 
+                    FOREIGN KEY (estacao_id) REFERENCES public.clube_estacoes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK clube_livro_encontros_estacao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK clube_livro_chat_interactions_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK clube_livro_encontros_estacao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for clube_livro_chat_interactions_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for clube_livro_encontros_estacao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for clube_livro_chat_interactions_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for clube_livro_encontros_estacao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -3573,9 +3573,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_progresso_passos_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_reflexoes_estacao_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_progresso_passos') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_reflexoes') INTO v_source_exists;
         -- Check Target Table
         IF 'clube_estacoes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -3585,7 +3585,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_progresso_passos' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_reflexoes clube_reflexoes_estacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_reflexoes ADD CONSTRAINT clube_reflexoes_estacao_id_fkey FOREIGN KEY (estacao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_reflexoes' AND column_name = 'estacao_id') INTO v_source_col_exists;
             
             IF 'clube_estacoes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -3595,17 +3595,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.clube_progresso_passos ADD CONSTRAINT clube_progresso_passos_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_reflexoes clube_reflexoes_estacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_reflexoes ADD CONSTRAINT clube_reflexoes_estacao_id_fkey FOREIGN KEY (estacao_id) REFERENCES public.clube_estacoes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK clube_progresso_passos_user_id_fkey';
+                    ALTER TABLE public.clube_reflexoes ADD CONSTRAINT clube_reflexoes_estacao_id_fkey 
+                    FOREIGN KEY (estacao_id) REFERENCES public.clube_estacoes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK clube_reflexoes_estacao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK clube_progresso_passos_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK clube_reflexoes_estacao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for clube_progresso_passos_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for clube_reflexoes_estacao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for clube_progresso_passos_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for clube_reflexoes_estacao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -3749,9 +3749,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_rota_progresso_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'clube_v3_station_audios_station_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_rota_progresso') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clube_v3_station_audios') INTO v_source_exists;
         -- Check Target Table
         IF 'clube_v3_stations' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -3761,7 +3761,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_rota_progresso' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_v3_station_audios clube_v3_station_audios_station_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_v3_station_audios ADD CONSTRAINT clube_v3_station_audios_station_id_fkey FOREIGN KEY (station_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clube_v3_station_audios' AND column_name = 'station_id') INTO v_source_col_exists;
             
             IF 'clube_v3_stations' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -3771,17 +3771,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.clube_rota_progresso ADD CONSTRAINT clube_rota_progresso_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: clube_v3_station_audios clube_v3_station_audios_station_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.clube_v3_station_audios ADD CONSTRAINT clube_v3_station_audios_station_id_fkey FOREIGN KEY (station_id) REFERENCES public.clube_v3_stations(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK clube_rota_progresso_user_id_fkey';
+                    ALTER TABLE public.clube_v3_station_audios ADD CONSTRAINT clube_v3_station_audios_station_id_fkey 
+                    FOREIGN KEY (station_id) REFERENCES public.clube_v3_stations(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK clube_v3_station_audios_station_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK clube_rota_progresso_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK clube_v3_station_audios_station_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for clube_rota_progresso_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for clube_v3_station_audios_station_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for clube_rota_progresso_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for clube_v3_station_audios_station_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4101,7 +4101,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_appointments_terapeuta_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_appointments_workspace_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_appointments') INTO v_source_exists;
         -- Check Target Table
@@ -4113,7 +4113,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_appointments' AND column_name = 'terapeuta_user_id) REFERENCES auth.users(id); -- -- Name: co_appointments co_appointments_workspace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_appointments ADD CONSTRAINT co_appointments_workspace_id_fkey FOREIGN KEY (workspace_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_appointments' AND column_name = 'workspace_id') INTO v_source_col_exists;
             
             IF 'co_workspaces' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4123,17 +4123,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_appointments ADD CONSTRAINT co_appointments_terapeuta_user_id_fkey 
-                    FOREIGN KEY (terapeuta_user_id) REFERENCES auth.users(id); -- -- Name: co_appointments co_appointments_workspace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_appointments ADD CONSTRAINT co_appointments_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.co_workspaces(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK co_appointments_terapeuta_user_id_fkey';
+                    ALTER TABLE public.co_appointments ADD CONSTRAINT co_appointments_workspace_id_fkey 
+                    FOREIGN KEY (workspace_id) REFERENCES public.co_workspaces(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK co_appointments_workspace_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_appointments_terapeuta_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_appointments_workspace_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_appointments_terapeuta_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_appointments_workspace_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_appointments_terapeuta_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_appointments_workspace_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4277,51 +4277,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_client_invites_therapist_user_id_fkey') THEN
-        -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_client_invites') INTO v_source_exists;
-        -- Check Target Table
-        IF 'clientes' = 'users' THEN
-            SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
-        ELSE
-            SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clientes') INTO v_target_exists;
-        END IF;
-
-        IF v_source_exists AND v_target_exists THEN
-            -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_invites' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_client_profile co_client_profile_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_client_profile ADD CONSTRAINT co_client_profile_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
-            
-            IF 'clientes' = 'users' THEN
-                SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
-            ELSE
-                SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clientes' AND column_name = 'id') INTO v_target_col_exists;
-            END IF;
-
-            IF v_source_col_exists AND v_target_col_exists THEN
-                BEGIN
-                    ALTER TABLE public.co_client_invites ADD CONSTRAINT co_client_invites_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_client_profile co_client_profile_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_client_profile ADD CONSTRAINT co_client_profile_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_client_invites_therapist_user_id_fkey';
-                EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_client_invites_therapist_user_id_fkey: %', SQLERRM;
-                END;
-            ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_client_invites_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
-            END IF;
-        ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_client_invites_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
-        END IF;
-    END IF;
-END $fk$;
-
-DO $fk$
-DECLARE
-    v_source_exists BOOLEAN;
-    v_target_exists BOOLEAN;
-    v_source_col_exists BOOLEAN;
-    v_target_col_exists BOOLEAN;
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_client_profile_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_client_profile_client_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_client_profile') INTO v_source_exists;
         -- Check Target Table
@@ -4333,7 +4289,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_profile' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_client_profiles co_client_profiles_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_client_profiles ADD CONSTRAINT co_client_profiles_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_profile' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4343,17 +4299,61 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_client_profile ADD CONSTRAINT co_client_profile_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_client_profiles co_client_profiles_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_client_profiles ADD CONSTRAINT co_client_profiles_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_client_profile_therapist_id_fkey';
+                    ALTER TABLE public.co_client_profile ADD CONSTRAINT co_client_profile_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_client_profile_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_client_profile_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_client_profile_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_client_profile_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_client_profile_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_client_profile_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_client_profile_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+        END IF;
+    END IF;
+END $fk$;
+
+DO $fk$
+DECLARE
+    v_source_exists BOOLEAN;
+    v_target_exists BOOLEAN;
+    v_source_col_exists BOOLEAN;
+    v_target_col_exists BOOLEAN;
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_client_profiles_client_id_fkey') THEN
+        -- Check Source Table
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_client_profiles') INTO v_source_exists;
+        -- Check Target Table
+        IF 'clientes' = 'users' THEN
+            SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
+        ELSE
+            SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'clientes') INTO v_target_exists;
+        END IF;
+
+        IF v_source_exists AND v_target_exists THEN
+            -- Check Columns
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_profiles' AND column_name = 'client_id') INTO v_source_col_exists;
+            
+            IF 'clientes' = 'users' THEN
+                SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
+            ELSE
+                SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'clientes' AND column_name = 'id') INTO v_target_col_exists;
+            END IF;
+
+            IF v_source_col_exists AND v_target_col_exists THEN
+                BEGIN
+                    ALTER TABLE public.co_client_profiles ADD CONSTRAINT co_client_profiles_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_client_profiles_client_id_fkey';
+                EXCEPTION WHEN OTHERS THEN
+                    RAISE NOTICE 'ERROR: Could not create FK co_client_profiles_client_id_fkey: %', SQLERRM;
+                END;
+            ELSE
+                RAISE NOTICE 'WARNING: Columns missing for co_client_profiles_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+            END IF;
+        ELSE
+            RAISE NOTICE 'WARNING: Tables missing for co_client_profiles_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4409,7 +4409,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_escutas_client_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_escutas_sessao_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_escutas') INTO v_source_exists;
         -- Check Target Table
@@ -4421,7 +4421,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_escutas' AND column_name = 'client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_escutas co_escutas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_escutas ADD CONSTRAINT co_escutas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_escutas co_escutas_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_escutas ADD CONSTRAINT co_escutas_sessao_id_fkey FOREIGN KEY (sessao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_escutas' AND column_name = 'sessao_id') INTO v_source_col_exists;
             
             IF 'co_sessoes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4431,17 +4431,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_escutas ADD CONSTRAINT co_escutas_client_user_id_fkey 
-                    FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_escutas co_escutas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_escutas ADD CONSTRAINT co_escutas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_escutas co_escutas_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_escutas ADD CONSTRAINT co_escutas_sessao_id_fkey FOREIGN KEY (sessao_id) REFERENCES public.co_sessoes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK co_escutas_client_user_id_fkey';
+                    ALTER TABLE public.co_escutas ADD CONSTRAINT co_escutas_sessao_id_fkey 
+                    FOREIGN KEY (sessao_id) REFERENCES public.co_sessoes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK co_escutas_sessao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_escutas_client_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_escutas_sessao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_escutas_client_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_escutas_sessao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_escutas_client_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_escutas_sessao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4453,9 +4453,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_escutas_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_garden_flowers_client_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_escutas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_garden_flowers') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -4465,7 +4465,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_escutas' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_garden_flowers co_garden_flowers_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_garden_flowers ADD CONSTRAINT co_garden_flowers_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_garden_flowers' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4475,17 +4475,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_escutas ADD CONSTRAINT co_escutas_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_garden_flowers co_garden_flowers_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_garden_flowers ADD CONSTRAINT co_garden_flowers_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_escutas_therapist_user_id_fkey';
+                    ALTER TABLE public.co_garden_flowers ADD CONSTRAINT co_garden_flowers_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_garden_flowers_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_escutas_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_garden_flowers_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_escutas_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_garden_flowers_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_escutas_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_garden_flowers_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4541,7 +4541,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_jardim_entries_client_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_jardim_entries_jardim_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_jardim_entries') INTO v_source_exists;
         -- Check Target Table
@@ -4553,7 +4553,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_jardim_entries' AND column_name = 'client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardim_entries co_jardim_entries_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_jardim_entries co_jardim_entries_jardim_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_jardim_id_fkey FOREIGN KEY (jardim_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_jardim_entries' AND column_name = 'jardim_id') INTO v_source_col_exists;
             
             IF 'co_jardins' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4563,17 +4563,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_client_user_id_fkey 
-                    FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardim_entries co_jardim_entries_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_jardim_entries co_jardim_entries_jardim_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_jardim_id_fkey FOREIGN KEY (jardim_id) REFERENCES public.co_jardins(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_jardim_entries_client_user_id_fkey';
+                    ALTER TABLE public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_jardim_id_fkey 
+                    FOREIGN KEY (jardim_id) REFERENCES public.co_jardins(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_jardim_entries_jardim_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_jardim_entries_client_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_jardim_entries_jardim_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_jardim_entries_client_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_jardim_entries_jardim_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_jardim_entries_client_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_jardim_entries_jardim_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4585,9 +4585,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_jardim_entries_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_journey_records_client_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_jardim_entries') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_journey_records') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -4597,7 +4597,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_jardim_entries' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardins co_jardins_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardins co_jardins_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_jardins co_jardins_therapist_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_therapist_user_id_fkey FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_journey_records co_journey_records_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_journey_records ADD CONSTRAINT co_journey_records_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_journey_records' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4607,17 +4607,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_jardim_entries ADD CONSTRAINT co_jardim_entries_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardins co_jardins_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_jardins co_jardins_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_jardins co_jardins_therapist_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_jardins ADD CONSTRAINT co_jardins_therapist_user_id_fkey FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_journey_records co_journey_records_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_journey_records ADD CONSTRAINT co_journey_records_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_jardim_entries_therapist_user_id_fkey';
+                    ALTER TABLE public.co_journey_records ADD CONSTRAINT co_journey_records_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_journey_records_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_jardim_entries_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_journey_records_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_jardim_entries_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_journey_records_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_jardim_entries_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_journey_records_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4673,9 +4673,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_mentora_feedback_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_orientacao_sugestoes_ia_cliente_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_mentora_feedback') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_orientacao_sugestoes_ia') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -4685,7 +4685,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_mentora_feedback' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_mentora_insights co_mentora_insights_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_mentora_insights ADD CONSTRAINT co_mentora_insights_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_orientacao_sugestoes_ia co_orientacao_sugestoes_ia_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_orientacao_sugestoes_ia ADD CONSTRAINT co_orientacao_sugestoes_ia_cliente_id_fkey FOREIGN KEY (cliente_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacao_sugestoes_ia' AND column_name = 'cliente_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4695,17 +4695,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_mentora_feedback ADD CONSTRAINT co_mentora_feedback_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_mentora_insights co_mentora_insights_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_mentora_insights ADD CONSTRAINT co_mentora_insights_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_orientacao_sugestoes_ia co_orientacao_sugestoes_ia_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_orientacao_sugestoes_ia ADD CONSTRAINT co_orientacao_sugestoes_ia_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_mentora_feedback_user_id_fkey';
+                    ALTER TABLE public.co_orientacao_sugestoes_ia ADD CONSTRAINT co_orientacao_sugestoes_ia_cliente_id_fkey 
+                    FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_orientacao_sugestoes_ia_cliente_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_mentora_feedback_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_orientacao_sugestoes_ia_cliente_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_mentora_feedback_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_orientacao_sugestoes_ia_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_mentora_feedback_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_orientacao_sugestoes_ia_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4937,7 +4937,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_praticas_client_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_praticas_sessao_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_praticas') INTO v_source_exists;
         -- Check Target Table
@@ -4949,7 +4949,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_praticas' AND column_name = 'client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_praticas co_praticas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_praticas ADD CONSTRAINT co_praticas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_praticas co_praticas_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_praticas ADD CONSTRAINT co_praticas_sessao_id_fkey FOREIGN KEY (sessao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_praticas' AND column_name = 'sessao_id') INTO v_source_col_exists;
             
             IF 'co_sessoes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -4959,17 +4959,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_praticas ADD CONSTRAINT co_praticas_client_user_id_fkey 
-                    FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_praticas co_praticas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_praticas ADD CONSTRAINT co_praticas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_praticas co_praticas_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_praticas ADD CONSTRAINT co_praticas_sessao_id_fkey FOREIGN KEY (sessao_id) REFERENCES public.co_sessoes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK co_praticas_client_user_id_fkey';
+                    ALTER TABLE public.co_praticas ADD CONSTRAINT co_praticas_sessao_id_fkey 
+                    FOREIGN KEY (sessao_id) REFERENCES public.co_sessoes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK co_praticas_sessao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_praticas_client_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_praticas_sessao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_praticas_client_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_praticas_sessao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_praticas_client_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_praticas_sessao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -4981,9 +4981,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_praticas_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_registros_simbolicos_jardim_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_praticas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos') INTO v_source_exists;
         -- Check Target Table
         IF 'co_jardins' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -4993,7 +4993,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_praticas' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_registros_simbolicos co_registros_simbolicos_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_registros_simbolicos co_registros_simbolicos_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_registros_simbolicos co_registros_simbolicos_jardim_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_jardim_id_fkey FOREIGN KEY (jardim_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos' AND column_name = 'jardim_id') INTO v_source_col_exists;
             
             IF 'co_jardins' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5003,17 +5003,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_praticas ADD CONSTRAINT co_praticas_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_registros_simbolicos co_registros_simbolicos_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_registros_simbolicos co_registros_simbolicos_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_registros_simbolicos co_registros_simbolicos_jardim_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_jardim_id_fkey FOREIGN KEY (jardim_id) REFERENCES public.co_jardins(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK co_praticas_therapist_user_id_fkey';
+                    ALTER TABLE public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_jardim_id_fkey 
+                    FOREIGN KEY (jardim_id) REFERENCES public.co_jardins(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK co_registros_simbolicos_jardim_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_praticas_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_registros_simbolicos_jardim_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_praticas_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_registros_simbolicos_jardim_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_praticas_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_registros_simbolicos_jardim_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5069,9 +5069,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_registros_simbolicos_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_sessoes_jardim_ref_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_sessoes') INTO v_source_exists;
         -- Check Target Table
         IF 'co_jardins' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5081,7 +5081,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sessoes co_sessoes_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sessoes co_sessoes_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_sessoes co_sessoes_jardim_ref_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_jardim_ref_id_fkey FOREIGN KEY (jardim_ref_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sessoes' AND column_name = 'jardim_ref_id') INTO v_source_col_exists;
             
             IF 'co_jardins' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5091,17 +5091,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_registros_simbolicos ADD CONSTRAINT co_registros_simbolicos_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sessoes co_sessoes_client_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_client_user_id_fkey FOREIGN KEY (client_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sessoes co_sessoes_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: co_sessoes co_sessoes_jardim_ref_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sessoes ADD CONSTRAINT co_sessoes_jardim_ref_id_fkey FOREIGN KEY (jardim_ref_id) REFERENCES public.co_jardins(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK co_registros_simbolicos_therapist_user_id_fkey';
+                    ALTER TABLE public.co_sessoes ADD CONSTRAINT co_sessoes_jardim_ref_id_fkey 
+                    FOREIGN KEY (jardim_ref_id) REFERENCES public.co_jardins(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK co_sessoes_jardim_ref_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_registros_simbolicos_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_sessoes_jardim_ref_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_registros_simbolicos_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_sessoes_jardim_ref_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_registros_simbolicos_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_sessoes_jardim_ref_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5113,9 +5113,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_sessoes_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_sim_options_proximo_step_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_sessoes') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_sim_options') INTO v_source_exists;
         -- Check Target Table
         IF 'co_sim_steps' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5125,7 +5125,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sessoes' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sim_options co_sim_options_proximo_step_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sim_options ADD CONSTRAINT co_sim_options_proximo_step_id_fkey FOREIGN KEY (proximo_step_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_options' AND column_name = 'proximo_step_id') INTO v_source_col_exists;
             
             IF 'co_sim_steps' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5135,17 +5135,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_sessoes ADD CONSTRAINT co_sessoes_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_sim_options co_sim_options_proximo_step_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_sim_options ADD CONSTRAINT co_sim_options_proximo_step_id_fkey FOREIGN KEY (proximo_step_id) REFERENCES public.co_sim_steps(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK co_sessoes_therapist_user_id_fkey';
+                    ALTER TABLE public.co_sim_options ADD CONSTRAINT co_sim_options_proximo_step_id_fkey 
+                    FOREIGN KEY (proximo_step_id) REFERENCES public.co_sim_steps(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK co_sim_options_proximo_step_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_sessoes_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_sim_options_proximo_step_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_sessoes_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_sim_options_proximo_step_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_sessoes_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_sim_options_proximo_step_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5377,9 +5377,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_therapist_profile_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_tool_flows_tool_destino_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_therapist_profile') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_tool_flows') INTO v_source_exists;
         -- Check Target Table
         IF 'tools' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5389,7 +5389,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_therapist_profile' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_tool_flows co_tool_flows_tool_destino_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_tool_flows ADD CONSTRAINT co_tool_flows_tool_destino_id_fkey FOREIGN KEY (tool_destino_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_tool_flows' AND column_name = 'tool_destino_id') INTO v_source_col_exists;
             
             IF 'tools' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5399,17 +5399,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_therapist_profile ADD CONSTRAINT co_therapist_profile_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_tool_flows co_tool_flows_tool_destino_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_tool_flows ADD CONSTRAINT co_tool_flows_tool_destino_id_fkey FOREIGN KEY (tool_destino_id) REFERENCES public.tools(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_therapist_profile_user_id_fkey';
+                    ALTER TABLE public.co_tool_flows ADD CONSTRAINT co_tool_flows_tool_destino_id_fkey 
+                    FOREIGN KEY (tool_destino_id) REFERENCES public.tools(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_tool_flows_tool_destino_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_therapist_profile_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_tool_flows_tool_destino_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_therapist_profile_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_tool_flows_tool_destino_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_therapist_profile_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_tool_flows_tool_destino_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5553,9 +5553,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_training_attempts_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_training_case_feedbacks_case_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_training_attempts') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_training_case_feedbacks') INTO v_source_exists;
         -- Check Target Table
         IF 'co_training_cases' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5565,7 +5565,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_attempts' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_training_case_feedbacks co_training_case_feedbacks_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_training_case_feedbacks ADD CONSTRAINT co_training_case_feedbacks_case_id_fkey FOREIGN KEY (case_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_case_feedbacks' AND column_name = 'case_id') INTO v_source_col_exists;
             
             IF 'co_training_cases' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5575,17 +5575,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_training_attempts ADD CONSTRAINT co_training_attempts_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_training_case_feedbacks co_training_case_feedbacks_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_training_case_feedbacks ADD CONSTRAINT co_training_case_feedbacks_case_id_fkey FOREIGN KEY (case_id) REFERENCES public.co_training_cases(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_training_attempts_user_id_fkey';
+                    ALTER TABLE public.co_training_case_feedbacks ADD CONSTRAINT co_training_case_feedbacks_case_id_fkey 
+                    FOREIGN KEY (case_id) REFERENCES public.co_training_cases(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_training_case_feedbacks_case_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_training_attempts_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_training_case_feedbacks_case_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_training_attempts_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_training_case_feedbacks_case_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_training_attempts_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_training_case_feedbacks_case_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5729,9 +5729,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_training_progress_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_travessia_encontros_travessia_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_training_progress') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_travessia_encontros') INTO v_source_exists;
         -- Check Target Table
         IF 'co_travessias' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5741,7 +5741,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_progress' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_travessia_encontros co_travessia_encontros_travessia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_travessia_encontros ADD CONSTRAINT co_travessia_encontros_travessia_id_fkey FOREIGN KEY (travessia_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_travessia_encontros' AND column_name = 'travessia_id') INTO v_source_col_exists;
             
             IF 'co_travessias' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5751,17 +5751,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_training_progress ADD CONSTRAINT co_training_progress_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_travessia_encontros co_travessia_encontros_travessia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_travessia_encontros ADD CONSTRAINT co_travessia_encontros_travessia_id_fkey FOREIGN KEY (travessia_id) REFERENCES public.co_travessias(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_training_progress_user_id_fkey';
+                    ALTER TABLE public.co_travessia_encontros ADD CONSTRAINT co_travessia_encontros_travessia_id_fkey 
+                    FOREIGN KEY (travessia_id) REFERENCES public.co_travessias(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_travessia_encontros_travessia_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_training_progress_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_travessia_encontros_travessia_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_training_progress_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_travessia_encontros_travessia_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_training_progress_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_travessia_encontros_travessia_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5861,7 +5861,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_workspace_users_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_workspace_users_workspace_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_workspace_users') INTO v_source_exists;
         -- Check Target Table
@@ -5873,7 +5873,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_workspace_users' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_workspace_users co_workspace_users_workspace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_workspace_users ADD CONSTRAINT co_workspace_users_workspace_id_fkey FOREIGN KEY (workspace_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_workspace_users' AND column_name = 'workspace_id') INTO v_source_col_exists;
             
             IF 'co_workspaces' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5883,17 +5883,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_workspace_users ADD CONSTRAINT co_workspace_users_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: co_workspace_users co_workspace_users_workspace_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.co_workspace_users ADD CONSTRAINT co_workspace_users_workspace_id_fkey FOREIGN KEY (workspace_id) REFERENCES public.co_workspaces(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_workspace_users_user_id_fkey';
+                    ALTER TABLE public.co_workspace_users ADD CONSTRAINT co_workspace_users_workspace_id_fkey 
+                    FOREIGN KEY (workspace_id) REFERENCES public.co_workspaces(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK co_workspace_users_workspace_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_workspace_users_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK co_workspace_users_workspace_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_workspace_users_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for co_workspace_users_workspace_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_workspace_users_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for co_workspace_users_workspace_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5905,9 +5905,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'co_workspaces_owner_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'collective_bed_entries_bed_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'co_workspaces') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'collective_bed_entries') INTO v_source_exists;
         -- Check Target Table
         IF 'collective_beds' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -5917,7 +5917,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_workspaces' AND column_name = 'owner_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: collective_bed_entries collective_bed_entries_bed_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.collective_bed_entries ADD CONSTRAINT collective_bed_entries_bed_id_fkey FOREIGN KEY (bed_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_bed_entries' AND column_name = 'bed_id') INTO v_source_col_exists;
             
             IF 'collective_beds' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -5927,17 +5927,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.co_workspaces ADD CONSTRAINT co_workspaces_owner_user_id_fkey 
-                    FOREIGN KEY (owner_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: collective_bed_entries collective_bed_entries_bed_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.collective_bed_entries ADD CONSTRAINT collective_bed_entries_bed_id_fkey FOREIGN KEY (bed_id) REFERENCES public.collective_beds(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK co_workspaces_owner_user_id_fkey';
+                    ALTER TABLE public.collective_bed_entries ADD CONSTRAINT collective_bed_entries_bed_id_fkey 
+                    FOREIGN KEY (bed_id) REFERENCES public.collective_beds(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK collective_bed_entries_bed_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK co_workspaces_owner_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK collective_bed_entries_bed_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for co_workspaces_owner_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for collective_bed_entries_bed_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for co_workspaces_owner_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for collective_bed_entries_bed_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -5993,9 +5993,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'collective_bed_entries_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'collective_beds_season_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'collective_bed_entries') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'collective_beds') INTO v_source_exists;
         -- Check Target Table
         IF 'oracular_seasons' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6005,7 +6005,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_bed_entries' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: collective_beds collective_beds_season_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.collective_beds ADD CONSTRAINT collective_beds_season_id_fkey FOREIGN KEY (season_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_beds' AND column_name = 'season_id') INTO v_source_col_exists;
             
             IF 'oracular_seasons' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6015,17 +6015,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.collective_bed_entries ADD CONSTRAINT collective_bed_entries_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: collective_beds collective_beds_season_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.collective_beds ADD CONSTRAINT collective_beds_season_id_fkey FOREIGN KEY (season_id) REFERENCES public.oracular_seasons(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK collective_bed_entries_user_id_fkey';
+                    ALTER TABLE public.collective_beds ADD CONSTRAINT collective_beds_season_id_fkey 
+                    FOREIGN KEY (season_id) REFERENCES public.oracular_seasons(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK collective_beds_season_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK collective_bed_entries_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK collective_beds_season_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for collective_bed_entries_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for collective_beds_season_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for collective_bed_entries_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for collective_beds_season_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6037,7 +6037,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_comments_autor_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_comments_post_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_comments') INTO v_source_exists;
         -- Check Target Table
@@ -6049,7 +6049,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_comments' AND column_name = 'autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_comments community_comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_comments ADD CONSTRAINT community_comments_post_id_fkey FOREIGN KEY (post_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_comments' AND column_name = 'post_id') INTO v_source_col_exists;
             
             IF 'community_posts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6059,17 +6059,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.community_comments ADD CONSTRAINT community_comments_autor_id_fkey 
-                    FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_comments community_comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_comments ADD CONSTRAINT community_comments_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.community_posts(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK community_comments_autor_id_fkey';
+                    ALTER TABLE public.community_comments ADD CONSTRAINT community_comments_post_id_fkey 
+                    FOREIGN KEY (post_id) REFERENCES public.community_posts(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK community_comments_post_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK community_comments_autor_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK community_comments_post_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for community_comments_autor_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for community_comments_post_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for community_comments_autor_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for community_comments_post_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6125,9 +6125,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_event_participants_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_group_members_group_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_event_participants') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_group_members') INTO v_source_exists;
         -- Check Target Table
         IF 'community_groups' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6137,7 +6137,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_event_participants' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_events community_events_criador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_events ADD CONSTRAINT community_events_criador_id_fkey FOREIGN KEY (criador_id) REFERENCES auth.users(id); -- -- Name: community_group_members community_group_members_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_group_members ADD CONSTRAINT community_group_members_group_id_fkey FOREIGN KEY (group_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_group_members' AND column_name = 'group_id') INTO v_source_col_exists;
             
             IF 'community_groups' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6147,17 +6147,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.community_event_participants ADD CONSTRAINT community_event_participants_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_events community_events_criador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_events ADD CONSTRAINT community_events_criador_id_fkey FOREIGN KEY (criador_id) REFERENCES auth.users(id); -- -- Name: community_group_members community_group_members_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_group_members ADD CONSTRAINT community_group_members_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.community_groups(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK community_event_participants_user_id_fkey';
+                    ALTER TABLE public.community_group_members ADD CONSTRAINT community_group_members_group_id_fkey 
+                    FOREIGN KEY (group_id) REFERENCES public.community_groups(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK community_group_members_group_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK community_event_participants_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK community_group_members_group_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for community_event_participants_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for community_group_members_group_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for community_event_participants_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for community_group_members_group_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6169,9 +6169,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_group_members_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_likes_post_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_group_members') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_likes') INTO v_source_exists;
         -- Check Target Table
         IF 'community_posts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6181,7 +6181,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_group_members' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_groups community_groups_criador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_groups ADD CONSTRAINT community_groups_criador_id_fkey FOREIGN KEY (criador_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_likes community_likes_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_likes ADD CONSTRAINT community_likes_post_id_fkey FOREIGN KEY (post_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_likes' AND column_name = 'post_id') INTO v_source_col_exists;
             
             IF 'community_posts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6191,17 +6191,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.community_group_members ADD CONSTRAINT community_group_members_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_groups community_groups_criador_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_groups ADD CONSTRAINT community_groups_criador_id_fkey FOREIGN KEY (criador_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_likes community_likes_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_likes ADD CONSTRAINT community_likes_post_id_fkey FOREIGN KEY (post_id) REFERENCES public.community_posts(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK community_group_members_user_id_fkey';
+                    ALTER TABLE public.community_likes ADD CONSTRAINT community_likes_post_id_fkey 
+                    FOREIGN KEY (post_id) REFERENCES public.community_posts(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK community_likes_post_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK community_group_members_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK community_likes_post_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for community_group_members_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for community_likes_post_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for community_group_members_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for community_likes_post_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6213,9 +6213,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_likes_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_topic_replies_topic_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_likes') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_topic_replies') INTO v_source_exists;
         -- Check Target Table
         IF 'community_topics' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6225,7 +6225,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_likes' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_posts community_posts_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_posts ADD CONSTRAINT community_posts_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topic_replies community_topic_replies_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topic_replies ADD CONSTRAINT community_topic_replies_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topic_replies community_topic_replies_topic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topic_replies ADD CONSTRAINT community_topic_replies_topic_id_fkey FOREIGN KEY (topic_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_topic_replies' AND column_name = 'topic_id') INTO v_source_col_exists;
             
             IF 'community_topics' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6235,17 +6235,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.community_likes ADD CONSTRAINT community_likes_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_posts community_posts_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_posts ADD CONSTRAINT community_posts_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topic_replies community_topic_replies_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topic_replies ADD CONSTRAINT community_topic_replies_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topic_replies community_topic_replies_topic_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topic_replies ADD CONSTRAINT community_topic_replies_topic_id_fkey FOREIGN KEY (topic_id) REFERENCES public.community_topics(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK community_likes_user_id_fkey';
+                    ALTER TABLE public.community_topic_replies ADD CONSTRAINT community_topic_replies_topic_id_fkey 
+                    FOREIGN KEY (topic_id) REFERENCES public.community_topics(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK community_topic_replies_topic_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK community_likes_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK community_topic_replies_topic_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for community_likes_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for community_topic_replies_topic_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for community_likes_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for community_topic_replies_topic_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6257,7 +6257,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_topics_autor_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'community_topics_forum_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'community_topics') INTO v_source_exists;
         -- Check Target Table
@@ -6269,7 +6269,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_topics' AND column_name = 'autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topics community_topics_forum_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topics ADD CONSTRAINT community_topics_forum_id_fkey FOREIGN KEY (forum_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_topics' AND column_name = 'forum_id') INTO v_source_col_exists;
             
             IF 'community_forums' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6279,17 +6279,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.community_topics ADD CONSTRAINT community_topics_autor_id_fkey 
-                    FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: community_topics community_topics_forum_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.community_topics ADD CONSTRAINT community_topics_forum_id_fkey FOREIGN KEY (forum_id) REFERENCES public.community_forums(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK community_topics_autor_id_fkey';
+                    ALTER TABLE public.community_topics ADD CONSTRAINT community_topics_forum_id_fkey 
+                    FOREIGN KEY (forum_id) REFERENCES public.community_forums(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK community_topics_forum_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK community_topics_autor_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK community_topics_forum_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for community_topics_autor_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for community_topics_forum_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for community_topics_autor_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for community_topics_forum_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6829,9 +6829,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'course_module_forum_posts_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'course_modules_course_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'course_module_forum_posts') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'course_modules') INTO v_source_exists;
         -- Check Target Table
         IF 'courses' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6841,7 +6841,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'course_module_forum_posts' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: course_modules course_modules_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.course_modules ADD CONSTRAINT course_modules_course_id_fkey FOREIGN KEY (course_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'course_modules' AND column_name = 'course_id') INTO v_source_col_exists;
             
             IF 'courses' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6851,17 +6851,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.course_module_forum_posts ADD CONSTRAINT course_module_forum_posts_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: course_modules course_modules_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.course_modules ADD CONSTRAINT course_modules_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.courses(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK course_module_forum_posts_user_id_fkey';
+                    ALTER TABLE public.course_modules ADD CONSTRAINT course_modules_course_id_fkey 
+                    FOREIGN KEY (course_id) REFERENCES public.courses(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK course_modules_course_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK course_module_forum_posts_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK course_modules_course_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for course_module_forum_posts_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for course_modules_course_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for course_module_forum_posts_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for course_modules_course_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -6917,9 +6917,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'course_work_submissions_reviewed_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'courses_sala_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'course_work_submissions') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'courses') INTO v_source_exists;
         -- Check Target Table
         IF 'salas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -6929,7 +6929,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'course_work_submissions' AND column_name = 'reviewed_by) REFERENCES auth.users(id); -- -- Name: course_work_submissions course_work_submissions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.course_work_submissions ADD CONSTRAINT course_work_submissions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: courses courses_sala_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.courses ADD CONSTRAINT courses_sala_id_fkey FOREIGN KEY (sala_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'courses' AND column_name = 'sala_id') INTO v_source_col_exists;
             
             IF 'salas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -6939,17 +6939,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.course_work_submissions ADD CONSTRAINT course_work_submissions_reviewed_by_fkey 
-                    FOREIGN KEY (reviewed_by) REFERENCES auth.users(id); -- -- Name: course_work_submissions course_work_submissions_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.course_work_submissions ADD CONSTRAINT course_work_submissions_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: courses courses_sala_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.courses ADD CONSTRAINT courses_sala_id_fkey FOREIGN KEY (sala_id) REFERENCES public.salas(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK course_work_submissions_reviewed_by_fkey';
+                    ALTER TABLE public.courses ADD CONSTRAINT courses_sala_id_fkey 
+                    FOREIGN KEY (sala_id) REFERENCES public.salas(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK courses_sala_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK course_work_submissions_reviewed_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK courses_sala_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for course_work_submissions_reviewed_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for courses_sala_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for course_work_submissions_reviewed_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for courses_sala_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -7181,9 +7181,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'decodificacao_onirica_terapeuta_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'diagnostico_ego_cliente_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'decodificacao_onirica') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'diagnostico_ego') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -7193,7 +7193,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'decodificacao_onirica' AND column_name = 'terapeuta_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: degustacao_requests degustacao_requests_aprovado_por_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.degustacao_requests ADD CONSTRAINT degustacao_requests_aprovado_por_fkey FOREIGN KEY (aprovado_por) REFERENCES auth.users(id); -- -- Name: degustacao_requests degustacao_requests_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.degustacao_requests ADD CONSTRAINT degustacao_requests_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: diagnostico_ego diagnostico_ego_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.diagnostico_ego ADD CONSTRAINT diagnostico_ego_cliente_id_fkey FOREIGN KEY (cliente_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'diagnostico_ego' AND column_name = 'cliente_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -7203,17 +7203,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.decodificacao_onirica ADD CONSTRAINT decodificacao_onirica_terapeuta_id_fkey 
-                    FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: degustacao_requests degustacao_requests_aprovado_por_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.degustacao_requests ADD CONSTRAINT degustacao_requests_aprovado_por_fkey FOREIGN KEY (aprovado_por) REFERENCES auth.users(id); -- -- Name: degustacao_requests degustacao_requests_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.degustacao_requests ADD CONSTRAINT degustacao_requests_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: diagnostico_ego diagnostico_ego_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.diagnostico_ego ADD CONSTRAINT diagnostico_ego_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK decodificacao_onirica_terapeuta_id_fkey';
+                    ALTER TABLE public.diagnostico_ego ADD CONSTRAINT diagnostico_ego_cliente_id_fkey 
+                    FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK diagnostico_ego_cliente_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK decodificacao_onirica_terapeuta_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK diagnostico_ego_cliente_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for decodificacao_onirica_terapeuta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for diagnostico_ego_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for decodificacao_onirica_terapeuta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for diagnostico_ego_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -7577,9 +7577,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'eneagrama_feminino_registros_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'escrita_nao_censurada_cliente_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'eneagrama_feminino_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'escrita_nao_censurada') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -7589,7 +7589,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'eneagrama_feminino_registros' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: eneagrama_registros eneagrama_registros_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: eneagrama_registros eneagrama_registros_terapeuta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_terapeuta_id_fkey FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: eneagrama_registros eneagrama_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: escrita_nao_censurada escrita_nao_censurada_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.escrita_nao_censurada ADD CONSTRAINT escrita_nao_censurada_cliente_id_fkey FOREIGN KEY (cliente_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'escrita_nao_censurada' AND column_name = 'cliente_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -7599,17 +7599,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.eneagrama_feminino_registros ADD CONSTRAINT eneagrama_feminino_registros_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: eneagrama_registros eneagrama_registros_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: eneagrama_registros eneagrama_registros_terapeuta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_terapeuta_id_fkey FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: eneagrama_registros eneagrama_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.eneagrama_registros ADD CONSTRAINT eneagrama_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: escrita_nao_censurada escrita_nao_censurada_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.escrita_nao_censurada ADD CONSTRAINT escrita_nao_censurada_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK eneagrama_feminino_registros_user_id_fkey';
+                    ALTER TABLE public.escrita_nao_censurada ADD CONSTRAINT escrita_nao_censurada_cliente_id_fkey 
+                    FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK escrita_nao_censurada_cliente_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK eneagrama_feminino_registros_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK escrita_nao_censurada_cliente_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for eneagrama_feminino_registros_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for escrita_nao_censurada_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for eneagrama_feminino_registros_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for escrita_nao_censurada_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -7709,9 +7709,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'estudos_caso_respostas_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercise_responses_exercise_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'estudos_caso_respostas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'exercise_responses') INTO v_source_exists;
         -- Check Target Table
         IF 'exercises' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -7721,7 +7721,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'estudos_caso_respostas' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: exercise_responses exercise_responses_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.exercise_responses ADD CONSTRAINT exercise_responses_exercise_id_fkey FOREIGN KEY (exercise_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'exercise_responses' AND column_name = 'exercise_id') INTO v_source_col_exists;
             
             IF 'exercises' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -7731,17 +7731,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.estudos_caso_respostas ADD CONSTRAINT estudos_caso_respostas_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: exercise_responses exercise_responses_exercise_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.exercise_responses ADD CONSTRAINT exercise_responses_exercise_id_fkey FOREIGN KEY (exercise_id) REFERENCES public.exercises(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK estudos_caso_respostas_user_id_fkey';
+                    ALTER TABLE public.exercise_responses ADD CONSTRAINT exercise_responses_exercise_id_fkey 
+                    FOREIGN KEY (exercise_id) REFERENCES public.exercises(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK exercise_responses_exercise_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK estudos_caso_respostas_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK exercise_responses_exercise_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for estudos_caso_respostas_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for exercise_responses_exercise_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for estudos_caso_respostas_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for exercise_responses_exercise_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -7753,9 +7753,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercise_responses_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'exercises_lesson_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'exercise_responses') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'exercises') INTO v_source_exists;
         -- Check Target Table
         IF 'lessons' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -7765,7 +7765,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'exercise_responses' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: exercises exercises_lesson_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.exercises ADD CONSTRAINT exercises_lesson_id_fkey FOREIGN KEY (lesson_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'exercises' AND column_name = 'lesson_id') INTO v_source_col_exists;
             
             IF 'lessons' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -7775,17 +7775,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.exercise_responses ADD CONSTRAINT exercise_responses_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: exercises exercises_lesson_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.exercises ADD CONSTRAINT exercises_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES public.lessons(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK exercise_responses_user_id_fkey';
+                    ALTER TABLE public.exercises ADD CONSTRAINT exercises_lesson_id_fkey 
+                    FOREIGN KEY (lesson_id) REFERENCES public.lessons(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK exercises_lesson_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK exercise_responses_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK exercises_lesson_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for exercise_responses_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for exercises_lesson_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for exercise_responses_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for exercises_lesson_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -7797,9 +7797,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'facilitadora_profiles_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ferramenta_registros_cliente_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'facilitadora_profiles') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'ferramenta_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -7809,7 +7809,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'facilitadora_profiles' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: ferramenta_registros ferramenta_registros_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.ferramenta_registros ADD CONSTRAINT ferramenta_registros_cliente_id_fkey FOREIGN KEY (cliente_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'ferramenta_registros' AND column_name = 'cliente_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -7819,17 +7819,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.facilitadora_profiles ADD CONSTRAINT facilitadora_profiles_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: ferramenta_registros ferramenta_registros_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.ferramenta_registros ADD CONSTRAINT ferramenta_registros_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK facilitadora_profiles_user_id_fkey';
+                    ALTER TABLE public.ferramenta_registros ADD CONSTRAINT ferramenta_registros_cliente_id_fkey 
+                    FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK ferramenta_registros_cliente_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK facilitadora_profiles_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK ferramenta_registros_cliente_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for facilitadora_profiles_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for ferramenta_registros_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for facilitadora_profiles_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for ferramenta_registros_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8017,9 +8017,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'formacao_oracula_content_updated_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'founding_archetypes_distrito_principal_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'formacao_oracula_content') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'founding_archetypes') INTO v_source_exists;
         -- Check Target Table
         IF 'city_districts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8029,7 +8029,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'formacao_oracula_content' AND column_name = 'updated_by) REFERENCES auth.users(id); -- -- Name: founding_archetypes founding_archetypes_distrito_principal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.founding_archetypes ADD CONSTRAINT founding_archetypes_distrito_principal_id_fkey FOREIGN KEY (distrito_principal_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'founding_archetypes' AND column_name = 'distrito_principal_id') INTO v_source_col_exists;
             
             IF 'city_districts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8039,17 +8039,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.formacao_oracula_content ADD CONSTRAINT formacao_oracula_content_updated_by_fkey 
-                    FOREIGN KEY (updated_by) REFERENCES auth.users(id); -- -- Name: founding_archetypes founding_archetypes_distrito_principal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.founding_archetypes ADD CONSTRAINT founding_archetypes_distrito_principal_id_fkey FOREIGN KEY (distrito_principal_id) REFERENCES public.city_districts(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK formacao_oracula_content_updated_by_fkey';
+                    ALTER TABLE public.founding_archetypes ADD CONSTRAINT founding_archetypes_distrito_principal_id_fkey 
+                    FOREIGN KEY (distrito_principal_id) REFERENCES public.city_districts(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK founding_archetypes_distrito_principal_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK formacao_oracula_content_updated_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK founding_archetypes_distrito_principal_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for formacao_oracula_content_updated_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for founding_archetypes_distrito_principal_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for formacao_oracula_content_updated_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for founding_archetypes_distrito_principal_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8105,7 +8105,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'gestos_integracao_owner_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'gestos_integracao_sessao_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'gestos_integracao') INTO v_source_exists;
         -- Check Target Table
@@ -8117,7 +8117,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'gestos_integracao' AND column_name = 'owner_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: gestos_integracao gestos_integracao_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.gestos_integracao ADD CONSTRAINT gestos_integracao_sessao_id_fkey FOREIGN KEY (sessao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'gestos_integracao' AND column_name = 'sessao_id') INTO v_source_col_exists;
             
             IF 'sessoes_casa_maquinas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8127,17 +8127,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.gestos_integracao ADD CONSTRAINT gestos_integracao_owner_id_fkey 
-                    FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: gestos_integracao gestos_integracao_sessao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.gestos_integracao ADD CONSTRAINT gestos_integracao_sessao_id_fkey FOREIGN KEY (sessao_id) REFERENCES public.sessoes_casa_maquinas(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK gestos_integracao_owner_id_fkey';
+                    ALTER TABLE public.gestos_integracao ADD CONSTRAINT gestos_integracao_sessao_id_fkey 
+                    FOREIGN KEY (sessao_id) REFERENCES public.sessoes_casa_maquinas(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK gestos_integracao_sessao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK gestos_integracao_owner_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK gestos_integracao_sessao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for gestos_integracao_owner_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for gestos_integracao_sessao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for gestos_integracao_owner_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for gestos_integracao_sessao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8501,9 +8501,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'group_sessions_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_arquetipo_registros_arquetipo_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'group_sessions') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_arquetipo_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_arquetipos' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8513,7 +8513,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'group_sessions' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_arquetipo_registros heroina_arquetipo_registros_arquetipo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_arquetipo_registros ADD CONSTRAINT heroina_arquetipo_registros_arquetipo_id_fkey FOREIGN KEY (arquetipo_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_arquetipo_registros' AND column_name = 'arquetipo_id') INTO v_source_col_exists;
             
             IF 'labirinto_arquetipos' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8523,17 +8523,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.group_sessions ADD CONSTRAINT group_sessions_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_arquetipo_registros heroina_arquetipo_registros_arquetipo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_arquetipo_registros ADD CONSTRAINT heroina_arquetipo_registros_arquetipo_id_fkey FOREIGN KEY (arquetipo_id) REFERENCES public.labirinto_arquetipos(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK group_sessions_therapist_id_fkey';
+                    ALTER TABLE public.heroina_arquetipo_registros ADD CONSTRAINT heroina_arquetipo_registros_arquetipo_id_fkey 
+                    FOREIGN KEY (arquetipo_id) REFERENCES public.labirinto_arquetipos(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK heroina_arquetipo_registros_arquetipo_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK group_sessions_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK heroina_arquetipo_registros_arquetipo_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for group_sessions_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for heroina_arquetipo_registros_arquetipo_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for group_sessions_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for heroina_arquetipo_registros_arquetipo_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8545,9 +8545,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_arquetipo_registros_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_cenario_registros_metafora_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_arquetipo_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_cenario_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_metaforas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8557,7 +8557,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_arquetipo_registros' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_cenario_registros heroina_cenario_registros_metafora_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_cenario_registros ADD CONSTRAINT heroina_cenario_registros_metafora_id_fkey FOREIGN KEY (metafora_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_cenario_registros' AND column_name = 'metafora_id') INTO v_source_col_exists;
             
             IF 'labirinto_metaforas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8567,17 +8567,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.heroina_arquetipo_registros ADD CONSTRAINT heroina_arquetipo_registros_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_cenario_registros heroina_cenario_registros_metafora_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_cenario_registros ADD CONSTRAINT heroina_cenario_registros_metafora_id_fkey FOREIGN KEY (metafora_id) REFERENCES public.labirinto_metaforas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK heroina_arquetipo_registros_user_id_fkey';
+                    ALTER TABLE public.heroina_cenario_registros ADD CONSTRAINT heroina_cenario_registros_metafora_id_fkey 
+                    FOREIGN KEY (metafora_id) REFERENCES public.labirinto_metaforas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK heroina_cenario_registros_metafora_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK heroina_arquetipo_registros_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK heroina_cenario_registros_metafora_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for heroina_arquetipo_registros_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for heroina_cenario_registros_metafora_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for heroina_arquetipo_registros_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for heroina_cenario_registros_metafora_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8589,9 +8589,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_cenario_registros_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_fase_ativa_fase_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_cenario_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_fase_ativa') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_fases' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8601,7 +8601,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_cenario_registros' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_fase_ativa heroina_fase_ativa_fase_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_fase_ativa ADD CONSTRAINT heroina_fase_ativa_fase_id_fkey FOREIGN KEY (fase_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_fase_ativa' AND column_name = 'fase_id') INTO v_source_col_exists;
             
             IF 'labirinto_fases' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8611,17 +8611,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.heroina_cenario_registros ADD CONSTRAINT heroina_cenario_registros_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_fase_ativa heroina_fase_ativa_fase_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_fase_ativa ADD CONSTRAINT heroina_fase_ativa_fase_id_fkey FOREIGN KEY (fase_id) REFERENCES public.labirinto_fases(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK heroina_cenario_registros_user_id_fkey';
+                    ALTER TABLE public.heroina_fase_ativa ADD CONSTRAINT heroina_fase_ativa_fase_id_fkey 
+                    FOREIGN KEY (fase_id) REFERENCES public.labirinto_fases(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK heroina_fase_ativa_fase_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK heroina_cenario_registros_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK heroina_fase_ativa_fase_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for heroina_cenario_registros_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for heroina_fase_ativa_fase_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for heroina_cenario_registros_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for heroina_fase_ativa_fase_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8633,9 +8633,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_fase_ativa_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_ritual_registros_ritual_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_fase_ativa') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'heroina_ritual_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_rituais' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8645,7 +8645,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_fase_ativa' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_jornada heroina_jornada_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_jornada ADD CONSTRAINT heroina_jornada_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_registros heroina_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_registros ADD CONSTRAINT heroina_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_ritual_registros heroina_ritual_registros_ritual_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_ritual_registros ADD CONSTRAINT heroina_ritual_registros_ritual_id_fkey FOREIGN KEY (ritual_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'heroina_ritual_registros' AND column_name = 'ritual_id') INTO v_source_col_exists;
             
             IF 'labirinto_rituais' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8655,17 +8655,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.heroina_fase_ativa ADD CONSTRAINT heroina_fase_ativa_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_jornada heroina_jornada_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_jornada ADD CONSTRAINT heroina_jornada_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_registros heroina_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_registros ADD CONSTRAINT heroina_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: heroina_ritual_registros heroina_ritual_registros_ritual_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.heroina_ritual_registros ADD CONSTRAINT heroina_ritual_registros_ritual_id_fkey FOREIGN KEY (ritual_id) REFERENCES public.labirinto_rituais(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK heroina_fase_ativa_user_id_fkey';
+                    ALTER TABLE public.heroina_ritual_registros ADD CONSTRAINT heroina_ritual_registros_ritual_id_fkey 
+                    FOREIGN KEY (ritual_id) REFERENCES public.labirinto_rituais(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK heroina_ritual_registros_ritual_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK heroina_fase_ativa_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK heroina_ritual_registros_ritual_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for heroina_fase_ativa_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for heroina_ritual_registros_ritual_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for heroina_fase_ativa_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for heroina_ritual_registros_ritual_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8765,9 +8765,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'intervention_favorites_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'interventions_district_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'intervention_favorites') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'interventions') INTO v_source_exists;
         -- Check Target Table
         IF 'districts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8777,7 +8777,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'intervention_favorites' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: interventions interventions_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.interventions ADD CONSTRAINT interventions_district_id_fkey FOREIGN KEY (district_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'interventions' AND column_name = 'district_id') INTO v_source_col_exists;
             
             IF 'districts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8787,17 +8787,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.intervention_favorites ADD CONSTRAINT intervention_favorites_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: interventions interventions_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.interventions ADD CONSTRAINT interventions_district_id_fkey FOREIGN KEY (district_id) REFERENCES public.districts(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK intervention_favorites_user_id_fkey';
+                    ALTER TABLE public.interventions ADD CONSTRAINT interventions_district_id_fkey 
+                    FOREIGN KEY (district_id) REFERENCES public.districts(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK interventions_district_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK intervention_favorites_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK interventions_district_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for intervention_favorites_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for interventions_district_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for intervention_favorites_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for interventions_district_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -8941,9 +8941,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jardim_do_oficio_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jardim_grupo_registros_group_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jardim_do_oficio') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jardim_grupo_registros') INTO v_source_exists;
         -- Check Target Table
         IF 'therapeutic_groups' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -8953,7 +8953,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'jardim_do_oficio' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jardim_grupo_registros jardim_grupo_registros_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jardim_grupo_registros ADD CONSTRAINT jardim_grupo_registros_group_id_fkey FOREIGN KEY (group_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'jardim_grupo_registros' AND column_name = 'group_id') INTO v_source_col_exists;
             
             IF 'therapeutic_groups' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -8963,17 +8963,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.jardim_do_oficio ADD CONSTRAINT jardim_do_oficio_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jardim_grupo_registros jardim_grupo_registros_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jardim_grupo_registros ADD CONSTRAINT jardim_grupo_registros_group_id_fkey FOREIGN KEY (group_id) REFERENCES public.therapeutic_groups(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK jardim_do_oficio_user_id_fkey';
+                    ALTER TABLE public.jardim_grupo_registros ADD CONSTRAINT jardim_grupo_registros_group_id_fkey 
+                    FOREIGN KEY (group_id) REFERENCES public.therapeutic_groups(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK jardim_grupo_registros_group_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK jardim_do_oficio_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK jardim_grupo_registros_group_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for jardim_do_oficio_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for jardim_grupo_registros_group_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for jardim_do_oficio_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for jardim_grupo_registros_group_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -9249,9 +9249,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jardim_heroina_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_notas_profissionais_registro_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jardim_heroina') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jornada_heroina_notas_profissionais') INTO v_source_exists;
         -- Check Target Table
         IF 'jornada_heroina_registros' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -9261,7 +9261,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'jardim_heroina' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jardim_psique_registros jardim_psique_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jardim_psique_registros ADD CONSTRAINT jardim_psique_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_habitante_eventos jornada_habitante_eventos_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_habitante_eventos ADD CONSTRAINT jornada_habitante_eventos_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_heroina_notas_profissionais jornada_heroina_notas_profissionais_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_heroina_notas_profissionais ADD CONSTRAINT jornada_heroina_notas_profissionais_registro_id_fkey FOREIGN KEY (registro_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'jornada_heroina_notas_profissionais' AND column_name = 'registro_id') INTO v_source_col_exists;
             
             IF 'jornada_heroina_registros' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -9271,17 +9271,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.jardim_heroina ADD CONSTRAINT jardim_heroina_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jardim_psique_registros jardim_psique_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jardim_psique_registros ADD CONSTRAINT jardim_psique_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_habitante_eventos jornada_habitante_eventos_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_habitante_eventos ADD CONSTRAINT jornada_habitante_eventos_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_heroina_notas_profissionais jornada_heroina_notas_profissionais_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_heroina_notas_profissionais ADD CONSTRAINT jornada_heroina_notas_profissionais_registro_id_fkey FOREIGN KEY (registro_id) REFERENCES public.jornada_heroina_registros(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK jardim_heroina_therapist_id_fkey';
+                    ALTER TABLE public.jornada_heroina_notas_profissionais ADD CONSTRAINT jornada_heroina_notas_profissionais_registro_id_fkey 
+                    FOREIGN KEY (registro_id) REFERENCES public.jornada_heroina_registros(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK jornada_heroina_notas_profissionais_registro_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK jardim_heroina_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK jornada_heroina_notas_profissionais_registro_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for jardim_heroina_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for jornada_heroina_notas_profissionais_registro_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for jardim_heroina_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for jornada_heroina_notas_profissionais_registro_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -9469,9 +9469,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_individuacao_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'journey_districts_district_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'jornada_individuacao') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'journey_districts') INTO v_source_exists;
         -- Check Target Table
         IF 'districts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -9481,7 +9481,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'jornada_individuacao' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_progressao jornada_progressao_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_progressao ADD CONSTRAINT jornada_progressao_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journey_districts journey_districts_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journey_districts ADD CONSTRAINT journey_districts_district_id_fkey FOREIGN KEY (district_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'journey_districts' AND column_name = 'district_id') INTO v_source_col_exists;
             
             IF 'districts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -9491,17 +9491,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.jornada_individuacao ADD CONSTRAINT jornada_individuacao_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: jornada_progressao jornada_progressao_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.jornada_progressao ADD CONSTRAINT jornada_progressao_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journey_districts journey_districts_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journey_districts ADD CONSTRAINT journey_districts_district_id_fkey FOREIGN KEY (district_id) REFERENCES public.districts(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK jornada_individuacao_therapist_id_fkey';
+                    ALTER TABLE public.journey_districts ADD CONSTRAINT journey_districts_district_id_fkey 
+                    FOREIGN KEY (district_id) REFERENCES public.districts(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK journey_districts_district_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK jornada_individuacao_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK journey_districts_district_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for jornada_individuacao_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for journey_districts_district_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for jornada_individuacao_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for journey_districts_district_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -9645,9 +9645,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'journey_events_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'journey_media_journey_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'journey_events') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'journey_media') INTO v_source_exists;
         -- Check Target Table
         IF 'clube_jornadas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -9657,7 +9657,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'journey_events' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journey_media journey_media_journey_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journey_media ADD CONSTRAINT journey_media_journey_id_fkey FOREIGN KEY (journey_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'journey_media' AND column_name = 'journey_id') INTO v_source_col_exists;
             
             IF 'clube_jornadas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -9667,17 +9667,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.journey_events ADD CONSTRAINT journey_events_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journey_media journey_media_journey_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journey_media ADD CONSTRAINT journey_media_journey_id_fkey FOREIGN KEY (journey_id) REFERENCES public.clube_jornadas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK journey_events_therapist_id_fkey';
+                    ALTER TABLE public.journey_media ADD CONSTRAINT journey_media_journey_id_fkey 
+                    FOREIGN KEY (journey_id) REFERENCES public.clube_jornadas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK journey_media_journey_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK journey_events_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK journey_media_journey_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for journey_events_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for journey_media_journey_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for journey_events_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for journey_media_journey_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -9733,9 +9733,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'journey_reflections_therapist_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'journeys_client_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'journey_reflections') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'journeys') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -9745,7 +9745,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'journey_reflections' AND column_name = 'therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journeys journeys_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journeys ADD CONSTRAINT journeys_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'journeys' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -9755,17 +9755,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.journey_reflections ADD CONSTRAINT journey_reflections_therapist_id_fkey 
-                    FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: journeys journeys_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.journeys ADD CONSTRAINT journeys_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK journey_reflections_therapist_id_fkey';
+                    ALTER TABLE public.journeys ADD CONSTRAINT journeys_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK journeys_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK journey_reflections_therapist_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK journeys_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for journey_reflections_therapist_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for journeys_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for journey_reflections_therapist_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for journeys_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -10349,9 +10349,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_registros_terapeuta_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_roteiros_gerados_arquetipo_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'labirinto_registros') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'labirinto_roteiros_gerados') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_arquetipos' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -10361,7 +10361,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'labirinto_registros' AND column_name = 'terapeuta_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: labirinto_registros labirinto_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.labirinto_registros ADD CONSTRAINT labirinto_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: labirinto_roteiros_gerados labirinto_roteiros_gerados_arquetipo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.labirinto_roteiros_gerados ADD CONSTRAINT labirinto_roteiros_gerados_arquetipo_id_fkey FOREIGN KEY (arquetipo_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'labirinto_roteiros_gerados' AND column_name = 'arquetipo_id') INTO v_source_col_exists;
             
             IF 'labirinto_arquetipos' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -10371,17 +10371,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.labirinto_registros ADD CONSTRAINT labirinto_registros_terapeuta_id_fkey 
-                    FOREIGN KEY (terapeuta_id) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: labirinto_registros labirinto_registros_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.labirinto_registros ADD CONSTRAINT labirinto_registros_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: labirinto_roteiros_gerados labirinto_roteiros_gerados_arquetipo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.labirinto_roteiros_gerados ADD CONSTRAINT labirinto_roteiros_gerados_arquetipo_id_fkey FOREIGN KEY (arquetipo_id) REFERENCES public.labirinto_arquetipos(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK labirinto_registros_terapeuta_id_fkey';
+                    ALTER TABLE public.labirinto_roteiros_gerados ADD CONSTRAINT labirinto_roteiros_gerados_arquetipo_id_fkey 
+                    FOREIGN KEY (arquetipo_id) REFERENCES public.labirinto_arquetipos(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK labirinto_roteiros_gerados_arquetipo_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK labirinto_registros_terapeuta_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK labirinto_roteiros_gerados_arquetipo_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for labirinto_registros_terapeuta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for labirinto_roteiros_gerados_arquetipo_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for labirinto_registros_terapeuta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for labirinto_roteiros_gerados_arquetipo_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -10745,9 +10745,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'library_items_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'mapa_heroina_porta_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'library_items') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'mapa_heroina') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_fases' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -10757,7 +10757,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'library_items' AND column_name = 'created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: mapa_heroina mapa_heroina_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.mapa_heroina ADD CONSTRAINT mapa_heroina_porta_id_fkey FOREIGN KEY (porta_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'mapa_heroina' AND column_name = 'porta_id') INTO v_source_col_exists;
             
             IF 'labirinto_fases' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -10767,17 +10767,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.library_items ADD CONSTRAINT library_items_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: mapa_heroina mapa_heroina_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.mapa_heroina ADD CONSTRAINT mapa_heroina_porta_id_fkey FOREIGN KEY (porta_id) REFERENCES public.labirinto_fases(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK library_items_created_by_fkey';
+                    ALTER TABLE public.mapa_heroina ADD CONSTRAINT mapa_heroina_porta_id_fkey 
+                    FOREIGN KEY (porta_id) REFERENCES public.labirinto_fases(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK mapa_heroina_porta_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK library_items_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK mapa_heroina_porta_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for library_items_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for mapa_heroina_porta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for library_items_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for mapa_heroina_porta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11009,9 +11009,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'matriculas_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'message_logs_campaign_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'matriculas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'message_logs') INTO v_source_exists;
         -- Check Target Table
         IF 'message_campaigns' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -11021,7 +11021,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'matriculas' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: message_campaigns message_campaigns_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_campaigns ADD CONSTRAINT message_campaigns_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: message_logs message_logs_campaign_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_logs ADD CONSTRAINT message_logs_campaign_id_fkey FOREIGN KEY (campaign_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'message_logs' AND column_name = 'campaign_id') INTO v_source_col_exists;
             
             IF 'message_campaigns' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11031,17 +11031,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.matriculas ADD CONSTRAINT matriculas_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: message_campaigns message_campaigns_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_campaigns ADD CONSTRAINT message_campaigns_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: message_logs message_logs_campaign_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_logs ADD CONSTRAINT message_logs_campaign_id_fkey FOREIGN KEY (campaign_id) REFERENCES public.message_campaigns(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK matriculas_user_id_fkey';
+                    ALTER TABLE public.message_logs ADD CONSTRAINT message_logs_campaign_id_fkey 
+                    FOREIGN KEY (campaign_id) REFERENCES public.message_campaigns(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK message_logs_campaign_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK matriculas_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK message_logs_campaign_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for matriculas_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for message_logs_campaign_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for matriculas_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for message_logs_campaign_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11097,9 +11097,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'message_logs_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'mind_map_nodes_map_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'message_logs') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'mind_map_nodes') INTO v_source_exists;
         -- Check Target Table
         IF 'mind_maps' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -11109,7 +11109,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'message_logs' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: message_templates message_templates_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_templates ADD CONSTRAINT message_templates_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id); -- -- Name: mind_map_nodes mind_map_nodes_map_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.mind_map_nodes ADD CONSTRAINT mind_map_nodes_map_id_fkey FOREIGN KEY (map_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'mind_map_nodes' AND column_name = 'map_id') INTO v_source_col_exists;
             
             IF 'mind_maps' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11119,17 +11119,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.message_logs ADD CONSTRAINT message_logs_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: message_templates message_templates_updated_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.message_templates ADD CONSTRAINT message_templates_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id); -- -- Name: mind_map_nodes mind_map_nodes_map_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.mind_map_nodes ADD CONSTRAINT mind_map_nodes_map_id_fkey FOREIGN KEY (map_id) REFERENCES public.mind_maps(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK message_logs_user_id_fkey';
+                    ALTER TABLE public.mind_map_nodes ADD CONSTRAINT mind_map_nodes_map_id_fkey 
+                    FOREIGN KEY (map_id) REFERENCES public.mind_maps(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK mind_map_nodes_map_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK message_logs_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK mind_map_nodes_map_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for message_logs_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for mind_map_nodes_map_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for message_logs_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for mind_map_nodes_map_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11273,7 +11273,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'missoes_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'missoes_portal_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'missoes') INTO v_source_exists;
         -- Check Target Table
@@ -11285,7 +11285,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'missoes' AND column_name = 'created_by) REFERENCES auth.users(id); -- -- Name: missoes missoes_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.missoes ADD CONSTRAINT missoes_portal_id_fkey FOREIGN KEY (portal_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'missoes' AND column_name = 'portal_id') INTO v_source_col_exists;
             
             IF 'portais' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11295,17 +11295,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.missoes ADD CONSTRAINT missoes_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: missoes missoes_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.missoes ADD CONSTRAINT missoes_portal_id_fkey FOREIGN KEY (portal_id) REFERENCES public.portais(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK missoes_created_by_fkey';
+                    ALTER TABLE public.missoes ADD CONSTRAINT missoes_portal_id_fkey 
+                    FOREIGN KEY (portal_id) REFERENCES public.portais(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK missoes_portal_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK missoes_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK missoes_portal_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for missoes_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for missoes_portal_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for missoes_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for missoes_portal_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11581,9 +11581,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'notification_logs_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oracle_cards_archetype_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'notification_logs') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oracle_cards') INTO v_source_exists;
         -- Check Target Table
         IF 'founding_archetypes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -11593,7 +11593,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'notification_logs' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: notification_preferences notification_preferences_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.notification_preferences ADD CONSTRAINT notification_preferences_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: notifications notifications_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.notifications ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_cards oracle_cards_archetype_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_cards ADD CONSTRAINT oracle_cards_archetype_id_fkey FOREIGN KEY (archetype_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oracle_cards' AND column_name = 'archetype_id') INTO v_source_col_exists;
             
             IF 'founding_archetypes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11603,17 +11603,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.notification_logs ADD CONSTRAINT notification_logs_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: notification_preferences notification_preferences_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.notification_preferences ADD CONSTRAINT notification_preferences_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: notifications notifications_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.notifications ADD CONSTRAINT notifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_cards oracle_cards_archetype_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_cards ADD CONSTRAINT oracle_cards_archetype_id_fkey FOREIGN KEY (archetype_id) REFERENCES public.founding_archetypes(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK notification_logs_user_id_fkey';
+                    ALTER TABLE public.oracle_cards ADD CONSTRAINT oracle_cards_archetype_id_fkey 
+                    FOREIGN KEY (archetype_id) REFERENCES public.founding_archetypes(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK oracle_cards_archetype_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK notification_logs_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK oracle_cards_archetype_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for notification_logs_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for oracle_cards_archetype_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for notification_logs_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for oracle_cards_archetype_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11801,9 +11801,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oracle_clients_therapist_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oracle_draws_client_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oracle_clients') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oracle_draws') INTO v_source_exists;
         -- Check Target Table
         IF 'oracle_clients' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -11813,7 +11813,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oracle_clients' AND column_name = 'therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_decks oracle_decks_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_decks ADD CONSTRAINT oracle_decks_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: oracle_draws oracle_draws_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_draws ADD CONSTRAINT oracle_draws_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oracle_draws' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'oracle_clients' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11823,17 +11823,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.oracle_clients ADD CONSTRAINT oracle_clients_therapist_user_id_fkey 
-                    FOREIGN KEY (therapist_user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_decks oracle_decks_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_decks ADD CONSTRAINT oracle_decks_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: oracle_draws oracle_draws_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_draws ADD CONSTRAINT oracle_draws_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.oracle_clients(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK oracle_clients_therapist_user_id_fkey';
+                    ALTER TABLE public.oracle_draws ADD CONSTRAINT oracle_draws_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.oracle_clients(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK oracle_draws_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK oracle_clients_therapist_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK oracle_draws_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for oracle_clients_therapist_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for oracle_draws_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for oracle_clients_therapist_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for oracle_draws_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -11933,9 +11933,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oracle_draws_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oracle_spread_positions_spread_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oracle_draws') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oracle_spread_positions') INTO v_source_exists;
         -- Check Target Table
         IF 'oracle_spreads' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -11945,7 +11945,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oracle_draws' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_spread_positions oracle_spread_positions_spread_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_spread_positions ADD CONSTRAINT oracle_spread_positions_spread_id_fkey FOREIGN KEY (spread_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oracle_spread_positions' AND column_name = 'spread_id') INTO v_source_col_exists;
             
             IF 'oracle_spreads' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -11955,17 +11955,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.oracle_draws ADD CONSTRAINT oracle_draws_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oracle_spread_positions oracle_spread_positions_spread_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oracle_spread_positions ADD CONSTRAINT oracle_spread_positions_spread_id_fkey FOREIGN KEY (spread_id) REFERENCES public.oracle_spreads(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK oracle_draws_user_id_fkey';
+                    ALTER TABLE public.oracle_spread_positions ADD CONSTRAINT oracle_spread_positions_spread_id_fkey 
+                    FOREIGN KEY (spread_id) REFERENCES public.oracle_spreads(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK oracle_spread_positions_spread_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK oracle_draws_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK oracle_spread_positions_spread_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for oracle_draws_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for oracle_spread_positions_spread_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for oracle_draws_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for oracle_spread_positions_spread_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -12109,9 +12109,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oraculo_aplicacoes_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oraculo_favoritos_pergunta_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oraculo_aplicacoes') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oraculo_favoritos') INTO v_source_exists;
         -- Check Target Table
         IF 'oraculo_perguntas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -12121,7 +12121,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oraculo_aplicacoes' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oraculo_favoritos oraculo_favoritos_pergunta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oraculo_favoritos ADD CONSTRAINT oraculo_favoritos_pergunta_id_fkey FOREIGN KEY (pergunta_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oraculo_favoritos' AND column_name = 'pergunta_id') INTO v_source_col_exists;
             
             IF 'oraculo_perguntas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -12131,17 +12131,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.oraculo_aplicacoes ADD CONSTRAINT oraculo_aplicacoes_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oraculo_favoritos oraculo_favoritos_pergunta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oraculo_favoritos ADD CONSTRAINT oraculo_favoritos_pergunta_id_fkey FOREIGN KEY (pergunta_id) REFERENCES public.oraculo_perguntas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK oraculo_aplicacoes_user_id_fkey';
+                    ALTER TABLE public.oraculo_favoritos ADD CONSTRAINT oraculo_favoritos_pergunta_id_fkey 
+                    FOREIGN KEY (pergunta_id) REFERENCES public.oraculo_perguntas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK oraculo_favoritos_pergunta_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK oraculo_aplicacoes_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK oraculo_favoritos_pergunta_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for oraculo_aplicacoes_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for oraculo_favoritos_pergunta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for oraculo_aplicacoes_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for oraculo_favoritos_pergunta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -12153,9 +12153,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oraculo_favoritos_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'oraculo_portal_aplicacoes_portal_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oraculo_favoritos') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'oraculo_portal_aplicacoes') INTO v_source_exists;
         -- Check Target Table
         IF 'oraculo_portais' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -12165,7 +12165,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oraculo_favoritos' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oraculo_portal_aplicacoes oraculo_portal_aplicacoes_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oraculo_portal_aplicacoes ADD CONSTRAINT oraculo_portal_aplicacoes_portal_id_fkey FOREIGN KEY (portal_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'oraculo_portal_aplicacoes' AND column_name = 'portal_id') INTO v_source_col_exists;
             
             IF 'oraculo_portais' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -12175,17 +12175,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.oraculo_favoritos ADD CONSTRAINT oraculo_favoritos_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: oraculo_portal_aplicacoes oraculo_portal_aplicacoes_portal_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.oraculo_portal_aplicacoes ADD CONSTRAINT oraculo_portal_aplicacoes_portal_id_fkey FOREIGN KEY (portal_id) REFERENCES public.oraculo_portais(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK oraculo_favoritos_user_id_fkey';
+                    ALTER TABLE public.oraculo_portal_aplicacoes ADD CONSTRAINT oraculo_portal_aplicacoes_portal_id_fkey 
+                    FOREIGN KEY (portal_id) REFERENCES public.oraculo_portais(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK oraculo_portal_aplicacoes_portal_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK oraculo_favoritos_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK oraculo_portal_aplicacoes_portal_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for oraculo_favoritos_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for oraculo_portal_aplicacoes_portal_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for oraculo_favoritos_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for oraculo_portal_aplicacoes_portal_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -12813,9 +12813,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'personal_symbolic_maps_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'portais_jornada_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'personal_symbolic_maps') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'portais') INTO v_source_exists;
         -- Check Target Table
         IF 'jornadas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -12825,7 +12825,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'personal_symbolic_maps' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: portais portais_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.portais ADD CONSTRAINT portais_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: portais portais_jornada_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.portais ADD CONSTRAINT portais_jornada_id_fkey FOREIGN KEY (jornada_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'portais' AND column_name = 'jornada_id') INTO v_source_col_exists;
             
             IF 'jornadas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -12835,17 +12835,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.personal_symbolic_maps ADD CONSTRAINT personal_symbolic_maps_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: portais portais_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.portais ADD CONSTRAINT portais_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: portais portais_jornada_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.portais ADD CONSTRAINT portais_jornada_id_fkey FOREIGN KEY (jornada_id) REFERENCES public.jornadas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK personal_symbolic_maps_user_id_fkey';
+                    ALTER TABLE public.portais ADD CONSTRAINT portais_jornada_id_fkey 
+                    FOREIGN KEY (jornada_id) REFERENCES public.jornadas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK portais_jornada_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK personal_symbolic_maps_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK portais_jornada_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for personal_symbolic_maps_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for portais_jornada_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for personal_symbolic_maps_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for portais_jornada_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -13297,9 +13297,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'posts_mentoria_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'praticas_mudra_client_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'posts_mentoria') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'praticas_mudra') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -13309,7 +13309,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'posts_mentoria' AND column_name = 'created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: praticas_mudra praticas_mudra_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.praticas_mudra ADD CONSTRAINT praticas_mudra_client_id_fkey FOREIGN KEY (client_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'praticas_mudra' AND column_name = 'client_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -13319,17 +13319,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.posts_mentoria ADD CONSTRAINT posts_mentoria_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: praticas_mudra praticas_mudra_client_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.praticas_mudra ADD CONSTRAINT praticas_mudra_client_id_fkey FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK posts_mentoria_created_by_fkey';
+                    ALTER TABLE public.praticas_mudra ADD CONSTRAINT praticas_mudra_client_id_fkey 
+                    FOREIGN KEY (client_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK praticas_mudra_client_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK posts_mentoria_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK praticas_mudra_client_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for posts_mentoria_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for praticas_mudra_client_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for posts_mentoria_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for praticas_mudra_client_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -13341,9 +13341,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'profiles_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'progresso_aluna_formacao_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'profiles') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'progresso_aluna') INTO v_source_exists;
         -- Check Target Table
         IF 'formacoes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -13353,7 +13353,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'profiles' AND column_name = 'id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: progresso_aluna progresso_aluna_formacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.progresso_aluna ADD CONSTRAINT progresso_aluna_formacao_id_fkey FOREIGN KEY (formacao_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'progresso_aluna' AND column_name = 'formacao_id') INTO v_source_col_exists;
             
             IF 'formacoes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -13363,17 +13363,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.profiles ADD CONSTRAINT profiles_id_fkey 
-                    FOREIGN KEY (id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: progresso_aluna progresso_aluna_formacao_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.progresso_aluna ADD CONSTRAINT progresso_aluna_formacao_id_fkey FOREIGN KEY (formacao_id) REFERENCES public.formacoes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK profiles_id_fkey';
+                    ALTER TABLE public.progresso_aluna ADD CONSTRAINT progresso_aluna_formacao_id_fkey 
+                    FOREIGN KEY (formacao_id) REFERENCES public.formacoes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK progresso_aluna_formacao_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK profiles_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK progresso_aluna_formacao_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for profiles_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for progresso_aluna_formacao_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for profiles_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for progresso_aluna_formacao_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -13429,7 +13429,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'projetos_mestria_avaliador_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'projetos_mestria_course_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'projetos_mestria') INTO v_source_exists;
         -- Check Target Table
@@ -13441,7 +13441,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'projetos_mestria' AND column_name = 'avaliador_id) REFERENCES auth.users(id); -- -- Name: projetos_mestria projetos_mestria_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.projetos_mestria ADD CONSTRAINT projetos_mestria_course_id_fkey FOREIGN KEY (course_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'projetos_mestria' AND column_name = 'course_id') INTO v_source_col_exists;
             
             IF 'courses' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -13451,17 +13451,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.projetos_mestria ADD CONSTRAINT projetos_mestria_avaliador_id_fkey 
-                    FOREIGN KEY (avaliador_id) REFERENCES auth.users(id); -- -- Name: projetos_mestria projetos_mestria_course_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.projetos_mestria ADD CONSTRAINT projetos_mestria_course_id_fkey FOREIGN KEY (course_id) REFERENCES public.courses(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK projetos_mestria_avaliador_id_fkey';
+                    ALTER TABLE public.projetos_mestria ADD CONSTRAINT projetos_mestria_course_id_fkey 
+                    FOREIGN KEY (course_id) REFERENCES public.courses(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK projetos_mestria_course_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK projetos_mestria_avaliador_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK projetos_mestria_course_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for projetos_mestria_avaliador_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for projetos_mestria_course_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for projetos_mestria_avaliador_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for projetos_mestria_course_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -13473,9 +13473,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'projetos_mestria_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'protocolo_oracula_caminho_registro_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'projetos_mestria') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'protocolo_oracula') INTO v_source_exists;
         -- Check Target Table
         IF 'jornada_heroina_registros' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -13485,7 +13485,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'projetos_mestria' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: protocolo_oracula protocolo_oracula_caminho_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.protocolo_oracula ADD CONSTRAINT protocolo_oracula_caminho_registro_id_fkey FOREIGN KEY (caminho_registro_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'protocolo_oracula' AND column_name = 'caminho_registro_id') INTO v_source_col_exists;
             
             IF 'jornada_heroina_registros' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -13495,17 +13495,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.projetos_mestria ADD CONSTRAINT projetos_mestria_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: protocolo_oracula protocolo_oracula_caminho_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.protocolo_oracula ADD CONSTRAINT protocolo_oracula_caminho_registro_id_fkey FOREIGN KEY (caminho_registro_id) REFERENCES public.jornada_heroina_registros(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK projetos_mestria_user_id_fkey';
+                    ALTER TABLE public.protocolo_oracula ADD CONSTRAINT protocolo_oracula_caminho_registro_id_fkey 
+                    FOREIGN KEY (caminho_registro_id) REFERENCES public.jornada_heroina_registros(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK protocolo_oracula_caminho_registro_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK projetos_mestria_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK protocolo_oracula_caminho_registro_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for projetos_mestria_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for protocolo_oracula_caminho_registro_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for projetos_mestria_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for protocolo_oracula_caminho_registro_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -13693,9 +13693,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'push_subscriptions_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'quiz_opcoes_pergunta_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'push_subscriptions') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'quiz_opcoes') INTO v_source_exists;
         -- Check Target Table
         IF 'quiz_perguntas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -13705,7 +13705,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'push_subscriptions' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: quiz_opcoes quiz_opcoes_pergunta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.quiz_opcoes ADD CONSTRAINT quiz_opcoes_pergunta_id_fkey FOREIGN KEY (pergunta_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'quiz_opcoes' AND column_name = 'pergunta_id') INTO v_source_col_exists;
             
             IF 'quiz_perguntas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -13715,17 +13715,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.push_subscriptions ADD CONSTRAINT push_subscriptions_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: quiz_opcoes quiz_opcoes_pergunta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.quiz_opcoes ADD CONSTRAINT quiz_opcoes_pergunta_id_fkey FOREIGN KEY (pergunta_id) REFERENCES public.quiz_perguntas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK push_subscriptions_user_id_fkey';
+                    ALTER TABLE public.quiz_opcoes ADD CONSTRAINT quiz_opcoes_pergunta_id_fkey 
+                    FOREIGN KEY (pergunta_id) REFERENCES public.quiz_perguntas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK quiz_opcoes_pergunta_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK push_subscriptions_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK quiz_opcoes_pergunta_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for push_subscriptions_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for quiz_opcoes_pergunta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for push_subscriptions_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for quiz_opcoes_pergunta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -14265,9 +14265,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ritual_passages_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sala_ferramentas_familia_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'ritual_passages') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'sala_ferramentas') INTO v_source_exists;
         -- Check Target Table
         IF 'travessia_familias' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -14277,7 +14277,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'ritual_passages' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sala_ferramentas sala_ferramentas_familia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sala_ferramentas ADD CONSTRAINT sala_ferramentas_familia_id_fkey FOREIGN KEY (familia_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'sala_ferramentas' AND column_name = 'familia_id') INTO v_source_col_exists;
             
             IF 'travessia_familias' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -14287,17 +14287,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.ritual_passages ADD CONSTRAINT ritual_passages_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sala_ferramentas sala_ferramentas_familia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sala_ferramentas ADD CONSTRAINT sala_ferramentas_familia_id_fkey FOREIGN KEY (familia_id) REFERENCES public.travessia_familias(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK ritual_passages_user_id_fkey';
+                    ALTER TABLE public.sala_ferramentas ADD CONSTRAINT sala_ferramentas_familia_id_fkey 
+                    FOREIGN KEY (familia_id) REFERENCES public.travessia_familias(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK sala_ferramentas_familia_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK ritual_passages_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK sala_ferramentas_familia_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for ritual_passages_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for sala_ferramentas_familia_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for ritual_passages_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for sala_ferramentas_familia_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15365,9 +15365,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sessoes_casa_maquinas_owner_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sessoes_labirinto_porta_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'sessoes_casa_maquinas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'sessoes_labirinto') INTO v_source_exists;
         -- Check Target Table
         IF 'labirinto_fases' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15377,7 +15377,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'sessoes_casa_maquinas' AND column_name = 'owner_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sessoes_labirinto sessoes_labirinto_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sessoes_labirinto ADD CONSTRAINT sessoes_labirinto_porta_id_fkey FOREIGN KEY (porta_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'sessoes_labirinto' AND column_name = 'porta_id') INTO v_source_col_exists;
             
             IF 'labirinto_fases' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15387,17 +15387,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.sessoes_casa_maquinas ADD CONSTRAINT sessoes_casa_maquinas_owner_id_fkey 
-                    FOREIGN KEY (owner_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sessoes_labirinto sessoes_labirinto_porta_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sessoes_labirinto ADD CONSTRAINT sessoes_labirinto_porta_id_fkey FOREIGN KEY (porta_id) REFERENCES public.labirinto_fases(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK sessoes_casa_maquinas_owner_id_fkey';
+                    ALTER TABLE public.sessoes_labirinto ADD CONSTRAINT sessoes_labirinto_porta_id_fkey 
+                    FOREIGN KEY (porta_id) REFERENCES public.labirinto_fases(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK sessoes_labirinto_porta_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK sessoes_casa_maquinas_owner_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK sessoes_labirinto_porta_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for sessoes_casa_maquinas_owner_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for sessoes_labirinto_porta_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for sessoes_casa_maquinas_owner_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for sessoes_labirinto_porta_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15453,9 +15453,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'simulador_progresso_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sonho_estruturado_cliente_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'simulador_progresso') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'sonho_estruturado') INTO v_source_exists;
         -- Check Target Table
         IF 'clientes' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15465,7 +15465,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'simulador_progresso' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sonho_estruturado sonho_estruturado_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sonho_estruturado ADD CONSTRAINT sonho_estruturado_cliente_id_fkey FOREIGN KEY (cliente_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'sonho_estruturado' AND column_name = 'cliente_id') INTO v_source_col_exists;
             
             IF 'clientes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15475,17 +15475,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.simulador_progresso ADD CONSTRAINT simulador_progresso_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: sonho_estruturado sonho_estruturado_cliente_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.sonho_estruturado ADD CONSTRAINT sonho_estruturado_cliente_id_fkey FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK simulador_progresso_user_id_fkey';
+                    ALTER TABLE public.sonho_estruturado ADD CONSTRAINT sonho_estruturado_cliente_id_fkey 
+                    FOREIGN KEY (cliente_id) REFERENCES public.clientes(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK sonho_estruturado_cliente_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK simulador_progresso_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK sonho_estruturado_cliente_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for simulador_progresso_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for sonho_estruturado_cliente_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for simulador_progresso_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for sonho_estruturado_cliente_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15585,7 +15585,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'studio_episodes_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'studio_episodes_eixo_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'studio_episodes') INTO v_source_exists;
         -- Check Target Table
@@ -15597,7 +15597,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'studio_episodes' AND column_name = 'created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: studio_episodes studio_episodes_eixo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.studio_episodes ADD CONSTRAINT studio_episodes_eixo_id_fkey FOREIGN KEY (eixo_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'studio_episodes' AND column_name = 'eixo_id') INTO v_source_col_exists;
             
             IF 'studio_method_axes' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15607,17 +15607,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.studio_episodes ADD CONSTRAINT studio_episodes_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL; -- -- Name: studio_episodes studio_episodes_eixo_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.studio_episodes ADD CONSTRAINT studio_episodes_eixo_id_fkey FOREIGN KEY (eixo_id) REFERENCES public.studio_method_axes(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK studio_episodes_created_by_fkey';
+                    ALTER TABLE public.studio_episodes ADD CONSTRAINT studio_episodes_eixo_id_fkey 
+                    FOREIGN KEY (eixo_id) REFERENCES public.studio_method_axes(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK studio_episodes_eixo_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK studio_episodes_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK studio_episodes_eixo_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for studio_episodes_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for studio_episodes_eixo_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for studio_episodes_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for studio_episodes_eixo_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15629,9 +15629,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'subscriptions_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'symbolic_template_sessions_case_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'subscriptions') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'symbolic_template_sessions') INTO v_source_exists;
         -- Check Target Table
         IF 'session_cases' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15641,7 +15641,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'subscriptions' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: symbolic_template_sessions symbolic_template_sessions_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.symbolic_template_sessions ADD CONSTRAINT symbolic_template_sessions_case_id_fkey FOREIGN KEY (case_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'symbolic_template_sessions' AND column_name = 'case_id') INTO v_source_col_exists;
             
             IF 'session_cases' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15651,17 +15651,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.subscriptions ADD CONSTRAINT subscriptions_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: symbolic_template_sessions symbolic_template_sessions_case_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.symbolic_template_sessions ADD CONSTRAINT symbolic_template_sessions_case_id_fkey FOREIGN KEY (case_id) REFERENCES public.session_cases(id) ON DELETE SET NULL;
-                    RAISE NOTICE 'SUCCESS: Created FK subscriptions_user_id_fkey';
+                    ALTER TABLE public.symbolic_template_sessions ADD CONSTRAINT symbolic_template_sessions_case_id_fkey 
+                    FOREIGN KEY (case_id) REFERENCES public.session_cases(id) ON DELETE SET NULL;
+                    RAISE NOTICE 'SUCCESS: Created FK symbolic_template_sessions_case_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK subscriptions_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK symbolic_template_sessions_case_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for subscriptions_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for symbolic_template_sessions_case_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for subscriptions_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for symbolic_template_sessions_case_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15761,7 +15761,7 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_conversations_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_conversations_voice_id_fkey') THEN
         -- Check Source Table
         SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'syntheia_conversations') INTO v_source_exists;
         -- Check Target Table
@@ -15773,7 +15773,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'syntheia_conversations' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: syntheia_conversations syntheia_conversations_voice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.syntheia_conversations ADD CONSTRAINT syntheia_conversations_voice_id_fkey FOREIGN KEY (voice_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'syntheia_conversations' AND column_name = 'voice_id') INTO v_source_col_exists;
             
             IF 'syntheia_voices' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15783,17 +15783,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.syntheia_conversations ADD CONSTRAINT syntheia_conversations_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: syntheia_conversations syntheia_conversations_voice_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.syntheia_conversations ADD CONSTRAINT syntheia_conversations_voice_id_fkey FOREIGN KEY (voice_id) REFERENCES public.syntheia_voices(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK syntheia_conversations_user_id_fkey';
+                    ALTER TABLE public.syntheia_conversations ADD CONSTRAINT syntheia_conversations_voice_id_fkey 
+                    FOREIGN KEY (voice_id) REFERENCES public.syntheia_voices(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK syntheia_conversations_voice_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK syntheia_conversations_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK syntheia_conversations_voice_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for syntheia_conversations_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for syntheia_conversations_voice_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for syntheia_conversations_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for syntheia_conversations_voice_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15849,9 +15849,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_casos_espelho_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_conselho_respostas_conselho_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_casos_espelho') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_conselho_respostas') INTO v_source_exists;
         -- Check Target Table
         IF 'tecela_conselho' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15861,7 +15861,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_casos_espelho' AND column_name = 'created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_comentarios tecela_comentarios_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_comentarios ADD CONSTRAINT tecela_comentarios_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho tecela_conselho_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho ADD CONSTRAINT tecela_conselho_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho_respostas tecela_conselho_respostas_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho_respostas ADD CONSTRAINT tecela_conselho_respostas_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho_respostas tecela_conselho_respostas_conselho_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho_respostas ADD CONSTRAINT tecela_conselho_respostas_conselho_id_fkey FOREIGN KEY (conselho_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_conselho_respostas' AND column_name = 'conselho_id') INTO v_source_col_exists;
             
             IF 'tecela_conselho' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15871,17 +15871,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.tecela_casos_espelho ADD CONSTRAINT tecela_casos_espelho_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_comentarios tecela_comentarios_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_comentarios ADD CONSTRAINT tecela_comentarios_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho tecela_conselho_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho ADD CONSTRAINT tecela_conselho_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho_respostas tecela_conselho_respostas_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho_respostas ADD CONSTRAINT tecela_conselho_respostas_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_conselho_respostas tecela_conselho_respostas_conselho_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_conselho_respostas ADD CONSTRAINT tecela_conselho_respostas_conselho_id_fkey FOREIGN KEY (conselho_id) REFERENCES public.tecela_conselho(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK tecela_casos_espelho_created_by_fkey';
+                    ALTER TABLE public.tecela_conselho_respostas ADD CONSTRAINT tecela_conselho_respostas_conselho_id_fkey 
+                    FOREIGN KEY (conselho_id) REFERENCES public.tecela_conselho(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK tecela_conselho_respostas_conselho_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK tecela_casos_espelho_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK tecela_conselho_respostas_conselho_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for tecela_casos_espelho_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for tecela_conselho_respostas_conselho_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for tecela_casos_espelho_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for tecela_conselho_respostas_conselho_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15893,9 +15893,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_favoritos_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_ressonancias_registro_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_favoritos') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_ressonancias') INTO v_source_exists;
         -- Check Target Table
         IF 'tecela_registros_campo' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15905,7 +15905,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_favoritos' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_intervencoes tecela_intervencoes_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_intervencoes ADD CONSTRAINT tecela_intervencoes_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_mensagens_dia tecela_mensagens_dia_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_mensagens_dia ADD CONSTRAINT tecela_mensagens_dia_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: tecela_registros_campo tecela_registros_campo_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_registros_campo ADD CONSTRAINT tecela_registros_campo_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_ressonancias tecela_ressonancias_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_ressonancias ADD CONSTRAINT tecela_ressonancias_registro_id_fkey FOREIGN KEY (registro_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_ressonancias' AND column_name = 'registro_id') INTO v_source_col_exists;
             
             IF 'tecela_registros_campo' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15915,17 +15915,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.tecela_favoritos ADD CONSTRAINT tecela_favoritos_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_intervencoes tecela_intervencoes_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_intervencoes ADD CONSTRAINT tecela_intervencoes_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_mensagens_dia tecela_mensagens_dia_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_mensagens_dia ADD CONSTRAINT tecela_mensagens_dia_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id); -- -- Name: tecela_registros_campo tecela_registros_campo_autor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_registros_campo ADD CONSTRAINT tecela_registros_campo_autor_id_fkey FOREIGN KEY (autor_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_ressonancias tecela_ressonancias_registro_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_ressonancias ADD CONSTRAINT tecela_ressonancias_registro_id_fkey FOREIGN KEY (registro_id) REFERENCES public.tecela_registros_campo(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK tecela_favoritos_user_id_fkey';
+                    ALTER TABLE public.tecela_ressonancias ADD CONSTRAINT tecela_ressonancias_registro_id_fkey 
+                    FOREIGN KEY (registro_id) REFERENCES public.tecela_registros_campo(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK tecela_ressonancias_registro_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK tecela_favoritos_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK tecela_ressonancias_registro_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for tecela_favoritos_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for tecela_ressonancias_registro_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for tecela_favoritos_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for tecela_ressonancias_registro_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15937,9 +15937,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_ressonancias_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_supervisoes_caso_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_ressonancias') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_supervisoes') INTO v_source_exists;
         -- Check Target Table
         IF 'tecela_casos_espelho' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15949,7 +15949,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_ressonancias' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_supervisoes tecela_supervisoes_caso_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_supervisoes ADD CONSTRAINT tecela_supervisoes_caso_id_fkey FOREIGN KEY (caso_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_supervisoes' AND column_name = 'caso_id') INTO v_source_col_exists;
             
             IF 'tecela_casos_espelho' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -15959,17 +15959,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.tecela_ressonancias ADD CONSTRAINT tecela_ressonancias_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_supervisoes tecela_supervisoes_caso_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_supervisoes ADD CONSTRAINT tecela_supervisoes_caso_id_fkey FOREIGN KEY (caso_id) REFERENCES public.tecela_casos_espelho(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK tecela_ressonancias_user_id_fkey';
+                    ALTER TABLE public.tecela_supervisoes ADD CONSTRAINT tecela_supervisoes_caso_id_fkey 
+                    FOREIGN KEY (caso_id) REFERENCES public.tecela_casos_espelho(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK tecela_supervisoes_caso_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK tecela_ressonancias_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK tecela_supervisoes_caso_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for tecela_ressonancias_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for tecela_supervisoes_caso_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for tecela_ressonancias_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for tecela_supervisoes_caso_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -15981,9 +15981,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tecela_supervisoes_created_by_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'tool_districts_district_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tecela_supervisoes') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'tool_districts') INTO v_source_exists;
         -- Check Target Table
         IF 'city_districts' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -15993,7 +15993,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tecela_supervisoes' AND column_name = 'created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_tramas tecela_tramas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_tramas ADD CONSTRAINT tecela_tramas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: therapeutic_groups therapeutic_groups_therapist_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.therapeutic_groups ADD CONSTRAINT therapeutic_groups_therapist_id_fkey FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tool_districts tool_districts_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tool_districts ADD CONSTRAINT tool_districts_district_id_fkey FOREIGN KEY (district_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'tool_districts' AND column_name = 'district_id') INTO v_source_col_exists;
             
             IF 'city_districts' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16003,17 +16003,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.tecela_supervisoes ADD CONSTRAINT tecela_supervisoes_created_by_fkey 
-                    FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tecela_tramas tecela_tramas_created_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tecela_tramas ADD CONSTRAINT tecela_tramas_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: therapeutic_groups therapeutic_groups_therapist_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.therapeutic_groups ADD CONSTRAINT therapeutic_groups_therapist_id_fkey FOREIGN KEY (therapist_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: tool_districts tool_districts_district_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.tool_districts ADD CONSTRAINT tool_districts_district_id_fkey FOREIGN KEY (district_id) REFERENCES public.city_districts(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK tecela_supervisoes_created_by_fkey';
+                    ALTER TABLE public.tool_districts ADD CONSTRAINT tool_districts_district_id_fkey 
+                    FOREIGN KEY (district_id) REFERENCES public.city_districts(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK tool_districts_district_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK tecela_supervisoes_created_by_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK tool_districts_district_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for tecela_supervisoes_created_by_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for tool_districts_district_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for tecela_supervisoes_created_by_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for tool_districts_district_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -16465,9 +16465,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'travessia_day_unlocks_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'travessia_library_items_familia_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'travessia_day_unlocks') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'travessia_library_items') INTO v_source_exists;
         -- Check Target Table
         IF 'travessia_familias' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -16477,7 +16477,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'travessia_day_unlocks' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: travessia_library_items travessia_library_items_familia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.travessia_library_items ADD CONSTRAINT travessia_library_items_familia_id_fkey FOREIGN KEY (familia_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'travessia_library_items' AND column_name = 'familia_id') INTO v_source_col_exists;
             
             IF 'travessia_familias' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16487,17 +16487,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.travessia_day_unlocks ADD CONSTRAINT travessia_day_unlocks_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: travessia_library_items travessia_library_items_familia_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.travessia_library_items ADD CONSTRAINT travessia_library_items_familia_id_fkey FOREIGN KEY (familia_id) REFERENCES public.travessia_familias(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK travessia_day_unlocks_user_id_fkey';
+                    ALTER TABLE public.travessia_library_items ADD CONSTRAINT travessia_library_items_familia_id_fkey 
+                    FOREIGN KEY (familia_id) REFERENCES public.travessia_familias(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK travessia_library_items_familia_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK travessia_day_unlocks_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK travessia_library_items_familia_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for travessia_day_unlocks_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for travessia_library_items_familia_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for travessia_day_unlocks_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for travessia_library_items_familia_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -16641,9 +16641,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'treinamento_respostas_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'upsell_opportunities_rule_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'treinamento_respostas') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'upsell_opportunities') INTO v_source_exists;
         -- Check Target Table
         IF 'upsell_rules' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -16653,7 +16653,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'treinamento_respostas' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: upsell_opportunities upsell_opportunities_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.upsell_opportunities ADD CONSTRAINT upsell_opportunities_rule_id_fkey FOREIGN KEY (rule_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'upsell_opportunities' AND column_name = 'rule_id') INTO v_source_col_exists;
             
             IF 'upsell_rules' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16663,17 +16663,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.treinamento_respostas ADD CONSTRAINT treinamento_respostas_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: upsell_opportunities upsell_opportunities_rule_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.upsell_opportunities ADD CONSTRAINT upsell_opportunities_rule_id_fkey FOREIGN KEY (rule_id) REFERENCES public.upsell_rules(id) ;
-                    RAISE NOTICE 'SUCCESS: Created FK treinamento_respostas_user_id_fkey';
+                    ALTER TABLE public.upsell_opportunities ADD CONSTRAINT upsell_opportunities_rule_id_fkey 
+                    FOREIGN KEY (rule_id) REFERENCES public.upsell_rules(id) ;
+                    RAISE NOTICE 'SUCCESS: Created FK upsell_opportunities_rule_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK treinamento_respostas_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK upsell_opportunities_rule_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for treinamento_respostas_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for upsell_opportunities_rule_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for treinamento_respostas_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for upsell_opportunities_rule_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -16685,9 +16685,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'upsell_opportunities_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_aula_progress_aula_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'upsell_opportunities') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_aula_progress') INTO v_source_exists;
         -- Check Target Table
         IF 'conteudo_aulas' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -16697,7 +16697,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'upsell_opportunities' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_aula_progress user_aula_progress_aula_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_aula_progress ADD CONSTRAINT user_aula_progress_aula_id_fkey FOREIGN KEY (aula_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'user_aula_progress' AND column_name = 'aula_id') INTO v_source_col_exists;
             
             IF 'conteudo_aulas' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16707,17 +16707,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.upsell_opportunities ADD CONSTRAINT upsell_opportunities_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_aula_progress user_aula_progress_aula_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_aula_progress ADD CONSTRAINT user_aula_progress_aula_id_fkey FOREIGN KEY (aula_id) REFERENCES public.conteudo_aulas(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK upsell_opportunities_user_id_fkey';
+                    ALTER TABLE public.user_aula_progress ADD CONSTRAINT user_aula_progress_aula_id_fkey 
+                    FOREIGN KEY (aula_id) REFERENCES public.conteudo_aulas(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK user_aula_progress_aula_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK upsell_opportunities_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK user_aula_progress_aula_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for upsell_opportunities_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for user_aula_progress_aula_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for upsell_opportunities_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for user_aula_progress_aula_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -16817,9 +16817,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_favorites_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_progress_lesson_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_favorites') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_progress') INTO v_source_exists;
         -- Check Target Table
         IF 'lessons' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -16829,7 +16829,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'user_favorites' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_journey_stats user_journey_stats_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_journey_stats ADD CONSTRAINT user_journey_stats_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_progress user_progress_lesson_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_progress ADD CONSTRAINT user_progress_lesson_id_fkey FOREIGN KEY (lesson_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'user_progress' AND column_name = 'lesson_id') INTO v_source_col_exists;
             
             IF 'lessons' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16839,17 +16839,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.user_favorites ADD CONSTRAINT user_favorites_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_journey_stats user_journey_stats_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_journey_stats ADD CONSTRAINT user_journey_stats_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_progress user_progress_lesson_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_progress ADD CONSTRAINT user_progress_lesson_id_fkey FOREIGN KEY (lesson_id) REFERENCES public.lessons(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK user_favorites_user_id_fkey';
+                    ALTER TABLE public.user_progress ADD CONSTRAINT user_progress_lesson_id_fkey 
+                    FOREIGN KEY (lesson_id) REFERENCES public.lessons(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK user_progress_lesson_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK user_favorites_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK user_progress_lesson_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for user_favorites_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for user_progress_lesson_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for user_favorites_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for user_progress_lesson_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
@@ -16861,9 +16861,9 @@ DECLARE
     v_source_col_exists BOOLEAN;
     v_target_col_exists BOOLEAN;
 BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_progress_user_id_fkey') THEN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'user_unlocked_rewards_reward_id_fkey') THEN
         -- Check Source Table
-        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_progress') INTO v_source_exists;
+        SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'user_unlocked_rewards') INTO v_source_exists;
         -- Check Target Table
         IF 'symbolic_rewards' = 'users' THEN
             SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'auth' AND table_name = 'users') INTO v_target_exists;
@@ -16873,7 +16873,7 @@ BEGIN
 
         IF v_source_exists AND v_target_exists THEN
             -- Check Columns
-            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'user_progress' AND column_name = 'user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_road_nodes user_road_nodes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_road_nodes ADD CONSTRAINT user_road_nodes_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_roles user_roles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_roles ADD CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_unlocked_rewards user_unlocked_rewards_reward_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_unlocked_rewards ADD CONSTRAINT user_unlocked_rewards_reward_id_fkey FOREIGN KEY (reward_id') INTO v_source_col_exists;
+            SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'user_unlocked_rewards' AND column_name = 'reward_id') INTO v_source_col_exists;
             
             IF 'symbolic_rewards' = 'users' THEN
                 SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'auth' AND table_name = 'users' AND column_name = 'id') INTO v_target_col_exists;
@@ -16883,17 +16883,17 @@ BEGIN
 
             IF v_source_col_exists AND v_target_col_exists THEN
                 BEGIN
-                    ALTER TABLE public.user_progress ADD CONSTRAINT user_progress_user_id_fkey 
-                    FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_road_nodes user_road_nodes_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_road_nodes ADD CONSTRAINT user_road_nodes_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_roles user_roles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_roles ADD CONSTRAINT user_roles_user_id_fkey FOREIGN KEY (user_id) REFERENCES auth.users(id) ON DELETE CASCADE; -- -- Name: user_unlocked_rewards user_unlocked_rewards_reward_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: - -- ALTER TABLE ONLY public.user_unlocked_rewards ADD CONSTRAINT user_unlocked_rewards_reward_id_fkey FOREIGN KEY (reward_id) REFERENCES public.symbolic_rewards(id) ON DELETE CASCADE;
-                    RAISE NOTICE 'SUCCESS: Created FK user_progress_user_id_fkey';
+                    ALTER TABLE public.user_unlocked_rewards ADD CONSTRAINT user_unlocked_rewards_reward_id_fkey 
+                    FOREIGN KEY (reward_id) REFERENCES public.symbolic_rewards(id) ON DELETE CASCADE;
+                    RAISE NOTICE 'SUCCESS: Created FK user_unlocked_rewards_reward_id_fkey';
                 EXCEPTION WHEN OTHERS THEN
-                    RAISE NOTICE 'ERROR: Could not create FK user_progress_user_id_fkey: %', SQLERRM;
+                    RAISE NOTICE 'ERROR: Could not create FK user_unlocked_rewards_reward_id_fkey: %', SQLERRM;
                 END;
             ELSE
-                RAISE NOTICE 'WARNING: Columns missing for user_progress_user_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
+                RAISE NOTICE 'WARNING: Columns missing for user_unlocked_rewards_reward_id_fkey (Source: %, Target: %)', v_source_col_exists, v_target_col_exists;
             END IF;
         ELSE
-            RAISE NOTICE 'WARNING: Tables missing for user_progress_user_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
+            RAISE NOTICE 'WARNING: Tables missing for user_unlocked_rewards_reward_id_fkey (Source: %, Target: %)', v_source_exists, v_target_exists;
         END IF;
     END IF;
 END $fk$;
