@@ -835,7 +835,7 @@ CREATE TABLE IF NOT EXISTS public.mapa_vivo_historico (
 );
 
 -- Constraints PK/UK (Idempotentes)
-DO $ 
+DO 27514 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'cidadela_mapa_vivo_pkey') THEN
         ALTER TABLE public.cidadela_mapa_vivo ADD CONSTRAINT cidadela_mapa_vivo_pkey PRIMARY KEY (id);
@@ -1044,7 +1044,7 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'mapa_vivo_historico_pkey') THEN
         ALTER TABLE public.mapa_vivo_historico ADD CONSTRAINT mapa_vivo_historico_pkey PRIMARY KEY (id);
     END IF;
-END $;
+END 27514;
 
 -- Validações do Bloco 05
 SELECT count(*) as bloco_05_tables_present FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('cidadela_mapa_vivo', 'cidadela_oracle_cards', 'cidadela_oracle_usage', 'co_ai_recommendations', 'co_appointments', 'co_camara_sussurro_casos', 'co_cartografia_profile', 'co_city_history', 'co_client_invites', 'co_client_profile', 'co_client_profiles', 'co_convites', 'co_detectores_eventos', 'co_escutas', 'co_garden_flowers', 'co_intervencoes', 'co_intervencoes_aplicadas', 'co_jardim_entries', 'co_jardins', 'co_journey_records', 'co_laboratorio_casos', 'co_mapa_vivo', 'co_mentora_feedback', 'co_mentora_insights', 'co_orientacao_sugestoes_ia', 'co_orientacoes', 'co_passport_entries', 'co_praticas', 'co_registros_simbolicos', 'co_session_notes', 'co_sessoes', 'co_sim_cases', 'co_sim_options', 'co_sim_progress', 'co_sim_steps', 'co_therapist_profile', 'co_tool_flows', 'co_tool_usage', 'co_training_attempts', 'co_training_case_feedbacks', 'co_training_case_possible_readings', 'co_training_case_signals', 'co_training_cases', 'co_training_progress', 'co_travessia_encontros', 'co_travessia_respostas', 'co_travessias', 'co_workspace_users', 'co_workspaces', 'jardim_do_oficio', 'jardim_grupo_registros', 'jardim_heroina', 'jardim_heroina_registros', 'jardim_psique_registros', 'mapa_vivo_heroina', 'mapa_vivo_historico');
