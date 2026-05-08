@@ -1,6 +1,7 @@
 import json
 import math
 
+# Load the foreign keys
 with open('fks_from_schema.json', 'r') as f:
     fks = json.load(f)
 
@@ -14,6 +15,10 @@ def generate_part(part_num, start_idx, end_idx):
     sql = f"""-- BLOCO 07B - FOREIGN KEYS DIAGNOSTIC (PARTE {part_num} de {CHUNKS})
 -- Diagnóstico de FKs {start_idx + 1} a {min(end_idx, TOTAL_FKS)} (Total: {len(chunk_fks)})
 
+-- Limpar tabela anterior se existir na sessão
+DROP TABLE IF EXISTS diagnostic_results;
+
+-- Criar tabela temporária de diagnóstico
 CREATE TEMP TABLE diagnostic_results (
     constraint_name TEXT,
     status TEXT,
@@ -39,7 +44,7 @@ BEGIN
         tgt_table = fk['ref_table']
         tgt_col = fk['ref_columns']
         
-        # Check if target is 'auth.users' or similar
+        # Check if target is in a specific schema (e.g., 'auth')
         tgt_schema = 'public'
         clean_tgt_table = tgt_table
         if '.' in tgt_table:
@@ -58,12 +63,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('{name}', 'MISSING_TARGET_TABLE', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Table {tgt_table} not found');
     ELSE
         IF '{tgt_schema}' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -73,9 +76,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('{name}', 'MISSING_TARGET_COLUMN', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Column {tgt_table}.{tgt_col} not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = '{src_table}' AND column_name = '{src_col}';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('{name}', 'TYPE_MISMATCH', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('{name}', 'TYPE_MISMATCH', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Source type ' || v_source_type || ' might not match auth.' || '{clean_tgt_table}');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('{name}', 'READY_TO_CREATE', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Ready (to auth schema)');
                 END IF;
@@ -90,6 +92,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('{name}', 'TYPE_MISMATCH', '{src_table}', '{src_col}', '{tgt_table}', '{tgt_col}', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -113,21 +116,19 @@ BEGIN
     sql += """
 END $$;
 
-SELECT * FROM diagnostic_results ORDER BY status, constraint_name;
+-- Retornar resultados tabulares
+SELECT * FROM diagnostic_results ORDER BY constraint_name;
 
--- Summary for this part
-SELECT 
-    status, 
-    count(*) as total
+-- Retornar resumo por status
+SELECT status, COUNT(*) AS total
 FROM diagnostic_results
 GROUP BY status
-ORDER BY total DESC;
-
-DROP TABLE diagnostic_results;
+ORDER BY status;
 """
     return sql
 
-index_md = "# Index of Foreign Key Diagnostic Files (Tabular Version)\n\n"
+# Generate the files
+index_md = "# Index of Foreign Key Diagnostic Files (Final Tabular Version)\n\n"
 index_md += "| File Name | FK Range | Count | Order |\n"
 index_md += "|-----------|----------|-------|-------|\n"
 
