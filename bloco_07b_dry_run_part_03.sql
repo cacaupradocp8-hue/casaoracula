@@ -1,6 +1,10 @@
 -- BLOCO 07B - FOREIGN KEYS DIAGNOSTIC (PARTE 3 de 8)
 -- Diagnóstico de FKs 97 a 144 (Total: 48)
 
+-- Limpar tabela anterior se existir na sessão
+DROP TABLE IF EXISTS diagnostic_results;
+
+-- Criar tabela temporária de diagnóstico
 CREATE TEMP TABLE diagnostic_results (
     constraint_name TEXT,
     status TEXT,
@@ -30,12 +34,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'MISSING_TARGET_TABLE', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Table sala_ferramentas not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -45,9 +47,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'MISSING_TARGET_COLUMN', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Column sala_ferramentas.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_city_history' AND column_name = 'tool_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'TYPE_MISMATCH', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'TYPE_MISMATCH', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'sala_ferramentas');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'READY_TO_CREATE', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -62,6 +63,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_city_history_tool_id_fkey', 'TYPE_MISMATCH', 'co_city_history', 'tool_id', 'sala_ferramentas', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -93,12 +95,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'MISSING_TARGET_TABLE', 'co_client_profile', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -108,9 +108,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'MISSING_TARGET_COLUMN', 'co_client_profile', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_profile' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profile', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profile', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'READY_TO_CREATE', 'co_client_profile', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -125,6 +124,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_client_profile_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profile', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -156,12 +156,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'MISSING_TARGET_TABLE', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -171,9 +169,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'MISSING_TARGET_COLUMN', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_client_profiles' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'READY_TO_CREATE', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -188,6 +185,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_client_profiles_client_id_fkey', 'TYPE_MISMATCH', 'co_client_profiles', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -219,12 +217,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'MISSING_TARGET_TABLE', 'co_convites', 'cliente_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -234,9 +230,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'MISSING_TARGET_COLUMN', 'co_convites', 'cliente_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_convites' AND column_name = 'cliente_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'TYPE_MISMATCH', 'co_convites', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'TYPE_MISMATCH', 'co_convites', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'READY_TO_CREATE', 'co_convites', 'cliente_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -251,6 +246,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_convites_cliente_id_fkey', 'TYPE_MISMATCH', 'co_convites', 'cliente_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -282,12 +278,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'MISSING_TARGET_TABLE', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Table co_sessoes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -297,9 +291,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'MISSING_TARGET_COLUMN', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Column co_sessoes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_escutas' AND column_name = 'sessao_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sessoes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'READY_TO_CREATE', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -314,6 +307,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_escutas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_escutas', 'sessao_id', 'co_sessoes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -345,12 +339,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'MISSING_TARGET_TABLE', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -360,9 +352,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'MISSING_TARGET_COLUMN', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_garden_flowers' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'READY_TO_CREATE', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -377,6 +368,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_client_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -408,12 +400,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'MISSING_TARGET_TABLE', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Table co_journey_records not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -423,9 +413,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'MISSING_TARGET_COLUMN', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Column co_journey_records.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_garden_flowers' AND column_name = 'origem_registro_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_journey_records');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'READY_TO_CREATE', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -440,6 +429,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_garden_flowers_origem_registro_id_fkey', 'TYPE_MISMATCH', 'co_garden_flowers', 'origem_registro_id', 'co_journey_records', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -471,12 +461,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'MISSING_TARGET_TABLE', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Table co_jardins not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -486,9 +474,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'MISSING_TARGET_COLUMN', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Column co_jardins.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_jardim_entries' AND column_name = 'jardim_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'TYPE_MISMATCH', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'TYPE_MISMATCH', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_jardins');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'READY_TO_CREATE', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -503,6 +490,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_jardim_entries_jardim_id_fkey', 'TYPE_MISMATCH', 'co_jardim_entries', 'jardim_id', 'co_jardins', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -534,12 +522,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'MISSING_TARGET_TABLE', 'co_journey_records', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -549,9 +535,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'MISSING_TARGET_COLUMN', 'co_journey_records', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_journey_records' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'READY_TO_CREATE', 'co_journey_records', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -566,6 +551,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_journey_records_client_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -597,12 +583,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'MISSING_TARGET_TABLE', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Table sala_ferramentas not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -612,9 +596,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'MISSING_TARGET_COLUMN', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Column sala_ferramentas.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_journey_records' AND column_name = 'tool_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'sala_ferramentas');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'READY_TO_CREATE', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -629,6 +612,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_journey_records_tool_id_fkey', 'TYPE_MISMATCH', 'co_journey_records', 'tool_id', 'sala_ferramentas', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -660,12 +644,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'MISSING_TARGET_TABLE', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -675,9 +657,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'MISSING_TARGET_COLUMN', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacao_sugestoes_ia' AND column_name = 'cliente_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'READY_TO_CREATE', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -692,6 +673,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'cliente_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -723,12 +705,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'MISSING_TARGET_TABLE', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Table co_orientacoes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -738,9 +718,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'MISSING_TARGET_COLUMN', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Column co_orientacoes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacao_sugestoes_ia' AND column_name = 'orientacao_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_orientacoes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'READY_TO_CREATE', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -755,6 +734,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_orientacao_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'orientacao_id', 'co_orientacoes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -786,12 +766,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'MISSING_TARGET_TABLE', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Table sessions not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -801,9 +779,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'MISSING_TARGET_COLUMN', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Column sessions.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacao_sugestoes_ia' AND column_name = 'session_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'sessions');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'READY_TO_CREATE', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -818,6 +795,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_orientacao_sugestoes_ia_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacao_sugestoes_ia', 'session_id', 'sessions', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -849,12 +827,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'MISSING_TARGET_TABLE', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -864,9 +840,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'MISSING_TARGET_COLUMN', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacoes' AND column_name = 'cliente_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'READY_TO_CREATE', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -881,6 +856,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_cliente_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'cliente_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -912,12 +888,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'MISSING_TARGET_TABLE', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Table sessions not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -927,9 +901,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'MISSING_TARGET_COLUMN', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Column sessions.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_orientacoes' AND column_name = 'session_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'sessions');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'READY_TO_CREATE', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -944,6 +917,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_orientacoes_session_id_fkey', 'TYPE_MISMATCH', 'co_orientacoes', 'session_id', 'sessions', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -975,12 +949,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'MISSING_TARGET_TABLE', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -990,9 +962,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'MISSING_TARGET_COLUMN', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_passport_entries' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'TYPE_MISMATCH', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'TYPE_MISMATCH', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'READY_TO_CREATE', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1007,6 +978,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_passport_entries_client_id_fkey', 'TYPE_MISMATCH', 'co_passport_entries', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1038,12 +1010,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'MISSING_TARGET_TABLE', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Table co_sessoes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1053,9 +1023,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'MISSING_TARGET_COLUMN', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Column co_sessoes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_praticas' AND column_name = 'sessao_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sessoes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'READY_TO_CREATE', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1070,6 +1039,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_praticas_sessao_id_fkey', 'TYPE_MISMATCH', 'co_praticas', 'sessao_id', 'co_sessoes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1101,12 +1071,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'MISSING_TARGET_TABLE', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Table co_jardins not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1116,9 +1084,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'MISSING_TARGET_COLUMN', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Column co_jardins.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos' AND column_name = 'jardim_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_jardins');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'READY_TO_CREATE', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1133,6 +1100,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_jardim_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'jardim_id', 'co_jardins', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1164,12 +1132,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'MISSING_TARGET_TABLE', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Table co_sessoes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1179,9 +1145,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'MISSING_TARGET_COLUMN', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Column co_sessoes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_registros_simbolicos' AND column_name = 'sessao_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sessoes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'READY_TO_CREATE', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1196,6 +1161,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_registros_simbolicos_sessao_id_fkey', 'TYPE_MISMATCH', 'co_registros_simbolicos', 'sessao_id', 'co_sessoes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1227,12 +1193,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'MISSING_TARGET_TABLE', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Table co_jardins not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1242,9 +1206,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Column co_jardins.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sessoes' AND column_name = 'jardim_ref_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'TYPE_MISMATCH', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'TYPE_MISMATCH', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_jardins');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'READY_TO_CREATE', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1259,6 +1222,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sessoes_jardim_ref_id_fkey', 'TYPE_MISMATCH', 'co_sessoes', 'jardim_ref_id', 'co_jardins', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1290,12 +1254,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Table co_sim_steps not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1305,9 +1267,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Column co_sim_steps.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_options' AND column_name = 'proximo_step_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_steps');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'READY_TO_CREATE', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1322,6 +1283,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_options_proximo_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'proximo_step_id', 'co_sim_steps', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1353,12 +1315,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Table co_sim_steps not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1368,9 +1328,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Column co_sim_steps.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_options' AND column_name = 'step_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_steps');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'READY_TO_CREATE', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1385,6 +1344,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_options_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_options', 'step_id', 'co_sim_steps', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1416,12 +1376,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Table co_sim_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1431,9 +1389,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Column co_sim_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_progress' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'READY_TO_CREATE', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1448,6 +1405,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'case_id', 'co_sim_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1479,12 +1437,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Table co_sim_options not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1494,9 +1450,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Column co_sim_options.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_progress' AND column_name = 'escolha_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_options');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'READY_TO_CREATE', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1511,6 +1466,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_escolha_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'escolha_id', 'co_sim_options', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1542,12 +1498,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Table co_sim_steps not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1557,9 +1511,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Column co_sim_steps.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_progress' AND column_name = 'step_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_steps');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'READY_TO_CREATE', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1574,6 +1527,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_progress_step_id_fkey', 'TYPE_MISMATCH', 'co_sim_progress', 'step_id', 'co_sim_steps', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1605,12 +1559,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Table co_sim_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1620,9 +1572,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Column co_sim_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_sim_steps' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_sim_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'READY_TO_CREATE', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1637,6 +1588,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_sim_steps_case_id_fkey', 'TYPE_MISMATCH', 'co_sim_steps', 'case_id', 'co_sim_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1668,12 +1620,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'MISSING_TARGET_TABLE', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Table tools not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1683,9 +1633,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'MISSING_TARGET_COLUMN', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Column tools.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_tool_flows' AND column_name = 'tool_destino_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'tools');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'READY_TO_CREATE', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1700,6 +1649,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_destino_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_destino_id', 'tools', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1731,12 +1681,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'MISSING_TARGET_TABLE', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Table tools not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1746,9 +1694,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'MISSING_TARGET_COLUMN', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Column tools.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_tool_flows' AND column_name = 'tool_origem_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'tools');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'READY_TO_CREATE', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1763,6 +1710,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_tool_flows_tool_origem_id_fkey', 'TYPE_MISMATCH', 'co_tool_flows', 'tool_origem_id', 'tools', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1794,12 +1742,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'MISSING_TARGET_TABLE', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Table sala_ferramentas not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1809,9 +1755,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'MISSING_TARGET_COLUMN', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Column sala_ferramentas.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_tool_usage' AND column_name = 'tool_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'TYPE_MISMATCH', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'TYPE_MISMATCH', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'sala_ferramentas');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'READY_TO_CREATE', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1826,6 +1771,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_tool_usage_tool_id_fkey', 'TYPE_MISMATCH', 'co_tool_usage', 'tool_id', 'sala_ferramentas', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1857,12 +1803,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Table co_training_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1872,9 +1816,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Column co_training_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_attempts' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'TYPE_MISMATCH', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'TYPE_MISMATCH', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_training_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'READY_TO_CREATE', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1889,6 +1832,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_training_attempts_case_id_fkey', 'TYPE_MISMATCH', 'co_training_attempts', 'case_id', 'co_training_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1920,12 +1864,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Table co_training_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1935,9 +1877,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Column co_training_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_case_feedbacks' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_training_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'READY_TO_CREATE', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -1952,6 +1893,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_training_case_feedbacks_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_feedbacks', 'case_id', 'co_training_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -1983,12 +1925,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Table co_training_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -1998,9 +1938,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Column co_training_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_case_possible_readings' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_training_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'READY_TO_CREATE', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2015,6 +1954,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_training_case_possible_readings_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_possible_readings', 'case_id', 'co_training_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2046,12 +1986,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Table co_training_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2061,9 +1999,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Column co_training_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_case_signals' AND column_name = 'case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_training_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'READY_TO_CREATE', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2078,6 +2015,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_training_case_signals_case_id_fkey', 'TYPE_MISMATCH', 'co_training_case_signals', 'case_id', 'co_training_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2109,12 +2047,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'MISSING_TARGET_TABLE', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Table co_training_cases not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2124,9 +2060,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'MISSING_TARGET_COLUMN', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Column co_training_cases.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_training_progress' AND column_name = 'ultimo_case_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'TYPE_MISMATCH', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'TYPE_MISMATCH', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_training_cases');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'READY_TO_CREATE', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2141,6 +2076,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_training_progress_ultimo_case_id_fkey', 'TYPE_MISMATCH', 'co_training_progress', 'ultimo_case_id', 'co_training_cases', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2172,12 +2108,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'MISSING_TARGET_TABLE', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Table co_travessias not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2187,9 +2121,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'MISSING_TARGET_COLUMN', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Column co_travessias.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_travessia_encontros' AND column_name = 'travessia_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_travessias');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'READY_TO_CREATE', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2204,6 +2137,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_travessia_encontros_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_encontros', 'travessia_id', 'co_travessias', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2235,12 +2169,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'MISSING_TARGET_TABLE', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Table co_travessia_encontros not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2250,9 +2182,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'MISSING_TARGET_COLUMN', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Column co_travessia_encontros.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_travessia_respostas' AND column_name = 'encontro_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_travessia_encontros');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'READY_TO_CREATE', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2267,6 +2198,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_encontro_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'encontro_id', 'co_travessia_encontros', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2298,12 +2230,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'MISSING_TARGET_TABLE', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Table co_travessias not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2313,9 +2243,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'MISSING_TARGET_COLUMN', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Column co_travessias.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_travessia_respostas' AND column_name = 'travessia_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_travessias');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'READY_TO_CREATE', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2330,6 +2259,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_travessia_respostas_travessia_id_fkey', 'TYPE_MISMATCH', 'co_travessia_respostas', 'travessia_id', 'co_travessias', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2361,12 +2291,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'MISSING_TARGET_TABLE', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Table co_workspaces not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2376,9 +2304,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'MISSING_TARGET_COLUMN', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Column co_workspaces.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'co_workspace_users' AND column_name = 'workspace_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'TYPE_MISMATCH', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'TYPE_MISMATCH', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'co_workspaces');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'READY_TO_CREATE', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2393,6 +2320,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('co_workspace_users_workspace_id_fkey', 'TYPE_MISMATCH', 'co_workspace_users', 'workspace_id', 'co_workspaces', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2424,12 +2352,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'MISSING_TARGET_TABLE', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Table collective_beds not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2439,9 +2365,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'MISSING_TARGET_COLUMN', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Column collective_beds.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_bed_entries' AND column_name = 'bed_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'collective_beds');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'READY_TO_CREATE', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2456,6 +2381,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_bed_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'bed_id', 'collective_beds', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2487,12 +2413,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'MISSING_TARGET_TABLE', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Table oracular_seasons not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2502,9 +2426,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'MISSING_TARGET_COLUMN', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Column oracular_seasons.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_bed_entries' AND column_name = 'season_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'oracular_seasons');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'READY_TO_CREATE', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2519,6 +2442,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('collective_bed_entries_season_id_fkey', 'TYPE_MISMATCH', 'collective_bed_entries', 'season_id', 'oracular_seasons', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2550,12 +2474,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'MISSING_TARGET_TABLE', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Table oracular_seasons not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2565,9 +2487,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'MISSING_TARGET_COLUMN', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Column oracular_seasons.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'collective_beds' AND column_name = 'season_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'TYPE_MISMATCH', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'TYPE_MISMATCH', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'oracular_seasons');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'READY_TO_CREATE', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2582,6 +2503,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('collective_beds_season_id_fkey', 'TYPE_MISMATCH', 'collective_beds', 'season_id', 'oracular_seasons', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2613,12 +2535,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'MISSING_TARGET_TABLE', 'community_comments', 'post_id', 'community_posts', 'id', 'Table community_posts not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2628,9 +2548,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'MISSING_TARGET_COLUMN', 'community_comments', 'post_id', 'community_posts', 'id', 'Column community_posts.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_comments' AND column_name = 'post_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'TYPE_MISMATCH', 'community_comments', 'post_id', 'community_posts', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'TYPE_MISMATCH', 'community_comments', 'post_id', 'community_posts', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_posts');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'READY_TO_CREATE', 'community_comments', 'post_id', 'community_posts', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2645,6 +2564,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_comments_post_id_fkey', 'TYPE_MISMATCH', 'community_comments', 'post_id', 'community_posts', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2676,12 +2596,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'MISSING_TARGET_TABLE', 'community_event_participants', 'event_id', 'community_events', 'id', 'Table community_events not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2691,9 +2609,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'MISSING_TARGET_COLUMN', 'community_event_participants', 'event_id', 'community_events', 'id', 'Column community_events.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_event_participants' AND column_name = 'event_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'TYPE_MISMATCH', 'community_event_participants', 'event_id', 'community_events', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'TYPE_MISMATCH', 'community_event_participants', 'event_id', 'community_events', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_events');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'READY_TO_CREATE', 'community_event_participants', 'event_id', 'community_events', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2708,6 +2625,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_event_participants_event_id_fkey', 'TYPE_MISMATCH', 'community_event_participants', 'event_id', 'community_events', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2739,12 +2657,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'MISSING_TARGET_TABLE', 'community_group_members', 'group_id', 'community_groups', 'id', 'Table community_groups not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2754,9 +2670,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'MISSING_TARGET_COLUMN', 'community_group_members', 'group_id', 'community_groups', 'id', 'Column community_groups.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_group_members' AND column_name = 'group_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'TYPE_MISMATCH', 'community_group_members', 'group_id', 'community_groups', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'TYPE_MISMATCH', 'community_group_members', 'group_id', 'community_groups', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_groups');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'READY_TO_CREATE', 'community_group_members', 'group_id', 'community_groups', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2771,6 +2686,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_group_members_group_id_fkey', 'TYPE_MISMATCH', 'community_group_members', 'group_id', 'community_groups', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2802,12 +2718,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'MISSING_TARGET_TABLE', 'community_likes', 'post_id', 'community_posts', 'id', 'Table community_posts not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2817,9 +2731,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'MISSING_TARGET_COLUMN', 'community_likes', 'post_id', 'community_posts', 'id', 'Column community_posts.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_likes' AND column_name = 'post_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'TYPE_MISMATCH', 'community_likes', 'post_id', 'community_posts', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'TYPE_MISMATCH', 'community_likes', 'post_id', 'community_posts', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_posts');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'READY_TO_CREATE', 'community_likes', 'post_id', 'community_posts', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2834,6 +2747,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_likes_post_id_fkey', 'TYPE_MISMATCH', 'community_likes', 'post_id', 'community_posts', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2865,12 +2779,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'MISSING_TARGET_TABLE', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Table community_topics not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2880,9 +2792,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'MISSING_TARGET_COLUMN', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Column community_topics.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_topic_replies' AND column_name = 'topic_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'TYPE_MISMATCH', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'TYPE_MISMATCH', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_topics');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'READY_TO_CREATE', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2897,6 +2808,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_topic_replies_topic_id_fkey', 'TYPE_MISMATCH', 'community_topic_replies', 'topic_id', 'community_topics', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2928,12 +2840,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'MISSING_TARGET_TABLE', 'community_topics', 'forum_id', 'community_forums', 'id', 'Table community_forums not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -2943,9 +2853,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'MISSING_TARGET_COLUMN', 'community_topics', 'forum_id', 'community_forums', 'id', 'Column community_forums.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'community_topics' AND column_name = 'forum_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'TYPE_MISMATCH', 'community_topics', 'forum_id', 'community_forums', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'TYPE_MISMATCH', 'community_topics', 'forum_id', 'community_forums', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'community_forums');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'READY_TO_CREATE', 'community_topics', 'forum_id', 'community_forums', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -2960,6 +2869,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('community_topics_forum_id_fkey', 'TYPE_MISMATCH', 'community_topics', 'forum_id', 'community_forums', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -2991,12 +2901,10 @@ BEGIN
         INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'MISSING_TARGET_TABLE', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Table clientes not found');
     ELSE
         IF 'public' = 'auth' THEN
-            -- Simplified check for auth schema columns as information_schema might not have full visibility or different structures
-            -- But we usually expect 'id' or 'email' in auth.users
-            v_target_type := 'uuid'; -- Assume uuid for auth.users.id
+            -- Simplified check for auth schema columns
+            v_target_type := 'uuid'; 
             v_is_unique := TRUE;
             
-            -- Basic existence check via pg_attribute for auth tables if possible
             IF NOT EXISTS (
                 SELECT 1 FROM pg_attribute a 
                 JOIN pg_class c ON a.attrelid = c.oid 
@@ -3006,9 +2914,8 @@ BEGIN
                 INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'MISSING_TARGET_COLUMN', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Column clientes.id not found');
             ELSE
                 SELECT data_type INTO v_source_type FROM information_schema.columns WHERE table_schema = 'public' AND table_name = 'conselho_partes_internas' AND column_name = 'client_id';
-                -- Check compatibility (uuid is common)
                 IF v_source_type NOT IN ('uuid', 'text', 'character varying') THEN
-                     INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'TYPE_MISMATCH', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.users');
+                     INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'TYPE_MISMATCH', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Source type ' || v_source_type || ' might not match auth.' || 'clientes');
                 ELSE
                      INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'READY_TO_CREATE', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Ready (to auth schema)');
                 END IF;
@@ -3023,6 +2930,7 @@ BEGIN
                 IF v_source_type <> v_target_type THEN
                     INSERT INTO diagnostic_results VALUES ('conselho_partes_internas_client_id_fkey', 'TYPE_MISMATCH', 'conselho_partes_internas', 'client_id', 'clientes', 'id', 'Type mismatch: ' || v_source_type || ' vs ' || v_target_type);
                 ELSE
+                    -- Check for uniqueness on target column
                     SELECT EXISTS (
                         SELECT 1 
                         FROM pg_index i
@@ -3044,14 +2952,11 @@ BEGIN
 
 END $$;
 
-SELECT * FROM diagnostic_results ORDER BY status, constraint_name;
+-- Retornar resultados tabulares
+SELECT * FROM diagnostic_results ORDER BY constraint_name;
 
--- Summary for this part
-SELECT 
-    status, 
-    count(*) as total
+-- Retornar resumo por status
+SELECT status, COUNT(*) AS total
 FROM diagnostic_results
 GROUP BY status
-ORDER BY total DESC;
-
-DROP TABLE diagnostic_results;
+ORDER BY status;
