@@ -1,7 +1,7 @@
 -- bloco_06_tables_jardins_ia.sql
 -- Jardins (Heroína/Psique/Ofício), IA (agentes/syntheia), Labirinto
 -- Depende de: 01, 02a, 03, 04, 05
--- Idempotente: CREATE TABLE IF NOT EXISTS + ADD CONSTRAINT PK/UK via DO block
+-- Idempotente: CREATE TABLE IF NOT EXISTS + ADD CONSTRAINT PK/UK via DO $$block
 
 -- ========== agente_conversas ==========
 CREATE TABLE IF NOT EXISTS public.agente_conversas (
@@ -13,12 +13,12 @@ CREATE TABLE IF NOT EXISTS public.agente_conversas (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agente_conversas_pkey') THEN
     ALTER TABLE ONLY public.agente_conversas
     ADD CONSTRAINT agente_conversas_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== agente_mensagens ==========
 CREATE TABLE IF NOT EXISTS public.agente_mensagens (
@@ -30,12 +30,12 @@ CREATE TABLE IF NOT EXISTS public.agente_mensagens (
     CONSTRAINT agente_mensagens_role_check CHECK ((role = ANY (ARRAY['user'::text, 'assistant'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agente_mensagens_pkey') THEN
     ALTER TABLE ONLY public.agente_mensagens
     ADD CONSTRAINT agente_mensagens_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== agentes ==========
 CREATE TABLE IF NOT EXISTS public.agentes (
@@ -55,12 +55,12 @@ CREATE TABLE IF NOT EXISTS public.agentes (
     max_tokens integer DEFAULT 1024
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'agentes_pkey') THEN
     ALTER TABLE ONLY public.agentes
     ADD CONSTRAINT agentes_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== ai_global_settings ==========
 CREATE TABLE IF NOT EXISTS public.ai_global_settings (
@@ -73,19 +73,19 @@ CREATE TABLE IF NOT EXISTS public.ai_global_settings (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_global_settings_chave_key') THEN
     ALTER TABLE ONLY public.ai_global_settings
     ADD CONSTRAINT ai_global_settings_chave_key UNIQUE (chave);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_global_settings_pkey') THEN
     ALTER TABLE ONLY public.ai_global_settings
     ADD CONSTRAINT ai_global_settings_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== ai_interaction_logs ==========
 CREATE TABLE IF NOT EXISTS public.ai_interaction_logs (
@@ -104,12 +104,12 @@ CREATE TABLE IF NOT EXISTS public.ai_interaction_logs (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_interaction_logs_pkey') THEN
     ALTER TABLE ONLY public.ai_interaction_logs
     ADD CONSTRAINT ai_interaction_logs_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== ai_provider_prices ==========
 CREATE TABLE IF NOT EXISTS public.ai_provider_prices (
@@ -121,19 +121,19 @@ CREATE TABLE IF NOT EXISTS public.ai_provider_prices (
     updated_at timestamp with time zone DEFAULT now()
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_provider_prices_model_name_key') THEN
     ALTER TABLE ONLY public.ai_provider_prices
     ADD CONSTRAINT ai_provider_prices_model_name_key UNIQUE (model_name);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_provider_prices_pkey') THEN
     ALTER TABLE ONLY public.ai_provider_prices
     ADD CONSTRAINT ai_provider_prices_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== ai_recommendations ==========
 CREATE TABLE IF NOT EXISTS public.ai_recommendations (
@@ -150,12 +150,12 @@ CREATE TABLE IF NOT EXISTS public.ai_recommendations (
     resolved_at timestamp with time zone
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_recommendations_pkey') THEN
     ALTER TABLE ONLY public.ai_recommendations
     ADD CONSTRAINT ai_recommendations_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== client_labyrinths ==========
 CREATE TABLE IF NOT EXISTS public.client_labyrinths (
@@ -179,12 +179,12 @@ CREATE TABLE IF NOT EXISTS public.client_labyrinths (
     CONSTRAINT client_labyrinths_tipo_check CHECK ((tipo = ANY (ARRAY['repetitivo'::text, 'evitativo'::text, 'circular'::text, 'autoboicote'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'client_labyrinths_pkey') THEN
     ALTER TABLE ONLY public.client_labyrinths
     ADD CONSTRAINT client_labyrinths_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_arquetipo_registros ==========
 CREATE TABLE IF NOT EXISTS public.heroina_arquetipo_registros (
@@ -196,12 +196,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_arquetipo_registros (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_arquetipo_registros_pkey') THEN
     ALTER TABLE ONLY public.heroina_arquetipo_registros
     ADD CONSTRAINT heroina_arquetipo_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_cenario_registros ==========
 CREATE TABLE IF NOT EXISTS public.heroina_cenario_registros (
@@ -213,12 +213,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_cenario_registros (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_cenario_registros_pkey') THEN
     ALTER TABLE ONLY public.heroina_cenario_registros
     ADD CONSTRAINT heroina_cenario_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_fase_ativa ==========
 CREATE TABLE IF NOT EXISTS public.heroina_fase_ativa (
@@ -230,12 +230,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_fase_ativa (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_fase_ativa_pkey') THEN
     ALTER TABLE ONLY public.heroina_fase_ativa
     ADD CONSTRAINT heroina_fase_ativa_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_insights ==========
 CREATE TABLE IF NOT EXISTS public.heroina_insights (
@@ -247,12 +247,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_insights (
     CONSTRAINT heroina_insights_tipo_check CHECK ((tipo = ANY (ARRAY['reflexao'::text, 'alerta'::text, 'movimento'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_insights_pkey') THEN
     ALTER TABLE ONLY public.heroina_insights
     ADD CONSTRAINT heroina_insights_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_jornada ==========
 CREATE TABLE IF NOT EXISTS public.heroina_jornada (
@@ -268,19 +268,19 @@ CREATE TABLE IF NOT EXISTS public.heroina_jornada (
     updated_at timestamp with time zone DEFAULT now()
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_jornada_pkey') THEN
     ALTER TABLE ONLY public.heroina_jornada
     ADD CONSTRAINT heroina_jornada_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_jornada_user_id_key') THEN
     ALTER TABLE ONLY public.heroina_jornada
     ADD CONSTRAINT heroina_jornada_user_id_key UNIQUE (user_id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_registros ==========
 CREATE TABLE IF NOT EXISTS public.heroina_registros (
@@ -295,12 +295,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_registros (
     created_at timestamp with time zone DEFAULT now()
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_registros_pkey') THEN
     ALTER TABLE ONLY public.heroina_registros
     ADD CONSTRAINT heroina_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== heroina_ritual_registros ==========
 CREATE TABLE IF NOT EXISTS public.heroina_ritual_registros (
@@ -312,12 +312,12 @@ CREATE TABLE IF NOT EXISTS public.heroina_ritual_registros (
     created_at timestamp with time zone DEFAULT now()
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'heroina_ritual_registros_pkey') THEN
     ALTER TABLE ONLY public.heroina_ritual_registros
     ADD CONSTRAINT heroina_ritual_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== jornada_heroina_fases ==========
 CREATE TABLE IF NOT EXISTS public.jornada_heroina_fases (
@@ -347,26 +347,26 @@ CREATE TABLE IF NOT EXISTS public.jornada_heroina_fases (
     CONSTRAINT jornada_heroina_fases_numero_check CHECK (((numero >= 1) AND (numero <= 7)))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_fases_chave_key') THEN
     ALTER TABLE ONLY public.jornada_heroina_fases
     ADD CONSTRAINT jornada_heroina_fases_chave_key UNIQUE (chave);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_fases_numero_key') THEN
     ALTER TABLE ONLY public.jornada_heroina_fases
     ADD CONSTRAINT jornada_heroina_fases_numero_key UNIQUE (numero);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_fases_pkey') THEN
     ALTER TABLE ONLY public.jornada_heroina_fases
     ADD CONSTRAINT jornada_heroina_fases_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== jornada_heroina_notas_profissionais ==========
 CREATE TABLE IF NOT EXISTS public.jornada_heroina_notas_profissionais (
@@ -383,19 +383,19 @@ CREATE TABLE IF NOT EXISTS public.jornada_heroina_notas_profissionais (
     CONSTRAINT jornada_heroina_notas_profissionais_fase_numero_check CHECK (((fase_numero >= 1) AND (fase_numero <= 7)))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_notas_profiss_registro_id_fase_numero_terap_key') THEN
     ALTER TABLE ONLY public.jornada_heroina_notas_profissionais
     ADD CONSTRAINT jornada_heroina_notas_profiss_registro_id_fase_numero_terap_key UNIQUE (registro_id, fase_numero, terapeuta_id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_notas_profissionais_pkey') THEN
     ALTER TABLE ONLY public.jornada_heroina_notas_profissionais
     ADD CONSTRAINT jornada_heroina_notas_profissionais_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== jornada_heroina_registros ==========
 CREATE TABLE IF NOT EXISTS public.jornada_heroina_registros (
@@ -417,12 +417,12 @@ CREATE TABLE IF NOT EXISTS public.jornada_heroina_registros (
     CONSTRAINT jornada_heroina_registros_status_check CHECK ((status = ANY (ARRAY['em_andamento'::text, 'pausado'::text, 'concluido'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_registros_pkey') THEN
     ALTER TABLE ONLY public.jornada_heroina_registros
     ADD CONSTRAINT jornada_heroina_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== jornada_heroina_respostas ==========
 CREATE TABLE IF NOT EXISTS public.jornada_heroina_respostas (
@@ -441,19 +441,19 @@ CREATE TABLE IF NOT EXISTS public.jornada_heroina_respostas (
     CONSTRAINT jornada_heroina_respostas_fase_numero_check CHECK (((fase_numero >= 1) AND (fase_numero <= 7)))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_respostas_pkey') THEN
     ALTER TABLE ONLY public.jornada_heroina_respostas
     ADD CONSTRAINT jornada_heroina_respostas_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'jornada_heroina_respostas_registro_id_fase_numero_key') THEN
     ALTER TABLE ONLY public.jornada_heroina_respostas
     ADD CONSTRAINT jornada_heroina_respostas_registro_id_fase_numero_key UNIQUE (registro_id, fase_numero);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_39_portas ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_39_portas (
@@ -475,12 +475,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_39_portas (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_39_portas_pkey') THEN
     ALTER TABLE ONLY public.labirinto_39_portas
     ADD CONSTRAINT labirinto_39_portas_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_anotacoes ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_anotacoes (
@@ -494,19 +494,19 @@ CREATE TABLE IF NOT EXISTS public.labirinto_anotacoes (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_anotacoes_pkey') THEN
     ALTER TABLE ONLY public.labirinto_anotacoes
     ADD CONSTRAINT labirinto_anotacoes_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_anotacoes_porta_id_user_id_cliente_id_created_at_key') THEN
     ALTER TABLE ONLY public.labirinto_anotacoes
     ADD CONSTRAINT labirinto_anotacoes_porta_id_user_id_cliente_id_created_at_key UNIQUE (porta_id, user_id, cliente_id, created_at);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_arquetipos ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_arquetipos (
@@ -524,12 +524,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_arquetipos (
     imagem_url text
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_arquetipos_pkey') THEN
     ALTER TABLE ONLY public.labirinto_arquetipos
     ADD CONSTRAINT labirinto_arquetipos_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_fases ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_fases (
@@ -556,12 +556,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_fases (
     observacoes_admin text
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_fases_pkey') THEN
     ALTER TABLE ONLY public.labirinto_fases
     ADD CONSTRAINT labirinto_fases_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_leituras ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_leituras (
@@ -575,12 +575,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_leituras (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_leituras_pkey') THEN
     ALTER TABLE ONLY public.labirinto_leituras
     ADD CONSTRAINT labirinto_leituras_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_metaforas ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_metaforas (
@@ -597,12 +597,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_metaforas (
     imagem_url text
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_metaforas_pkey') THEN
     ALTER TABLE ONLY public.labirinto_metaforas
     ADD CONSTRAINT labirinto_metaforas_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_portas ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_portas (
@@ -645,19 +645,19 @@ CREATE TABLE IF NOT EXISTS public.labirinto_portas (
     CONSTRAINT labirinto_portas_numero_check CHECK (((numero >= 1) AND (numero <= 99)))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_portas_numero_key') THEN
     ALTER TABLE ONLY public.labirinto_portas
     ADD CONSTRAINT labirinto_portas_numero_key UNIQUE (numero);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_portas_pkey') THEN
     ALTER TABLE ONLY public.labirinto_portas
     ADD CONSTRAINT labirinto_portas_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_registros ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_registros (
@@ -685,12 +685,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_registros (
     nome_cliente text
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_registros_pkey') THEN
     ALTER TABLE ONLY public.labirinto_registros
     ADD CONSTRAINT labirinto_registros_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_rituais ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_rituais (
@@ -707,12 +707,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_rituais (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_rituais_pkey') THEN
     ALTER TABLE ONLY public.labirinto_rituais
     ADD CONSTRAINT labirinto_rituais_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_roteiro_templates ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_roteiro_templates (
@@ -729,12 +729,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_roteiro_templates (
     CONSTRAINT labirinto_roteiro_templates_tipo_camada_check CHECK ((tipo_camada = ANY (ARRAY['fase'::text, 'arquetipo'::text, 'metafora'::text, 'ritual'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_roteiro_templates_pkey') THEN
     ALTER TABLE ONLY public.labirinto_roteiro_templates
     ADD CONSTRAINT labirinto_roteiro_templates_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labirinto_roteiros_gerados ==========
 CREATE TABLE IF NOT EXISTS public.labirinto_roteiros_gerados (
@@ -757,12 +757,12 @@ CREATE TABLE IF NOT EXISTS public.labirinto_roteiros_gerados (
     CONSTRAINT labirinto_roteiros_gerados_gerado_por_check CHECK ((gerado_por = ANY (ARRAY['template'::text, 'hibrido'::text, 'ia_completo'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labirinto_roteiros_gerados_pkey') THEN
     ALTER TABLE ONLY public.labirinto_roteiros_gerados
     ADD CONSTRAINT labirinto_roteiros_gerados_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== labyrinth_records ==========
 CREATE TABLE IF NOT EXISTS public.labyrinth_records (
@@ -777,12 +777,12 @@ CREATE TABLE IF NOT EXISTS public.labyrinth_records (
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'labyrinth_records_pkey') THEN
     ALTER TABLE ONLY public.labyrinth_records
     ADD CONSTRAINT labyrinth_records_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== mapa_heroina ==========
 CREATE TABLE IF NOT EXISTS public.mapa_heroina (
@@ -798,12 +798,12 @@ CREATE TABLE IF NOT EXISTS public.mapa_heroina (
     CONSTRAINT mapa_heroina_status_check CHECK ((status = ANY (ARRAY['ativa'::text, 'integrada'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'mapa_heroina_pkey') THEN
     ALTER TABLE ONLY public.mapa_heroina
     ADD CONSTRAINT mapa_heroina_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== posts_mentoria ==========
 CREATE TABLE IF NOT EXISTS public.posts_mentoria (
@@ -822,12 +822,12 @@ CREATE TABLE IF NOT EXISTS public.posts_mentoria (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'posts_mentoria_pkey') THEN
     ALTER TABLE ONLY public.posts_mentoria
     ADD CONSTRAINT posts_mentoria_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== sessoes_labirinto ==========
 CREATE TABLE IF NOT EXISTS public.sessoes_labirinto (
@@ -851,12 +851,12 @@ CREATE TABLE IF NOT EXISTS public.sessoes_labirinto (
     CONSTRAINT sessoes_labirinto_modo_check CHECK ((modo = ANY (ARRAY['pessoal'::text, 'profissional'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'sessoes_labirinto_pkey') THEN
     ALTER TABLE ONLY public.sessoes_labirinto
     ADD CONSTRAINT sessoes_labirinto_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== syntheia_conversations ==========
 CREATE TABLE IF NOT EXISTS public.syntheia_conversations (
@@ -870,12 +870,12 @@ CREATE TABLE IF NOT EXISTS public.syntheia_conversations (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_conversations_pkey') THEN
     ALTER TABLE ONLY public.syntheia_conversations
     ADD CONSTRAINT syntheia_conversations_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== syntheia_creations ==========
 CREATE TABLE IF NOT EXISTS public.syntheia_creations (
@@ -901,12 +901,12 @@ CREATE TABLE IF NOT EXISTS public.syntheia_creations (
     CONSTRAINT syntheia_creations_tipo_check CHECK ((tipo = ANY (ARRAY['sessao_individual'::text, 'experiencia_grupo'::text, 'ritual'::text, 'produto_programa'::text, 'aula_conteudo'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_creations_pkey') THEN
     ALTER TABLE ONLY public.syntheia_creations
     ADD CONSTRAINT syntheia_creations_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== syntheia_messages ==========
 CREATE TABLE IF NOT EXISTS public.syntheia_messages (
@@ -919,12 +919,12 @@ CREATE TABLE IF NOT EXISTS public.syntheia_messages (
     CONSTRAINT syntheia_messages_role_check CHECK ((role = ANY (ARRAY['user'::text, 'assistant'::text, 'system'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_messages_pkey') THEN
     ALTER TABLE ONLY public.syntheia_messages
     ADD CONSTRAINT syntheia_messages_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== syntheia_modes ==========
 CREATE TABLE IF NOT EXISTS public.syntheia_modes (
@@ -939,12 +939,12 @@ CREATE TABLE IF NOT EXISTS public.syntheia_modes (
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_modes_pkey') THEN
     ALTER TABLE ONLY public.syntheia_modes
     ADD CONSTRAINT syntheia_modes_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== syntheia_voices ==========
 CREATE TABLE IF NOT EXISTS public.syntheia_voices (
@@ -960,12 +960,12 @@ CREATE TABLE IF NOT EXISTS public.syntheia_voices (
     CONSTRAINT syntheia_voices_type_check CHECK ((type = ANY (ARRAY['quiz'::text, 'porta'::text, 'travessia'::text, 'arquetipo'::text, 'ferramenta'::text, 'ritual'::text])))
 );
 
-DO 31472 BEGIN
+DO $$ BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'syntheia_voices_pkey') THEN
     ALTER TABLE ONLY public.syntheia_voices
     ADD CONSTRAINT syntheia_voices_pkey PRIMARY KEY (id);
-  END IF;
-END 31472;
+  END $$IF;
+END $$;
 
 -- ========== Validação ==========
 SELECT count(*) AS bloco_06_tables_present FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('agente_conversas', 'agente_mensagens', 'agentes', 'ai_global_settings', 'ai_interaction_logs', 'ai_provider_prices', 'ai_recommendations', 'client_labyrinths', 'heroina_arquetipo_registros', 'heroina_cenario_registros', 'heroina_fase_ativa', 'heroina_insights', 'heroina_jornada', 'heroina_registros', 'heroina_ritual_registros', 'jornada_heroina_fases', 'jornada_heroina_notas_profissionais', 'jornada_heroina_registros', 'jornada_heroina_respostas', 'labirinto_39_portas', 'labirinto_anotacoes', 'labirinto_arquetipos', 'labirinto_fases', 'labirinto_leituras', 'labirinto_metaforas', 'labirinto_portas', 'labirinto_registros', 'labirinto_rituais', 'labirinto_roteiro_templates', 'labirinto_roteiros_gerados', 'labyrinth_records', 'mapa_heroina', 'posts_mentoria', 'sessoes_labirinto', 'syntheia_conversations', 'syntheia_creations', 'syntheia_messages', 'syntheia_modes', 'syntheia_voices');
