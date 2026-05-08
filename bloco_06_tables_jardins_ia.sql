@@ -62,31 +62,6 @@ DO $$ BEGIN
   END IF;
 END $$;
 
--- ========== ai_global_settings ==========
-CREATE TABLE IF NOT EXISTS public.ai_global_settings (
-    id uuid DEFAULT gen_random_uuid() NOT NULL,
-    chave text NOT NULL,
-    valor text NOT NULL,
-    descricao text,
-    ativo boolean DEFAULT true NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_global_settings_chave_key') THEN
-    ALTER TABLE ONLY public.ai_global_settings
-    ADD CONSTRAINT ai_global_settings_chave_key UNIQUE (chave);
-  END IF;
-END $$;
-
-DO $$ BEGIN
-  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'ai_global_settings_pkey') THEN
-    ALTER TABLE ONLY public.ai_global_settings
-    ADD CONSTRAINT ai_global_settings_pkey PRIMARY KEY (id);
-  END IF;
-END $$;
-
 -- ========== ai_interaction_logs ==========
 CREATE TABLE IF NOT EXISTS public.ai_interaction_logs (
     id uuid DEFAULT gen_random_uuid() NOT NULL,
@@ -968,5 +943,5 @@ DO $$ BEGIN
 END $$;
 
 -- ========== Validação ==========
-SELECT count(*) AS bloco_06_tables_present FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('agente_conversas', 'agente_mensagens', 'agentes', 'ai_global_settings', 'ai_interaction_logs', 'ai_provider_prices', 'ai_recommendations', 'client_labyrinths', 'heroina_arquetipo_registros', 'heroina_cenario_registros', 'heroina_fase_ativa', 'heroina_insights', 'heroina_jornada', 'heroina_registros', 'heroina_ritual_registros', 'jornada_heroina_fases', 'jornada_heroina_notas_profissionais', 'jornada_heroina_registros', 'jornada_heroina_respostas', 'labirinto_39_portas', 'labirinto_anotacoes', 'labirinto_arquetipos', 'labirinto_fases', 'labirinto_leituras', 'labirinto_metaforas', 'labirinto_portas', 'labirinto_registros', 'labirinto_rituais', 'labirinto_roteiro_templates', 'labirinto_roteiros_gerados', 'labyrinth_records', 'mapa_heroina', 'posts_mentoria', 'sessoes_labirinto', 'syntheia_conversations', 'syntheia_creations', 'syntheia_messages', 'syntheia_modes', 'syntheia_voices');
-SELECT count(*) AS bloco_06_pk_uk_constraints FROM pg_constraint WHERE conname IN ('agente_conversas_pkey', 'agente_mensagens_pkey', 'agentes_pkey', 'ai_global_settings_chave_key', 'ai_global_settings_pkey', 'ai_interaction_logs_pkey', 'ai_provider_prices_model_name_key', 'ai_provider_prices_pkey', 'ai_recommendations_pkey', 'client_labyrinths_pkey', 'heroina_arquetipo_registros_pkey', 'heroina_cenario_registros_pkey', 'heroina_fase_ativa_pkey', 'heroina_insights_pkey', 'heroina_jornada_pkey', 'heroina_jornada_user_id_key', 'heroina_registros_pkey', 'heroina_ritual_registros_pkey', 'jornada_heroina_fases_chave_key', 'jornada_heroina_fases_numero_key', 'jornada_heroina_fases_pkey', 'jornada_heroina_notas_profiss_registro_id_fase_numero_terap_key', 'jornada_heroina_notas_profissionais_pkey', 'jornada_heroina_registros_pkey', 'jornada_heroina_respostas_pkey', 'jornada_heroina_respostas_registro_id_fase_numero_key', 'labirinto_39_portas_pkey', 'labirinto_anotacoes_pkey', 'labirinto_anotacoes_porta_id_user_id_cliente_id_created_at_key', 'labirinto_arquetipos_pkey', 'labirinto_fases_pkey', 'labirinto_leituras_pkey', 'labirinto_metaforas_pkey', 'labirinto_portas_numero_key', 'labirinto_portas_pkey', 'labirinto_registros_pkey', 'labirinto_rituais_pkey', 'labirinto_roteiro_templates_pkey', 'labirinto_roteiros_gerados_pkey', 'labyrinth_records_pkey', 'mapa_heroina_pkey', 'posts_mentoria_pkey', 'sessoes_labirinto_pkey', 'syntheia_conversations_pkey', 'syntheia_creations_pkey', 'syntheia_messages_pkey', 'syntheia_modes_pkey', 'syntheia_voices_pkey');
+SELECT count(*) AS bloco_06_tables_present FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('agente_conversas', 'agente_mensagens', 'agentes', 'ai_interaction_logs', 'ai_provider_prices', 'ai_recommendations', 'client_labyrinths', 'heroina_arquetipo_registros', 'heroina_cenario_registros', 'heroina_fase_ativa', 'heroina_insights', 'heroina_jornada', 'heroina_registros', 'heroina_ritual_registros', 'jornada_heroina_fases', 'jornada_heroina_notas_profissionais', 'jornada_heroina_registros', 'jornada_heroina_respostas', 'labirinto_39_portas', 'labirinto_anotacoes', 'labirinto_arquetipos', 'labirinto_fases', 'labirinto_leituras', 'labirinto_metaforas', 'labirinto_portas', 'labirinto_registros', 'labirinto_rituais', 'labirinto_roteiro_templates', 'labirinto_roteiros_gerados', 'labyrinth_records', 'mapa_heroina', 'posts_mentoria', 'sessoes_labirinto', 'syntheia_conversations', 'syntheia_creations', 'syntheia_messages', 'syntheia_modes', 'syntheia_voices');
+SELECT count(*) AS bloco_06_pk_uk_constraints FROM pg_constraint WHERE conname IN ('agente_conversas_pkey', 'agente_mensagens_pkey', 'agentes_pkey', 'ai_interaction_logs_pkey', 'ai_provider_prices_model_name_key', 'ai_provider_prices_pkey', 'ai_recommendations_pkey', 'client_labyrinths_pkey', 'heroina_arquetipo_registros_pkey', 'heroina_cenario_registros_pkey', 'heroina_fase_ativa_pkey', 'heroina_insights_pkey', 'heroina_jornada_pkey', 'heroina_jornada_user_id_key', 'heroina_registros_pkey', 'heroina_ritual_registros_pkey', 'jornada_heroina_fases_chave_key', 'jornada_heroina_fases_numero_key', 'jornada_heroina_fases_pkey', 'jornada_heroina_notas_profiss_registro_id_fase_numero_terap_key', 'jornada_heroina_notas_profissionais_pkey', 'jornada_heroina_registros_pkey', 'jornada_heroina_respostas_pkey', 'jornada_heroina_respostas_registro_id_fase_numero_key', 'labirinto_39_portas_pkey', 'labirinto_anotacoes_pkey', 'labirinto_anotacoes_porta_id_user_id_cliente_id_created_at_key', 'labirinto_arquetipos_pkey', 'labirinto_fases_pkey', 'labirinto_leituras_pkey', 'labirinto_metaforas_pkey', 'labirinto_portas_numero_key', 'labirinto_portas_pkey', 'labirinto_registros_pkey', 'labirinto_rituais_pkey', 'labirinto_roteiro_templates_pkey', 'labirinto_roteiros_gerados_pkey', 'labyrinth_records_pkey', 'mapa_heroina_pkey', 'posts_mentoria_pkey', 'sessoes_labirinto_pkey', 'syntheia_conversations_pkey', 'syntheia_creations_pkey', 'syntheia_messages_pkey', 'syntheia_modes_pkey', 'syntheia_voices_pkey');

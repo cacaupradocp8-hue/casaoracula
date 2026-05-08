@@ -46,6 +46,12 @@ created = get_tables('/mnt/documents/bloco_03_tables_core.sql') | \
           get_tables('/mnt/documents/bloco_04_tables_editorial_formacao_clube.sql') | \
           get_tables('bloco_05_tables_dominios_especificos.sql')
 
+print(f"Created tables count: {len(created)}")
+if 'ai_global_settings' in created:
+    print("ai_global_settings is in created")
+else:
+    print("ai_global_settings NOT in created")
+
 selected_tables = [t for t in selected_tables if t not in created]
 selected_tables = sorted(list(set(selected_tables)))
 
