@@ -420,11 +420,11 @@ BEGIN
             IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = v_rec.src_table AND column_name = v_rec.src_col) OR
                NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = 'public' AND table_name = v_rec.tgt_table AND column_name = v_rec.tgt_col) THEN
                 v_skipped_not_ready := v_skipped_not_ready + 1;
-                RAISE NOTICE 'Skipping %: Table or column missing.', v_rec.fk_name;
+                RAISE NOTICE 'Skipping %: Table or column missing (SOURCE_TABLE_MISSING).', v_rec.fk_name;
                 CONTINUE;
             END IF;
 
-            -- 3. Verificar se o destino tem PK ou UNIQUE na coluna alvo
+            -- 3. Verificar se o destino tem PK ou UNIQUE na coluna alvo (Ignora TARGET_NOT_UNIQUE)
             IF NOT EXISTS (
                 SELECT 1 
                 FROM pg_index i
@@ -437,7 +437,7 @@ BEGIN
                 AND (i.indisprimary OR i.indisunique)
             ) THEN
                 v_skipped_not_ready := v_skipped_not_ready + 1;
-                RAISE NOTICE 'Skipping %: Target column is not PK/UNIQUE.', v_rec.fk_name;
+                RAISE NOTICE 'Skipping %: Target column is not PK/UNIQUE (TARGET_NOT_UNIQUE).', v_rec.fk_name;
                 CONTINUE;
             END IF;
 
@@ -452,19 +452,20 @@ BEGIN
                 CONTINUE;
             END IF;
 
-            -- 5. Tentar criar (Se usar NOT VALID + VALIDATE, rollback no erro)
+            -- 5. Tentar criar (Se usar NOT VALID + VALIDATE, DROP no EXCEPTION em caso de erro no validate)
             BEGIN
                 EXECUTE format('ALTER TABLE public.%I ADD CONSTRAINT %I FOREIGN KEY (%I) REFERENCES public.%I(%I) %s NOT VALID', 
                     v_rec.src_table, v_rec.fk_name, v_rec.src_col, v_rec.tgt_table, v_rec.tgt_col, v_rec.extra_clause);
                 
+                -- Se o validate falhar, ele cai no EXCEPTION do bloco interno
                 EXECUTE format('ALTER TABLE public.%I VALIDATE CONSTRAINT %I', v_rec.src_table, v_rec.fk_name);
                 
                 v_added := v_added + 1;
             EXCEPTION WHEN OTHERS THEN
-                -- Se falhar o validate ou a criação, removemos a constraint para não deixar lixo
+                -- DROP CONSTRAINT imediatamente em caso de erro (incluindo erro de validação de órfãos)
                 EXECUTE format('ALTER TABLE public.%I DROP CONSTRAINT IF EXISTS %I', v_rec.src_table, v_rec.fk_name);
                 v_failed := v_failed + 1;
-                RAISE WARNING 'Failed to create %: %', v_rec.fk_name, SQLERRM;
+                RAISE WARNING 'Failed to create/validate %: %. Constraint dropped.', v_rec.fk_name, SQLERRM;
             END;
 
         EXCEPTION WHEN OTHERS THEN
