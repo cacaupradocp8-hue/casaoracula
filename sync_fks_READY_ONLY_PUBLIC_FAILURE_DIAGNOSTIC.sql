@@ -165,7 +165,7 @@ WITH failed AS (
     FROM fk_candidates c
     WHERE NOT EXISTS (
         SELECT 1 FROM pg_constraint pc
-        JOIN pg_namespace n ON n.oid = pc.connamespace
+        JOIN pg_namespace n ON n.oid = pc.relnamespace
         WHERE pc.conname = c.fk_name AND n.nspname = 'public'
     )
 ),
@@ -199,7 +199,7 @@ diagnosis AS (
             SELECT 1
             FROM pg_index i
             JOIN pg_class c  ON c.oid = i.indrelid
-            JOIN pg_namespace n ON n.oid = c.connamespace
+            JOIN pg_namespace n ON n.oid = c.relnamespace
             JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
             WHERE n.nspname='public' AND c.relname=f.tgt_table AND a.attname=f.tgt_col
               AND (i.indisprimary OR i.indisunique)
@@ -210,7 +210,7 @@ diagnosis AS (
         EXISTS (
             SELECT 1
             FROM pg_constraint pc
-            JOIN pg_namespace n  ON n.oid = pc.connamespace
+            JOIN pg_namespace n  ON n.oid = pc.relnamespace
             JOIN pg_class    cs ON cs.oid = pc.conrelid
             JOIN pg_class    ct ON ct.oid = pc.confrelid
             JOIN pg_attribute sa ON sa.attrelid = pc.conrelid  AND sa.attnum = pc.conkey[1]
@@ -292,7 +292,7 @@ FROM (
             WHEN EXISTS (
                 SELECT 1
                 FROM pg_constraint pc
-                JOIN pg_namespace n  ON n.oid = pc.connamespace
+                JOIN pg_namespace n  ON n.oid = pc.relnamespace
                 JOIN pg_class    cs ON cs.oid = pc.conrelid
                 JOIN pg_class    ct ON ct.oid = pc.confrelid
                 JOIN pg_attribute sa ON sa.attrelid = pc.conrelid  AND sa.attnum = pc.conkey[1]
@@ -305,7 +305,7 @@ FROM (
             WHEN NOT EXISTS (
                 SELECT 1 FROM pg_index i
                 JOIN pg_class c  ON c.oid = i.indrelid
-                JOIN pg_namespace n ON n.oid = c.connamespace
+                JOIN pg_namespace n ON n.oid = c.relnamespace
                 JOIN pg_attribute a ON a.attrelid = i.indrelid AND a.attnum = ANY(i.indkey)
                 WHERE n.nspname='public' AND c.relname=f.tgt_table AND a.attname=f.tgt_col
                   AND (i.indisprimary OR i.indisunique) AND i.indnatts=1
@@ -320,7 +320,7 @@ FROM (
     FROM fk_candidates f
     WHERE NOT EXISTS (
         SELECT 1 FROM pg_constraint pc
-        JOIN pg_namespace n ON n.oid = pc.connamespace
+        JOIN pg_namespace n ON n.oid = pc.relnamespace
         WHERE pc.conname = f.fk_name AND n.nspname = 'public'
     )
 ) s
