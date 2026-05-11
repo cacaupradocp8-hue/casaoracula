@@ -140,7 +140,7 @@ export default function BibliotecaTravessiasFamilia() {
           <Button asChild variant="ghost" size="sm" className="gap-1">
             <Link to="/biblioteca-travessias">
               <ArrowLeft className="w-4 h-4" />
-              Biblioteca das Travessias
+              Travessias da Casa
             </Link>
           </Button>
         </div>
