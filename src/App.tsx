@@ -17,6 +17,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 import { BootLoadingScreen } from "@/components/shared/BootLoadingScreen";
 import { useRouteGuard } from "@/hooks/auth/useRouteGuard";
+import { useEffectivePortal } from "@/hooks/useEffectivePortal";
 
 import { Suspense } from "react";
 
@@ -262,6 +263,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <Navigate to={destination} replace />;
 }
 
+function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; allowed: PortalType[] }) {
+  const { effectivePortal } = useEffectivePortal();
+  if (!allowed.includes(effectivePortal)) {
+    return <Navigate to="/dashboard-membro" replace />;
+  }
+  return <>{children}</>;
+}
+
 function LegacyCursoRedirect() {
   const { id } = useParams<{ id: string }>();
   return <Navigate to={`/cursos/${id}`} replace />;
@@ -465,7 +474,7 @@ function AppRoutes() {
       <Route path="/quiz/:quizId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/quiz/:quizId/resultado" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
-      <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><BibliotecaCasos /></ProtectedRoute>} />
+      <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><RoleSpecificGuard allowed={['oracula', 'admin']}><BibliotecaCasos /></RoleSpecificGuard></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
