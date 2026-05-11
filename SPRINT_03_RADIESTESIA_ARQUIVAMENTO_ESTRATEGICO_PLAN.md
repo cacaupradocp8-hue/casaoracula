@@ -16,61 +16,64 @@ Arquivar o módulo de Radiestesia, removendo-o da navegação principal e classi
 - `/radiestesia/escala`: Escala Narrativa
 - `/radiestesia/diario`: Diário de Práticas
 
-### 2.2 Componentes e Páginas (src/pages/radiestesia/)
-- `RadiestesiaPortal.tsx`
-- `Leitura5Camadas.tsx`
-- `MesaRadionica.tsx`
-- `CatalogoGraficos.tsx`
-- `GraficoDetalhe.tsx`
-- `Pantaculos.tsx`
-- `CristaisCampos.tsx`
-- `EscalaNarrativa.tsx`
-- `DiarioPraticas.tsx`
-- `AdminRadiestesiaTab.tsx` (src/components/admin/)
+### 2.2 Componentes e Páginas
+- `src/pages/radiestesia/RadiestesiaPortal.tsx`
+- `src/pages/radiestesia/Leitura5Camadas.tsx`
+- `src/pages/radiestesia/MesaRadionica.tsx`
+- `src/pages/radiestesia/CatalogoGraficos.tsx`
+- `src/pages/radiestesia/GraficoDetalhe.tsx`
+- `src/pages/radiestesia/Pantaculos.tsx`
+- `src/pages/radiestesia/CristaisCampos.tsx`
+- `src/pages/radiestesia/EscalaNarrativa.tsx`
+- `src/pages/radiestesia/DiarioPraticas.tsx`
+- `src/components/admin/AdminRadiestesiaTab.tsx`: Aba de gestão administrativa.
 
-### 2.3 Ganchos e Integração
-- `useRadiestesiaConfig.ts` (src/hooks/)
-- Registro na tabela `sala_ferramentas` (Database)
+### 2.3 Banco de Dados (Tabelas Encontradas)
+- `public.radiestesia_graficos`: Armazena o catálogo de gráficos.
+- `public.radiestesia_config`: Armazena textos introdutórios e toggles de seção.
+- `public.radiestesia_cristais`: Armazena dados de cristais e campos.
+- Registro na tabela `public.sala_ferramentas`: Onde a ferramenta é registrada para aparecer no Hub.
+
+### 2.4 Edge Functions e Hooks
+- **Edge Functions:** Nenhuma Edge Function específica de Radiestesia foi encontrada.
+- **Hooks:** `src/hooks/useRadiestesiaConfig.ts`.
 
 ## 3. Pontos de Exposição Atual
-- **Menu Principal (Mobile/Desktop):** Não listado explicitamente no `Navigation.tsx`, mas acessível via `/ferramentas`.
-- **Hub de Ferramentas:** Aparece como "Radiestesia & Gráficos Vibracionais" carregado dinamicamente da tabela `sala_ferramentas`.
-- **Painel Admin:** Aba dedicada para gestão de gráficos e cristais.
-- **Links Internos:** Possíveis menções em `JardimPsique` e `TravessiaDetalhe`.
+- **Hub de Ferramentas (`/ferramentas`):** Aparece como "Radiestesia & Gráficos Vibracionais".
+- **Painel Admin:** Aba dedicada para gestão de gráficos, cristais e configurações.
+- **Navegação:** Não há links fixos no menu lateral principal (`Navigation.tsx`), o acesso é via Hub.
 
-## 4. Estratégia de Arquivamento
+## 4. Plano de Ocultação e Preservação
 
-### 4.1 Reclassificação
-- **Status:** Laboratório / Legado Externo.
-- **Visibilidade:** Oculto na navegação pública (Hub de Ferramentas).
-- **Acesso:** Mantido via URL direta ou área restrita de laboratório para Admin.
+### 4.1 Ocultação da Navegação Principal
+- **Ação:** Atualizar o registro na tabela `sala_ferramentas` onde `ferramenta_chave = 'radiestesia'` para `ativa = false`.
+- **Resultado:** O card desaparece do Hub de Ferramentas para todos os perfis (Visitante, Assinante, Aluna).
 
-### 4.2 Ações Técnicas (Sprint 03)
-1. **Banco de Dados (Invisibilidade):**
-   - Atualizar `sala_ferramentas` setando `ativa = false` para o registro de Radiestesia. Isso remove o card do `/ferramentas` automaticamente sem apagar dados.
-2. **Navegação:**
-   - Garantir que não haja links fixos em menus laterais ou dashboards.
-3. **Proteção de Rota:**
-   - Alterar `minPortal` no `App.tsx` para `admin` nas rotas de Radiestesia, ou manter como está mas documentar que o acesso é "por convite/direto".
-4. **Documentação de Código:**
-   - Adicionar comentário de cabeçalho em `RadiestesiaPortal.tsx` e `App.tsx` (seção de rotas) indicando o status de "Módulo Arquivado/Legado".
+### 4.2 Preservação por URL/Admin
+- **Acesso Direto:** As rotas no `App.tsx` permanecem ativas. Quem tiver a URL (ex: `/radiestesia`) ainda acessa.
+- **Admin:** O Painel Admin manterá a aba de Radiestesia para que o administrador possa consultar ou editar dados históricos.
+- **Proteção:** As rotas no `App.tsx` serão mantidas, mas documentadas internamente como legadas.
 
-## 5. Regras de Segurança e Integridade
-- **NÃO APAGAR:** Nenhum componente, arquivo ou registro de banco será deletado.
-- **NÃO ALTERAR RLS/EDGE:** A estrutura de permissões de banco permanece intacta.
-- **NÃO REFATORAR:** O código interno do módulo não será mexido; se houver bugs legados, permanecerão lá até decisão futura.
+## 5. Plano de Auditoria para Exclusão Futura
+Este módulo entra em "Estado de Observação" por 6 meses.
+- **Critério de Exclusão:** Se após 6 meses não houver acessos administrativos ou necessidade de consulta, os arquivos e tabelas poderão ser deletados em uma sprint futura de limpeza (Housekeeping).
+- **Dependências:** Verificar se há vínculos de Radiestesia em "Travessias" ou "Jardim da Psique" antes de qualquer deleção futura.
 
-## 6. Plano de Rollback
-1. **Restaurar no Hub:** Voltar `ativa = true` na tabela `sala_ferramentas`.
-2. **Restaurar Rotas:** Reverter alterações de `minPortal` no `App.tsx` (caso tenham sido alteradas).
-3. **Navegação:** Reverter qualquer alteração em arquivos de navegação ou atalhos.
+## 6. Regras de Integridade (O que NÃO será feito)
+- **NÃO APAGAR:** Nenhum arquivo `.tsx`, `.ts` ou registro de banco será deletado agora.
+- **NÃO ALTERAR RLS:** As políticas de segurança permanecem iguais.
+- **NÃO ALTERAR EDGE FUNCTIONS:** Nenhuma alteração em infraestrutura.
+- **NÃO MEXER EM AUTH/STRIPE:** Totalmente isolado.
 
-## 7. Critérios de Validação
-- Visitante, Assinante e Aluna não encontram "Radiestesia" no `/ferramentas`.
-- Admin consegue acessar `/radiestesia` digitando a URL.
-- O Painel Admin continua permitindo editar os dados (para fins de histórico).
-- Nenhuma funcionalidade central (Clube, Formação, Syntheia) é afetada.
-- Build e Typecheck passam sem erros.
+## 7. Plano de Rollback
+1. **Restaurar no Hub:** Executar `UPDATE sala_ferramentas SET ativa = true WHERE ferramenta_chave = 'radiestesia';`.
+2. **Reverter Navegação:** Caso algum link fixo tenha sido removido, restaurar o componente de origem.
 
----
-**Nota Estratégica:** A Radiestesia permanece no código como uma "ferramenta fantasma", disponível para uso interno ou para clientes antigos que possuam o link, mas deixa de ser um produto de prateleira da Casa Orácula.
+## 8. Critérios de Validação
+- [ ] Visitante não vê "Radiestesia" no `/ferramentas`.
+- [ ] Assinante comum não vê no `/ferramentas`.
+- [ ] Aluna não vê no `/ferramentas`.
+- [ ] Admin consegue acessar `/radiestesia` digitando na barra de endereços.
+- [ ] Admin continua vendo a aba no Painel de Administração.
+- [ ] Build (`npm run build`) concluído com sucesso.
+- [ ] Console do navegador sem erros de rotas órfãs.
