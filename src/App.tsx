@@ -44,6 +44,7 @@ const ClubeRotasCatalogo = React.lazy(() => import("./pages/clube/ClubeRotasCata
 const ClubeRotaPremium = React.lazy(() => import("./pages/clube/ClubeRotaPremium"));
 const Welcome = React.lazy(() => import("./pages/Welcome"));
 const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
+const BibliotecaCasos = React.lazy(() => import("./pages/BibliotecaCasos"));
 const Mentoria = React.lazy(() => import("./pages/Mentoria"));
 const CasaTecelaAtrio = React.lazy(() => import("./pages/CasaTecelaAtrio"));
 const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior"));
@@ -464,7 +465,7 @@ function AppRoutes() {
       <Route path="/quiz/:quizId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/quiz/:quizId/resultado" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
-      <Route path="/biblioteca-casos" element={<ProtectedRoute><Navigate to="/biblioteca?aba=casos" replace /></ProtectedRoute>} />
+      <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><BibliotecaCasos /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
@@ -501,7 +502,7 @@ function AppRoutes() {
 
       {/* Canteiro */}
       
-      <Route path="/minha-biblioteca" element={<ProtectedRoute><Navigate to="/biblioteca?aba=pessoal" replace /></ProtectedRoute>} />
+      {/* Redirect legados consolidados em jornadaRoutes */}
 
       {/* Oráculos */}
       <Route path="/oraculos" element={<ProtectedRoute><Oraculos /></ProtectedRoute>} />

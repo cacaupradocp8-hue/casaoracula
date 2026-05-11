@@ -29,11 +29,12 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       <Route path="/clube" element={<ProtectedRoute><ClubeRotasCatalogo /></ProtectedRoute>} />
       <Route path="/clube/rota/:slug" element={<ProtectedRoute><ClubeRotaPremium /></ProtectedRoute>} />
       
-      {/* Biblioteca de Travessias */}
+      {/* Biblioteca de Travessias - Redirects para a Unificada */}
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
       <Route path="/biblioteca-das-travessias/:slug" element={<ProtectedRoute><BibliotecaTravessiaDetalhe /></ProtectedRoute>} />
       <Route path="/biblioteca-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
       <Route path="/biblioteca-travessias/:familiaSlug" element={<ProtectedRoute><BibliotecaTravessiasFamilia /></ProtectedRoute>} />
+      <Route path="/minha-biblioteca" element={<ProtectedRoute><Navigate to="/biblioteca?aba=pessoal" replace /></ProtectedRoute>} />
     </>
   );
 };

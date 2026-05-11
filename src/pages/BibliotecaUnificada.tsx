@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useSearchParams, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, Library, Shield, Compass, Lock } from 'lucide-react';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 
 // Lazy-loaded tab content components
 import BibliotecaSimbolica from '@/components/biblioteca/BibliotecaSimbolica';
@@ -15,7 +16,7 @@ import BibliotecaTravessiasTab from '@/components/biblioteca/BibliotecaTravessia
 const TABS = [
   { key: 'simbolica', label: 'Simbólica', icon: BookOpen },
   { key: 'pessoal', label: 'Pessoal', icon: Lock },
-  { key: 'casos', label: 'Casos Clínicos', icon: Shield },
+  { key: 'casos', label: 'Casos Clínicos', icon: Shield, minPortal: 'oracula' },
   { key: 'travessias', label: 'Travessias', icon: Compass },
 ] as const;
 
@@ -23,8 +24,25 @@ type TabKey = typeof TABS[number]['key'];
 
 export default function BibliotecaUnificada() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { effectivePortal } = useEffectivePortal();
+  
+  const filteredTabs = useMemo(() => {
+    return TABS.filter(tab => {
+      // @ts-ignore - minPortal exists on some tabs
+      if (tab.minPortal === 'oracula') {
+        return effectivePortal === 'oracula' || effectivePortal === 'admin';
+      }
+      return true;
+    });
+  }, [effectivePortal]);
+
   const initialTab = (searchParams.get('aba') as TabKey) || 'simbolica';
   const [activeTab, setActiveTab] = useState<string>(initialTab);
+
+  // Se a aba inicial for 'casos' mas o usuário não tiver permissão, redirecionar
+  if (initialTab === 'casos' && effectivePortal !== 'oracula' && effectivePortal !== 'admin') {
+    return <Navigate to="/biblioteca?aba=simbolica" replace />;
+  }
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -53,8 +71,8 @@ export default function BibliotecaUnificada() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            {TABS.map((tab) => {
+          <TabsList className={`grid w-full grid-cols-${filteredTabs.length}`}>
+            {filteredTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger key={tab.key} value={tab.key} className="gap-1.5 text-xs sm:text-sm">
