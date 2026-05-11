@@ -71,8 +71,8 @@ export default function BibliotecaUnificada() {
 
         {/* Tabs */}
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            {TABS.map((tab) => {
+          <TabsList className={`grid w-full grid-cols-${filteredTabs.length}`}>
+            {filteredTabs.map((tab) => {
               const Icon = tab.icon;
               return (
                 <TabsTrigger key={tab.key} value={tab.key} className="gap-1.5 text-xs sm:text-sm">
