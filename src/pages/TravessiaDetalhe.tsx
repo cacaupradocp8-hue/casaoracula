@@ -156,7 +156,7 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
       title: 'O Solo',
       description: 'O chão da travessia',
       items: [
-        { title: 'Biblioteca das Travessias', description: 'Famílias simbólicas e recursos integrados', route: '/biblioteca-das-travessias', icon: BookOpen },
+        { title: 'Travessias da Casa', description: 'Famílias simbólicas e recursos integrados', route: '/biblioteca-das-travessias', icon: BookOpen },
         { title: 'Percursos Disponíveis', description: 'Jornadas de aprofundamento', route: '/cursos', icon: Sparkles },
       ],
     },
@@ -176,7 +176,7 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
       description: 'Materiais de sustentação',
       items: [
         { title: 'Síntese da Tríade', description: 'Visão integrada do método', route: '/metodo/triade', icon: Compass },
-        { title: 'Biblioteca de Contos', description: 'Narrativas simbólicas em texto e áudio', route: '/biblioteca', icon: BookOpen },
+        { title: 'Biblioteca Oracular', description: 'Narrativas simbólicas em texto e áudio', route: '/biblioteca', icon: BookOpen },
       ],
     },
   ],
@@ -205,7 +205,7 @@ const TRAVESSIA_CONTEUDO: Record<string, TravessiaSection[]> = {
       description: 'Recursos exclusivos para facilitadoras certificadas',
       items: [
         { title: 'Torre Viva™', description: 'Leitura de estrutura psíquica e sobrevivência', route: '/ferramentas/torre-viva', icon: Castle },
-        { title: 'Biblioteca de Casos', description: 'Vinhetas clínicas para treino de postura', route: '/biblioteca-casos', icon: BookOpen },
+        { title: 'Biblioteca de Casos Profissionais', description: 'Vinhetas clínicas para treino de postura', route: '/biblioteca-casos', icon: BookOpen },
         { title: 'Cartografia da Torre', description: 'Mapeamento das 39 portas e 5 famílias', route: '/ferramentas/cartografia-torre', icon: Compass },
       ],
     },

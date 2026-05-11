@@ -184,7 +184,7 @@ export default function TemploEscuta() {
                       onClick={() => setSelectedAudioId(null)}
                       className="text-xs text-muted-foreground/40 hover:text-muted-foreground/70 transition-colors"
                     >
-                      ← Voltar à biblioteca
+                      ← Voltar à lista
                     </button>
                   </div>
                 </motion.div>

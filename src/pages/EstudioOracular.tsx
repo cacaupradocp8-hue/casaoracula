@@ -52,7 +52,7 @@ export default function EstudioOracular() {
                   onClick={() => setSelected(null)}
                   className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  ← Voltar à biblioteca
+                  ← Voltar à lista
                 </button>
 
                 <div className="space-y-4">
