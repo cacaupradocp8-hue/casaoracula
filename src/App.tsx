@@ -262,6 +262,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   return <Navigate to={destination} replace />;
 }
 
+function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; allowed: PortalType[] }) {
+  const { effectivePortal } = useEffectivePortal();
+  if (!allowed.includes(effectivePortal)) {
+    return <Navigate to="/dashboard-membro" replace />;
+  }
+  return <>{children}</>;
+}
+
 function LegacyCursoRedirect() {
   const { id } = useParams<{ id: string }>();
   return <Navigate to={`/cursos/${id}`} replace />;
