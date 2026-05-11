@@ -138,7 +138,7 @@ export default function BibliotecaDasTravessias() {
       <div className="container mx-auto px-4 py-8 space-y-10">
         {/* Header */}
         <SectionHeader
-          title="Biblioteca das Travessias"
+          title="Travessias da Casa"
           subtitle="Ferramentas para sustentar o que não cabe em protocolos"
           icon={<BookOpen className="h-8 w-8 text-gold" />}
         />

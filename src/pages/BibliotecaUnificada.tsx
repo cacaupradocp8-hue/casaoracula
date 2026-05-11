@@ -15,9 +15,9 @@ import BibliotecaTravessiasTab from '@/components/biblioteca/BibliotecaTravessia
 
 const TABS = [
   { key: 'simbolica', label: 'Simbólica', icon: BookOpen },
-  { key: 'pessoal', label: 'Pessoal', icon: Lock },
-  { key: 'casos', label: 'Casos Clínicos', icon: Shield, minPortal: 'oracula' },
-  { key: 'travessias', label: 'Travessias', icon: Compass },
+  { key: 'pessoal', label: 'Meu Acervo', icon: Lock },
+  { key: 'casos', label: 'Biblioteca de Casos Profissionais', icon: Shield, minPortal: 'oracula' },
+  { key: 'travessias', label: 'Travessias da Casa', icon: Compass },
 ] as const;
 
 type TabKey = typeof TABS[number]['key'];
@@ -62,7 +62,7 @@ export default function BibliotecaUnificada() {
             <Library className="w-7 h-7 text-primary" />
           </div>
           <h1 className="text-2xl md:text-3xl font-display text-foreground mb-2">
-            Biblioteca da Casa Orácula
+            Biblioteca Oracular
           </h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Acervo simbólico, registros pessoais, casos clínicos e travessias — tudo em um só lugar.

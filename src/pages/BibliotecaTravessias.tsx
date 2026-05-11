@@ -79,7 +79,7 @@ export default function BibliotecaTravessias() {
             </span>
           </div>
           <h1 className="text-3xl md:text-4xl font-display text-foreground mb-4">
-            Biblioteca das Travessias
+            Travessias da Casa
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
             Ferramentas para sustentar o que não cabe em protocolos.

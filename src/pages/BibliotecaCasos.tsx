@@ -124,7 +124,7 @@ export default function BibliotecaCasos() {
 
   return (
     <ContentPageLayout
-      title="Biblioteca de Casos"
+      title="Biblioteca de Casos Profissionais"
       onBack={() => window.history.back()}
       backLabel="Voltar"
     >
