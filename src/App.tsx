@@ -502,7 +502,7 @@ function AppRoutes() {
 
       {/* Canteiro */}
       
-      <Route path="/minha-biblioteca" element={<ProtectedRoute><Navigate to="/biblioteca?aba=pessoal" replace /></ProtectedRoute>} />
+      {/* Redirect legados consolidados em jornadaRoutes */}
 
       {/* Oráculos */}
       <Route path="/oraculos" element={<ProtectedRoute><Oraculos /></ProtectedRoute>} />
