@@ -81,7 +81,17 @@ Isolamento do produto lateral.
 
 ---
 
-## 7. CRONOGRAMA DE EXECUÇÃO (FASE 4)
+## 7. OTIMIZAÇÃO DE ATIVOS VISUAIS (SKILL ATIVA)
+Dada a natureza visual das Mandalas, Mapas e Oráculos, as seguintes diretrizes de performance devem ser aplicadas:
+
+- **Formatos:** Converter assets estáticos para `.webp` ou `.avif`.
+- **Lazy Loading:** Implementar `loading="lazy"` em componentes de grid (Biblioteca/Oráculos).
+- **CLS:** Definir `width` e `height` explícitos nos SVGs e Imagens dos Mapas.
+- **Compressão:** Alvo de 80% de qualidade para WebP.
+
+---
+
+## 8. CRONOGRAMA DE EXECUÇÃO (FASE 4)
 
 1. **Sprint 01:** Extração do Painel Mestre e criação do domínio `src/domains/painel-mestre`.
 2. **Sprint 02:** Implementação de Redirects para Bibliotecas e Mapas secundários.
