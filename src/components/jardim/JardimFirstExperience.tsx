@@ -3,6 +3,7 @@ import { Compass, Sparkles, Heart, Leaf, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 type ProfileTag = 'perfil_profissional_atuante' | 'perfil_terapeuta_integrativa' | 'perfil_buscadora';
 
@@ -96,7 +97,14 @@ interface JardimFirstExperienceProps {
 
 export function JardimFirstExperience({ profileTag, onNewEntry }: JardimFirstExperienceProps) {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const isAdmin = user?.portal === 'admin';
   const profile = (profileTag && JARDIM_BY_TAG[profileTag as ProfileTag]) || DEFAULT_PROFILE;
+
+  // Sprint 03A: Hide Radiestesia portals for non-admin users
+  const filteredPortals = isAdmin 
+    ? profile.portals 
+    : profile.portals.filter(portal => !portal.route.includes('/radiestesia'));
 
   return (
     <motion.div
@@ -123,7 +131,7 @@ export function JardimFirstExperience({ profileTag, onNewEntry }: JardimFirstExp
           Por onde começar:
         </p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {profile.portals.map((portal, i) => (
+          {filteredPortals.map((portal, i) => (
             <motion.div
               key={portal.name}
               initial={{ opacity: 0, y: 8 }}

@@ -403,7 +403,7 @@ export default function TravessiaDetalhe() {
   };
   
   // Construir sections dinamicamente se tiver lições no banco
-  const sections: TravessiaSection[] = hasDBLicoes 
+  let sections: TravessiaSection[] = hasDBLicoes 
     ? [{
         title: travessia.subtitle || 'Conteúdo da Travessia',
         description: travessia.description || '',
@@ -416,6 +416,14 @@ export default function TravessiaDetalhe() {
         }))
       }]
     : hardcodedSections;
+
+  // Sprint 03A: Hide Radiestesia items for non-admin users
+  if (!isAdmin) {
+    sections = sections.map(section => ({
+      ...section,
+      items: section.items.filter(item => !item.route.includes('/radiestesia'))
+    }));
+  }
 
   // Admin has full access
   const hasPortalAccess = isAdmin || canAccessFeature(user.portal, travessia.portal_minimo);
