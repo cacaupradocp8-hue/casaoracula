@@ -5,8 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BookOpen, Library, Shield, Compass, Lock } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAdminPreview } from '@/hooks/useAdminPreview';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 
 // Lazy-loaded tab content components
 import BibliotecaSimbolica from '@/components/biblioteca/BibliotecaSimbolica';
@@ -25,8 +24,7 @@ type TabKey = typeof TABS[number]['key'];
 
 export default function BibliotecaUnificada() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const { user } = useAuth();
-  const { effectivePortal } = useAdminPreview();
+  const { effectivePortal } = useEffectivePortal();
   
   const filteredTabs = useMemo(() => {
     return TABS.filter(tab => {
