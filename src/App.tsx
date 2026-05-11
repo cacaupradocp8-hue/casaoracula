@@ -17,6 +17,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 import { BootLoadingScreen } from "@/components/shared/BootLoadingScreen";
 import { useRouteGuard } from "@/hooks/auth/useRouteGuard";
+import { useEffectivePortal } from "@/hooks/useEffectivePortal";
 
 import { Suspense } from "react";
 
