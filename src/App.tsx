@@ -44,6 +44,7 @@ const ClubeRotasCatalogo = React.lazy(() => import("./pages/clube/ClubeRotasCata
 const ClubeRotaPremium = React.lazy(() => import("./pages/clube/ClubeRotaPremium"));
 const Welcome = React.lazy(() => import("./pages/Welcome"));
 const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
+const BibliotecaCasos = React.lazy(() => import("./pages/BibliotecaCasos"));
 const Mentoria = React.lazy(() => import("./pages/Mentoria"));
 const CasaTecelaAtrio = React.lazy(() => import("./pages/CasaTecelaAtrio"));
 const CasaTecelaInterior = React.lazy(() => import("./pages/CasaTecelaInterior"));
