@@ -1,52 +1,61 @@
-# Plano de Implementação: Sprint 03A — Ocultação Visual de Radiestesia
+# Sprint 03A: Arquivamento Estratégico da Radiestesia — Ocultação Visual
 
-Este plano descreve as ações para ocultar estrategicamente o módulo de Radiestesia da navegação principal e dos hubs de ferramentas para usuárias comuns, preservando o acesso para administradores via URL direta ou Painel Admin.
+Este plano detalha a primeira fase do arquivamento do módulo de Radiestesia, focando exclusivamente na ocultação dos pontos de acesso visual para usuárias (Visitante, Assinante, Aluna), sem realizar alterações estruturais no banco de dados ou nas permissões de rota.
+
+## 1. Diagnóstico de Exposição Visual
+
+A Radiestesia está exposta nos seguintes locais:
+
+1.  **Hub de Ferramentas (`/ferramentas`):**
+    - Listada dinamicamente a partir da tabela `sala_ferramentas`.
+    - Atualmente visível para todas as usuárias com portal "mentorada" ou superior.
+2.  **Travessia Detalhe (`/travessias/:slug`):**
+    - Card fixo "Radiestesia Oracular" dentro da seção "Recursos de Escuta" da travessia `codigo-narrativas`.
+3.  **Jardim da Psique (Primeira Experiência):**
+    - Sugestão de portal "Radar do Eixo" para o perfil `perfil_profissional_atuante`.
+    - Sugestão de portal "Leitura em 5 Camadas" para o perfil `perfil_terapeuta_integrativa`.
+4.  **Admin Sidebar:**
+    - Item "Radiestesia" no grupo "Ferramentas Simbólicas". (Deve ser mantido para Admins).
+
+## 2. Estratégia de Ocultação (Frontend-Only)
+
+Como o banco de dados não será alterado (`UPDATE sala_ferramentas SET ativa = false` não é permitido agora), a ocultação será feita via lógica de renderização no React.
+
+### Alternativa Escolhida: Filtro por Identificador no Frontend
+Implementaremos uma verificação nos componentes de listagem para excluir ferramentas que contenham a chave "radiestesia" ou rotas que iniciem com `/radiestesia`, exceto para usuárias com portal `admin`.
+
+## 3. Arquivos a serem Alterados
+
+### `src/pages/FerramentasHub.tsx`
+- **Alteração:** Adicionar um filtro no array `allTools` para remover itens onde `t.rota` contenha "radiestesia", condicionado a `!isAdmin`.
+- **Resultado:** A ferramenta desaparece do grid para usuárias comuns, mas permanece para Admins.
+
+### `src/pages/TravessiaDetalhe.tsx`
+- **Alteração:** No mapeamento `TRAVESSIA_CONTEUDO`, filtrar os `items` de cada seção para remover aqueles cuja rota seja `/radiestesia`, condicionado a `!isAdmin`.
+- **Resultado:** O card "Radiestesia Oracular" deixa de ser exibido na Travessia "Código de Narrativas" para usuárias comuns.
+
+### `src/components/jardim/JardimFirstExperience.tsx`
+- **Alteração:** No objeto `JARDIM_BY_TAG`, filtrar as listas de `portals` para remover rotas que comecem com `/radiestesia`, condicionado a `!isAdmin`.
+- **Resultado:** As sugestões de Radiestesia no primeiro acesso ao Jardim são removidas.
+
+## 4. Manutenção do Acesso e Legado
+
+- **URL Direta:** Como o `src/App.tsx` não será alterado, o acesso via `casaoracula.com.br/radiestesia` continuará funcionando para quem tiver a permissão `mentorada` (permissão atual).
+- **Admin Dashboard:** A aba `AdminRadiestesiaTab` no Painel Administrativo e o link no `AdminSidebar` permanecem intactos.
+- **Banco de Dados:** Nenhuma query SQL será executada. A tabela `sala_ferramentas` e `radiestesia_config` permanecem inalteradas.
+
+## 5. Critérios de Validação
+
+- [ ] **Visitante/Aluna/Assinante:** Não encontram nenhum link ou card de "Radiestesia" no Hub de Ferramentas ou nas Travessias.
+- [ ] **Admin:** Continua vendo a Radiestesia no Hub de Ferramentas e na Barra Lateral Admin.
+- [ ] **Acesso Manual:** Digitar `/radiestesia` na URL ainda carrega o módulo (preservando o acesso para testes e usuárias antigas que tenham o link).
+- [ ] **Build:** `npm run build` sem erros.
+- [ ] **Console:** Sem erros de "undefined" ao tentar filtrar itens inexistentes.
+
+## 6. Plano de Rollback
+
+Para reverter a ocultação visual, basta reverter as alterações nos três arquivos citados (FerramentasHub, TravessiaDetalhe, JardimFirstExperience), removendo os filtros condicionais adicionados.
 
 ---
 
-## 1. Diagnóstico de Presença Visual
-Radiestesia aparece atualmente nos seguintes locais:
-1. **Hub de Ferramentas (`/ferramentas`):** Exibe cards de ferramentas como "Mesa Radiônica" e "Leitura de 5 Camadas" porque estão marcadas como `ativa=true` no banco de dados.
-2. **Painel Admin:** Aba "Radiestesia" visível na barra lateral para administradores.
-3. **Rotas diretas:** `/radiestesia`, `/radiestesia/mesa`, etc.
-
-## 2. Estratégia de Ocultação (Frontend-only)
-Conforme solicitado, **não haverá alterações no banco de dados** nesta fase. A ocultação será feita puramente na camada de apresentação (React).
-
-### A. Hub de Ferramentas (`src/pages/FerramentasHub.tsx`)
-- Aplicar um filtro adicional na lista de ferramentas retornada pelo Supabase.
-- **Lógica:** Se a usuária não for `admin`, filtrar qualquer ferramenta cujo campo `rota` contenha a string `radiestesia`.
-- **Resultado:** Visitantes, Assinantes e Alunas param de ver os cards de Radiestesia, mesmo que o banco diga que estão ativos.
-
-### B. Navegação Principal (`src/components/layout/Navigation.tsx`)
-- Verificação realizada: Radiestesia não está presente nos grupos de menu fixos (`visitanteMenuGroups`, `assinanteMenuGroups`, `alunaMenuGroups`). Nenhuma alteração necessária aqui.
-
-### C. Admin Sidebar (`src/components/admin/AdminSidebar.tsx`)
-- **Manter intacto.** O acesso deve continuar visível para administradores para que o módulo possa ser gerido/testado como "laboratório".
-
-## 3. Preservação de Acesso
-- **URL Direta:** As rotas em `src/App.tsx` não serão removidas. Qualquer pessoa com o link direto continuará acessando as páginas (protegidas por suas respectivas regras de RLS/Auth já existentes).
-- **Admin Tab:** A aba `radiestesia` no Painel Admin continua funcionando normalmente.
-
-## 4. Diagnóstico `sala_ferramentas` (Impacto de `ativa=false`)
-Respondendo aos pontos de atenção solicitados:
-1. **Onde é usada:** `FerramentasHub`, `AdminFerramentasTab`, `AdminModulosFormativos`, `useFerramentaDinamica`, entre outros.
-2. **Impacto de `ativa=false` no Admin:** Atualmente, a maioria das queries de produção usa `.eq('ativa', true)`. Se alterássemos o banco, os administradores também parariam de ver no Hub, a menos que a query fosse ajustada para ignorar o filtro para admins.
-3. **Impacto em outras ferramentas:** Nenhum. O filtro é por registro.
-4. **Forma de ocultar por frontend:** Através do filtro no `filter()` do array de dados (proposta da Sprint 03A).
-
-## 5. Plano de Rollback
-Para reverter a ocultação visual:
-1. Remover o filtro `.filter(t => isAdmin || !t.rota?.includes('radiestesia'))` no arquivo `src/pages/FerramentasHub.tsx`.
-2. A visibilidade voltará a ser controlada exclusivamente pelo campo `ativa` do banco de dados.
-
-## 6. Critérios de Validação
-- [ ] Logado como **Visitante**: Acessar `/ferramentas` e confirmar que não há cards de Radiestesia.
-- [ ] Logado como **Assinante**: Mesma validação acima.
-- [ ] Logado como **Admin**: Acessar `/ferramentas` e confirmar que os cards **ainda aparecem**.
-- [ ] Logado como **Admin**: Confirmar que a aba "Radiestesia" no Painel Admin está funcional.
-- [ ] Acessar `/radiestesia` via URL direta e confirmar que a página carrega.
-- [ ] Rodar `npm run build` para garantir que não há erros de tipagem.
-
----
-**Confirmação:** Nenhum `UPDATE` ou alteração de esquema será realizado no banco de dados nesta fase 03A.
+**Confirmação:** Nenhuma alteração no banco de dados (`UPDATE`) ou nas permissões de rota (`minPortal`) será realizada nesta fase 03A.
