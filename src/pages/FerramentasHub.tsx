@@ -129,7 +129,19 @@ export default function FerramentasHub() {
 
   // Filter out complementary tools (they appear under their parent)
   const allTools = (dbFerramentas || [])
-    .filter(t => t.rota && !t.e_complementar)
+    .filter(t => {
+      // Basic filter for complementary tools and routes
+      if (!t.rota || t.e_complementar) return false;
+      
+      // Sprint 03A: Hide Radiestesia for non-admin users
+      if (!isAdmin) {
+        const isRadiestesia = t.rota.includes('/radiestesia') || 
+                             t.ferramenta_nome.toLowerCase().includes('radiestesia');
+        if (isRadiestesia) return false;
+      }
+      
+      return true;
+    })
     .map(t => ({
       id: t.id,
       nome: t.ferramenta_nome,
