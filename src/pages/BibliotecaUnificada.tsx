@@ -62,7 +62,7 @@ export default function BibliotecaUnificada() {
             <Library className="w-7 h-7 text-primary" />
           </div>
           <h1 className="text-2xl md:text-3xl font-display text-foreground mb-2">
-            Biblioteca da Casa Orácula
+            Biblioteca Oracular
           </h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Acervo simbólico, registros pessoais, casos clínicos e travessias — tudo em um só lugar.
