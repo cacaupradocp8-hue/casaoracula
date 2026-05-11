@@ -464,7 +464,7 @@ function AppRoutes() {
       <Route path="/quiz/:quizId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/quiz/:quizId/resultado" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
-      <Route path="/biblioteca-casos" element={<ProtectedRoute><Navigate to="/biblioteca?aba=casos" replace /></ProtectedRoute>} />
+      <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><BibliotecaCasos /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
