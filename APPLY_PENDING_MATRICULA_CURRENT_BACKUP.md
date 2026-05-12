@@ -103,3 +103,11 @@ BEGIN
 END;
 $function$;
 ```
+
+## 4. Viabilidade de Rollback
+
+**O rollback é perfeitamente possível.**
+- As definições acima são as originais do sistema.
+- Para reverter qualquer alteração da Sprint 04C1, basta executar os blocos SQL contidos neste arquivo.
+- O estado dos dados (matriculas e subscriptions) não será corrompido, pois a migração apenas adicionará restrições e mapeamentos, sem deletar volumes de dados históricos.
+- Este arquivo deve ser mantido como referência absoluta do estado "Pre-04C1".
