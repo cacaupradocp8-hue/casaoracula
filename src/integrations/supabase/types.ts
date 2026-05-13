@@ -14589,10 +14589,16 @@ export type Database = {
           created_at: string
           curso_id: string
           email: string
+          external_subscription_id: string | null
           id: string
+          last_attempt_at: string | null
+          plan_id: string | null
           portal_destino: Database["public"]["Enums"]["portal_type"]
           processado: boolean
+          processing_error: string | null
+          processing_status: string | null
           produto_rockty: string | null
+          rockty_offer_id: string | null
           transaction_id: string | null
           updated_at: string
         }
@@ -14600,10 +14606,16 @@ export type Database = {
           created_at?: string
           curso_id?: string
           email: string
+          external_subscription_id?: string | null
           id?: string
+          last_attempt_at?: string | null
+          plan_id?: string | null
           portal_destino?: Database["public"]["Enums"]["portal_type"]
           processado?: boolean
+          processing_error?: string | null
+          processing_status?: string | null
           produto_rockty?: string | null
+          rockty_offer_id?: string | null
           transaction_id?: string | null
           updated_at?: string
         }
@@ -14611,14 +14623,28 @@ export type Database = {
           created_at?: string
           curso_id?: string
           email?: string
+          external_subscription_id?: string | null
           id?: string
+          last_attempt_at?: string | null
+          plan_id?: string | null
           portal_destino?: Database["public"]["Enums"]["portal_type"]
           processado?: boolean
+          processing_error?: string | null
+          processing_status?: string | null
           produto_rockty?: string | null
+          rockty_offer_id?: string | null
           transaction_id?: string | null
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "matriculas_pendentes_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       message_campaigns: {
         Row: {
