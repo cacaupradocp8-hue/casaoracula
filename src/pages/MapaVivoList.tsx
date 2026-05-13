@@ -137,7 +137,7 @@ export default function MapaVivoList() {
               >
                 <CardHeader className="pb-2">
                   <CardTitle className="text-lg flex items-start justify-between">
-                    <span className="truncate">{map.title}</span>
+                    <span className="min-w-0 break-words line-clamp-2">{map.title}</span>
                     <Button
                       variant="ghost"
                       size="icon"

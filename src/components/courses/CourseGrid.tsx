@@ -17,7 +17,7 @@ export function CourseGrid({
 }: CourseGridProps) {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="space-y-3">
             <Skeleton className="aspect-video rounded-lg" />
@@ -39,7 +39,7 @@ export function CourseGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       {courses.map(course => (
         <CourseCard 
           key={course.id} 
