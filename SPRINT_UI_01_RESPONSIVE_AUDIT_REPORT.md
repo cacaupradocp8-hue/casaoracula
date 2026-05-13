@@ -1,83 +1,96 @@
 # SPRINT_UI_01_RESPONSIVE_AUDIT_REPORT
 
 ## 1. Admin Responsivo
-### Arquivos Analisados
-- `src/pages/Admin.tsx`
-- `src/components/admin/AdminSidebar.tsx`
-- `src/components/layout/AppLayout.tsx`
+**Arquivos analisados:** `src/pages/Admin.tsx`, `src/components/admin/AdminSidebar.tsx`
 
-### Problemas Encontrados
-- **Sidebar Estática:** A barra lateral administrativa (`AdminSidebar`) utiliza uma largura fixa (`w-64`) e permanece visível via `sticky`, o que em telas móveis consome quase toda a área útil ou causa overflow dependendo do container pai.
-- **Layout de Colunas:** O layout no `Admin.tsx` utiliza `flex`, o que espreme o conteúdo das abas (`ActiveComponent`) quando a sidebar está aberta em telas pequenas.
-- **Ausência de Drawer:** Não há um componente de Drawer/Sheet para colapsar a navegação administrativa em mobile, dificultando o acesso às diferentes abas do painel.
+**Problemas encontrados:**
+- A barra lateral administrativa ocupa espaço fixo horizontal em telas menores que `lg`, o que pode espremer o conteúdo principal.
+- Em telas móveis, a sidebar colapsada (`w-14`) ainda ocupa espaço visual que poderia ser liberado para o conteúdo.
+- Falta um componente de "Sheet" (Drawer) que oculte completamente a navegação em mobile e seja acionado por um botão de menu (hamburger).
 
-### Nível de Risco: Médio
-- Alterações de layout estrutural podem deslocar elementos, mas como se trata de CSS/Tailwind, o risco para lógica de negócio é zero.
-
-### Proposta de Correção
-- Implementar um Drawer (utilizando `Sheet` do shadcn/ui) no `AdminSidebar` para telas menores que `lg`.
-- Ajustar o container principal no `Admin.tsx` para `flex-col` em mobile e `flex-row` em desktop.
+**Risco:** Baixo (Ajustes de layout CSS).
 
 ---
 
 ## 2. Navegação Mobile
-### Arquivos Analisados
-- `src/components/layout/Navigation.tsx`
-- `src/components/layout/BottomNavPreview.tsx`
+**Arquivos analisados:** `src/components/layout/Navigation.tsx`, `src/components/layout/BottomNavPreview.tsx`
 
-### Problemas Encontrados
-- **Menu Mobile Navigation:** O menu mobile atual é uma div absoluta que aparece abaixo do header. Em telas muito pequenas ou com muitos itens, pode haver overflow vertical sem scroll adequado.
-- **Safe Area Inset:** O `BottomNavPreview.tsx` já faz uso de `pb-[env(safe-area-inset-bottom)]`, mas o container pai no `AppLayout.tsx` precisa garantir que o conteúdo principal não seja sobreposto (o `pb-28` atual no `AppLayout` é fixo e pode não ser suficiente para todos os dispositivos).
+**Problemas encontrados:**
+- O menu mobile no `Navigation.tsx` é uma lista absoluta simples. Em dispositivos com entalhes (notches) ou barras de navegação do sistema, o preenchimento pode não ser o ideal.
+- `BottomNavPreview` usa `pb-[env(safe-area-inset-bottom)]`, o que é excelente, mas o container pai no `AppLayout.tsx` precisa garantir que o conteúdo principal (`main`) tenha padding inferior suficiente para não ser sobreposto.
 
-### Nível de Risco: Baixo
-- Ajustes puramente visuais na navegação.
+**Risco:** Baixo.
 
 ---
 
-## 3. Larguras Fixas e Tabelas
-### Problemas Encontrados
-- **SelectTrigger:** Vários arquivos (`JardimPsique.tsx`, `AcademiaFormacaoPage.tsx`, `AdminAlunaAcompanhamento.tsx`) possuem `w-[...px]` fixos, impedindo que o elemento ocupe 100% da largura em mobile.
-- **Tabelas:** `LabirintoTabela.tsx` possui um `min-w-[720px]` que causa scroll horizontal. Embora o `overflow-x-auto` esteja presente, a experiência pode ser melhorada com ajustes de padding e fontes.
-- **Cards:** Alguns elementos decorativos (glow/blur) usam larguras fixas em pixels (ex: `w-[400px]`), o que não causa quebra de layout pois são `pointer-events-none` e `absolute`, mas poderiam ser `w-full` com `max-w` para melhor consistência.
+## 3. Larguras Fixas (Rigidez de UI)
+**Padrões problemáticos encontrados:**
+- **SelectTrigger rígido:** Usos de `w-[140px]`, `w-[180px]`, `w-[250px]` em dezenas de arquivos (ex: `AdminCursosTab.tsx`, `BibliotecaPessoal.tsx`, `GestosIntegracaoPage.tsx`). Isso causa quebra de alinhamento em telas estreitas (320px).
+- **Cards com largura fixa:** Alguns componentes decorativos ou de vitrine usam `min-w-[280px]` ou similar sem considerar o fallback para `w-full` em telas menores.
+- **Cabeçalhos de Table:** Colunas com `w-[200px]` fixo em tabelas forçam o scroll horizontal mesmo quando há espaço para fluidez.
 
-### Nível de Risco: Baixo
-- Substituição de `w-[200px]` por `w-full sm:w-[200px]` é altamente segura.
-
----
-
-## 4. Grids e Cards
-### Problemas Encontrados
-- **CourseGrid:** O grid atual é `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`. Em telas grandes (2xl), os cards ficam excessivamente largos. 
-- **MapaVivoList:** Segue padrão similar. Necessita de um breakpoint `xl` ou `2xl` para 4 ou 5 colunas para otimizar o espaço.
-
-### Nível de Risco: Muito Baixo
-- Ajuste de colunas de grid é uma das alterações mais seguras no Tailwind.
+**Risco:** Baixo.
 
 ---
 
-## 5. Formulários
-### Problemas Encontrados
-- **Auth.tsx:** O `GlassContainer` possui `p-8 md:p-12`. Em dispositivos mobile muito estreitos (320px), 64px de padding lateral (8*2*4px) deixa pouco espaço para o formulário.
-- **Inputs:** A maioria dos inputs já usa `w-full`, mas o espaçamento entre labels e inputs pode ser otimizado para toque (touch targets).
+## 4. Tabelas
+**Arquivos analisados:** `src/pages/labirinto/LabirintoTabela.tsx`, `src/components/qa-jardim/*.tsx`
 
-### Nível de Risco: Baixo
-- Ajuste de padding e gap.
+**Problemas encontrados:**
+- Uso de `min-w-[720px]` é uma solução segura para evitar compressão de dados, mas não é a ideal para UX mobile.
+- Tabelas complexas em `AdminMatriculasTab` ou `AdminUsersTab` (prováveis locais) podem ser ilegíveis em mobile sem uma transformação para formato de "Cards".
 
----
-
-## 6. Tipografia e Containers
-### Problemas Encontrados
-- **ResponsiveContainer:** O componente está bem estruturado, mas não é usado em todas as páginas de conteúdo (algumas usam `max-w-6xl mx-auto` manualmente), o que causa inconsistência de margens laterais.
-- **Clamp:** O uso de `clamp` no `index.css` é excelente, mas alguns componentes injetam `text-2xl` fixo que sobrescreve a fluidez desejada.
+**Risco:** Médio (Transformar tabelas em cards exige cuidado visual).
 
 ---
 
-## Plano de Implementação Recomendado
+## 5. Grids
+**Arquivos analisados:** `src/components/courses/CourseGrid.tsx`, `src/pages/MapaVivoList.tsx`
 
-1. **Bloco 1 (Seguro):** Padronização de Grids (`CourseGrid`, `MapaVivoList`) e substituição de `w-[...px]` em `SelectTrigger` e inputs simples.
-2. **Bloco 2 (Estrutural):** Implementação de Drawer para `AdminSidebar` e ajuste de responsividade no layout do `Admin.tsx`.
-3. **Bloco 3 (Navegação):** Ajustes finos no `Navigation.tsx` (scroll no menu mobile) e `AppLayout` (padding bottom adaptativo).
-4. **Bloco 4 (Visual):** Refinamento de padding nos formulários (`Auth.tsx`) e consistência no uso do `ResponsiveContainer`.
+**Problemas encontrados:**
+- Breakpoints padrão (`md:grid-cols-2 lg:grid-cols-3`) são funcionais, mas em telas muito grandes (Ultrawide) deixam o conteúdo muito esticado ou com espaços vazios laterais excessivos se o container for muito largo.
+- Falta de um breakpoint intermediário (`sm:grid-cols-2`) para telas de 640px.
 
-### Veredito de Segurança
-Todas as mudanças propostas são **seguras** e não afetam as regras de negócio ou integrações com Supabase/Auth/Stripe. O risco de "quebra" é estritamente visual e facilmente reversível.
+**Risco:** Muito Baixo.
+
+---
+
+## 6. Formulários
+**Arquivos analisados:** `src/pages/Auth.tsx`, abas do painel Admin.
+
+**Problemas encontrados:**
+- `Auth.tsx`: O `GlassContainer` tem padding fixo que consome muito espaço em telas de 320px-360px.
+- Botões de formulário nem sempre ocupam a largura total (`w-full`) em mobile, dificultando o toque (touch target).
+
+**Risco:** Baixo.
+
+---
+
+## 7. Tipografia e Containers
+**Arquivos analisados:** `src/components/ui/ResponsiveContainer.tsx`, `src/index.css`
+
+**Problemas encontrados:**
+- `ResponsiveContainer` tem max-widths bem definidos, mas não é aplicado consistentemente em todas as rotas de "páginas de conteúdo".
+- Variáveis `--section-gap` e `--container-gap` são usadas pontualmente, mas muitos componentes ainda injetam `py-20` ou `gap-8` hardcoded, ignorando a fluidez do `clamp`.
+
+---
+
+## Proposta de Divisão em Blocos
+
+### Bloco 1: Flexibilização de Inputs e Grids (Prioridade Máxima)
+- Substituir `w-[...px]` por `w-full sm:w-[...px]` em todos os `SelectTrigger`.
+- Ajustar `CourseGrid` e `MapaVivoList` para breakpoints mais fluidos (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4`).
+- **Risco:** Mínimo.
+
+### Bloco 2: Navegação e Layout Estrutural
+- Refatorar `AdminSidebar` para usar o componente `Sheet` (Drawer) do shadcn em telas menores que `lg`.
+- Ajustar o padding inferior global no `AppLayout` para telas móveis.
+- **Risco:** Baixo/Médio.
+
+### Bloco 3: Formulários e Tabelas
+- Ajustar padding responsivo no `Auth.tsx`.
+- Implementar wrapper de scroll e min-width inteligente em tabelas administrativas críticas.
+- **Risco:** Baixo.
+
+## Recomendação Inicial
+Iniciar pelo **Bloco 1**, pois remove a rigidez mais visível (Selects e Grids) com impacto zero na estrutura de navegação, sendo uma vitória rápida para a usabilidade imediata.
