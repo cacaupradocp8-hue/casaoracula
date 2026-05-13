@@ -18669,6 +18669,47 @@ export type Database = {
           },
         ]
       }
+      rockty_offer_mapping: {
+        Row: {
+          ativo: boolean | null
+          created_at: string | null
+          duracao_dias: number | null
+          plan_id: string | null
+          portal_destino: Database["public"]["Enums"]["portal_type"]
+          produto_nome: string | null
+          rockty_offer_id: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativo?: boolean | null
+          created_at?: string | null
+          duracao_dias?: number | null
+          plan_id?: string | null
+          portal_destino: Database["public"]["Enums"]["portal_type"]
+          produto_nome?: string | null
+          rockty_offer_id: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativo?: boolean | null
+          created_at?: string | null
+          duracao_dias?: number | null
+          plan_id?: string | null
+          portal_destino?: Database["public"]["Enums"]["portal_type"]
+          produto_nome?: string | null
+          rockty_offer_id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rockty_offer_mapping_plan_id_fkey"
+            columns: ["plan_id"]
+            isOneToOne: false
+            referencedRelation: "plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sala_ferramentas: {
         Row: {
           ativa: boolean
