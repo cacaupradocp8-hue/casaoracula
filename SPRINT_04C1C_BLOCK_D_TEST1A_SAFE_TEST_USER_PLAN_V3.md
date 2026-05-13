@@ -1,49 +1,48 @@
-# SPRINT_04C1C_BLOCK_D_TEST1A_SAFE_TEST_USER_PLAN_V3.md
+# PLANO: SPRINT_04C1C_BLOCK_D_TEST1A_SAFE_TEST_USER_PLAN_V3
 
-## 1. Método de Criação do Usuário Teste
-**Método:** Cadastro via Supabase Auth Public API (Flow de SignUp).
+Este plano descreve a criação de um usuário de teste de forma segura e controlada para validar o fluxo de acesso Rockty, atendendo aos requisitos de não utilizar SQL direto no schema `auth`.
 
-**Justificação Técnica:**
-Em conformidade com a restrição de não realizar `INSERT` direto em `auth.users`, utilizaremos a API oficial do Supabase Auth. Este método é considerado "seguro e controlado" pois:
-- Utiliza o fluxo oficial do provedor de identidade.
-- Dispara automaticamente as triggers de banco (`handle_new_user` e `apply_pending_matricula`) conforme o comportamento esperado de um usuário real.
-- Popula corretamente os metadados (`raw_user_meta_data`) necessários para o funcionamento das triggers.
-- **Confirmação:** Após o cadastro, realizaremos um `UPDATE` pontual na coluna `email_confirmed_at` via SQL para evitar o envio de e-mails reais e permitir o login em testes futuros (D.TEST-1), cumprindo a regra de não fazer *inserção* direta, mas mantendo o controle sobre o estado do usuário.
+## 1. Método de Criação (Seguro e Controlado)
+- **Ferramenta:** Script de automação (Bun) utilizando o cliente Supabase com privilégios administrativos (`auth.admin.createUser`).
+- **Trigger `handle_new_user`:** O fluxo via API Admin dispara as triggers nativas do banco de dados, garantindo que o comportamento seja idêntico ao de um cadastro real.
+- **Criação de `profiles` e `user_roles`:** Será verificado se a trigger automática criou os registros. Caso contrário, serão criados via API `public` de forma controlada.
+- **Confirmação de E-mail:** O usuário será criado com a flag `email_confirm: true`, eliminando o envio de e-mails reais de verificação.
+- **Segurança:** Uso exclusivo do domínio `@oracula.test` para evitar qualquer conflito com usuários reais ou serviços de entrega de e-mail.
 
-## 2. Dados do Usuário Teste
-- **Email:** `test_d1_clube_mensal@oracula.test`
-- **Nome:** `Teste Clube Mensal D1`
-- **Portal Inicial Esperado:** `visitante`
-- **User_Roles Portal Esperado:** `visitante`
-- **Metadata:** `{ "nome": "Teste Clube Mensal D1" }`
+## 2. Dados do Usuário de Teste
+- **E-mail:** `test_d1_clube_mensal@oracula.test`
+- **Nome:** Teste Clube Mensal D1
+- **Portal Inicial Esperado (Profile):** `visitante`
+- **Portal Inicial Esperado (User Roles):** `visitante`
 
-## 3. Ferramentas Utilizadas
-- **Script Bun:** Execução de `supabase.auth.signUp()` utilizando a `SUPABASE_URL` e `SUPABASE_ANON_KEY` do projeto.
-- **Supabase Query:** Para validações e o `UPDATE` de confirmação (se autorizado).
+## 3. Validações Pré-Execução (Pre-flight)
+Executar via consultas seguras (`SELECT`) antes de qualquer alteração:
+- [ ] `auth.users`: Confirmar que o e-mail não existe.
+- [ ] `public.profiles`: Confirmar que não existe perfil vinculado.
+- [ ] `public.user_roles`: Confirmar que não há permissões vinculadas ao e-mail/ID.
+- [ ] `public.matriculas_pendentes`: Confirmar que não há processamentos pendentes para este e-mail.
+- [ ] `public.subscriptions`: Confirmar que `external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1'` não existe.
 
-## 4. Validações Antes da Criação (Pre-flight)
-- `SELECT count(*) FROM auth.users WHERE email = 'test_d1_clube_mensal@oracula.test';` -> **Deve ser 0**
-- `SELECT count(*) FROM public.profiles WHERE email = 'test_d1_clube_mensal@oracula.test';` -> **Deve ser 0**
-- `SELECT count(*) FROM public.user_roles WHERE user_id IN (SELECT id FROM public.profiles WHERE email = 'test_d1_clube_mensal@oracula.test');` -> **Deve ser 0**
-- `SELECT count(*) FROM public.matriculas_pendentes WHERE email = 'test_d1_clube_mensal@oracula.test';` -> **Deve ser 0**
-- `SELECT count(*) FROM public.subscriptions WHERE external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1';` -> **Deve ser 0**
+## 4. Validações Pós-Execução (Post-flight)
+- [ ] **Auth User:** Confirmar criação via API.
+- [ ] **Profile:** Validar existência e campo `portal = 'visitante'`.
+- [ ] **User Role:** Validar existência e campo `portal = 'visitante'`.
+- [ ] **Integridade:** Garantir que **nenhuma** `subscription` ou `matricula` foi gerada neste estágio.
+- [ ] **Logs:** Verificar se nenhuma pendência de matrícula foi processada por engano.
 
-## 5. Validações Depois da Criação (Post-flight)
-1. **Auth:** Conferir existência em `auth.users` via SQL.
-2. **Profile:** Conferir entrada em `public.profiles` onde `nome` deve ser 'Teste Clube Mensal D1' e `email` correto.
-3. **Role:** Conferir entrada em `public.user_roles` onde `portal` deve ser 'visitante'.
-4. **Subscriptions:** Conferir que não há assinaturas vinculadas.
-5. **Matrículas:** Conferir que não há matrículas processadas.
-6. **Pendências:** Confirmar que nada foi inserido ou alterado em `matriculas_pendentes`.
+## 5. Plano de Limpeza Futura (Rollback)
+*A ser executado apenas após autorização futura e conclusão dos testes D.TEST.*
+- Remover `subscriptions` de teste (se geradas no passo D.TEST-1).
+- Remover registros em `user_roles`.
+- Remover registro em `profiles`.
+- Remover o usuário de `auth.users` via `auth.admin.deleteUser`.
 
-## 6. Plano de Limpeza Futura
-(Executado apenas com nova autorização)
-1. `DELETE FROM auth.users WHERE email = 'test_d1_clube_mensal@oracula.test';`
-2. O `DELETE` em `auth.users` dispara o cascade para `public.profiles` e `public.user_roles`.
+## 6. Gestão de Riscos
+- **Usuário sem profile:** O script validará a criação imediata após o disparo da trigger.
+- **Trigger não disparar:** Se a trigger falhar, o plano prevê interrupção e reporte do erro antes de prosseguir para testes de acesso.
+- **Processamento por engano:** O status de `visitante` e a validação prévia de `matriculas_pendentes` garantem que o usuário comece em estado neutro.
+- **Conflito de E-mail:** O domínio reservado `.test` impede qualquer interação com servidores de e-mail externos.
 
-## 7. Riscos e Mitigações
-- **Signup desabilitado:** O script validará o retorno da API.
-- **Trigger `handle_new_user` falhar:** Validado no Post-flight; se falhar, o usuário será removido.
-- **Trigger `apply_pending_matricula` processar algo:** Mitigado pelo Pre-flight em `matriculas_pendentes`.
-- **Usuário ficar ativo:** O e-mail `.test` e o plano de limpeza garantem isolamento.
-- **Conflito com e-mail real:** Domínio `@oracula.test` é exclusivo para testes internos.
+---
+**Status:** Aguardando Aprovação para Versão V3.
+**Regra:** Não executar comandos de criação até aprovação explícita desta versão do plano.
