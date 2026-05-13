@@ -304,6 +304,27 @@ export type Database = {
           },
         ]
       }
+      _sprint_04c1c_d2a_function_backup: {
+        Row: {
+          backed_up_at: string | null
+          definition: string
+          function_name: string
+          id: string
+        }
+        Insert: {
+          backed_up_at?: string | null
+          definition: string
+          function_name: string
+          id?: string
+        }
+        Update: {
+          backed_up_at?: string | null
+          definition?: string
+          function_name?: string
+          id?: string
+        }
+        Relationships: []
+      }
       academy_progress: {
         Row: {
           badges_json: Json
@@ -23066,6 +23087,16 @@ export type Database = {
         Returns: undefined
       }
       refresh_upsell_opportunities: { Args: never; Returns: undefined }
+      system_sync_profile_access: {
+        Args: {
+          _access_expires_at: string
+          _nome?: string
+          _portal: Database["public"]["Enums"]["portal_type"]
+          _subscription_status: string
+          _user_id: string
+        }
+        Returns: undefined
+      }
       update_cidadela_from_session: {
         Args: {
           _arquetipo?: string
