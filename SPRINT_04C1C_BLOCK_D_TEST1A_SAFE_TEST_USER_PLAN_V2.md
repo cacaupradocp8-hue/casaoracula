@@ -1,48 +1,52 @@
 # SPRINT_04C1C_BLOCK_D_TEST1A_SAFE_TEST_USER_PLAN_V2
 
-## 1. Estratégia Recomendada de Criação
-Para garantir a integridade total do ecossistema Lovable Cloud/Supabase, a estratégia recomendada é a **Criação via Painel de Autenticação do Supabase (Auth Admin)** ou via **Fluxo de Signup do App com Confirmação Automática**, em vez de `INSERT` direto em `auth.users`.
+## 1. Método Exato de Criação
+O método recomendado é a criação via **Painel de Autenticação do Supabase (Auth Admin)** ou via **Fluxo de Signup controlado no App**.
 
-### Por que este método é seguro?
-- **Triggers Ativos:** Garante o disparo do trigger `on_auth_user_created` (se existente), que é responsável por orquestrar a criação automática em `profiles` e `user_roles`.
-- **Integridade de Schema:** Evita erros de hash de senha ou metadados de sistema que um `INSERT` manual poderia causar.
-- **Isolamento:** Usa o domínio `.test`, garantindo que nenhum e-mail real seja enviado.
-
-### Fluxo esperado:
-1. Criação do usuário em `auth.users`.
-2. Disparo automático de `handle_new_user` (trigger).
-3. Criação automática do registro em `public.profiles` (portal: visitante).
-4. Criação automática do registro em `public.user_roles` (role: visitante).
+### Por que não usar SQL direto em `auth.users`?
+Embora tecnicamente possível, o `INSERT` direto via SQL em `auth.users` no Lovable Cloud/Supabase pode ser arriscado porque:
+- Exige manipulação manual de hashes de senha compatíveis com o `auth.uid()`.
+- Pode não disparar todos os hooks de metadados internos do Supabase Auth.
+- O método via API/Dashboard garante que os triggers de banco de dados (`on_auth_user_created`) sejam disparados seguindo o fluxo padrão do sistema.
 
 ## 2. Dados do Usuário de Teste
 - **E-mail:** `test_d1_clube_mensal@oracula.test`
-- **Senha:** `Teste@D1_2026` (provisória para criação)
 - **Nome:** `Teste Clube Mensal D1`
-- **Portal Inicial:** `visitante`
-- **User Role Inicial:** `visitante`
+- **User_id Proposto:** Será gerado automaticamente pelo Supabase (UUID v4) para garantir unicidade real.
+- **Portal Inicial Esperado:** `visitante`
+- **User_roles.portal Inicial Esperado:** `visitante`
 
-## 3. Validações Antes do Teste (D.TEST-1)
-Antes de chamar a função RPC, devemos confirmar via `SELECT`:
-1. **Auth:** O `id` (UUID) foi gerado em `auth.users`.
-2. **Profile:** Existe registro em `public.profiles` com o `id` acima e `portal = 'visitante'`.
-3. **Role:** Existe registro em `public.user_roles` com o `id` acima e `role = 'visitante'`.
-4. **Subscription:** `SELECT count(*) FROM public.subscriptions WHERE user_id = <UUID>` deve ser **0**.
-5. **ID Externo:** `SELECT count(*) FROM public.subscriptions WHERE external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1'` deve ser **0**.
+## 3. Triggers Envolvidas
+- **`handle_new_user`:** Será disparada automaticamente pela criação do registro em `auth.users`, criando as entradas em `profiles` e `user_roles`.
+- **`apply_pending_matricula`:** Caso exista um trigger vinculado ao e-mail em `auth.users`, ele será disparado.
+- **Por que é seguro (não processará pendências)?** Antes da criação, validaremos que não existem registros para este e-mail específico (`test_d1_clube_mensal@oracula.test`) na tabela `public.matriculas_pendentes`. Sem registros pendentes, a função não terá o que processar.
 
-## 4. Plano de Limpeza Futura (Pós-Validação)
-Quando autorizado, a limpeza seguirá a ordem reversa de dependência:
-1. `DELETE FROM public.subscriptions WHERE user_id = <UUID>;`
-2. `DELETE FROM public.user_roles WHERE user_id = <UUID>;`
-3. `DELETE FROM public.profiles WHERE id = <UUID>;`
-4. `DELETE FROM auth.users WHERE id = <UUID>;` (via Auth Admin ou RPC seguro).
+## 4. Validações Antes da Criação (Auditoria de Limpeza)
+Executar os seguintes SELECTs para garantir que o ambiente está "virgem":
+- `SELECT id FROM auth.users WHERE email = 'test_d1_clube_mensal@oracula.test';` (Deve ser 0)
+- `SELECT id FROM public.profiles WHERE email = 'test_d1_clube_mensal@oracula.test';` (Deve ser 0)
+- `SELECT user_id FROM public.user_roles WHERE user_id IN (SELECT id FROM auth.users WHERE email = 'test_d1_clube_mensal@oracula.test');` (Deve ser 0)
+- `SELECT count(*) FROM public.matriculas_pendentes WHERE email = 'test_d1_clube_mensal@oracula.test';` (Deve ser 0)
 
-## 5. Riscos e Mitigações
+## 5. Validações Depois da Criação
+Confirmar o estado do novo usuário:
+1. **Auth:** UUID gerado em `auth.users`.
+2. **Profile:** Registro em `public.profiles` criado com `portal = 'visitante'`.
+3. **User_role:** Registro em `public.user_roles` criado com `role = 'visitante'`.
+4. **Subscriptions:** `SELECT count(*) FROM public.subscriptions WHERE user_id = <UUID>` deve ser **0**.
+5. **Matrículas:** Confirmar que `public.matriculas_pendentes` para este e-mail continua vazio ou inalterado.
+
+## 6. Plano de Limpeza Futura (Não executar agora)
+Após a conclusão dos testes (D.TEST-1), a remoção seguirá esta ordem:
+1. `DELETE FROM public.subscriptions WHERE user_id = <TEST_UUID>;`
+2. `DELETE FROM public.user_roles WHERE user_id = <TEST_UUID>;`
+3. `DELETE FROM public.profiles WHERE id = <TEST_UUID>;`
+4. `DELETE FROM auth.users WHERE id = <TEST_UUID>;`
+
+## 7. Riscos e Mitigações
 | Risco | Mitigação |
 | :--- | :--- |
-| **Inconsistência de Profile:** O trigger não disparar. | **Ação:** Validar existência de Profile/Role ANTES do RPC. |
-| **E-mail Real:** Enviar e-mail para domínio de produção. | **Ação:** Usar estritamente o domínio `@oracula.test`. |
-| **Apply Pendente:** Disparar matrículas antigas por engano. | **Ação:** O teste usa um UUID novo, sem histórico em `matriculas_pendentes`. |
-| **Sujeira no Banco:** Deixar usuário teste ativo. | **Ação:** Prefixar nome com "TESTE" e e-mail com "test_" para fácil identificação. |
-
----
-**Regra de Ouro:** Não executar o teste RPC (D.TEST-1) até que a existência e o portal "visitante" deste usuário sejam confirmados via log no chat.
+| **Criação sem Profile/Role** | Validar logs de trigger e registros em `profiles`/`user_roles` imediatamente após a criação. |
+| **Trigger apply_pending_matricula processar algo** | O uso de um e-mail com domínio `.test` inédito e a validação prévia da tabela de pendências anulam este risco. |
+| **Usuário Teste ficar Ativo** | O nome "Teste Clube Mensal D1" e o domínio `.test` facilitam a auditoria e limpeza manual se necessário. |
+| **Conflito com E-mail Real** | O uso do domínio reservado `.test` impede qualquer colisão com usuários reais (`.com`, `.com.br`, etc). |
