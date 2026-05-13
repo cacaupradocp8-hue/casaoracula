@@ -372,7 +372,8 @@ function AssociacoesManager() {
         </Dialog>
       </div>
 
-      <Table>
+      <div className="overflow-x-auto">
+        <Table className="min-w-[600px]">
         <TableHeader>
           <TableRow>
             <TableHead>Porta</TableHead>
@@ -426,7 +427,8 @@ function AssociacoesManager() {
             );
           })}
         </TableBody>
-      </Table>
+        </Table>
+      </div>
     </div>
   );
 }
