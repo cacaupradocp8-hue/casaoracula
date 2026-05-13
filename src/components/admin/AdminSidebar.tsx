@@ -112,9 +112,10 @@ export const adminNavGroups: AdminNavGroup[] = [
 interface AdminSidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onItemClick?: () => void;
 }
 
-export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
+export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSidebarProps) {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
@@ -165,7 +166,11 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
             return (
               <div key={group.key}>
                 <button
-                  onClick={() => collapsed ? undefined : toggleGroup(group.key)}
+                  onClick={() => {
+                    if (collapsed) return;
+                    toggleGroup(group.key);
+                    if (onItemClick) onItemClick();
+                  }}
                   className={cn(
                     'w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm font-medium transition-colors',
                     hasActiveItem
@@ -210,6 +215,7 @@ export function AdminSidebar({ activeTab, onTabChange }: AdminSidebarProps) {
                               if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
                               if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
                             }
+                            if (onItemClick) onItemClick();
                           }}
                           className={cn(
                             'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs transition-colors',
