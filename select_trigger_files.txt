@@ -1,0 +1,15 @@
+src/components/treinamento/simulador/SimuladorConducao.tsx
+src/components/biblioteca/BibliotecaPessoal.tsx
+src/components/admin/treinamento/AdminCamaraSussurro.tsx
+src/components/admin/communication/CommunicationLogs.tsx
+src/pages/JardimPsique.tsx
+src/pages/AcademiaFormacaoPage.tsx
+src/components/admin/AdminProgressoTab.tsx
+src/components/admin/AdminOraculosTab.tsx
+src/components/admin/AdminGaleriaTab.tsx
+src/components/admin/AdminCursosTab.tsx
+src/components/session-room/JardimHeroinaTab.tsx
+src/components/casa-maquinas/SessionInterventionSuggestions.tsx
+src/pages/admin/AdminAlunaAcompanhamento.tsx
+src/pages/casa-maquinas/BibliotecaIntervPage.tsx
+src/pages/casa-maquinas/GestosIntegracaoPage.tsx

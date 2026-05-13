@@ -1,0 +1,5 @@
+src/components/clube-oracular/ClubeProximoEncontro.tsx
+src/components/clube-oracular/ClubeProgressoTravessia.tsx
+src/components/clube-oracular/ClubeJardinsIntegracao.tsx
+src/components/clube-oracular/ClubeBlocoProgressao.tsx
+src/pages/TemploEscuta.tsx
