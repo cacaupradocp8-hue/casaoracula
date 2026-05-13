@@ -970,7 +970,7 @@ export function AdminOraculosTab() {
                         </SelectContent>
                       </Select>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <Label htmlFor="name">Nome *</Label>
                         <Input id="name" name="name" defaultValue={editingSpread?.name} required placeholder="Ex: Tiragem da Encruzilhada" />

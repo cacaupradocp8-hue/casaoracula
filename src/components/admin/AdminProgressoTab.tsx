@@ -257,7 +257,7 @@ export function AdminProgressoTab() {
                     <TableCell>{getPortalBadge(item.portal)}</TableCell>
                     <TableCell>{item.formacao_titulo}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2 min-w-[150px]">
+                      <div className="flex items-center gap-2 min-w-[120px]">
                         <Progress value={item.percentual} className="flex-1" />
                         <span className="text-sm text-muted-foreground w-12">
                           {item.percentual}%

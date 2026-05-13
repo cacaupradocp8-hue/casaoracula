@@ -361,7 +361,7 @@ export function AdminCursosTab() {
                 </DialogHeader>
                 <ScrollArea className="max-h-[70vh]">
                   <form onSubmit={e => { e.preventDefault(); handleSaveCourse(new FormData(e.currentTarget)); }} className="space-y-4 p-1">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="col-span-2">
                         <Label htmlFor="titulo">Título *</Label>
                         <Input id="titulo" name="titulo" defaultValue={editingCourse?.titulo} required />

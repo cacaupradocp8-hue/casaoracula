@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Table,
   TableBody,
@@ -133,57 +134,59 @@ export function AdminPlanosTab() {
             </p>
           </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Portal</TableHead>
-                <TableHead>Máximo de Clientes</TableHead>
-                <TableHead className="text-right">Ação</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {limits.map((limit) => (
-                <TableRow key={limit.id}>
-                  <TableCell>
-                    {getPortalBadge(limit.portal)}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2 max-w-[200px]">
-                      <Input
-                        type="number"
-                        value={editValues[limit.id] ?? limit.max_clientes}
-                        onChange={(e) => setEditValues({
-                          ...editValues,
-                          [limit.id]: parseInt(e.target.value) || 0
-                        })}
-                        className="w-24"
-                      />
-                      {(editValues[limit.id] ?? limit.max_clientes) === -1 && (
-                        <Infinity className="w-4 h-4 text-muted-foreground" />
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleSave(limit)}
-                      disabled={saving === limit.id || editValues[limit.id] === limit.max_clientes}
-                    >
-                      {saving === limit.id ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <Save className="w-4 h-4 mr-1" />
-                          Salvar
-                        </>
-                      )}
-                    </Button>
-                  </TableCell>
+          <ScrollArea className="w-full">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Portal</TableHead>
+                  <TableHead>Máximo de Clientes</TableHead>
+                  <TableHead className="text-right">Ação</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {limits.map((limit) => (
+                  <TableRow key={limit.id}>
+                    <TableCell>
+                      {getPortalBadge(limit.portal)}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2 max-w-[200px]">
+                        <Input
+                          type="number"
+                          value={editValues[limit.id] ?? limit.max_clientes}
+                          onChange={(e) => setEditValues({
+                            ...editValues,
+                            [limit.id]: parseInt(e.target.value) || 0
+                          })}
+                          className="w-24"
+                        />
+                        {(editValues[limit.id] ?? limit.max_clientes) === -1 && (
+                          <Infinity className="w-4 h-4 text-muted-foreground" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleSave(limit)}
+                        disabled={saving === limit.id || editValues[limit.id] === limit.max_clientes}
+                      >
+                        {saving === limit.id ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4 mr-1" />
+                            Salvar
+                          </>
+                        )}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </ScrollArea>
         </CardContent>
       </Card>
     </div>
