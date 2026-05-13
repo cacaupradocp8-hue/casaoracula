@@ -519,6 +519,7 @@ export function AdminSalasTab() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
