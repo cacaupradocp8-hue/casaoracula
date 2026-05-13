@@ -235,7 +235,8 @@ export function AdminProgressoTab() {
               </p>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[800px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Aluna</TableHead>

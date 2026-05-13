@@ -135,7 +135,7 @@ export function AdminPlanosTab() {
           </div>
 
           <ScrollArea className="w-full">
-            <Table>
+            <Table className="min-w-[600px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Portal</TableHead>
