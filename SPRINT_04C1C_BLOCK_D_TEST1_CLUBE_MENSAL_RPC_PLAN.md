@@ -1,66 +1,82 @@
-# SPRINT_04C1C_BLOCK_D_TEST1_CLUBE_MENSAL_RPC_PLAN.md
+# Plano de Teste D.TEST-1: Clube Mensal RPC Safety Test
 
-Plano de teste seguro para validação de tradução de oferta real (Clube Mensal) no BLOCO D.
+## Objetivo
+Validar se a função RPC `public.process_webhook_subscription` traduz corretamente o `offer_id` externo da Rockty para o `plan_id` interno (`clube_mensal`) e o portal correspondente (`assinante`), utilizando o usuário de teste criado no D.TEST-1A.
 
-## 1. Estratégia de Usuário de Teste
-- **Diagnóstico:** O usuário fictício `00000000-0000-0000-0000-000000000999` não existe no banco.
-- **Proposta:** Para um teste completo que valide a sincronização de `profiles` e `user_roles`, é necessária uma etapa prévia de criação deste usuário de teste.
-- **Segurança:** O usuário será criado com e-mail `teste_clube_mensal_d1@ficticio.com` para garantir isolamento total de clientes reais.
+## 1. Identificação do Usuário de Teste
+- **user_id**: `81b7fdfc-fc46-402f-b5d0-50ca9e2d148e`
+- **email**: `test_d1_clube_mensal@oracula.test`
+- **profile.portal atual**: `visitante`
+- **user_roles.portal atual**: `visitante`
+- **Confirmação**: O usuário está em estado inicial de visitante e não possui assinaturas vinculadas.
 
-## 2. Estado Antes do Teste (Baseline)
-Serão capturadas as contagens atuais de:
-- `subscriptions`
-- `profiles`
-- `user_roles`
-- `matriculas_pendentes`
-
-**Verificação de Constraint:**
-- Confirmar que `subscriptions_user_provider_unique` (UNIQUE user_id, provider) ainda está ativa.
+## 2. Estado Antes do Teste (Snapshot)
+- **Total Subscriptions**: 0
+- **Total Profiles**: 6
+- **Total User Roles**: 6
+- **Total Matrículas Pendentes**: 3
+- **External ID Check**: Não existe assinatura com `external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1'`.
+- **User ID Check**: Não existe assinatura vinculada ao `user_id` de teste.
 
 ## 3. Chamada RPC Planejada
-A execução consiste em chamar a função `public.process_webhook_subscription` com os seguintes parâmetros:
+A execução será realizada via SQL/RPC simulando o processamento do webhook:
 
 ```sql
 SELECT public.process_webhook_subscription(
-    _user_id := '00000000-0000-0000-0000-000000000999',
-    _provider := 'rockty',
-    _plan_id := 'karv9y4bewbdjcwbmvtwq', -- Offer ID real do Clube Mensal
-    _status := 'active',
-    _portal := 'visitante',              -- Mapping deve sobrescrever para 'assinante'
-    _subscription_status_profile := 'active',
-    _current_period_start := now(),
-    _current_period_end := now() + interval '30 days',
-    _next_billing_date := now() + interval '30 days',
-    _external_subscription_id := 'TEST_EXT_CLUBE_MENSAL_D1',
-    _customer_name := 'Teste Clube Mensal'
+  _user_id := '81b7fdfc-fc46-402f-b5d0-50ca9e2d148e',
+  _provider := 'rockty',
+  _plan_id := 'karv9y4bewbdjcwbmvtwq', -- Offer ID real do Clube Mensal
+  _status := 'active',
+  _portal := 'visitante', -- Forçado como visitante para testar se o mapping interno tem precedência
+  _subscription_status_profile := 'active',
+  _current_period_start := now(),
+  _current_period_end := now() + interval '30 days',
+  _next_billing_date := now() + interval '30 days',
+  _external_subscription_id := 'TEST_EXT_CLUBE_MENSAL_D1',
+  _customer_name := 'Teste Clube Mensal D1'
 );
 ```
 
-## 4. Resultado Esperado e Validações
-### Comportamento da Função:
-- **Sucesso Estrutural:** A função deve retornar um JSON indicando `success: true`.
-- **Tradução de Plan ID:** O campo `plan_id` no registro criado em `subscriptions` deve ser `clube_mensal` (e não o hash da Rockty).
-- **Precedência de Portal:** O portal em `profiles` e `user_roles` deve ser atualizado para `assinante` (conforme mapping), ignorando o parâmetro `_portal := 'visitante'`.
+## 4. Resultado Esperado
+- **Retorno**: JSON indicando sucesso.
+- **Tabela `subscriptions`**:
+  - Nova linha criada.
+  - `plan_id = 'clube_mensal'` (traduzido do offer_id).
+  - `provider = 'rockty'`.
+  - `external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1'`.
+- **Tabela `profiles`**:
+  - `portal = 'assinante'` (mapping deve sobrescrever o `_portal` enviado).
+- **Tabela `user_roles`**:
+  - `portal = 'assinante'`.
+- **Isolamento**:
+  - Nenhuma alteração em `matriculas_pendentes`.
+  - Nenhum usuário real afetado.
 
-### Integridade dos Dados:
-- **Subscriptions:** +1 registro (ID externo: `TEST_EXT_CLUBE_MENSAL_D1`).
-- **Profiles:** O portal do usuário de teste deve ser `assinante`.
-- **User Roles:** O portal do usuário de teste deve ser `assinante`.
-- **Matrículas Pendentes:** Nenhuma alteração (contagem igual à baseline).
-- **Isolamento:** Nenhum usuário real ou assinatura real deve ser alterado.
+## 5. Validações Pós-Teste
+1. Verificar se a contagem global de assinaturas aumentou exatamente em 1.
+2. Confirmar `plan_id = 'clube_mensal'` na nova assinatura.
+3. Confirmar `portal = 'assinante'` no `profiles` do `user_id` de teste.
+4. Confirmar `portal = 'assinante'` no `user_roles` do `user_id` de teste.
+5. Garantir que a contagem de `matriculas_pendentes` permanece em 3.
+6. Verificar se a constraint `subscriptions_user_provider_unique` permanece ativa (não deve haver erro de duplicidade se tentado novamente, mas sim atualização).
+7. Confirmar que nenhuma Edge Function ou Webhook externo foi disparado.
 
-## 5. Riscos e Observações Técnicas
-- **Risco de Mapping:** Identificada possível divergência: o banco atualmente mapeia `karv9y4bewbdjcwbmvtwq` para `aluna`, mas o requisito do teste espera `assinante`. O teste servirá para confirmar se o mapping precisa de ajuste.
-- **Risco de Schema:** Se a função referenciar colunas inexistentes na tabela de mapping (ex: `internal_plan_id` vs `plan_id`), o teste falhará com erro de SQL, o que é um resultado válido para o diagnóstico.
+## 6. Riscos Identificados
+- **Mapeamento Falho**: A função gravar o `offer_id` externo (`karv9y4...`) diretamente no campo `plan_id`.
+- **Precedência de Parâmetro**: A função respeitar o `_portal = 'visitante'` enviado na chamada em vez de aplicar o mapping para `assinante`.
+- **Constraint Error**: A função falhar devido à constraint `subscriptions_user_provider_unique` se houver resquícios de testes anteriores não limpos.
+- **Isolamento**: Erro de lógica que afete outros usuários ou registros de matrícula.
+- **Datas**: `current_period_end` ser gravado como nulo ou com timezone incorreto.
 
-## 6. Plano de Limpeza
-- **Ação:** Após a validação dos resultados, os registros criados (usuário de teste e assinatura de teste) serão mantidos até autorização explícita para remoção.
-- **Comando de Rollback (Se solicitado):**
-  ```sql
-  DELETE FROM public.subscriptions WHERE external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1';
-  DELETE FROM public.user_roles WHERE user_id = '00000000-0000-0000-0000-000000000999';
-  DELETE FROM public.profiles WHERE id = '00000000-0000-0000-0000-000000000999';
-  ```
+## 7. Plano de Limpeza Futura
+- **Nota**: A limpeza NÃO será executada neste bloco.
+- **Registros para Remoção**:
+  - Assinatura: `external_subscription_id = 'TEST_EXT_CLUBE_MENSAL_D1'`.
+  - Usuário: `test_d1_clube_mensal@oracula.test`.
+- A remoção deve ocorrer em um bloco futuro de cleanup autorizado.
 
 ---
-**Status:** Aguardando autorização para criação do usuário de teste e posterior execução do RPC.
+**Regras de Execução:**
+- Não executar sem autorização expressa.
+- Não publicar alterações.
+- Não tocar em dados de produção.
