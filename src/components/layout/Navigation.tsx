@@ -351,9 +351,9 @@ export function Navigation() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden absolute top-16 left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-primary/10 animate-slide-up">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex flex-col gap-1">
+          <div className="lg:hidden fixed top-16 left-0 right-0 bottom-0 bg-background/95 backdrop-blur-xl border-b border-primary/10 overflow-y-auto z-40 animate-slide-up pb-[env(safe-area-inset-bottom,2rem)]">
+            <div className="container mx-auto px-4 py-6">
+              <div className="flex flex-col gap-2">
                 {user && isHybrid && (
                   <Button
                     variant="outline"
