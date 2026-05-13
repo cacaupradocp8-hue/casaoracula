@@ -227,7 +227,8 @@ export function AdminMatriculasTab() {
         </Card>
       ) : (
         <Card>
-          <Table>
+          <div className="overflow-x-auto">
+            <Table className="min-w-[700px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Usuária</TableHead>
@@ -278,7 +279,8 @@ export function AdminMatriculasTab() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+            </Table>
+          </div>
         </Card>
       )}
 

@@ -210,7 +210,8 @@ export function AdminSessoesTab() {
               <p>Nenhum caso encontrado</p>
             </div>
           ) : (
-            <Table>
+            <div className="overflow-x-auto">
+              <Table className="min-w-[800px]">
               <TableHeader>
                 <TableRow>
                   <TableHead>Título</TableHead>
@@ -270,7 +271,8 @@ export function AdminSessoesTab() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>

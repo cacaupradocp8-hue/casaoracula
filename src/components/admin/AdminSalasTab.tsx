@@ -343,7 +343,8 @@ export function AdminSalasTab() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <Table>
+          <div className="overflow-x-auto">
+            <Table className="min-w-[800px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Ordem</TableHead>
@@ -518,6 +519,7 @@ export function AdminSalasTab() {
               ))}
             </TableBody>
           </Table>
+          </div>
         </CardContent>
       </Card>
 
