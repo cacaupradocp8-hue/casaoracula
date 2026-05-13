@@ -84,6 +84,7 @@ export function BottomNavPreview() {
           })}
         </ul>
       </div>
-    </nav>
+    </div>
+  </nav>
   );
 }
