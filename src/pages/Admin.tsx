@@ -201,26 +201,48 @@ export default function Admin() {
   return (
     <AppLayout>
       <div className="flex">
-        <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <div className="hidden lg:block">
+          <AdminSidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        </div>
 
         <div className="flex-1 min-w-0">
           <div className="px-4 sm:px-6 py-6 pb-32">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-8">
-              {activeTab !== 'clube' && !isDirectClubeRoute && (
-                <SectionHeader
-                  title="Painel da Guardiã"
-                  subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
-                  icon={<Settings className="w-5 h-5" />}
-                />
-              )}
-              {isDirectClubeRoute && (
-                <SectionHeader
-                  title="Clube Editorial Oracular"
-                  subtitle="Operação Premium & Gestão de Conteúdo"
-                  icon={<Layout className="w-5 h-5 text-gold" />}
-                />
-              )}
+              <div className="flex items-center gap-4">
+                {/* Mobile Menu Trigger */}
+                <div className="lg:hidden">
+                  <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-10 w-10 border border-primary/10">
+                        <Menu className="w-6 h-6" />
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="p-0 w-72 border-r-primary/10">
+                      <AdminSidebar 
+                        activeTab={activeTab} 
+                        onTabChange={setActiveTab} 
+                        onItemClick={() => setIsMobileMenuOpen(false)}
+                      />
+                    </SheetContent>
+                  </Sheet>
+                </div>
+
+                {activeTab !== 'clube' && !isDirectClubeRoute && (
+                  <SectionHeader
+                    title="Painel da Guardiã"
+                    subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
+                    icon={<Settings className="w-5 h-5" />}
+                  />
+                )}
+                {isDirectClubeRoute && (
+                  <SectionHeader
+                    title="Clube Editorial Oracular"
+                    subtitle="Operação Premium & Gestão de Conteúdo"
+                    icon={<Layout className="w-5 h-5 text-gold" />}
+                  />
+                )}
+              </div>
 
               {/* Preview Mode Control */}
               <div className="flex items-center gap-2 shrink-0">

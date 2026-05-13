@@ -215,6 +215,7 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
                               if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
                             }
+                            if (onItemClick) onItemClick();
                           }}
                           className={cn(
                             'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-xs transition-colors',
