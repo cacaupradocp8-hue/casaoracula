@@ -203,6 +203,73 @@ export default function ClubeRotasCatalogo() {
         </ResponsiveContainer>
       </section>
 
+      {/* Sua Primeira Travessia - Novo Bloco de Boas-vindas */}
+      <ResponsiveContainer size="wide" className="pt-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="space-y-6"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-gold/60" />
+            <h2 className="font-display text-xl md:text-2xl text-foreground/90 italic">
+              Sua Primeira Travessia
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Card: Rota dos Lobos */}
+            <BoasVindasCard
+              title="Rota dos Lobos"
+              description="Comece por aqui: a travessia primordial sobre instinto e voz."
+              icon={<Compass className="w-5 h-5" />}
+              onClick={() => {
+                const s1 = estacoes?.find(e => e.numero === 1);
+                if (s1?.primeiro_slug) navigate(`/clube/rota/${s1.primeiro_slug}`);
+              }}
+              label="Iniciar"
+              highlight
+            />
+
+            {/* Card: Abertura do Campo */}
+            <BoasVindasCard
+              title="Abertura do Campo"
+              description="Ouça a primeira condução para sintonizar sua percepção."
+              icon={<Play className="w-5 h-5" />}
+              onClick={() => {
+                const s1 = estacoes?.find(e => e.numero === 1);
+                if (s1?.primeiro_slug) navigate(`/clube/rota/${s1.primeiro_slug}`);
+              }}
+              label="Ouvir"
+            />
+
+            {/* Card: Jardim da Psique */}
+            <BoasVindasCard
+              title="Jardim da Psique"
+              description="Registre suas impressões e sementes simbólicas da jornada."
+              icon={<MapPin className="w-5 h-5" />}
+              onClick={() => navigate('/jardim-psique')}
+              label="Registrar"
+            />
+
+            {/* Card: Converse com o Livro */}
+            <BoasVindasCard
+              title="Converse com o Livro"
+              description="Tire dúvidas e aprofunde o sentido simbólico da obra regente."
+              icon={<Sparkles className="w-5 h-5" />}
+              onClick={() => {
+                const current = estacaoEmCurso || estacoes?.find(e => e.numero === 1);
+                if (current?.primeiro_slug) {
+                  navigate(`/clube/rota/${current.primeiro_slug}#converse-com-o-livro`);
+                }
+              }}
+              label="Conversar"
+            />
+          </div>
+        </motion.div>
+      </ResponsiveContainer>
+
       {/* Filtros */}
       <ResponsiveContainer size="wide" className="pt-8">
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
@@ -407,6 +474,50 @@ function RotaCard({ estacao, index, onOpen, onClickLocked }: RotaCardProps) {
             </span>
           )}
         </div>
+      </div>
+    </motion.button>
+  );
+}
+
+interface BoasVindasCardProps {
+  title: string;
+  description: string;
+  icon: React.ReactNode;
+  onClick: () => void;
+  label: string;
+  highlight?: boolean;
+}
+
+function BoasVindasCard({ title, description, icon, onClick, label, highlight }: BoasVindasCardProps) {
+  return (
+    <motion.button
+      whileHover={{ y: -4 }}
+      onClick={onClick}
+      className={cn(
+        "group relative flex flex-col justify-between p-5 rounded-2xl border text-left transition-all duration-300",
+        highlight 
+          ? "border-gold/30 bg-gold/[0.04] shadow-[0_10px_30px_-10px_rgba(212,175,55,0.15)]" 
+          : "border-foreground/10 bg-foreground/[0.02] hover:border-gold/20"
+      )}
+    >
+      <div className="space-y-3">
+        <div className={cn(
+          "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+          highlight ? "bg-gold/20 text-gold" : "bg-foreground/5 text-foreground/40 group-hover:bg-gold/10 group-hover:text-gold/60"
+        )}>
+          {icon}
+        </div>
+        <div className="space-y-1">
+          <h3 className="font-display text-base text-foreground/90">{title}</h3>
+          <p className="text-[11px] leading-relaxed text-foreground/50 line-clamp-2 italic font-serif">
+            {description}
+          </p>
+        </div>
+      </div>
+      
+      <div className="mt-4 flex items-center gap-1.5 text-[9px] tracking-[0.2em] uppercase font-bold text-gold/60 group-hover:text-gold transition-colors">
+        {label}
+        <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-0.5" />
       </div>
     </motion.button>
   );
