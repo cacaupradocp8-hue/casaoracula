@@ -1,46 +1,41 @@
-# SPRINT_04C1C_D2A_MINIMAL_PATCH_AND_DTEST1_RETRY_RESULT.md
+# SPRINT_04C1C_D2A_MINIMAL_PATCH_AND_DTEST1_RETRY_RESULT
 
 ## 1. Backups Realizados
-As funções originais foram salvas na tabela `public._sprint_04c1c_d2a_function_backup`:
-- `public.protect_profile_privileged_fields`
-- `public.process_webhook_subscription`
+As funções originais foram salvas na tabela persistente `public._sprint_04c1c_d2a_function_backup`:
+- `protect_profile_privileged_fields`
+- `process_webhook_subscription`
 
 ## 2. Funções Alteradas / Criadas
-- **Criada:** `public.system_sync_profile_access` (SECURITY DEFINER)
-- **Atualizada:** `public.protect_profile_privileged_fields` (Agora suporta bypass via `app.system_process`)
-- **Atualizada:** `public.process_webhook_subscription` (Agora utiliza a função segura para sincronizar o perfil)
+- `public.system_sync_profile_access`: Criada como SECURITY DEFINER para centralizar atualizações de perfil com bypass de trigger.
+- `public.protect_profile_privileged_fields`: Atualizada para permitir modificações quando `app.system_process = 'true'`.
+- `public.process_webhook_subscription`: Atualizada para chamar `system_sync_profile_access` em vez de fazer UPDATE direto em `profiles`.
 
 ## 3. Diff Resumido
-- **`system_sync_profile_access`**: Nova função que define `app.system_process = true` temporariamente para realizar o `UPDATE` em `profiles`.
-- **`protect_profile_privileged_fields`**: Adicionada condição `current_setting('app.system_process', true) = 'true'` para permitir atualizações de campos protegidos.
-- **`process_webhook_subscription`**: Substituído o `UPDATE` direto em `profiles` pela chamada da `system_sync_profile_access`.
+- **system_sync_profile_access**: Nova função que encapsula o `set_config('app.system_process', 'true', true)`.
+- **protect_profile_privileged_fields**: Adicionada condição `OR current_setting('app.system_process', true) = 'true'`.
+- **process_webhook_subscription**: Substituído o bloco de `UPDATE profiles` por uma chamada `PERFORM public.system_sync_profile_access(...)`.
 
 ## 4. Validações Pós-Patch
-- [x] Trigger `protect_profile_privileged_fields_trigger` continua **ENABLED** (tgenabled = 'O').
-- [x] `system_sync_profile_access` existe e é **SECURITY DEFINER**.
-- [x] Permissões de EXECUTE **revogadas** para PUBLIC, anon e authenticated.
-- [x] `process_webhook_subscription` mantém assinatura e retorno **jsonb**.
-- [x] `process_webhook_subscription` chama a função segura.
-- [x] `subscriptions_user_provider_unique` continua existindo.
-- [x] Índices do Bloco C validados:
-  - `idx_subscriptions_provider_external_id_unique`
-  - `idx_subscriptions_user_provider_plan_unique`
+- `system_sync_profile_access` está com `SECURITY DEFINER`.
+- Permissões `EXECUTE` revogadas para `PUBLIC`, `anon` e `authenticated`.
+- `idx_subscriptions_provider_external_id_unique`: **EXISTENTE**
+- `idx_subscriptions_user_provider_plan_unique`: **EXISTENTE**
 
 ## 5. Resultado do D.TEST-1-RETRY
-Teste executado para o usuário `afe12d58-16ad-41dc-ab6a-ff230adedd6e` (gigametalplast@gmail.com):
-- **Input:** Rockty, Plano `karv9y4bewbdjcwbmvtwq` (Clube Mensal), Portal `visitante`.
-- **Resultado:**
-  - `profiles.portal`: **assinante** (Sucesso)
-  - `profiles.subscription_status`: **active** (Sucesso)
-  - `user_roles.portal`: **assinante** (Sucesso)
-  - `subscriptions.plan_id`: **clube_mensal** (Mapeado corretamente)
-  - `subscriptions.status`: **active** (Sucesso)
+- **Usuário**: `2e75ece3-ea71-4769-b9e0-f4c8a1a6b1b4`
+- **Estado Inicial**: Portal `visitante`, Subscription Status `inactive`.
+- **Operação**: Processamento de assinatura Rockty (`karv9y4bewbdjcwbmvtwq` -> `assinante`).
+- **Estado Final**:
+  - `profile_portal`: `assinante` (Sucesso)
+  - `profile_sub_status`: `active` (Sucesso)
+  - `profile_name`: `Test User D1 Retry` (Sucesso)
+  - `role_portal`: `assinante` (Sucesso)
+  - `sub_plan_id`: `clube_mensal` (Sucesso)
 
-## 6. Confirmações Adicionais
-- [x] Trigger permaneceu ativa durante todo o processo.
-- [x] Nenhum bypass manual (ALTER TABLE DISABLE TRIGGER) foi utilizado.
-- [x] Webhook/Edge Function/RLS/Auth/Constraints não foram alterados.
-- [x] Rockty não mapeada agora gera EXCEPTION.
+## 6. Confirmação de Segurança
+- **Trigger Ativa**: Confirmado (`tgenabled = 'O'`).
+- **Nenhum Bypass Manual**: A trigger bloqueou tentativas diretas e apenas a função autorizada realizou a alteração.
+- **Integridade**: Webhook, Edge Functions, RLS e Constraints permanecem inalterados.
 
 ## 7. Classificação Final
 **APROVADO**
