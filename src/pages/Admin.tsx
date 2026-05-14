@@ -63,6 +63,8 @@ const AdminClubeHub = lazy(() => import('@/pages/admin/clube/AdminClubeHub'));
 const AdminCentralJornadas = lazy(() => import('@/pages/admin/clube/AdminCentralJornadas'));
 const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
+const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeEditorialTab').then(m => ({ default: m.AdminClubeEditorialTab })));
+
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
 // AdminClubeLivroTab removed as it is legacy all-in-one component
@@ -101,6 +103,8 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-acervo': AdminClubeAcervo,
   'clube-chat': AdminClubeHub,
   'clube-carrosseis-insights': AdminCarrosseisInsights,
+  'clube-editorial': AdminClubeEditorialTab,
+
   
   // FORMAÇÃO
   'cursos': AdminCursosTab,
