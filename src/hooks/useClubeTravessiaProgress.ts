@@ -4,7 +4,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAudioProgress } from './useAudioProgress';
 import { useJardimPsique } from './useJardimPsique';
 import { useMemo } from 'react';
-import { StepStatus } from '@/components/clube/ClubeTravessiaProgress';
+import { StepStatus, TravessiaStep } from '@/components/clube/ClubeTravessiaProgress';
+import { 
+  Compass, 
+  Headphones, 
+  Star, 
+  FlaskConical, 
+  Flower2, 
+  MessageSquare, 
+  Zap 
+} from 'lucide-react';
+
 
 export function useClubeTravessiaProgress(ponto: any, estacaoId?: string) {
   const { user } = useAuth();
