@@ -51,7 +51,7 @@ export function AdminDocumentosTab() {
                     <ul>
                       <li>Verificar painel Guardiã Rockty.</li>
                       <li>Conferir volume de webhooks.</li>
-                      <li>Validar matrículas pendentes (>1h).</li>
+                      <li>Validar matrículas pendentes (&gt;1h).</li>
                       <li>Checar logs de erro nas Edge Functions.</li>
                     </ul>
                     <p className="text-xs text-muted-foreground mt-4 italic">Ref: SPRINT_04C2_ROCKTY_PRODUCTION_MONITORING_GUIDE.md</p>
@@ -139,7 +139,7 @@ export function AdminDocumentosTab() {
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2 text-amber-500 mb-2">
-                  <AlertTriangle className="w-5 h-5" />
+                  <AlertTriangleIcon className="w-5 h-5" />
                   <Badge variant="outline" className="text-[10px] uppercase border-amber-500/50 text-amber-500">Auditoria</Badge>
                 </div>
                 <CardTitle className="text-lg">Critérios de Unknown Offer</CardTitle>
@@ -307,7 +307,7 @@ export function AdminDocumentosTab() {
             <Card className="md:col-span-2">
               <CardHeader>
                 <div className="flex items-center gap-2 text-purple-400 mb-2">
-                  <Layout className="w-5 h-5" />
+                  <LayoutIcon className="w-5 h-5" />
                   <Badge variant="outline" className="text-[10px] uppercase border-purple-400/50 text-purple-400">Arquitetura</Badge>
                 </div>
                 <CardTitle className="text-lg">Estrutura dos Portais</CardTitle>
@@ -369,7 +369,7 @@ function ShieldAlert(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function AlertTriangle(props: React.SVGProps<SVGSVGElement>) {
+function AlertTriangleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -390,7 +390,7 @@ function AlertTriangle(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-function Layout(props: React.SVGProps<SVGSVGElement>) {
+function LayoutIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -408,22 +408,5 @@ function Layout(props: React.SVGProps<SVGSVGElement>) {
       <path d="M3 9h18" />
       <path d="M9 21V9" />
     </svg>
-  );
-}
-    </div>
-  );
-}
-
-function Badge({ children, variant = 'default', className }: { children: React.ReactNode; variant?: 'default' | 'outline' | 'secondary' | 'destructive'; className?: string }) {
-  const variants = {
-    default: 'bg-primary text-primary-foreground',
-    outline: 'border border-primary text-primary',
-    secondary: 'bg-secondary text-secondary-foreground',
-    destructive: 'bg-destructive text-destructive-foreground',
-  };
-  return (
-    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-semibold ${variants[variant]} ${className}`}>
-      {children}
-    </span>
   );
 }
