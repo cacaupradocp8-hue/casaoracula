@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   Sparkles, Compass, BookOpen, GraduationCap, 
-  ArrowRight, ShieldCheck, FileText, Layout
+  ArrowRight, ShieldCheck, FileText, Layout, Zap
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
