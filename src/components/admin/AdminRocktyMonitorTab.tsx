@@ -112,34 +112,27 @@ export function AdminRocktyMonitorTab() {
       if (subsError) throw subsError;
       setSubscriptions(subs?.map(s => ({ ...s, user_email: (s.profiles as any)?.email })) || []);
 
-      // 4. Divergences
-      const { data: divData, error: divError } = await supabase
-        .rpc('check_portal_divergences');
+      // 4. Divergences - Manual comparison instead of RPC
+      const { data: pData } = await supabase
+        .from('profiles')
+        .select('id, email, portal');
       
-      // Since check_portal_divergences might not exist, fallback to a query if it fails
-      if (divError) {
-        console.warn('RPC check_portal_divergences failed, falling back to query');
-        const { data: pData } = await supabase
-          .from('profiles')
-          .select('id, email, portal');
-        
-        const { data: rData } = await supabase
-          .from('user_roles')
-          .select('user_id, portal');
-        
-        const divList = pData?.filter(p => {
-          const role = rData?.find(r => r.user_id === p.id);
-          return role && role.portal !== p.portal;
-        }).map(p => ({
-          user_id: p.id,
-          email: p.email,
-          profile_portal: p.portal,
-          role_portal: rData?.find(r => r.user_id === p.id)?.portal
-        })) || [];
-        setDivergences(divList);
-      } else {
-        setDivergences(divData || []);
-      }
+      const { data: rData } = await supabase
+        .from('user_roles')
+        .select('user_id, portal');
+      
+      const divList = pData?.filter(p => {
+        const role = rData?.find(r => r.user_id === p.id);
+        // Divergence if role exists and portal differs
+        return role && role.portal !== p.portal;
+      }).map(p => ({
+        user_id: p.id,
+        email: p.email,
+        profile_portal: p.portal,
+        role_portal: rData?.find(r => r.user_id === p.id)?.portal
+      })) || [];
+      
+      setDivergences(divList);
 
       // 5. Calculate Metrics
       const webhooksToday = logs?.filter(l => new Date(l.created_at) >= today).length || 0;
