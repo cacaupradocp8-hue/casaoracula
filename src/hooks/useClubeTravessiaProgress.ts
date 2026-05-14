@@ -97,14 +97,15 @@ export function useClubeTravessiaProgress(ponto: any, estacaoId?: string) {
     };
 
     const rawSteps = [
-      { id: 'abertura', label: 'Abertura do Campo', status: 'completed' as StepStatus },
-      { id: 'audio', label: 'Áudio Principal', status: checkAudioStatus() },
-      { id: 'simbolo', label: 'Símbolo Central', status: 'in_progress' as StepStatus },
-      { id: 'lab', label: 'Laboratório 80/20', status: checkLabStatus() },
-      { id: 'jardim', label: 'Jardim da Psique', status: checkJardimStatus() },
-      { id: 'chat', label: 'Converse com o Livro', status: checkChatStatus() },
-      { id: 'integracao', label: 'Integração Final', status: 'recommended' as StepStatus },
+      { id: 'abertura', label: 'Abertura do Campo', icon: Compass, status: 'completed' as StepStatus },
+      { id: 'audio', label: 'Áudio Principal', icon: Headphones, status: checkAudioStatus() },
+      { id: 'simbolo', label: 'Símbolo Central', icon: Star, status: 'in_progress' as StepStatus },
+      { id: 'lab', label: 'Laboratório 80/20', icon: FlaskConical, status: checkLabStatus() },
+      { id: 'jardim', label: 'Jardim da Psique', icon: Flower2, status: checkJardimStatus() },
+      { id: 'chat', label: 'Converse com o Livro', icon: MessageSquare, status: checkChatStatus() },
+      { id: 'integracao', label: 'Integração Final', icon: Zap, status: 'recommended' as StepStatus },
     ];
+
 
     // Refine recommended status based on sequence
     let foundFirstIncomplete = false;
