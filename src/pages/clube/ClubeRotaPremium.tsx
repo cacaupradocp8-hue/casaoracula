@@ -596,7 +596,7 @@ export default function ClubeRotaPremium() {
                 <div className="relative space-y-8 text-center">
                   <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
                   <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
-                    "{jardimPrompt}"
+                    "O que em você pede para ser nomeado após esta travessia?"
                   </p>
                   <Button
                     variant="ghost"
@@ -632,11 +632,10 @@ export default function ClubeRotaPremium() {
                   </span>
                 </h3>
                 <p className="font-serif italic text-foreground/55 text-base md:text-lg">
-                  "Seu olhar existe. Falta método."
+                  "Onde a técnica termina, o olhar começa."
                 </p>
                 <p className="text-foreground/55 text-[15px] leading-relaxed">
-                  A travessia que você acabou de viver é apenas a superfície. A Formação Orácula é o
-                  oceano onde se domina a arte da escuta clínica e da condução simbólica.
+                  A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
                 </p>
                 <Button
                   size="lg"
