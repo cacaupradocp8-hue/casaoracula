@@ -279,7 +279,16 @@ export default function ClubeRotaPremium() {
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
-          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Mapa da Travessia">
+          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo">
+            <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
+              <p className="text-foreground/70 text-lg md:text-xl font-serif italic leading-relaxed">
+                "Toda travessia começa com o reconhecimento do terreno. Olhe para o mapa e localize sua alma no ciclo da história que estamos prestes a desvelar."
+              </p>
+              <div className="flex justify-center gap-4">
+                 <Badge variant="outline" className="border-gold/30 text-gold/60 py-1 px-4 rounded-full uppercase tracking-widest text-[9px]">Preparação</Badge>
+                 <Badge variant="outline" className="border-white/10 text-white/40 py-1 px-4 rounded-full uppercase tracking-widest text-[9px]">Simbólico</Badge>
+              </div>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 sm:gap-16 items-start">
               {/* Coluna de Cards de Cartografia — Bento Style */}
               <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
@@ -392,8 +401,15 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
           {audios.length > 0 && (
-            <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
-              <div className="space-y-4">
+            <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
+              <div className="max-w-3xl mx-auto space-y-8">
+                <div className="text-center space-y-3 mb-8">
+                  <p className="text-foreground/60 text-base md:text-lg font-serif italic leading-relaxed">
+                    "Feche os olhos e permita que a voz conduza sua imaginação. Não busque entender, busque sentir os contornos da história que se desenrola."
+                  </p>
+                  <div className="h-px w-24 bg-gold/20 mx-auto" />
+                </div>
+                <div className="space-y-6">
                 {audios.map((audio: any, i: number) => (
                   <motion.div
                     key={i}
@@ -419,6 +435,19 @@ export default function ClubeRotaPremium() {
                     )}
                   </motion.div>
                 ))}
+                </div>
+                <div className="pt-8 text-center">
+                  <Button
+                    variant="ghost"
+                    className="text-gold/60 hover:text-gold gap-2 group transition-all"
+                    onClick={() => {
+                      const el = document.getElementById('converse-com-o-livro');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    Próximo: Dialogar com a Obra <ArrowDown className="w-3 h-3 group-hover:translate-y-1 transition-transform" />
+                  </Button>
+                </div>
               </div>
             </Section>
           )}
@@ -444,14 +473,24 @@ export default function ClubeRotaPremium() {
                       </motion.div>
                     )}
 
-                    <div className="flex-1 w-full space-y-5">
-                      <div className="space-y-2 text-center md:text-left">
+                    <div className="flex-1 w-full space-y-6">
+                      <div className="space-y-3 text-center md:text-left">
                         <h4 className="font-display text-xl md:text-2xl text-foreground">
                           Diálogo com o Inconsciente
                         </h4>
-                        <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
-                          Uma obra oracular não é para ser lida, é para ser conversada. Como o símbolo central deste capítulo ressoa em sua história?
-                        </p>
+                        <div className="space-y-3 text-sm text-foreground/70 leading-relaxed font-serif italic">
+                          <p>
+                            Uma obra oracular não é para ser lida, é para ser conversada. Como o símbolo central deste capítulo ressoa em sua história?
+                          </p>
+                          <div className="bg-white/[0.03] border-l-2 border-gold/30 p-4 rounded-r-lg space-y-2">
+                            <p className="text-[10px] uppercase tracking-[0.2em] text-gold/60 font-bold not-italic">Sugestões de Escuta:</p>
+                            <ul className="space-y-2 text-[13px]">
+                              <li>• "Como este símbolo se manifesta em meu momento atual?"</li>
+                              <li>• "O que este conto revela sobre meus medos ou desejos?"</li>
+                              <li>• "Qual o próximo passo que a obra me convida a dar?"</li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
 
                       <div className="space-y-3">
@@ -600,17 +639,31 @@ export default function ClubeRotaPremium() {
                 className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
               >
                 <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="relative space-y-8 text-center">
-                  <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
-                  <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
-                    "O que em você pede para ser nomeado após esta travessia?"
-                  </p>
+                <div className="relative space-y-8 text-center max-w-2xl mx-auto">
+                  <Flower2 className="w-8 h-8 text-gold/60 mx-auto" />
+                  <div className="space-y-6">
+                    <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed">
+                      "O que em você pede para ser nomeado após esta travessia?"
+                    </p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+                      {[
+                        "O que mais me tocou nesta escuta?",
+                        "Qual símbolo ficou ecoando em mim?",
+                        "O que pretendo cultivar a partir de agora?"
+                      ].map((q, i) => (
+                        <div key={i} className="p-4 rounded-xl bg-white/[0.03] border border-white/5 text-[13px] text-foreground/60 italic font-serif">
+                          {q}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                   <Button
-                    variant="ghost"
-                    className="text-gold hover:text-gold hover:bg-gold/10 gap-2 rounded-full"
+                    variant="gold"
+                    size="lg"
+                    className="h-14 px-10 rounded-full shadow-[0_10px_30px_rgba(234,179,8,0.2)] hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all gap-3 font-bold"
                     onClick={() => navigate('/jardim-heroina')}
                   >
-                    <MapPin className="w-4 h-4" /> Registrar no Jardim
+                    <MapPin className="w-4 h-4" /> Registrar no Jardim da Psique
                   </Button>
                 </div>
               </motion.div>
