@@ -190,6 +190,7 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
+const RelatorioSprint06 = React.lazy(() => import("./pages/RelatorioSprint06"));
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -567,6 +568,9 @@ function AppRoutes() {
       <Route path="/templo-de-escuta" element={<ProtectedRoute><TemploEscuta /></ProtectedRoute>} />
 
       {/* As rotas de Biblioteca de Travessias estão no jornadaRoutes */}
+
+      {/* Relatórios */}
+      <Route path="/relatorio/sprint-06" element={<ProtectedRoute minPortal="admin"><RelatorioSprint06 /></ProtectedRoute>} />
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
