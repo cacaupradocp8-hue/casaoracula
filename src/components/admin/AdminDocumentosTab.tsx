@@ -108,6 +108,31 @@ export function AdminDocumentosTab() {
               </CardContent>
             </Card>
 
+            <Card className="border-primary/30 bg-primary/5">
+              <CardHeader>
+                <div className="flex items-center gap-2 text-primary mb-2">
+                  <Zap className="w-5 h-5 text-gold" />
+                  <Badge variant="outline" className="text-[10px] uppercase border-gold text-gold">Operação</Badge>
+                </div>
+                <CardTitle className="text-lg">Jornada de Onboarding</CardTitle>
+                <CardDescription>Validação da experiência inicial por perfil</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[250px] rounded-md border p-4 bg-muted/20">
+                  <div className="prose prose-sm prose-invert max-w-none">
+                    <h3>Validação Sprint 05C</h3>
+                    <ul>
+                      <li><strong>Visitante:</strong> Foco em Experiência Gratuita e Planos.</li>
+                      <li><strong>Assinante:</strong> Foco em Clube Oracular e Biblioteca.</li>
+                      <li><strong>Aluna:</strong> Foco em Formação e Minha Jornada.</li>
+                      <li><strong>Admin:</strong> Foco em Guardiã, Rockty e Documentos.</li>
+                    </ul>
+                    <p className="text-xs text-muted-foreground mt-4 italic">Ref: SPRINT_05C_FIRST_JOURNEY_CLARITY_VALIDATION.md</p>
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+
             <Card className="md:col-span-2 border-primary/30 bg-primary/5">
               <CardHeader>
                 <div className="flex items-center gap-2 text-primary mb-2">
