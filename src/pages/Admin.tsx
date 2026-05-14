@@ -74,6 +74,7 @@ const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPorta
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
 const AdminFounderDashboardTab = lazy(() => import('@/domains/painel-mestre').then(m => ({ default: m.FounderDashboard })));
+const AdminRocktyMonitorTab = lazy(() => import('@/components/admin/AdminRocktyMonitorTab').then(m => ({ default: m.AdminRocktyMonitorTab })));
 
 
 
