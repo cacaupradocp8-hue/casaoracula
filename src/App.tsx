@@ -191,7 +191,7 @@ const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
 const RelatorioSprint06 = React.lazy(() => import("./pages/RelatorioSprint06"));
-const RelatorioAuditoriaBotoes = React.lazy(() => import("./pages/RelatorioAuditoriaBotoes"));
+const RelatorioSprint07 = React.lazy(() => import("./pages/RelatorioSprint07"));
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -572,7 +572,7 @@ function AppRoutes() {
 
       {/* Relatórios */}
       <Route path="/relatorio/sprint-06" element={<ProtectedRoute minPortal="admin"><RelatorioSprint06 /></ProtectedRoute>} />
-      <Route path="/relatorio/auditoria-botoes" element={<ProtectedRoute minPortal="admin"><RelatorioAuditoriaBotoes /></ProtectedRoute>} />
+      <Route path="/relatorio/sprint-07" element={<ProtectedRoute minPortal="admin"><RelatorioSprint07 /></ProtectedRoute>} />
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
