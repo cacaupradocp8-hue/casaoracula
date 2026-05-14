@@ -499,7 +499,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
           {matchedBook && (
-            <Section icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
+            <Section id="laboratorio-8020" icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
               <Laboratorio8020Modal
                 bookId={matchedBook.id}
                 bookTitle={matchedBook.title}
@@ -552,7 +552,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 5. TREINAMENTO ═══════════ */}
           {simulacaoTexto && (
-            <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
+            <Section id="treinamento-contextual" icon={Zap} kicker="Câmara de simulação" titulo="Treinamento Contextual">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -584,7 +584,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 6. JARDIM ═══════════ */}
           {jardimPrompt && (
-            <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
+            <Section id="jardim-da-psique" icon={Flower2} kicker="Sementeira interna" titulo="Jardim da Psique">
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}
