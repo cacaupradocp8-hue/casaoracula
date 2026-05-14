@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { FileText, ShieldCheck, ClipboardList, Book, Info, Lock, Map, Zap } from 'lucide-react';
+import { FileText, ShieldCheck, ClipboardList, Book, Info, Lock, Map, Zap, ExternalLink } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 
@@ -35,6 +35,35 @@ export function AdminDocumentosTab() {
         {/* 📌 OPERAÇÃO */}
         <TabsContent value="operacao" className="pt-4 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-gold/30 bg-gold/5 shadow-gold/5">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-gold">
+                    <FileText className="w-5 h-5" />
+                    <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded border border-gold/40">Sprint 06</span>
+                  </div>
+                  <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-gold hover:text-white hover:bg-gold/20">
+                    <a href="/relatorio/sprint-06">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Visualizar
+                    </a>
+                  </Button>
+                </div>
+                <CardTitle className="text-lg mt-2">Relatório de Fechamento</CardTitle>
+                <CardDescription>Consolidado final da experiência Rota dos Lobos</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm text-gray-400 leading-relaxed">
+                  <p>Documento estratégico com diagnóstico, melhorias implementadas e próximos passos recomendados para o Clube Oracular.</p>
+                  <div className="mt-4 flex flex-wrap gap-2 text-[10px]">
+                    <span className="bg-black/40 px-2 py-1 rounded border border-white/10 uppercase tracking-tighter">Premium</span>
+                    <span className="bg-black/40 px-2 py-1 rounded border border-white/10 uppercase tracking-tighter">UX Validada</span>
+                    <span className="bg-black/40 px-2 py-1 rounded border border-white/10 uppercase tracking-tighter">14/05/2026</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2 text-primary mb-2">
