@@ -13,6 +13,7 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
+import { HomeOnboardingBlocks } from "@/components/home/HomeOnboardingBlocks";
 import { ProximoPasso } from "@/components/dashboard/ProximoPasso";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
@@ -83,6 +84,7 @@ export default function DashboardMembro() {
         {/* Layout adaptativo: stack em mobile, 2 colunas em xl+ */}
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.2fr_1fr] gap-8 xl:gap-16 mt-10">
           <div className="space-y-6 lg:space-y-8 min-w-0">
+            <HomeOnboardingBlocks />
             <ProximaAcao
               principal={bussola.acaoPrincipal}
               secundarias={bussola.acoesSecundarias}
