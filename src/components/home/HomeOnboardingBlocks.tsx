@@ -35,44 +35,111 @@ export function HomeOnboardingBlocks() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {isVisitor && (
-            <OnboardingCard
-              title="Descubra sua Voz"
-              description="Inicie sua jornada revelando seu mapa interior através do Quiz do Eixo."
-              icon={<Compass className="w-6 h-6 text-primary" />}
-              action={() => navigate('/quiz/descubra-seu-eixo')}
-              label="Iniciar Quiz"
-            />
+            <>
+              <OnboardingCard
+                title="Descubra sua Voz"
+                description="Inicie sua jornada revelando seu mapa interior através do Quiz do Eixo."
+                icon={<Compass className="w-6 h-6 text-primary" />}
+                action={() => navigate('/quiz/descubra-seu-eixo')}
+                label="Iniciar Quiz"
+                highlight
+              />
+              <OnboardingCard
+                title="Experiência Gratuita"
+                description="Conheça a metodologia e sinta a atmosfera da Casa Orácula."
+                icon={<Sparkles className="w-6 h-6 text-primary" />}
+                action={() => navigate('/experiencia-gratuita')}
+                label="Acessar"
+              />
+              <OnboardingCard
+                title="Conheça os Planos"
+                description="Descubra o Clube Oracular e a Formação Orácula."
+                icon={<Layout className="w-6 h-6 text-primary" />}
+                action={() => navigate('/planos')}
+                label="Ver Planos"
+              />
+            </>
           )}
 
           {isSubscriber && (
-            <OnboardingCard
-              title="Círculo de Leitura"
-              description="Acesse o acervo premium e as estações do Clube Oracular."
-              icon={<BookOpen className="w-6 h-6 text-gold" />}
-              action={() => navigate('/clube')}
-              label="Entrar no Clube"
-            />
+            <>
+              <OnboardingCard
+                title="Clube Oracular"
+                description="Acesse o acervo premium, as estações e o Círculo Oracular."
+                icon={<BookOpen className="w-6 h-6 text-gold" />}
+                action={() => navigate('/clube')}
+                label="Entrar no Clube"
+                highlight
+              />
+              <OnboardingCard
+                title="Minha Jornada"
+                description="Continue sua evolução e acompanhe suas travessias."
+                icon={<Compass className="w-6 h-6 text-gold" />}
+                action={() => navigate('/minha-jornada')}
+                label="Continuar"
+              />
+              <OnboardingCard
+                title="Biblioteca"
+                description="Acesse seus materiais de leitura e consulta."
+                icon={<FileText className="w-6 h-6 text-gold" />}
+                action={() => navigate('/biblioteca-unificada')}
+                label="Ver Leituras"
+              />
+            </>
           )}
 
           {isStudent && (
-            <OnboardingCard
-              title="Academia de Formação"
-              description="Seus cursos, aulas e materiais de estudo da Formação Orácula."
-              icon={<GraduationCap className="w-6 h-6 text-primary" />}
-              action={() => navigate('/sala-de-treinamento')}
-              label="Ver Meus Cursos"
-            />
+            <>
+              <OnboardingCard
+                title="Formação Orácula"
+                description="Acesse seus cursos, aulas e materiais de estudo da Academia."
+                icon={<GraduationCap className="w-6 h-6 text-primary" />}
+                action={() => navigate('/sala-de-treinamento')}
+                label="Continuar Formação"
+                highlight
+              />
+              <OnboardingCard
+                title="Minha Jornada"
+                description="Acompanhe seu progresso e desenvolvimento oracular."
+                icon={<Compass className="w-6 h-6 text-primary" />}
+                action={() => navigate('/minha-jornada')}
+                label="Ver Mapa"
+              />
+              <OnboardingCard
+                title="Práticas e Biblioteca"
+                description="Acesse as ferramentas práticas e acervo de estudos."
+                icon={<Layout className="w-6 h-6 text-primary" />}
+                action={() => navigate('/biblioteca-unificada')}
+                label="Acessar Práticas"
+              />
+            </>
           )}
 
           {isAdmin && (
-            <OnboardingCard
-              title="Painel da Guardiã"
-              description="Gerencie a Casa, monitore vendas e acesse documentos oficiais."
-              icon={<ShieldCheck className="w-6 h-6 text-primary" />}
-              action={() => navigate('/admin')}
-              label="Acessar Admin"
-              highlight
-            />
+            <>
+              <OnboardingCard
+                title="Guardiã Rockty"
+                description="Monitoramento de vendas, webhooks e integridade em tempo real."
+                icon={<ShieldCheck className="w-6 h-6 text-primary" />}
+                action={() => navigate('/admin?tab=rockty-monitor')}
+                label="Monitorar"
+                highlight
+              />
+              <OnboardingCard
+                title="Documentos Oficiais"
+                description="Acesse manuais, protocolos e guias operacionais."
+                icon={<FileText className="w-6 h-6 text-primary" />}
+                action={() => navigate('/admin?tab=documentos')}
+                label="Ver Documentos"
+              />
+              <OnboardingCard
+                title="Gestão da Casa"
+                description="Administração de membros, conteúdos e configurações."
+                icon={<Layout className="w-6 h-6 text-primary" />}
+                action={() => navigate('/admin')}
+                label="Gerenciar"
+              />
+            </>
           )}
         </div>
       </motion.section>
@@ -110,38 +177,6 @@ export function HomeOnboardingBlocks() {
         </motion.section>
       )}
 
-      {/* Bloco Administrativo Rápido (Somente Admin) */}
-      {isAdmin && (
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <ShieldCheck className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-display text-foreground">Acesso Rápido Guardiã</h2>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <OnboardingCard
-              title="Guardiã Rockty"
-              description="Monitoramento em tempo real de webhooks e vendas."
-              icon={<Zap className="w-5 h-5 text-amber-500" />}
-              action={() => navigate('/admin?tab=rockty-monitor')}
-              label="Monitorar"
-              variant="outline"
-            />
-            <OnboardingCard
-              title="Documentos Oficiais"
-              description="Manuais, protocolos e guias operacionais."
-              icon={<FileText className="w-5 h-5 text-primary" />}
-              action={() => navigate('/admin?tab=documentos')}
-              label="Ver Documentos"
-              variant="outline"
-            />
-          </div>
-        </motion.section>
-      )}
     </div>
   );
 }
