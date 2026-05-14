@@ -239,6 +239,10 @@ export default function ClubeRotaPremium() {
                   size="lg"
                   variant="outline"
                   className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                  onClick={() => {
+                    const el = document.getElementById('audios-da-estacao');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
                 >
                   <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
                 </Button>
@@ -381,7 +385,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
           {audios.length > 0 && (
-            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
+            <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
               <div className="space-y-4">
                 {audios.map((audio: any, i: number) => (
                   <motion.div
