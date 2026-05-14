@@ -106,6 +106,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'planos-clube', label: 'Planos & Checkout', icon: CreditCard },
       { key: 'settings', label: 'Configurações', icon: Cog },
       { key: 'rockty-monitor', label: 'Guardiã Rockty', icon: ShieldCheck },
+      { key: 'documentos', label: 'Documentos', icon: FileText },
     ],
   },
 ];

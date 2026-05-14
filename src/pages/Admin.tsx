@@ -75,6 +75,7 @@ const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertific
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
 const AdminFounderDashboardTab = lazy(() => import('@/domains/painel-mestre').then(m => ({ default: m.FounderDashboard })));
 const AdminRocktyMonitorTab = lazy(() => import('@/components/admin/AdminRocktyMonitorTab').then(m => ({ default: m.AdminRocktyMonitorTab })));
+const AdminDocumentosTab = lazy(() => import('@/components/admin/AdminDocumentosTab').then(m => ({ default: m.AdminDocumentosTab })));
 
 
 
@@ -137,6 +138,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'planos-clube': AdminPlanosClubTab,
   'settings': AdminSettingsTab,
   'rockty-monitor': AdminRocktyMonitorTab,
+  'documentos': AdminDocumentosTab,
 };
 
 export default function Admin() {

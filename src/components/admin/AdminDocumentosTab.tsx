@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { FileText, ShieldCheck, ClipboardList, Book } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 
 export function AdminDocumentosTab() {
   return (
