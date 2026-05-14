@@ -572,6 +572,7 @@ function AppRoutes() {
 
       {/* Relatórios */}
       <Route path="/relatorio/sprint-06" element={<ProtectedRoute minPortal="admin"><RelatorioSprint06 /></ProtectedRoute>} />
+      <Route path="/relatorio/auditoria-botoes" element={<ProtectedRoute minPortal="admin"><RelatorioAuditoriaBotoes /></ProtectedRoute>} />
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
