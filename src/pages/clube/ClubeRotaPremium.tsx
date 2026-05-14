@@ -48,6 +48,10 @@ export default function ClubeRotaPremium() {
   const navigate = useNavigate();
   const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
   const { data: allBooks = [] } = useAllBooks();
+  
+  const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
+  const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
+
   const { scrollY } = useScroll();
   const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
