@@ -33,6 +33,9 @@ import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { AudioOracular } from '@/components/audio/AudioOracular';
+import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgress';
+import { useClubeTravessiaProgress } from '@/hooks/useClubeTravessiaProgress';
+
 
 
 /**
