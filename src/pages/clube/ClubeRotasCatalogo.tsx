@@ -203,6 +203,73 @@ export default function ClubeRotasCatalogo() {
         </ResponsiveContainer>
       </section>
 
+      {/* Sua Primeira Travessia - Novo Bloco de Boas-vindas */}
+      <ResponsiveContainer size="wide" className="pt-10">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="space-y-6"
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-gold/60" />
+            <h2 className="font-display text-xl md:text-2xl text-foreground/90 italic">
+              Sua Primeira Travessia
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {/* Card: Rota dos Lobos */}
+            <BoasVindasCard
+              title="Rota dos Lobos"
+              description="Comece por aqui: a travessia primordial sobre instinto e voz."
+              icon={<Compass className="w-5 h-5" />}
+              onClick={() => {
+                const s1 = estacoes?.find(e => e.numero === 1);
+                if (s1?.primeiro_slug) navigate(`/clube/rota/${s1.primeiro_slug}`);
+              }}
+              label="Iniciar"
+              highlight
+            />
+
+            {/* Card: Abertura do Campo */}
+            <BoasVindasCard
+              title="Abertura do Campo"
+              description="Ouça a primeira condução para sintonizar sua percepção."
+              icon={<Play className="w-5 h-5" />}
+              onClick={() => {
+                const s1 = estacoes?.find(e => e.numero === 1);
+                if (s1?.primeiro_slug) navigate(`/clube/rota/${s1.primeiro_slug}`);
+              }}
+              label="Ouvir"
+            />
+
+            {/* Card: Jardim da Psique */}
+            <BoasVindasCard
+              title="Jardim da Psique"
+              description="Registre suas impressões e sementes simbólicas da jornada."
+              icon={<MapPin className="w-5 h-5" />}
+              onClick={() => navigate('/jardim-psique')}
+              label="Registrar"
+            />
+
+            {/* Card: Converse com o Livro */}
+            <BoasVindasCard
+              title="Converse com o Livro"
+              description="Tire dúvidas e aprofunde o sentido simbólico da obra regente."
+              icon={<Sparkles className="w-5 h-5" />}
+              onClick={() => {
+                const current = estacaoEmCurso || estacoes?.find(e => e.numero === 1);
+                if (current?.primeiro_slug) {
+                  navigate(`/clube/rota/${current.primeiro_slug}#converse-com-o-livro`);
+                }
+              }}
+              label="Conversar"
+            />
+          </div>
+        </motion.div>
+      </ResponsiveContainer>
+
       {/* Filtros */}
       <ResponsiveContainer size="wide" className="pt-8">
         <div className="flex items-center gap-2 overflow-x-auto pb-2">
