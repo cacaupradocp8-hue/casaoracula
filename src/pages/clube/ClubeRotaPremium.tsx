@@ -116,11 +116,11 @@ export default function ClubeRotaPremium() {
 
   // Cartografia: só mostra cards que têm valor real
   const cartografia = [
-    { label: 'Estação', value: estacaoAtual?.titulo, icon: MapPin },
-    { label: 'Porta', value: ponto.porta, icon: DoorOpen },
-    { label: 'Campo', value: ponto.campo, icon: Layers },
-    { label: 'Torre', value: ponto.torre, icon: Layout },
-    { label: 'Labirinto', value: ponto.labirinto, icon: ShieldAlert },
+    { label: 'Onde você está', value: estacaoAtual?.titulo, icon: MapPin },
+    { label: 'A Porta', value: ponto.porta, icon: DoorOpen },
+    { label: 'O Campo', value: ponto.campo, icon: Layers },
+    { label: 'A Torre', value: ponto.torre, icon: Layout },
+    { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
   ].filter(c => c.value && c.value.trim());
 
 
@@ -167,14 +167,21 @@ export default function ClubeRotaPremium() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 1.2 }}
-              className="flex flex-col items-center justify-center gap-4 sm:gap-5"
+              className="flex flex-col items-center justify-center gap-4 sm:gap-6"
             >
-              <div className="flex items-center gap-3 sm:gap-4">
-                <span className="h-[px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
-                <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
-                  {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-                </span>
-                <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+              <div className="flex flex-col items-center gap-2">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
+                  <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
+                    {estacaoAtual?.livro_titulo || 'Estação Oracular'}
+                  </span>
+                  <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                </div>
+                {estacaoAtual?.titulo && (
+                   <span className="text-[10px] sm:text-[12px] italic font-serif text-white/30">
+                     Travessia: {estacaoAtual.titulo}
+                   </span>
+                )}
               </div>
 
               {matchedBook && (
@@ -239,6 +246,10 @@ export default function ClubeRotaPremium() {
                   size="lg"
                   variant="outline"
                   className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                  onClick={() => {
+                    const el = document.getElementById('audios-da-estacao');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }}
                 >
                   <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
                 </Button>
@@ -381,7 +392,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
           {audios.length > 0 && (
-            <Section icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
+            <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="Áudios da Estação">
               <div className="space-y-4">
                 {audios.map((audio: any, i: number) => (
                   <motion.div
@@ -436,10 +447,10 @@ export default function ClubeRotaPremium() {
                     <div className="flex-1 w-full space-y-5">
                       <div className="space-y-2 text-center md:text-left">
                         <h4 className="font-display text-xl md:text-2xl text-foreground">
-                          Diálogo com o inconsciente
+                          Diálogo com o Inconsciente
                         </h4>
                         <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
-                          Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
+                          Uma obra oracular não é para ser lida, é para ser conversada. Como o símbolo central deste capítulo ressoa em sua história?
                         </p>
                       </div>
 
@@ -495,7 +506,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
           {matchedBook && (
-            <Section icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
+            <Section id="laboratorio-8020" icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
               <Laboratorio8020Modal
                 bookId={matchedBook.id}
                 bookTitle={matchedBook.title}
@@ -522,10 +533,10 @@ export default function ClubeRotaPremium() {
 
                       <div className="space-y-4">
                         <h3 className="text-2xl md:text-4xl font-display text-white leading-[1.1] tracking-tight">
-                          Acesse o núcleo simbólico e clínico desta obra.
+                          O Núcleo Simbólico da Obra
                         </h3>
                         <p className="text-white/50 text-base sm:text-lg md:text-xl font-serif italic leading-relaxed">
-                          Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
+                          Acesse a essência destilada: a estrutura que organiza sua escuta e transforma informação em sabedoria prática para a alma.
                         </p>
                       </div>
 
@@ -548,7 +559,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 5. TREINAMENTO ═══════════ */}
           {simulacaoTexto && (
-            <Section icon={Zap} kicker="Câmara de simulação" titulo="Treinamento">
+            <Section id="treinamento-contextual" icon={Zap} kicker="Câmara de simulação" titulo="Treinamento Contextual">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -561,10 +572,10 @@ export default function ClubeRotaPremium() {
                     <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
                       Situação de campo
                     </p>
-                    <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                    <h4 className="font-display text-xl md:text-2xl">Laboratório Prático</h4>
                   </div>
                   <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
-                    {simulacaoTexto}
+                    Toda teoria é apenas semente. O fruto nasce na aplicação. Como essa dinâmica se manifesta na sua prática ou na sua autoescuta hoje?
                   </p>
                   <Button
                     variant="outline"
@@ -580,7 +591,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 6. JARDIM ═══════════ */}
           {jardimPrompt && (
-            <Section icon={Flower2} kicker="Sementeira interna" titulo="Jardim da psique">
+            <Section id="jardim-da-psique" icon={Flower2} kicker="Sementeira interna" titulo="Jardim da Psique">
               <motion.div
                 initial={{ opacity: 0, scale: 0.97 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -592,7 +603,7 @@ export default function ClubeRotaPremium() {
                 <div className="relative space-y-8 text-center">
                   <Flower2 className="w-7 h-7 text-gold/60 mx-auto" />
                   <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed max-w-xl mx-auto">
-                    "{jardimPrompt}"
+                    "O que em você pede para ser nomeado após esta travessia?"
                   </p>
                   <Button
                     variant="ghost"
@@ -607,7 +618,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
-          <Section>
+          <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -628,11 +639,10 @@ export default function ClubeRotaPremium() {
                   </span>
                 </h3>
                 <p className="font-serif italic text-foreground/55 text-base md:text-lg">
-                  "Seu olhar existe. Falta método."
+                  "Onde a técnica termina, o olhar começa."
                 </p>
                 <p className="text-foreground/55 text-[15px] leading-relaxed">
-                  A travessia que você acabou de viver é apenas a superfície. A Formação Orácula é o
-                  oceano onde se domina a arte da escuta clínica e da condução simbólica.
+                  A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
                 </p>
                 <Button
                   size="lg"
@@ -661,7 +671,7 @@ export default function ClubeRotaPremium() {
           {proximoPonto && (() => {
             const proxLocked = proximoPonto.estado === 'locked';
             return (
-              <Section>
+              <Section id="proxima-travessia" icon={ArrowRight} kicker="Continuidade" titulo="Próximo Passo">
                 <motion.button
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
