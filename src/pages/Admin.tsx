@@ -136,6 +136,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'assinaturas': AdminAssinaturasTab,
   'planos-clube': AdminPlanosClubTab,
   'settings': AdminSettingsTab,
+  'rockty-monitor': AdminRocktyMonitorTab,
 };
 
 export default function Admin() {
