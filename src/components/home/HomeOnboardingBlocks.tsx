@@ -118,21 +118,6 @@ export function HomeOnboardingBlocks() {
           {isAdmin && (
             <>
               <OnboardingCard
-                title="Guardiã Rockty"
-                description="Monitoramento de vendas, webhooks e integridade em tempo real."
-                icon={<ShieldCheck className="w-6 h-6 text-primary" />}
-                action={() => navigate('/admin?tab=rockty-monitor')}
-                label="Monitorar"
-                highlight
-              />
-              <OnboardingCard
-                title="Documentos Oficiais"
-                description="Acesse manuais, protocolos e guias operacionais."
-                icon={<FileText className="w-6 h-6 text-primary" />}
-                action={() => navigate('/admin?tab=documentos')}
-                label="Ver Documentos"
-              />
-              <OnboardingCard
                 title="Gestão da Casa"
                 description="Administração de membros, conteúdos e configurações."
                 icon={<Layout className="w-6 h-6 text-primary" />}
