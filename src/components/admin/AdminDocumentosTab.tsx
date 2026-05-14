@@ -107,6 +107,30 @@ export function AdminDocumentosTab() {
                 </ScrollArea>
               </CardContent>
             </Card>
+
+            <Card className="md:col-span-2 border-primary/30 bg-primary/5">
+              <CardHeader>
+                <div className="flex items-center gap-2 text-primary mb-2">
+                  <Zap className="w-5 h-5 text-gold" />
+                  <Badge variant="outline" className="text-[10px] uppercase border-gold text-gold">Lançamento</Badge>
+                </div>
+                <CardTitle className="text-lg">Plano de Produção Controlada</CardTitle>
+                <CardDescription>Estratégia de lançamento e monitoramento inicial</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[250px] rounded-md border p-4 bg-muted/20">
+                  <div className="prose prose-sm prose-invert max-w-none">
+                    <h3>Operação Sprint 04D</h3>
+                    <ul>
+                      <li><strong>Checklist Pré-Venda:</strong> Webhook, Mapping e HMAC.</li>
+                      <li><strong>Monitoramento Real:</strong> Acompanhamento das 3 primeiras vendas.</li>
+                      <li><strong>Critérios de Sucesso:</strong> Liberação imediata e sem erros críticos.</li>
+                    </ul>
+                    <p className="text-xs text-muted-foreground mt-4 italic">Ref: SPRINT_04D_CONTROLLED_PRODUCTION_LAUNCH_PLAN.md</p>
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
           </div>
         </TabsContent>
 
