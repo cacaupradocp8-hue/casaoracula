@@ -57,7 +57,6 @@ export default function ClubeRotaPremium() {
   const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
   const heroY = useTransform(scrollY, [0, 400], [0, 80]);
 
-  const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
   const proximoPonto = useMemo(
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
     [pontos, ponto]
