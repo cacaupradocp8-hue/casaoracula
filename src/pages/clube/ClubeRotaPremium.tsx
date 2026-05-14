@@ -284,7 +284,11 @@ export default function ClubeRotaPremium() {
         {/* Conteúdo principal */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
+          {/* Indicador de Progresso Simbólico */}
+          <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
+
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
+
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo">
             <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
               <p className="text-foreground/70 text-lg md:text-xl font-serif italic leading-relaxed">
