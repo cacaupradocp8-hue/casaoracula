@@ -526,10 +526,10 @@ export default function ClubeRotaPremium() {
 
                       <div className="space-y-4">
                         <h3 className="text-2xl md:text-4xl font-display text-white leading-[1.1] tracking-tight">
-                          Acesse o núcleo simbólico e clínico desta obra.
+                          O Núcleo Simbólico da Obra
                         </h3>
                         <p className="text-white/50 text-base sm:text-lg md:text-xl font-serif italic leading-relaxed">
-                          Não é um resumo. É a estrutura 80/20 que organiza seu atendimento e destila a sabedoria da alma para a prática.
+                          Acesse a essência destilada: a estrutura que organiza sua escuta e transforma informação em sabedoria prática para a alma.
                         </p>
                       </div>
 
