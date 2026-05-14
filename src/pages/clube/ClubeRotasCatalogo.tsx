@@ -262,6 +262,10 @@ export default function ClubeRotasCatalogo() {
                 const current = estacaoEmCurso || estacoes?.find(e => e.numero === 1);
                 if (current?.primeiro_slug) {
                   navigate(`/clube/rota/${current.primeiro_slug}#converse-com-o-livro`);
+                  setTimeout(() => {
+                    const el = document.getElementById('converse-com-o-livro');
+                    el?.scrollIntoView({ behavior: 'smooth' });
+                  }, 500);
                 }
               }}
               label="Conversar"
