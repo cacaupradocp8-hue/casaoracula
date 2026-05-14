@@ -366,9 +366,50 @@ export function AdminRocktyMonitorTab() {
                         {log.error || '-'}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => console.log(log.payload)}>
-                          <Info className="w-4 h-4" />
-                        </Button>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Eye className="w-4 h-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Detalhes do Webhook</DialogTitle>
+                            </DialogHeader>
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                  <p className="text-muted-foreground">ID</p>
+                                  <p className="font-mono text-[10px]">{log.id}</p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground">Evento</p>
+                                  <p className="font-medium">{log.event_type}</p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground">Data</p>
+                                  <p>{format(new Date(log.created_at), "dd/MM/yyyy HH:mm:ss", { locale: ptBR })}</p>
+                                </div>
+                                <div>
+                                  <p className="text-muted-foreground">Status</p>
+                                  <div>{getStatusBadge(log.processed ? 'processed' : (log.error ? 'error' : 'pending'))}</div>
+                                </div>
+                              </div>
+                              {log.error && (
+                                <div className="p-3 bg-red-500/10 border border-red-500/20 rounded text-red-500 text-xs">
+                                  <p className="font-bold mb-1">Erro:</p>
+                                  {log.error}
+                                </div>
+                              )}
+                              <div>
+                                <p className="text-sm font-medium mb-2">Payload JSON</p>
+                                <pre className="p-4 bg-muted rounded-lg text-[10px] overflow-x-auto whitespace-pre-wrap">
+                                  {JSON.stringify(log.payload, null, 2)}
+                                </pre>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   ))}
