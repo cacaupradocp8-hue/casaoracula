@@ -7,7 +7,7 @@ import {
   Headphones, PenLine, FileText, LayoutGrid, ImageIcon as GalleryIcon,
   Flame, MessageSquare, Users, Sparkles,
   UserCheck, TrendingUp, Gift, RefreshCw, Map as MapIcon,
-  Settings, CreditCard, Wrench, ClipboardList, Bot, Brain, Layers, Library, Megaphone, FolderOpen, Video, Cog,
+  Settings, CreditCard, Wrench, ClipboardList, Bot, Brain, Layers, Library, Megaphone, FolderOpen, Video, Cog, ShieldCheck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
