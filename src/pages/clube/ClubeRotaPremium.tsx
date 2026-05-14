@@ -440,10 +440,10 @@ export default function ClubeRotaPremium() {
                     <div className="flex-1 w-full space-y-5">
                       <div className="space-y-2 text-center md:text-left">
                         <h4 className="font-display text-xl md:text-2xl text-foreground">
-                          Diálogo com o inconsciente
+                          Diálogo com o Inconsciente
                         </h4>
                         <p className="text-sm text-foreground/55 italic font-serif leading-relaxed">
-                          Pergunte ao livro sobre as tensões deste capítulo ou peça uma orientação simbólica.
+                          Uma obra oracular não é para ser lida, é para ser conversada. Como o símbolo central deste capítulo ressoa em sua história?
                         </p>
                       </div>
 
@@ -565,10 +565,10 @@ export default function ClubeRotaPremium() {
                     <p className="text-[9px] tracking-[0.3em] uppercase text-gold/60 mb-1">
                       Situação de campo
                     </p>
-                    <h4 className="font-display text-xl md:text-2xl">Simulação contextual</h4>
+                    <h4 className="font-display text-xl md:text-2xl">Laboratório Prático</h4>
                   </div>
                   <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
-                    {simulacaoTexto}
+                    Toda teoria é apenas semente. O fruto nasce na aplicação. Como essa dinâmica se manifesta na sua prática ou na sua autoescuta hoje?
                   </p>
                   <Button
                     variant="outline"
