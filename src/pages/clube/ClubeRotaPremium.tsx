@@ -116,11 +116,11 @@ export default function ClubeRotaPremium() {
 
   // Cartografia: só mostra cards que têm valor real
   const cartografia = [
-    { label: 'Estação', value: estacaoAtual?.titulo, icon: MapPin },
-    { label: 'Porta', value: ponto.porta, icon: DoorOpen },
-    { label: 'Campo', value: ponto.campo, icon: Layers },
-    { label: 'Torre', value: ponto.torre, icon: Layout },
-    { label: 'Labirinto', value: ponto.labirinto, icon: ShieldAlert },
+    { label: 'Onde você está', value: estacaoAtual?.titulo, icon: MapPin },
+    { label: 'A Porta', value: ponto.porta, icon: DoorOpen },
+    { label: 'O Campo', value: ponto.campo, icon: Layers },
+    { label: 'A Torre', value: ponto.torre, icon: Layout },
+    { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
   ].filter(c => c.value && c.value.trim());
 
 
