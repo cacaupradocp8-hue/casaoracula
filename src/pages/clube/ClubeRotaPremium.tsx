@@ -414,7 +414,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 4. CONVERSE COM O LIVRO ═══════════ */}
           {temChatLivro && (
-            <Section icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
+            <Section id="converse-com-o-livro" icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
               <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
                 <CardContent className="p-6 md:p-8">
                   <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
