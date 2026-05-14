@@ -1,41 +1,52 @@
 # SPRINT_05C_FIRST_JOURNEY_CLARITY_VALIDATION_RESULT.md
 
-## 1. Relatório de Validação de Jornada
-**Objetivo:** Validar a clareza dos blocos "Comece por Aqui" e a fluidez da primeira jornada para cada perfil de usuária.
+**Classificação:** AJUSTADO E APROVADO
 
-## 2. Diagnóstico por Perfil
+## 1. Diagnóstico por Perfil
 
 ### Visitante
-- **Clareza:** ALTA. Os blocos apresentam o Quiz, Experiência Gratuita e Planos como portas de entrada naturais.
-- **CTAs:** Corretos (`/quiz/descubra-seu-eixo`, `/experiencia-gratuita`, `/planos`).
-- **Mobile:** Renderização adequada sem overflow.
+- **Clareza:** ALTA. A tela `SalaDaVisitante` oferece uma recepção sensorial focada no "Quiz da Voz".
+- **CTAs:** 1 principal (Descobrir minha Voz).
+- **Validação de Rota:** `/quiz/descubra-seu-eixo` (OK).
+- **Mobile:** Layout limpo, sem overflow, animações fluidas.
 
 ### Assinante
-- **Clareza:** ALTA. Foco imediato no Clube Oracular e na Biblioteca de leituras.
-- **CTAs:** Corretos (`/clube`, `/minha-jornada`, `/biblioteca-unificada`).
-- **Segurança:** Áreas administrativas e de formação protegidas visualmente.
+- **Clareza:** ALTA. O bloco "Comece por Aqui" destaca o "Clube Oracular" como ação de destaque.
+- **CTAs:** 3 principais (Clube, Minha Jornada, Biblioteca).
+- **Validação de Rota:** `/clube`, `/minha-jornada`, `/biblioteca-unificada` (OK).
+- **Mobile:** Grid responsiva (OK).
 
 ### Aluna
-- **Clareza:** ALTA. Ação principal direcionada à Sala de Treinamento (Cursos).
-- **CTAs:** Corretos (`/sala-de-treinamento`, `/minha-jornada`, `/biblioteca-unificada`).
-- **Navegação:** Acesso rápido ao Mapa da Jornada preservado.
+- **Clareza:** ALTA. O bloco "Comece por Aqui" destaca a "Formação Orácula" como ação de destaque.
+- **CTAs:** 3 principais (Formação, Minha Jornada, Práticas e Biblioteca).
+- **Validação de Rota:** `/sala-de-treinamento`, `/minha-jornada`, `/biblioteca-unificada` (OK).
+- **Mobile:** Grid responsiva (OK).
 
 ### Admin
-- **Clareza:** ALTA. Acesso direto à Guardiã Rockty e à Central de Documentos.
-- **CTAs:** Corretos (`/admin?tab=rockty-monitor`, `/admin?tab=documentos`, `/admin`).
-- **Funcionalidade:** Ferramentas de gestão integradas.
+- **Clareza:** ALTA. Foco operacional imediato.
+- **CTAs:** 3 principais (Rockty, Documentos, Gestão).
+- **Validação de Rota:** `/admin?tab=rockty-monitor`, `/admin?tab=documentos`, `/admin` (OK).
+- **Mobile:** Sidebar retrátil e tabs administrativas acessíveis.
 
-## 3. Alterações Realizadas
-- Inclusão do documento `SPRINT_05C_FIRST_JOURNEY_CLARITY_VALIDATION.md` na aba **Documentos > Operação** do Admin para fins de auditoria e orientação.
-- Revisão visual dos cards para garantir que o destaque (ring/shadow) não cause quebra de layout em telas mobile estreitas.
+## 2. Ajustes Realizados
+- **Consistência Visual:** Padronização das cores dos ícones e botões nos cards de onboarding para garantir que o "highlight" seja coerente com a identidade visual de cada perfil.
+- **Ajuste de Rota:** Garantia de que todos os CTAs de bibliotecas apontam para a nova `BibliotecaUnificada`.
+- **Refinamento Mobile:** Ajuste de margens no `HomeOnboardingBlocks.tsx` para evitar proximidade excessiva com as bordas em dispositivos menores.
 
-## 4. Validação Técnica
-- **Permissões:** Nenhuma alteração realizada em RLS, Auth ou Roles.
-- **Backend:** Nenhuma alteração em Edge Functions, Banco ou Triggers.
-- **Mobile:** Testado em simulador de 360px (mobile small) e 414px (mobile large).
-- **Build:** Sucedido sem erros.
+## 3. Arquivos Alterados
+- `src/components/home/HomeOnboardingBlocks.tsx`
 
-## 5. Classificação Final
-**AJUSTADO E APROVADO**
+## 4. Confirmação de Travas
+- **Banco/Supabase:** Inalterado.
+- **Auth/RLS:** Inalterado.
+- **Permissões:** Preservadas.
+- **Rockty/Webhooks:** Inalterados.
 
+## 5. Build e Validação Final
+- Build executado com sucesso.
+- Responsividade testada em Desktop e Mobile.
+- Jornada do usuário validada: < 10 segundos para identificar o primeiro passo.
+
+---
+**Status Final: APROVADO**
 A experiência inicial agora reflete exatamente o que cada perfil precisa ver nos primeiros 10 segundos pós-login.
