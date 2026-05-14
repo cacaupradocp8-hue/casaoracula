@@ -611,7 +611,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
-          <Section>
+          <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -665,7 +665,7 @@ export default function ClubeRotaPremium() {
           {proximoPonto && (() => {
             const proxLocked = proximoPonto.estado === 'locked';
             return (
-              <Section>
+              <Section id="proxima-travessia" icon={ArrowRight} kicker="Continuidade" titulo="Próximo Passo">
                 <motion.button
                   initial={{ opacity: 0 }}
                   whileInView={{ opacity: 1 }}
