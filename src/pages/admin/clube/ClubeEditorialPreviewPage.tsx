@@ -116,6 +116,9 @@ function ClubeEditorialPreviewContent() {
 
   const estacao = item.estacao as any;
   
+  console.info("[PREVIEW_DEBUG] Processando item:", item.titulo, "Estacao:", estacao?.titulo);
+
+  
   let metadata: any = {};
   try {
     if (typeof item.metadata === 'string') {
