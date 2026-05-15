@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -66,7 +66,9 @@ export function AdminClubeEditorialTab() {
   const [isEstacaoDialogOpen, setIsEstacaoDialogOpen] = useState(false);
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
   const [editingEstacao, setEditingEstacao] = useState<any>(null);
+  const [prevEstacao, setPrevEstacao] = useState<any>(null);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [prevItem, setPrevItem] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('conteudo');
   
   // History filters
@@ -131,6 +133,16 @@ export function AdminClubeEditorialTab() {
   });
 
   // Mutations
+  const createAuditLog = async (log: any) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    
+    await supabase.from('clube_audit_log').insert({
+      ...log,
+      user_id: user.id
+    });
+  };
+
   const updateEstacao = useMutation({
     mutationFn: async (payload: any) => {
       const { id, ...updates } = payload;
@@ -139,6 +151,20 @@ export function AdminClubeEditorialTab() {
         .update(updates)
         .eq('id', id);
       if (error) throw error;
+      
+      // Log changes
+      for (const key in updates) {
+        if (updates[key] !== prevEstacao[key]) {
+          await createAuditLog({
+            tabela: 'clube_estacoes',
+            registro_id: id,
+            acao: 'UPDATE',
+            campo_alterado: key,
+            valor_anterior: String(prevEstacao[key]),
+            valor_novo: String(updates[key])
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
@@ -155,6 +181,20 @@ export function AdminClubeEditorialTab() {
         .update(updates)
         .eq('id', id);
       if (error) throw error;
+
+      // Log changes
+      for (const key in updates) {
+        if (updates[key] !== prevItem[key]) {
+          await createAuditLog({
+            tabela: 'clube_rota_itens',
+            registro_id: id,
+            acao: 'UPDATE',
+            campo_alterado: key,
+            valor_anterior: String(prevItem[key]),
+            valor_novo: String(updates[key])
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
@@ -165,11 +205,13 @@ export function AdminClubeEditorialTab() {
 
   const handleEditEstacao = (estacao: any) => {
     setEditingEstacao(estacao);
+    setPrevEstacao({...estacao});
     setIsEstacaoDialogOpen(true);
   };
 
   const handleEditItem = (item: any) => {
     setEditingItem(item);
+    setPrevItem({...item});
     setIsItemDialogOpen(true);
   };
 
