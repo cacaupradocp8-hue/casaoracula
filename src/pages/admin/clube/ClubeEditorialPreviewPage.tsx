@@ -220,9 +220,16 @@ export default function ClubeEditorialPreviewPage() {
                   <h2 className="font-display text-3xl md:text-4xl text-white">Escuta Profunda</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {audios.map((audio: any, i: number) => (
-                    <AudioOracular key={`audio-${i}`} titulo={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
-                  ))}
+                  {audios.map((audio: any, i: number) => {
+                    if (!audio || !audio.url) return null;
+                    return (
+                      <AudioOracular 
+                        key={`audio-${i}`} 
+                        titulo={audio.titulo || `Áudio ${i+1}`} 
+                        audioUrl={audio.url} 
+                      />
+                    );
+                  })}
                   {placeholders.map((ph: any, i: number) => (
                     <div key={`ph-${i}`} className="rounded-xl border border-white/5 bg-white/[0.01] p-6 flex items-center justify-between opacity-50 grayscale">
                       <div className="flex items-center gap-4">
