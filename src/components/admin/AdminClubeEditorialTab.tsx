@@ -119,7 +119,7 @@ export function AdminClubeEditorialTab() {
       const userIds = Array.from(new Set(logs.map(l => l.user_id).filter(Boolean)));
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, nome, avatar_url')
+        .select('*')
         .in('id', userIds);
       
       return logs.map(log => ({
