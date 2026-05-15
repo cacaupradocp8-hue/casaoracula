@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,6 +27,10 @@ import { ClubeTravessiaProgress, TravessiaStep } from '@/components/clube/ClubeT
 import { ErrorBoundary } from 'react-error-boundary';
 
 function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
+  useEffect(() => {
+    console.error("[PREVIEW_CRITICAL_ERROR]", error);
+  }, [error]);
+
   return (
     <div className="min-h-screen bg-midnight flex flex-col items-center justify-center p-8 text-center space-y-4">
       <AlertTriangle className="w-12 h-12 text-destructive mb-2" />
@@ -34,13 +38,14 @@ function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
       <p className="text-white/60 max-w-md font-mono text-xs bg-white/5 p-4 rounded-lg break-all">
         {error.message}
       </p>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-2">
         <Button onClick={resetErrorBoundary} variant="outline">Tentar Novamente</Button>
-        <Button onClick={() => window.location.href = '/admin'}>Voltar ao Painel</Button>
+        <Button onClick={() => window.location.href = '/admin'} variant="ghost">Voltar ao Painel</Button>
       </div>
     </div>
   );
 }
+
 
 
 export default function ClubeEditorialPreviewPage() {
