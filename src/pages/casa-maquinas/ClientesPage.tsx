@@ -111,8 +111,11 @@ export default function ClientesPage() {
       supabase.from('journeys').select('client_id, process_state, current_district_id').in('client_id', clientIds),
       supabase.from('districts').select('id, nome'),
       supabase.from('sessoes_casa_maquinas').select('cliente_id, data_sessao').in('cliente_id', clientIds).order('data_sessao', { ascending: false }),
-      supabase.from('gestos_integracao').select('cliente_id, status').in('cliente_id', clientIds).eq('status', 'pendente')
+      supabase.from('gestos_integracao').select('cliente_id, status').in('cliente_id', clientIds)
     ]);
+
+    // Filtragem manual para evitar erro de tipo na query
+    const pendentes = gestos?.filter(g => g.status === 'pendente' || (g.status as string) === 'pendente');
 
     const districtMap = Object.fromEntries((districts || []).map(d => [d.id, d.nome]));
 
