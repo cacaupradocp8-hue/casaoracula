@@ -267,8 +267,8 @@ export function AdminClubeAudioteca() {
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center">
-                        {album.cover_url ? (
-                          <img src={album.cover_url} alt={album.titulo} className="w-full h-full object-cover rounded-lg" />
+                        {album.capa_url ? (
+                          <img src={album.capa_url} alt={album.titulo} className="w-full h-full object-cover rounded-lg" />
                         ) : (
                           <Disc className="w-6 h-6 text-white/20" />
                         )}
