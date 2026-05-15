@@ -108,7 +108,7 @@ export default function ClubeEditorialPreviewPage() {
     { label: 'O Campo', value: item.campo, icon: Layers },
     { label: 'A Torre', value: item.torre, icon: Layout },
     { label: 'O Labirinto', value: item.labirinto, icon: ShieldAlert },
-  ].filter(c => c.value && c.value.trim());
+  ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
 
   // Mocked steps for preview progress
   const mockSteps: TravessiaStep[] = (siblingItems || []).map(sib => ({
