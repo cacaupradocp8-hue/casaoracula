@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react'; // REBUILD_V70
 import { createPortal } from 'react-dom';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -35,6 +35,7 @@ export function AudioOracular({
   hideInsight = false,
   compact = false,
 }: AudioOracularProps) {
+  console.log("[DEBUG_UI] AudioOracular montando para URL:", audioUrl);
   const resolvedUrl = getPublicAudioUrl(audioUrl);
   const isValid = isValidAudioUrl(resolvedUrl);
 
@@ -345,6 +346,7 @@ export function AudioOracular({
     </motion.div>
   );
 
+  console.log("[DEBUG_UI] Renderizando AudioOracular JSX");
   return (
     <>
       <div className={cn(
