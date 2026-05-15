@@ -311,8 +311,11 @@ export function AdminClubeEditorialTab() {
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
                           <Edit3 className="w-4 h-4" /> Editar Item
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
-                          <Eye className="w-4 h-4" /> Ver no Clube
+                        <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
+                          <Eye className="w-4 h-4" /> Pré-visualizar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
+                          <Layout className="w-4 h-4" /> Ver no Clube
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
