@@ -84,11 +84,13 @@ export default function CasaDasMaquinas() {
         .in('client_id', clientIds);
 
       if (cityStates) {
-        const stateMap = new Map();
-        cityStates.forEach(s => stateMap.set(s.client_id, s));
+        const stateMapping: Record<string, any> = {};
+        cityStates.forEach(s => {
+          stateMapping[s.client_id] = s;
+        });
         
         recentClients.forEach(c => {
-          const state = stateMap.get(c.id);
+          const state = stateMapping[c.id];
           if (state) {
             c.distrito_ativo = state.distrito_ativo || undefined;
           }
