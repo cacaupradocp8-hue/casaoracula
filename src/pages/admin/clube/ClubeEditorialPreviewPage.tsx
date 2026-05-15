@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -119,24 +119,21 @@ function ClubeEditorialPreviewContent() {
   console.info("[PREVIEW_DEBUG] Processando item:", item.titulo, "Estacao:", estacao?.titulo);
 
   
-  let metadata: any = {};
-  try {
-    if (typeof item.metadata === 'string') {
-      metadata = JSON.parse(item.metadata);
-    } else {
-      metadata = item.metadata || {};
+  const metadata = useMemo(() => {
+    try {
+      if (typeof item.metadata === 'string') {
+        return JSON.parse(item.metadata);
+      }
+      return item.metadata || {};
+    } catch (e) {
+      console.error("[PREVIEW_ERROR] Metadata parse fail:", e);
+      return {};
     }
-    // Final safety check to ensure metadata is an object and not null
-    if (!metadata || typeof metadata !== 'object') {
-      metadata = {};
-    }
-  } catch (e) {
-    console.error("Error parsing metadata:", e);
-    metadata = {};
-  }
+  }, [item.metadata]);
   
-  const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
-  const placeholders = Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [];
+  const audios = useMemo(() => Array.isArray(metadata.audios) ? metadata.audios : [], [metadata]);
+  const placeholders = useMemo(() => Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [], [metadata]);
+
   
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
