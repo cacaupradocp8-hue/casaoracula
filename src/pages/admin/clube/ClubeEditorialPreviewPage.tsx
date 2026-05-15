@@ -151,8 +151,11 @@ function ClubeEditorialPreviewContent() {
     status: sib.id === item.id ? 'in_progress' : (sib.ordem < (item.ordem || 0) ? 'completed' : 'not_started')
   }));
 
+  console.info("[PREVIEW_DEBUG] Rendering content for item:", item.id);
+
   return (
     <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
+
       {/* MODO PREVIEW BANNER */}
       <div className="fixed top-0 left-0 right-0 z-[100] bg-gold text-midnight py-2 px-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
