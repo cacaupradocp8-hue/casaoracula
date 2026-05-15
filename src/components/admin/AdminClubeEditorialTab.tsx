@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -14,9 +14,13 @@ import {
   CheckCircle2, 
   Clock, 
   FileText,
+  History,
   Image as ImageIcon,
   MoreVertical,
-  ChevronRight
+  ChevronRight,
+  User,
+  ArrowUpDown,
+  Calendar
 } from 'lucide-react';
 import { 
   Card, 
@@ -36,6 +40,8 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -60,7 +66,17 @@ export function AdminClubeEditorialTab() {
   const [isEstacaoDialogOpen, setIsEstacaoDialogOpen] = useState(false);
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
   const [editingEstacao, setEditingEstacao] = useState<any>(null);
+  const [prevEstacao, setPrevEstacao] = useState<any>(null);
   const [editingItem, setEditingItem] = useState<any>(null);
+  const [prevItem, setPrevItem] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState('conteudo');
+  
+  // History filters
+  const [historyFilter, setHistoryFilter] = useState({
+    user: 'all',
+    type: 'all',
+    action: 'all'
+  });
 
   // Queries
   const { data: estacoes, isLoading: loadingEstacoes } = useQuery({
@@ -90,8 +106,43 @@ export function AdminClubeEditorialTab() {
       return data;
     }
   });
+  
+  const { data: auditLogs, isLoading: loadingLogs } = useQuery({
+    queryKey: ['admin-clube-audit-logs'],
+    queryFn: async () => {
+      const { data: logs, error } = await supabase
+        .from('clube_audit_log')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      if (!logs) return [];
+      
+      const userIds = Array.from(new Set(logs.map(l => l.user_id).filter(Boolean)));
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('*')
+        .in('id', userIds);
+      
+      return logs.map(log => ({
+        ...log,
+        profiles: profiles?.find(p => p.id === log.user_id)
+      }));
+    },
+    enabled: activeTab === 'historico'
+  });
 
   // Mutations
+  const createAuditLog = async (log: any) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    
+    await supabase.from('clube_audit_log').insert({
+      ...log,
+      user_id: user.id
+    });
+  };
+
   const updateEstacao = useMutation({
     mutationFn: async (payload: any) => {
       const { id, ...updates } = payload;
@@ -100,6 +151,20 @@ export function AdminClubeEditorialTab() {
         .update(updates)
         .eq('id', id);
       if (error) throw error;
+      
+      // Log changes
+      for (const key in updates) {
+        if (updates[key] !== prevEstacao[key]) {
+          await createAuditLog({
+            tabela: 'clube_estacoes',
+            registro_id: id,
+            acao: 'UPDATE',
+            campo_alterado: key,
+            valor_anterior: String(prevEstacao[key]),
+            valor_novo: String(updates[key])
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
@@ -116,6 +181,20 @@ export function AdminClubeEditorialTab() {
         .update(updates)
         .eq('id', id);
       if (error) throw error;
+
+      // Log changes
+      for (const key in updates) {
+        if (updates[key] !== prevItem[key]) {
+          await createAuditLog({
+            tabela: 'clube_rota_itens',
+            registro_id: id,
+            acao: 'UPDATE',
+            campo_alterado: key,
+            valor_anterior: String(prevItem[key]),
+            valor_novo: String(updates[key])
+          });
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
@@ -126,11 +205,13 @@ export function AdminClubeEditorialTab() {
 
   const handleEditEstacao = (estacao: any) => {
     setEditingEstacao(estacao);
+    setPrevEstacao({...estacao});
     setIsEstacaoDialogOpen(true);
   };
 
   const handleEditItem = (item: any) => {
     setEditingItem(item);
+    setPrevItem({...item});
     setIsItemDialogOpen(true);
   };
 
@@ -140,8 +221,20 @@ export function AdminClubeEditorialTab() {
   );
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500">
-      {/* Header & Stats */}
+    <Tabs defaultValue="conteudo" value={activeTab} onValueChange={setActiveTab} className="space-y-8 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+        <TabsList className="bg-midnight/40 border-white/10">
+          <TabsTrigger value="conteudo" className="gap-2">
+            <Layout className="w-4 h-4" /> Conteúdo Rota
+          </TabsTrigger>
+          <TabsTrigger value="historico" className="gap-2">
+            <History className="w-4 h-4" /> Histórico Editorial
+          </TabsTrigger>
+        </TabsList>
+      </div>
+
+      <TabsContent value="conteudo" className="space-y-8 mt-0 border-none p-0">
+        {/* Header & Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
@@ -538,6 +631,141 @@ export function AdminClubeEditorialTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </TabsContent>
+
+      <TabsContent value="historico" className="space-y-6 mt-0 border-none p-0">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <Card className="bg-midnight/20 border-white/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <History className="w-4 h-4 text-gold" /> Total de Ações
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{auditLogs?.length || 0}</div>
+            </CardContent>
+          </Card>
+          
+          <div className="md:col-span-3 flex flex-wrap gap-3 items-end justify-end">
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Admin</Label>
+              <select 
+                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
+                onChange={(e) => setHistoryFilter({...historyFilter, user: e.target.value})}
+              >
+                <option value="all">Todos os Admins</option>
+                {Array.from(new Set(auditLogs?.map(l => l.profiles?.nome).filter(Boolean))).map(name => (
+                  <option key={name as string} value={name as string}>{name as string}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Tabela</Label>
+              <select 
+                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
+                onChange={(e) => setHistoryFilter({...historyFilter, type: e.target.value})}
+              >
+                <option value="all">Todas as Tabelas</option>
+                <option value="clube_estacoes">Estações</option>
+                <option value="clube_rota_itens">Itens de Rota</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Ação</Label>
+              <select 
+                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
+                onChange={(e) => setHistoryFilter({...historyFilter, action: e.target.value})}
+              >
+                <option value="all">Todas as Ações</option>
+                <option value="UPDATE">Update</option>
+                <option value="INSERT">Insert</option>
+                <option value="DELETE">Delete</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-white/5 overflow-hidden bg-midnight/20">
+          <Table>
+            <TableHeader className="bg-white/[0.02]">
+              <TableRow>
+                <TableHead className="w-[180px]">Data / Hora</TableHead>
+                <TableHead>Admin</TableHead>
+                <TableHead>Tabela / Item</TableHead>
+                <TableHead>Alteração</TableHead>
+                <TableHead className="text-right">Ação</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loadingLogs ? (
+                <TableRow><TableCell colSpan={5} className="text-center py-12">Carregando histórico...</TableCell></TableRow>
+              ) : auditLogs?.length === 0 ? (
+                <TableRow><TableCell colSpan={5} className="text-center py-12 text-white/20">Nenhum registro de auditoria encontrado.</TableCell></TableRow>
+              ) : auditLogs?.filter(l => {
+                const matchUser = historyFilter.user === 'all' || l.profiles?.nome === historyFilter.user;
+                const matchType = historyFilter.type === 'all' || l.tabela === historyFilter.type;
+                const matchAction = historyFilter.action === 'all' || l.acao === historyFilter.action;
+                return matchUser && matchType && matchAction;
+              }).map((log) => (
+                <TableRow key={log.id} className="hover:bg-white/[0.01] transition-colors border-white/5">
+                  <TableCell className="text-xs text-white/40 font-mono">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3 h-3" />
+                      {new Date(log.created_at).toLocaleString('pt-BR')}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 overflow-hidden">
+                        {log.profiles?.avatar_url ? (
+                          <img src={log.profiles.avatar_url} className="w-full h-full object-cover" alt="" />
+                        ) : (
+                          <User className="w-3 h-3 text-gold/60" />
+                        )}
+                      </div>
+                      <span className="text-xs font-medium">{log.profiles?.nome || 'Admin'}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-col gap-1">
+                      <Badge variant="outline" className="text-[9px] w-fit border-white/10 opacity-60">
+                        {log.tabela}
+                      </Badge>
+                      <span className="text-[10px] text-white/40 truncate max-w-[150px]">
+                        ID: {log.registro_id}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="max-w-[300px] space-y-1">
+                      <div className="text-[10px] font-bold text-gold/60 uppercase tracking-tighter">
+                        {log.campo_alterado || 'Múltiplos campos'}
+                      </div>
+                      <div className="flex items-center gap-2 text-[10px] bg-white/[0.02] p-1.5 rounded border border-white/5">
+                        <span className="text-red-400/60 line-through truncate max-w-[100px]">{log.valor_anterior || 'n/a'}</span>
+                        <ChevronRight className="w-2 h-2 text-white/20" />
+                        <span className="text-emerald-400/80 font-medium truncate max-w-[120px]">{log.valor_novo || 'n/a'}</span>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Badge className={`
+                      text-[9px] font-bold uppercase ${
+                      log.acao === 'UPDATE' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : 
+                      log.acao === 'INSERT' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
+                      "bg-red-500/10 text-red-400 border-red-500/20"
+                    }`}>
+                      {log.acao}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      </TabsContent>
+    </Tabs>
   );
 }
