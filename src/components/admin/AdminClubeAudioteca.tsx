@@ -62,6 +62,7 @@ export function AdminClubeAudioteca() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
   const [editingTrack, setEditingTrack] = useState<any>(null);
+  const [prevTrack, setPrevTrack] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState<any>(null);
 
@@ -119,12 +120,33 @@ export function AdminClubeAudioteca() {
 
   const updateTrack = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, album, ...updates } = payload;
+      const { id, album, album_id, ...updates } = payload;
       const { error } = await supabase
         .from('clube_audio_tracks')
         .update(updates)
         .eq('id', id);
       if (error) throw error;
+
+      // Log changes
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        for (const key in updates) {
+          const valAnterior = prevTrack[key];
+          const valNovo = updates[key];
+          
+          if (valNovo !== undefined && String(valAnterior) !== String(valNovo)) {
+            await supabase.from('clube_audit_log').insert({
+              user_id: user.id,
+              tabela: 'clube_audio_tracks',
+              registro_id: id,
+              acao: 'UPDATE',
+              campo_alterado: key,
+              valor_anterior: valAnterior !== null && valAnterior !== undefined ? String(valAnterior) : 'vazio',
+              valor_novo: valNovo !== null && valNovo !== undefined ? String(valNovo) : 'vazio'
+            });
+          }
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-audio-tracks'] });
@@ -347,7 +369,8 @@ export function AdminClubeAudioteca() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                             <DropdownMenuItem onClick={() => {
-                              setEditingTrack(track);
+                              setEditingTrack({...track});
+                              setPrevTrack({...track});
                               setIsEditDialogOpen(true);
                             }} className="gap-2">
                               <Edit3 className="w-4 h-4" /> Editar Dados
