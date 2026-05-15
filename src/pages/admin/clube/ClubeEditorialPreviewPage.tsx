@@ -12,10 +12,10 @@ import {
   Layout, 
   ShieldAlert, 
   MapPin, 
-  Play, 
   Headphones,
   FlaskConical,
-  Check
+  Clock,
+  Mic2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -82,8 +82,11 @@ export default function ClubeEditorialPreviewPage() {
   }
 
   const estacao = item.estacao as any;
-  const metadata = (item.metadata || {}) as any;
+  const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : (item.metadata || {});
+  
+  // Handle both production audios and production placeholders
   const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
+  const placeholders = Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [];
   
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
@@ -196,7 +199,7 @@ export default function ClubeEditorialPreviewPage() {
             </div>
 
             {/* Audios Section */}
-            {audios.length > 0 && (
+            {(audios.length > 0 || placeholders.length > 0) && (
               <div className="space-y-8 py-12 border-t border-white/5" id="audios-da-estacao">
                 <div className="text-center">
                   <Badge variant="outline" className="border-gold/30 text-gold/60 mb-2">AUDIOTECA</Badge>
@@ -204,23 +207,52 @@ export default function ClubeEditorialPreviewPage() {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {audios.map((audio: any, i: number) => (
-                    <AudioOracular key={i} titulo={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
+                    <AudioOracular key={`audio-${i}`} titulo={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
+                  ))}
+                  {placeholders.map((ph: any, i: number) => (
+                    <div key={`ph-${i}`} className="rounded-xl border border-white/5 bg-white/[0.01] p-6 flex items-center justify-between opacity-50 grayscale">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center">
+                          <Mic2 className="w-4 h-4 text-white/20" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-white/60">{ph.titulo}</p>
+                          <p className="text-[10px] uppercase tracking-wider text-white/20">{ph.taxonomia || 'Aguardando'}</p>
+                        </div>
+                      </div>
+                      <Badge variant="outline" className="text-[10px] border-white/10 text-white/20">EM PRODUÇÃO</Badge>
+                    </div>
                   ))}
                 </div>
               </div>
             )}
             
-            {/* Jardim/Prompt Section */}
-            {(item.jardim_prompt || item.cenario_treinamento) && (
+            {/* Jardim Section */}
+            {item.jardim_prompt && (
               <div className="space-y-8 py-12 border-t border-white/5">
                 <div className="text-center">
-                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-500/60 mb-2">PRÁTICA</Badge>
-                  <h2 className="font-display text-3xl md:text-4xl text-white">O Jardim das Delícias</h2>
+                  <Badge variant="outline" className="border-emerald-500/30 text-emerald-500/60 mb-2">JARDIM DA PSIQUE</Badge>
+                  <h2 className="font-display text-3xl md:text-4xl text-white">Escrita Íntima</h2>
                 </div>
                 <div className="max-w-3xl mx-auto p-8 rounded-3xl bg-emerald-500/[0.02] border border-emerald-500/10">
-                  <p className="text-lg md:text-xl font-serif italic text-white/70 leading-relaxed text-center">
-                    {item.jardim_prompt || item.cenario_treinamento}
+                  <p className="text-lg md:text-xl font-serif italic text-white/70 leading-relaxed text-center whitespace-pre-wrap">
+                    {item.jardim_prompt}
                   </p>
+                </div>
+              </div>
+            )}
+
+            {/* Laboratório Section */}
+            {item.cenario_treinamento && (
+              <div className="space-y-8 py-12 border-t border-white/5">
+                <div className="text-center">
+                  <Badge variant="outline" className="border-gold/30 text-gold/60 mb-2">LABORATÓRIO 80/20</Badge>
+                  <h2 className="font-display text-3xl md:text-4xl text-white">Prática Objetiva</h2>
+                </div>
+                <div className="max-w-3xl mx-auto p-8 rounded-3xl bg-gold/[0.02] border border-gold/10">
+                  <div className="text-sm md:text-base text-white/70 leading-relaxed whitespace-pre-wrap">
+                    {item.cenario_treinamento}
+                  </div>
                 </div>
               </div>
             )}
