@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, MapPin, Castle, ChevronRight, Loader2 } from 'lucide-react';
+import { Plus, Search, MapPin, Castle, ChevronRight, Loader2, Calendar, Clock, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Cliente {
@@ -23,6 +23,8 @@ interface Cliente {
   created_at: string;
   has_initial_cartography: boolean;
   has_initial_cidadela: boolean;
+  ultima_sessao?: string;
+  gesto_pendente?: boolean;
   journey?: {
     process_state: string;
     current_district?: { nome: string } | null;
