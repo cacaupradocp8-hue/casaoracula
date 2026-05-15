@@ -112,7 +112,7 @@ export default function ClubeEditorialPreviewPage() {
         <Button 
           variant="ghost" 
           size="sm" 
-          onClick={() => navigate('/admin')}
+          onClick={() => navigate('/admin?tab=clube-editorial')}
           className="h-8 gap-2 hover:bg-midnight/10 text-midnight border-midnight/20 border"
         >
           <ArrowLeft className="w-4 h-4" /> Voltar ao Editorial
