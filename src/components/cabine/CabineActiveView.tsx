@@ -73,7 +73,6 @@ export function CabineActiveView({
   // During active session — full screen session view
   if (mode === 'sessao' && sessionStartedAt) {
     return (
-    return (
       <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
         <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
           <CabineSessaoViva
@@ -89,7 +88,6 @@ export function CabineActiveView({
           />
         </div>
       </div>
-    );
     );
   }
 
