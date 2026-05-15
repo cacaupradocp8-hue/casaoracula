@@ -1,4 +1,4 @@
-import React from "react"; // REBUILD_V50
+import React from "react"; // REBUILD_V51 - FIX_WHITE_SCREEN_RECOVERY
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";

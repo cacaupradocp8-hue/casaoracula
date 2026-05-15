@@ -43,6 +43,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const AUTH_BOOT_LOG_PREFIX = '[boot-debug][auth-context]';
+  useEffect(() => {
+    console.info(`${AUTH_BOOT_LOG_PREFIX} AuthProvider montado`, { isAuthReady, isLoading, isAuthenticated: !!user });
+  }, []);
 
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
