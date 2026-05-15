@@ -82,9 +82,23 @@ export default function ClubeEditorialPreviewPage() {
   }
 
   const estacao = item.estacao as any;
-  const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : (item.metadata || {});
   
-  // Handle both production audios and production placeholders
+  let metadata: any = {};
+  try {
+    if (typeof item.metadata === 'string') {
+      metadata = JSON.parse(item.metadata);
+    } else {
+      metadata = item.metadata || {};
+    }
+    // Final safety check to ensure metadata is an object and not null
+    if (!metadata || typeof metadata !== 'object') {
+      metadata = {};
+    }
+  } catch (e) {
+    console.error("Error parsing metadata:", e);
+    metadata = {};
+  }
+  
   const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
   const placeholders = Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [];
   
