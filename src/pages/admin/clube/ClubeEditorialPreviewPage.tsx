@@ -1,4 +1,4 @@
-/* FORCING REBUILD - v2 */
+/* FORCING REBUILD - v25 */
 import React, { Suspense, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -59,6 +59,7 @@ export default function ClubeEditorialPreviewPage() {
 }
 
 function ClubeEditorialPreviewContent() {
+  console.log("[PREVIEW_CRITICAL] ClubeEditorialPreviewContent montando...");
   const { itemId } = useParams();
   const navigate = useNavigate();
 
@@ -155,6 +156,7 @@ function ClubeEditorialPreviewContent() {
 
   console.info("[PREVIEW_DEBUG] Rendering content for item:", item.id);
 
+  console.log("[PREVIEW_CRITICAL] Renderizando JSX final para item:", item.id);
   return (
     <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
 
@@ -174,6 +176,31 @@ function ClubeEditorialPreviewContent() {
         </Button>
       </div>
 
+      <div className="pt-24 bg-midnight min-h-screen text-white p-8">
+        <h1 className="text-4xl font-bold mb-4">Debug: {item.titulo}</h1>
+        <p className="text-xl text-white/60 mb-8">Se você está vendo isso, o AppLayout foi removido temporariamente para teste.</p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white/5 p-6 rounded-xl">
+            <h2 className="text-2xl font-bold mb-4">Metadados</h2>
+            <pre className="bg-black/40 p-4 rounded text-xs overflow-auto max-h-96">
+              {JSON.stringify(metadata, null, 2)}
+            </pre>
+          </div>
+          <div className="bg-white/5 p-6 rounded-xl">
+            <h2 className="text-2xl font-bold mb-4">Áudios</h2>
+            <div className="space-y-4">
+              {audios.map((a: any, i: number) => (
+                <div key={i} className="p-3 bg-white/10 rounded">
+                  {a.titulo} - {a.url?.substring(0, 30)}...
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden">
       <AppLayout>
         <div className="pt-12">
           {/* Hero Section */}
@@ -318,6 +345,7 @@ function ClubeEditorialPreviewContent() {
           </div>
         </div>
       </AppLayout>
+      </div>
     </div>
   );
 }
