@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // REBUILD_V60
+import { useState, useEffect } from 'react'; // REBUILD_V80
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';

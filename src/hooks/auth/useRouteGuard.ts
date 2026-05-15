@@ -4,7 +4,7 @@ import { useOnboarding } from '@/hooks/useOnboarding';
 import { useLocation } from 'react-router-dom';
 import { PortalType, canAccessFeature } from '@/types/portal';
 
-const LOG_PREFIX = '[boot-debug][routes]';
+const LOG_PREFIX = '[DEBUG_UI][routes]';
 
 function logRouteStep(stage: string, payload?: Record<string, unknown>, level: 'info' | 'warn' | 'error' = 'info') {
   const logger = level === 'error' ? console.error : level === 'warn' ? console.warn : console.info;
@@ -47,7 +47,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
 
   // Auth not ready
   if (!isAuthReady || isLoading) {
-    logRouteStep('boot auth pendente', { path: location.pathname, isAuthReady, isLoading });
+    console.info(`${LOG_PREFIX} boot auth pendente`, { path: location.pathname, isAuthReady, isLoading });
     return { status: 'loading' };
   }
 
@@ -91,9 +91,9 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
   const hasAccess = canAccessFeature(effectivePortal, minPortal);
 
   if (!hasAccess && !isPosCompraRoute) {
-    logRouteStep('bloqueada por permissão — exibindo gating', {
-      path: location.pathname, effectivePortal, minPortal,
-    }, 'warn');
+    console.warn(`${LOG_PREFIX} bloqueada por permissão — exibindo gating`, {
+      path: location.pathname, effectivePortal, minPortal, userPortal: user?.portal
+    });
     return { status: 'locked-visitor' };
   }
 
