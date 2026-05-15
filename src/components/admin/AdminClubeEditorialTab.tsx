@@ -108,15 +108,24 @@ export function AdminClubeEditorialTab() {
   const { data: auditLogs, isLoading: loadingLogs } = useQuery({
     queryKey: ['admin-clube-audit-logs'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: logs, error } = await supabase
         .from('clube_audit_log')
-        .select(`
-          *,
-          profiles:user_id(display_name, avatar_url)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
+      
       if (error) throw error;
-      return data;
+      
+      // Fetch profile names for these logs manually since there's no FK
+      const userIds = Array.from(new Set(logs.map(l => l.user_id).filter(Boolean)));
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, display_name, avatar_url')
+        .in('id', userIds);
+      
+      return logs.map(log => ({
+        ...log,
+        profiles: profiles?.find(p => p.id === log.user_id)
+      }));
     },
     enabled: activeTab === 'historico'
   });
@@ -704,12 +713,12 @@ export function AdminClubeEditorialTab() {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Badge className={cn(
-                      "text-[9px] font-bold uppercase",
+                    <Badge className={`
+                      text-[9px] font-bold uppercase ${
                       log.acao === 'UPDATE' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : 
                       log.acao === 'INSERT' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
                       "bg-red-500/10 text-red-400 border-red-500/20"
-                    )}>
+                    }`}>
                       {log.acao}
                     </Badge>
                   </TableCell>
