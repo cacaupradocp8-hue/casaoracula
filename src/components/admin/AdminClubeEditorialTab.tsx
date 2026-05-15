@@ -210,7 +210,7 @@ export function AdminClubeEditorialTab() {
                 <TableHead>Número</TableHead>
                 <TableHead>Título</TableHead>
                 <TableHead>Livro</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>Visibilidade</TableHead>
                 <TableHead>Atualizado em</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -224,14 +224,17 @@ export function AdminClubeEditorialTab() {
                   <TableCell className="font-medium">{e.titulo}</TableCell>
                   <TableCell className="text-muted-foreground italic text-xs">{e.livro_titulo}</TableCell>
                   <TableCell>
-                    {e.ativa ? (
+                    {e.publicada ? (
                       <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Ativa
+                        <CheckCircle2 className="w-3 h-3" /> Publicado
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="bg-white/5 text-white/40 gap-1">
-                        <Clock className="w-3 h-3" /> Inativa
+                      <Badge variant="outline" className="text-white/20 border-white/5 gap-1">
+                        <Clock className="w-3 h-3" /> Rascunho
                       </Badge>
+                    )}
+                    {e.ativa && (
+                      <Badge variant="outline" className="ml-2 border-gold/30 text-gold/60 text-[10px]">Ativa</Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground">
@@ -297,9 +300,12 @@ export function AdminClubeEditorialTab() {
                   </TableCell>
                   <TableCell>
                     {item.publicado ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Público</Badge>
+                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Publicado</Badge>
                     ) : (
                       <Badge variant="outline" className="text-white/20 border-white/5 text-[10px]">Rascunho</Badge>
+                    )}
+                    {item.status && item.status !== (item.publicado ? 'published' : 'draft') && (
+                      <span className="text-[8px] text-white/10 ml-2 block italic">({item.status})</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
@@ -399,7 +405,7 @@ export function AdminClubeEditorialTab() {
                 type="checkbox" 
                 id="publicada" 
                 defaultChecked={editingEstacao?.publicada}
-                onChange={(e) => setEditingEstacao({...editingEstacao, publicada: e.target.checked})}
+                onChange={(e) => setEditingEstacao({...editingEstacao, publicada: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
               <Label htmlFor="publicada">Publicada (Visível)</Label>
@@ -517,7 +523,7 @@ export function AdminClubeEditorialTab() {
                 type="checkbox" 
                 id="publicado-item" 
                 defaultChecked={editingItem?.publicado}
-                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked})}
+                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
               <Label htmlFor="publicado-item">Publicado e visível na Rota</Label>
