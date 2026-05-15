@@ -82,9 +82,23 @@ export default function ClubeEditorialPreviewPage() {
   }
 
   const estacao = item.estacao as any;
-  const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : (item.metadata || {});
   
-  // Handle both production audios and production placeholders
+  let metadata: any = {};
+  try {
+    if (typeof item.metadata === 'string') {
+      metadata = JSON.parse(item.metadata);
+    } else {
+      metadata = item.metadata || {};
+    }
+    // Final safety check to ensure metadata is an object and not null
+    if (!metadata || typeof metadata !== 'object') {
+      metadata = {};
+    }
+  } catch (e) {
+    console.error("Error parsing metadata:", e);
+    metadata = {};
+  }
+  
   const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
   const placeholders = Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [];
   
@@ -94,7 +108,7 @@ export default function ClubeEditorialPreviewPage() {
     { label: 'O Campo', value: item.campo, icon: Layers },
     { label: 'A Torre', value: item.torre, icon: Layout },
     { label: 'O Labirinto', value: item.labirinto, icon: ShieldAlert },
-  ].filter(c => c.value && c.value.trim());
+  ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
 
   // Mocked steps for preview progress
   const mockSteps: TravessiaStep[] = (siblingItems || []).map(sib => ({
@@ -206,9 +220,16 @@ export default function ClubeEditorialPreviewPage() {
                   <h2 className="font-display text-3xl md:text-4xl text-white">Escuta Profunda</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {audios.map((audio: any, i: number) => (
-                    <AudioOracular key={`audio-${i}`} titulo={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
-                  ))}
+                  {audios.map((audio: any, i: number) => {
+                    if (!audio || !audio.url) return null;
+                    return (
+                      <AudioOracular 
+                        key={`audio-${i}`} 
+                        titulo={audio.titulo || `Áudio ${i+1}`} 
+                        audioUrl={audio.url} 
+                      />
+                    );
+                  })}
                   {placeholders.map((ph: any, i: number) => (
                     <div key={`ph-${i}`} className="rounded-xl border border-white/5 bg-white/[0.01] p-6 flex items-center justify-between opacity-50 grayscale">
                       <div className="flex items-center gap-4">

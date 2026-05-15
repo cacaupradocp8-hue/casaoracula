@@ -31,7 +31,7 @@ interface ClubeTravessiaProgressProps {
 
 export function ClubeTravessiaProgress({ steps, className }: ClubeTravessiaProgressProps) {
   const completedCount = steps.filter(s => s.status === 'completed').length;
-  const progressPercentage = (completedCount / steps.length) * 100;
+  const progressPercentage = steps.length > 0 ? (completedCount / steps.length) * 100 : 0;
 
   return (
     <div className={cn("w-full space-y-6 bg-midnight/40 backdrop-blur-md border border-white/5 rounded-3xl p-6 md:p-8", className)}>
