@@ -7,6 +7,7 @@ const CriarFerramenta = React.lazy(() => import('@/pages/admin/CriarFerramenta')
 const AdminModulosFormativos = React.lazy(() => import('@/pages/admin/AdminModulosFormativos'));
 const AdminAlunaAcompanhamento = React.lazy(() => import('@/pages/admin/AdminAlunaAcompanhamento'));
 const AdminOracleCardsPage = React.lazy(() => import('@/pages/admin/AdminOracleCardsPage'));
+const ClubeEditorialPreviewPage = React.lazy(() => import('@/pages/admin/clube/ClubeEditorialPreviewPage'));
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
