@@ -36,7 +36,7 @@ const TIPOS = [
 export function CabineIntegracao({ cliente, sessionId, sessionData, leituraCampo, mapaVivoState, fluxoFinal, onDone }: Props) {
   const { user } = useAuth();
   const [titulo, setTitulo] = useState('');
-  const [descricao, setDescricao] = useState('');
+  const [descricao, setDescricao] = useState(sessionData.gestoIntegracao || '');
   const [tipo, setTipo] = useState('');
   const [duracao, setDuracao] = useState('');
   const [intencao, setIntencao] = useState('');
