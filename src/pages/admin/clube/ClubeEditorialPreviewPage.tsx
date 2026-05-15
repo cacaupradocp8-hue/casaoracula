@@ -1,4 +1,4 @@
-/* FORCING REBUILD - v30 */
+/* REBUILD_V50 */
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -8,7 +8,7 @@ export default function ClubeEditorialPreviewPage() {
   const { itemId } = useParams();
   const navigate = useNavigate();
 
-  console.log("[PREVIEW_CRITICAL] ClubeEditorialPreviewPage renderizando com itemId:", itemId);
+  console.log("[DEBUG_UI] ClubeEditorialPreviewPage renderizando com itemId:", itemId);
 
   const { data: item, isLoading, error } = useQuery({
     queryKey: ['admin-preview-item-minimal', itemId],
