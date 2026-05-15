@@ -114,12 +114,12 @@ export function AdminClubeEditorialTab() {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
+      if (!logs) return [];
       
-      // Fetch profile names for these logs manually since there's no FK
       const userIds = Array.from(new Set(logs.map(l => l.user_id).filter(Boolean)));
       const { data: profiles } = await supabase
         .from('profiles')
-        .select('id, display_name, avatar_url')
+        .select('id, nome, avatar_url')
         .in('id', userIds);
       
       return logs.map(log => ({
@@ -612,7 +612,7 @@ export function AdminClubeEditorialTab() {
                 onChange={(e) => setHistoryFilter({...historyFilter, user: e.target.value})}
               >
                 <option value="all">Todos os Admins</option>
-                {Array.from(new Set(auditLogs?.map(l => l.profiles?.display_name).filter(Boolean))).map(name => (
+                {Array.from(new Set(auditLogs?.map(l => l.profiles?.nome).filter(Boolean))).map(name => (
                   <option key={name as string} value={name as string}>{name as string}</option>
                 ))}
               </select>
@@ -642,10 +642,6 @@ export function AdminClubeEditorialTab() {
                 <option value="DELETE">Delete</option>
               </select>
             </div>
-            
-            <Button variant="outline" size="sm" className="bg-midnight/40 border-white/10 text-xs">
-              <ArrowUpDown className="w-3 h-3 mr-2" /> Exportar CSV
-            </Button>
           </div>
         </div>
 
@@ -666,7 +662,7 @@ export function AdminClubeEditorialTab() {
               ) : auditLogs?.length === 0 ? (
                 <TableRow><TableCell colSpan={5} className="text-center py-12 text-white/20">Nenhum registro de auditoria encontrado.</TableCell></TableRow>
               ) : auditLogs?.filter(l => {
-                const matchUser = historyFilter.user === 'all' || l.profiles?.display_name === historyFilter.user;
+                const matchUser = historyFilter.user === 'all' || l.profiles?.nome === historyFilter.user;
                 const matchType = historyFilter.type === 'all' || l.tabela === historyFilter.type;
                 const matchAction = historyFilter.action === 'all' || l.acao === historyFilter.action;
                 return matchUser && matchType && matchAction;
@@ -680,14 +676,14 @@ export function AdminClubeEditorialTab() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
+                      <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 overflow-hidden">
                         {log.profiles?.avatar_url ? (
-                          <img src={log.profiles.avatar_url} className="w-full h-full rounded-full object-cover" alt="" />
+                          <img src={log.profiles.avatar_url} className="w-full h-full object-cover" alt="" />
                         ) : (
                           <User className="w-3 h-3 text-gold/60" />
                         )}
                       </div>
-                      <span className="text-xs font-medium">{log.profiles?.display_name || 'Admin'}</span>
+                      <span className="text-xs font-medium">{log.profiles?.nome || 'Admin'}</span>
                     </div>
                   </TableCell>
                   <TableCell>
