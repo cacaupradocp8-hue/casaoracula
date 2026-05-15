@@ -621,6 +621,12 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      <AudiotecaSelector 
+        open={isAudiotecaOpen}
+        onClose={() => setIsAudiotecaOpen(false)}
+        onSelect={handleAudiotecaSelect}
+      />
     </Dialog>
   );
 }
