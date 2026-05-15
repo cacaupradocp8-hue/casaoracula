@@ -300,9 +300,12 @@ export function AdminClubeEditorialTab() {
                   </TableCell>
                   <TableCell>
                     {item.publicado ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Público</Badge>
+                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Publicado</Badge>
                     ) : (
                       <Badge variant="outline" className="text-white/20 border-white/5 text-[10px]">Rascunho</Badge>
+                    )}
+                    {item.status && item.status !== (item.publicado ? 'published' : 'draft') && (
+                      <span className="text-[8px] text-white/10 ml-2 block italic">({item.status})</span>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
@@ -402,7 +405,7 @@ export function AdminClubeEditorialTab() {
                 type="checkbox" 
                 id="publicada" 
                 defaultChecked={editingEstacao?.publicada}
-                onChange={(e) => setEditingEstacao({...editingEstacao, publicada: e.target.checked})}
+                onChange={(e) => setEditingEstacao({...editingEstacao, publicada: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
               <Label htmlFor="publicada">Publicada (Visível)</Label>
@@ -520,7 +523,7 @@ export function AdminClubeEditorialTab() {
                 type="checkbox" 
                 id="publicado-item" 
                 defaultChecked={editingItem?.publicado}
-                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked})}
+                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
               <Label htmlFor="publicado-item">Publicado e visível na Rota</Label>
