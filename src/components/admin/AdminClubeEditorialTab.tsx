@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
@@ -54,6 +55,7 @@ import { toast } from 'sonner';
 
 export function AdminClubeEditorialTab() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [isEstacaoDialogOpen, setIsEstacaoDialogOpen] = useState(false);
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
@@ -311,8 +313,11 @@ export function AdminClubeEditorialTab() {
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
                           <Edit3 className="w-4 h-4" /> Editar Item
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2">
-                          <Eye className="w-4 h-4" /> Ver no Clube
+                        <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
+                          <Eye className="w-4 h-4" /> Pré-visualizar
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
+                          <Layout className="w-4 h-4" /> Ver no Clube
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
