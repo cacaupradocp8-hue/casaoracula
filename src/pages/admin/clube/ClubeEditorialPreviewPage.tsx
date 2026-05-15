@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -22,7 +22,7 @@ import { Badge } from '@/components/ui/badge';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { cn } from '@/lib/utils';
 import { AudioOracular } from '@/components/audio/AudioOracular';
-import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgress';
+import { ClubeTravessiaProgress, TravessiaStep } from '@/components/clube/ClubeTravessiaProgress';
 
 export default function ClubeEditorialPreviewPage() {
   const { itemId } = useParams();
@@ -50,13 +50,14 @@ export default function ClubeEditorialPreviewPage() {
   const { data: siblingItems } = useQuery({
     queryKey: ['admin-preview-siblings', item?.estacao_id],
     queryFn: async () => {
+      if (!item?.estacao_id) return [];
       const { data, error } = await supabase
         .from('clube_rota_itens')
         .select('*')
         .eq('estacao_id', item.estacao_id)
         .order('ordem');
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!item?.estacao_id
   });
@@ -80,8 +81,9 @@ export default function ClubeEditorialPreviewPage() {
     );
   }
 
-  const estacao = item.estacao;
-  const audios = Array.isArray(item.metadata?.audios) ? item.metadata.audios : [];
+  const estacao = item.estacao as any;
+  const metadata = (item.metadata || {}) as any;
+  const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
   
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
@@ -92,11 +94,11 @@ export default function ClubeEditorialPreviewPage() {
   ].filter(c => c.value && c.value.trim());
 
   // Mocked steps for preview progress
-  const mockSteps = (siblingItems || []).map(sib => ({
+  const mockSteps: TravessiaStep[] = (siblingItems || []).map(sib => ({
     id: sib.id,
-    label: sib.titulo,
-    completed: sib.ordem < item.ordem,
-    current: sib.id === item.id
+    label: sib.titulo || 'Sem título',
+    icon: Compass,
+    status: sib.id === item.id ? 'in_progress' : (sib.ordem < (item.ordem || 0) ? 'completed' : 'not_started')
   }));
 
   return (
@@ -201,8 +203,8 @@ export default function ClubeEditorialPreviewPage() {
                   <h2 className="font-display text-3xl md:text-4xl text-white">Escuta Profunda</h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {audios.map((audio, i) => (
-                    <AudioOracular key={i} title={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
+                  {audios.map((audio: any, i: number) => (
+                    <AudioOracular key={i} titulo={audio.titulo || `Áudio ${i+1}`} audioUrl={audio.url} />
                   ))}
                 </div>
               </div>
