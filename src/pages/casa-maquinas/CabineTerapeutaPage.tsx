@@ -312,6 +312,8 @@ export default function CabineTerapeutaPage() {
           torre_estruturante: sessionData.torreEstruturante,
           observacao_etica: sessionData.observacaoEtica,
           ferramenta_escolhida: sessionData.ferramentaEscolhida,
+          gesto_integracao: sessionData.gestoIntegracao,
+          intencao_sessao: sessionData.intencaoSessao,
           checkin_texto: sessionData.checkinTexto,
           started_at: sessionStartedAt?.toISOString(),
           estado_campo: leituraCampo?.estado || null,
