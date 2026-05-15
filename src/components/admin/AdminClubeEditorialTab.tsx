@@ -55,6 +55,7 @@ import { toast } from 'sonner';
 
 export function AdminClubeEditorialTab() {
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [isEstacaoDialogOpen, setIsEstacaoDialogOpen] = useState(false);
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
