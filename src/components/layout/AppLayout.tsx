@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react'; // REBUILD_V70
 import { Navigation } from './Navigation';
 import { BottomNavPreview } from './BottomNavPreview';
 import { EthicalNotice } from '@/components/shared/EthicalNotice';
@@ -11,6 +11,9 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
+  useEffect(() => {
+    console.log("[DEBUG_UI] AppLayout montado");
+  }, []);
   return (
     <div className="min-h-screen bg-background relative flex flex-col overflow-x-hidden selection:bg-gold/30 selection:text-white">
       {/* Subtle ambient texture */}

@@ -1,5 +1,5 @@
-/* FORCING REBUILD - v2 */
-import React, { Suspense, useEffect, useMemo } from 'react';
+/* FORCING REBUILD - v40 */
+import React, { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -13,9 +13,6 @@ import {
   Layout, 
   ShieldAlert, 
   MapPin, 
-  Headphones,
-  FlaskConical,
-  Clock,
   Mic2,
   AlertTriangle
 } from 'lucide-react';
@@ -47,9 +44,6 @@ function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
   );
 }
 
-
-
-
 export default function ClubeEditorialPreviewPage() {
   return (
     <ErrorBoundary FallbackComponent={PreviewErrorFallback}>
@@ -62,11 +56,13 @@ function ClubeEditorialPreviewContent() {
   const { itemId } = useParams();
   const navigate = useNavigate();
 
+  console.log("[DEBUG_UI] ClubeEditorialPreviewContent montando com itemId:", itemId);
 
   // Fetch the item
   const { data: item, isLoading: loadingItem } = useQuery({
     queryKey: ['admin-preview-item', itemId],
     queryFn: async () => {
+      console.log("[DEBUG_UI] Buscando item no Supabase...");
       const { data, error } = await supabase
         .from('clube_rota_itens')
         .select(`
@@ -75,7 +71,10 @@ function ClubeEditorialPreviewContent() {
         `)
         .eq('id', itemId)
         .single();
-      if (error) throw error;
+      if (error) {
+        console.error("[DEBUG_UI] Erro Supabase:", error);
+        throw error;
+      }
       return data;
     },
     enabled: !!itemId
@@ -118,9 +117,6 @@ function ClubeEditorialPreviewContent() {
 
   const estacao = item.estacao as any;
   
-  console.info("[PREVIEW_DEBUG] Processando item:", item.titulo, "Estacao:", estacao?.titulo);
-
-  
   const metadata = useMemo(() => {
     try {
       if (typeof item.metadata === 'string') {
@@ -136,7 +132,6 @@ function ClubeEditorialPreviewContent() {
   const audios = useMemo(() => Array.isArray(metadata.audios) ? metadata.audios : [], [metadata]);
   const placeholders = useMemo(() => Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [], [metadata]);
 
-  
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
     { label: 'A Porta', value: item.porta, icon: DoorOpen },
@@ -145,7 +140,6 @@ function ClubeEditorialPreviewContent() {
     { label: 'O Labirinto', value: item.labirinto, icon: ShieldAlert },
   ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
 
-  // Mocked steps for preview progress
   const mockSteps: TravessiaStep[] = (siblingItems || []).map(sib => ({
     id: sib.id,
     label: sib.titulo || 'Sem título',
@@ -153,11 +147,10 @@ function ClubeEditorialPreviewContent() {
     status: sib.id === item.id ? 'in_progress' : (sib.ordem < (item.ordem || 0) ? 'completed' : 'not_started')
   }));
 
-  console.info("[PREVIEW_DEBUG] Rendering content for item:", item.id);
+  console.log("[DEBUG_UI] Renderizando JSX final");
 
   return (
     <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
-
       {/* MODO PREVIEW BANNER */}
       <div className="fixed top-0 left-0 right-0 z-[100] bg-gold text-midnight py-2 px-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
