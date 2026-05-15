@@ -17,7 +17,9 @@ import {
   ExternalLink,
   ChevronRight,
   Plus,
-  ArrowUpDown
+  ArrowUpDown,
+  Tag,
+  AlertCircle
 } from 'lucide-react';
 import { 
   Card, 
@@ -55,9 +57,22 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
+export const TAXONOMIA_EDITORIAL = [
+  { value: 'abertura_campo', label: 'Abertura de Campo', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
+  { value: 'aula_principal', label: 'Aula Principal', color: 'bg-purple-500/10 text-purple-400 border-purple-500/20' },
+  { value: 'conto_simbolo', label: 'Conto & Símbolo', color: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' },
+  { value: 'laboratorio_80_20', label: 'Laboratório 80/20', color: 'bg-orange-500/10 text-orange-400 border-orange-500/20' },
+  { value: 'pratica_guiada', label: 'Prática Guiada', color: 'bg-pink-500/10 text-pink-400 border-pink-500/20' },
+  { value: 'fechamento_campo', label: 'Fechamento de Campo', color: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20' },
+  { value: 'forja_profissional', label: 'Forja Profissional', color: 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' },
+  { value: 'meditacao', label: 'Meditação', color: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20' },
+  { value: 'instrucao_tecnica', label: 'Instrução Técnica', color: 'bg-slate-500/10 text-slate-400 border-slate-500/20' },
+];
+
 export function AdminClubeAudioteca() {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedEditorial, setSelectedEditorial] = useState<string>('all');
   const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   
@@ -168,10 +183,12 @@ export function AdminClubeAudioteca() {
     }
   };
 
-  const filteredTracks = tracks?.filter(t => 
-    t.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.album?.titulo?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredTracks = tracks?.filter(t => {
+    const matchesSearch = t.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         t.album?.titulo?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesEditorial = selectedEditorial === 'all' || (t.tags && t.tags.includes(selectedEditorial));
+    return matchesSearch && matchesEditorial;
+  });
 
   const formatDuration = (seconds: number) => {
     if (!seconds) return '0:00';
@@ -242,7 +259,18 @@ export function AdminClubeAudioteca() {
           />
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10">
+          <Select value={selectedEditorial} onValueChange={setSelectedEditorial}>
+            <SelectTrigger className="w-[180px] bg-midnight/40 border-white/10">
+              <SelectValue placeholder="Taxonomia Editorial" />
+            </SelectTrigger>
+            <SelectContent className="bg-midnight border-white/10">
+              <SelectItem value="all">Todas Categorias</SelectItem>
+              {TAXONOMIA_EDITORIAL.map(t => (
+                <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10" onClick={() => setSelectedAlbum(null)}>
             <Filter className="w-4 h-4" /> Álbuns
           </Button>
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90">
@@ -333,8 +361,30 @@ export function AdminClubeAudioteca() {
                         </Button>
                       </TableCell>
                       <TableCell>
-                        <div className="flex flex-col">
-                          <span className="font-medium text-sm">{track.titulo}</span>
+                        <div className="flex flex-col gap-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-medium text-sm">{track.titulo}</span>
+                            {!track.tags?.some((tag: string) => TAXONOMIA_EDITORIAL.some(t => t.value === tag)) && (
+                              <AlertCircle className="w-3 h-3 text-amber-500/50" title="Sem taxonomia editorial" />
+                            )}
+                          </div>
+                          <div className="flex flex-wrap gap-1">
+                            {track.tags?.map((tag: string) => {
+                              const taxonomy = TAXONOMIA_EDITORIAL.find(t => t.value === tag);
+                              if (taxonomy) {
+                                return (
+                                  <Badge key={tag} variant="outline" className={`text-[8px] h-3.5 px-1 py-0 ${taxonomy.color}`}>
+                                    {taxonomy.label}
+                                  </Badge>
+                                );
+                              }
+                              return (
+                                <Badge key={tag} variant="outline" className="text-[8px] h-3.5 px-1 py-0 text-white/30 border-white/5">
+                                  {tag}
+                                </Badge>
+                              );
+                            })}
+                          </div>
                           <span className="text-[10px] text-muted-foreground font-mono truncate max-w-[150px]">{track.audio_url}</span>
                         </div>
                       </TableCell>
@@ -426,6 +476,36 @@ export function AdminClubeAudioteca() {
                     className="bg-midnight/40 border-white/10"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Taxonomia Editorial</Label>
+                <div className="flex flex-wrap gap-2 p-3 rounded-lg border border-white/5 bg-white/[0.02]">
+                  {TAXONOMIA_EDITORIAL.map(t => {
+                    const isSelected = editingTrack.tags?.includes(t.value);
+                    return (
+                      <button
+                        key={t.value}
+                        type="button"
+                        onClick={() => {
+                          const currentTags = editingTrack.tags || [];
+                          const newTags = isSelected 
+                            ? currentTags.filter((tag: string) => tag !== t.value)
+                            : [...currentTags, t.value];
+                          setEditingTrack({...editingTrack, tags: newTags});
+                        }}
+                        className={`text-[10px] px-2 py-1 rounded-md border transition-all ${
+                          isSelected 
+                            ? `${t.color} border-current ring-1 ring-current/30` 
+                            : 'bg-white/5 text-muted-foreground border-transparent hover:bg-white/10'
+                        }`}
+                      >
+                        {t.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[10px] text-muted-foreground italic">Selecione uma ou mais categorias para organizar a Audioteca.</p>
               </div>
 
               <div className="space-y-2">
