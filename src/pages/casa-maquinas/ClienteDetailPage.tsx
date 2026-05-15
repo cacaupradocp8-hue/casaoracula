@@ -73,75 +73,106 @@ export default function ClienteDetailPage() {
     );
   }
 
-  const tabClass = "data-[state=active]:bg-primary/15 data-[state=active]:text-primary text-muted-foreground text-xs";
+  const tabClass = "data-[state=active]:bg-primary/15 data-[state=active]:text-primary text-muted-foreground text-xs transition-all duration-300";
 
   return (
     <CasaMaquinasLayout title={cliente.nome} subtitle="Jornada interior">
-      <div className="flex justify-end mb-4">
-        <Button
-          variant="outline"
-          onClick={() => navigate(`/casa-das-maquinas/cabine?clienteId=${clienteId}`)}
-          className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
-        >
-          Abrir Cabine
-        </Button>
-      </div>
+      <ClienteJourneyHeader cliente={cliente} clienteId={clienteId!} />
 
-      {/* Mini Mandala — visão rápida da CidaDELA */}
-      <MiniMandalaCidadela clienteId={clienteId!} />
-
-      {/* Atividade da cliente no Jardim */}
-      <div className="mb-4">
-        <ClienteAtividadeJardim clienteId={clienteId!} />
-      </div>
-
-
-      <Tabs defaultValue="cidadela" className="w-full">
-        <TabsList className="bg-card/80 border border-border/30 mb-6 flex-wrap h-auto gap-0.5 p-1">
-          <TabsTrigger value="cidadela" className={tabClass}>CidaDELA</TabsTrigger>
-          <TabsTrigger value="perfil-simbolico" className={tabClass}>Perfil Simbólico</TabsTrigger>
-          <TabsTrigger value="historico" className={tabClass}>Histórico</TabsTrigger>
-          <TabsTrigger value="cartografia" className={tabClass}>Cartografia</TabsTrigger>
-          <TabsTrigger value="sonhos" className={tabClass}>Sonhos</TabsTrigger>
-          <TabsTrigger value="arquetipo" className={tabClass}>Arquétipo</TabsTrigger>
-          <TabsTrigger value="estacoes" className={tabClass}>Estações</TabsTrigger>
-          <TabsTrigger value="ariadne" className={tabClass}>Fio de Ariadne</TabsTrigger>
-          <TabsTrigger value="sinais" className={tabClass}>Sinais</TabsTrigger>
-          <TabsTrigger value="jardim-heroina" className={tabClass}>Jardim</TabsTrigger>
-          <TabsTrigger value="39portas" className={tabClass}>39 Portas</TabsTrigger>
-          <TabsTrigger value="atlas" className={tabClass}>Atlas</TabsTrigger>
-          <TabsTrigger value="espelho" className={tabClass}>Espelho</TabsTrigger>
-          <TabsTrigger value="complexos" className={tabClass}>Complexos</TabsTrigger>
-          <TabsTrigger value="conselho" className={tabClass}>Conselho</TabsTrigger>
-          <TabsTrigger value="ritual" className={tabClass}>Ritual</TabsTrigger>
+      <Tabs defaultValue="visao-geral" className="w-full">
+        <TabsList className="bg-card/40 border border-border/20 mb-8 p-1 h-auto flex-wrap justify-start gap-1 backdrop-blur-md">
+          <TabsTrigger value="visao-geral" className={tabClass}>
+            <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" /> Visão Geral
+          </TabsTrigger>
+          <TabsTrigger value="cidadela" className={tabClass}>
+            <Map className="w-3.5 h-3.5 mr-1.5" /> CidaDELA
+          </TabsTrigger>
+          <TabsTrigger value="historico" className={tabClass}>
+            <History className="w-3.5 h-3.5 mr-1.5" /> Histórico
+          </TabsTrigger>
+          <TabsTrigger value="ferramentas" className={tabClass}>
+            <Sparkles className="w-3.5 h-3.5 mr-1.5" /> Ferramentas
+          </TabsTrigger>
           <TabsTrigger value="perfil" className={tabClass}>Perfil</TabsTrigger>
-          <TabsTrigger value="mapa-psiquico" className={tabClass}>Mapa Psíquico</TabsTrigger>
-          <TabsTrigger value="relatorio-jornada" className={tabClass}>Relatórios</TabsTrigger>
-          <TabsTrigger value="bussola" className={tabClass}>Bússola</TabsTrigger>
-          <TabsTrigger value="leitura-clinica" className={tabClass}>Leitura Clínica</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="cidadela"><MapaVivoCidadela clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="perfil-simbolico"><PerfilSimbolicoCliente clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="historico"><ClienteHistorico clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="cartografia"><ClienteCartografias clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="sonhos"><ClienteSonhos clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="arquetipo"><ClientePerfilArquetipico clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="estacoes"><OraculoEstacoes clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="ariadne"><FioDeAriadne clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="sinais"><SinaisDaJornada clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="jardim-heroina"><ClienteJardimHeroinaTab clientId={clienteId!} clientName={cliente.nome} /></TabsContent>
-        <TabsContent value="39portas"><Labirinto39Portas clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="atlas"><AtlasArquetipos clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="espelho"><RelacionamentosEspelho clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="complexos"><CartografiaComplexos clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="conselho"><ConselhoPartesInternas clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="ritual"><RitualIntegracao clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="perfil"><ClientePerfilTab cliente={cliente} onUpdate={loadCliente} /></TabsContent>
-        <TabsContent value="mapa-psiquico"><CartografiaPsiquicaOracula clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="relatorio-jornada"><RelatorioJornadaPage clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="bussola"><BussolaCartografa clienteId={clienteId!} /></TabsContent>
-        <TabsContent value="leitura-clinica"><CartografiaClinicaPanel clienteId={clienteId!} /></TabsContent>
+        <TabsContent value="visao-geral" className="space-y-8 animate-in fade-in duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <section>
+                <h3 className="text-sm font-display font-semibold uppercase tracking-widest text-primary/70 mb-4 flex items-center">
+                  <div className="w-1 h-4 bg-primary mr-2 rounded-full" />
+                  Estado Atual da Jornada
+                </h3>
+                <MiniMandalaCidadela clienteId={clienteId!} />
+              </section>
+
+              <section>
+                <h3 className="text-sm font-display font-semibold uppercase tracking-widest text-primary/70 mb-4 flex items-center">
+                  <div className="w-1 h-4 bg-primary mr-2 rounded-full" />
+                  Atividade no Jardim
+                </h3>
+                <ClienteAtividadeJardim clienteId={clienteId!} />
+              </section>
+            </div>
+
+            <div className="space-y-8">
+              <section>
+                <h3 className="text-sm font-display font-semibold uppercase tracking-widest text-primary/70 mb-4 flex items-center">
+                  <div className="w-1 h-4 bg-primary mr-2 rounded-full" />
+                  Timeline Simbólica
+                </h3>
+                <ClienteJourneyTimeline clienteId={clienteId!} />
+              </section>
+            </div>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="cidadela" className="animate-in fade-in duration-500">
+          <MapaVivoCidadela clienteId={clienteId!} />
+        </TabsContent>
+
+        <TabsContent value="historico" className="animate-in fade-in duration-500">
+          <ClienteHistorico clienteId={clienteId!} />
+        </TabsContent>
+
+        <TabsContent value="ferramentas" className="animate-in fade-in duration-500">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* Grouped tools triggers for better UX instead of a giant list of tabs */}
+            <Tabs defaultValue="cartografia" className="w-full col-span-full">
+              <TabsList className="bg-transparent mb-6 border-b border-border/30 w-full justify-start rounded-none h-auto p-0">
+                <TabsTrigger value="cartografia" className="border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none px-4 py-2">Cartografias</TabsTrigger>
+                <TabsTrigger value="simbolico" className="border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none px-4 py-2">Simbólico</TabsTrigger>
+                <TabsTrigger value="avancado" className="border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent rounded-none px-4 py-2">Avançado</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="cartografia" className="space-y-6">
+                <ClienteCartografias clienteId={clienteId!} />
+                <CartografiaClinicaPanel clienteId={clienteId!} />
+              </TabsContent>
+              
+              <TabsContent value="simbolico" className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <PerfilSimbolicoCliente clienteId={clienteId!} />
+                <ClienteSonhos clienteId={clienteId!} />
+                <ClientePerfilArquetipico clienteId={clienteId!} />
+                <AtlasArquetipos clienteId={clienteId!} />
+              </TabsContent>
+              
+              <TabsContent value="avancado" className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <OraculoEstacoes clienteId={clienteId!} />
+                  <FioDeAriadne clienteId={clienteId!} />
+                  <SinaisDaJornada clienteId={clienteId!} />
+                  <Labirinto39Portas clienteId={clienteId!} />
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="perfil" className="animate-in fade-in duration-500">
+          <ClientePerfilTab cliente={cliente} onUpdate={loadCliente} />
+        </TabsContent>
       </Tabs>
     </CasaMaquinasLayout>
   );
