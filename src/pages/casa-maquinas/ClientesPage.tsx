@@ -115,7 +115,7 @@ export default function ClientesPage() {
     ]);
 
     // Filtragem manual para evitar erro de tipo na query
-    const pendentes = gestos?.filter(g => g.status === 'pendente' || (g.status as string) === 'pendente');
+    const pendentes = gestos?.filter(g => (g.status as string) === 'pendente' || (g.status as string) === 'em_pratica');
 
     const districtMap = Object.fromEntries((districts || []).map(d => [d.id, d.nome]));
 
