@@ -266,6 +266,40 @@ export function AdminDocumentosTab() {
         {/* 🏛 MANUAIS DA CASA */}
         <TabsContent value="manuais" className="pt-4 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="border-gold/30 bg-gold/5 shadow-gold/5">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-gold">
+                    <Book className="w-5 h-5" />
+                    <Badge variant="outline" className="text-[10px] uppercase border-gold text-gold">Editorial</Badge>
+                  </div>
+                  <Button variant="ghost" size="sm" asChild className="h-8 px-2 text-gold hover:text-white hover:bg-gold/20">
+                    <a href="/admin/clube-editorial">
+                      <ExternalLink className="w-4 h-4 mr-2" />
+                      Painel Editorial
+                    </a>
+                  </Button>
+                </div>
+                <CardTitle className="text-lg mt-2">Guia do Sistema Editorial</CardTitle>
+                <CardDescription>Fluxos, taxonomia e gestão do Clube Oracular</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ScrollArea className="h-[250px] rounded-md border p-4 bg-muted/20">
+                  <div className="prose prose-sm prose-invert max-w-none text-sm text-gray-300">
+                    <h3 className="text-white">Manual do Usuário</h3>
+                    <ul className="space-y-1">
+                      <li><strong>Fluxo Editorial:</strong> Rascunho, Preview e Publicação.</li>
+                      <li><strong>Gestão de Estações:</strong> Títulos, visibilidade e livros.</li>
+                      <li><strong>Audioteca:</strong> Taxonomia (9 categorias) e gestão de URLs.</li>
+                      <li><strong>Vínculo Sincronizado:</strong> Manutenção de integridade Audioteca vs Rota.</li>
+                    </ul>
+                    <p className="text-xs text-muted-foreground mt-4 italic">Ref: SPRINT_08H_CLUBE_EDITORIAL_USER_GUIDE.md</p>
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-2 text-blue-400 mb-2">
