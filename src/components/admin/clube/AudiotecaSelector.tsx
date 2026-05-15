@@ -20,7 +20,8 @@ import {
   CheckCircle2,
   Circle,
   Loader2,
-  Filter
+  Filter,
+  AlertCircle
 } from 'lucide-react';
 import {
   Select,
@@ -29,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { TAXONOMIA_EDITORIAL } from '../AdminClubeAudioteca';
 
 interface Props {
   open: boolean;
@@ -40,6 +42,7 @@ export function AudiotecaSelector({ open, onClose, onSelect }: Props) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAlbumId, setSelectedAlbumId] = useState<string>('all');
   const [selectedTipo, setSelectedTipo] = useState<string>('all');
+  const [selectedEditorial, setSelectedEditorial] = useState<string>('all');
 
   const { data: albums } = useQuery({
     queryKey: ['admin-clube-audio-albums-selector'],
@@ -73,7 +76,8 @@ export function AudiotecaSelector({ open, onClose, onSelect }: Props) {
                          t.album?.titulo?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesAlbum = selectedAlbumId === 'all' || t.album_id === selectedAlbumId;
     const matchesTipo = selectedTipo === 'all' || t.tipo === selectedTipo;
-    return matchesSearch && matchesAlbum && matchesTipo;
+    const matchesEditorial = selectedEditorial === 'all' || (t.tags && t.tags.includes(selectedEditorial));
+    return matchesSearch && matchesAlbum && matchesTipo && matchesEditorial;
   });
 
   const formatDuration = (seconds: number) => {
@@ -112,6 +116,17 @@ export function AudiotecaSelector({ open, onClose, onSelect }: Props) {
                   <SelectItem value="all">Todos Álbuns</SelectItem>
                   {albums?.map(a => (
                     <SelectItem key={a.id} value={a.id}>{a.titulo}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedEditorial} onValueChange={setSelectedEditorial}>
+                <SelectTrigger className="w-[110px] bg-midnight/40 border-white/10">
+                  <SelectValue placeholder="Taxonomia" />
+                </SelectTrigger>
+                <SelectContent className="bg-midnight border-white/10">
+                  <SelectItem value="all">Todas</SelectItem>
+                  {TAXONOMIA_EDITORIAL.map(t => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -154,6 +169,22 @@ export function AudiotecaSelector({ open, onClose, onSelect }: Props) {
                         ) : (
                           <Badge variant="outline" className="text-[8px] h-4 text-white/20 border-white/5">Rascunho</Badge>
                         )}
+                        {!track.tags?.some((tag: string) => TAXONOMIA_EDITORIAL.some(t => t.value === tag)) && (
+                          <AlertCircle className="w-2.5 h-2.5 text-amber-500/50" />
+                        )}
+                      </div>
+                      <div className="flex flex-wrap gap-1 mb-1">
+                        {track.tags?.map((tag: string) => {
+                          const taxonomy = TAXONOMIA_EDITORIAL.find(t => t.value === tag);
+                          if (taxonomy) {
+                            return (
+                              <Badge key={tag} variant="outline" className={`text-[7px] h-3 px-1 py-0 leading-none ${taxonomy.color}`}>
+                                {taxonomy.label}
+                              </Badge>
+                            );
+                          }
+                          return null;
+                        })}
                       </div>
                       <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-wider">
                         <Disc className="w-3 h-3" /> {track.album?.titulo || 'Sem Álbum'}
