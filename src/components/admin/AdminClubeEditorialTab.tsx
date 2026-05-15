@@ -154,14 +154,18 @@ export function AdminClubeEditorialTab() {
       
       // Log changes
       for (const key in updates) {
-        if (updates[key] !== prevEstacao[key]) {
+        const valAnterior = prevEstacao[key];
+        const valNovo = updates[key];
+        
+        // Só loga se houver mudança real e os valores forem diferentes
+        if (valNovo !== undefined && String(valAnterior) !== String(valNovo)) {
           await createAuditLog({
             tabela: 'clube_estacoes',
             registro_id: id,
             acao: 'UPDATE',
             campo_alterado: key,
-            valor_anterior: String(prevEstacao[key]),
-            valor_novo: String(updates[key])
+            valor_anterior: valAnterior !== null && valAnterior !== undefined ? String(valAnterior) : 'vazio',
+            valor_novo: valNovo !== null && valNovo !== undefined ? String(valNovo) : 'vazio'
           });
         }
       }
@@ -184,14 +188,18 @@ export function AdminClubeEditorialTab() {
 
       // Log changes
       for (const key in updates) {
-        if (updates[key] !== prevItem[key]) {
+        const valAnterior = prevItem[key];
+        const valNovo = updates[key];
+
+        // Só loga se houver mudança real e os valores forem diferentes
+        if (valNovo !== undefined && String(valAnterior) !== String(valNovo)) {
           await createAuditLog({
             tabela: 'clube_rota_itens',
             registro_id: id,
             acao: 'UPDATE',
             campo_alterado: key,
-            valor_anterior: String(prevItem[key]),
-            valor_novo: String(updates[key])
+            valor_anterior: valAnterior !== null && valAnterior !== undefined ? String(valAnterior) : 'vazio',
+            valor_novo: valNovo !== null && valNovo !== undefined ? String(valNovo) : 'vazio'
           });
         }
       }
