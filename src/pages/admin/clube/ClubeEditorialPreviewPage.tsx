@@ -1,4 +1,5 @@
-import React, { Suspense } from 'react';
+/* FORCING REBUILD - v2 */
+import React, { Suspense, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,6 +28,10 @@ import { ClubeTravessiaProgress, TravessiaStep } from '@/components/clube/ClubeT
 import { ErrorBoundary } from 'react-error-boundary';
 
 function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
+  useEffect(() => {
+    console.error("[PREVIEW_CRITICAL_ERROR]", error);
+  }, [error]);
+
   return (
     <div className="min-h-screen bg-midnight flex flex-col items-center justify-center p-8 text-center space-y-4">
       <AlertTriangle className="w-12 h-12 text-destructive mb-2" />
@@ -34,13 +39,15 @@ function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
       <p className="text-white/60 max-w-md font-mono text-xs bg-white/5 p-4 rounded-lg break-all">
         {error.message}
       </p>
-      <div className="flex gap-4">
+      <div className="flex flex-col gap-2">
         <Button onClick={resetErrorBoundary} variant="outline">Tentar Novamente</Button>
-        <Button onClick={() => window.location.href = '/admin'}>Voltar ao Painel</Button>
+        <Button onClick={() => window.location.href = '/admin'} variant="ghost">Voltar ao Painel</Button>
       </div>
     </div>
   );
 }
+
+
 
 
 export default function ClubeEditorialPreviewPage() {
@@ -111,24 +118,24 @@ function ClubeEditorialPreviewContent() {
 
   const estacao = item.estacao as any;
   
-  let metadata: any = {};
-  try {
-    if (typeof item.metadata === 'string') {
-      metadata = JSON.parse(item.metadata);
-    } else {
-      metadata = item.metadata || {};
-    }
-    // Final safety check to ensure metadata is an object and not null
-    if (!metadata || typeof metadata !== 'object') {
-      metadata = {};
-    }
-  } catch (e) {
-    console.error("Error parsing metadata:", e);
-    metadata = {};
-  }
+  console.info("[PREVIEW_DEBUG] Processando item:", item.titulo, "Estacao:", estacao?.titulo);
+
   
-  const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
-  const placeholders = Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [];
+  const metadata = useMemo(() => {
+    try {
+      if (typeof item.metadata === 'string') {
+        return JSON.parse(item.metadata);
+      }
+      return item.metadata || {};
+    } catch (e) {
+      console.error("[PREVIEW_ERROR] Metadata parse fail:", e);
+      return {};
+    }
+  }, [item.metadata]);
+  
+  const audios = useMemo(() => Array.isArray(metadata.audios) ? metadata.audios : [], [metadata]);
+  const placeholders = useMemo(() => Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : [], [metadata]);
+
   
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
@@ -146,8 +153,11 @@ function ClubeEditorialPreviewContent() {
     status: sib.id === item.id ? 'in_progress' : (sib.ordem < (item.ordem || 0) ? 'completed' : 'not_started')
   }));
 
+  console.info("[PREVIEW_DEBUG] Rendering content for item:", item.id);
+
   return (
     <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
+
       {/* MODO PREVIEW BANNER */}
       <div className="fixed top-0 left-0 right-0 z-[100] bg-gold text-midnight py-2 px-4 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-2 font-bold text-xs uppercase tracking-widest">
