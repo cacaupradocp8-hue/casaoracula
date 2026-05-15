@@ -82,9 +82,11 @@ export default function ClubeEditorialPreviewPage() {
   }
 
   const estacao = item.estacao as any;
-  const metadata = (item.metadata || {}) as any;
-  const audios = Array.isArray(metadata.audios) ? metadata.audios : [];
-  
+  const metadata = typeof item.metadata === 'string' ? JSON.parse(item.metadata) : (item.metadata || {});
+  const audios = Array.isArray(metadata.audios) 
+    ? metadata.audios 
+    : (Array.isArray(metadata.audio_placeholders) ? metadata.audio_placeholders : []);
+
   const cartografia = [
     { label: 'Onde você está', value: estacao?.titulo, icon: MapPin },
     { label: 'A Porta', value: item.porta, icon: DoorOpen },
