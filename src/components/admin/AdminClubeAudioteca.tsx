@@ -51,7 +51,6 @@ import {
   DialogFooter
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -64,7 +63,6 @@ export function AdminClubeAudioteca() {
   
   const [editingTrack, setEditingTrack] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isAlbumDialogOpen, setIsAlbumDialogOpen] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState<any>(null);
 
   // Queries
@@ -93,13 +91,12 @@ export function AdminClubeAudioteca() {
           *,
           album:clube_audio_albums(titulo)
         `)
-        .order('track_number', { ascending: true });
+        .order('ordem', { ascending: true });
       if (error) throw error;
       return data;
     }
   });
 
-  // Helper to check where track is used (metadata search fallback)
   const { data: rotaItens } = useQuery({
     queryKey: ['admin-clube-itens-rota-metadata'],
     queryFn: async () => {
@@ -120,28 +117,14 @@ export function AdminClubeAudioteca() {
     });
   };
 
-  // Mutations
   const updateTrack = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, ...updates } = payload;
+      const { id, album, ...updates } = payload;
       const { error } = await supabase
         .from('clube_audio_tracks')
         .update(updates)
         .eq('id', id);
       if (error) throw error;
-      
-      // Log editorial (se houver integração futura com auditoria)
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.from('clube_audit_log').insert({
-          user_id: user.id,
-          tabela: 'clube_audio_tracks',
-          registro_id: id,
-          acao: 'UPDATE',
-          campo_alterado: 'multi_fields',
-          valor_novo: JSON.stringify(updates)
-        });
-      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-audio-tracks'] });
@@ -164,7 +147,7 @@ export function AdminClubeAudioteca() {
   };
 
   const filteredTracks = tracks?.filter(t => 
-    t.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    t.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     t.album?.titulo?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -179,7 +162,6 @@ export function AdminClubeAudioteca() {
     <div className="space-y-8 animate-in fade-in duration-500">
       <audio ref={audioRef} onEnded={() => setPlayingId(null)} />
 
-      {/* Stats / Header */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
@@ -248,7 +230,6 @@ export function AdminClubeAudioteca() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Albums List */}
         <div className="lg:col-span-1 space-y-4">
           <div className="flex items-center gap-2">
             <h2 className="font-display text-lg text-white/90">Álbuns / Estações</h2>
@@ -266,9 +247,9 @@ export function AdminClubeAudioteca() {
                 >
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-white/5 rounded-lg flex items-center justify-center overflow-hidden">
                         {album.capa_url ? (
-                          <img src={album.capa_url} alt={album.titulo} className="w-full h-full object-cover rounded-lg" />
+                          <img src={album.capa_url} alt={album.titulo} className="w-full h-full object-cover" />
                         ) : (
                           <Disc className="w-6 h-6 text-white/20" />
                         )}
@@ -288,7 +269,6 @@ export function AdminClubeAudioteca() {
           </ScrollArea>
         </div>
 
-        {/* Tracks List */}
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -332,12 +312,12 @@ export function AdminClubeAudioteca() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="font-medium text-sm">{track.title}</span>
+                          <span className="font-medium text-sm">{track.titulo}</span>
                           <span className="text-[10px] text-muted-foreground font-mono truncate max-w-[150px]">{track.audio_url}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-xs">{track.album?.titulo || '-'}</TableCell>
-                      <TableCell className="text-xs font-mono">{formatDuration(track.duration)}</TableCell>
+                      <TableCell className="text-xs font-mono">{formatDuration(track.duracao_segundos)}</TableCell>
                       <TableCell>
                         {usage.length > 0 ? (
                           <div className="flex -space-x-2">
@@ -387,7 +367,6 @@ export function AdminClubeAudioteca() {
         </div>
       </div>
 
-      {/* Edit Track Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-lg">
           <DialogHeader>
@@ -401,8 +380,8 @@ export function AdminClubeAudioteca() {
                 <div className="space-y-2 col-span-2">
                   <Label>Título da Faixa</Label>
                   <Input 
-                    value={editingTrack.title} 
-                    onChange={(e) => setEditingTrack({...editingTrack, title: e.target.value})}
+                    value={editingTrack.titulo} 
+                    onChange={(e) => setEditingTrack({...editingTrack, titulo: e.target.value})}
                     className="bg-midnight/40 border-white/10"
                   />
                 </div>
@@ -410,8 +389,8 @@ export function AdminClubeAudioteca() {
                   <Label>Ordem (#)</Label>
                   <Input 
                     type="number"
-                    value={editingTrack.track_number} 
-                    onChange={(e) => setEditingTrack({...editingTrack, track_number: parseInt(e.target.value)})}
+                    value={editingTrack.ordem} 
+                    onChange={(e) => setEditingTrack({...editingTrack, ordem: parseInt(e.target.value)})}
                     className="bg-midnight/40 border-white/10"
                   />
                 </div>
@@ -419,8 +398,8 @@ export function AdminClubeAudioteca() {
                   <Label>Duração (segundos)</Label>
                   <Input 
                     type="number"
-                    value={editingTrack.duration} 
-                    onChange={(e) => setEditingTrack({...editingTrack, duration: parseInt(e.target.value)})}
+                    value={editingTrack.duracao_segundos} 
+                    onChange={(e) => setEditingTrack({...editingTrack, duracao_segundos: parseInt(e.target.value)})}
                     className="bg-midnight/40 border-white/10"
                   />
                 </div>
