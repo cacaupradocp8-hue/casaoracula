@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Search, MapPin, Castle, ChevronRight, Loader2 } from 'lucide-react';
+import { Plus, Search, MapPin, Castle, ChevronRight, Loader2, Calendar, Clock, Sparkles, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Cliente {
@@ -23,6 +23,8 @@ interface Cliente {
   created_at: string;
   has_initial_cartography: boolean;
   has_initial_cidadela: boolean;
+  ultima_sessao?: string;
+  gesto_pendente?: boolean;
   journey?: {
     process_state: string;
     current_district?: { nome: string } | null;
@@ -94,18 +96,38 @@ export default function ClientesPage() {
     }
 
     const clientIds = (data || []).map(c => c.id);
-    const { data: journeys } = await supabase
-      .from('journeys')
-      .select('client_id, process_state, current_district_id')
-      .in('client_id', clientIds.length > 0 ? clientIds : ['none']);
+    if (clientIds.length === 0) {
+      setClientes([]);
+      setLoading(false);
+      return;
+    }
 
-    const { data: districts } = await supabase.from('districts').select('id, nome');
+    const [
+      { data: journeys }, 
+      { data: districts }, 
+      { data: sessoes }, 
+      { data: gestos }
+    ] = await Promise.all([
+      supabase.from('journeys').select('client_id, process_state, current_district_id').in('client_id', clientIds),
+      supabase.from('districts').select('id, nome'),
+      supabase.from('sessoes_casa_maquinas').select('cliente_id, data_sessao').in('cliente_id', clientIds).order('data_sessao', { ascending: false }),
+      supabase.from('gestos_integracao').select('cliente_id, status').in('cliente_id', clientIds)
+    ]);
+
+    // Filtragem manual para evitar erro de tipo na query
+    const pendentes = gestos?.filter(g => (g.status as string) === 'pendente' || (g.status as string) === 'em_pratica');
+
     const districtMap = Object.fromEntries((districts || []).map(d => [d.id, d.nome]));
 
     const enriched = (data || []).map(c => {
       const j = journeys?.find(j => j.client_id === c.id);
+      const s = sessoes?.find(s => s.cliente_id === c.id);
+      const hasGestoPendente = pendentes?.some(g => g.cliente_id === c.id);
+      
       return {
         ...c,
+        ultima_sessao: s?.data_sessao,
+        gesto_pendente: hasGestoPendente,
         journey: j ? {
           process_state: j.process_state,
           current_district: j.current_district_id ? { nome: districtMap[j.current_district_id] || '' } : null,
@@ -322,35 +344,62 @@ export default function ClientesPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-sm font-display font-semibold text-foreground">{c.nome}</h3>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                    <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
                       Desde {new Date(c.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                   {c.journey && (
-                    <Badge variant="outline" className={`text-[10px] ${estadoCores[c.journey.process_state] || ''}`}>
+                    <Badge variant="outline" className={`text-[10px] capitalize ${estadoCores[c.journey.process_state] || ''}`}>
                       {c.journey.process_state}
                     </Badge>
                   )}
                 </div>
-                {c.objetivo_terapeutico && (
-                  <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{c.objetivo_terapeutico}</p>
-                )}
-                <div className="flex items-center gap-2">
+
+                <div className="space-y-2 mb-4">
+                  {c.ultima_sessao && (
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                      <Clock className="w-3 h-3 text-primary/60" />
+                      Última sessão: {new Date(c.ultima_sessao).toLocaleDateString('pt-BR')}
+                    </div>
+                  )}
+                  {c.gesto_pendente && (
+                    <div className="flex items-center gap-2 text-[10px] text-accent font-medium">
+                      <Sparkles className="w-3 h-3" />
+                      Gesto de integração pendente
+                    </div>
+                  )}
                   {c.journey?.current_district && (
-                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                       <MapPin className="w-3 h-3 text-primary/60" />
-                      {c.journey.current_district.nome}
+                      Em: {c.journey.current_district.nome}
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-2 mt-3">
+
+                {c.objetivo_terapeutico && (
+                  <p className="text-xs text-muted-foreground mb-4 line-clamp-2 italic">
+                    "{c.objetivo_terapeutico}"
+                  </p>
+                )}
+                
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="h-8 text-xs flex-1 bg-primary/5 hover:bg-primary/10 text-primary border border-primary/10"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/clientes/${c.id}`); }}
+                  >
+                    Ver Jornada
+                  </Button>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    title="Abrir Cabine"
                     onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`); }}
                   >
-                    Abrir Cabine <ChevronRight className="w-3 h-3 ml-1" />
+                    <Zap className="w-4 h-4" />
                   </Button>
                 </div>
               </CardContent>
