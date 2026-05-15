@@ -96,18 +96,35 @@ export default function ClientesPage() {
     }
 
     const clientIds = (data || []).map(c => c.id);
-    const { data: journeys } = await supabase
-      .from('journeys')
-      .select('client_id, process_state, current_district_id')
-      .in('client_id', clientIds.length > 0 ? clientIds : ['none']);
+    if (clientIds.length === 0) {
+      setClientes([]);
+      setLoading(false);
+      return;
+    }
 
-    const { data: districts } = await supabase.from('districts').select('id, nome');
+    const [
+      { data: journeys }, 
+      { data: districts }, 
+      { data: sessoes }, 
+      { data: gestos }
+    ] = await Promise.all([
+      supabase.from('journeys').select('client_id, process_state, current_district_id').in('client_id', clientIds),
+      supabase.from('districts').select('id, nome'),
+      supabase.from('sessoes_casa_maquinas').select('cliente_id, data_sessao').in('cliente_id', clientIds).order('data_sessao', { ascending: false }),
+      supabase.from('gestos_integracao').select('cliente_id, status').in('cliente_id', clientIds).eq('status', 'pendente')
+    ]);
+
     const districtMap = Object.fromEntries((districts || []).map(d => [d.id, d.nome]));
 
     const enriched = (data || []).map(c => {
       const j = journeys?.find(j => j.client_id === c.id);
+      const s = sessoes?.find(s => s.cliente_id === c.id);
+      const hasGestoPendente = gestos?.some(g => g.cliente_id === c.id);
+      
       return {
         ...c,
+        ultima_sessao: s?.data_sessao,
+        gesto_pendente: hasGestoPendente,
         journey: j ? {
           process_state: j.process_state,
           current_district: j.current_district_id ? { nome: districtMap[j.current_district_id] || '' } : null,
