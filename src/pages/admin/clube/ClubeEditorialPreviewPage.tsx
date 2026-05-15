@@ -44,8 +44,17 @@ function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
 
 
 export default function ClubeEditorialPreviewPage() {
+  return (
+    <ErrorBoundary FallbackComponent={PreviewErrorFallback}>
+      <ClubeEditorialPreviewContent />
+    </ErrorBoundary>
+  );
+}
+
+function ClubeEditorialPreviewContent() {
   const { itemId } = useParams();
   const navigate = useNavigate();
+
 
   // Fetch the item
   const { data: item, isLoading: loadingItem } = useQuery({
