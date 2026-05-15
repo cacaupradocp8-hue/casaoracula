@@ -122,7 +122,7 @@ export default function ClientesPage() {
     const enriched = (data || []).map(c => {
       const j = journeys?.find(j => j.client_id === c.id);
       const s = sessoes?.find(s => s.cliente_id === c.id);
-      const hasGestoPendente = gestos?.some(g => g.cliente_id === c.id);
+      const hasGestoPendente = pendentes?.some(g => g.cliente_id === c.id);
       
       return {
         ...c,
