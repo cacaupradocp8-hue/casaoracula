@@ -344,35 +344,62 @@ export default function ClientesPage() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-sm font-display font-semibold text-foreground">{c.nome}</h3>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">
+                    <p className="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
                       Desde {new Date(c.created_at).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                   {c.journey && (
-                    <Badge variant="outline" className={`text-[10px] ${estadoCores[c.journey.process_state] || ''}`}>
+                    <Badge variant="outline" className={`text-[10px] capitalize ${estadoCores[c.journey.process_state] || ''}`}>
                       {c.journey.process_state}
                     </Badge>
                   )}
                 </div>
-                {c.objetivo_terapeutico && (
-                  <p className="text-xs text-muted-foreground mb-3 line-clamp-2">{c.objetivo_terapeutico}</p>
-                )}
-                <div className="flex items-center gap-2">
+
+                <div className="space-y-2 mb-4">
+                  {c.ultima_sessao && (
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                      <Clock className="w-3 h-3 text-primary/60" />
+                      Última sessão: {new Date(c.ultima_sessao).toLocaleDateString('pt-BR')}
+                    </div>
+                  )}
+                  {c.gesto_pendente && (
+                    <div className="flex items-center gap-2 text-[10px] text-accent font-medium">
+                      <Sparkles className="w-3 h-3" />
+                      Gesto de integração pendente
+                    </div>
+                  )}
                   {c.journey?.current_district && (
-                    <div className="flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                       <MapPin className="w-3 h-3 text-primary/60" />
-                      {c.journey.current_district.nome}
+                      Em: {c.journey.current_district.nome}
                     </div>
                   )}
                 </div>
-                <div className="flex items-center gap-2 mt-3">
+
+                {c.objetivo_terapeutico && (
+                  <p className="text-xs text-muted-foreground mb-4 line-clamp-2 italic">
+                    "{c.objetivo_terapeutico}"
+                  </p>
+                )}
+                
+                <div className="flex items-center gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="h-8 text-xs flex-1 bg-primary/5 hover:bg-primary/10 text-primary border border-primary/10"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/clientes/${c.id}`); }}
+                  >
+                    Ver Jornada
+                  </Button>
                   <Button
                     size="sm"
                     variant="ghost"
-                    className="h-7 text-xs text-primary hover:text-primary hover:bg-primary/10 flex-1"
+                    className="h-8 w-8 p-0 text-muted-foreground hover:text-primary hover:bg-primary/10"
+                    title="Abrir Cabine"
                     onClick={(e) => { e.stopPropagation(); navigate(`/casa-das-maquinas/cabine?clienteId=${c.id}`); }}
                   >
-                    Abrir Cabine <ChevronRight className="w-3 h-3 ml-1" />
+                    <Zap className="w-4 h-4" />
                   </Button>
                 </div>
               </CardContent>
