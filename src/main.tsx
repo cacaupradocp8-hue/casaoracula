@@ -1,4 +1,4 @@
-import React from "react"; // reload-trigger-v11
+import React from "react"; // REBUILD_V90
 import { createRoot, Root } from "react-dom/client";
 import "./index.css";
 
@@ -157,7 +157,7 @@ function installDomMutationGuards() {
   });
 }
 
-console.info(`${BOOT_LOG_PREFIX} entrada do app`);
+console.info(`${BOOT_LOG_PREFIX} entrada do app`, { url: window.location.href, ts: Date.now() });
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -259,7 +259,9 @@ window.setTimeout(async () => {
 
 async function bootstrapApp() {
   try {
+    console.info(`${BOOT_LOG_PREFIX} bootstrapApp iniciando`);
     const { default: App } = await import("./App.tsx");
+    console.info(`${BOOT_LOG_PREFIX} App.tsx importado, renderizando...`);
     root.render(<App />);
   } catch (error) {
     const alreadyRetried = sessionStorage.getItem(BOOT_IMPORT_RETRY_KEY) === "1";
