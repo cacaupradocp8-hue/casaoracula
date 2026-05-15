@@ -29,8 +29,10 @@ import { PerfilSimbolicoCliente } from '@/components/casa-maquinas/painel-conduc
 import { MiniMandalaCidadela } from '@/components/casa-maquinas/MiniMandalaCidadela';
 import { ClienteJardimHeroinaTab } from '@/components/casa-maquinas/ClienteJardimHeroinaTab';
 import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtividadeJardim';
+import { ClienteJourneyHeader } from '@/components/casa-maquinas/ClienteJourneyHeader';
+import { ClienteJourneyTimeline } from '@/components/casa-maquinas/ClienteJourneyTimeline';
 import { Button } from '@/components/ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, LayoutDashboard, History, Map, Sparkles } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
