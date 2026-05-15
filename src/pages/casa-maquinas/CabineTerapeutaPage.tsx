@@ -52,6 +52,8 @@ export interface SessionData {
   resumoSessao: string;
   hipoteseSimbólica: string;
   proximosPassos: string;
+  gestoIntegracao: string;
+  intencaoSessao: string;
 }
 
 const EMPTY_SESSION: SessionData = {
@@ -65,6 +67,8 @@ const EMPTY_SESSION: SessionData = {
   resumoSessao: '',
   hipoteseSimbólica: '',
   proximosPassos: '',
+  gestoIntegracao: '',
+  intencaoSessao: '',
 };
 
 export default function CabineTerapeutaPage() {
