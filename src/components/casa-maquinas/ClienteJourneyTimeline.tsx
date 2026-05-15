@@ -92,7 +92,7 @@ export function ClienteJourneyTimeline({ clienteId }: { clienteId: string }) {
                 {new Date(item.date).toLocaleDateString('pt-BR')}
               </span>
               {item.status && (
-                <Badge variant="ghost" className="text-[8px] h-4 px-1.5 border border-border/30">
+                <Badge variant="outline" className="text-[8px] h-4 px-1.5 border border-border/30">
                   {item.status}
                 </Badge>
               )}
