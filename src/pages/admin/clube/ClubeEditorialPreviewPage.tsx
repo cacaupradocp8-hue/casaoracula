@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -15,7 +15,8 @@ import {
   Headphones,
   FlaskConical,
   Clock,
-  Mic2
+  Mic2,
+  AlertTriangle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -23,6 +24,24 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { cn } from '@/lib/utils';
 import { AudioOracular } from '@/components/audio/AudioOracular';
 import { ClubeTravessiaProgress, TravessiaStep } from '@/components/clube/ClubeTravessiaProgress';
+import { ErrorBoundary } from 'react-error-boundary';
+
+function PreviewErrorFallback({ error, resetErrorBoundary }: any) {
+  return (
+    <div className="min-h-screen bg-midnight flex flex-col items-center justify-center p-8 text-center space-y-4">
+      <AlertTriangle className="w-12 h-12 text-destructive mb-2" />
+      <h2 className="text-2xl font-display text-white">Erro no Render do Preview</h2>
+      <p className="text-white/60 max-w-md font-mono text-xs bg-white/5 p-4 rounded-lg break-all">
+        {error.message}
+      </p>
+      <div className="flex gap-4">
+        <Button onClick={resetErrorBoundary} variant="outline">Tentar Novamente</Button>
+        <Button onClick={() => window.location.href = '/admin'}>Voltar ao Painel</Button>
+      </div>
+    </div>
+  );
+}
+
 
 export default function ClubeEditorialPreviewPage() {
   const { itemId } = useParams();
