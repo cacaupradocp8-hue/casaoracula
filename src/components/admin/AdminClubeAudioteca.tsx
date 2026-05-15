@@ -56,6 +56,13 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 
 export const TAXONOMIA_EDITORIAL = [
   { value: 'abertura_campo', label: 'Abertura de Campo', color: 'bg-blue-500/10 text-blue-400 border-blue-500/20' },
@@ -365,7 +372,7 @@ export function AdminClubeAudioteca() {
                           <div className="flex items-center gap-2">
                             <span className="font-medium text-sm">{track.titulo}</span>
                             {!track.tags?.some((tag: string) => TAXONOMIA_EDITORIAL.some(t => t.value === tag)) && (
-                              <AlertCircle className="w-3 h-3 text-amber-500/50" title="Sem taxonomia editorial" />
+                              <AlertCircle className="w-3 h-3 text-amber-500/50" />
                             )}
                           </div>
                           <div className="flex flex-wrap gap-1">

@@ -170,7 +170,7 @@ export function AudiotecaSelector({ open, onClose, onSelect }: Props) {
                           <Badge variant="outline" className="text-[8px] h-4 text-white/20 border-white/5">Rascunho</Badge>
                         )}
                         {!track.tags?.some((tag: string) => TAXONOMIA_EDITORIAL.some(t => t.value === tag)) && (
-                          <AlertCircle className="w-2.5 h-2.5 text-amber-500/50" title="Sem taxonomia editorial" />
+                          <AlertCircle className="w-2.5 h-2.5 text-amber-500/50" />
                         )}
                       </div>
                       <div className="flex flex-wrap gap-1 mb-1">
