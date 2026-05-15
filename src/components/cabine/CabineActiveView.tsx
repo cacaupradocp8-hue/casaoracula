@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, Lock, Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, AlertTriangle, Shield, Eye, Map, Clock, ChevronRight, UserPlus, RefreshCw } from 'lucide-react';
+import { 
+  Activity, Compass, ShieldCheck, ShieldAlert, ShieldX, 
+  Play, Pen, VolumeX, ChevronDown, ChevronUp, ArrowLeft, 
+  AlertTriangle, Shield, UserPlus, RefreshCw, ChevronRight,
+  Info, Sparkles, CheckCircle2
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
@@ -68,19 +73,23 @@ export function CabineActiveView({
   // During active session — full screen session view
   if (mode === 'sessao' && sessionStartedAt) {
     return (
-      <div className="min-h-[calc(100vh-2rem)] flex flex-col">
-        <CabineSessaoViva
-          cliente={cliente}
-          profile={profile}
-          sessionData={sessionData}
-          setSessionData={setSessionData}
-          startedAt={sessionStartedAt}
-          leituraCampo={leituraCampo}
-          mapaVivoState={mapaVivoState}
-          onEnd={onEndSession}
-          onFluxoChange={onFluxoChange}
-        />
+    return (
+      <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
+        <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+          <CabineSessaoViva
+            cliente={cliente}
+            profile={profile}
+            sessionData={sessionData}
+            setSessionData={setSessionData}
+            startedAt={sessionStartedAt}
+            leituraCampo={leituraCampo}
+            mapaVivoState={mapaVivoState}
+            onEnd={onEndSession}
+            onFluxoChange={onFluxoChange}
+          />
+        </div>
       </div>
+    );
     );
   }
 
