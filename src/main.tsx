@@ -1,4 +1,4 @@
-import React from "react"; // REBUILD_V100
+import React from "react"; // REBUILD_V101 - FIX_WHITE_SCREEN_RECOVERY
 import { createRoot, Root } from "react-dom/client";
 import "./index.css";
 

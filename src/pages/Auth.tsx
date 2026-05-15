@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'; // REBUILD_V80
+import { useState, useEffect } from 'react'; // REBUILD_V81 - FIX_WHITE_SCREEN_RECOVERY
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
