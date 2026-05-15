@@ -20,8 +20,10 @@ import {
   ChevronRight,
   User,
   ArrowUpDown,
-  Calendar
+  Calendar,
+  Music
 } from 'lucide-react';
+import { AdminClubeAudioteca } from './AdminClubeAudioteca';
 import { 
   Card, 
   CardContent, 
@@ -235,6 +237,9 @@ export function AdminClubeEditorialTab() {
           <TabsTrigger value="conteudo" className="gap-2">
             <Layout className="w-4 h-4" /> Conteúdo Rota
           </TabsTrigger>
+          <TabsTrigger value="audioteca" className="gap-2">
+            <Music className="w-4 h-4" /> Audioteca
+          </TabsTrigger>
           <TabsTrigger value="historico" className="gap-2">
             <History className="w-4 h-4" /> Histórico Editorial
           </TabsTrigger>
@@ -435,6 +440,10 @@ export function AdminClubeEditorialTab() {
           </Table>
         </div>
       </div>
+
+      <TabsContent value="audioteca" className="space-y-8 mt-0 border-none p-0">
+        <AdminClubeAudioteca />
+      </TabsContent>
 
       {/* Edit Estação Dialog */}
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
