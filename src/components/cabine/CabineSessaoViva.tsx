@@ -47,8 +47,10 @@ interface Props {
   startedAt: Date;
   leituraCampo: LeituraCampo | null;
   mapaVivoState?: MapaVivoState | null;
+  lastSession?: any | null;
   onEnd: () => void;
   onFluxoChange?: (result: FluxoClinicoResult) => void;
+  onBack?: () => void;
 }
 
 function Timer({ startedAt }: { startedAt: Date }) {
