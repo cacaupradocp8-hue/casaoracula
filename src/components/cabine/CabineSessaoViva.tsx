@@ -132,85 +132,133 @@ function Timer({ startedAt }: { startedAt: Date }) {
 
   return (
     <div className="flex flex-col h-full max-w-5xl mx-auto space-y-4">
-      {/* 1. CABEÇALHO DA SESSÃO */}
-      <Card className="border-border/10 bg-card/40 backdrop-blur-md">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
+      {/* 1. CABEÇALHO DA SESSÃO REFINADO */}
+      <Card className="border-border/10 bg-card/40 backdrop-blur-md overflow-hidden">
+        <CardContent className="p-0">
+          <div className="flex items-center justify-between p-4 bg-gradient-to-r from-primary/5 via-transparent to-transparent">
             <div className="flex items-center gap-4">
-              <div className="p-2 rounded-full bg-primary/10">
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                onClick={onBack}
+                className="w-8 h-8 text-muted-foreground/40 hover:text-foreground"
+              >
+                <ArrowLeft className="w-4 h-4" />
+              </Button>
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                 <User className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-foreground leading-none">{cliente.nome}</h2>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-muted-foreground/60">{new Date().toLocaleDateString('pt-BR')}</span>
-                  <Badge variant="outline" className={cn("text-[9px] h-4", RISCO_BADGE[liveRisco])}>
-                    Risco {liveRisco}
+                <h2 className="text-lg font-bold text-foreground leading-none tracking-tight">{cliente.nome}</h2>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground/40">
+                    Sessão em {new Date().toLocaleDateString('pt-BR')}
+                  </span>
+                  <div className="w-1 h-1 rounded-full bg-border/20" />
+                  <Badge variant="outline" className={cn("text-[9px] h-4 py-0", RISCO_BADGE[liveRisco])}>
+                    Campo {liveRisco}
                   </Badge>
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
               <div className="flex flex-col items-end">
-                <span className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold">Tempo de Sessão</span>
-                <span className="text-sm font-mono text-primary font-bold"><Timer startedAt={startedAt} /></span>
+                <span className="text-[9px] uppercase tracking-widest text-muted-foreground/40 font-bold mb-0.5">Tempo de Voo</span>
+                <div className="flex items-center gap-2 text-sm font-mono text-primary font-bold">
+                  <Clock className="w-3.5 h-3.5 opacity-40" />
+                  <Timer startedAt={startedAt} />
+                </div>
               </div>
-              <div className="h-8 w-px bg-border/10" />
-              <Button variant="ghost" size="sm" onClick={onEnd} className="text-xs text-destructive hover:bg-destructive/10 gap-1.5 h-9">
-                <Square className="w-3.5 h-3.5" /> Finalizar Sessão
+              <div className="h-10 w-px bg-border/10" />
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={onEnd} 
+                className="text-xs text-destructive hover:bg-destructive/10 gap-2 h-10 px-4 rounded-xl transition-all hover:scale-105"
+              >
+                <Square className="w-3.5 h-3.5 fill-destructive/20" /> 
+                <span className="font-bold uppercase tracking-wider">Finalizar Sessão</span>
               </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* 2. BLOCO "CAMPO ATUAL" */}
+      {/* 2. BLOCO "CAMPO ATUAL" REFINADO */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
         <div className="md:col-span-4 space-y-4">
-          <Card className="border-border/10 bg-card/30">
-            <CardContent className="p-4 space-y-4">
+          <Card className="border-border/10 bg-card/30 backdrop-blur-sm overflow-hidden">
+            <CardContent className="p-4 space-y-5">
               <div>
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold mb-2">Campo Atual</p>
-                <div className="p-3 rounded-xl bg-primary/5 border border-primary/10">
-                  <p className="text-sm font-semibold text-primary">{leituraCampo?.mensagem_estado || 'Sem leitura ativa'}</p>
-                  <p className="text-[11px] text-muted-foreground/60 mt-1">{leituraCampo?.mensagem_direcao}</p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold">Estado Simbólico</p>
+                  {leituraCampo?.risco === 'elevado' && (
+                    <AlertTriangle className="w-3 h-3 text-red-400 animate-pulse" />
+                  )}
+                </div>
+                <div className="p-3.5 rounded-2xl bg-primary/5 border border-primary/10 shadow-inner">
+                  <p className="text-sm font-semibold text-primary leading-tight">{leituraCampo?.mensagem_estado || 'Aguardando leitura...'}</p>
+                  <p className="text-[11px] text-muted-foreground/60 mt-1.5 leading-relaxed italic">{leituraCampo?.mensagem_direcao}</p>
                 </div>
               </div>
 
               {mapaVivoState && (
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Distrito</span>
-                    <span className="text-foreground font-medium">{mapaVivoState.estado_atual || '—'}</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-2.5 rounded-xl bg-background/20 border border-border/10">
+                    <p className="text-[8px] uppercase font-bold text-muted-foreground/40 mb-1">Distrito</p>
+                    <p className="text-xs font-medium text-foreground truncate">{mapaVivoState.estado_atual || '—'}</p>
                   </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Tensão</span>
-                    <span className="text-foreground font-medium">{mapaVivoState.tensao_principal || '—'}</span>
+                  <div className="p-2.5 rounded-xl bg-background/20 border border-border/10">
+                    <p className="text-[8px] uppercase font-bold text-muted-foreground/40 mb-1">Tensão</p>
+                    <p className="text-xs font-medium text-foreground truncate">{mapaVivoState.tensao_principal || '—'}</p>
                   </div>
                 </div>
               )}
 
-              <div className="pt-2 border-t border-border/10">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold mb-2">Intenção</p>
-                <Textarea 
-                  value={sessionData.intencaoSessao} 
-                  onChange={e => update('intencaoSessao', e.target.value)}
-                  placeholder="Qual o foco de hoje?"
-                  className="bg-transparent border-none p-0 min-h-[40px] text-xs resize-none focus-visible:ring-0 placeholder:italic"
-                />
+              <div className="pt-2">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold mb-2">Intenção da Sessão</p>
+                <div className="group relative">
+                  <Textarea 
+                    value={sessionData.intencaoSessao} 
+                    onChange={e => update('intencaoSessao', e.target.value)}
+                    placeholder="Qual a âncora de hoje?"
+                    className="bg-transparent border-none p-0 min-h-[50px] text-sm resize-none focus-visible:ring-0 placeholder:italic text-foreground/80 leading-relaxed"
+                  />
+                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-primary/10 group-focus-within:bg-primary/40 transition-colors" />
+                </div>
               </div>
 
-              {cliente.lastSessionDate && (
-                <div className="pt-2 border-t border-border/10">
-                  <div className="flex items-center gap-1.5 mb-1.5 text-muted-foreground/40">
+              <div className="pt-2">
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground/40 font-bold mb-2">Observações Seguras</p>
+                <div className="group relative">
+                  <Textarea 
+                    value={sessionData.observacaoEtica} 
+                    onChange={e => update('observacaoEtica', e.target.value)}
+                    placeholder="Notas de segurança ou ética..."
+                    className="bg-transparent border-none p-0 min-h-[40px] text-[11px] resize-none focus-visible:ring-0 placeholder:italic text-muted-foreground/70"
+                  />
+                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-border/5 group-focus-within:bg-primary/20 transition-colors" />
+                </div>
+              </div>
+
+              {lastSession && (
+                <div className="pt-4 border-t border-border/5">
+                  <div className="flex items-center gap-1.5 mb-2 text-muted-foreground/40">
                     <History className="w-3 h-3" />
-                    <span className="text-[10px] uppercase tracking-wider font-bold">Último Registro</span>
+                    <span className="text-[10px] uppercase tracking-widest font-bold">Última Síntese</span>
                   </div>
-                  <p className="text-[10px] text-muted-foreground/60 line-clamp-3 italic">
-                    {/* Placeholder para última síntese */}
-                    "Continuamos o trabalho nas torres de silêncio..."
-                  </p>
+                  <div className="p-3 rounded-xl bg-background/10 border border-border/5">
+                    <p className="text-[11px] text-muted-foreground/60 leading-relaxed line-clamp-4 italic">
+                      "{lastSession.sintese_json?.resumo || lastSession.notes || 'Sem registro anterior.'}"
+                    </p>
+                    {lastSession.cabine_data?.gesto_integracao && (
+                      <div className="mt-2 pt-2 border-t border-border/5 flex items-center gap-1.5">
+                        <Sparkles className="w-2.5 h-2.5 text-primary/40" />
+                        <p className="text-[9px] text-primary/50 font-medium truncate">Gesto: {lastSession.cabine_data.gesto_integracao}</p>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -221,11 +269,13 @@ function Timer({ startedAt }: { startedAt: Date }) {
             key={fluxo.fluxo}
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
-            className={cn("p-4 rounded-2xl border backdrop-blur-sm", FLUXO_AMBIENT[fluxo.fluxo])}
+            className={cn("p-5 rounded-3xl border backdrop-blur-sm shadow-lg", FLUXO_AMBIENT[fluxo.fluxo])}
           >
-            <div className="flex items-start gap-2">
-              <Info className={cn("w-4 h-4 mt-0.5 shrink-0", FLUXO_ACCENT[fluxo.fluxo])} />
-              <p className={cn("text-xs leading-relaxed", FLUXO_ACCENT[fluxo.fluxo])}>
+            <div className="flex items-start gap-3">
+              <div className={cn("p-2 rounded-xl bg-background/20", FLUXO_ACCENT[fluxo.fluxo])}>
+                <Info className="w-4 h-4" />
+              </div>
+              <p className={cn("text-[12px] leading-relaxed font-medium", FLUXO_ACCENT[fluxo.fluxo])}>
                 {fluxo.orientacao}
               </p>
             </div>
