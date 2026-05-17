@@ -398,7 +398,9 @@ function Timer({ startedAt }: { startedAt: Date }) {
 
                   {currentStep === 4 && (
                     <div className="space-y-4 flex-1 overflow-auto">
-                      <p className="text-sm text-muted-foreground italic">Sugestões baseadas no diagnóstico e biblioteca oracular.</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-sm text-muted-foreground italic">Sugestões baseadas no diagnóstico e biblioteca oracular.</p>
+                      </div>
                       <SessionInterventionSuggestions 
                         sessionDistrictId={leituraCampo?.estado} 
                         clientId={cliente.id}
@@ -407,54 +409,67 @@ function Timer({ startedAt }: { startedAt: Date }) {
                           // Lógica adicional se necessário ao selecionar intervenção
                         }}
                       />
-                      <div className="pt-4">
-                        <label className="text-[10px] uppercase font-bold text-muted-foreground/60 mb-2 block">Ferramenta Selecionada</label>
+                      <div className="pt-6 border-t border-border/5">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Sparkles className="w-3.5 h-3.5 text-primary/60" />
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Intervenção Aplicada</label>
+                        </div>
                         <Textarea 
                           value={sessionData.ferramentaEscolhida}
                           onChange={e => update('ferramentaEscolhida', e.target.value)}
-                          placeholder="Descreva a intervenção aplicada..."
-                          className="bg-background/20 border-border/10 h-24 resize-none text-sm"
+                          placeholder="Descreva a dinâmica, pergunta ou micro-ritual realizado..."
+                          className="bg-background/20 border-border/5 rounded-2xl h-32 resize-none text-sm focus:border-primary/20 transition-all"
                         />
                       </div>
                     </div>
                   )}
 
                   {currentStep === 5 && (
-                    <div className="space-y-4">
+                    <div className="space-y-6 flex-1">
                       <p className="text-sm text-muted-foreground italic">Qual gesto simbólico ou movimento prático integra o que foi vivido?</p>
                       <Textarea 
                         value={sessionData.gestoIntegracao}
                         onChange={e => update('gestoIntegracao', e.target.value)}
-                        placeholder="Defina o gesto de integração..."
-                        className="bg-background/30 border-border/10 min-h-[150px] resize-none text-base"
+                        placeholder="Defina o gesto de integração que a cliente levará para o cotidiano..."
+                        className="flex-1 bg-background/30 border-border/5 rounded-2xl min-h-[180px] resize-none text-base focus:border-primary/20 transition-all p-6"
                       />
-                      <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-3">
-                        <Sparkles className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                        <p className="text-xs text-primary/70 italic">O gesto deve ser simples, simbólico e executável pela cliente até a próxima sessão.</p>
+                      <div className="p-5 rounded-3xl bg-primary/5 border border-primary/10 flex items-start gap-4 shadow-sm">
+                        <div className="p-2 rounded-xl bg-primary/10">
+                          <Shield className="w-4 h-4 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-primary mb-1 uppercase tracking-wider">Lembrete de Condução</p>
+                          <p className="text-[11px] text-primary/70 italic leading-relaxed">
+                            O gesto de integração é a ponte entre a cabine e a vida. Ele deve ser simples, simbólico e executável pela cliente.
+                          </p>
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {currentStep === 6 && (
-                    <div className="space-y-4">
+                    <div className="space-y-6 flex-1">
                       <p className="text-sm text-muted-foreground italic">Consolidação simbólica. O que fica de mais valioso desta sessão?</p>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground/60 mb-2 block">Síntese do Atendimento</label>
+                      <div className="grid grid-cols-1 gap-6">
+                        <div className="space-y-3">
+                          <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60 ml-2">Síntese do Atendimento</label>
                           <Textarea 
                             value={sessionData.resumoSessao}
                             onChange={e => update('resumoSessao', e.target.value)}
-                            placeholder="Resumo do que foi vivido..."
-                            className="bg-background/30 border-border/10 min-h-[100px] resize-none text-sm"
+                            placeholder="Descreva os movimentos principais e descobertas da sessão..."
+                            className="bg-background/30 border-border/5 rounded-2xl min-h-[120px] resize-none text-sm focus:border-primary/20 transition-all p-4"
                           />
                         </div>
-                        <div>
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground/60 mb-2 block">Hipótese Simbólica</label>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2 ml-2">
+                            <Pen className="w-3 h-3 text-muted-foreground/40" />
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Hipótese Simbólica</label>
+                          </div>
                           <Textarea 
                             value={sessionData.hipoteseSimbólica}
                             onChange={e => update('hipoteseSimbólica', e.target.value)}
-                            placeholder="Para onde o inconsciente aponta?"
-                            className="bg-background/30 border-border/10 min-h-[80px] resize-none text-sm italic"
+                            placeholder="O que o inconsciente parece estar processando em profundidade?"
+                            className="bg-background/30 border-border/5 rounded-2xl min-h-[100px] resize-none text-sm italic focus:border-primary/20 transition-all p-4 text-muted-foreground/80"
                           />
                         </div>
                       </div>
