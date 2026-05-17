@@ -5,20 +5,23 @@ Esta auditoria mapeou a arquitetura de rotas, permissões e integridade de conte
 
 ---
 
-## 2. Mapa Completo de Rotas (Principais Domínios)
+## 2. Mapa de Rotas e Classificação de Uso
 
-| Rota | Componente | Arquivo | Nível Mínimo | No Menu? | Domínio |
+| Rota | Arquivo do Componente | Nível Mínimo | Menu? | Status Sugerido | Domínio |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `/sala-da-visitante` | `SalaDaVisitante` | `pages/SalaDaVisitante.tsx` | Visitante | Sim (Visitante) | Visitante |
-| `/dashboard-membro` | `DashboardMembro` | `pages/DashboardMembro.tsx` | Aluna | Sim (Aluna/Assinante) | Aluna/Clube |
-| `/casa-das-maquinas` | `CasaDasMaquinas` | `pages/casa-maquinas/CasaDasMaquinas.tsx` | Orácula | Sim (Profissional) | Casa das Máquinas |
-| `/admin` | `Admin` | `pages/Admin.tsx` | Admin | Sim (Admin) | Admin |
-| `/clube` | `ClubeRotasCatalogo` | `pages/clube/ClubeRotasCatalogo.tsx` | Aluna | Sim | Clube |
-| `/cursos` | `Cursos` | `pages/Cursos.tsx` | Aluna | Sim | Formação |
-| `/ferramentas` | `FerramentasHub` | `pages/FerramentasHub.tsx` | Aluna | Sim | Aluna |
-| `/minha-conta` | `MinhaConta` | `pages/MinhaConta.tsx` | Aluna | Sim (Dropdown) | Perfil |
-
-*(Nota: Tabela simplificada; o mapa completo de 150+ rotas está em análise técnica)*
+| `/sala-da-visitante` | `pages/SalaDaVisitante.tsx` | Visitante | Sim | Manter | Visitante |
+| `/dashboard-membro` | `pages/DashboardMembro.tsx` | Aluna | Sim | Manter | Aluna |
+| `/casa-das-maquinas` | `pages/casa-maquinas/CasaDasMaquinas.tsx` | Orácula | Sim | Manter | Casa das Máquinas |
+| `/casa-das-maquinas/cabine`| `pages/casa-maquinas/CabineTerapeutaPage.tsx` | Orácula | Sim | **Protagonista** | Casa das Máquinas |
+| `/session-room/*` | `pages/SessionRoom*.tsx` | Orácula | Não | **Remover (Legado)** | Legado |
+| `/labirinto` | `pages/labirinto/LabirintoHome.tsx` | Aluna | Sim | Revisar | Clube/Legado |
+| `/labirinto-heroina` | `pages/labirinto-heroina/...` | Aluna | Sim | **Manter (Novo)** | Clube |
+| `/portal-junguiano` | `pages/PortalJunguiano.tsx` | Aluna | Não | Esconder/Fundir | Experimental |
+| `/ferramenta/big5-simbolico`| `pages/Big5Simbolico.tsx` | Aluna | Não | Fundir | Experimental |
+| `/ferramenta/big5-funcional`| `pages/Big5Funcional.tsx` | Aluna | Não | Fundir | Experimental |
+| `/admin/*` | `pages/Admin.tsx` | Admin | Sim | Manter | Admin |
+| `/saas/*` | (Redirecionamentos) | - | Não | Remover | Legado |
+| `/app/clientes/*` | (Redirecionamentos) | - | Não | Remover | Legado |
 
 ---
 
