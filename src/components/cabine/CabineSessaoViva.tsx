@@ -66,9 +66,9 @@ function Timer({ startedAt }: { startedAt: Date }) {
   return <span className="tabular-nums">{m.toString().padStart(2, '0')}:{s.toString().padStart(2, '0')}</span>;
 }
 
-export function CabineSessaoViva({
+ export function CabineSessaoViva({
   cliente, profile, sessionData, setSessionData,
-  startedAt, leituraCampo, mapaVivoState, onEnd, onFluxoChange,
+  startedAt, leituraCampo, mapaVivoState, lastSession, onEnd, onFluxoChange, onBack,
 }: Props) {
   const [currentStep, setCurrentStep] = useState(1);
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
