@@ -360,26 +360,38 @@ function Timer({ startedAt }: { startedAt: Date }) {
 
                   {currentStep === 3 && (
                     <div className="space-y-6">
-                      <p className="text-sm text-muted-foreground italic">Onde estamos na jornada? Identifique os pilares da sessão.</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground/60">Porta Ativa</label>
+                      <p className="text-sm text-muted-foreground italic">Onde estamos na jornada? Identifique os pilares simbólicos da sessão.</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px] border-primary/20 text-primary">1</Badge>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Porta Ativa</label>
+                          </div>
                           <Textarea 
                             value={sessionData.portaAtiva}
                             onChange={e => update('portaAtiva', e.target.value)}
-                            placeholder="Qual porta está sendo atravessada?"
-                            className="bg-background/20 border-border/10 h-20 resize-none text-xs"
+                            placeholder="Qual portal está sendo atravessado neste momento?"
+                            className="bg-background/20 border-border/5 rounded-xl h-24 resize-none text-xs focus:border-primary/20 transition-all"
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] uppercase font-bold text-muted-foreground/60">Torre Estruturante</label>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="h-5 w-5 rounded-full p-0 flex items-center justify-center text-[10px] border-primary/20 text-primary">2</Badge>
+                            <label className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground/60">Torre Estruturante</label>
+                          </div>
                           <Textarea 
                             value={sessionData.torreEstruturante}
                             onChange={e => update('torreEstruturante', e.target.value)}
-                            placeholder="Qual torre sustenta esse campo?"
-                            className="bg-background/20 border-border/10 h-20 resize-none text-xs"
+                            placeholder="Qual pilar de sustentação está em jogo?"
+                            className="bg-background/20 border-border/5 rounded-xl h-24 resize-none text-xs focus:border-primary/20 transition-all"
                           />
                         </div>
+                      </div>
+                      <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-start gap-3">
+                        <Compass className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                        <p className="text-[11px] text-primary/60 italic leading-relaxed">
+                          O mapeamento simbólico ajuda a localizar a cliente no "Mapa das Máquinas" e orienta a escolha da intervenção mais precisa.
+                        </p>
                       </div>
                     </div>
                   )}
