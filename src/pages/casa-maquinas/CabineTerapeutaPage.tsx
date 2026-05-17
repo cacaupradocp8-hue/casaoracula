@@ -85,6 +85,7 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
+  const [lastSession, setLastSession] = useState<any | null>(null);
   const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot, loading: mapaVivoLoading } = useMapaVivoLive();
   const [currentFluxo, setCurrentFluxo] = useState<FluxoClinicoResult | null>(null);
 
