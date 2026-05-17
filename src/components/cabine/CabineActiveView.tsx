@@ -53,6 +53,7 @@ export function CabineActiveView({
   setSessionData,
   sessionStartedAt,
   savedSessionId,
+  lastSession,
   currentFluxo,
   onStartSession,
   onEndSession,
