@@ -29,6 +29,7 @@ interface Props {
   setSessionData: (data: SessionData | ((prev: SessionData) => SessionData)) => void;
   sessionStartedAt: Date | null;
   savedSessionId: string | null;
+  lastSession?: any | null;
   currentFluxo: FluxoClinicoResult | null;
   onStartSession: (withoutProfile: boolean) => void;
   onEndSession: () => void;
