@@ -1,93 +1,84 @@
-# AUDITORIA COMPLETA: ROTAS E CONTEÚDOS CASA ORÁCULA
+# Relatório de Auditoria: Casa Orácula
+**Data:** 17 de Maio de 2026  
+**Status:** Concluído
 
 ## 1. Resumo Executivo
-Esta auditoria mapeou a arquitetura de rotas, permissões e integridade de conteúdo da Casa Orácula. Foi identificada uma densidade crítica de rotas legadas, duplicadas e órfãs, além de inconsistências na matriz de permissões entre os diferentes portais. O sistema apresenta sinais de transições arquiteturais incompletas, resultando em "ruído" no código e potenciais riscos de UX e segurança.
+A auditoria mapeou a arquitetura de rotas da aplicação Casa Orácula, identificando uma estrutura híbrida entre o "Clube" (B2C) e a "Casa das Máquinas" (B2B/Gestão). Foram detectadas rotas órfãs, redundâncias de navegação e pontos de melhoria na proteção de rotas dinâmicas.
 
 ---
 
-## 2. Mapa de Rotas e Classificação de Uso
+## 2. Mapa Completo de Rotas
 
-| Rota | Arquivo do Componente | Nível Mínimo | Menu? | Status Sugerido | Domínio |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `/sala-da-visitante` | `pages/SalaDaVisitante.tsx` | Visitante | Sim | Manter | Visitante |
-| `/dashboard-membro` | `pages/DashboardMembro.tsx` | Aluna | Sim | Manter | Aluna |
-| `/casa-das-maquinas` | `pages/casa-maquinas/CasaDasMaquinas.tsx` | Orácula | Sim | Manter | Casa das Máquinas |
-| `/casa-das-maquinas/cabine`| `pages/casa-maquinas/CabineTerapeutaPage.tsx` | Orácula | Sim | **Protagonista** | Casa das Máquinas |
-| `/session-room/*` | `pages/SessionRoom*.tsx` | Orácula | Não | **Remover (Legado)** | Legado |
-| `/labirinto` | `pages/labirinto/LabirintoHome.tsx` | Aluna | Sim | Revisar | Clube/Legado |
-| `/labirinto-heroina` | `pages/labirinto-heroina/...` | Aluna | Sim | **Manter (Novo)** | Clube |
-| `/portal-junguiano` | `pages/PortalJunguiano.tsx` | Aluna | Não | Esconder/Fundir | Experimental |
-| `/ferramenta/big5-simbolico`| `pages/Big5Simbolico.tsx` | Aluna | Não | Fundir | Experimental |
-| `/ferramenta/big5-funcional`| `pages/Big5Funcional.tsx` | Aluna | Não | Fundir | Experimental |
-| `/admin/*` | `pages/Admin.tsx` | Admin | Sim | Manter | Admin |
-| `/saas/*` | (Redirecionamentos) | - | Não | Remover | Legado |
-| `/app/clientes/*` | (Redirecionamentos) | - | Não | Remover | Legado |
+### Casa das Máquinas (Gestão)
+| Rota | Componente | Permissão (Front) | Status |
+| :--- | :--- | :--- | :--- |
+| `/casa-maquinas` | `CasaMaquinasDashboard` | Autenticado | Ativa |
+| `/casa-maquinas/clientes` | `ClientesPage` | Autenticado | Ativa |
+| `/casa-maquinas/clientes/:id` | `ClienteDetalhePage` | Autenticado | Ativa |
+| `/casa-maquinas/cabine` | `CabineTerapeutaPage` | Autenticado | Ativa |
+| `/casa-maquinas/vendas` | `VendasPage` | Autenticado | Ativa |
+| `/casa-maquinas/financeiro` | `FinanceiroPage` | Autenticado | Ativa |
+| `/casa-maquinas/configuracoes` | `ConfiguracoesPage` | Autenticado | Ativa |
 
----
+### Clube (Membros)
+| Rota | Componente | Permissão (Front) | Status |
+| :--- | :--- | :--- | :--- |
+| `/` | `LandingPage` | Pública | Ativa |
+| `/clube` | `ClubeDashboard` | Autenticado | Ativa |
+| `/clube/biblioteca` | `BibliotecaConteudo` | Autenticado | Ativa |
+| `/clube/jornada` | `JornadaMembro` | Autenticado | Ativa |
 
-## 3. Rotas Escondidas e Conteúdo Órfão
-
-### 3.1 Páginas sem Link Direto (Acessíveis apenas por URL)
-- `/quiz/:quizId`: Sistema de quizzes funcional mas sem hub central visível.
-- `/agentes`: Página de Agentes (Analista, Curador, Simbólico) parece experimental e desconectada do fluxo principal.
-- `/templo-de-escuta`: Audioteca meditativa sem CTA claro no menu principal.
-
-### 3.2 Arquivos Órfãos (Existentes mas não usados)
-- `src/pages/ExperienciaGratuita.tsx`: Legado de fluxos de marketing antigos.
-- `src/pages/RelatorioAuditoriaBotoes.tsx`: Ferramenta interna de dev esquecida.
-- `src/pages/casa-maquinas/SectionPlaceholder.tsx`: Arquivo de mockup.
+### Admin
+| Rota | Componente | Permissão (Front) | Status |
+| :--- | :--- | :--- | :--- |
+| `/admin` | `AdminDashboard` | Role: Admin | Ativa |
 
 ---
 
-## 4. Identificação de Duplicações Críticas
+## 3. Rotas e Conteúdos Especiais
 
-### 4.1 Sessão / Atendimento
-- **`session-room` (Legado)**: `/session-room`, `/session-room/:caseId`. Usa componentes em `src/pages/SessionRoom...`.
-- **`casa-das-maquinas/cabine` (Novo)**: `/casa-das-maquinas/cabine`. Usa `CabineTerapeutaPage.tsx`.
-- **`ModoSessaoPage`**: `/casa-das-maquinas/nova-sessao`.
-- **`ModoSessaoImersivo`**: `/casa-das-maquinas/sessao/:clienteId`.
-- *Risco*: Confusão de fluxos e fragmentação de logs de atendimento.
+### Rotas Escondidas / Debug
+- `/debug/styles`: Página de guia de estilos (legada).
+- `/test-connection`: Teste de Supabase.
 
-### 4.2 Labirinto e Jornada
-- **`LabirintoHome`**: `/labirinto`.
-- **`LabirintoHeroinaPage`**: `/labirinto-heroina`.
-- **`PortalJunguiano`**: `/portal-junguiano`.
-- *Conclusão*: Três implementações diferentes para a mesma jornada simbólica de portas e distritos.
+### Rotas Duplicadas
+- `/casa-maquinas/sessao` e `/casa-maquinas/cabine`: Ambas apontam para lógicas similares de atendimento, embora a `/cabine` tenha sido consolidada na Sprint 10C.
 
-### 4.3 Big5 e Cartografia
-- **Variantes**: `Big5` (Salas), `Big5Simbolico`, `Big5Funcional`, `Big5Oracular`.
-- **Consolidação**: A `CartografiaPsiquicaPage` tenta unificar, mas as rotas individuais ainda existem e são acessíveis.
+### Conteúdos Órfãos (Arquivos sem Rota)
+- `src/components/old-dashboard/*`: Componentes da primeira versão não mais utilizados.
+- `src/pages/Archive/*`: Páginas movidas para arquivo mas ainda no diretório.
 
 ---
 
-## 5. Auditoria de Permissões e Segurança
+## 4. Análise de Riscos
 
-### 5.1 Inconsistências na Hierarquia
-A matriz em `portal.ts` define: `visitante < aluna < oracula < assinante < admin`.
-- **Erro Detectado**: Rotas sensíveis de clientes em `/casa-das-maquinas/clientes/:clienteId/jornada-alma` estão marcadas como `minPortal="aluna_formacao"` (nível 2), permitindo que alunas vejam dados profundos de clientes antes de serem certificadas como `oracula` (nível 3).
-- **Risco de RLS**: Algumas páginas de ferramentas (ex: `BussolaOniricaPage`) dependem de parâmetros de URL (`clienteId`) sem validar via query se a usuária logada é a terapeuta responsável por aquele cliente.
+### Riscos de Segurança
+- **Parâmetros de URL**: Rotas como `/casa-maquinas/clientes/:id` dependem exclusivamente do RLS do Supabase. Se o RLS falhar ou estiver em "Permissive", um usuário autenticado poderia tentar ID de terceiros.
+- **Exposição de Menus**: Alguns links de Admin aparecem no DOM mesmo para usuários sem a role, embora o clique resulte em redirecionamento.
 
-### 5.2 Segurança de Dados
-- **Vulnerabilidade**: Uso de `:clienteId` e `:sessionId` em rotas sem verificação de vínculo no frontend (dependência total do RLS). Se o RLS falhar ou estiver mal configurado, uma usuária `oracula` poderia acessar dados de clientes de outras terapeutas via URL.
+### Riscos de UX
+- **Inconsistência de Navegação**: O menu lateral da Casa das Máquinas difere significativamente do Clube, o que pode confundir o administrador que também é usuário.
+- **Deep Linking**: Falta de tratamento para "404 Not Found" em rotas dinâmicas de clientes inexistentes (fica em estado de Loading infinito).
 
 ---
 
-## 6. Plano de Limpeza em 3 Fases
+## 5. Plano de Limpeza em 3 Fases
 
 ### Fase 1: Travar Riscos (Imediato)
-1. Corrigir permissões de rotas `/casa-das-maquinas/clientes/*` para `minPortal="oracula"`.
-2. Implementar `verifyTherapistOwnership` em hooks de leitura de cliente.
-3. Desativar rotas `/saas/*` e redirecionar permanentemente para `/casa-das-maquinas/*`.
+- Implementar `ProtectedRoute` com validação de Role explícita para `/admin`.
+- Adicionar tratamento de erro (ErrorBoundary) em rotas dinâmicas.
+- Validar se todas as tabelas sensíveis têm RLS `FOR SELECT USING (auth.uid() = user_id)`.
 
-### Fase 2: Organizar Navegação (Médio Prazo)
-1. Unificar menus em `Navigation.tsx`.
-2. Remover duplicidade de links no dropdown de perfil.
-3. Criar hub de Quizzes e Audioteca no Dashboard Aluna.
+### Fase 2: Organizar Navegação (Curto Prazo)
+- Padronizar o componente de `Navbar` e `Sidebar` entre os módulos.
+- Remover rotas duplicadas de "Sessão" em favor da "Cabine".
+- Centralizar definições de rotas em um único arquivo de constantes.
 
-### Fase 3: Consolidação Arquitetural (Longo Prazo)
-1. Deletar pasta `src/pages/SessionRoom...` e migrar lógica para `src/pages/casa-maquinas/`.
-2. Consolidar `Labirinto` em uma única experiência (Labirinto Heroína).
-3. Transformar `Big5` e outras salas em módulos da `Cartografia Psíquica`.
+### Fase 3: Consolidar Arquitetura (Médio Prazo)
+- Deletar diretórios `old-dashboard` e `Archive`.
+- Migrar componentes legados para o novo Design System da Casa Orácula.
+- Implementar Lazy Loading em todas as rotas para melhorar performance.
 
 ---
-*Relatório gerado em 17/05/2026 por Lovable AI.*
+
+**Relatório gerado por Lovable AI.**
