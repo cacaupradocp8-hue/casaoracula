@@ -334,12 +334,14 @@ function Timer({ startedAt }: { startedAt: Date }) {
 
                   {currentStep === 1 && (
                     <div className="space-y-4 flex-1">
-                      <p className="text-sm text-muted-foreground italic">Como a cliente chega? O que você percebe no campo de imediato?</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-muted-foreground italic">Como a cliente chega? O que você percebe no campo de imediato?</p>
+                      </div>
                       <Textarea 
                         value={sessionData.checkinTexto}
                         onChange={e => update('checkinTexto', e.target.value)}
-                        placeholder="Abertura do campo..."
-                        className="flex-1 bg-background/30 border-border/10 resize-none text-base min-h-[200px]"
+                        placeholder="O campo se abre com..."
+                        className="flex-1 bg-background/30 border-border/5 rounded-2xl resize-none text-base min-h-[200px] focus:border-primary/20 transition-all placeholder:text-muted-foreground/20"
                       />
                     </div>
                   )}
@@ -350,8 +352,8 @@ function Timer({ startedAt }: { startedAt: Date }) {
                       <Textarea 
                         value={sessionData.anotacoes}
                         onChange={e => update('anotacoes', e.target.value)}
-                        placeholder="Registro da escuta..."
-                        className="flex-1 bg-background/30 border-border/10 resize-none text-base min-h-[250px]"
+                        placeholder="Registros da escuta terapêutica..."
+                        className="flex-1 bg-background/30 border-border/5 rounded-2xl resize-none text-base min-h-[250px] focus:border-primary/20 transition-all placeholder:text-muted-foreground/20"
                       />
                     </div>
                   )}
