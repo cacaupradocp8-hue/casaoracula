@@ -29,6 +29,7 @@ interface Props {
   setSessionData: (data: SessionData | ((prev: SessionData) => SessionData)) => void;
   sessionStartedAt: Date | null;
   savedSessionId: string | null;
+  lastSession?: any | null;
   currentFluxo: FluxoClinicoResult | null;
   onStartSession: (withoutProfile: boolean) => void;
   onEndSession: () => void;
@@ -52,6 +53,7 @@ export function CabineActiveView({
   setSessionData,
   sessionStartedAt,
   savedSessionId,
+  lastSession,
   currentFluxo,
   onStartSession,
   onEndSession,
@@ -83,8 +85,10 @@ export function CabineActiveView({
             startedAt={sessionStartedAt}
             leituraCampo={leituraCampo}
             mapaVivoState={mapaVivoState}
+            lastSession={lastSession}
             onEnd={onEndSession}
             onFluxoChange={onFluxoChange}
+            onBack={onBack}
           />
         </div>
       </div>

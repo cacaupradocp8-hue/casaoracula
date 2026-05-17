@@ -85,6 +85,7 @@ export default function CabineTerapeutaPage() {
   const [sessionStartedAt, setSessionStartedAt] = useState<Date | null>(null);
   const [sessionWithoutProfile, setSessionWithoutProfile] = useState(false);
   const [savedSessionId, setSavedSessionId] = useState<string | null>(null);
+  const [lastSession, setLastSession] = useState<any | null>(null);
   const { state: mapaVivoState, fetchMapaVivo, salvarSnapshot, loading: mapaVivoLoading } = useMapaVivoLive();
   const [currentFluxo, setCurrentFluxo] = useState<FluxoClinicoResult | null>(null);
 
@@ -215,22 +216,39 @@ export default function CabineTerapeutaPage() {
   }, [fetchCirculos]);
 
   useEffect(() => {
-    if (!selectedClienteId || !user) { setProfile(null); return; }
+    if (!selectedClienteId || !user) { setProfile(null); setLastSession(null); return; }
     setProfileLoading(true);
     (async () => {
-      const { data } = await supabase
+      // Fetch Profile
+      const { data: profileData } = await supabase
         .from('co_cartografia_profile')
         .select('id, contexto, profile_json, medias_json, oracula_inicial, intensidade_oracular, updated_at')
         .or(`client_user_id.eq.${clientes.find(c => c.id === selectedClienteId)?.client_user_id},user_id.eq.${user.id}`)
         .order('updated_at', { ascending: false })
         .limit(5);
 
-      if (data && data.length > 0) {
-        const casaMaquinas = data.find((d: any) => d.contexto === 'casa_das_maquinas');
-        setProfile((casaMaquinas || data[0]) as any);
+      if (profileData && profileData.length > 0) {
+        const casaMaquinas = profileData.find((d: any) => d.contexto === 'casa_das_maquinas');
+        setProfile((casaMaquinas || profileData[0]) as any);
       } else {
         setProfile(null);
       }
+
+      // Fetch Last Session Details
+      const { data: sessionData } = await supabase
+        .from('sessions')
+        .select('notes, sintese_json, cabine_data, date')
+        .eq('client_id', selectedClienteId)
+        .order('date', { ascending: false })
+        .limit(1)
+        .single();
+      
+      if (sessionData) {
+        setLastSession(sessionData);
+      } else {
+        setLastSession(null);
+      }
+
       setProfileLoading(false);
     })();
   }, [selectedClienteId, user, clientes]);
