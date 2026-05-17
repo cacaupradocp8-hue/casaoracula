@@ -33,10 +33,10 @@ const RISCO_BADGE: Record<string, string> = {
 const STEPS = [
   { id: 1, label: 'Abertura', icon: Info },
   { id: 2, label: 'Escuta', icon: Activity },
-  { id: 3, label: 'Mapeamento', icon: Compass },
+  { id: 3, label: 'Mapeamento Simbólico', icon: Compass },
   { id: 4, label: 'Intervenção', icon: Sparkles },
-  { id: 5, label: 'Integração', icon: Shield },
-  { id: 6, label: 'Síntese', icon: CheckCircle2 },
+  { id: 5, label: 'Gesto de Integração', icon: Shield },
+  { id: 6, label: 'Síntese Final', icon: CheckCircle2 },
 ];
 
 interface Props {
