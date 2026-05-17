@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { 
   Clock, Square, CheckCircle2, Ban, Compass, AlertTriangle, 
   Activity, Shield, ChevronRight, ChevronLeft, BookOpen, 
-  Sparkles, Pen, History, Info, User
+  Sparkles, Pen, History, Info, User, ArrowLeft
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ClienteComStatus, CartografiaProfile, SessionData } from '@/pages/casa-maquinas/CabineTerapeutaPage';
