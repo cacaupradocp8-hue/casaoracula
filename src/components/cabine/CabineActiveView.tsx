@@ -86,8 +86,10 @@ export function CabineActiveView({
             leituraCampo={leituraCampo}
             mapaVivoState={mapaVivoState}
             lastSession={lastSession}
+            lastSession={lastSession}
             onEnd={onEndSession}
             onFluxoChange={onFluxoChange}
+            onBack={onBack}
           />
         </div>
       </div>
