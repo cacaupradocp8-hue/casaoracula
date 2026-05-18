@@ -42,6 +42,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
   const isVisitor = user?.portal === 'visitante';
   const shouldSkipOnboarding = isAdmin || isVisitor || isVisitorJourneyRoute;
 
+
   const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({
     enabled: !shouldSkipOnboarding,
   });
