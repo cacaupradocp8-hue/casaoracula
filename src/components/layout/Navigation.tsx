@@ -36,7 +36,8 @@ const visitanteMenuGroups = () => [
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas', icon: BookOpen, path: '/clube', subitems: [] },
+
   { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
   { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
