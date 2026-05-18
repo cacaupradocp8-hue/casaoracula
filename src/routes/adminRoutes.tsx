@@ -20,8 +20,10 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
       <Route key="adm-mf" path="/admin/modulos-formativos" element={<ProtectedRoute minPortal="admin"><AdminModulosFormativos /></ProtectedRoute>} />
       <Route key="adm-oc" path="/admin/oracle-cards" element={<ProtectedRoute minPortal="admin"><AdminOracleCardsPage /></ProtectedRoute>} />
       <Route key="adm-al" path="/admin/alunas-acompanhamento" element={<ProtectedRoute minPortal="admin"><AdminAlunaAcompanhamento /></ProtectedRoute>} />
+      <Route key="adm-quiz" path="/admin/quiz" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       
       {/* ═══ CENTRAL OFICIAL DO CLUBE ═══ */}
+
       <Route key="adm-cl-hub" path="/admin/clube" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-ciclos" path="/admin/clube/ciclos" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-portais" path="/admin/clube/portais" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
