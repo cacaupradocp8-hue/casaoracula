@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useProfessionalStatus } from '@/hooks/useProfessionalStatus';
