@@ -310,7 +310,7 @@ export default function QuizPage() {
 
         const { error } = await supabase.from("quiz_respostas_usuario").insert({
           user_id: user.id,
-          quiz_id: quizId,
+          quiz_id: quiz.id, // Using quiz.id instead of quizId from params to be safer
           resultado_id: result.id,
           respostas: Object.entries(answers).map(([perguntaId, opcao]) => ({
             pergunta_id: perguntaId,
@@ -335,6 +335,7 @@ export default function QuizPage() {
             await saveVozes(vozPrimaria, vozApoio);
           }
         }
+
       } catch (error) {
         console.error(error);
       } finally {
