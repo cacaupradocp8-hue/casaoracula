@@ -29,7 +29,7 @@ import {
 const visitanteMenuGroups = () => [
   { key: 'explorar', label: 'Explorar a Casa', icon: Compass, path: '/explorar-a-casa', subitems: [] },
   { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/oracula', subitems: [] },
-  { key: 'clube', label: 'Clube do Livro', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa Orácula', icon: BookOpen, path: '/clube', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
