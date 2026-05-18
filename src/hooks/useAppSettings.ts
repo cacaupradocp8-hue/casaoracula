@@ -23,7 +23,17 @@ export function useAppSettings() {
 
         const settingsMap: Record<string, string> = {};
         data?.forEach(setting => {
-          settingsMap[setting.key] = setting.value;
+          let val = setting.value;
+          // Try to clean up JSON stringified values if they have extra quotes
+          if (typeof val === 'string' && val.startsWith('"') && val.endsWith('"')) {
+            try {
+              val = JSON.parse(val);
+            } catch (e) {
+              // Fallback to removing quotes manually if JSON.parse fails
+              val = val.substring(1, val.length - 1);
+            }
+          }
+          settingsMap[setting.key] = val;
         });
         setSettings(settingsMap);
       } catch (error) {
