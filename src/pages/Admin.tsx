@@ -121,8 +121,10 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'torre-viva': AdminTorreVivaTab,
   'atlas-feminino': AdminAtlasFemininoTab,
   'radiestesia': AdminRadiestesiaTab,
+  'quiz': AdminQuizTab,
   
   // ESTÚDIO
+
   'estudio-oracular': AdminEstudioOracular,
   
   'audios': AdminAudiosTab,
@@ -171,8 +173,10 @@ export default function Admin() {
     }
     
     if (path.startsWith('/admin/clube-livro')) return 'clube';
+    if (path === '/admin/quiz') return 'quiz';
     
     return 'clube';
+
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
