@@ -29,14 +29,11 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
   const isVisitorJourneyRoute =
     location.pathname === '/sala-da-visitante' ||
     location.pathname.startsWith('/quiz/') ||
-    location.pathname === '/ferramenta/cartografia-psiquica-oracula' ||
-
-    location.pathname === '/ferramentas/cartografia-psiquica-oracula' ||
     location.pathname === '/revelacao-cidadela' ||
     location.pathname === '/cidadela/revelacao' ||
     location.pathname === '/comece-aqui' ||
-    location.pathname === '/experiencia-gratuita' ||
-    location.pathname.startsWith('/travessia/');
+    location.pathname === '/experiencia-gratuita';
+
 
   const isAdmin = user?.portal === 'admin';
   const isVisitor = user?.portal === 'visitante';
