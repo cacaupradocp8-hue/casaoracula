@@ -49,7 +49,7 @@ const assinanteMenuGroups = () => [
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas', icon: BookOpen, path: '/clube', subitems: [] },
   { 
     key: 'treinamento', 
     label: 'Treinamento', 
