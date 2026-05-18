@@ -6,13 +6,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { WelcomeCopyByProfile } from '@/components/welcome/WelcomeCopyByProfile';
 
 export default function Welcome() {
-  const { user } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
   const [profileTag, setProfileTag] = useState<string | null>(null);
   const [isLoadingTag, setIsLoadingTag] = useState(true);
 
   const isAdmin = user?.portal === 'admin';
+
 
   // Fetch user's entry archetype (profile tag)
   useEffect(() => {
