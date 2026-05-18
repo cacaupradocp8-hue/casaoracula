@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Route, BookOpen, Map, Lock } from 'lucide-react';
+import { ArrowRight, Route, BookOpen, Map, Lock, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { canAccessFeature } from '@/types/portal';
@@ -34,8 +34,7 @@ const fade = (delay = 0) => ({
 export function QuizResultView({ primaryResult, secondaryResult }: QuizResultViewProps) {
   const navigate = useNavigate();
   const { user, isAuthenticated } = useAuth();
-  const hasAssinanteAccess = user ? canAccessFeature(user.portal, 'assinante') : false;
-
+  
   const handleNextStep = () => {
     const targetPath = '/travessia/travessia-zero-o-limiar-da-casa';
     if (!isAuthenticated) {
@@ -46,116 +45,127 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
   };
 
   return (
-    <div className="space-y-10">
-
-      {/* ══ BLOCO DE ABERTURA ══ */}
-      <motion.section {...fade(0)}>
-        <div className="text-center space-y-3">
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            Sua Voz foi ouvida. Este é o seu ponto de partida na Casa.
+    <div className="space-y-12">
+      {/* ══ BLOCO 1: REVELAÇÃO ══ */}
+      <motion.section {...fade(0)} className="space-y-8">
+        <div className="text-center space-y-4">
+          <p className="text-sm uppercase tracking-[0.3em] text-gold/60">
+            Sua Voz foi revelada
           </p>
-          <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide">
-            Seu próximo passo:
+          <h2 className="font-display text-4xl md:text-5xl text-foreground tracking-tight">
+            {primaryResult.titulo_simbolico}
           </h2>
-        </div>
-      </motion.section>
-
-      {/* ══ TRILHA PRINCIPAL: Travessia 00 ══ */}
-      <motion.section {...fade(0.15)} className="space-y-6">
-        <Card className="border-gold/30 bg-gradient-to-br from-gold/[0.06] to-transparent shadow-lg ring-1 ring-gold/10 overflow-hidden relative">
-          <div className="absolute top-0 right-0 p-3 opacity-10">
-             <Route className="w-24 h-24" />
-          </div>
-          <CardContent className="py-10 px-6 sm:px-10 relative z-10">
-            <div className="flex flex-col items-center text-center gap-6">
-              <div className="w-20 h-20 rounded-full bg-gold/15 border-2 border-gold/30 flex items-center justify-center shrink-0 shadow-premium-glow">
-                <Route className="w-10 h-10 text-gold" />
-              </div>
-              
-              <div className="space-y-4 max-w-md mx-auto">
-                <div>
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-gold/70 block mb-2">Início da Jornada</span>
-                  <h3 className="font-display text-2xl font-semibold text-foreground">Travessia 00: O Limiar da Casa</h3>
-                  <p className="text-sm text-foreground/80 leading-relaxed mt-4">
-                    Agora que você descobriu sua Voz, precisa aprender a sustentá-la. 
-                    A Travessia 00 é um percurso de 7 dias para sintonizar sua presença e escuta antes de habitar a Casa por completo.
-                  </p>
-                </div>
-
-                <Button
-                  variant="gold"
-                  size="xl"
-                  onClick={handleNextStep}
-                  className="gap-3 w-full sm:w-auto h-16 px-10 text-base shadow-gold-lg group"
-                >
-                  Guardar minha Voz e iniciar a Travessia 00
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-                
-                <p className="text-xs text-gold/50 italic pt-2">
-                  {isAuthenticated ? 'Você já está logada. Comece agora.' : 'Você precisará criar uma conta gratuita para salvar seu progresso.'}
-                </p>
-              </div>
+          {primaryResult.categoria && (
+            <div className="inline-block px-4 py-1 rounded-full bg-gold/10 border border-gold/20 text-xs text-gold/80">
+              {primaryResult.categoria}
             </div>
-          </CardContent>
-        </Card>
+          )}
+        </div>
 
-        {/* ══ BLOCO DE ASSINATURA ══ */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
-           {/* Rotas da Casa */}
-           <Card 
-            className="border-primary/10 bg-primary/[0.02] cursor-pointer hover:bg-primary/5 transition-colors group"
-            onClick={() => navigate('/planos')}
-          >
-            <CardContent className="py-6 px-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                  <BookOpen className="w-5 h-5 text-primary/60" />
-                </div>
-                <div className="flex-1 min-w-0 space-y-2">
-                  <h4 className="font-display text-base font-semibold text-foreground/80">Rotas da Casa Orácula</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Acesso completo após concluir o Limiar da Casa.
-                  </p>
-                </div>
-                <ArrowRight className="w-4 h-4 text-muted-foreground/30 mt-1" />
-              </div>
-            </CardContent>
-          </Card>
+        {primaryResult.imagem_url && (
+          <div className="rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 max-w-2xl mx-auto">
+            <img 
+              src={primaryResult.imagem_url} 
+              alt={primaryResult.titulo_simbolico}
+              className="w-full h-auto object-cover aspect-[16/9]"
+            />
+          </div>
+        )}
 
-          {/* CidaDELA */}
-          <Card 
-            className="border-primary/10 bg-primary/[0.02] cursor-pointer hover:bg-primary/5 transition-colors group"
-            onClick={() => navigate('/planos')}
-          >
-            <CardContent className="py-6 px-6">
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
-                  <Map className="w-5 h-5 text-primary/60" />
-                </div>
-                <div className="flex-1 min-w-0 space-y-2">
-                  <h4 className="font-display text-base font-semibold text-foreground/80">Habitar minha CidaDELA</h4>
-                  <p className="text-[11px] text-muted-foreground leading-relaxed">
-                    Sua cartografia psíquica. Disponível via assinatura das Rotas.
-                  </p>
-                </div>
-                <Lock className="w-3 h-3 text-muted-foreground/30 mt-1" />
-              </div>
-            </CardContent>
-          </Card>
+        <div className="max-w-2xl mx-auto">
+          <div 
+            className="prose prose-invert prose-gold max-w-none text-foreground/90 leading-relaxed text-lg italic text-center"
+            dangerouslySetInnerHTML={{ __html: primaryResult.texto_interpretativo }}
+          />
         </div>
       </motion.section>
 
-      {/* ══ BLOCO FINAL ══ */}
-      <motion.section {...fade(0.3)}>
-        <div className="text-center py-6">
-          <div className="w-12 h-px bg-gold/20 mx-auto mb-6" />
-          <p className="font-display text-base text-foreground/60 leading-relaxed max-w-xs mx-auto">
-            A Voz é o começo.
-            <br />
-            A Travessia é o caminho.
-          </p>
+      {/* ══ BLOCO 2: VOZ COMPLEMENTAR (SE EXISTIR) ══ */}
+      {secondaryResult && (
+        <motion.section {...fade(0.2)} className="max-w-xl mx-auto">
+          <div className="relative p-6 rounded-xl border border-gold/20 bg-gold/[0.03] overflow-hidden">
+             <div className="absolute -top-4 -right-4 opacity-5">
+               <Sparkles className="w-24 h-24" />
+             </div>
+             <div className="space-y-3 relative z-10">
+               <span className="text-[10px] uppercase tracking-[0.2em] text-gold/50 font-medium">Voz de Apoio</span>
+               <h4 className="font-display text-xl text-foreground/80">{secondaryResult.titulo_simbolico}</h4>
+               <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 italic">
+                 {secondaryResult.texto_interpretativo.replace(/<[^>]*>?/gm, '')}
+               </p>
+             </div>
+          </div>
+        </motion.section>
+      )}
+
+      {/* ══ BLOCO 3: CONTEÚDO CONFIGURADO (TRAZIDO PELO PAI) ══ */}
+      {/* Aqui o QuizPage renderiza DirectMediaContent e ModularPageRenderer */}
+
+      {/* ══ BLOCO 4: PRÓXIMO PASSO ══ */}
+      <motion.section {...fade(0.4)} className="pt-8 border-t border-gold/10">
+        <div className="max-w-2xl mx-auto text-center space-y-8">
+          <div className="space-y-4">
+            <h3 className="font-display text-2xl text-foreground">Sua Voz apareceu.</h3>
+            <p className="text-muted-foreground max-w-md mx-auto">
+              Agora ela precisa de uma travessia para ganhar corpo. Inicie o Limiar da Casa.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <Button
+              variant="gold"
+              size="xl"
+              onClick={handleNextStep}
+              className="gap-3 h-16 px-12 text-lg shadow-gold-lg group w-full sm:w-auto"
+            >
+              Guardar minha Voz e iniciar a Travessia 00
+              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+            </Button>
+            
+            <p className="text-xs text-muted-foreground/60 italic">
+              {isAuthenticated 
+                ? 'Você já está logada. Seu progresso será salvo.' 
+                : 'Você criará uma conta gratuita para guardar seu resultado.'}
+            </p>
+          </div>
+
+          {/* ══ BLOCO DISCRETO: ROTAS DA CASA ══ */}
+          <div className="pt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 opacity-80 hover:opacity-100 transition-opacity">
+            <button 
+              onClick={() => navigate('/planos')}
+              className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-left hover:bg-white/[0.05] transition-all group"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <BookOpen className="w-5 h-5 text-primary/60" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="text-sm font-semibold text-foreground/80">Rotas da Casa Orácula</h5>
+                <p className="text-[10px] text-muted-foreground">O ecossistema completo de assinatura.</p>
+              </div>
+            </button>
+
+            <button 
+              onClick={() => navigate('/planos')}
+              className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-left hover:bg-white/[0.05] transition-all group"
+            >
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Map className="w-5 h-5 text-primary/60" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <h5 className="text-sm font-semibold text-foreground/80">CidaDELA Interior</h5>
+                <p className="text-[10px] text-muted-foreground">Sua cartografia psíquica (Assinantes).</p>
+              </div>
+            </button>
+          </div>
         </div>
+      </motion.section>
+
+      {/* ══ RODAPÉ SIMBÓLICO ══ */}
+      <motion.section {...fade(0.6)} className="text-center opacity-40 py-8">
+        <div className="w-12 h-px bg-gold/30 mx-auto mb-6" />
+        <p className="font-display text-sm tracking-[0.2em]">
+          CASA ORÁCULA — CLÍNICA DOS CONTOS
+        </p>
       </motion.section>
     </div>
   );
