@@ -24,8 +24,13 @@ import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 type Phase = 'intro' | 'questionnaire' | 'generating' | 'result';
 
 export default function CartografiaPsiquicaPage() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { canAccess } = useEffectivePortal();
   const navigate = useNavigate();
+  
+  // A CidaDELA agora exige nível 'aluna' (membros pagantes) ou superior
+  const hasSubscriptionAccess = canAccess('aluna');
+  
   const {
     fatores, perguntas, loading: loadingBig5,
     calcularMedias, saveResult, getIntensidade,
@@ -33,6 +38,7 @@ export default function CartografiaPsiquicaPage() {
   const { saveTherapistCartografia } = useCartografiaGPS();
 
   const [phase, setPhase] = useState<Phase>('intro');
+
   const [saving, setSaving] = useState(false);
 
   // Questionnaire state
