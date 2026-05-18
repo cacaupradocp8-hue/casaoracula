@@ -43,14 +43,22 @@ export default function Welcome() {
 
   // Redirect logic
   useEffect(() => {
-    if (!onboardingLoading && user) {
+    if (authLoading || onboardingLoading) return;
+
+    if (!isAuthenticated) {
+      navigate('/sala-da-visitante', { replace: true });
+      return;
+    }
+
+    if (user) {
       // Non-completed onboarding users go to onboarding first
       if (!onboardingCompleted && !isAdmin) {
         navigate('/onboarding', { replace: true });
         return;
       }
     }
-  }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
+  }, [authLoading, onboardingLoading, isAuthenticated, user, onboardingCompleted, isAdmin, navigate]);
+
 
   const handleContinue = () => {
     navigate('/dashboard-membro', { replace: true });
