@@ -408,7 +408,7 @@ function AppRoutes() {
       {/* Ferramentas individuais */}
       <Route path="/ferramentas/big5" element={<ProtectedRoute minPortal="mentorada"><Big5 /></ProtectedRoute>} />
       <Route path="/ferramenta/big5-simbolico" element={<ProtectedRoute minPortal="mentorada"><Big5Simbolico /></ProtectedRoute>} />
-      <Route path="/ferramenta/cartografia-psiquica-oracula" element={<ProtectedRoute minPortal="visitante"><CartografiaPsiquicaPage /></ProtectedRoute>} />
+      <Route path="/ferramenta/cartografia-psiquica-oracula" element={<CartografiaPsiquicaPage />} />
       <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramenta/big5-funcional" element={<ProtectedRoute minPortal="mentorada"><Big5Funcional /></ProtectedRoute>} />
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
