@@ -220,7 +220,9 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento', { replace: true });
                               if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
                               if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
+                              if (item.key === 'quiz') navigate('/admin/quiz', { replace: true });
                             }
+
                             if (onItemClick) onItemClick();
                           }}
                           className={cn(

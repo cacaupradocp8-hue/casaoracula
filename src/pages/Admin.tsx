@@ -173,8 +173,10 @@ export default function Admin() {
     }
     
     if (path.startsWith('/admin/clube-livro')) return 'clube';
+    if (path === '/admin/quiz') return 'quiz';
     
     return 'clube';
+
   };
 
   const [activeTab, setActiveTab] = useState(getInitialTab());
