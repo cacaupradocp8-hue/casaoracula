@@ -100,13 +100,16 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
           </CardContent>
         </Card>
 
-        {/* ══ BLOCO DE ASSINATURA (Futuro) ══ */}
+        {/* ══ BLOCO DE ASSINATURA ══ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
            {/* Rotas da Casa */}
-           <Card className="border-primary/10 bg-primary/[0.02] opacity-70">
+           <Card 
+            className="border-primary/10 bg-primary/[0.02] cursor-pointer hover:bg-primary/5 transition-colors group"
+            onClick={() => navigate('/planos')}
+          >
             <CardContent className="py-6 px-6">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                   <BookOpen className="w-5 h-5 text-primary/60" />
                 </div>
                 <div className="flex-1 min-w-0 space-y-2">
@@ -115,19 +118,23 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                     Acesso completo após concluir o Limiar da Casa.
                   </p>
                 </div>
+                <ArrowRight className="w-4 h-4 text-muted-foreground/30 mt-1" />
               </div>
             </CardContent>
           </Card>
 
           {/* CidaDELA */}
-          <Card className="border-primary/10 bg-primary/[0.02] opacity-70">
+          <Card 
+            className="border-primary/10 bg-primary/[0.02] cursor-pointer hover:bg-primary/5 transition-colors group"
+            onClick={() => navigate('/planos')}
+          >
             <CardContent className="py-6 px-6">
               <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary/20 transition-colors">
                   <Map className="w-5 h-5 text-primary/60" />
                 </div>
                 <div className="flex-1 min-w-0 space-y-2">
-                  <h4 className="font-display text-base font-semibold text-foreground/80">CidaDELA Interior</h4>
+                  <h4 className="font-display text-base font-semibold text-foreground/80">Habitar minha CidaDELA</h4>
                   <p className="text-[11px] text-muted-foreground leading-relaxed">
                     Sua cartografia psíquica. Disponível via assinatura das Rotas.
                   </p>
