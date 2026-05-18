@@ -329,7 +329,7 @@ function AppRoutes() {
       <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
       <Route path="/convite-clube" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
-      <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
+      <Route path="/experiencia-gratuita" element={<Navigate to="/quiz/descubra-seu-eixo" replace />} />
       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
       <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
       {/* /clube is handled by clubeRoutes */}
