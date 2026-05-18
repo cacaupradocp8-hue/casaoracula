@@ -565,10 +565,9 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Resultado Simbólico"
+          badge="A Revelação da sua Voz"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
-          title={prevResult.titulo_simbolico}
-          subtitle={prevResult.categoria || undefined}
+          title="O Espelho da Alma"
           maxWidth="4xl"
           showNavigation={false}
         >
@@ -594,33 +593,29 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* Ver minha Voz button */}
+          {/* Ver minha Voz button - Somente se fizer sentido, movido para baixo */}
           {(() => {
             const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
             return vozId ? (
-              <div className="flex justify-center pt-4">
+              <div className="flex justify-center pt-8 border-t border-white/5">
                 <Button
-                  variant="outline"
-                  size="lg"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                  className="gap-2 text-primary/50 hover:text-primary transition-colors"
                 >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
+                  <AudioLines className="w-4 h-4" />
+                  Visualizar registro técnico da Voz
                 </Button>
               </div>
             ) : null;
           })()}
 
-          {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer Quiz
+          {/* Action buttons secundários */}
+          <div className="flex gap-4 justify-center py-8">
+            <Button variant="outline" size="sm" onClick={handleRestart} className="text-xs opacity-50 hover:opacity-100">
+              <RefreshCw className="w-3 h-3 mr-2" />
+              Refazer Questionário
             </Button>
           </div>
         </ContentPageLayout>
@@ -640,10 +635,9 @@ export default function QuizPage() {
             { label: quiz.titulo, href: quiz.sala_id ? `/salas/${quiz.sala_id}` : undefined },
             { label: 'Resultado' },
           ]}
-          badge="Seu Resultado Simbólico"
+          badge="A Revelação da sua Voz"
           badgeIcon={<Sparkles className="w-4 h-4 text-gold" />}
-          title={finalResult.titulo_simbolico}
-          subtitle={finalResult.categoria || undefined}
+          title="O Espelho da Alma"
           maxWidth="4xl"
           showNavigation={false}
         >
@@ -670,75 +664,50 @@ export default function QuizPage() {
           />
 
           {saving && (
-            <div className="flex items-center justify-center gap-2 text-muted-foreground">
+            <div className="flex items-center justify-center gap-2 text-muted-foreground py-4">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Salvando resultado...</span>
+              <span className="text-xs italic">Sincronizando Voz com seu perfil...</span>
             </div>
           )}
 
          {/* Syntheia Chat Button - Only for logged users */}
          {user && (
-           <div className="flex justify-center">
+           <div className="flex justify-center pt-8">
              <Button
-               variant="gold"
+               variant="outline"
                size="lg"
                onClick={() => setShowSyntheiaChat(true)}
-               className="gap-2"
+               className="gap-2 border-gold/20 hover:bg-gold/5"
              >
-               <MessageCircle className="w-5 h-5" />
-               Explorar com Syntheia
+               <MessageCircle className="w-5 h-5 text-gold" />
+               Aprofundar este arquétipo com Syntheia
              </Button>
            </div>
          )}
 
-         {/* Ver minha Voz button - Only for logged users */}
+         {/* Ver minha Voz button - Técnico */}
           {user && (() => {
             const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
             return vozId ? (
-              <div className="flex justify-center pt-2">
+              <div className="flex justify-center pt-4">
                 <Button
-                  variant="outline"
-                  size="lg"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 border-primary/30 text-primary hover:bg-primary/10"
+                  className="gap-2 text-primary/40 hover:text-primary transition-colors"
                 >
-                  <AudioLines className="w-5 h-5" />
-                  Ver minha Voz no sistema
+                  <AudioLines className="w-4 h-4" />
+                  Ver registro técnico
                 </Button>
               </div>
             ) : null;
           })()}
 
-          {/* CTA Principal - Iniciar Travessia 00 */}
-          <div className="flex justify-center pt-6">
-            <Button
-              variant="gold"
-              size="lg"
-              onClick={() => {
-                const targetPath = '/travessia/travessia-zero-o-limiar-da-casa';
-                if (user) {
-                  navigate(targetPath);
-                } else {
-                  navigate(`/auth?redirect=${targetPath}`);
-                }
-              }}
-              className="gap-2 shadow-premium-glow"
-            >
-              <Sparkles className="w-5 h-5" />
-              Guardar minha Voz e iniciar a Travessia 00
-            </Button>
-          </div>
-
-
-         {/* Action buttons */}
-          <div className="flex gap-4 justify-center pt-4">
-            <Button variant="outline" onClick={() => navigate(-1)}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Voltar
-            </Button>
-            <Button variant="gold" onClick={handleRestart}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refazer
+          {/* Footer actions */}
+          <div className="flex gap-4 justify-center py-10 opacity-30 hover:opacity-100 transition-opacity">
+            <Button variant="ghost" size="sm" onClick={handleRestart} className="text-xs">
+              <RefreshCw className="w-3 h-3 mr-2" />
+              Refazer Quiz
             </Button>
           </div>
         </ContentPageLayout>
