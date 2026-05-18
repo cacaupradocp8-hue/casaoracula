@@ -352,7 +352,14 @@ function AppRoutes() {
       <Route path="/meu-jardim" element={<ProtectedRoute><JardimHeroinaClientePage /></ProtectedRoute>} />
       <Route path="/jardim" element={<ProtectedRoute><JardimHeroina /></ProtectedRoute>} />
       <Route path="/sala-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeuta /></ProtectedRoute>} />
-      <Route path="/mapa-vivo" element={<ProtectedRoute minPortal="oracula"><CoMapaVivoPage /></ProtectedRoute>} />
+      <Route path="/mapa-vivo" element={<ProtectedRoute minPortal="assinante"><CoMapaVivoPage /></ProtectedRoute>} />
+      
+      {/* Cartografia e Ferramentas - Exclusivas Assinante */}
+      <Route path="/ferramenta/cartografia-psiquica-oracula" element={<ProtectedRoute minPortal="assinante"><CartografiaPsiquicaPage /></ProtectedRoute>} />
+      <Route path="/cidadela/revelacao" element={<ProtectedRoute minPortal="assinante"><RevelacaoCidadelaPage /></ProtectedRoute>} />
+      <Route path="/ferramenta/torre-viva" element={<ProtectedRoute minPortal="assinante"><TorreViva /></ProtectedRoute>} />
+      <Route path="/ferramenta/atlas-arquetipos-femininos" element={<ProtectedRoute minPortal="assinante"><AtlasArquetiposFemininos /></ProtectedRoute>} />
+      <Route path="/ferramenta/:slug" element={<ProtectedRoute minPortal="assinante"><FerramentaDinamica /></ProtectedRoute>} />
       <Route path="/aceitar-convite" element={<Suspense fallback={<BootLoadingScreen />}><AceitarConvitePage /></Suspense>} />
 
       {/* Casa Orácula rooms */}
