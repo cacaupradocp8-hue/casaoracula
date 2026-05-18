@@ -83,9 +83,12 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
   const extractVideoId = useCallback((url: string): string | null => {
     if (!url) return null;
 
+    // Clean up input: remove quotes and whitespace that might have been saved acidentalmente
+    const cleanUrl = url.trim().replace(/^["']|["']$/g, '');
+
     // Already a Cloudflare video ID
-    if (isCloudflareVideoId(url)) {
-      return url;
+    if (isCloudflareVideoId(cleanUrl)) {
+      return cleanUrl;
     }
 
     // Cloudflare Stream URL patterns
@@ -97,7 +100,7 @@ export function useCloudflareVideo(options: UseCloudflareVideoOptions = {}) {
     ];
 
     for (const pattern of cfPatterns) {
-      const match = url.match(pattern);
+      const match = cleanUrl.match(pattern);
       if (match) {
         return match[1];
       }
