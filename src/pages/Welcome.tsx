@@ -6,13 +6,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { WelcomeCopyByProfile } from '@/components/welcome/WelcomeCopyByProfile';
 
 export default function Welcome() {
-  const { user } = useAuth();
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { onboardingCompleted, isLoading: onboardingLoading } = useOnboarding();
   const [profileTag, setProfileTag] = useState<string | null>(null);
   const [isLoadingTag, setIsLoadingTag] = useState(true);
 
   const isAdmin = user?.portal === 'admin';
+
 
   // Fetch user's entry archetype (profile tag)
   useEffect(() => {
@@ -42,14 +43,22 @@ export default function Welcome() {
 
   // Redirect logic
   useEffect(() => {
-    if (!onboardingLoading && user) {
+    if (authLoading || onboardingLoading) return;
+
+    if (!isAuthenticated) {
+      navigate('/sala-da-visitante', { replace: true });
+      return;
+    }
+
+    if (user) {
       // Non-completed onboarding users go to onboarding first
       if (!onboardingCompleted && !isAdmin) {
         navigate('/onboarding', { replace: true });
         return;
       }
     }
-  }, [onboardingLoading, onboardingCompleted, user, isAdmin, navigate]);
+  }, [authLoading, onboardingLoading, isAuthenticated, user, onboardingCompleted, isAdmin, navigate]);
+
 
   const handleContinue = () => {
     navigate('/dashboard-membro', { replace: true });

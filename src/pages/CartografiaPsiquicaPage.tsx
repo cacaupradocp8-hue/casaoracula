@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
@@ -9,21 +9,28 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from '@/hooks/useBig5Oracular';
 import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Map, Sparkles, Loader2, Check, Eye } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Map, Sparkles, Loader2, Check, Eye, Lock, ShieldCheck } from 'lucide-react';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
 import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+
 
 type Phase = 'intro' | 'questionnaire' | 'generating' | 'result';
 
 export default function CartografiaPsiquicaPage() {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const { canAccess } = useEffectivePortal();
   const navigate = useNavigate();
+  
+  // A CidaDELA agora exige nível 'aluna' (membros pagantes) ou superior
+  const hasSubscriptionAccess = canAccess('aluna');
+  
   const {
     fatores, perguntas, loading: loadingBig5,
     calcularMedias, saveResult, getIntensidade,
@@ -31,6 +38,7 @@ export default function CartografiaPsiquicaPage() {
   const { saveTherapistCartografia } = useCartografiaGPS();
 
   const [phase, setPhase] = useState<Phase>('intro');
+
   const [saving, setSaving] = useState(false);
 
   // Questionnaire state
@@ -196,6 +204,65 @@ export default function CartografiaPsiquicaPage() {
     );
   }
 
+  if (!hasSubscriptionAccess) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md w-full"
+        >
+          <Card className="glass border-gold/30 shadow-premium-glow">
+            <CardHeader className="text-center pb-2">
+              <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Lock className="w-8 h-8 text-gold" />
+              </div>
+              <CardTitle className="text-2xl font-display text-gold">CidaDELA Interior</CardTitle>
+              <CardDescription className="text-muted-foreground pt-2">
+                O mapa simbólico profundo da sua psique é um benefício exclusivo das Rotas da Casa Orácula.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-4">
+              <div className="space-y-3">
+                <div className="flex items-start gap-3 text-sm">
+                  <ShieldCheck className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                  <p>Acesse sua cartografia psíquica completa e integrada.</p>
+                </div>
+                <div className="flex items-start gap-3 text-sm">
+                  <Sparkles className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                  <p>Receba sua Leitura Profunda gerada por inteligência operacional.</p>
+                </div>
+                <div className="flex items-start gap-3 text-sm">
+                  <Map className="w-5 h-5 text-gold shrink-0 mt-0.5" />
+                  <p>Mapeie seus distritos e territórios internos de poder.</p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col gap-3 pt-4">
+                <Button 
+                  variant="gold" 
+                  size="lg" 
+                  className="w-full shadow-premium-glow"
+                  onClick={() => navigate('/planos')}
+                >
+                  Assinar e revelar minha CidaDELA
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full text-muted-foreground"
+                  onClick={() => navigate('/dashboard')}
+                >
+                  Voltar ao Dashboard
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col overflow-x-hidden">
       {/* Progress bar */}
@@ -206,6 +273,7 @@ export default function CartografiaPsiquicaPage() {
       )}
 
       <div className="flex-1 flex items-center justify-center px-4 py-6 sm:p-6 w-full max-w-full">
+
         <AnimatePresence mode="wait">
           {/* ═══ INTRO ═══ */}
           {phase === 'intro' && (

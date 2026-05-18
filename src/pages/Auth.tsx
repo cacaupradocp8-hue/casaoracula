@@ -95,7 +95,9 @@ export default function Auth() {
 
     if (result.success) {
       toast({ title: 'Bem-vinda de volta', description: 'A Casa ORÁCULA te recebe.' });
-      navigate('/', { replace: true });
+      const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+      navigate(redirectParam || '/', { replace: true });
+
     } else {
       toast({ title: 'Erro ao entrar', description: result.error, variant: 'destructive' });
     }

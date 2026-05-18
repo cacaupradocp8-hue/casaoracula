@@ -310,7 +310,7 @@ export default function QuizPage() {
 
         const { error } = await supabase.from("quiz_respostas_usuario").insert({
           user_id: user.id,
-          quiz_id: quizId,
+          quiz_id: quiz.id, // Using quiz.id instead of quizId from params to be safer
           resultado_id: result.id,
           respostas: Object.entries(answers).map(([perguntaId, opcao]) => ({
             pergunta_id: perguntaId,
@@ -335,6 +335,7 @@ export default function QuizPage() {
             await saveVozes(vozPrimaria, vozApoio);
           }
         }
+
       } catch (error) {
         console.error(error);
       } finally {
@@ -678,21 +679,23 @@ export default function QuizPage() {
             </div>
           )}
 
-         {/* Syntheia Chat Button */}
-         <div className="flex justify-center">
-           <Button
-             variant="gold"
-             size="lg"
-             onClick={() => setShowSyntheiaChat(true)}
-             className="gap-2"
-           >
-             <MessageCircle className="w-5 h-5" />
-             Explorar com Syntheia
-           </Button>
-         </div>
+         {/* Syntheia Chat Button - Only for logged users */}
+         {user && (
+           <div className="flex justify-center">
+             <Button
+               variant="gold"
+               size="lg"
+               onClick={() => setShowSyntheiaChat(true)}
+               className="gap-2"
+             >
+               <MessageCircle className="w-5 h-5" />
+               Explorar com Syntheia
+             </Button>
+           </div>
+         )}
 
-         {/* Ver minha Voz button */}
-          {(() => {
+         {/* Ver minha Voz button - Only for logged users */}
+          {user && (() => {
             const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
             return vozId ? (
               <div className="flex justify-center pt-2">
@@ -708,6 +711,26 @@ export default function QuizPage() {
               </div>
             ) : null;
           })()}
+
+          {/* CTA Principal - Iniciar Jornada 00 */}
+          <div className="flex justify-center pt-6">
+            <Button
+              variant="gold"
+              size="lg"
+              onClick={() => {
+                if (user) {
+                  navigate('/travessia/travessia-zero-o-limiar-da-casa');
+                } else {
+                  navigate('/auth?redirect=/travessia/travessia-zero-o-limiar-da-casa');
+                }
+              }}
+              className="gap-2 shadow-premium-glow"
+            >
+              <Sparkles className="w-5 h-5" />
+              Guardar minha Voz e iniciar a Jornada 00
+            </Button>
+          </div>
+
 
          {/* Action buttons */}
           <div className="flex gap-4 justify-center pt-4">

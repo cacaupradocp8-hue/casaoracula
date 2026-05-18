@@ -305,10 +305,11 @@ function AppRoutes() {
       <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
-      <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
+      <Route path="/" element={<Welcome />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
+
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
@@ -328,7 +329,7 @@ function AppRoutes() {
       <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
       <Route path="/convite-clube" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
-      <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
+      <Route path="/experiencia-gratuita" element={<Navigate to="/quiz/descubra-seu-eixo" replace />} />
       <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
       <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
       {/* /clube is handled by clubeRoutes */}
@@ -407,7 +408,7 @@ function AppRoutes() {
       {/* Ferramentas individuais */}
       <Route path="/ferramentas/big5" element={<ProtectedRoute minPortal="mentorada"><Big5 /></ProtectedRoute>} />
       <Route path="/ferramenta/big5-simbolico" element={<ProtectedRoute minPortal="mentorada"><Big5Simbolico /></ProtectedRoute>} />
-      <Route path="/ferramenta/cartografia-psiquica-oracula" element={<ProtectedRoute minPortal="visitante"><CartografiaPsiquicaPage /></ProtectedRoute>} />
+      <Route path="/ferramenta/cartografia-psiquica-oracula" element={<CartografiaPsiquicaPage />} />
       <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramenta/big5-funcional" element={<ProtectedRoute minPortal="mentorada"><Big5Funcional /></ProtectedRoute>} />
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
@@ -417,7 +418,7 @@ function AppRoutes() {
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cidadela/revelacao" element={<Navigate to="/revelacao-cidadela" replace />} />
-      <Route path="/revelacao-cidadela" element={<ProtectedRoute minPortal="visitante"><RevelacaoCidadelaPage /></ProtectedRoute>} />
+      <Route path="/revelacao-cidadela" element={<RevelacaoCidadelaPage />} />
       <Route path="/ferramentas/oraculo-perguntas" element={<ProtectedRoute minPortal="mentorada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/ferramentas/mapa-oracula" element={<ProtectedRoute minPortal="mentorada"><MapaOracula /></ProtectedRoute>} />
 
@@ -473,8 +474,9 @@ function AppRoutes() {
       <Route path="/ferramentas/cartografia-torre" element={<ProtectedRoute minPortal="mentorada"><CartografiaTorre /></ProtectedRoute>} />
       <Route path="/ferramentas/plasticidade-psiquica" element={<ProtectedRoute minPortal="mentorada"><PlasticidadePsiquica /></ProtectedRoute>} />
 
-      <Route path="/quiz/:quizId" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
-      <Route path="/quiz/:quizId/resultado" element={<ProtectedRoute><QuizPage /></ProtectedRoute>} />
+      <Route path="/quiz/:quizId" element={<QuizPage />} />
+      <Route path="/quiz/:quizId/resultado" element={<QuizPage />} />
+
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
       <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><RoleSpecificGuard allowed={['oracula', 'admin']}><BibliotecaCasos /></RoleSpecificGuard></ProtectedRoute>} />
 
