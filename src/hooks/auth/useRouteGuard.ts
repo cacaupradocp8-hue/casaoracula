@@ -30,6 +30,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
     location.pathname === '/sala-da-visitante' ||
     location.pathname.startsWith('/quiz/') ||
     location.pathname === '/ferramenta/cartografia-psiquica-oracula' ||
+
     location.pathname === '/ferramentas/cartografia-psiquica-oracula' ||
     location.pathname === '/revelacao-cidadela' ||
     location.pathname === '/cidadela/revelacao' ||
