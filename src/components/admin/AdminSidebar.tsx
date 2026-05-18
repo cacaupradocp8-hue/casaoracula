@@ -69,8 +69,10 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'torre-viva', label: 'Torre Viva™', icon: Castle },
       { key: 'atlas-feminino', label: 'Atlas Arquétipos', icon: Flower2 },
       { key: 'radiestesia', label: 'Radiestesia', icon: Target },
+      { key: 'quiz', label: 'Quizzes da Casa', icon: ClipboardList },
     ],
   },
+
   {
     key: 'estudio',
     label: 'Casa do Estúdio',

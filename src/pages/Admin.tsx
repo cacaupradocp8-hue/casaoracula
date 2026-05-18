@@ -121,8 +121,10 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'torre-viva': AdminTorreVivaTab,
   'atlas-feminino': AdminAtlasFemininoTab,
   'radiestesia': AdminRadiestesiaTab,
+  'quiz': AdminQuizTab,
   
   // ESTÚDIO
+
   'estudio-oracular': AdminEstudioOracular,
   
   'audios': AdminAudiosTab,
