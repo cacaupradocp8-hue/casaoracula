@@ -310,7 +310,7 @@ export default function QuizPage() {
 
         const { error } = await supabase.from("quiz_respostas_usuario").insert({
           user_id: user.id,
-          quiz_id: quiz.id, // Using quiz.id instead of quizId from params to be safer
+          quiz_id: quiz.id,
           resultado_id: result.id,
           respostas: Object.entries(answers).map(([perguntaId, opcao]) => ({
             pergunta_id: perguntaId,
@@ -324,10 +324,7 @@ export default function QuizPage() {
 
         if (error) {
           console.error(error);
-          toast.error("Erro ao salvar resultado");
         } else {
-          toast.success("Resultado salvo no seu perfil");
-          
           // Save vozes to profile
           const vozPrimaria = mapQuizResultToVozId(result.titulo_simbolico);
           const vozApoio = secondary ? mapQuizResultToVozId(secondary.titulo_simbolico) : null;

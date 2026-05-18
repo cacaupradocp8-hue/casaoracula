@@ -79,7 +79,7 @@ export default function ClubeRotasCatalogo() {
               <div className="flex items-center gap-2">
                 <span className="h-px w-6 bg-gold/40" />
                 <span className="text-[9px] tracking-[0.4em] uppercase text-gold/70">
-                  Bem-vinda ao Clube Oracular
+                  Bem-vinda às Rotas da Casa Orácula
                 </span>
               </div>
               <VozTag size="sm" />
@@ -337,7 +337,7 @@ export default function ClubeRotasCatalogo() {
               <Lock className="w-5 h-5 text-gold" />
             </div>
             <DialogTitle className="font-display text-2xl text-center text-foreground">
-              Esta porta ainda não se abriu
+              Esta rota ainda não se abriu
             </DialogTitle>
             <DialogDescription className="font-serif italic text-center text-foreground/60 pt-2">
               Conclua a estação anterior para que esta travessia se revele. Cada passo prepara

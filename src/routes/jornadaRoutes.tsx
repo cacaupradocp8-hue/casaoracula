@@ -26,8 +26,8 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       <Route path="/travessia/:slug" element={<ProtectedRoute><TravessiaDetalhe /></ProtectedRoute>} />
       
       {/* Clube */}
-      <Route path="/clube" element={<ProtectedRoute><ClubeRotasCatalogo /></ProtectedRoute>} />
-      <Route path="/clube/rota/:slug" element={<ProtectedRoute><ClubeRotaPremium /></ProtectedRoute>} />
+      <Route path="/clube" element={<ProtectedRoute minPortal="assinante"><ClubeRotasCatalogo /></ProtectedRoute>} />
+      <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
       
       {/* Biblioteca de Travessias - Redirects para a Unificada */}
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
