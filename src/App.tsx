@@ -319,13 +319,13 @@ function AppRoutes() {
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-      <Route path="/sala-da-visitante" element={<ProtectedRoute><SalaDaVisitante /></ProtectedRoute>} />
+      <Route path="/sala-da-visitante" element={<SalaDaVisitante />} />
 
       {/* Core navigation */}
       <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
-      <Route path="/comece-aqui" element={<ProtectedRoute><Navigate to="/sala-da-visitante" replace /></ProtectedRoute>} />
+      <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
       <Route path="/convite-clube" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/experiencia-gratuita" element={<ProtectedRoute><Navigate to="/quiz/descubra-seu-eixo" replace /></ProtectedRoute>} />
