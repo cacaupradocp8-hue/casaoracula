@@ -709,22 +709,23 @@ export default function QuizPage() {
             ) : null;
           })()}
 
-          {/* CTA Principal - Iniciar Jornada 00 */}
+          {/* CTA Principal - Iniciar Travessia 00 */}
           <div className="flex justify-center pt-6">
             <Button
               variant="gold"
               size="lg"
               onClick={() => {
+                const targetPath = '/travessia/travessia-zero-o-limiar-da-casa';
                 if (user) {
-                  navigate('/travessia/travessia-zero-o-limiar-da-casa');
+                  navigate(targetPath);
                 } else {
-                  navigate('/auth?redirect=/travessia/travessia-zero-o-limiar-da-casa');
+                  navigate(`/auth?redirect=${targetPath}`);
                 }
               }}
               className="gap-2 shadow-premium-glow"
             >
               <Sparkles className="w-5 h-5" />
-              Guardar minha Voz e iniciar a Jornada 00
+              Guardar minha Voz e iniciar a Travessia 00
             </Button>
           </div>
 

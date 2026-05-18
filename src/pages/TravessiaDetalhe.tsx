@@ -724,7 +724,7 @@ export default function TravessiaDetalhe() {
                       className="mt-2 px-8 py-3 rounded-full font-display text-sm tracking-wider bg-gold/10 border border-gold/20 text-gold hover:bg-gold/15 hover:border-gold/30 transition-all"
                       variant="ghost"
                     >
-                      Habitar minha CidaDELA
+                      Habitar minha CidaDELA nas Rotas da Casa
                     </Button>
                   )}
 
