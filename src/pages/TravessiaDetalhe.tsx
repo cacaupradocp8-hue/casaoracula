@@ -730,6 +730,34 @@ export default function TravessiaDetalhe() {
                 </div>
               </section>
             )}
+
+            {/* Convite para Assinatura pós Travessia 00 */}
+            {isTravessiaZero && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="mt-20 p-8 rounded-3xl border border-gold/30 bg-gradient-to-br from-gold/[0.08] to-transparent text-center space-y-6"
+              >
+                <div className="space-y-2">
+                  <h3 className="font-display text-2xl text-foreground">O Limiar foi atravessado.</h3>
+                  <p className="text-muted-foreground max-w-md mx-auto">
+                    Agora que você habita o átrio, está pronta para caminhar pelas Rotas da Casa Orácula e revelar sua CidaDELA Interior.
+                  </p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                  <Button 
+                    variant="gold" 
+                    size="lg" 
+                    className="gap-2"
+                    onClick={() => navigate('/planos')}
+                  >
+                    Habitar as Rotas da Casa
+                    <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </motion.section>
+            )}
           </div>
         )}
 
