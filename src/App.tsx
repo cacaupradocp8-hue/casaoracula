@@ -305,10 +305,11 @@ function AppRoutes() {
       <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       {/* Public */}
-      <Route path="/" element={<PublicRoute><Auth /></PublicRoute>} />
+      <Route path="/" element={<Welcome />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
+
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
