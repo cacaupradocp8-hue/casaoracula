@@ -134,7 +134,7 @@ export function CartografiaEstruturalStepper() {
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
-      {step !== 'intro' && step !== 'resultado' && step !== 'gerando' && (
+      {(step as string) !== 'intro' && (step as string) !== 'resultado' && (step as string) !== 'gerando' && (
         <div className="flex flex-col space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground/60">
