@@ -29,7 +29,7 @@ export interface ProfileJsonDerivacao {
   torre_dominante: string;
   clima_cidadela: string;
   tensao_central: string;
-  direcao_trabalho: string;
+  direcao_clinica: string;
   atencao_seguranca: NivelAtencao;
   ritmo_recomendado: string;
   evitar: string[];
@@ -253,7 +253,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
       torre_dominante: cidadela.torre_dominante,
       clima_cidadela: cidadela.clima_cidade,
       tensao_central: leitura.profile.tensao_central,
-      direcao_trabalho: leitura.profile.estilo_conducao,
+      direcao_clinica: leitura.profile.estilo_conducao,
       atencao_seguranca: atencao,
       ritmo_recomendado: leitura.profile.ritmo_ideal,
       evitar: leitura.saida_terapeuta.o_que_evitar,
