@@ -39,20 +39,9 @@ export function useCartografiaEstrutural() {
 
   // Carregar progresso salvo (opcional - implementar se houver tabela de rascunhos)
   useEffect(() => {
-    const loadDraft = async () => {
-      if (!user) return;
-      const { data, error } = await supabase
-        .from('cartografia_psiquica')
-        .select('metadata_json')
-        .eq('user_id', user.id)
-        .eq('status', 'draft') // Se tivermos status draft
-        .maybeSingle();
-      
-      if (data?.metadata_json) {
-        // Logica para restaurar estado
-      }
-    };
-    // loadDraft();
+    // Draft loading logic removed to avoid recursion/depth issues for now
+    // and because it was just a placeholder.
+
   }, [user]);
 
   const updateResposta = (key: keyof CartografiaRespostas, value: any) => {
