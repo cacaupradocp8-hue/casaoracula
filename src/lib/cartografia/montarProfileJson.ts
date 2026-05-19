@@ -88,6 +88,11 @@ export interface ProfileJsonFinal {
   cidadela: ProfileJsonCidadela;
   oracula_inicial: string;
   intensidade_oracular: string;
+  recomendacoes?: {
+    rotas: string[];
+    praticas: string[];
+    proximo_passo: string;
+  };
 }
 
 // ─── Classificação de distritos ───
