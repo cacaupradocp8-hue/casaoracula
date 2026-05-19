@@ -6,15 +6,14 @@ import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { toast } from 'sonner';
 
-export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'tracos' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
+export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'objetivas' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
 
 export interface CartografiaRespostas {
-  // Big Five (Traços)
-  big5: Record<string, number>;
+  // Objetivas (30 perguntas baseadas nos 5 eixos)
+  objetivas: Record<string, number>;
   // Qualitativo (6 Territórios)
   sintoma: string;
   historia: string;
-  tracos_qualitativo: string;
   crencas: string;
   recursos: string;
   seguranca: string;
@@ -26,10 +25,9 @@ export function useCartografiaEstrutural() {
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
-    big5: {},
+    objetivas: {},
     sintoma: '',
     historia: '',
-    tracos_qualitativo: '',
     crencas: '',
     recursos: '',
     seguranca: '',
@@ -137,10 +135,10 @@ export function useCartografiaEstrutural() {
     setRespostas(prev => ({ ...prev, [key]: value }));
   };
 
-  const updateBig5 = (perguntaId: string, value: number) => {
+  const updateObjetiva = (perguntaId: string, value: number) => {
     setRespostas(prev => ({
       ...prev,
-      big5: { ...prev.big5, [perguntaId]: value }
+      objetivas: { ...prev.objetivas, [perguntaId]: value }
     }));
   };
 
@@ -150,8 +148,8 @@ export function useCartografiaEstrutural() {
     setLoading(true);
 
     try {
-      // 1. Calcular médias do Big Five
-      const big5Medias = calcularMedias(respostas.big5);
+      // 1. Calcular médias a partir das 30 perguntas objetivas
+      const big5Medias = calcularMedias(respostas.objetivas);
       
       // 2. Montar Profile JSON Integrado (Territórios + Big Five)
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
@@ -160,7 +158,8 @@ export function useCartografiaEstrutural() {
           sintoma: respostas.sintoma,
           historia_vida: respostas.historia,
           crencas: respostas.crencas,
-          recursos: respostas.recursos
+          recursos: respostas.recursos,
+          seguranca: respostas.seguranca
         },
         contexto: 'clube' 
       });
@@ -182,8 +181,7 @@ export function useCartografiaEstrutural() {
             sintoma: respostas.sintoma,
             historia: respostas.historia,
             crencas: respostas.crencas,
-            seguranca: respostas.seguranca,
-            tracos_qualitativo: respostas.tracos_qualitativo
+            seguranca: respostas.seguranca
           },
           versao: '2.0-estrutural'
         },
@@ -242,7 +240,7 @@ export function useCartografiaEstrutural() {
     setStep,
     respostas,
     updateResposta,
-    updateBig5,
+    updateObjetiva,
     loading: loading || loadingBig5,
     fatores,
     perguntas,

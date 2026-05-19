@@ -17,7 +17,7 @@ import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadel
 const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
   { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert },
   { id: 'historia', title: 'História', icon: History },
-  { id: 'tracos', title: 'Traços', icon: User },
+  { id: 'objetivas', title: 'Núcleo Estruturado', icon: User },
   { id: 'crencas', title: 'Crenças', icon: Brain },
   { id: 'recursos', title: 'Recursos', icon: Heart },
   { id: 'seguranca', title: 'Segurança', icon: ShieldCheck },
@@ -26,7 +26,7 @@ const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
 export function CartografiaEstruturalStepper() {
   const { 
     step, setStep, respostas, updateResposta, 
-    updateBig5, perguntas, finalizar, loading, result,
+    updateObjetiva, perguntas, finalizar, loading, result,
     saveStatus, hasDraft, retomarRascunho
   } = useCartografiaEstrutural();
 
@@ -36,8 +36,8 @@ export function CartografiaEstruturalStepper() {
   const next = () => {
     if (step === 'intro') setStep('sintoma');
     else if (step === 'sintoma') setStep('historia');
-    else if (step === 'historia') setStep('tracos');
-    else if (step === 'tracos') setStep('crencas');
+    else if (step === 'historia') setStep('objetivas');
+    else if (step === 'objetivas') setStep('crencas');
     else if (step === 'crencas') setStep('recursos');
     else if (step === 'recursos') setStep('seguranca');
     else if (step === 'seguranca') finalizar();
@@ -46,8 +46,8 @@ export function CartografiaEstruturalStepper() {
   const back = () => {
     if (step === 'sintoma') setStep('intro');
     else if (step === 'historia') setStep('sintoma');
-    else if (step === 'tracos') setStep('historia');
-    else if (step === 'crencas') setStep('tracos');
+    else if (step === 'objetivas') setStep('historia');
+    else if (step === 'crencas') setStep('objetivas');
     else if (step === 'recursos') setStep('crencas');
     else if (step === 'seguranca') setStep('recursos');
   };
@@ -113,7 +113,7 @@ export function CartografiaEstruturalStepper() {
           </CardHeader>
           <CardContent>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {result.profileJson.derivacao.territorios.atencao_seguranca}
+              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Segurança estabilizada para a travessia.'}
             </p>
             <div className="mt-4 p-4 rounded-lg bg-gold/5 border border-gold/10 text-xs text-muted-foreground italic">
               Nota Ética: Esta cartografia é uma ferramenta de auto-observação e suporte ao processo terapêutico. 
@@ -140,12 +140,15 @@ export function CartografiaEstruturalStepper() {
                   Rotas Recomendadas
                 </h4>
                 <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.rotas.map((rota: string) => (
+                  {result.profileJson.recomendacoes?.rotas.filter((r: string) => r && r !== '""').map((rota: string) => (
                     <li key={rota} className="text-xs text-muted-foreground flex items-center gap-2">
                       <div className="w-1 h-1 rounded-full bg-gold/40" />
                       {rota}
                     </li>
                   ))}
+                  {(!result.profileJson.recomendacoes?.rotas || result.profileJson.recomendacoes?.rotas.length === 0) && (
+                    <li className="text-xs text-muted-foreground italic">Identificando rotas ideais...</li>
+                  )}
                 </ul>
               </div>
               <div className="space-y-3">
@@ -154,12 +157,15 @@ export function CartografiaEstruturalStepper() {
                   Práticas Iniciais
                 </h4>
                 <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.praticas.map((pratica: string) => (
+                  {result.profileJson.recomendacoes?.praticas.filter((p: string) => p && p !== '""').map((pratica: string) => (
                     <li key={pratica} className="text-xs text-muted-foreground flex items-center gap-2">
                       <div className="w-1 h-1 rounded-full bg-gold/40" />
                       {pratica}
                     </li>
                   ))}
+                  {(!result.profileJson.recomendacoes?.praticas || result.profileJson.recomendacoes?.praticas.length === 0) && (
+                    <li className="text-xs text-muted-foreground italic">Mapeando práticas de sustentação...</li>
+                  )}
                 </ul>
               </div>
             </div>
@@ -167,18 +173,20 @@ export function CartografiaEstruturalStepper() {
             <div className="p-4 rounded-lg bg-gold/5 border border-gold/10 space-y-3">
               <div className="flex items-center gap-2 text-sm font-medium text-gold">
                 <User className="w-4 h-4" />
-                Clínica dos Contos
+                Rotas da Casa Orácula
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {result.profileJson.recomendacoes?.proximo_passo}
+                {result.profileJson.recomendacoes?.proximo_passo && result.profileJson.recomendacoes.proximo_passo !== '""' 
+                  ? result.profileJson.recomendacoes.proximo_passo 
+                  : "Continue habitando sua CidaDELA através das Rotas da Casa Orácula."}
               </p>
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="w-full border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-wider"
-                onClick={() => window.location.href = '/clinica-dos-contos'}
+                onClick={() => window.location.href = '/clube'}
               >
-                Conhecer a Clínica
+                Entrar nas Rotas
               </Button>
             </div>
           </CardContent>
@@ -287,43 +295,49 @@ export function CartografiaEstruturalStepper() {
           />
         )}
 
-        {step === 'tracos' && (
-          <motion.div key="tracos" {...slideVariants} className="space-y-6">
+        {step === 'objetivas' && (
+          <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
-              <h2 className="text-2xl font-display text-foreground">Território dos Traços</h2>
-              <p className="text-sm text-muted-foreground">Suas tendências de funcionamento e estilo pessoal.</p>
+              <h2 className="text-2xl font-display text-foreground">Núcleo Estruturado</h2>
+              <p className="text-sm text-muted-foreground">Responda com honestidade para mapear seu modo de funcionamento atual.</p>
             </header>
             
-            <Card className="glass border-gold/10">
-              <CardContent className="pt-6 space-y-4">
-                <p className="text-sm font-medium">Como você costuma reagir sob pressão?</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {['Ação', 'Análise', 'Cuidado', 'Controle', 'Recolhimento'].map(opt => (
-                    <button 
-                      key={opt}
-                      onClick={() => updateResposta('tracos_qualitativo', opt)}
-                      className={`p-3 rounded-lg border text-sm transition-all ${
-                        respostas.tracos_qualitativo === opt 
-                          ? 'border-gold bg-gold/10 text-gold' 
-                          : 'border-border/40 hover:border-gold/30'
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  ))}
-                </div>
-                <Textarea 
-                  placeholder="Conte mais sobre seus traços..."
-                  className="min-h-[120px] bg-background/50"
-                  value={respostas.tracos_qualitativo}
-                  onChange={e => updateResposta('tracos_qualitativo', e.target.value)}
-                />
-              </CardContent>
-            </Card>
+            <div className="space-y-8">
+              {perguntas.map((p) => (
+                <Card key={p.id} className="glass border-gold/10 overflow-hidden">
+                  <CardContent className="pt-6 space-y-4">
+                    <p className="text-sm font-medium leading-relaxed">{p.texto_pergunta}</p>
+                    <div className="flex justify-between items-center gap-2">
+                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Discordo</span>
+                      <div className="flex-1 flex justify-between px-4">
+                        {[1, 2, 3, 4, 5].map((val) => (
+                          <button
+                            key={val}
+                            onClick={() => updateObjetiva(p.id, val)}
+                            className={`w-10 h-10 rounded-full border transition-all flex items-center justify-center text-xs ${
+                              respostas.objetivas[p.id] === val
+                                ? 'bg-gold border-gold text-gold-foreground shadow-lg shadow-gold/20'
+                                : 'border-border/40 hover:border-gold/30 text-muted-foreground'
+                            }`}
+                          >
+                            {val}
+                          </button>
+                        ))}
+                      </div>
+                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Concordo</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
 
-            <div className="flex justify-between pt-4">
+            <div className="flex justify-between pt-8">
               <Button variant="ghost" onClick={back}><ArrowLeft className="w-4 h-4 mr-2" /> Voltar</Button>
-              <Button onClick={next} variant="gold" disabled={!respostas.tracos_qualitativo}>
+              <Button 
+                onClick={next} 
+                variant="gold" 
+                disabled={Object.keys(respostas.objetivas).length < perguntas.length}
+              >
                 Próximo <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
