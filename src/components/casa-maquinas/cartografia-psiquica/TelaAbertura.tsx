@@ -13,7 +13,7 @@ export function TelaAbertura({ onNext }: Props) {
       </div>
 
       <div className="space-y-3 max-w-md">
-        <h2 className="text-2xl font-display text-foreground">Cartografia Psíquica Orácula</h2>
+        <h2 className="text-2xl font-display text-foreground">Cartografia Estrutural Orácula™ Orácula</h2>
         <p className="text-muted-foreground text-sm italic">
           Como é a geografia da sua cidade interior agora?
         </p>

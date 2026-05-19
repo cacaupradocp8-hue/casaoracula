@@ -22,12 +22,12 @@ const PARA_QUEM = [
 const O_QUE_ENCONTRA = [
   { icon: GraduationCap, title: 'Formação Orácula', desc: 'Método completo de formação em psicologia simbólica aplicada.' },
   { icon: BookOpen, title: 'Clube do Livro Oracular', desc: 'Travessias semanais com aulas-álbum, práticas e reflexões coletivas.' },
-  { icon: Wrench, title: 'Ferramentas Clínicas', desc: 'Cartografia Psíquica, Leitura Simbólica e instrumentos de escuta profunda.' },
+  { icon: Wrench, title: 'Ferramentas Clínicas', desc: 'Cartografia Estrutural Orácula™, Leitura Simbólica e instrumentos de escuta profunda.' },
   { icon: Sparkles, title: 'IA Simbólica', desc: 'Agentes inteligentes para apoio em sessão e leitura oracular.' },
 ];
 
 const PASSOS = [
-  { num: '01', title: 'Descubra seu eixo', desc: 'Faça a Cartografia Psíquica gratuita e entenda seu ponto de partida.' },
+  { num: '01', title: 'Descubra seu eixo', desc: 'Faça a Cartografia Estrutural Orácula™ gratuita e entenda seu ponto de partida.' },
   { num: '02', title: 'Escolha seu caminho', desc: 'Clube do Livro para imersão cultural ou Formação para prática profissional.' },
   { num: '03', title: 'Pratique com método', desc: 'Use as ferramentas, participe da comunidade e evolua com acompanhamento.' },
 ];
