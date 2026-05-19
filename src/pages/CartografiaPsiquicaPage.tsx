@@ -1,29 +1,16 @@
-import { useState, useCallback } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
-import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
-import { calcularLeitura } from '@/lib/cartografia/leituraComportamental';
-import { derivarCidadela } from '@/lib/cartografia/derivacaoCidadela';
-import { useAuth } from '@/contexts/AuthContext';
-import { useBig5Oracular } from '@/hooks/useBig5Oracular';
-import { useCartografiaGPS } from '@/hooks/useCartografiaGPS';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, ArrowRight, Map, Sparkles, Loader2, Check, Eye, Lock, ShieldCheck } from 'lucide-react';
-import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
-import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
-import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
-import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
-import { LeituraRevelacao } from '@/components/cartografia/LeituraRevelacao';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
-
-
-type Phase = 'intro' | 'questionnaire' | 'generating' | 'result';
+import { CartografiaEstruturalStepper } from '@/components/cartografia/CartografiaEstruturalStepper';
+import { Lock, ShieldCheck, Sparkles, Map } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 export default function CartografiaPsiquicaPage() {
+  const { canAccess } = useEffectivePortal();
+  const navigate = useNavigate();
+  const hasSubscriptionAccess = canAccess('aluna');
+
   const { user, isAuthenticated } = useAuth();
   const { canAccess } = useEffectivePortal();
   const navigate = useNavigate();
