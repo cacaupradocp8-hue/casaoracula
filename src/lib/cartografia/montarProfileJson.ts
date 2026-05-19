@@ -41,6 +41,14 @@ export interface ProfileJsonDerivacao {
     travessia: NivelDistrito;
     abalo: NivelDistrito;
   };
+  territorios: {
+    sintoma: string;
+    historia_vida: string;
+    tracos: string;
+    crencas: string;
+    recursos: string;
+    atencao_seguranca: string;
+  };
 }
 
 export interface ProfileJsonLeituraClinica {
@@ -159,6 +167,12 @@ const OBSERVACAO_ETICA: Record<NivelAtencao, string> = {
 
 export interface MontarProfileParams {
   rawMedias: Record<string, number>;
+  territorios?: {
+    sintoma?: string;
+    historia_vida?: string;
+    crencas?: string;
+    recursos?: string;
+  };
   contexto: ContextoLeitura;
 }
 
@@ -208,6 +222,14 @@ export function montarProfileJson({ rawMedias, contexto }: MontarProfileParams):
         vinculos: classificarDistrito(medias.campo_do_outro),
         travessia: classificarDistrito(medias.porta_do_possivel),
         abalo: classificarDistrito(medias.porta_do_abalo),
+      },
+      territorios: {
+        sintoma: territorios?.sintoma || 'Em análise.',
+        historia_vida: territorios?.historia_vida || 'Em análise.',
+        tracos: `Predominante: ${leitura.oracula_inicial}. Intensidade: ${leitura.intensidade_oracular}.`,
+        crencas: territorios?.crencas || 'Em análise.',
+        recursos: territorios?.recursos || 'Em análise.',
+        atencao_seguranca: TEXTOS_ATENCAO[atencao],
       },
     },
 
