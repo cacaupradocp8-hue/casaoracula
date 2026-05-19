@@ -51,13 +51,13 @@ export function useCartografiaEstrutural() {
         setLoading(true);
         const { data, error } = await supabase
           .from('cartografia_estrutural_drafts')
-          .select('step, respostas, status')
+          .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
 
         if (error) throw error;
 
-        if (data && data.status === 'draft') {
+        if (data && (data as any).status === 'draft') {
           setHasDraft(true);
         }
       } catch (err) {
@@ -76,16 +76,17 @@ export function useCartografiaEstrutural() {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('cartografia_estrutural_drafts' as any)
-        .select('step, respostas')
+        .from('cartografia_estrutural_drafts')
+        .select('*')
         .eq('user_id', user.id)
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
 
       if (data) {
-        setStep(data.step as CartografiaStepId);
-        setRespostas(data.respostas as unknown as CartografiaRespostas);
+        const draft = data as any;
+        setStep(draft.step as CartografiaStepId);
+        setRespostas(draft.respostas as unknown as CartografiaRespostas);
         toast.success('Progresso retomado com sucesso');
       }
     } catch (err) {
