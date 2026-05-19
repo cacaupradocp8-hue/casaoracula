@@ -30,16 +30,16 @@ const RITMO_LABEL: Record<string, string> = {
   rapido: 'Dinâmico — abertura para experimentação ativa',
 };
 
-const RISCO_LABEL: Record<string, { text: string; color: string }> = {
-  alto: { text: 'Alto', color: 'text-destructive' },
-  moderado: { text: 'Moderado', color: 'text-amber-500' },
-  baixo: { text: 'Baixo', color: 'text-emerald-500' },
+const ATENCAO_LABEL: Record<string, { text: string; color: string }> = {
+  alto: { text: 'Elevada', color: 'text-destructive' },
+  moderado: { text: 'Moderada', color: 'text-amber-500' },
+  baixo: { text: 'Segura', color: 'text-emerald-500' },
 };
 
 export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
   const { profile, saida_terapeuta } = leitura;
-  const risco = profileJson?.derivacao.risco_conducao || 'moderado';
-  const riscoInfo = RISCO_LABEL[risco] || RISCO_LABEL.moderado;
+  const atencao = profileJson?.derivacao.atencao_seguranca || 'moderado';
+  const atencaoInfo = ATENCAO_LABEL[atencao] || ATENCAO_LABEL.moderado;
 
   return (
     <div className="space-y-5 w-full max-w-2xl mx-auto overflow-hidden">
@@ -102,9 +102,9 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
             <CardContent className="p-3 space-y-1">
               <div className="flex items-center gap-1.5">
                 <AlertTriangle className="w-3.5 h-3.5 text-destructive/60" />
-                <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Risco de condução</p>
+                <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Nível de Atenção</p>
               </div>
-              <p className={`text-xs font-bold ${riscoInfo.color}`}>{riscoInfo.text}</p>
+              <p className={`text-xs font-bold ${atencaoInfo.color}`}>{atencaoInfo.text}</p>
             </CardContent>
           </Card>
         </motion.div>
