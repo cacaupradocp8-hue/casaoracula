@@ -172,7 +172,7 @@ export function CartografiaEstruturalStepper() {
 
             <div className="p-4 rounded-lg bg-gold/5 border border-gold/10 space-y-3">
               <div className="flex items-center gap-2 text-sm font-medium text-gold">
-                <User className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" />
                 Rotas da Casa Orácula
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -181,9 +181,9 @@ export function CartografiaEstruturalStepper() {
                   : "Continue habitando sua CidaDELA através das Rotas da Casa Orácula."}
               </p>
               <Button 
-                variant="outline" 
+                variant="gold" 
                 size="sm" 
-                className="w-full border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-wider"
+                className="w-full text-[10px] uppercase tracking-wider"
                 onClick={() => window.location.href = '/clube'}
               >
                 Entrar nas Rotas

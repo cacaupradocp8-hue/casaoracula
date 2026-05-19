@@ -47,8 +47,8 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
         <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
           <Stethoscope className="w-6 h-6 text-primary" />
         </div>
-        <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Formulação Simbólico-Clínica</p>
-        <h2 className="font-display text-xl font-bold text-foreground">Leitura Estruturada</h2>
+        <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Mapeamento Reflexivo</p>
+        <h2 className="font-display text-xl font-bold text-foreground">Leitura de Condução</h2>
       </motion.div>
 
       {/* Eixo Dominante */}
@@ -122,12 +122,12 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
         </motion.div>
       </div>
 
-      {/* Direção Clínica + Porta Inicial */}
+      {/* Direção de Trabalho + Porta Inicial */}
       <motion.div {...anim(0.35)}>
         <Card className="border-border/15 bg-card/50">
           <CardHeader className="pb-2">
             <CardTitle className="text-xs text-foreground/70 flex items-center gap-1.5">
-              <Compass className="w-3.5 h-3.5" /> Direção Clínica Inicial
+              <Compass className="w-3.5 h-3.5" /> Direção de Trabalho
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
