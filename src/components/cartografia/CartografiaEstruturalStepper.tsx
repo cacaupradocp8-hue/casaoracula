@@ -121,9 +121,10 @@ export function CartografiaEstruturalStepper() {
           </CardContent>
         </Card>
 
-        <div className="flex justify-center pt-8">
+        <div className="flex flex-col items-center gap-4 pt-8">
+          <p className="text-sm text-muted-foreground">Sua travessia continua nas Rotas da Casa Orácula.</p>
           <Button onClick={() => window.location.href = '/dashboard'} variant="gold">
-            Ir para o Dashboard
+            Continuar para o Dashboard
           </Button>
         </div>
       </motion.div>
@@ -163,7 +164,7 @@ export function CartografiaEstruturalStepper() {
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>
             <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg">
-              Iniciar minha Cartografia
+              Começar a travessia
             </Button>
             <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
               Uso exclusivo para assinantes Casa Orácula
