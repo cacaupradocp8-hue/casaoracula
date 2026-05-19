@@ -1,5 +1,5 @@
 // ============================================================
-// Camada Invisível de Leitura Comportamental
+// Camada de Leitura Estrutural
 // Módulo puro — zero dependências de banco ou UI
 // ============================================================
 

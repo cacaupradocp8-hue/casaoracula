@@ -58,7 +58,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
       <motion.div {...anim(0.25)}>
         <Card className="border-amber-500/15 bg-amber-500/5">
           <CardContent className="p-5 space-y-2">
-            <p className="text-[10px] text-amber-600/60 uppercase tracking-wider font-medium">Tensão que pede escuta</p>
+            <p className="text-[10px] text-amber-600/60 uppercase tracking-wider font-medium">Sinais de cuidado</p>
             <p className="text-sm text-foreground/85 leading-relaxed">
               {simbolica?.tensao_que_pede_escuta || saida.tensao_central}
             </p>
