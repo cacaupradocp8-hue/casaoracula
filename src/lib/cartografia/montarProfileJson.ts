@@ -182,7 +182,7 @@ export interface MontarProfileResult {
   cidadela: CidadelaDerivada;
 }
 
-export function montarProfileJson({ rawMedias, contexto }: MontarProfileParams): MontarProfileResult {
+export function montarProfileJson({ rawMedias, territorios, contexto }: MontarProfileParams): MontarProfileResult {
   // 1. Normalizar médias
   const medias = normalizarMedias(rawMedias);
 
