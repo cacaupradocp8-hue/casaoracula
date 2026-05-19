@@ -26,7 +26,8 @@ const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
 export function CartografiaEstruturalStepper() {
   const { 
     step, setStep, respostas, updateResposta, 
-    updateBig5, perguntas, finalizar, loading, result 
+    updateBig5, perguntas, finalizar, loading, result,
+    saveStatus, hasDraft, retomarRascunho
   } = useCartografiaEstrutural();
 
   const currentStepIndex = STEPS.findIndex(s => s.id === step);
