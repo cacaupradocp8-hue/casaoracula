@@ -122,10 +122,71 @@ export function CartografiaEstruturalStepper() {
           </CardContent>
         </Card>
 
+        <Card className="glass border-gold/20 overflow-hidden">
+          <CardHeader className="bg-gold/5">
+            <CardTitle className="text-lg font-display flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-gold" />
+              Próximo Passo: Sua Travessia Guiada
+            </CardTitle>
+            <CardDescription>
+              Com base no seu Mapa Vivo, sugerimos este caminho para continuar habitando sua CidaDELA.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium flex items-center gap-2">
+                  <Map className="w-4 h-4 text-gold" />
+                  Rotas Recomendadas
+                </h4>
+                <ul className="space-y-2">
+                  {result.profileJson.recomendacoes?.rotas.map((rota: string) => (
+                    <li key={rota} className="text-xs text-muted-foreground flex items-center gap-2">
+                      <div className="w-1 h-1 rounded-full bg-gold/40" />
+                      {rota}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div className="space-y-3">
+                <h4 className="text-sm font-medium flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-gold" />
+                  Práticas Iniciais
+                </h4>
+                <ul className="space-y-2">
+                  {result.profileJson.recomendacoes?.praticas.map((pratica: string) => (
+                    <li key={pratica} className="text-xs text-muted-foreground flex items-center gap-2">
+                      <div className="w-1 h-1 rounded-full bg-gold/40" />
+                      {pratica}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-lg bg-gold/5 border border-gold/10 space-y-3">
+              <div className="flex items-center gap-2 text-sm font-medium text-gold">
+                <User className="w-4 h-4" />
+                Clínica dos Contos
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                {result.profileJson.recomendacoes?.proximo_passo}
+              </p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-wider"
+                onClick={() => window.location.href = '/clinica-dos-contos'}
+              >
+                Conhecer a Clínica
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="flex flex-col items-center gap-4 pt-8">
-          <p className="text-sm text-muted-foreground">Sua travessia continua nas Rotas da Casa Orácula.</p>
-          <Button onClick={() => window.location.href = '/dashboard'} variant="gold">
-            Continuar para o Dashboard
+          <Button onClick={() => window.location.href = '/dashboard'} variant="gold" className="px-8">
+            Voltar ao Painel Principal
           </Button>
         </div>
       </motion.div>

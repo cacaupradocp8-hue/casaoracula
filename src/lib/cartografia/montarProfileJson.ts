@@ -168,6 +168,42 @@ const OBSERVACAO_ETICA: Record<NivelAtencao, string> = {
   baixo: 'Exploração progressiva. Manter atenção ao ritmo natural da cliente.',
 };
 
+// ─── Recomendações de Continuidade ───
+
+const RECOMENDACOES_POR_TENSAO: Record<string, { rotas: string[]; praticas: string[]; proximo_passo: string }> = {
+  'controle vs colapso': {
+    rotas: ['Rota do Aterramento', 'Rota da Contenção'],
+    praticas: ['Escrita matinal de descarga', 'Pausa de 5 minutos com foco no corpo'],
+    proximo_passo: 'Agendar uma sessão de acolhimento na Clínica dos Contos para organizar as bordas.'
+  },
+  'estrutura vs expressão': {
+    rotas: ['Rota da Voz Autêntica', 'Rota da Criatividade'],
+    praticas: ['Gravação de áudio-diário sem julgamento', 'Expressão livre com cores ou formas'],
+    proximo_passo: 'Explorar a Clínica dos Contos como um espaço seguro para soltar a voz.'
+  },
+  'pertencimento vs autonomia': {
+    rotas: ['Rota da Diferenciação', 'Rota do Espelho'],
+    praticas: ['Definir um limite pequeno por dia', 'Momento de solitude intencional'],
+    proximo_passo: 'Levar suas questões de vínculo para a Clínica dos Contos.'
+  },
+  'expansão vs segurança': {
+    rotas: ['Rota do Movimento', 'Rota da Coragem'],
+    praticas: ['Mapeamento de recursos seguros', 'Pequenos passos fora da zona de conforto'],
+    proximo_passo: 'Na Clínica dos Contos, podemos fortalecer a base para sua expansão.'
+  },
+  'expressão vs aceitação': {
+    rotas: ['Rota da Autenticidade', 'Rota das Máscaras'],
+    praticas: ['Prática de espelho: dizer sua verdade em voz alta', 'Identificar lealdades invisíveis'],
+    proximo_passo: 'Trabalhar o medo da rejeição na Clínica dos Contos.'
+  },
+  'segurança vs movimento': {
+    rotas: ['Rota da Fluidez', 'Rota da Iniciativa'],
+    praticas: ['Movimento corporal livre', 'Visualização de novos horizontes'],
+    proximo_passo: 'Dar o primeiro passo acompanhada na Clínica dos Contos.'
+  }
+};
+
+
 // ─── Função principal ───
 
 export interface MontarProfileParams {
@@ -270,6 +306,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     // Derivados do mesmo motor — sem lógica paralela
     oracula_inicial: leitura.oracula_inicial,
     intensidade_oracular: leitura.intensidade_oracular,
+    recomendacoes: RECOMENDACOES_POR_TENSAO[leitura.profile.tensao_central] || RECOMENDACOES_POR_TENSAO['segurança vs movimento'],
   };
 
   return { profileJson, leitura, cidadela };
