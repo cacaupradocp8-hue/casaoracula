@@ -50,7 +50,7 @@ export function useCartografiaEstrutural() {
       try {
         setLoading(true);
         const { data, error } = await supabase
-          .from('cartografia_estrutural_drafts' as any)
+          .from('cartografia_estrutural_drafts')
           .select('step, respostas, status')
           .eq('user_id', user.id)
           .maybeSingle();
@@ -59,8 +59,6 @@ export function useCartografiaEstrutural() {
 
         if (data && data.status === 'draft') {
           setHasDraft(true);
-          // Não aplicamos o rascunho automaticamente para permitir que a usuária escolha "Continuar"
-          // Armazenamos para uso posterior se solicitado
         }
       } catch (err) {
         console.error('Erro ao carregar rascunho:', err);
