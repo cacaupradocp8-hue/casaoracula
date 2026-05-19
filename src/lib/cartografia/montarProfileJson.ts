@@ -174,32 +174,32 @@ const RECOMENDACOES_POR_TENSAO: Record<string, { rotas: string[]; praticas: stri
   'controle vs colapso': {
     rotas: ['Rota do Aterramento', 'Rota da Contenção'],
     praticas: ['Escrita matinal de descarga', 'Pausa de 5 minutos com foco no corpo'],
-    proximo_passo: 'Agendar uma sessão de acolhimento na Clínica dos Contos para organizar as bordas.'
+    proximo_passo: 'Agendar uma sessão de acolhimento nas Rotas da Casa para organizar as bordas.'
   },
   'estrutura vs expressão': {
     rotas: ['Rota da Voz Autêntica', 'Rota da Criatividade'],
     praticas: ['Gravação de áudio-diário sem julgamento', 'Expressão livre com cores ou formas'],
-    proximo_passo: 'Explorar a Clínica dos Contos como um espaço seguro para soltar a voz.'
+    proximo_passo: 'Explorar as Rotas da Casa como um espaço seguro para soltar a voz.'
   },
   'pertencimento vs autonomia': {
     rotas: ['Rota da Diferenciação', 'Rota do Espelho'],
     praticas: ['Definir um limite pequeno por dia', 'Momento de solitude intencional'],
-    proximo_passo: 'Levar suas questões de vínculo para a Clínica dos Contos.'
+    proximo_passo: 'Levar suas questões de vínculo para as Rotas da Casa.'
   },
   'expansão vs segurança': {
     rotas: ['Rota do Movimento', 'Rota da Coragem'],
     praticas: ['Mapeamento de recursos seguros', 'Pequenos passos fora da zona de conforto'],
-    proximo_passo: 'Na Clínica dos Contos, podemos fortalecer a base para sua expansão.'
+    proximo_passo: 'Nas Rotas da Casa, podemos fortalecer a base para sua expansão.'
   },
   'expressão vs aceitação': {
     rotas: ['Rota da Autenticidade', 'Rota das Máscaras'],
     praticas: ['Prática de espelho: dizer sua verdade em voz alta', 'Identificar lealdades invisíveis'],
-    proximo_passo: 'Trabalhar o medo da rejeição na Clínica dos Contos.'
+    proximo_passo: 'Trabalhar o medo da rejeição nas Rotas da Casa.'
   },
   'segurança vs movimento': {
     rotas: ['Rota da Fluidez', 'Rota da Iniciativa'],
     praticas: ['Movimento corporal livre', 'Visualização de novos horizontes'],
-    proximo_passo: 'Dar o primeiro passo acompanhada na Clínica dos Contos.'
+    proximo_passo: 'Dar o primeiro passo acompanhada nas Rotas da Casa.'
   }
 };
 
@@ -213,6 +213,7 @@ export interface MontarProfileParams {
     historia_vida?: string;
     crencas?: string;
     recursos?: string;
+    seguranca?: string;
   };
   contexto: ContextoLeitura;
 }
@@ -265,11 +266,11 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
         abalo: classificarDistrito(medias.porta_do_abalo),
       },
       territorios: {
-        sintoma: territorios?.sintoma || 'Em análise.',
-        historia_vida: territorios?.historia_vida || 'Em análise.',
+        sintoma: territorios?.sintoma && territorios.sintoma.length > 10 ? territorios.sintoma : 'Aprofundando observação.',
+        historia_vida: territorios?.historia_vida && territorios.historia_vida.length > 10 ? territorios.historia_vida : 'Em contextualização.',
         tracos: `Predominante: ${leitura.oracula_inicial}. Intensidade: ${leitura.intensidade_oracular}.`,
-        crencas: territorios?.crencas || 'Em análise.',
-        recursos: territorios?.recursos || 'Em análise.',
+        crencas: territorios?.crencas && territorios.crencas.length > 10 ? territorios.crencas : 'Identificando narrativas.',
+        recursos: territorios?.recursos && territorios.recursos.length > 10 ? territorios.recursos : 'Mapeando forças internas.',
         atencao_seguranca: TEXTOS_ATENCAO[atencao],
       },
     },
