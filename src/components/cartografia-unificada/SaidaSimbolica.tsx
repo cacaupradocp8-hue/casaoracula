@@ -120,10 +120,10 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
                     strokeLinecap="round" />
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">
-                  {cidadela.indice_equilibrio}
+                  {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : '--'}
                 </span>
               </div>
-              <span className="text-[9px] text-muted-foreground">equilíbrio</span>
+              <span className="text-[9px] text-muted-foreground">revelação</span>
             </div>
           </CardContent>
         </Card>

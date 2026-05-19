@@ -200,8 +200,8 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
                 <p className="text-xs font-medium text-foreground">{cidadela.clima_cidade}</p>
               </div>
               <div>
-                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Equilíbrio</p>
-                <p className="text-xs font-medium text-foreground">{cidadela.indice_equilibrio}%</p>
+                <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider">Revelação</p>
+                <p className="text-xs font-medium text-foreground">{cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : '--'}%</p>
               </div>
             </div>
             <div>

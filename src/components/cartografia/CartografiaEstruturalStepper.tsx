@@ -237,7 +237,7 @@ export function CartografiaEstruturalStepper() {
             </div>
             <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
               <InfoItem icon={ShieldCheck} text="Experiência segura e não diagnóstica" />
-              <InfoItem icon={Sparkles} text="Mapeamento reflexivo de 6 territórios" />
+              <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios reflexivos" />
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
