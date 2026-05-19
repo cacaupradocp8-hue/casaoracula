@@ -35,7 +35,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
         <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
           <Sparkles className="w-7 h-7 text-primary/60" />
         </div>
-        <h2 className="font-display text-xl font-bold text-foreground">Sua Cartografia Estrutural Orácula™</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Mapa Vivo: CidaDELA Interior</h2>
         <p className="text-xs text-muted-foreground italic">Um mapa do seu campo interior neste momento</p>
       </motion.div>
 

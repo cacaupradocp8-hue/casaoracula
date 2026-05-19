@@ -80,7 +80,7 @@ export function CartografiaEstruturalStepper() {
       >
         <div className="text-center space-y-4">
           <Badge variant="outline" className="text-gold border-gold/30 px-3 py-1">Cartografia Concluída</Badge>
-          <h1 className="text-4xl font-display text-foreground">Sua CidaDELA Interior</h1>
+          <h1 className="text-4xl font-display text-foreground">Mapa Vivo: CidaDELA Interior</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Este é o seu Mapa Vivo estrutural. Ele não é um diagnóstico, mas um espelho simbólico do seu momento atual.
           </p>
@@ -149,9 +149,12 @@ export function CartografiaEstruturalStepper() {
               <Map className="w-10 h-10 text-gold" />
             </div>
             <div className="space-y-4">
-              <h1 className="text-3xl font-display text-foreground">Cartografia Estrutural Orácula™</h1>
+              <h1 className="text-4xl font-display text-foreground">CidaDELA Interior</h1>
+              <p className="text-muted-foreground leading-relaxed max-w-md mx-auto italic">
+                Cartografia Estrutural Orácula™
+              </p>
               <p className="text-muted-foreground leading-relaxed max-w-md mx-auto">
-                Inicie sua jornada de mapeamento psíquico. Uma experiência de auto-observação profunda para organizar seu momento atual.
+                Uma jornada de auto-observação profunda para organizar seu momento atual e habitar o que é seu.
               </p>
             </div>
             <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
