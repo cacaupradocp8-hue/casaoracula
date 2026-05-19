@@ -138,7 +138,7 @@ export function CartografiaEstruturalStepper() {
             <span>Território {currentStepIndex + 1} de {STEPS.length}</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <Progress value={progress} className="h-1 bg-gold/10" indicatorClassName="bg-gold" />
+          <Progress value={progress} className="h-1 bg-gold/10" />
         </div>
       )}
 
