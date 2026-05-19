@@ -89,9 +89,19 @@ export function CartografiaEstruturalStepper() {
         <SaidaSimbolica saida={result.leitura.saida_cliente} cidadela={result.cidadela} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <CamadaLeituraPsiquica leitura={result.leitura} />
-          <CamadaCidadela cidadela={result.cidadela} />
+          <CamadaLeituraPsiquica data={result.leitura.profile} medias={result.leitura.medias_calculadas} />
+          <CamadaCidadela 
+            data={result.cidadela} 
+            cor={result.cidadela.cor_derivada} 
+            corHex={result.cidadela.cor_hex}
+            atmosfera={result.cidadela.atmosfera_derivada}
+            simbolo={result.cidadela.simbolo_derivado}
+            simboloIcon={result.cidadela.simbolo_derivado_icon}
+            territorios={result.cidadela.distritos_acesos}
+            pontoPartida={result.cidadela.porta_inicial}
+          />
         </div>
+
 
         <Card className="glass border-gold/20">
           <CardHeader>
