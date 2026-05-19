@@ -174,7 +174,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
             client_user_id: clientUserId,
             therapist_user_id: user.id,
             estado_campo: 'inicio_de_processo',
-            direcao_conducao: profileJson.derivacao.direcao_clinica || 'leitura',
+            direcao_conducao: profileJson.derivacao.direcao_conducao || 'leitura',
             risco: profileJson.derivacao.atencao_seguranca || 'baixo',
             estagio: 'abertura',
             tensao_ativa: profileJson.derivacao.tensao_central,
@@ -187,7 +187,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
             client_user_id: clientUserId,
             therapist_user_id: user.id,
             estado_atual: 'inicio_de_processo',
-            direcao_atual: profileJson.derivacao.direcao_clinica || 'leitura',
+            direcao_atual: profileJson.derivacao.direcao_conducao || 'leitura',
             risco_atual: profileJson.derivacao.atencao_seguranca || 'baixo',
             tensao_principal: profileJson.derivacao.tensao_central,
             ritmo_atual: profileJson.derivacao.ritmo_recomendado || 'medio',
@@ -255,7 +255,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         console.error('AI reading error:', err);
       }
 
-      toast.success('Cartografia diagnóstica salva');
+      toast.success('Leitura estruturada salva');
       setMode('result');
       setActiveTab(0);
       loadRecords();
@@ -313,7 +313,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
           <>
             {/* Tabs: Clínica | AI Leitura | AI CidaDELA | AI Direção */}
             <div className="flex justify-center gap-1 flex-wrap">
-              {['Saída Clínica', ...(aiResult ? ['Leitura IA', 'CidaDELA IA', 'Direção IA'] : [])].map((label, i) => (
+              {['Leitura de Condução', ...(aiResult ? ['Leitura IA', 'CidaDELA IA', 'Direção IA'] : [])].map((label, i) => (
                 <button key={label} onClick={() => setActiveTab(i)}
                   className={`px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                     activeTab === i
@@ -362,7 +362,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
     return (
       <div className="flex flex-col items-center justify-center py-16 space-y-4">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        <p className="text-sm text-muted-foreground">Processando leitura diagnóstica...</p>
+        <p className="text-sm text-muted-foreground">Processando leitura estruturada...</p>
         <p className="text-xs text-muted-foreground/40">Derivando CidaDELA automaticamente</p>
       </div>
     );
@@ -380,7 +380,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         </div>
 
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>Diagnóstico — Leitura de Campo</span>
+          <span>Leitura estruturada — Mapeamento de Campo</span>
           <span>{currentQIndex + 1} / {totalQ}</span>
         </div>
 
@@ -429,7 +429,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
           {currentQIndex === totalQ - 1 ? (
             <Button size="sm" variant="gold" onClick={handleCompleteQuestionnaire}
               disabled={Object.keys(respostas).length < totalQ || saving}>
-              <Sparkles className="w-4 h-4 mr-1" /> Gerar leitura diagnóstica
+              <Sparkles className="w-4 h-4 mr-1" /> Gerar leitura de condução
             </Button>
           ) : (
             <Button size="sm" onClick={() => setCurrentQIndex(p => p + 1)}

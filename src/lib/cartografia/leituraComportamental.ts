@@ -112,7 +112,7 @@ function calcularMedoDominante(m: MediasFatores): string {
   if (abalo === 'alta' && torre === 'alta') return 'colapso e perda de controle';
   if (possivel === 'baixa' && torre === 'alta') return 'mudar e não sustentar';
   if (voz === 'alta' && campo === 'alta') return 'ser mal compreendida';
-  return 'instabilidade interna'; // fallback
+  return 'equilíbrio em revelação'; // fallback
 }
 
 function calcularEstrategiaDefesa(m: MediasFatores): string {
@@ -149,7 +149,7 @@ function calcularTensaoCentral(m: MediasFatores): string {
   // 5. Voz alta + Campo alta
   if (voz === 'alta' && campo === 'alta') return 'expressão vs aceitação';
   // 6. Fallback
-  return 'segurança vs movimento';
+  return 'travessia em revelação';
 }
 
 function calcularRitmoIdeal(m: MediasFatores): string {
@@ -189,7 +189,7 @@ function calcularEstiloConducao(m: MediasFatores): string {
   if (possivel === 'alta') partes.push('perguntas de expansão');
   if (abalo === 'alta') partes.push('contenção antes de aprofundar');
 
-  return partes.length > 0 ? partes.join('; ') : 'acolhimento e escuta ativa';
+  return partes.length > 0 ? partes.join('; ') : 'acolhimento e escuta reflexiva';
 }
 
 // AJUSTE 1: oracula_inicial determinística + intensidade_oracular separada

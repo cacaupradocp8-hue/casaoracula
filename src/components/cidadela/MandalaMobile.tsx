@@ -8,7 +8,7 @@ const STATE_COLORS = {
 };
 
 const STATE_LABELS = {
-  inativo: 'Não explorado',
+  inativo: 'Aguardando travessia',
   ativo: 'Ativo',
   integrado: 'Integrado',
 };
@@ -147,7 +147,7 @@ export function MandalaMobile({ districts, districtStates = [], collectiveData =
       <div className="flex items-center justify-center gap-4 pt-1">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: 'rgba(245,241,232,0.2)' }} />
-          <span className="text-[9px]" style={{ color: 'rgba(245,241,232,0.3)' }}>Não explorado</span>
+          <span className="text-[9px]" style={{ color: 'rgba(245,241,232,0.3)' }}>Aguardando travessia</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#C9A24A' }} />

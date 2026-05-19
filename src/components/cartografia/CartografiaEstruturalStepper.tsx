@@ -113,7 +113,7 @@ export function CartografiaEstruturalStepper() {
           </CardHeader>
           <CardContent>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Segurança estabilizada para a travessia.'}
+              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Nível de segurança estabilizado para a travessia.'}
             </p>
             <div className="mt-4 p-4 rounded-lg bg-gold/5 border border-gold/10 text-xs text-muted-foreground italic">
               Nota Ética: Esta cartografia é uma ferramenta de auto-observação e suporte ao processo terapêutico. 
@@ -172,7 +172,7 @@ export function CartografiaEstruturalStepper() {
 
             <div className="p-4 rounded-lg bg-gold/5 border border-gold/10 space-y-3">
               <div className="flex items-center gap-2 text-sm font-medium text-gold">
-                <User className="w-4 h-4" />
+                <Sparkles className="w-4 h-4" />
                 Rotas da Casa Orácula
               </div>
               <p className="text-xs text-muted-foreground leading-relaxed">
@@ -181,9 +181,9 @@ export function CartografiaEstruturalStepper() {
                   : "Continue habitando sua CidaDELA através das Rotas da Casa Orácula."}
               </p>
               <Button 
-                variant="outline" 
+                variant="gold" 
                 size="sm" 
-                className="w-full border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-wider"
+                className="w-full text-[10px] uppercase tracking-wider"
                 onClick={() => window.location.href = '/clube'}
               >
                 Entrar nas Rotas
@@ -237,7 +237,7 @@ export function CartografiaEstruturalStepper() {
             </div>
             <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
               <InfoItem icon={ShieldCheck} text="Experiência segura e não diagnóstica" />
-              <InfoItem icon={Sparkles} text="Mapeamento reflexivo de 6 territórios" />
+              <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios reflexivos" />
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

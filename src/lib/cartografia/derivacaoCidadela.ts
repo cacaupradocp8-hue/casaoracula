@@ -68,12 +68,12 @@ function derivarClima(tensao: string, abaloMedia: number): string {
   const abaloAlto = abaloMedia >= 3.5;
   const abaloMedio = abaloMedia >= 2.5;
 
-  if (tensao === 'controle vs colapso') return abaloAlto ? 'Tempestuosa' : 'Tensa';
+  if (tensao === 'controle vs colapso') return abaloAlto ? 'Tempestuosa' : 'Atmosfera densa';
   if (tensao === 'estrutura vs expressão') return abaloAlto ? 'Nebulosa e contida' : 'Organizada mas silenciosa';
   if (tensao === 'pertencimento vs autonomia') return abaloAlto ? 'Instável e carente' : 'Flutuante';
   if (tensao === 'expansão vs segurança') return abaloMedio ? 'Inquieta' : 'Viva e cautelosa';
   if (tensao === 'expressão vs aceitação') return abaloAlto ? 'Sufocada' : 'Vibrante mas insegura';
-  return abaloAlto ? 'Frágil' : 'Em transição';
+  return abaloAlto ? 'Em transição' : 'Atmosfera em revelação';
 }
 
 // ─── Atmosfera derivada ───
@@ -125,7 +125,7 @@ function derivarTorreDominante(medias: MediasFatores): string {
   // Abalo alto solo
   if (porta_do_abalo >= 3.5) return 'Torre do Abalo';
   // Fallback
-  return 'Torre em Construção';
+  return 'Torre em revelação';
 }
 
 // ─── Distritos acesos ───

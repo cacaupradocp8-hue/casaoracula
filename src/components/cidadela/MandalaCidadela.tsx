@@ -835,7 +835,7 @@ export function MandalaLegend({ mode }: { mode: MandalaMode }) {
       <div className="flex items-center justify-center gap-5 flex-wrap">
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-3 rounded-full border-2" style={{ backgroundColor: 'rgba(180,170,150,0.18)', borderColor: 'rgba(180,170,150,0.40)' }} />
-          <span className="text-[11px] text-muted-foreground/60">{mode === 'coletivo' ? 'Sem clientes' : 'Não explorado'}</span>
+          <span className="text-[11px] text-muted-foreground/60">{mode === 'coletivo' ? 'Sem habitantes' : 'Aguardando travessia'}</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-3 h-3 rounded-full border-2" style={{ backgroundColor: 'rgba(201,162,74,0.30)', borderColor: 'rgba(212,175,55,0.85)' }} />

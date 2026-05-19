@@ -120,10 +120,10 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
                     strokeLinecap="round" />
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">
-                  {cidadela.indice_equilibrio}
+                  {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : '--'}
                 </span>
               </div>
-              <span className="text-[9px] text-muted-foreground">equilíbrio</span>
+              <span className="text-[9px] text-muted-foreground">revelação</span>
             </div>
           </CardContent>
         </Card>
@@ -132,7 +132,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
       {/* Nota ética */}
       <motion.div {...anim(0.6)}>
         <p className="text-[10px] text-center text-muted-foreground/30 leading-relaxed max-w-sm mx-auto">
-          Esta leitura é simbólica e exploratória. Não constitui avaliação clínica formal.
+          Esta leitura é simbólica e reflexiva. Não constitui avaliação clínica formal.
           A interpretação final pertence a você.
         </p>
       </motion.div>
