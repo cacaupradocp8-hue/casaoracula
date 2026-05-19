@@ -1,7 +1,7 @@
 /**
  * montarProfileJson.ts
  * 
- * Orquestrador central: monta o JSON estruturado final da Cartografia Psíquica.
+ * orquestrador central: monta o JSON estruturado final da Leitura Estrutural.
  * Combina leituraComportamental + derivacaoCidadela em uma única estrutura persistível.
  * 
  * ZERO escolhas subjetivas. 100% determinístico.
@@ -160,12 +160,12 @@ const MOVIMENTO_POR_RITMO: Record<string, string> = {
   rapido: 'Explorar sem medo de errar — o campo sustenta.',
 };
 
-// ─── Observação ética por risco ───
+// ─── Observação ética por nível de atenção ───
 
 const OBSERVACAO_ETICA: Record<NivelAtencao, string> = {
-  alto: 'Priorizar vínculo e contenção. Evitar confrontos diretos ou interpretações de ruptura.',
-  moderado: 'Manter ritmo estruturado. Validar antes de expandir a exploração.',
-  baixo: 'Exploração progressiva. Manter atenção ao ritmo natural da cliente.',
+  alto: 'Priorizar vínculo e contenção segura. Evitar confrontos diretos ou interpretações de ruptura.',
+  moderado: 'Manter ritmo estruturado e seguro. Validar antes de expandir a auto-observação.',
+  baixo: 'Auto-observação progressiva. Manter atenção ao ritmo natural da travessia.',
 };
 
 // ─── Recomendações de Continuidade ───

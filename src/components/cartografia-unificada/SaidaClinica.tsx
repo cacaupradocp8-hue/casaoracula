@@ -47,8 +47,8 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
         <div className="w-12 h-12 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
           <Stethoscope className="w-6 h-6 text-primary" />
         </div>
-        <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Leitura Diagnóstica</p>
-        <h2 className="font-display text-xl font-bold text-foreground">Saída Clínica</h2>
+        <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Formulação Simbólico-Clínica</p>
+        <h2 className="font-display text-xl font-bold text-foreground">Leitura Estruturada</h2>
       </motion.div>
 
       {/* Eixo Dominante */}
@@ -223,7 +223,7 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Observação ética</p>
             <p className="text-xs text-muted-foreground/70 leading-relaxed">
               {profileJson?.leitura_clinica.observacao_etica || 
-                'Esta leitura é um instrumento de apoio à decisão clínica, não um diagnóstico. A interpretação final e a responsabilidade de condução pertencem à facilitadora.'}
+                'Esta leitura é um mapeamento reflexivo de apoio à condução, não um diagnóstico. A interpretação final e a responsabilidade ética pertencem à facilitadora.'}
             </p>
           </CardContent>
         </Card>
