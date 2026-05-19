@@ -28,7 +28,7 @@ export default function CartografiaPsiquicaPage() {
               </div>
               <CardTitle className="text-2xl font-display text-gold">CidaDELA Interior</CardTitle>
               <CardDescription className="text-muted-foreground pt-2">
-                O mapa simbólico profundo da sua psique é um benefício exclusivo das Rotas da Casa Orácula.
+                O mapa profundo da sua psique é o coração das Rotas da Casa Orácula. Um benefício exclusivo para quem habita este espaço.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 pt-4">
@@ -43,7 +43,7 @@ export default function CartografiaPsiquicaPage() {
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <Map className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-                  <p>Mapeie seus distritos e territórios internos de poder.</p>
+                  <p>Revele seu GPS simbólico e receba sua Jornada 00.</p>
                 </div>
               </div>
               
@@ -54,7 +54,7 @@ export default function CartografiaPsiquicaPage() {
                   className="w-full shadow-premium-glow"
                   onClick={() => navigate('/planos')}
                 >
-                  Assinar e revelar minha CidaDELA
+                  Habitar as Rotas da Casa Orácula
                 </Button>
                 <Button 
                   variant="ghost" 
