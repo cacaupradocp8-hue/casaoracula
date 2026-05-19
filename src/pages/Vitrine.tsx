@@ -106,7 +106,7 @@ const VITRINE_ITEMS: VitrineItem[] = [
   },
   {
     id: 'cartografia',
-    titulo: 'Cartografia Psíquica Orácula',
+    titulo: 'Cartografia Estrutural Orácula™ Orácula',
     descricao: 'Mapeamento gratuito do seu campo simbólico. Descubra seus territórios internos dominantes e receba seu GPS interior.',
     icon: Brain,
     rota: '/ferramenta/cartografia-psiquica-oracula',

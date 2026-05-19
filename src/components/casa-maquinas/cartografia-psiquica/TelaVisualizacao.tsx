@@ -44,7 +44,7 @@ export function TelaVisualizacao({
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="text-center space-y-1">
-        <h3 className="text-lg font-display text-foreground">Sua Cartografia Psíquica</h3>
+        <h3 className="text-lg font-display text-foreground">Sua Cartografia Estrutural Orácula™</h3>
         <p className="text-xs text-muted-foreground italic">Mapa simbólico do seu estado interior</p>
       </div>
 

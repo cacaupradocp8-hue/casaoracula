@@ -25,7 +25,7 @@ export function HomeSeuMapa({ mapa }: Props) {
           </div>
           <p className="font-display text-lg text-foreground/70 mb-1">Sua CidaDELA aguarda revelação</p>
           <p className="text-xs text-muted-foreground/60 mb-5 max-w-sm mx-auto">
-            Um mapa simbólico da sua psique será gerado pela Cartografia Psíquica Orácula.
+            Um mapa simbólico da sua psique será gerado pela Cartografia Estrutural Orácula™ Orácula.
           </p>
           <Button
             variant="gold"

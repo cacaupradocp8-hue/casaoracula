@@ -58,7 +58,7 @@ const FERRAMENTAS: FerramentaCard[] = [
   },
   {
     id: 'cartografia-psiquica-oracula',
-    titulo: 'Cartografia Psíquica Orácula',
+    titulo: 'Cartografia Estrutural Orácula™ Orácula',
     subtitulo: 'Mapa Simbólico da Psique',
     descricao: 'Mapeie os territórios da sua cidade interior e gere automaticamente sua CidaDELA. Inclui ritual de ancoragem.',
     icon: Sparkles,

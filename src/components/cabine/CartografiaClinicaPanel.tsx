@@ -12,10 +12,10 @@ interface Props {
   clienteId: string;
 }
 
-const RISCO_STYLES: Record<string, { label: string; cls: string }> = {
-  alto: { label: 'Alto', cls: 'bg-destructive/15 text-destructive border-destructive/20' },
-  moderado: { label: 'Moderado', cls: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
-  baixo: { label: 'Baixo', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
+const ATENCAO_STYLES: Record<string, { label: string; cls: string }> = {
+  alto: { label: 'Elevada', cls: 'bg-destructive/15 text-destructive border-destructive/20' },
+  moderado: { label: 'Moderada', cls: 'bg-amber-500/15 text-amber-400 border-amber-500/20' },
+  baixo: { label: 'Segura', cls: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/20' },
 };
 
 const DISTRITO_STYLES: Record<string, string> = {
@@ -50,7 +50,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
   }
 
   const { derivacao, leitura_clinica } = profile.profileJson;
-  const risco = RISCO_STYLES[derivacao.risco_conducao] || RISCO_STYLES.baixo;
+  const atencao = ATENCAO_STYLES[derivacao.atencao_seguranca] || ATENCAO_STYLES.baixo;
 
   return (
     <div className="space-y-4">
@@ -59,9 +59,9 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
         <h3 className="text-xs font-medium text-foreground/70 uppercase tracking-wider">
           Leitura Clínica Inicial
         </h3>
-        <Badge variant="outline" className={cn('text-[10px] border', risco.cls)}>
+        <Badge variant="outline" className={cn('text-[10px] border', atencao.cls)}>
           <Shield className="w-3 h-3 mr-1" />
-          Risco {risco.label}
+          Atenção {atencao.label}
         </Badge>
       </div>
 
