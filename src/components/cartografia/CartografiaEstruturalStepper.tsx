@@ -46,8 +46,8 @@ export function CartografiaEstruturalStepper() {
   const back = () => {
     if (step === 'sintoma') setStep('intro');
     else if (step === 'historia') setStep('sintoma');
-    else if (step === 'tracos') setStep('historia');
-    else if (step === 'crencas') setStep('tracos');
+    else if (step === 'objetivas') setStep('historia');
+    else if (step === 'crencas') setStep('objetivas');
     else if (step === 'recursos') setStep('crencas');
     else if (step === 'seguranca') setStep('recursos');
   };
