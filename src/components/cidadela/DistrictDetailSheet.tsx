@@ -4,7 +4,7 @@ import { Users, Compass, Sparkles } from 'lucide-react';
 import type { MandalaDistrict, MandalaDistrictState, MandalaCollectiveData } from './MandalaCidadela';
 
 const STATE_LABELS: Record<string, { label: string; color: string }> = {
-  inativo: { label: 'Não explorado', color: 'rgba(245,241,232,0.3)' },
+  inativo: { label: 'Aguardando travessia', color: 'rgba(245,241,232,0.3)' },
   ativo: { label: 'Ativo', color: '#C9A24A' },
   integrado: { label: 'Integrado', color: '#b8a4d8' },
 };

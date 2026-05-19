@@ -113,7 +113,7 @@ export function CartografiaEstruturalStepper() {
           </CardHeader>
           <CardContent>
             <p className="text-sm leading-relaxed text-muted-foreground">
-              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Segurança estabilizada para a travessia.'}
+              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Nível de segurança estabilizado para a travessia.'}
             </p>
             <div className="mt-4 p-4 rounded-lg bg-gold/5 border border-gold/10 text-xs text-muted-foreground italic">
               Nota Ética: Esta cartografia é uma ferramenta de auto-observação e suporte ao processo terapêutico. 
