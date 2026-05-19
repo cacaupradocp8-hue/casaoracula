@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from './useBig5Oracular';
@@ -22,7 +22,7 @@ export interface CartografiaRespostas {
 
 export function useCartografiaEstrutural() {
   const { user } = useAuth();
-  const { fatores, perguntas, loading: loadingBig5, calcularMedias, saveResult: saveBig5Result } = useBig5Oracular();
+  const { fatores, perguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
@@ -36,13 +36,103 @@ export function useCartografiaEstrutural() {
   });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [hasDraft, setHasDraft] = useState(false);
 
-  // Carregar progresso salvo (opcional - implementar se houver tabela de rascunhos)
+  // Referência para evitar salvar enquanto carrega
+  const isInitialLoading = useRef(true);
+
+  // Carregar progresso salvo
   useEffect(() => {
-    // Draft loading logic removed to avoid recursion/depth issues for now
-    // and because it was just a placeholder.
+    async function loadDraft() {
+      if (!user) return;
+      
+      try {
+        setLoading(true);
+        const { data, error } = await supabase
+          .from('cartografia_estrutural_drafts' as any)
+          .select('step, respostas, status')
+          .eq('user_id', user.id)
+          .maybeSingle();
 
+        if (error) throw error;
+
+        if (data && data.status === 'draft') {
+          setHasDraft(true);
+          // Não aplicamos o rascunho automaticamente para permitir que a usuária escolha "Continuar"
+          // Armazenamos para uso posterior se solicitado
+        }
+      } catch (err) {
+        console.error('Erro ao carregar rascunho:', err);
+      } finally {
+        setLoading(false);
+        isInitialLoading.current = false;
+      }
+    }
+
+    loadDraft();
   }, [user]);
+
+  const retomarRascunho = async () => {
+    if (!user) return;
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('cartografia_estrutural_drafts' as any)
+        .select('step, respostas')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setStep(data.step as CartografiaStepId);
+        setRespostas(data.respostas as unknown as CartografiaRespostas);
+        toast.success('Progresso retomado com sucesso');
+      }
+    } catch (err) {
+      console.error('Erro ao retomar rascunho:', err);
+      toast.error('Não foi possível retomar seu progresso');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const salvarRascunho = useCallback(async (currentStep: CartografiaStepId, currentRespostas: CartografiaRespostas) => {
+    if (!user || isInitialLoading.current || currentStep === 'resultado' || currentStep === 'gerando') return;
+
+    setSaveStatus('saving');
+    try {
+      const { error } = await supabase
+        .from('cartografia_estrutural_drafts' as any)
+        .upsert({
+          user_id: user.id,
+          step: currentStep,
+          respostas: currentRespostas as any,
+          status: 'draft',
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'user_id' });
+
+      if (error) throw error;
+      setSaveStatus('saved');
+      // Reset status after 3 seconds
+      setTimeout(() => setSaveStatus(prev => prev === 'saved' ? 'idle' : prev), 3000);
+    } catch (err) {
+      console.error('Erro ao salvar rascunho:', err);
+      setSaveStatus('error');
+    }
+  }, [user]);
+
+  // Autosave quando step ou respostas mudam
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (step !== 'intro' && step !== 'resultado' && step !== 'gerando') {
+        salvarRascunho(step, respostas);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [step, respostas, salvarRascunho]);
 
   const updateResposta = (key: keyof CartografiaRespostas, value: any) => {
     setRespostas(prev => ({ ...prev, [key]: value }));
@@ -130,6 +220,12 @@ export function useCartografiaEstrutural() {
         anotacoes: `Cartografia Estrutural | Cor: ${cidadela.cor_derivada} | Nível Atenção: ${profileJson.derivacao.atencao_seguranca}`,
       } as any, { onConflict: 'user_id' });
 
+      // 6. Marcar rascunho como concluído
+      await supabase
+        .from('cartografia_estrutural_drafts' as any)
+        .update({ status: 'completed' })
+        .eq('user_id', user.id);
+
       setResult({ profileJson, leitura, cidadela });
       setStep('resultado');
       toast.success('Sua CidaDELA Interior foi revelada ✨');
@@ -152,6 +248,9 @@ export function useCartografiaEstrutural() {
     fatores,
     perguntas,
     finalizar,
-    result
+    result,
+    saveStatus,
+    hasDraft,
+    retomarRascunho
   };
 }
