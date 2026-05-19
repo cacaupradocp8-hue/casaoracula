@@ -171,9 +171,21 @@ export function CartografiaEstruturalStepper() {
               <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios estruturais" />
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>
-            <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg">
-              Começar a travessia
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg w-full sm:w-auto">
+                Começar a travessia
+              </Button>
+              {hasDraft && (
+                <Button 
+                  onClick={retomarRascunho} 
+                  variant="outline" 
+                  size="lg" 
+                  className="px-10 h-14 text-lg border-gold/30 text-gold hover:bg-gold/5 w-full sm:w-auto"
+                >
+                  Continuar de onde parei
+                </Button>
+              )}
+            </div>
             <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
               Uso exclusivo para assinantes Casa Orácula
             </p>
