@@ -21,7 +21,7 @@ export interface ProfileJsonInput {
 }
 
 export type NivelDistrito = 'alto' | 'medio' | 'baixo';
-export type NivelRisco = 'baixo' | 'moderado' | 'alto';
+export type NivelAtencao = 'baixo' | 'moderado' | 'alto';
 
 export interface ProfileJsonDerivacao {
   porta_inicial: string;
@@ -30,7 +30,7 @@ export interface ProfileJsonDerivacao {
   clima_cidadela: string;
   tensao_central: string;
   direcao_clinica: string;
-  risco_conducao: NivelRisco;
+  atencao_seguranca: NivelAtencao;
   ritmo_recomendado: string;
   evitar: string[];
   priorizar: string[];
@@ -47,7 +47,7 @@ export interface ProfileJsonLeituraClinica {
   eixo_dominante: string;
   tensao_central_texto: string;
   estrategia_predominante: string;
-  risco_texto: string;
+  atencao_texto: string;
   direcao_texto: string;
   ritmo_texto: string;
   porta_inicial_texto: string;
@@ -92,7 +92,7 @@ function classificarDistrito(media: number): NivelDistrito {
 
 // ─── Risco de condução ───
 
-function calcularRiscoConductao(medias: MediasFatores): NivelRisco {
+function calcularAtencaoSeguranca(medias: MediasFatores): NivelAtencao {
   const abalo = medias.porta_do_abalo;
   const torre = medias.torre_interna;
 
@@ -116,10 +116,10 @@ const TEXTOS_TENSAO_CLINICA: Record<string, string> = {
   'segurança vs movimento': 'Eixo segurança–movimento: estagnação defensiva.',
 };
 
-const TEXTOS_RISCO: Record<NivelRisco, string> = {
-  alto: 'Risco alto de ruptura se houver confronto direto ou pressão por mudança rápida.',
-  moderado: 'Risco moderado — cuidado com interpretações prematuras e excesso de estímulos.',
-  baixo: 'Risco baixo — campo aberto para exploração com ritmo adequado.',
+const TEXTOS_ATENCAO: Record<NivelAtencao, string> = {
+  alto: 'Atenção elevada — necessária contenção e validação constante antes de aprofundamentos.',
+  moderado: 'Atenção moderada — manter ritmo estruturado e validar percepções.',
+  baixo: 'Segurança estabilizada — campo aberto para exploração progressiva.',
 };
 
 const TEXTOS_RITMO: Record<string, string> = {
@@ -149,10 +149,10 @@ const MOVIMENTO_POR_RITMO: Record<string, string> = {
 
 // ─── Observação ética por risco ───
 
-const OBSERVACAO_ETICA: Record<NivelRisco, string> = {
-  alto: 'Não confrontar diretamente. Priorizar vínculo e contenção antes de qualquer aprofundamento. Tolerância ao confronto reduzida.',
-  moderado: 'Cautela com interpretações precoces. Manter ritmo estruturado e validar antes de expandir.',
-  baixo: 'Campo aberto para exploração. Manter atenção ética à projeção e ao ritmo da cliente.',
+const OBSERVACAO_ETICA: Record<NivelAtencao, string> = {
+  alto: 'Priorizar vínculo e contenção. Evitar confrontos diretos ou interpretações de ruptura.',
+  moderado: 'Manter ritmo estruturado. Validar antes de expandir a exploração.',
+  baixo: 'Exploração progressiva. Manter atenção ao ritmo natural da cliente.',
 };
 
 // ─── Função principal ───
@@ -179,7 +179,7 @@ export function montarProfileJson({ rawMedias, contexto }: MontarProfileParams):
   const cidadela = derivarCidadela(rawMedias, leitura.profile.tensao_central);
 
   // 4. Calcular risco
-  const risco = calcularRiscoConductao(medias);
+  const atencao = calcularAtencaoSeguranca(medias);
 
   // 5. Montar JSON final
   const profileJson: ProfileJsonFinal = {
@@ -198,7 +198,7 @@ export function montarProfileJson({ rawMedias, contexto }: MontarProfileParams):
       clima_cidadela: cidadela.clima_cidade,
       tensao_central: leitura.profile.tensao_central,
       direcao_clinica: leitura.profile.estilo_conducao,
-      risco_conducao: risco,
+      atencao_seguranca: atencao,
       ritmo_recomendado: leitura.profile.ritmo_ideal,
       evitar: leitura.saida_terapeuta.o_que_evitar,
       priorizar: leitura.saida_terapeuta.o_que_priorizar,
@@ -215,13 +215,13 @@ export function montarProfileJson({ rawMedias, contexto }: MontarProfileParams):
       eixo_dominante: cidadela.porta_inicial_nome,
       tensao_central_texto: TEXTOS_TENSAO_CLINICA[leitura.profile.tensao_central] || 'Tensão em avaliação.',
       estrategia_predominante: leitura.profile.estrategia_defesa,
-      risco_texto: TEXTOS_RISCO[risco],
+      atencao_texto: TEXTOS_ATENCAO[atencao],
       direcao_texto: leitura.profile.estilo_conducao,
       ritmo_texto: TEXTOS_RITMO[leitura.profile.ritmo_ideal] || TEXTOS_RITMO.medio,
       porta_inicial_texto: cidadela.porta_inicial_nome,
       torre_dominante_texto: cidadela.torre_dominante,
       clima_texto: cidadela.clima_cidade,
-      observacao_etica: OBSERVACAO_ETICA[risco],
+      observacao_etica: OBSERVACAO_ETICA[atencao],
     },
 
     leitura_simbolica: {

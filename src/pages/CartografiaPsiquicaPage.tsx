@@ -284,7 +284,7 @@ export default function CartografiaPsiquicaPage() {
               </div>
               <div className="space-y-3">
                 <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
-                  Cartografia Psíquica Orácula
+                  Cartografia Estrutural Orácula™
                 </h1>
                 <p className="text-lg text-muted-foreground">
                   Uma leitura profunda da sua psique, traduzida em mapa simbólico.
