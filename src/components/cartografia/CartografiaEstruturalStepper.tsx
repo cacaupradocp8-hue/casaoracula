@@ -26,7 +26,8 @@ const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
 export function CartografiaEstruturalStepper() {
   const { 
     step, setStep, respostas, updateResposta, 
-    updateBig5, perguntas, finalizar, loading, result 
+    updateBig5, perguntas, finalizar, loading, result,
+    saveStatus, hasDraft, retomarRascunho
   } = useCartografiaEstrutural();
 
   const currentStepIndex = STEPS.findIndex(s => s.id === step);
@@ -133,11 +134,18 @@ export function CartografiaEstruturalStepper() {
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
-      {step !== 'intro' && (
-        <div className="space-y-2">
-          <div className="flex justify-between text-xs text-muted-foreground uppercase tracking-widest">
-            <span>Território {currentStepIndex + 1} de {STEPS.length}</span>
-            <span>{Math.round(progress)}%</span>
+      {(step as string) !== 'intro' && (step as string) !== 'resultado' && (step as string) !== 'gerando' && (
+        <div className="flex flex-col space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground/60">
+              {saveStatus === 'saving' && <><Loader2 className="w-3 h-3 animate-spin" /> Salvando...</>}
+              {saveStatus === 'saved' && <><Check className="w-3 h-3 text-green-500" /> Progresso salvo</>}
+              {saveStatus === 'error' && <><ShieldAlert className="w-3 h-3 text-red-500" /> Erro ao salvar</>}
+              {saveStatus === 'idle' && <>Você pode continuar depois</>}
+            </div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/60">
+              {Math.round(progress)}%
+            </div>
           </div>
           <Progress value={progress} className="h-1 bg-gold/10" />
         </div>
@@ -163,9 +171,21 @@ export function CartografiaEstruturalStepper() {
               <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios estruturais" />
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>
-            <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg">
-              Começar a travessia
-            </Button>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg w-full sm:w-auto">
+                Começar a travessia
+              </Button>
+              {hasDraft && (
+                <Button 
+                  onClick={retomarRascunho} 
+                  variant="outline" 
+                  size="lg" 
+                  className="px-10 h-14 text-lg border-gold/30 text-gold hover:bg-gold/5 w-full sm:w-auto"
+                >
+                  Continuar de onde parei
+                </Button>
+              )}
+            </div>
             <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
               Uso exclusivo para assinantes Casa Orácula
             </p>

@@ -2490,6 +2490,39 @@ export type Database = {
           },
         ]
       }
+      cartografia_estrutural_drafts: {
+        Row: {
+          created_at: string | null
+          id: string
+          respostas: Json
+          status: string
+          step: string
+          updated_at: string | null
+          user_id: string
+          versao: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          respostas?: Json
+          status?: string
+          step?: string
+          updated_at?: string | null
+          user_id: string
+          versao?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          respostas?: Json
+          status?: string
+          step?: string
+          updated_at?: string | null
+          user_id?: string
+          versao?: string
+        }
+        Relationships: []
+      }
       cartografia_psiquica: {
         Row: {
           atmosfera: string[]
