@@ -488,14 +488,14 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <GoldButton label="Ver estrutura completa" onClick={() => document.getElementById('oferta')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
+      <GoldButton label="Ver estrutura completa" onClick={() => document.getElementById('estrutura-formacao')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
          6. ESTRUTURA DA FORMAÇÃO
       ═══════════════════════════════ */}
 
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+      <div id="estrutura-formacao" className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
         <img src={img03} alt="Estrutura" loading="lazy" className="w-full h-auto object-contain" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]/90" />
       </div>
