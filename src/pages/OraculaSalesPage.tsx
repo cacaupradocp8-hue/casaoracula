@@ -1007,7 +1007,7 @@ export default function OraculaSalesPage() {
             e entrar na prática real,
           </Phrase>
           <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[8vh]">
-            a Formação Oracular está aberta.
+            a Formação Orácula está aberta.
           </Phrase>
           <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-12">
             Se ainda não for o momento, permaneça nas Rotas.
