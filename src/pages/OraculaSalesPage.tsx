@@ -1023,11 +1023,10 @@ export default function OraculaSalesPage() {
       <footer className="py-10 px-6 border-t border-[hsl(var(--border))/0.4]">
         <div className="max-w-xl mx-auto text-center space-y-4">
           <p className="font-display text-base md:text-lg leading-relaxed text-[hsl(var(--foreground))/0.94]">
-            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade psíquica.
+            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade simbólica e ética.
           </p>
           <p className="text-[hsl(var(--foreground))/0.72] text-[11px] leading-relaxed">
-            Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
-            acompanhamento psicológico ou tratamento clínico quando necessário.
+            Casa Orácula © {new Date().getFullYear()} · A Casa Orácula oferece conteúdo simbólico e formativo. Não substitui terapia, acompanhamento psicológico, supervisão profissional ou atendimento de saúde mental quando necessário.
           </p>
         </div>
       </footer>
