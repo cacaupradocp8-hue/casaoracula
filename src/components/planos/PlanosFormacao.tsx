@@ -29,7 +29,7 @@ export function PlanosFormacao() {
             Para quem decide ir além
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-10 max-w-lg mx-auto">
-            O Clube abre a porta. A Formação te conduz pela jornada inteira — com estrutura,
+            As Rotas abrem a porta. A Formação te conduz pela jornada inteira — com estrutura,
             profundidade e acompanhamento real.
           </p>
 
@@ -55,7 +55,7 @@ export function PlanosFormacao() {
             onClick={() => navigate('/formacao-metodo')}
             className="border-gold/15 text-foreground hover:bg-gold/5 hover:border-gold/25 px-8"
           >
-            Conhecer a formação completa
+            Conhecer a Formação
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </motion.div>

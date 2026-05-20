@@ -52,7 +52,7 @@ export function PlanosHero() {
     <section className="relative overflow-hidden min-h-[75vh] sm:min-h-[78vh] md:min-h-[88vh] flex items-end">
       <img
         src={heroPlanos}
-        alt="Clube de Leitura Simbólica"
+        alt="Rotas da Casa Orácula"
         className="absolute inset-0 h-full w-full object-cover object-[70%_15%] sm:object-[68%_top] md:object-right"
       />
 
@@ -84,7 +84,7 @@ export function PlanosHero() {
             </motion.div>
 
             <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[0.95] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-              Você já acessou uma parte da sua estrutura.
+              Rotas da Casa Orácula
             </h1>
 
             <motion.p
@@ -93,7 +93,7 @@ export function PlanosHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              Mas ainda não entrou no nível onde a transformação acontece.
+              Transforme leitura em método e cuidado em travessia.
             </motion.p>
           </motion.div>
         </div>

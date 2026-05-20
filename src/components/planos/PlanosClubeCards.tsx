@@ -26,10 +26,10 @@ export function PlanosClubeCards({ ofertas, onSelect }: Props) {
         className="text-center mb-14"
       >
         <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-3">
-          Entre no Clube Oracular
+          Habitar as Rotas
         </h2>
         <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-          Acesso contínuo à CidaDELA Interior, leituras guiadas e conteúdos que expandem sua percepção — mês a mês.
+          As Rotas da Casa Orácula são uma assinatura de leitura simbólica aplicada, onde livros, contos, mitos, áudios e práticas se tornam mapas de travessia.
         </p>
       </motion.div>
 
