@@ -456,7 +456,7 @@ export default function OraculaSalesPage() {
           <div className="space-y-4">
             {[
               { title: 'Rotas da Casa Orácula', desc: 'Base simbólica e percepção. Sem pressão de aplicação.' },
-              { title: 'Formação Oracular', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
+              { title: 'Formação Orácula', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
               { title: 'Casa das Máquinas', desc: 'Prática e aplicação contínua. Só existe quando há capacidade.' },
             ].map((item, i) => (
               <motion.div
