@@ -762,24 +762,7 @@ export default function OraculaSalesPage() {
 
       <Spacer h="lg" />
 
-      {/* ═══════════════════════════════
-         10C. DEPOIMENTOS (placeholder)
-      ═══════════════════════════════ */}
-
-      <section className="py-16 px-6">
-        <div className="max-w-lg mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="border border-[hsl(var(--border))/0.4] border-dashed rounded-xl p-8 text-center bg-[hsl(var(--card))/0.08]"
-          >
-            <p className="text-[hsl(var(--foreground))/0.5] text-xs uppercase tracking-[0.32em] font-semibold mb-2">Depoimentos</p>
-            <p className="text-[hsl(var(--foreground))/0.4] text-sm italic">Espaço reservado para provas sociais</p>
-          </motion.div>
-        </div>
-      </section>
+      {/* Seção de depoimentos removida conforme auditoria */}
 
       <Spacer h="xl" />
 
