@@ -16,86 +16,81 @@ const isExternal = (link: string) =>
 
 export function PlanosClubeCards({ ofertas, onSelect }: Props) {
   return (
-    <div>
-      {/* Section header */}
+    <div id="secao-planos">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.8 }}
-        className="text-center mb-14"
+        className="text-center mb-16"
       >
-        <h2 className="font-display text-2xl md:text-3xl text-foreground tracking-wide mb-3">
-          Habitar as Rotas
+        <h2 className="font-display text-4xl md:text-5xl text-foreground mb-6">
+          Escolha sua forma de habitar as Rotas
         </h2>
-        <p className="text-sm text-muted-foreground max-w-lg mx-auto">
-          As Rotas da Casa Orácula são uma assinatura de leitura simbólica aplicada, onde livros, contos, mitos, áudios e práticas se tornam mapas de travessia.
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Comece mês a mês ou escolha uma travessia anual com continuidade.
         </p>
       </motion.div>
 
-      {/* Cards */}
       <div
         className={cn(
-          'grid gap-10 max-w-5xl mx-auto',
+          'grid gap-8 max-w-6xl mx-auto items-stretch',
           ofertas.length === 1 && 'md:grid-cols-1 max-w-md',
-          ofertas.length === 2 && 'md:grid-cols-2 max-w-3xl',
+          ofertas.length === 2 && 'md:grid-cols-2 max-w-4xl',
           ofertas.length >= 3 && 'md:grid-cols-3'
         )}
       >
         {ofertas.map((oferta, index) => (
           <motion.div
             key={oferta.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: index * 0.12 }}
+            transition={{ duration: 0.8, delay: index * 0.15 }}
+            className="flex"
           >
             <Card
               className={cn(
-                'relative h-full flex flex-col overflow-hidden transition-all duration-500 group',
-                'bg-card/40 backdrop-blur-sm border-border/15',
-                'hover:-translate-y-1.5 hover:shadow-[0_12px_40px_-10px_hsl(var(--gold)/0.08)]',
-                oferta.destaque && 'border-gold/20 bg-card/50 ring-1 ring-gold/10'
+                'relative flex flex-col w-full overflow-hidden transition-all duration-500',
+                'bg-card/30 backdrop-blur-md border-border/10',
+                'hover:-translate-y-2 hover:shadow-[0_20px_50px_-12px_hsl(var(--gold)/0.15)]',
+                oferta.destaque && 'border-gold/30 bg-card/60 ring-1 ring-gold/20 scale-105 z-10'
               )}
             >
               {oferta.destaque && (
-                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-gold/20 via-gold to-gold/20" />
               )}
 
               {oferta.badge && (
-                <Badge className="absolute top-4 right-4 bg-mystic/15 text-mystic-light border-mystic/15 text-xs">
+                <Badge className="absolute top-6 right-6 bg-gold/10 text-gold border-gold/20 px-3 py-1 text-xs uppercase tracking-wider font-semibold">
                   {oferta.badge}
                 </Badge>
               )}
 
-              <CardContent className="p-9 flex flex-col h-full">
-                {/* Header */}
-                <div className="text-center mb-8">
-                  {oferta.simbolo && (
-                    <span className="text-3xl text-gold/70 block mb-4">{oferta.simbolo}</span>
-                  )}
-                  <h3 className="font-display text-xl font-semibold text-foreground mb-2 tracking-wide">
+              <CardContent className="p-10 flex flex-col h-full">
+                <div className="mb-8">
+                  <h3 className="font-display text-2xl font-bold text-foreground mb-3 tracking-wide">
                     {oferta.nome}
                   </h3>
                   {oferta.subtitulo && (
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-sm text-muted-foreground leading-relaxed min-h-[3rem]">
                       {oferta.subtitulo}
                     </p>
                   )}
                 </div>
 
-                {/* Price */}
                 {!oferta.gratuito && oferta.preco && (
-                  <div className="mb-8 p-5 rounded-xl bg-muted/10 border border-border/10 text-center">
-                    <p className="text-lg font-semibold text-foreground">{oferta.preco}</p>
+                  <div className="mb-10 pb-8 border-b border-border/10">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-bold text-foreground">{oferta.preco}</span>
+                    </div>
                   </div>
                 )}
 
-                {/* Includes */}
-                <div className="flex-1 mb-8">
-                  <ul className="space-y-3.5">
+                <div className="flex-1 mb-10">
+                  <ul className="space-y-4">
                     {oferta.inclusoes.map((item, i) => (
-                      <li key={i} className="flex items-start gap-3 text-sm text-foreground/80">
+                      <li key={i} className="flex items-start gap-3 text-sm text-foreground/80 leading-snug">
                         <Check className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
                         <span>{item}</span>
                       </li>
@@ -103,27 +98,22 @@ export function PlanosClubeCards({ ofertas, onSelect }: Props) {
                   </ul>
                 </div>
 
-                {/* CTA */}
                 <Button
                   size="lg"
                   className={cn(
-                    'w-full py-6 text-sm font-medium transition-all duration-300',
+                    'w-full py-7 text-base font-semibold transition-all duration-300 rounded-xl',
                     oferta.destaque
-                      ? 'bg-gradient-to-r from-gold to-mystic text-primary-foreground border border-gold/20 hover:scale-105 shadow-[0_0_25px_-6px_hsl(var(--gold)/0.2)]'
-                      : 'bg-transparent border border-gold/15 text-foreground hover:bg-gold/5 hover:border-gold/25'
+                      ? 'bg-gold hover:bg-gold-light text-primary-foreground shadow-lg shadow-gold/20'
+                      : 'bg-transparent border-2 border-gold/20 text-foreground hover:bg-gold/5 hover:border-gold/40'
                   )}
                   onClick={() => onSelect(oferta)}
                 >
                   {oferta.texto_botao}
                   {isExternal(oferta.link_botao) && (
-                    <ExternalLink className="w-3.5 h-3.5 ml-2" />
+                    <ExternalLink className="w-4 h-4 ml-2" />
                   )}
                 </Button>
               </CardContent>
-
-              {oferta.destaque && (
-                <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/50 to-transparent" />
-              )}
             </Card>
           </motion.div>
         ))}

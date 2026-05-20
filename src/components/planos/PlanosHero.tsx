@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { useMemo } from 'react';
+import { Button } from '@/components/ui/button';
 import heroPlanos from '@/assets/planos/hero-rotas.png';
 
 function HeroParticles() {
@@ -48,53 +49,73 @@ function HeroParticles() {
 }
 
 export function PlanosHero() {
+  const scrollToPlanos = () => {
+    const section = document.getElementById('secao-planos');
+    section?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToFuncionamento = () => {
+    const section = document.getElementById('secao-funcionamento');
+    section?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <section className="relative overflow-hidden min-h-[75vh] sm:min-h-[78vh] md:min-h-[88vh] flex items-end">
+    <section className="relative overflow-hidden min-h-[85vh] md:min-h-[90vh] flex items-center pt-20">
       <img
         src={heroPlanos}
         alt="Rotas da Casa Orácula"
         className="absolute inset-0 h-full w-full object-cover object-[70%_15%] sm:object-[68%_top] md:object-right"
       />
 
-      {/* Mobile: lighter overlay so the image is visible, with strong bottom gradient for text */}
       <div className="absolute inset-0 bg-background/40 sm:bg-background/10 z-[1]" />
       <div className="absolute inset-0 bg-gradient-to-t from-background from-15% via-background/80 via-50% to-transparent sm:bg-gradient-to-r sm:from-background sm:via-background/78 sm:to-transparent z-[1]" />
-      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 sm:via-background/24 to-transparent z-[1]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_35%,hsl(var(--gold)/0.16),transparent_30%)] z-[1]" />
-      <div className="absolute top-0 left-0 right-0 h-40 bg-gradient-to-b from-background/30 to-transparent z-[1]" />
-
+      
       <HeroParticles />
 
-      <div className="w-full relative z-20 pb-8 pt-20 px-5 sm:pb-14 sm:pt-28 sm:px-6 md:pb-24 md:pt-36">
-        <div className="max-w-2xl mx-auto sm:mx-0 sm:ml-[5%] md:ml-[8%]">
+      <div className="container mx-auto relative z-20 px-6">
+        <div className="max-w-3xl sm:ml-[5%] md:ml-[8%]">
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
+            className="space-y-6 md:space-y-8"
           >
-            <motion.div
-              className="flex items-center gap-3 mb-4 sm:mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.2, delay: 0.3 }}
-            >
-              <div className="w-8 sm:w-12 h-px bg-gradient-to-r from-transparent to-gold/50" />
-              <Sparkles className="w-3.5 sm:w-4 h-3.5 sm:h-4 text-gold/60" />
-              <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-gold/50" />
-            </motion.div>
+            <div className="space-y-2">
+               <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="text-gold/80 text-xs uppercase tracking-[0.3em] font-medium"
+              >
+                Rotas da Casa Orácula
+              </motion.p>
+              <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.1] md:leading-[1.05]">
+                Você não precisa de mais conteúdo solto. <br className="hidden md:block" />
+                <span className="text-gold">Precisa de uma rota.</span>
+              </h1>
+            </div>
 
-            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[1.0] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-              Você já ouviu a sua Voz.
-            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl">
+              Leituras, contos, áudios e práticas simbólicas para transformar percepção em travessia.
+            </p>
 
-            <motion.p
-              className="text-base sm:text-lg md:text-xl text-gold font-display italic leading-relaxed max-w-[90%] sm:max-w-lg drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              Agora precisa de um caminho para atravessá-la.
-            </motion.p>
+            <div className="flex flex-col sm:flex-row items-center gap-4 pt-4">
+              <Button 
+                size="lg" 
+                onClick={scrollToPlanos}
+                className="w-full sm:w-auto bg-gold hover:bg-gold-light text-primary-foreground font-medium px-10 py-7 text-base rounded-full transition-all hover:scale-105"
+              >
+                Entrar nas Rotas
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={scrollToFuncionamento}
+                className="w-full sm:w-auto border-gold/30 text-foreground hover:bg-gold/5 px-10 py-7 text-base rounded-full"
+              >
+                Ver como funciona
+              </Button>
+            </div>
           </motion.div>
         </div>
       </div>
