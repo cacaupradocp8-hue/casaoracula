@@ -13,52 +13,20 @@ interface WelcomeCopy {
   closing: string;
 }
 
-const WELCOME_COPY: Record<ProfileTag, WelcomeCopy> = {
-  perfil_profissional_atuante: {
-    icon: <Compass className="w-8 h-8" />,
-    greeting: 'Você já sustenta outras mulheres há algum tempo.',
+const WELCOME_COPY: Record<string, WelcomeCopy> = {
+  default: {
+    icon: <Home className="w-8 h-8" />,
+    greeting: 'Bem-vinda à Casa Orácula.',
     message: [
-      'E sabe que isso exige mais do que técnica.',
-      'Exige eixo, escuta profunda e um sistema que não te esgote.',
-      'A Casa ORÁCULA foi criada para isso: oferecer estrutura simbólica que organiza sua prática — sem tirar o que você já conquistou.',
-      'Aqui, você não começa do zero. Você integra.',
+      'Aqui, você não entra para consumir conteúdos.',
+      'Você entra para atravessar processos, organizar sua linguagem simbólica e transformar cuidado em método.',
+      'A Casa se revela por camadas.\nPrimeiro, a Voz.\nDepois, a Travessia.\nEntão, o Mapa.',
     ],
-    closing: 'A Casa reconhece sua caminhada.',
-  },
-  perfil_terapeuta_integrativa: {
-    icon: <Sparkles className="w-8 h-8" />,
-    greeting: 'Você trabalha de forma intuitiva — e isso é sua força.',
-    message: [
-      'Mas talvez sinta que falta algo: uma linguagem que organize o que você já percebe.',
-      'A Casa ORÁCULA não substitui seu saber. Ela oferece estrutura para que ele se expresse com mais clareza.',
-      'Aqui, intuição e método caminham juntos.',
-      'Você não vai perder a alma do seu trabalho. Vai enraizá-la.',
-    ],
-    closing: 'A Casa honra o que você já sabe.',
-  },
-  perfil_buscadora: {
-    icon: <Heart className="w-8 h-8" />,
-    greeting: 'Você ainda não atua — e isso não é um problema.',
-    message: [
-      'O chamado não exige pressa. Nem comparação. Nem chegar pronta.',
-      'A Casa ORÁCULA é um espaço de escuta. Não de exigência.',
-      'Você pode explorar, experimentar e descobrir se esse caminho faz sentido — no seu ritmo.',
-      'Aqui, você não precisa saber. Precisa estar disponível.',
-    ],
-    closing: 'A Casa acolhe quem está em busca.',
+    closing: 'Comece pelo primeiro limiar.',
   },
 };
 
-const DEFAULT_COPY: WelcomeCopy = {
-  icon: <Heart className="w-8 h-8" />,
-  greeting: 'Bem-vinda à Casa ORÁCULA.',
-  message: [
-    'Um espaço de formação simbólica para mulheres que cuidam de outras mulheres.',
-    'Aqui, você não consome conteúdo. Você atravessa processos.',
-    'Com estrutura, linguagem e cuidado simbólico.',
-  ],
-  closing: 'A Casa se revela passo a passo.',
-};
+const DEFAULT_COPY: WelcomeCopy = WELCOME_COPY.default;
 
 interface WelcomeCopyByProfileProps {
   profileTag?: string | null;
@@ -67,7 +35,7 @@ interface WelcomeCopyByProfileProps {
 }
 
 export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: WelcomeCopyByProfileProps) {
-  const copy = (profileTag && WELCOME_COPY[profileTag as ProfileTag]) || DEFAULT_COPY;
+  const copy = DEFAULT_COPY;
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-6 md:p-8">
@@ -137,7 +105,7 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           className="space-y-5 max-w-xl mx-auto"
         >
           {copy.message.map((paragraph, index) => (
-            <p key={index} className="text-foreground/70 text-base md:text-lg leading-[1.8] tracking-[0.01em]">
+            <p key={index} className="text-foreground/70 text-base md:text-lg leading-[1.8] tracking-[0.01em] whitespace-pre-line">
               {paragraph}
             </p>
           ))}
@@ -156,19 +124,16 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
         </motion.div>
 
         {/* Closing quote */}
-        <motion.blockquote
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.7 }}
-          className="border-l-2 border-gold/30 pl-5 text-left max-w-md mx-auto"
+          className="text-center max-w-md mx-auto"
         >
-          <p className="font-display text-lg md:text-xl italic text-foreground/90 leading-[1.5]">
-            "{copy.closing}"
+          <p className="font-display text-lg md:text-xl text-gold leading-[1.5]">
+            {copy.closing}
           </p>
-          <p className="text-sm text-foreground/50 mt-3 leading-relaxed">
-            Aqui, o caminho se revela passo a passo.
-          </p>
-        </motion.blockquote>
+        </motion.div>
 
         {/* Continue button */}
         <motion.div
