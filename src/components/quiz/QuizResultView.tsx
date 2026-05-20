@@ -128,7 +128,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
                 : 'Você criará uma conta gratuita para guardar seu resultado.'}
             </p>
           </div>
-
+          </div>
       </motion.section>
 
       {/* ══ RODAPÉ SIMBÓLICO ══ */}
