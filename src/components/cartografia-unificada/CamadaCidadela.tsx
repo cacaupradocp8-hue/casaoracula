@@ -113,30 +113,34 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       </motion.div>
 
       {/* Distrito Dominante */}
-      <motion.div {...anim(0.3)}>
-        <Card className="border-primary/20 bg-primary/5 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-primary/80">
-              {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.distrito_dominante_descricao}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.distrito_dominante && data.distrito_dominante !== '""' && (
+        <motion.div {...anim(0.3)}>
+          <Card className="border-primary/20 bg-primary/5 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-primary/80">
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.distrito_dominante_descricao}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Leitura Integrada */}
-      <motion.div {...anim(0.4)}>
-        <Card className="border-border/10 bg-card/40 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.leitura_integrada && data.leitura_integrada !== '""' && (
+        <motion.div {...anim(0.4)}>
+          <Card className="border-border/10 bg-card/40 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Grid: Tensão + Crescimento */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
@@ -171,14 +175,16 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       </div>
 
       {/* Direção da Travessia */}
-      <motion.div {...anim(0.6)}>
-        <Card className="border-primary/10 mx-4">
-          <CardContent className="p-5 text-center">
-            <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
-            <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.direcao_travessia && data.direcao_travessia !== '""' && (
+        <motion.div {...anim(0.6)}>
+          <Card className="border-primary/10 mx-4">
+            <CardContent className="p-5 text-center">
+              <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
+              <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </div>
   );
 }

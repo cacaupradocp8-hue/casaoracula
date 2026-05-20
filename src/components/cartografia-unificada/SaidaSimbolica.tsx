@@ -67,7 +67,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
       </motion.div>
 
       {/* Movimento necessário */}
-      {simbolica?.movimento_necessario && (
+      {simbolica?.movimento_necessario && simbolica.movimento_necessario !== '""' && (
         <motion.div {...anim(0.35)}>
           <Card className="border-border/15 bg-card/50">
             <CardContent className="p-5 space-y-2">
@@ -102,7 +102,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
         </Card>
       </motion.div>
 
-      {/* CidaDELA visual — sem cor, sem símbolo */}
+      {/* CidaDELA visual */}
       <motion.div {...anim(0.55)}>
         <Card className="border-border/15 bg-card/40">
           <CardContent className="p-5 text-center space-y-3">
@@ -116,14 +116,17 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
                 <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
                   <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="hsl(var(--muted))" strokeWidth="2.5" />
                   <circle cx="18" cy="18" r="15.91" fill="transparent" stroke="hsl(var(--primary))" strokeWidth="2.5"
-                    strokeDasharray={`${cidadela.indice_equilibrio} ${100 - cidadela.indice_equilibrio}`}
+                    strokeDasharray={`${cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : 0} ${100 - (cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : 0)}`}
                     strokeLinecap="round" />
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">
-                  {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : '--'}
+                  {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : ''}
                 </span>
               </div>
-              <span className="text-[9px] text-muted-foreground">revelação</span>
+              {cidadela.indice_equilibrio > 0 && <span className="text-[9px] text-muted-foreground">revelação</span>}
+              {cidadela.indice_equilibrio <= 0 && (
+                <span className="text-[9px] text-muted-foreground italic">Iniciando travessia...</span>
+              )}
             </div>
           </CardContent>
         </Card>
