@@ -52,7 +52,7 @@ export function PlanosHero() {
     <section className="relative overflow-hidden min-h-[75vh] sm:min-h-[78vh] md:min-h-[88vh] flex items-end">
       <img
         src={heroPlanos}
-        alt="Clube de Leitura Simbólica"
+        alt="Rotas da Casa Orácula"
         className="absolute inset-0 h-full w-full object-cover object-[70%_15%] sm:object-[68%_top] md:object-right"
       />
 
