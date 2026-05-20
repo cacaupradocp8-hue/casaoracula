@@ -33,7 +33,26 @@ const anim = (delay: number) => ({
 
 export function CamadaDirecaoClinica({ data, modo = 'terapeuta' }: Props) {
   const isClient = modo === 'cliente';
-  const hasContent = data.estilo_terapeutico || data.abordagem || data.orientacao || data.pergunta_clinica;
+  
+  // Implementação de guard real contra placeholders
+  const hasValidContent = (val?: string | string[]) => {
+    if (!val) return false;
+    if (Array.isArray(val)) return val.length > 0;
+    const clean = val.toLowerCase();
+    return clean !== '""' && 
+           clean !== 'undefined' && 
+           clean !== 'null' && 
+           clean.length > 2 &&
+           !clean.includes('identificando') &&
+           !clean.includes('mapeando') &&
+           !clean.includes('em avaliação');
+  };
+
+  const hasContent = hasValidContent(data.estilo_terapeutico) || 
+                    hasValidContent(data.abordagem) || 
+                    hasValidContent(data.orientacao) || 
+                    hasValidContent(data.pergunta_clinica);
+
   if (!hasContent) return null;
 
   return (
@@ -219,7 +238,7 @@ export function CamadaDirecaoClinica({ data, modo = 'terapeuta' }: Props) {
         </>
       )}
 
-      {/* Ethical notice */}
+      {/* Notice */}
       <motion.div {...anim(0.6)}>
         <p className="text-[10px] text-center text-muted-foreground/30 leading-relaxed max-w-sm mx-auto px-4">
           Esta leitura é simbólica e exploratória. 

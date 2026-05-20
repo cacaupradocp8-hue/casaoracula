@@ -50,7 +50,25 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida }: Props) {
-  const hasContent = data.distrito_dominante || data.leitura_integrada || data.tensao_simbolica || data.territorio_crescimento_descricao || data.direcao_travessia;
+  // Implementação de guard real contra placeholders
+  const hasValidContent = (val?: string) => {
+    if (!val) return false;
+    const clean = val.toLowerCase();
+    return clean !== '""' && 
+           clean !== 'undefined' && 
+           clean !== 'null' && 
+           clean.length > 2 &&
+           !clean.includes('não explorado') &&
+           !clean.includes('identificando') &&
+           !clean.includes('mapeando');
+  };
+
+  const hasContent = hasValidContent(data.distrito_dominante) || 
+                    hasValidContent(data.leitura_integrada) || 
+                    hasValidContent(data.tensao_simbolica) || 
+                    hasValidContent(data.territorio_crescimento_descricao) || 
+                    hasValidContent(data.direcao_travessia);
+
   if (!hasContent) return null;
   // Build district states for the SVG map
   const svgDistrictStates = useMemo(() => {

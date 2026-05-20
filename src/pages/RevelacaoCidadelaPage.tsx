@@ -27,10 +27,10 @@ export default function RevelacaoCidadelaPage() {
         <Button
           variant="gold"
           size="lg"
-          onClick={() => navigate('/dashboard-membro', { replace: true })}
+          onClick={() => navigate('/clube', { replace: true })}
           className="gap-2 px-8"
         >
-          Entrar na Casa com meu mapa
+          Entrar nas Rotas da Casa Orácula
           <ArrowRight className="w-4 h-4" />
         </Button>
         <p className="text-xs text-muted-foreground/50">

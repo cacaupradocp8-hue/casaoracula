@@ -13,6 +13,8 @@ import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCar
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
+import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
   { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert },
@@ -112,19 +114,48 @@ export function CartografiaEstruturalStepper() {
 
         <SaidaSimbolica saida={result.leitura.saida_cliente} cidadela={result.cidadela} profileJson={result.profileJson} />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <CamadaLeituraPsiquica data={result.leitura.profile} medias={result.leitura.medias_calculadas} />
-          <CamadaCidadela 
-            data={result.cidadela} 
-            cor={result.cidadela.cor_derivada} 
-            corHex={result.cidadela.cor_hex}
-            atmosfera={result.cidadela.atmosfera_derivada}
-            simbolo={result.cidadela.simbolo_derivado}
-            simboloIcon={result.cidadela.simbolo_derivado_icon}
-            territorios={result.cidadela.distritos_acesos}
-            pontoPartida={result.cidadela.porta_inicial}
-          />
-        </div>
+        <Tabs defaultValue="leitura" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 glass border-gold/20 mb-8">
+            <TabsTrigger value="leitura" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">Leitura Estrutural</TabsTrigger>
+            <TabsTrigger value="cidadela" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">CidaDELA Interior</TabsTrigger>
+            <TabsTrigger value="conducao" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">Leitura de Condução</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="leitura" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <CamadaLeituraPsiquica data={result.leitura.profile} medias={result.leitura.medias_calculadas} />
+          </TabsContent>
+          
+          <TabsContent value="cidadela" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <CamadaCidadela 
+              data={result.cidadela} 
+              cor={result.cidadela.cor_derivada} 
+              corHex={result.cidadela.cor_hex}
+              atmosfera={result.cidadela.atmosfera_derivada}
+              simbolo={result.cidadela.simbolo_derivado}
+              simboloIcon={result.cidadela.simbolo_derivado_icon}
+              territorios={result.cidadela.distritos_acesos}
+              pontoPartida={result.cidadela.porta_inicial}
+            />
+          </TabsContent>
+
+          <TabsContent value="conducao" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {result.profileJson.leitura_conducao ? (
+              <CamadaDirecaoClinica 
+                data={{
+                  abordagem: result.profileJson.leitura_conducao.tensao_central_texto,
+                  orientacao: result.profileJson.leitura_conducao.direcao_texto,
+                  sugestoes: result.profileJson.recomendacoes?.praticas,
+                  ferramentas_indicadas: result.profileJson.recomendacoes?.rotas
+                }} 
+                modo="cliente" 
+              />
+            ) : (
+              <div className="text-center py-20 glass border-gold/10 rounded-xl">
+                <p className="text-muted-foreground italic">A leitura de condução ainda não foi gerada.</p>
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
 
         {/* Bloco 3 — Territórios da CidaDELA */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

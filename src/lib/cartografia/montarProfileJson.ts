@@ -51,7 +51,7 @@ export interface ProfileJsonDerivacao {
   };
 }
 
-export interface ProfileJsonLeituraClinica {
+export interface ProfileJsonLeituraConducao {
   eixo_dominante: string;
   tensao_central_texto: string;
   estrategia_predominante: string;
@@ -83,7 +83,7 @@ export interface ProfileJsonCidadela {
 export interface ProfileJsonFinal {
   input: ProfileJsonInput;
   derivacao: ProfileJsonDerivacao;
-  leitura_clinica: ProfileJsonLeituraClinica;
+  leitura_conducao: ProfileJsonLeituraConducao;
   leitura_simbolica: ProfileJsonLeituraSimbolica;
   cidadela: ProfileJsonCidadela;
   oracula_inicial: string;
@@ -118,9 +118,9 @@ function calcularAtencaoSeguranca(medias: MediasFatores): NivelAtencao {
   return 'baixo';
 }
 
-// ─── Textos clínicos ───
+// ─── Textos de condução ───
 
-const TEXTOS_TENSAO_CLINICA: Record<string, string> = {
+const TEXTOS_TENSAO_CONDUCAO: Record<string, string> = {
   'controle vs colapso': 'Eixo controle–colapso: hipervigilância compensando fragilidade emocional.',
   'estrutura vs expressão': 'Eixo estrutura–expressão: rigidez defensiva pode bloquear autenticidade.',
   'pertencimento vs autonomia': 'Eixo pertencimento–autonomia: fusão relacional pode inibir individuação.',
@@ -275,9 +275,9 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
       },
     },
 
-    leitura_clinica: {
+    leitura_conducao: {
       eixo_dominante: cidadela.porta_inicial_nome,
-      tensao_central_texto: TEXTOS_TENSAO_CLINICA[leitura.profile.tensao_central] || 'Tensão em avaliação.',
+      tensao_central_texto: TEXTOS_TENSAO_CONDUCAO[leitura.profile.tensao_central] || 'Tensão em avaliação.',
       estrategia_predominante: leitura.profile.estrategia_defesa,
       atencao_texto: TEXTOS_ATENCAO[atencao],
       direcao_texto: leitura.profile.estilo_conducao,
