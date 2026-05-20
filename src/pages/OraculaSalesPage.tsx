@@ -422,7 +422,7 @@ export default function OraculaSalesPage() {
         <Phrase className="font-display text-[clamp(1.4rem,6vw,2.6rem)] font-light leading-[1.2] text-center py-[14vh]">
           <span className="text-[#C6A96B]">Formar mulheres capazes de sustentar processos simbólicos com ética, clareza e aplicação real</span>
           <br /><br />
-          <span className="text-[hsl(var(--foreground))/0.82] text-lg md:text-xl">— sem dependência de técnica ou validação externa.</span>
+          <span className="text-[hsl(var(--foreground))/0.82] text-lg md:text-xl">sem dependência de técnica ou validação externa.</span>
         </Phrase>
       </section>
 
