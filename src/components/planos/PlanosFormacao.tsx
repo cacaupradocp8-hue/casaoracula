@@ -29,7 +29,7 @@ export function PlanosFormacao() {
             Para quem decide ir além
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-10 max-w-lg mx-auto">
-            O Clube abre a porta. A Formação te conduz pela jornada inteira — com estrutura,
+            As Rotas abrem a porta. A Formação te conduz pela jornada inteira — com estrutura,
             profundidade e acompanhamento real.
           </p>
 
