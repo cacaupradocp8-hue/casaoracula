@@ -549,7 +549,7 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      <GoldButton label="Conhecer a Formação" onClick={ctaClick} variant="solid" />
+      <GoldButton label="Ver investimento" onClick={() => document.getElementById('oferta')?.scrollIntoView({ behavior: 'smooth' })} variant="solid" />
       <Spacer h="lg" />
 
       {/* ═══════════════════════════════
