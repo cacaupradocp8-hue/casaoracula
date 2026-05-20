@@ -123,7 +123,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
                   {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : ''}
                 </span>
               </div>
-              {cidadela.indice_equilibrio > 0 && <span className="text-[9px] text-muted-foreground">revelação</span>}
+              {cidadela.indice_equilibrio > 0 && <span className="text-[9px] text-muted-foreground uppercase tracking-widest">revelação</span>}
               {cidadela.indice_equilibrio <= 0 && (
                 <span className="text-[9px] text-muted-foreground italic">Iniciando travessia...</span>
               )}
@@ -135,7 +135,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
       {/* Nota ética */}
       <motion.div {...anim(0.6)}>
         <p className="text-[10px] text-center text-muted-foreground/30 leading-relaxed max-w-sm mx-auto">
-          Esta leitura é simbólica e reflexiva. Não constitui avaliação clínica formal.
+          Esta leitura é simbólica e reflexiva.
           A interpretação final pertence a você.
         </p>
       </motion.div>

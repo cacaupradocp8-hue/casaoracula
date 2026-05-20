@@ -25,7 +25,25 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias }: Props) {
-  const hasContent = data.titulo || data.frase_espelho || data.tracos_dominantes || data.padroes_emocionais || data.estrutura_funcionamento;
+  // Implementação de guard real contra placeholders
+  const hasValidContent = (val?: string) => {
+    if (!val) return false;
+    const clean = val.toLowerCase();
+    return clean !== '""' && 
+           clean !== 'undefined' && 
+           clean !== 'null' && 
+           clean.length > 2 &&
+           !clean.includes('identificando') &&
+           !clean.includes('mapeando') &&
+           !clean.includes('em avaliação');
+  };
+
+  const hasContent = hasValidContent(data.titulo) || 
+                    hasValidContent(data.frase_espelho) || 
+                    hasValidContent(data.tracos_dominantes) || 
+                    hasValidContent(data.padroes_emocionais) || 
+                    hasValidContent(data.estrutura_funcionamento);
+
   if (!hasContent && !medias) return null;
 
   return (
@@ -36,7 +54,7 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
         </div>
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 1</p>
         <h2 className="font-display text-2xl font-bold text-foreground">Leitura Estrutural</h2>
-        {data.titulo && data.titulo !== '""' && (
+        {hasValidContent(data.titulo) && (
           <p className="text-lg italic text-primary/80 font-display break-words px-4">"{data.titulo}"</p>
         )}
       </motion.div>

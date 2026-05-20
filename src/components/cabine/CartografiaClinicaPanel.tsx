@@ -49,7 +49,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
     );
   }
 
-  const { derivacao, leitura_clinica } = profile.profileJson;
+  const { derivacao, leitura_conducao } = profile.profileJson;
   const atencao = ATENCAO_STYLES[derivacao.atencao_seguranca] || ATENCAO_STYLES.baixo;
 
   return (
@@ -57,7 +57,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-medium text-foreground/70 uppercase tracking-wider">
-          Leitura Clínica Inicial
+          Leitura de Condução Inicial
         </h3>
         <Badge variant="outline" className={cn('text-[10px] border', atencao.cls)}>
           <Shield className="w-3 h-3 mr-1" />
@@ -70,7 +70,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
         <InfoCard
           icon={<Compass className="w-3.5 h-3.5" />}
           label="Eixo dominante"
-          value={leitura_clinica.eixo_dominante}
+          value={leitura_conducao.eixo_dominante}
         />
         <InfoCard
           icon={<Flame className="w-3.5 h-3.5" />}
@@ -79,8 +79,8 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
         />
         <InfoCard
           icon={<Activity className="w-3.5 h-3.5" />}
-          label="Direção clínica"
-          value={leitura_clinica.direcao_texto}
+          label="Direção condução"
+          value={leitura_conducao.direcao_texto}
         />
         <InfoCard
           icon={<Activity className="w-3.5 h-3.5" />}
@@ -92,9 +92,9 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
       {/* Tensão + Estratégia */}
       <div className="rounded-lg bg-card/50 border border-border/10 p-3 space-y-2">
         <p className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Leitura do campo</p>
-        <p className="text-xs text-foreground/70">{leitura_clinica.tensao_central_texto}</p>
+        <p className="text-xs text-foreground/70">{leitura_conducao.tensao_central_texto}</p>
         <p className="text-[10px] text-muted-foreground/50">
-          Estratégia predominante: <span className="text-foreground/60">{leitura_clinica.estrategia_predominante}</span>
+          Estratégia predominante: <span className="text-foreground/60">{leitura_conducao.estrategia_predominante}</span>
         </p>
       </div>
 
@@ -161,7 +161,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
       {/* Observação ética */}
       <div className="rounded-lg bg-card/30 border border-border/5 p-3">
         <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider mb-1">Observação ética</p>
-        <p className="text-[10px] text-foreground/50 italic">{leitura_clinica.observacao_etica}</p>
+        <p className="text-[10px] text-foreground/50 italic">{leitura_conducao.observacao_etica}</p>
       </div>
     </div>
   );
