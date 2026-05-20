@@ -108,7 +108,7 @@ export function CartografiaEstruturalStepper() {
           <h1 className="text-4xl font-display text-foreground">Mapa Vivo: CidaDELA Interior</h1>
           <p className="text-sm font-display text-gold/80 italic">Um retrato simbólico-estrutural do seu momento atual</p>
           <p className="text-muted-foreground max-w-2xl mx-auto text-xs">
-            Esta cartografia é uma ferramenta de auto-observação e suporte ao processo terapêutico.
+            Esta cartografia é uma ferramenta de auto-observação e suporte à sua jornada.
           </p>
         </div>
 
@@ -203,8 +203,8 @@ export function CartografiaEstruturalStepper() {
               {result.profileJson.derivacao.territorios.atencao_seguranca || 'Nível de segurança estabilizado para a travessia.'}
             </p>
             <div className="mt-4 p-4 rounded-lg bg-gold/5 border border-gold/10 text-xs text-muted-foreground italic">
-              Nota Ética: Esta cartografia é uma ferramenta de auto-observação e suporte ao processo terapêutico. 
-              Em caso de crise ou sofrimento intenso, procure sempre um profissional de saúde mental ou serviços de emergência.
+              Nota: Esta cartografia é uma ferramenta de auto-observação e suporte. 
+              Em caso de crise ou sofrimento intenso, procure sempre apoio profissional ou serviços de emergência.
             </div>
           </CardContent>
         </Card>
@@ -335,7 +335,7 @@ export function CartografiaEstruturalStepper() {
               </p>
             </div>
             <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
-              <InfoItem icon={ShieldCheck} text="Experiência segura e não diagnóstica" />
+              <InfoItem icon={ShieldCheck} text="Experiência segura e reflexiva" />
               <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios reflexivos" />
               <InfoItem icon={History} text="Você pode pausar e continuar depois" />
             </div>

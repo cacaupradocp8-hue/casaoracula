@@ -39,7 +39,7 @@ export default function CartografiaPsiquicaPage() {
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <Sparkles className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-                  <p>Receba sua Leitura Profunda gerada por inteligência operacional.</p>
+                  <p>Receba sua Leitura Estrutural gerada por inteligência operacional.</p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <Map className="w-5 h-5 text-gold shrink-0 mt-0.5" />

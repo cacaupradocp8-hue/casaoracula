@@ -77,7 +77,7 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
           <CardContent>
             <p className="text-sm font-medium text-foreground capitalize">{profile.tensao_central}</p>
             {profileJson && (
-              <p className="text-xs text-muted-foreground mt-1">{profileJson.leitura_clinica.tensao_central_texto}</p>
+              <p className="text-xs text-muted-foreground mt-1">{profileJson.leitura_conducao.tensao_central_texto}</p>
             )}
           </CardContent>
         </Card>
@@ -222,8 +222,8 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
           <CardContent className="p-4">
             <p className="text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-1.5">Observação ética</p>
             <p className="text-xs text-muted-foreground/70 leading-relaxed">
-              {profileJson?.leitura_clinica.observacao_etica || 
-                'Esta leitura é um mapeamento reflexivo de apoio à condução, não um diagnóstico. A interpretação final e a responsabilidade ética pertencem à facilitadora.'}
+              {profileJson?.leitura_conducao.observacao_etica || 
+                'Esta leitura é um mapeamento reflexivo de apoio à condução, não um diagnóstico.'}
             </p>
           </CardContent>
         </Card>
