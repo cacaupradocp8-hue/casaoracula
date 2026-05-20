@@ -11,12 +11,12 @@ const STATE_LABELS: Record<string, { label: string; color: string }> = {
 
 // Map district numbers to symbolic tools
 const DISTRICT_TOOLS: Record<number, string[]> = {
-  1: ['Cartografia Psíquica', 'Ritual de Entrada'],
+  1: ['CidaDELA Interior', 'Ritual de Entrada'],
   2: ['Atlas de Arquétipos', 'Big5 Simbólico'],
   3: ['Labirinto das Portas'],
   4: ['Atlas de Arquétipos', 'Diário Arquetípico'],
   5: ['Ritual de Integração', 'Oráculo das Estações'],
-  6: ['Narroterapia', 'Cartografia Psíquica'],
+  6: ['Narroterapia', 'CidaDELA Interior'],
   7: ['Relacionamentos como Espelho'],
   8: ['Fio de Ariadne', 'Conselho das Partes'],
   9: ['Conselho das Partes Internas'],

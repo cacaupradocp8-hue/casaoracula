@@ -33,7 +33,7 @@ const labelMap: Record<string, string> = {
   treinamento: 'Ir para Treinamento',
   clube: 'Ir para o Clube',
   sessao: 'Ir para Casa das Máquinas',
-  cartografia: 'Iniciar Cartografia',
+  cartografia: 'Revelar minha CidaDELA',
 };
 
 function useSintheyaNextStep() {
@@ -55,8 +55,8 @@ function calcularFallback(estado: any): SintheyaStep {
   if (!estado) {
     return {
       proxima_acao: 'cartografia',
-      sugestao: 'Inicie sua jornada pela Cartografia Psíquica para revelar sua CidaDELA.',
-      ferramenta: 'Cartografia Psíquica Orácula',
+      sugestao: 'Inicie sua jornada pela CidaDELA Interior para revelar seu mapa simbólico.',
+      ferramenta: 'CidaDELA Interior',
       urgencia: 'alta',
     };
   }
@@ -74,7 +74,7 @@ function calcularFallback(estado: any): SintheyaStep {
   if (totalTentativas < 3 && distrito_atual) {
     return {
       proxima_acao: 'treinamento',
-      sugestao: `Pratique sua leitura clínica no distrito "${distrito_atual}" na Sala de Treinamento.`,
+      sugestao: `Pratique sua leitura estrutural no distrito "${distrito_atual}" na Sala de Treinamento.`,
       ferramenta: null,
       urgencia: 'media',
     };
@@ -92,7 +92,7 @@ function calcularFallback(estado: any): SintheyaStep {
   if (taxa < 0.5 && totalTentativas >= 3) {
     return {
       proxima_acao: 'treinamento',
-      sugestao: 'Refine sua leitura clínica com mais casos práticos antes de avançar.',
+      sugestao: 'Refine sua leitura estrutural com mais casos práticos antes de avançar.',
       ferramenta: null,
       urgencia: 'media',
     };

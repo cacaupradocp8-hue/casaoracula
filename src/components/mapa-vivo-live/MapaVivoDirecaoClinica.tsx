@@ -17,7 +17,7 @@ export function MapaVivoDirecaoClinica({ state }: Props) {
       <CardHeader className="pb-2">
         <CardTitle className="text-sm flex items-center gap-2">
           <Compass className="w-4 h-4 text-muted-foreground" />
-          Direção Clínica
+          Leitura de Condução
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

@@ -34,7 +34,7 @@ interface Props {
 }
 
 const STATE_BADGES: Record<string, { label: string; cls: string }> = {
-  inativo: { label: 'Não explorado', cls: 'border-muted-foreground/20 text-muted-foreground/50' },
+  inativo: { label: 'Aguardando travessia', cls: 'border-muted-foreground/20 text-muted-foreground/50' },
   ativo: { label: 'Ativo', cls: 'border-primary/30 text-primary' },
   integrado: { label: 'Integrado', cls: 'border-[#556B57]/30 text-[#556B57]' },
 };
