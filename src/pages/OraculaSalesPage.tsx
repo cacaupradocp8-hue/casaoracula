@@ -820,7 +820,7 @@ export default function OraculaSalesPage() {
             <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-5">O que você está adquirindo</p>
             <div className="space-y-3">
               {[
-                'Acesso completo à Formação Oracular',
+                'Acesso completo à Formação Orácula',
                 'Estrutura prática de condução simbólica',
                 'Método aplicado (não teórico)',
                 'Acesso ao sistema Casa Orácula',
