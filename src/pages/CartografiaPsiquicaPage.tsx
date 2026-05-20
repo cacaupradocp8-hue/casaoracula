@@ -60,7 +60,7 @@ export default function CartografiaPsiquicaPage() {
                   variant="ghost" 
                   size="sm" 
                   className="w-full text-muted-foreground"
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/dashboard-membro')}
                 >
                   Voltar ao Dashboard
                 </Button>

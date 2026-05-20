@@ -292,7 +292,7 @@ export function CartografiaEstruturalStepper() {
         </Card>
 
         <div className="flex flex-col items-center gap-4 pt-8">
-          <Button onClick={() => window.location.href = '/dashboard'} variant="outline" className="px-8 border-gold/30 text-gold hover:bg-gold/5">
+          <Button onClick={() => window.location.href = '/dashboard-membro'} variant="outline" className="px-8 border-gold/30 text-gold hover:bg-gold/5">
             Voltar ao Painel
           </Button>
         </div>
