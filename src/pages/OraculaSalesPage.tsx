@@ -331,6 +331,22 @@ export default function OraculaSalesPage() {
       <Spacer h="lg" />
 
       {/* ═══════════════════════════════
+         VÍDEO — Apresentação
+      ═══════════════════════════════ */}
+
+      <section className="max-w-3xl mx-auto">
+        <Phrase className="font-display text-[clamp(1.4rem,6vw,2.4rem)] font-light text-center text-[hsl(var(--foreground))/0.9] px-6 mb-3">
+          Antes de entrar na Formação, <span className="text-[#C6A96B]">escute isto.</span>
+        </Phrase>
+        <Phrase delay={0.2} className="text-[hsl(var(--foreground))/0.7] text-sm md:text-base text-center px-6 mb-12">
+          A diferença entre sentir profundamente e saber conduzir com estrutura.
+        </Phrase>
+        <VideoPlayer onCtaClick={ctaClick} />
+      </section>
+
+      <Spacer h="xl" />
+
+      {/* ═══════════════════════════════
          1D. O QUE É A FORMAÇÃO
       ═══════════════════════════════ */}
 
