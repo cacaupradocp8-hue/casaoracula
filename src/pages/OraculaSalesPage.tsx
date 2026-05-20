@@ -212,7 +212,7 @@ export default function OraculaSalesPage() {
             transition={{ duration: 1, delay: 1.2 }}
             className="text-[hsl(var(--foreground))/0.9] text-base md:text-lg text-center max-w-md"
           >
-            A Formação Oracular nasce de uma arquitetura pensada para sustentar transformação real, prática e profissional.
+            A Formação Orácula nasce de uma arquitetura pensada para sustentar transformação real, prática e profissional.
           </motion.p>
 
           <motion.div
