@@ -84,7 +84,7 @@ export function PlanosHero() {
             </motion.div>
 
             <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[0.95] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-              Você já acessou uma parte da sua estrutura.
+              Rotas da Casa Orácula
             </h1>
 
             <motion.p
@@ -93,7 +93,7 @@ export function PlanosHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              Mas ainda não entrou no nível onde a transformação acontece.
+              Transforme leitura em método e cuidado em travessia.
             </motion.p>
           </motion.div>
         </div>
