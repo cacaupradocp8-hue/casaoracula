@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { useMemo } from 'react';
-import heroPlanos from '@/assets/planos/hero-planos.png';
+import heroPlanos from '@/assets/planos/hero-rotas.png';
 
 function HeroParticles() {
   const particles = useMemo(
@@ -83,8 +83,8 @@ export function PlanosHero() {
               <div className="w-8 sm:w-12 h-px bg-gradient-to-l from-transparent to-gold/50" />
             </motion.div>
 
-            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[0.95] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
-              Rotas da Casa Orácula
+            <h1 className="font-display text-[1.75rem] sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground tracking-wide mb-3 sm:mb-6 leading-[1.15] sm:leading-[1.0] max-w-[95%] sm:max-w-xl drop-shadow-[0_2px_12px_rgba(0,0,0,0.6)]">
+              Você já ouviu a sua Voz.
             </h1>
 
             <motion.p
@@ -93,7 +93,7 @@ export function PlanosHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.5 }}
             >
-              Transforme leitura em método e cuidado em travessia.
+              Agora precisa de um caminho para atravessá-la.
             </motion.p>
           </motion.div>
         </div>
