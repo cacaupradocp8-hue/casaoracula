@@ -21,7 +21,7 @@ const CASOS: Caso[] = [
     nivel: 'iniciante',
     contexto: 'Maria, 34 anos, relata que sente estar vivendo as mesmas situações repetidas vezes — nos relacionamentos, no trabalho e na relação consigo mesma. Diz que "sempre acaba no mesmo lugar". Está em sua terceira sessão.',
     opcoes: [
-      { ferramenta: 'Cartografia Psíquica', correta: false, justificativa: 'Indicada para mapeamento inicial. O ciclo repetitivo pede ferramentas de padrões, não de campo.' },
+      { ferramenta: 'CidaDELA Interior', correta: false, justificativa: 'Indicada para mapeamento inicial. O ciclo repetitivo pede ferramentas de padrões, não de campo.' },
       { ferramenta: 'Labirinto das 39 Portas', correta: true, justificativa: 'Ideal para ciclos repetitivos — permite identificar qual porta simbólica está travada e qual padrão se repete.' },
       { ferramenta: 'Ritual de Passagem', correta: false, justificativa: 'Prematuro neste momento. O ritual marca encerramento de ciclo, mas o padrão ainda não foi compreendido.' },
     ],
@@ -45,7 +45,7 @@ const CASOS: Caso[] = [
     nivel: 'avancado',
     contexto: 'Fernanda, 42 anos, terapeuta cognitivo-comportamental, procura atendimento simbólico. Fala com clareza e articulação, mas desconecta-se do corpo quando temas emocionais surgem. "Eu já entendi isso intelectualmente", repete.',
     opcoes: [
-      { ferramenta: 'Cartografia Psíquica', correta: false, justificativa: 'A Cartografia exige narrativa — o risco é alimentar a racionalização que já é o padrão de defesa.' },
+      { ferramenta: 'CidaDELA Interior', correta: false, justificativa: 'A CidaDELA exige narrativa — o risco é alimentar a racionalização que já é o padrão de defesa.' },
       { ferramenta: 'Decodificação Onírica', correta: true, justificativa: 'Os sonhos contornam o controle racional. Trabalhar com material onírico permite acessar o que o intelecto protege.' },
       { ferramenta: 'Diálogo de Partes', correta: false, justificativa: 'Pode funcionar, mas requer que a cliente acesse estados emocionais distintos — o que a racionalização impede.' },
     ],

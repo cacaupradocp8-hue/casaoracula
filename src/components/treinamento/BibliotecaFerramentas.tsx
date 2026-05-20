@@ -14,7 +14,7 @@ const HIDDEN_TOOLS = new Set([
 ]);
 
 const FERRAMENTAS = [
-  { nome: 'Cartografia Psíquica', categoria: 'Leitura de Campo', icon: Compass, desc: 'Mapeamento inicial da psique. Identifica Torres, Portas e campo dominante.', distrito: 'Portão da Chegada' },
+  { nome: 'CidaDELA Interior', categoria: 'Leitura de Campo', icon: Compass, desc: 'Mapeamento inicial da psique. Identifica Torres, Portas e campo dominante.', distrito: 'Portão da Chegada' },
   { nome: 'Torre Viva', categoria: 'Leitura de Campo', icon: Shield, desc: 'Explora as Torres de proteção psíquica e seus mecanismos de defesa.', distrito: 'Torres' },
   { nome: 'Labirinto das 39 Portas', categoria: 'Leitura de Campo', icon: DoorOpen, desc: 'Navegação pelas portas simbólicas que revelam padrões inconscientes.', distrito: 'Portas' },
   { nome: 'Atlas de Arquétipos', categoria: 'Narrativa', icon: Brain, desc: 'Identificação dos arquétipos ativos e em sombra na jornada da cliente.', distrito: 'Jardim dos Arquétipos' },

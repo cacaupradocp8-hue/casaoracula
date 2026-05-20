@@ -129,7 +129,7 @@ export const DISTRITOS_CIDADELA = [
 ];
 
 export const FERRAMENTAS_METODO = [
-  'Cartografia Psíquica', 'Torre Viva', 'Labirinto das 39 Portas',
+  'CidaDELA Interior', 'Torre Viva', 'Labirinto das 39 Portas',
   'Atlas de Arquétipos', 'Escrita Simbólica', 'Decodificação Onírica',
   'Espelho Relacional', 'Ritual Simbólico', 'Diálogo de Partes',
   'Portas Avançadas', 'Mapa de Transformação', 'Ritual de Passagem',
