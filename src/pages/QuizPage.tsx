@@ -593,23 +593,6 @@ export default function QuizPage() {
             showLoading={false}
           />
 
-          {/* Ver minha Voz button - Somente se fizer sentido, movido para baixo */}
-          {(() => {
-            const vozId = mapQuizResultToVozId(prevResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-8 border-t border-white/5">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 text-primary/50 hover:text-primary transition-colors"
-                >
-                  <AudioLines className="w-4 h-4" />
-                  Visualizar registro técnico da Voz
-                </Button>
-              </div>
-            ) : null;
-          })()}
 
           {/* Action buttons secundários */}
           <div className="flex gap-4 justify-center py-8">
