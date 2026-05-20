@@ -352,7 +352,7 @@ export default function OraculaSalesPage() {
 
       <section className="px-6 max-w-lg mx-auto">
         <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-6 font-semibold">
-          O que é a Formação Oracular
+          O que é a Formação Orácula
         </Phrase>
         <Phrase className="text-[hsl(var(--foreground))/0.88] text-base text-center mb-10">
           Um sistema que ensina você a:
@@ -360,9 +360,9 @@ export default function OraculaSalesPage() {
         <div className="space-y-3 max-w-sm mx-auto">
           {[
             'Identificar padrões invisíveis na fala da cliente',
-            'Reconhecer estruturas psíquicas (Torres, Portas e Campos)',
+            'Reconhecer padrões simbólicos e estruturas de experiência (Torres, Portas e Campos)',
             'Conduzir sessões com clareza',
-            'Criar intervenções que fazem sentido real',
+            'Criar práticas de condução que fazem sentido real',
           ].map((t, i) => (
             <Phrase key={t} delay={i * 0.08} className="text-[hsl(var(--foreground))/0.9] text-sm md:text-base flex items-center gap-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75] shrink-0" />
