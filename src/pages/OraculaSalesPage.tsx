@@ -451,7 +451,7 @@ export default function OraculaSalesPage() {
 
           <div className="space-y-4">
             {[
-              { title: 'Clube de Leitura Oracular', desc: 'Base simbólica e percepção. Sem pressão de aplicação.' },
+              { title: 'Rotas da Casa Orácula', desc: 'Base simbólica e percepção. Sem pressão de aplicação.' },
               { title: 'Formação Oracular', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
               { title: 'Casa das Máquinas', desc: 'Prática e aplicação contínua. Só existe quando há capacidade.' },
             ].map((item, i) => (
@@ -484,7 +484,7 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <GoldButton label="Entrar na Formação" onClick={ctaClick} variant="outline" />
+      <GoldButton label="Ver estrutura completa" onClick={() => document.getElementById('oferta')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
@@ -560,9 +560,9 @@ export default function OraculaSalesPage() {
           <div className="space-y-3 max-w-sm mx-auto">
             {[
               'Estrutura de condução de sessões',
-              'Perguntas clínicas aplicáveis',
+              'Perguntas aplicáveis em sessão',
               'Modelo de leitura simbólica',
-              'Organização clara do processo terapêutico',
+              'Organização clara do processo de condução',
               'Acesso ao app Casa Orácula',
             ].map((t, i) => (
               <motion.div
@@ -662,7 +662,7 @@ export default function OraculaSalesPage() {
         </div>
       </section>
 
-      <GoldButton label="Entrar na Formação" onClick={ctaClick} variant="solid" />
+      
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
@@ -800,8 +800,30 @@ export default function OraculaSalesPage() {
             <p className="text-[#C6A96B] text-sm md:text-base">Formação em Leitura Oracular da Psique</p>
           </div>
 
+          {/* ═══════════════════════════════
+             Tríade do Método
+          ═══════════════════════════════ */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div className="text-center p-6 border border-border/20 rounded-xl bg-card/10">
+              <p className="text-gold text-[10px] uppercase tracking-widest mb-2">Rotas</p>
+              <h4 className="text-foreground text-lg font-display mb-2">Atravessar</h4>
+              <p className="text-muted-foreground text-xs leading-relaxed">Organizar sua linguagem simbólica.</p>
+            </div>
+            <div className="text-center p-6 border border-gold/30 bg-gold/5 rounded-xl">
+              <p className="text-gold text-[10px] uppercase tracking-widest mb-2">Formação</p>
+              <h4 className="text-foreground text-lg font-display mb-2">Conduzir</h4>
+              <p className="text-muted-foreground text-xs leading-relaxed">Transformar cuidado em método simbólico.</p>
+            </div>
+            <div className="text-center p-6 border border-border/20 rounded-xl bg-card/10">
+              <p className="text-gold text-[10px] uppercase tracking-widest mb-2">Máquinas</p>
+              <h4 className="text-foreground text-lg font-display mb-2">Aplicar</h4>
+              <p className="text-muted-foreground text-xs leading-relaxed">Operação profissional para terapeutas.</p>
+            </div>
+          </div>
+
           {/* O que está adquirindo */}
           <motion.div
+            id="oferta"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -812,7 +834,7 @@ export default function OraculaSalesPage() {
             <div className="space-y-3">
               {[
                 'Acesso completo à Formação Oracular',
-                'Estrutura prática de condução terapêutica',
+                'Estrutura prática de condução simbólica',
                 'Método aplicado (não teórico)',
                 'Acesso ao sistema Casa Orácula',
                 'Desenvolvimento da sua leitura simbólica',
@@ -941,7 +963,6 @@ export default function OraculaSalesPage() {
             <Phrase delay={0.2} className="text-[#C6A96B] text-base font-medium mb-8">
               ou desenvolver uma forma completamente nova de conduzir.
             </Phrase>
-            <GoldButton label="Entrar na Formação Oracular" onClick={ctaClick} variant="glow" />
           </div>
 
           {/* Ambiente seguro */}
@@ -954,7 +975,7 @@ export default function OraculaSalesPage() {
       </section>
 
       {/* ═══════════════════════════════
-         12A. IMPORTANTE — Clube primeiro
+         12A. IMPORTANTE — Rotas primeiro
       ═══════════════════════════════ */}
 
       <section className="px-6 max-w-lg mx-auto text-center">
@@ -970,7 +991,7 @@ export default function OraculaSalesPage() {
             Se você ainda está no início,
           </p>
           <p className="text-[hsl(var(--foreground))/0.92] text-sm font-medium leading-relaxed mb-3">
-            comece pelo Clube de Leitura Oracular.
+            comece pelas Rotas da Casa Orácula.
           </p>
           <p className="text-[hsl(var(--foreground))/0.7] text-xs italic">
             A Formação exige um nível mínimo de maturidade.
@@ -1002,7 +1023,7 @@ export default function OraculaSalesPage() {
             a Formação Oracular está aberta.
           </Phrase>
           <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-12">
-            Se ainda não for o momento, permaneça no Clube.
+            Se ainda não for o momento, permaneça nas Rotas.
             <br />
             <span className="text-[hsl(var(--foreground))/0.96]">A maturidade não se acelera. Ela se constrói.</span>
           </Phrase>
