@@ -182,7 +182,7 @@ export default function CartografiaPage() {
 
   return (
     <CasaMaquinasLayout
-      title={isFromCabine ? 'Diagnóstico Inicial' : 'Cartografia Psíquica Orácula'}
+      title={isFromCabine ? 'Mapeamento Inicial' : 'CidaDELA Interior'}
       subtitle={isFromCabine ? undefined : 'Big Five simbólico — 30 perguntas, 5 territórios'}
     >
       <div className="max-w-2xl mx-auto space-y-6">

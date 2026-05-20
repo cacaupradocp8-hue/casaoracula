@@ -58,7 +58,7 @@ export function CabineMapaVivoPanel({
               Aguardando diagnóstico inicial
             </p>
             <p className="text-[10px] text-muted-foreground/30">
-              O mapa será gerado após a Cartografia Psíquica
+              O mapa será gerado após a CidaDELA Interior
             </p>
           </div>
         </CardContent>

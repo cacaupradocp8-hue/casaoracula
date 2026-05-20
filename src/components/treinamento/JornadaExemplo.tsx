@@ -6,7 +6,7 @@ const ETAPAS = [
   {
     sessao: 1,
     distrito: 'Portão da Chegada',
-    ferramenta: 'Cartografia Psíquica',
+    ferramenta: 'CidaDELA Interior',
     descricao: 'Primeiro mapeamento da psique. A terapeuta aplica a Cartografia para identificar as Torres, Portas e o campo dominante da cliente.',
     insight: 'Torre predominante: Controle. Porta mais ativa: Porta do Abandono.',
   },

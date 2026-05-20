@@ -181,7 +181,7 @@ export function CabineActiveView({
             Diagnóstico necessário
           </h3>
           <p className="text-sm text-muted-foreground/50 max-w-sm mb-4">
-            Para ativar a leitura do campo, esta cliente precisa da Cartografia Psíquica Orácula
+            Para ativar a leitura do campo, esta cliente precisa da CidaDELA Interior
           </p>
           <Button
             variant="outline"
@@ -322,7 +322,7 @@ export function CabineActiveView({
                     </p>
                   </div>
                   <p className="text-[10px] text-muted-foreground/50 leading-relaxed">
-                    Sessão clínica requer Cartografia Psíquica.
+                    Sessão requer CidaDELA Interior.
                   </p>
                   <Button
                     onClick={() => navigate(`/ferramenta/cartografia-psiquica-oracula?clienteId=${cliente.id}&fromCabine=true`)}

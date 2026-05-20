@@ -101,7 +101,7 @@ export function CabineClientePanel({ clientes, selectedId, onSelect }: Props) {
                 </p>
               </div>
               <p className="text-[10px] text-muted-foreground/50 leading-relaxed">
-                Sessão clínica requer Cartografia Psíquica.
+                Sessão requer CidaDELA Interior.
               </p>
               <Button
                 variant="outline"

@@ -54,7 +54,7 @@ export function MiniMapaCidadela(props: Props) {
             Sua CidaDELA aguarda revelação
           </p>
           <p className="text-xs text-muted-foreground/50 mb-4 max-w-xs mx-auto">
-            Um mapa simbólico da sua psique será gerado pela Cartografia Psíquica.
+            Um mapa simbólico da sua psique será gerado pela CidaDELA Interior.
           </p>
           <Button
             variant="gold"

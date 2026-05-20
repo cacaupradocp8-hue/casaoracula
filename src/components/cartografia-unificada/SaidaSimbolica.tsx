@@ -35,7 +35,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
         <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
           <Sparkles className="w-7 h-7 text-primary/60" />
         </div>
-        <h2 className="font-display text-2xl font-bold text-foreground">Mapa Vivo: CidaDELA Interior</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">CidaDELA Interior</h2>
         <p className="text-xs text-muted-foreground italic">Um mapa do seu campo interior neste momento</p>
       </motion.div>
 
@@ -120,7 +120,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: P
                     strokeLinecap="round" />
                 </svg>
                 <span className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-foreground">
-                  {cidadela.indice_equilibrio > 0 ? cidadela.indice_equilibrio : ''}
+                  {cidadela.indice_equilibrio > 0 ? `${cidadela.indice_equilibrio}%` : '—'}
                 </span>
               </div>
               {cidadela.indice_equilibrio > 0 && <span className="text-[9px] text-muted-foreground uppercase tracking-widest">revelação</span>}

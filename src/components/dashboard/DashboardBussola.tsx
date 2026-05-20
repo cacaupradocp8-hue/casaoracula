@@ -81,7 +81,7 @@ export function DashboardBussola() {
           <div className="flex-1 space-y-2">
             <p className="text-sm font-medium text-foreground">Descubra sua CidaDELA Interior</p>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Faça a Cartografia Psíquica Orácula para gerar seu mapa simbólico e transformá-lo em bússola da sua jornada.
+              Faça a CidaDELA Interior para gerar seu mapa simbólico e transformá-lo em bússola da sua jornada.
             </p>
             <Button
               size="sm"
@@ -89,7 +89,7 @@ export function DashboardBussola() {
               className="gap-1.5 mt-1"
               onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
             >
-              Começar cartografia <ArrowRight className="w-3.5 h-3.5" />
+              Revelar minha CidaDELA <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
         </div>

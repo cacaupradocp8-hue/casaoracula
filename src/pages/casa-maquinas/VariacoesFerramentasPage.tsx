@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 
 const FERRAMENTAS = [
-  'Cartografia Psíquica Orácula',
+  'CidaDELA Interior',
   'Cartografia das Torres',
   'Labirinto das 39 Portas',
   'Atlas de Arquétipos',
@@ -41,7 +41,7 @@ interface Variacao {
 // --- Knowledge base for generating variations ---
 
 const FERRAMENTA_FOCO: Record<Ferramenta, { verbo: string; campo: string }> = {
-  'Cartografia Psíquica Orácula': { verbo: 'mapear', campo: 'a topografia psíquica e os territórios internos' },
+  'CidaDELA Interior': { verbo: 'mapear', campo: 'a topografia psíquica e os territórios internos' },
   'Cartografia das Torres': { verbo: 'identificar', campo: 'as estruturas de proteção e defesa da psique' },
   'Labirinto das 39 Portas': { verbo: 'navegar', campo: 'os padrões emocionais e bloqueios inconscientes' },
   'Atlas de Arquétipos': { verbo: 'reconhecer', campo: 'os arquétipos ativos e em sombra na jornada' },

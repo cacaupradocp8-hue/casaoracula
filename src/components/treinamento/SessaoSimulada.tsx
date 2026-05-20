@@ -14,7 +14,7 @@ const STEPS = [
 ];
 
 const FERRAMENTAS_SIMULADAS = [
-  'Cartografia Psíquica',
+  'CidaDELA Interior',
   'Torre Viva',
   'Labirinto das 39 Portas',
   'Atlas de Arquétipos',

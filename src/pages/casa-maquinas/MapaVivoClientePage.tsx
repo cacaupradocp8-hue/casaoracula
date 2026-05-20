@@ -138,7 +138,7 @@ export default function MapaVivoClientePage() {
               {/* BLOCO 4 — Ritmo da Travessia */}
               <MapaVivoRitmo ritmo={derivedState.ritmo_atual} />
 
-              {/* BLOCO 5 — Direção Clínica */}
+              {/* BLOCO 5 — Leitura de Condução */}
               <MapaVivoDirecaoClinica state={derivedState} />
             </div>
           </div>

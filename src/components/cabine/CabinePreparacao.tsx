@@ -187,7 +187,7 @@ export function CabinePreparacao({ cliente, profile, profileLoading, leituraCamp
               </p>
               <p className="text-xs text-muted-foreground/60">
                 Esta cliente ainda não possui leitura inicial estruturada.
-                A sessão clínica só pode começar após a Cartografia Psíquica inicial.
+                A sessão só pode começar após a CidaDELA Interior inicial.
               </p>
               <Button
                 variant="outline"
