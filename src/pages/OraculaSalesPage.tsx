@@ -543,7 +543,7 @@ export default function OraculaSalesPage() {
           >
             <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-3">Ética — Base transversal</p>
             <p className="text-[hsl(var(--foreground))/0.88] text-sm leading-relaxed">
-              Discernimento de limites · Quando não conduzir · Quando encaminhar · Como não invadir processos
+              Discernimento de limites · Quando não conduzir · Quando encaminhar · Como não invadir processos simbólicos e estruturas de experiência
             </p>
           </motion.div>
         </div>
