@@ -126,7 +126,7 @@ export function JourneyReportPreview({ data, clienteId, onClose }: Props) {
         {/* 2. Cartografia */}
         {data.cartografia && (
           <section>
-            <SectionTitle icon={<Compass className="w-3.5 h-3.5" />} title="Cartografia Psíquica" />
+            <SectionTitle icon={<Compass className="w-3.5 h-3.5" />} title="CidaDELA Interior" />
             <div className="grid grid-cols-5 gap-2 mt-3">
               {Object.entries(data.cartografia.scores).map(([key, score]) => (
                 <div key={key} className="text-center">
