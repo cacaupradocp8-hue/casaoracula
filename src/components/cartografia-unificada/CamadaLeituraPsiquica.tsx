@@ -33,55 +33,65 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
         </div>
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 1</p>
         <h2 className="font-display text-2xl font-bold text-foreground">Leitura Psíquica</h2>
-        <p className="text-lg italic text-primary/80 font-display break-words px-4">"{data.titulo}"</p>
+        {data.titulo && data.titulo !== '""' && (
+          <p className="text-lg italic text-primary/80 font-display break-words px-4">"{data.titulo}"</p>
+        )}
       </motion.div>
 
       {/* Frase Espelho */}
-      <motion.div {...anim(0.15)}>
-        <Card className="border-primary/20 bg-primary/5 mx-4">
-          <CardContent className="p-6 text-center">
-            <p className="text-base italic text-foreground/90 leading-relaxed break-words">
-              "{data.frase_espelho}"
-            </p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.frase_espelho && data.frase_espelho !== '""' && (
+        <motion.div {...anim(0.15)}>
+          <Card className="border-primary/20 bg-primary/5 mx-4">
+            <CardContent className="p-6 text-center">
+              <p className="text-base italic text-foreground/90 leading-relaxed break-words">
+                "{data.frase_espelho}"
+              </p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Traços Dominantes */}
-      <motion.div {...anim(0.25)}>
-        <Card className="border-border/10 bg-card/40 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground/70">Traços Dominantes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.tracos_dominantes}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.tracos_dominantes && data.tracos_dominantes !== '""' && (
+        <motion.div {...anim(0.25)}>
+          <Card className="border-border/10 bg-card/40 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground/70">Traços Dominantes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.tracos_dominantes}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Padrões Emocionais */}
-      <motion.div {...anim(0.35)}>
-        <Card className="border-border/10 bg-card/40 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground/70">Padrões Emocionais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.padroes_emocionais}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.padroes_emocionais && data.padroes_emocionais !== '""' && (
+        <motion.div {...anim(0.35)}>
+          <Card className="border-border/10 bg-card/40 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground/70">Padrões Emocionais</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.padroes_emocionais}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Estrutura de Funcionamento */}
-      <motion.div {...anim(0.45)}>
-        <Card className="border-border/10 bg-card/40 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground/70">Estrutura de Funcionamento</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.estrutura_funcionamento}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.estrutura_funcionamento && data.estrutura_funcionamento !== '""' && (
+        <motion.div {...anim(0.45)}>
+          <Card className="border-border/10 bg-card/40 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground/70">Estrutura de Funcionamento</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.estrutura_funcionamento}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Conflitos Ativos (modo cliente) */}
       {data.conflitos_ativos && (
