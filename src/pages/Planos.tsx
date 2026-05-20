@@ -8,6 +8,7 @@ import { PlanosHero } from '@/components/planos/PlanosHero';
 import { PlanosProblema } from '@/components/planos/PlanosProblema';
 import { PlanosExplicacao } from '@/components/planos/PlanosExplicacao';
 import { PlanosClubeCards } from '@/components/planos/PlanosClubeCards';
+import { PlanosRotasDetalhes } from '@/components/planos/PlanosRotasDetalhes';
 import { PlanosFormacao } from '@/components/planos/PlanosFormacao';
 import { PlanosFooter } from '@/components/planos/PlanosFooter';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
@@ -58,7 +59,10 @@ export default function Planos() {
         {/* 3. Explicação psicológica */}
         <PlanosExplicacao />
 
-        {/* 4-7. Clube — Planos + CTA principal */}
+        {/* Detalhes das Rotas — estação, recebe, para quem, o que muda */}
+        <PlanosRotasDetalhes />
+
+        {/* Planos + CTA principal */}
         <section className="py-20 md:py-28">
           <ResponsiveContainer className="px-6">
             {isLoading ? (
