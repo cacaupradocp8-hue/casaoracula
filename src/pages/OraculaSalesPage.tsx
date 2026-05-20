@@ -145,7 +145,7 @@ function VideoPlayer({ onCtaClick }: { onCtaClick: () => void }) {
         </div>
       </div>
       <div className="mt-6">
-        <GoldButton label="Entrar na Formação" onClick={onCtaClick} variant="outline" />
+        <GoldButton label="Ver estrutura da Formação" onClick={() => document.getElementById('estrutura-formacao')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
       </div>
     </div>
   );
@@ -212,7 +212,7 @@ export default function OraculaSalesPage() {
             transition={{ duration: 1, delay: 1.2 }}
             className="text-[hsl(var(--foreground))/0.9] text-base md:text-lg text-center max-w-md"
           >
-            A Formação Oracular nasce de uma arquitetura pensada para sustentar transformação real, prática e profissional.
+            A Formação Orácula nasce de uma arquitetura pensada para sustentar transformação real, prática e profissional.
           </motion.p>
 
           <motion.div
@@ -352,7 +352,7 @@ export default function OraculaSalesPage() {
 
       <section className="px-6 max-w-lg mx-auto">
         <Phrase className="text-[hsl(var(--primary))] text-sm uppercase tracking-[0.35em] text-center mb-6 font-semibold">
-          O que é a Formação Oracular
+          O que é a Formação Orácula
         </Phrase>
         <Phrase className="text-[hsl(var(--foreground))/0.88] text-base text-center mb-10">
           Um sistema que ensina você a:
@@ -360,9 +360,9 @@ export default function OraculaSalesPage() {
         <div className="space-y-3 max-w-sm mx-auto">
           {[
             'Identificar padrões invisíveis na fala da cliente',
-            'Reconhecer estruturas psíquicas (Torres, Portas e Campos)',
+            'Reconhecer padrões simbólicos e estruturas de experiência (Torres, Portas e Campos)',
             'Conduzir sessões com clareza',
-            'Criar intervenções que fazem sentido real',
+            'Criar práticas de condução que fazem sentido real',
           ].map((t, i) => (
             <Phrase key={t} delay={i * 0.08} className="text-[hsl(var(--foreground))/0.9] text-sm md:text-base flex items-center gap-3">
               <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75] shrink-0" />
@@ -456,7 +456,7 @@ export default function OraculaSalesPage() {
           <div className="space-y-4">
             {[
               { title: 'Rotas da Casa Orácula', desc: 'Base simbólica e percepção. Sem pressão de aplicação.' },
-              { title: 'Formação Oracular', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
+              { title: 'Formação Orácula', desc: 'Profissionalização e condução. A escuta se torna estruturada.' },
               { title: 'Casa das Máquinas', desc: 'Prática e aplicação contínua. Só existe quando há capacidade.' },
             ].map((item, i) => (
               <motion.div
@@ -488,14 +488,14 @@ export default function OraculaSalesPage() {
         </Phrase>
       </section>
 
-      <GoldButton label="Ver estrutura completa" onClick={() => document.getElementById('oferta')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
+      <GoldButton label="Ver estrutura completa" onClick={() => document.getElementById('estrutura-formacao')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
       <Spacer h="xl" />
 
       {/* ═══════════════════════════════
          6. ESTRUTURA DA FORMAÇÃO
       ═══════════════════════════════ */}
 
-      <div className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
+      <div id="estrutura-formacao" className="relative overflow-hidden mx-4 md:mx-auto max-w-3xl rounded-xl">
         <img src={img03} alt="Estrutura" loading="lazy" className="w-full h-auto object-contain" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#0B0B0F]/40 via-transparent to-[#0B0B0F]/90" />
       </div>
@@ -543,13 +543,13 @@ export default function OraculaSalesPage() {
           >
             <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-3">Ética — Base transversal</p>
             <p className="text-[hsl(var(--foreground))/0.88] text-sm leading-relaxed">
-              Discernimento de limites · Quando não conduzir · Quando encaminhar · Como não invadir processos
+              Discernimento de limites · Quando não conduzir · Quando encaminhar · Como não invadir processos simbólicos e estruturas de experiência
             </p>
           </motion.div>
         </div>
       </section>
 
-      <GoldButton label="Conhecer a Formação" onClick={ctaClick} variant="solid" />
+      <GoldButton label="Ver investimento" onClick={() => document.getElementById('oferta')?.scrollIntoView({ behavior: 'smooth' })} variant="solid" />
       <Spacer h="lg" />
 
       {/* ═══════════════════════════════
@@ -762,24 +762,7 @@ export default function OraculaSalesPage() {
 
       <Spacer h="lg" />
 
-      {/* ═══════════════════════════════
-         10C. DEPOIMENTOS (placeholder)
-      ═══════════════════════════════ */}
-
-      <section className="py-16 px-6">
-        <div className="max-w-lg mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
-            className="border border-[hsl(var(--border))/0.4] border-dashed rounded-xl p-8 text-center bg-[hsl(var(--card))/0.08]"
-          >
-            <p className="text-[hsl(var(--foreground))/0.5] text-xs uppercase tracking-[0.32em] font-semibold mb-2">Depoimentos</p>
-            <p className="text-[hsl(var(--foreground))/0.4] text-sm italic">Espaço reservado para provas sociais</p>
-          </motion.div>
-        </div>
-      </section>
+      {/* Seção de depoimentos removida conforme auditoria */}
 
       <Spacer h="xl" />
 
@@ -837,7 +820,7 @@ export default function OraculaSalesPage() {
             <p className="text-[hsl(var(--primary))] text-xs uppercase tracking-[0.32em] font-semibold mb-5">O que você está adquirindo</p>
             <div className="space-y-3">
               {[
-                'Acesso completo à Formação Oracular',
+                'Acesso completo à Formação Orácula',
                 'Estrutura prática de condução simbólica',
                 'Método aplicado (não teórico)',
                 'Acesso ao sistema Casa Orácula',
@@ -883,7 +866,7 @@ export default function OraculaSalesPage() {
               </motion.div>
             </div>
 
-            <GoldButton label="Entrar na Formação Oracular" onClick={ctaClick} variant="glow" />
+            <GoldButton label="Entrar na Formação Orácula" onClick={ctaClick} variant="glow" />
           </div>
 
           {/* Garantia */}
@@ -1024,7 +1007,7 @@ export default function OraculaSalesPage() {
             e entrar na prática real,
           </Phrase>
           <Phrase className="font-display text-xl font-light text-[#C6A96B] mb-[8vh]">
-            a Formação Oracular está aberta.
+            a Formação Orácula está aberta.
           </Phrase>
           <Phrase className="font-display text-base font-light text-[hsl(var(--foreground))/0.82] mb-12">
             Se ainda não for o momento, permaneça nas Rotas.
@@ -1040,11 +1023,10 @@ export default function OraculaSalesPage() {
       <footer className="py-10 px-6 border-t border-[hsl(var(--border))/0.4]">
         <div className="max-w-xl mx-auto text-center space-y-4">
           <p className="font-display text-base md:text-lg leading-relaxed text-[hsl(var(--foreground))/0.94]">
-            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade psíquica.
+            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade simbólica e ética.
           </p>
           <p className="text-[hsl(var(--foreground))/0.72] text-[11px] leading-relaxed">
-            Casa Orácula © {new Date().getFullYear()} · A Casa Orácula não substitui terapia,
-            acompanhamento psicológico ou tratamento clínico quando necessário.
+            Casa Orácula © {new Date().getFullYear()} · A Casa Orácula oferece conteúdo simbólico e formativo. Não substitui terapia, acompanhamento psicológico, supervisão profissional ou atendimento de saúde mental quando necessário.
           </p>
         </div>
       </footer>
