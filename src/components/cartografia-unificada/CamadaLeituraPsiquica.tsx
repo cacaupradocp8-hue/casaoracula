@@ -25,6 +25,9 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias }: Props) {
+  const hasContent = data.titulo || data.frase_espelho || data.tracos_dominantes || data.padroes_emocionais || data.estrutura_funcionamento;
+  if (!hasContent && !medias) return null;
+
   return (
     <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
       <motion.div {...anim(0)} className="text-center space-y-3">
@@ -32,7 +35,7 @@ export function CamadaLeituraPsiquica({ data, predominante, fragilizado, medias 
           <Sparkles className="w-7 h-7 text-primary" />
         </div>
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 1</p>
-        <h2 className="font-display text-2xl font-bold text-foreground">Leitura Psíquica</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Leitura Estrutural</h2>
         {data.titulo && data.titulo !== '""' && (
           <p className="text-lg italic text-primary/80 font-display break-words px-4">"{data.titulo}"</p>
         )}

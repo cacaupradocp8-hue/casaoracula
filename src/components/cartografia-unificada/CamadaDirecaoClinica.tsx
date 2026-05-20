@@ -33,6 +33,8 @@ const anim = (delay: number) => ({
 
 export function CamadaDirecaoClinica({ data, modo = 'terapeuta' }: Props) {
   const isClient = modo === 'cliente';
+  const hasContent = data.estilo_terapeutico || data.abordagem || data.orientacao || data.pergunta_clinica;
+  if (!hasContent) return null;
 
   return (
     <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
@@ -42,11 +44,11 @@ export function CamadaDirecaoClinica({ data, modo = 'terapeuta' }: Props) {
         </div>
         <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 3</p>
         <h2 className="font-display text-2xl font-bold text-foreground">
-          {isClient ? 'Direção Clínica' : 'Direção Clínica'}
+          Leitura de Condução
         </h2>
         <p className="text-xs text-muted-foreground/60 max-w-sm mx-auto">
           {isClient
-            ? 'Orientações para a condução terapêutica desta cliente.'
+            ? 'Orientações para a sustentação e continuidade da sua travessia.'
             : 'Esta leitura é para você, facilitadora — como guia da sua própria prática.'}
         </p>
       </motion.div>
@@ -220,8 +222,8 @@ export function CamadaDirecaoClinica({ data, modo = 'terapeuta' }: Props) {
       {/* Ethical notice */}
       <motion.div {...anim(0.6)}>
         <p className="text-[10px] text-center text-muted-foreground/30 leading-relaxed max-w-sm mx-auto px-4">
-          Esta leitura é simbólica e exploratória. Não constitui avaliação clínica formal.
-          A interpretação final pertence a você.
+          Esta leitura é simbólica e exploratória. 
+          A interpretação final e a condução da travessia pertencem a você.
         </p>
       </motion.div>
     </div>

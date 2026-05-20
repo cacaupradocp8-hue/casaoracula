@@ -50,6 +50,8 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida }: Props) {
+  const hasContent = data.distrito_dominante || data.leitura_integrada || data.tensao_simbolica || data.territorio_crescimento_descricao || data.direcao_travessia;
+  if (!hasContent) return null;
   // Build district states for the SVG map
   const svgDistrictStates = useMemo(() => {
     const states: Record<string, DistrictDisplayState> = {};

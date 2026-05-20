@@ -35,7 +35,7 @@ export default function CartografiaPsiquicaPage() {
               <div className="space-y-3">
                 <div className="flex items-start gap-3 text-sm">
                   <ShieldCheck className="w-5 h-5 text-gold shrink-0 mt-0.5" />
-                  <p>Acesse sua cartografia psíquica completa e integrada.</p>
+                  <p>Acesse sua CidaDELA Interior completa e integrada.</p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <Sparkles className="w-5 h-5 text-gold shrink-0 mt-0.5" />
