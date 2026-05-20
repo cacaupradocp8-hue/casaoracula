@@ -175,14 +175,16 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       </div>
 
       {/* Direção da Travessia */}
-      <motion.div {...anim(0.6)}>
-        <Card className="border-primary/10 mx-4">
-          <CardContent className="p-5 text-center">
-            <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
-            <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.direcao_travessia && data.direcao_travessia !== '""' && (
+        <motion.div {...anim(0.6)}>
+          <Card className="border-primary/10 mx-4">
+            <CardContent className="p-5 text-center">
+              <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
+              <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
     </div>
   );
 }
