@@ -866,7 +866,7 @@ export default function OraculaSalesPage() {
               </motion.div>
             </div>
 
-            <GoldButton label="Entrar na Formação Oracular" onClick={ctaClick} variant="glow" />
+            <GoldButton label="Entrar na Formação Orácula" onClick={ctaClick} variant="glow" />
           </div>
 
           {/* Garantia */}
