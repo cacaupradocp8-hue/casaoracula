@@ -80,14 +80,15 @@ export function CartografiaEstruturalStepper() {
         className="w-full max-w-4xl mx-auto space-y-12 pb-20"
       >
         <div className="text-center space-y-4">
-          <Badge variant="outline" className="text-gold border-gold/30 px-3 py-1">Leitura Concluída</Badge>
+          <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-gold border-gold/30 mx-auto">Leitura Concluída</div>
           <h1 className="text-4xl font-display text-foreground">Mapa Vivo: CidaDELA Interior</h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Este é o seu Mapa Vivo estrutural. Ele não é um diagnóstico, mas um espelhamento simbólico do seu momento atual para fins de auto-observação.
+          <p className="text-sm font-display text-gold/80 italic">Um retrato simbólico-estrutural do seu momento atual</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto text-xs">
+            Esta leitura não é diagnóstico. É um mapa de auto-observação e continuidade.
           </p>
         </div>
 
-        <SaidaSimbolica saida={result.leitura.saida_cliente} cidadela={result.cidadela} />
+        <SaidaSimbolica saida={result.leitura.saida_cliente} cidadela={result.cidadela} profileJson={result.profileJson} />
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <CamadaLeituraPsiquica data={result.leitura.profile} medias={result.leitura.medias_calculadas} />
@@ -103,6 +104,39 @@ export function CartografiaEstruturalStepper() {
           />
         </div>
 
+        {/* Bloco 3 — Territórios da CidaDELA */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <TerritorioCard 
+            title="Sintoma" 
+            content={result.profileJson.derivacao.territorios.sintoma} 
+            icon={ShieldAlert}
+          />
+          <TerritorioCard 
+            title="História" 
+            content={result.profileJson.derivacao.territorios.historia_vida} 
+            icon={History}
+          />
+          <TerritorioCard 
+            title="Traços" 
+            content={result.profileJson.derivacao.territorios.tracos} 
+            icon={User}
+          />
+          <TerritorioCard 
+            title="Crenças" 
+            content={result.profileJson.derivacao.territorios.crencas} 
+            icon={Brain}
+          />
+          <TerritorioCard 
+            title="Recursos" 
+            content={result.profileJson.derivacao.territorios.recursos} 
+            icon={Heart}
+          />
+          <TerritorioCard 
+            title="Atenção e Segurança" 
+            content={result.profileJson.derivacao.territorios.atencao_seguranca} 
+            icon={ShieldCheck}
+          />
+        </div>
 
         <Card className="glass border-gold/20">
           <CardHeader>
