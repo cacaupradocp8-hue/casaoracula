@@ -55,7 +55,7 @@ export function PlanosFormacao() {
             onClick={() => navigate('/formacao-metodo')}
             className="border-gold/15 text-foreground hover:bg-gold/5 hover:border-gold/25 px-8"
           >
-            Conhecer a formação completa
+            Conhecer a Formação
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </motion.div>
