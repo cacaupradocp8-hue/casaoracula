@@ -196,14 +196,20 @@ export function CartografiaEstruturalStepper() {
                   Rotas Recomendadas
                 </h4>
                 <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.rotas.filter((r: string) => r && r !== '""').map((rota: string) => (
-                    <li key={rota} className="text-xs text-muted-foreground flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-gold/40" />
-                      {rota}
-                    </li>
-                  ))}
-                  {(!result.profileJson.recomendacoes?.rotas || result.profileJson.recomendacoes?.rotas.length === 0) && (
+                  {result.profileJson.recomendacoes?.rotas && result.profileJson.recomendacoes.rotas.length > 0 ? (
+                    result.profileJson.recomendacoes.rotas
+                      .filter((r: string) => r && r !== '""' && r.length > 2)
+                      .map((rota: string) => (
+                        <li key={rota} className="text-xs text-muted-foreground flex items-center gap-2">
+                          <div className="w-1 h-1 rounded-full bg-gold/40" />
+                          {rota}
+                        </li>
+                      ))
+                  ) : (
                     <li className="text-xs text-muted-foreground italic">Identificando rotas ideais...</li>
+                  )}
+                  {result.profileJson.recomendacoes?.rotas?.filter((r: string) => r && r !== '""' && r.length > 2).length === 0 && (
+                     <li className="text-xs text-muted-foreground italic">Identificando rotas ideais...</li>
                   )}
                 </ul>
               </div>
@@ -213,13 +219,19 @@ export function CartografiaEstruturalStepper() {
                   Práticas Iniciais
                 </h4>
                 <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.praticas.filter((p: string) => p && p !== '""').map((pratica: string) => (
-                    <li key={pratica} className="text-xs text-muted-foreground flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-gold/40" />
-                      {pratica}
-                    </li>
-                  ))}
-                  {(!result.profileJson.recomendacoes?.praticas || result.profileJson.recomendacoes?.praticas.length === 0) && (
+                  {result.profileJson.recomendacoes?.praticas && result.profileJson.recomendacoes.praticas.length > 0 ? (
+                    result.profileJson.recomendacoes.praticas
+                      .filter((p: string) => p && p !== '""' && p.length > 2)
+                      .map((pratica: string) => (
+                        <li key={pratica} className="text-xs text-muted-foreground flex items-center gap-2">
+                          <div className="w-1 h-1 rounded-full bg-gold/40" />
+                          {pratica}
+                        </li>
+                      ))
+                  ) : (
+                    <li className="text-xs text-muted-foreground italic">Mapeando práticas de sustentação...</li>
+                  )}
+                  {result.profileJson.recomendacoes?.praticas?.filter((p: string) => p && p !== '""' && p.length > 2).length === 0 && (
                     <li className="text-xs text-muted-foreground italic">Mapeando práticas de sustentação...</li>
                   )}
                 </ul>
