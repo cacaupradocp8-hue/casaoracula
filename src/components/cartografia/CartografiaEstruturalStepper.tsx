@@ -104,7 +104,7 @@ export function CartografiaEstruturalStepper() {
         className="w-full max-w-4xl mx-auto space-y-12 pb-20"
       >
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-gold border-gold/30 mx-auto">Cartografia Concluída</div>
+          <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-gold border-gold/30 mx-auto">Mapa Vivo revelado</div>
           <h1 className="text-4xl font-display text-foreground">Mapa Vivo: CidaDELA Interior</h1>
           <p className="text-sm font-display text-gold/80 italic">Um retrato simbólico-estrutural do seu momento atual</p>
           <p className="text-muted-foreground max-w-2xl mx-auto text-xs">
