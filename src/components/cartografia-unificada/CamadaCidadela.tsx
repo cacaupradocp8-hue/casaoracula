@@ -113,30 +113,34 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       </motion.div>
 
       {/* Distrito Dominante */}
-      <motion.div {...anim(0.3)}>
-        <Card className="border-primary/20 bg-primary/5 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-primary/80">
-              {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.distrito_dominante_descricao}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.distrito_dominante && data.distrito_dominante !== '""' && (
+        <motion.div {...anim(0.3)}>
+          <Card className="border-primary/20 bg-primary/5 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-primary/80">
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed break-words">{data.distrito_dominante_descricao}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Leitura Integrada */}
-      <motion.div {...anim(0.4)}>
-        <Card className="border-border/10 bg-card/40 mx-4">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {data.leitura_integrada && data.leitura_integrada !== '""' && (
+        <motion.div {...anim(0.4)}>
+          <Card className="border-border/10 bg-card/40 mx-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Grid: Tensão + Crescimento */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 px-4">
