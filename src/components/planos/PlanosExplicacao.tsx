@@ -20,7 +20,7 @@ export function PlanosExplicacao() {
           </p>
           <p className="text-muted-foreground leading-relaxed">
             A <span className="text-gold font-medium">CidaDELA Interior</span> é o mapa que
-            organiza esse sistema. E o Clube é a chave que abre esse mapa para você — com
+            organiza esse sistema. E as <span className="text-gold font-medium">Rotas da Casa Orácula</span> são a chave que abre esse mapa para você — com
             leituras guiadas, conteúdos recorrentes e uma jornada de aprofundamento contínuo.
           </p>
         </motion.div>
