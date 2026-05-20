@@ -129,42 +129,13 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
             </p>
           </div>
 
-          {/* ══ BLOCO DISCRETO: ROTAS DA CASA ══ */}
-          <div className="pt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 opacity-80 hover:opacity-100 transition-opacity">
-            <button 
-              onClick={() => navigate('/planos')}
-              className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-left hover:bg-white/[0.05] transition-all group"
-            >
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <BookOpen className="w-5 h-5 text-primary/60" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-foreground/80">Rotas da Casa Orácula</h5>
-                <p className="text-[10px] text-muted-foreground">O ecossistema completo de assinatura.</p>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => navigate('/planos')}
-              className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02] text-left hover:bg-white/[0.05] transition-all group"
-            >
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                <Map className="w-5 h-5 text-primary/60" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h5 className="text-sm font-semibold text-foreground/80">CidaDELA Interior</h5>
-                <p className="text-[10px] text-muted-foreground">Sua cartografia psíquica (Assinantes).</p>
-              </div>
-            </button>
-          </div>
-        </div>
       </motion.section>
 
       {/* ══ RODAPÉ SIMBÓLICO ══ */}
       <motion.section {...fade(0.6)} className="text-center opacity-40 py-8">
         <div className="w-12 h-px bg-gold/30 mx-auto mb-6" />
         <p className="font-display text-sm tracking-[0.2em]">
-          CASA ORÁCULA — CLÍNICA DOS CONTOS
+          A Voz chama. A Travessia começa.
         </p>
       </motion.section>
     </div>
