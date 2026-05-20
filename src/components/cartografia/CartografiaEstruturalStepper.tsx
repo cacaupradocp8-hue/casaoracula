@@ -23,6 +23,28 @@ const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
   { id: 'seguranca', title: 'Segurança', icon: ShieldCheck },
 ];
 
+function TerritorioCard({ title, content, icon: Icon }: { title: string, content: string, icon: any }) {
+  const isPlaceholder = !content || content === '""' || content.toLowerCase().includes('aprofundando') || content.toLowerCase().includes('contextualização') || content.toLowerCase().includes('identificando') || content.toLowerCase().includes('mapeando');
+  
+  if (!content || content === '""') return null;
+
+  return (
+    <Card className="glass border-gold/10 hover:border-gold/30 transition-all duration-300">
+      <CardHeader className="pb-2">
+        <CardTitle className="text-sm font-display flex items-center gap-2 text-gold/80">
+          <Icon className="w-4 h-4" />
+          {title}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className={`text-xs leading-relaxed ${isPlaceholder ? 'italic text-muted-foreground/60' : 'text-muted-foreground'}`}>
+          {isPlaceholder ? "Este território será aprofundado em uma próxima travessia." : content}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function CartografiaEstruturalStepper() {
   const { 
     step, setStep, respostas, updateResposta, 
