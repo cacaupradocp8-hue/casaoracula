@@ -145,7 +145,7 @@ function VideoPlayer({ onCtaClick }: { onCtaClick: () => void }) {
         </div>
       </div>
       <div className="mt-6">
-        <GoldButton label="Entrar na Formação" onClick={onCtaClick} variant="outline" />
+        <GoldButton label="Ver estrutura da Formação" onClick={() => document.getElementById('estrutura-formacao')?.scrollIntoView({ behavior: 'smooth' })} variant="outline" />
       </div>
     </div>
   );
