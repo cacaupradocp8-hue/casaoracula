@@ -654,7 +654,7 @@ export default function OraculaSalesPage() {
           </Phrase>
 
           <div className="space-y-3">
-            {['A Casa das Máquinas é exclusiva para alunas formadas', 'Essa ordem não é estética — é estrutural', 'Ferramentas sem capacidade geram dano', 'A prática vem depois da maturidade'].map(
+            {['A Casa das Máquinas é exclusiva para alunas formadas', 'Essa ordem não é estética — é estrutural', 'Ferramentas sem maturidade de condução podem gerar ruído.', 'A prática vem depois da maturidade'].map(
               (item) => (
                 <p key={item} className="text-[hsl(var(--foreground))/0.88] text-sm md:text-base flex items-center gap-3 justify-center">
                   <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--primary))/0.75]" />
@@ -1023,7 +1023,7 @@ export default function OraculaSalesPage() {
       <footer className="py-10 px-6 border-t border-[hsl(var(--border))/0.4]">
         <div className="max-w-xl mx-auto text-center space-y-4">
           <p className="font-display text-base md:text-lg leading-relaxed text-[hsl(var(--foreground))/0.94]">
-            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com ética, aplicabilidade e maturidade simbólica e ética.
+            A Casa Orácula forma mulheres capazes de atravessar, integrar e transmitir conhecimento simbólico com aplicabilidade, presença e maturidade ética.
           </p>
           <p className="text-[hsl(var(--foreground))/0.72] text-[11px] leading-relaxed">
             Casa Orácula © {new Date().getFullYear()} · A Casa Orácula oferece conteúdo simbólico e formativo. Não substitui terapia, acompanhamento psicológico, supervisão profissional ou atendimento de saúde mental quando necessário.
