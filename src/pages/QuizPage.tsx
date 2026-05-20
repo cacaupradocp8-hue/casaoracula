@@ -653,38 +653,6 @@ export default function QuizPage() {
             </div>
           )}
 
-         {/* Syntheia Chat Button - Only for logged users */}
-         {user && (
-           <div className="flex justify-center pt-8">
-             <Button
-               variant="outline"
-               size="lg"
-               onClick={() => setShowSyntheiaChat(true)}
-               className="gap-2 border-gold/20 hover:bg-gold/5"
-             >
-               <MessageCircle className="w-5 h-5 text-gold" />
-               Aprofundar este arquétipo com Syntheia
-             </Button>
-           </div>
-         )}
-
-         {/* Ver minha Voz button - Técnico */}
-          {user && (() => {
-            const vozId = mapQuizResultToVozId(finalResult.titulo_simbolico);
-            return vozId ? (
-              <div className="flex justify-center pt-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate(`/casa-das-maquinas/7-vozes/${vozId}`)}
-                  className="gap-2 text-primary/40 hover:text-primary transition-colors"
-                >
-                  <AudioLines className="w-4 h-4" />
-                  Ver registro técnico
-                </Button>
-              </div>
-            ) : null;
-          })()}
 
           {/* Footer actions */}
           <div className="flex gap-4 justify-center py-10 opacity-30 hover:opacity-100 transition-opacity">
