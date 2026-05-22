@@ -94,16 +94,16 @@ export default function BibliotecaUnificada() {
             <BibliotecaPessoal />
           </TabsContent>
 
-          <TabsContent value="casos">
-            <BibliotecaCasosTab />
-          </TabsContent>
-
           <TabsContent value="travessias">
             <BibliotecaTravessiasTab />
           </TabsContent>
 
           <TabsContent value="rituais">
             <BibliotecaRituaisTab />
+          </TabsContent>
+
+          <TabsContent value="casos">
+            <BibliotecaCasosTab />
           </TabsContent>
         </Tabs>
       </ResponsiveContainer>
