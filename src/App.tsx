@@ -425,7 +425,7 @@ function AppRoutes() {
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cidadela/revelacao" element={<Navigate to="/revelacao-cidadela" replace />} />
-      <Route path="/revelacao-cidadela" element={<RevelacaoCidadelaPage />} />
+      <Route path="/revelacao-cidadela" element={<Navigate to="/cidadela/revelacao" replace />} />
       <Route path="/ferramentas/oraculo-perguntas" element={<ProtectedRoute minPortal="mentorada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/ferramentas/mapa-oracula" element={<ProtectedRoute minPortal="mentorada"><MapaOracula /></ProtectedRoute>} />
 
