@@ -17,9 +17,9 @@ import BibliotecaRituaisTab from '@/components/biblioteca/BibliotecaRituaisTab';
 const TABS = [
   { key: 'simbolica', label: 'Simbólica', icon: BookOpen },
   { key: 'pessoal', label: 'Meu Acervo', icon: Lock },
-  { key: 'casos', label: 'Biblioteca de Casos Profissionais', icon: Shield, minPortal: 'oracula' },
   { key: 'travessias', label: 'Travessias da Casa', icon: Compass },
   { key: 'rituais', label: 'Rituais', icon: Sparkles },
+  { key: 'casos', label: 'Biblioteca de Casos Profissionais', icon: Shield, minPortal: 'oracula' },
 ] as const;
 
 type TabKey = typeof TABS[number]['key'];
