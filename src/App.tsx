@@ -421,7 +421,7 @@ function AppRoutes() {
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/ferramenta/eneagrama-feminino" element={<ProtectedRoute minPortal="mentorada"><EneagramaFeminino /></ProtectedRoute>} />
       <Route path="/ferramenta/jornada-heroina" element={<ProtectedRoute minPortal="mentorada"><JornadaHeroina /></ProtectedRoute>} />
-      <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cidadela/revelacao" element={<Navigate to="/revelacao-cidadela" replace />} />
