@@ -1,3 +1,5 @@
+// @deprecated This standalone page has been replaced by BibliotecaUnificada > BibliotecaTravessiasTab.
+// Keep temporarily for safe rollback and legacy reference. Do not route new users here.
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
