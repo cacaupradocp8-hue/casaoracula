@@ -66,10 +66,6 @@ const CursoDeusasPage = React.lazy(() => import('@/pages/CursoDeusasPage'));
 const CursoChaveOniricaPage = React.lazy(() => import('@/pages/CursoChaveOniricaPage'));
 const CabineTerapeutaPage = React.lazy(() => import('@/pages/casa-maquinas/CabineTerapeutaPage'));
 
-function OracleRedirectCM({ suffix = '' }: { suffix?: string }) {
-  const { oracleSlug } = useParams();
-  return <Navigate to={`/oraculos/${oracleSlug}${suffix}`} replace />;
-}
 
 type PR = React.ComponentType<{ children: React.ReactNode; minPortal?: string }>;
 
@@ -88,30 +84,21 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-rm" path="/casa-das-maquinas/clientes/:clienteId/rituais-mudra" element={<ProtectedRoute minPortal="aluna_formacao"><RituaisMudraPage /></ProtectedRoute>} />,
     <Route key="cm-bo" path="/casa-das-maquinas/clientes/:clienteId/bussola-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><BussolaOniricaPage /></ProtectedRoute>} />,
     <Route key="cm-cs" path="/casa-das-maquinas/clientes/:clienteId/circulo-sagrado" element={<ProtectedRoute minPortal="aluna_formacao"><CirculoSagradoPage /></ProtectedRoute>} />,
-    // Legacy redirects
-    <Route key="rdr-mc" path="/saas/clientes/:clienteId/mapa-cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />,
-    <Route key="rdr-rj" path="/saas/clientes/:clienteId/relatorio-jornada" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/relatorio-jornada" />} />,
-    <Route key="rdr-mv" path="/saas/clientes/:clienteId/mapa-vivo" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-vivo" />} />,
-    <Route key="rdr-cv" path="/saas/clientes/:clienteId/cidadela-viva" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/cidadela-viva" />} />,
-    <Route key="rdr-ja" path="/saas/clientes/:clienteId/jornada-alma" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/jornada-alma" />} />,
-    <Route key="rdr-rm" path="/saas/clientes/:clienteId/rituais-mudra" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/rituais-mudra" />} />,
-    <Route key="rdr-bo" path="/saas/clientes/:clienteId/bussola-onirica" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/bussola-onirica" />} />,
-    <Route key="rdr-cs" path="/saas/clientes/:clienteId/circulo-sagrado" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/circulo-sagrado" />} />,
-    <Route key="rdr-cid" path="/app/clientes/:clienteId/cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />,
+    {/* Legacy redirects moved to legacyRedirects.tsx */}
     <Route key="cm-deusas" path="/academia/curso-deusas" element={<ProtectedRoute minPortal="aluna_formacao"><CursoDeusasPage /></ProtectedRoute>} />,
     <Route key="cm-chave" path="/academia/curso-chave-onirica" element={<ProtectedRoute minPortal="aluna_formacao"><CursoChaveOniricaPage /></ProtectedRoute>} />,
     <Route key="cm-ns" path="/casa-das-maquinas/nova-sessao" element={<ProtectedRoute minPortal="oracula"><ModoSessaoPage /></ProtectedRoute>} />,
     <Route key="cm-pc" path="/casa-das-maquinas/perfil-conducao" element={<ProtectedRoute minPortal="oracula"><PerfilConducaoPage /></ProtectedRoute>} />,
     <Route key="cm-cc" path="/casa-das-maquinas/campo-clientes" element={<ProtectedRoute minPortal="oracula"><CampoDasClientesPage /></ProtectedRoute>} />,
     <Route key="cm-si" path="/casa-das-maquinas/sessao/:clienteId" element={<ProtectedRoute minPortal="oracula"><ModoSessaoImersivo /></ProtectedRoute>} />,
-    <Route key="rdr-si" path="/saas/sessao/:clienteId" element={<RedirectWithParams to="/casa-das-maquinas/sessao/:clienteId" />} />,
+    
     <Route key="cm-fer" path="/casa-das-maquinas/ferramentas" element={<ProtectedRoute minPortal="oracula"><FerramentasPage /></ProtectedRoute>} />,
     <Route key="cm-gr" path="/casa-das-maquinas/grupos" element={<ProtectedRoute minPortal="oracula"><GruposPage /></ProtectedRoute>} />,
     <Route key="cm-grd" path="/casa-das-maquinas/grupos/:groupId" element={<ProtectedRoute minPortal="oracula"><GrupoDetailPage /></ProtectedRoute>} />,
     <Route key="cm-bib" path="/casa-das-maquinas/biblioteca" element={<ProtectedRoute minPortal="oracula"><BibliotecaIntervPage /></ProtectedRoute>} />,
     <Route key="cm-var" path="/casa-das-maquinas/variacoes-ferramentas" element={<ProtectedRoute minPortal="oracula"><VariacoesFerramentasPage /></ProtectedRoute>} />,
     <Route key="cm-qa" path="/casa-das-maquinas/qa-jardim-sessoes" element={<ProtectedRoute minPortal="admin"><QaJardimSessoesPage /></ProtectedRoute>} />,
-    <Route key="rdr-bib" path="/saas/biblioteca" element={<Navigate to="/casa-das-maquinas/biblioteca" replace />} />,
+    
     <Route key="cm-tec" path="/casa-das-maquinas/tecelãs" element={<ProtectedRoute minPortal="aluna"><CasaTecelasPage /></ProtectedRoute>} />,
     <Route key="cm-acad" path="/casa-das-maquinas/academia" element={<ProtectedRoute minPortal="oracula"><AcademiaPage /></ProtectedRoute>} />,
     <Route key="cm-prof" path="/casa-das-maquinas/perfil-profissional" element={<ProtectedRoute minPortal="oracula"><PerfilProfissionalPage /></ProtectedRoute>} />,
@@ -125,27 +112,16 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-atlas-ei" path="/casa-das-maquinas/atlas/escolher-intervencao" element={<ProtectedRoute minPortal="oracula"><EscolherIntervencaoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-ae" path="/casa-das-maquinas/atlas/acompanhar-evolucao" element={<ProtectedRoute minPortal="oracula"><AcompanharEvolucaoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-demo" path="/casa-das-maquinas/atlas/demo" element={<ProtectedRoute minPortal="oracula"><CasoDemonstrativoPage /></ProtectedRoute>} />,
-    <Route key="cm-cart" path="/casa-das-maquinas/ferramentas/cartografia" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />,
+    
     <Route key="cm-tv" path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />,
     <Route key="cm-lab" path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />,
     <Route key="cm-don" path="/casa-das-maquinas/ferramentas/decodificacao-onirica" element={<ProtectedRoute minPortal="oracula"><DecodificacaoOniricaPage /></ProtectedRoute>} />,
     <Route key="cm-atl" path="/casa-das-maquinas/ferramentas/atlas-arquetipos" element={<ProtectedRoute minPortal="oracula"><AtlasArquetiposPage /></ProtectedRoute>} />,
-    <Route key="cm-es" path="/casa-das-maquinas/ferramentas/escrita-simbolica" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
-    <Route key="cm-er" path="/casa-das-maquinas/ferramentas/espelho-relacional" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
-    <Route key="cm-rs" path="/casa-das-maquinas/ferramentas/ritual-simbolico" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
     <Route key="cm-7v" path="/casa-das-maquinas/7-vozes" element={<ProtectedRoute minPortal="oracula"><VozesHomePage /></ProtectedRoute>} />,
     <Route key="cm-7vl" path="/casa-das-maquinas/7-vozes/lista" element={<ProtectedRoute minPortal="oracula"><VozesListaPage /></ProtectedRoute>} />,
     <Route key="cm-7vm" path="/casa-das-maquinas/7-vozes/mapa" element={<ProtectedRoute minPortal="oracula"><VozesMapaPage /></ProtectedRoute>} />,
     <Route key="cm-7vt" path="/casa-das-maquinas/7-vozes/tabela" element={<ProtectedRoute minPortal="oracula"><VozesTabelaPage /></ProtectedRoute>} />,
     <Route key="cm-7vd" path="/casa-das-maquinas/7-vozes/:vozId" element={<ProtectedRoute minPortal="oracula"><VozDetalhePage /></ProtectedRoute>} />,
-    <Route key="cm-orc" path="/casa-das-maquinas/oraculo" element={<Navigate to="/oraculos" replace />} />,
-    <Route key="cm-orc1" path="/casa-das-maquinas/oraculo/:oracleSlug" element={<OracleRedirectCM />} />,
-    <Route key="cm-orc2" path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<OracleRedirectCM suffix="/tirar" />} />,
-    <Route key="cm-orc3" path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<OracleRedirectCM suffix="/historico" />} />,
-    <Route key="cm-orc4" path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<OracleRedirectCM suffix="/biblioteca" />} />,
-    <Route key="cm-dp" path="/casa-das-maquinas/ferramentas/dialogo-partes" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
-    <Route key="cm-mt" path="/casa-das-maquinas/ferramentas/mapa-transformacao" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
-    <Route key="cm-rp" path="/casa-das-maquinas/ferramentas/ritual-passagem" element={<Navigate to="/casa-das-maquinas/ferramentas" replace />} />,
     <Route key="cm-ip" path="/casa-das-maquinas/ferramentas/inventario-personas/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><InventarioPersonasPage /></ProtectedRoute>} />,
     <Route key="cm-mpc" path="/casa-das-maquinas/ferramentas/mapeamento-complexos/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><MapeamentoComplexosPage /></ProtectedRoute>} />,
     <Route key="cm-ms" path="/casa-das-maquinas/ferramentas/mapa-sombra/:clienteId" element={<ProtectedRoute minPortal="aluna_formacao"><MapaSombraPage /></ProtectedRoute>} />,
@@ -161,8 +137,6 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-pcli" path="/casa-das-maquinas/painel-clinico" element={<ProtectedRoute minPortal="oracula"><PainelClinicoPage /></ProtectedRoute>} />,
     <Route key="cm-jo" path="/casa-das-maquinas/jardim-oficio" element={<ProtectedRoute minPortal="oracula"><JardimOficioPage /></ProtectedRoute>} />,
     <Route key="cm-sup" path="/casa-das-maquinas/supervisao" element={<ProtectedRoute minPortal="assinante"><PainelSupervisaoPage /></ProtectedRoute>} />,
-    <Route key="cm-com" path="/casa-das-maquinas/comunidade" element={<Navigate to="/comunidade" replace />} />,
-    <Route key="cm-af" path="/casa-das-maquinas/academia-formacao" element={<Navigate to="/academia" replace />} />,
     </>
   );
 }
