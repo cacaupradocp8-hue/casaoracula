@@ -143,14 +143,14 @@ export default function DefinirDirecaoPage() {
                 description="Considere os eixos de condução (seleção mock para reflexão)."
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <DirectionCard title="Estabilização" desc="Quando o caso pede segurança, presença e organização antes de aprofundar." />
-                  <DirectionCard title="Regulação" desc="Foco em reconhecer estados internos, recuperar chão e modular respostas." />
-                  <DirectionCard title="Crenças Nucleares" desc="Quando aparecem frases de valor, pertença, merecimento ou segurança." />
-                  <DirectionCard title="Padrões Relacionais" desc="Repetição em vínculos, escolhas, conflitos ou ciclos conhecidos." />
-                  <DirectionCard title="Defesas e Proteção" desc="Observação de evitamento, retraimento ou estratégias de sobrevivência." />
-                  <DirectionCard title="Trabalho Simbólico" desc="Imagens, sonhos e contos que ajudam a abrir a compreensão." />
-                  <DirectionCard title="Limites e Ação" desc="Direção para escolhas práticas, fronteiras, rotina e decisões." />
-                  <DirectionCard title="Supervisão/Encaminhamento" desc="Necessidade de rede, outro olhar ou cuidado especializado." />
+                  <DirectionCard title="Estabilização" desc="Quando o caso pede segurança, presença e organização antes de qualquer movimento." />
+                  <DirectionCard title="Regulação" desc="Foco em reconhecer estados internos, recuperar chão e modular respostas adaptativas." />
+                  <DirectionCard title="Crenças Nucleares" desc="Quando aparecem padrões de valor, pertença, merecimento ou segurança." />
+                  <DirectionCard title="Padrões Relacionais" desc="Observação de dinâmicas em vínculos, escolhas, conflitos ou ciclos conhecidos." />
+                  <DirectionCard title="Proteção e Camadas" desc="Observação de mecanismos de evitamento, retraimento ou estratégias de cuidado." />
+                  <DirectionCard title="Trabalho Simbólico" desc="Imagens, sonhos e contos que ajudam a abrir a compreensão da alma." />
+                  <DirectionCard title="Limites e Ação" desc="Direção para escolhas conscientes, fronteiras, rotina e decisões práticas." />
+                  <DirectionCard title="Supervisão/Encaminhamento" desc="Necessidade de rede, outro olhar ou suporte especializado responsável." />
                 </div>
               </StepContainer>
             )}
