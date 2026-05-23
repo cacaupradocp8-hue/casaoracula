@@ -1,81 +1,27 @@
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Trophy, Flame, Zap, Play, ChevronRight, 
-  BookOpen, Search, AlertCircle, History,
-  Star, Clock, CheckCircle2, ArrowRight, Sparkles,
-  ArrowLeft, FlaskConical, GraduationCap, Lock,
-  Target, BarChart3, Users, Wrench, Compass
+  Zap, 
+  BookOpen, 
+  Search, 
+  AlertCircle, 
+  Sparkles,
+  FlaskConical, 
+  Target, 
+  BarChart3, 
+  Users, 
+  Wrench, 
+  Compass,
+  MessageCircle
 } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { useCamaraCases } from '@/components/treinamento/simulador/useCamaraCases';
-import { SimuladorPremium } from '@/components/treinamento/simulador/SimuladorPremium';
-import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClube';
-import { SimuladorConducao } from '@/components/treinamento/simulador/SimuladorConducao';
-import { TrainingDashboard } from '@/components/treinamento/simulador/TrainingDashboard';
-import { AutoMapeamento } from '@/components/treinamento/AutoMapeamento';
-import { BibliotecaFerramentas } from '@/components/treinamento/BibliotecaFerramentas';
-import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
-import { TrainingCase } from '@/components/treinamento/simulador/types';
-import { useCidadelaEstado } from '@/hooks/useCidadelaEstado';
-import { useStudentTracking } from '@/hooks/useStudentTracking';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
-import { cn } from '@/lib/utils';
 
 export default function SalaDeTreinamentoPage() {
-  const { user } = useAuth();
-  const { track } = useStudentTracking();
-  const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
-  const [activeTab, setActiveTab] = useState('simulador');
-  const { data: allCases = [] } = useCamaraCases();
-  const formacaoCases = useMemo(() => allCases.filter(c => c.nivel_produto === 'formacao'), [allCases]);
-
-  const handleStartCase = (c: TrainingCase) => {
-    setActiveCase(c);
-    track('treinamento', 'opened_case', 'caso_treinamento', c.id);
-  };
-  
-  const handleBack = () => {
-    if (activeCase) {
-      setActiveCase(null);
-    } else {
-      window.history.back();
-    }
-  };
-
-  if (activeCase) {
-    return (
-      <div className="min-h-screen bg-background">
-        <motion.div 
-          key="simulation"
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          className="h-screen w-full"
-        >
-          <SimuladorPremium 
-            caso={activeCase} 
-            onExit={handleBack} 
-            onNextCaso={() => {
-              const nextIdx = formacaoCases.findIndex(c => c.id === activeCase.id) + 1;
-              if (nextIdx < formacaoCases.length) {
-                setActiveCase(formacaoCases[nextIdx]);
-              } else {
-                setActiveCase(null);
-              }
-            }}
-          />
-        </motion.div>
-      </div>
-    );
-  }
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
@@ -234,24 +180,6 @@ function TrainingModuleCard({ icon: Icon, title, description, status, primaryIco
       <div className="pt-4 flex items-center gap-2 text-primary/40 group-hover:text-primary/70 transition-colors">
         <PrimaryIcon className="w-4 h-4" />
         <span className="text-[10px] uppercase font-bold tracking-widest">Laboratório Seguro</span>
-      </div>
-    </div>
-  );
-}
-  return (
-    <div 
-      onClick={() => !isLocked && onClick()}
-      className={cn(
-        "group bg-card/40 backdrop-blur-sm border border-border rounded-2xl p-6 space-y-4 hover:bg-card/60 hover:border-primary/30 hover:shadow-glow transition-all cursor-pointer relative",
-        isLocked && "opacity-50 grayscale"
-      )}
-    >
-      <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-        {isLocked ? <Lock className="w-5 h-5 text-muted-foreground/30" /> : <Icon className="w-5 h-5 text-primary/60 group-hover:text-primary transition-colors" />}
-      </div>
-      <div className="space-y-1">
-        <h4 className="text-sm font-medium text-foreground tracking-wide font-body">{title}</h4>
-        <p className="text-[10px] text-primary/40 uppercase tracking-widest font-bold font-body">{description}</p>
       </div>
     </div>
   );
