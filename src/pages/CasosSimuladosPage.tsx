@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
@@ -14,15 +14,31 @@ import {
   ChevronRight,
   MessageCircle,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Archive,
+  Save,
+  Clock,
+  User as UserIcon
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
-import { useTrainingProgress } from '@/hooks/useTrainingData';
+import { useTrainingProgress, useTrainingSubmissions } from '@/hooks/useTrainingData';
 import { cn } from '@/lib/utils';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import { toast } from 'sonner';
 
 export default function CasosSimuladosPage() {
   const navigate = useNavigate();
@@ -34,11 +50,89 @@ export default function CasosSimuladosPage() {
     markCompleted 
   } = useTrainingProgress("casos-simulados");
 
+  const {
+    submissions,
+    loading: submissionsLoading,
+    submitExercise,
+    archiveSubmission
+  } = useTrainingSubmissions("casos-simulados");
+
+  const [formData, setFormData] = useState({
+    personagem: '',
+    focoEstudo: '',
+    sinaisSimbolicos: '',
+    hipotesesTreino: '',
+    cautelasPedagogicas: '',
+    direcaoSimbolica: '',
+    praticaIntegracao: '',
+    proximoPassoEstudo: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     if (!progressLoading && !progress) {
       markStarted();
     }
   }, [progressLoading, progress, markStarted]);
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.personagem || !formData.focoEstudo) {
+      toast.error("Por favor, selecione uma personagem e preencha o foco do estudo.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      
+      const caseKey = formData.personagem.toLowerCase();
+      
+      await submitExercise({
+        module_key: "casos-simulados",
+        exercise_key: "simulacao-pedagogica-caso",
+        exercise_type: "formulation_practice",
+        case_key: caseKey,
+        prompt_text: `Simulação pedagógica para o caso da personagem ${formData.personagem}.`,
+        response_text: `Foco do Estudo: ${formData.focoEstudo}. Sinais: ${formData.sinaisSimbolicos.substring(0, 100)}...`,
+        response_metadata: {
+          ...formData
+        }
+      });
+
+      toast.success("Simulação pedagógica salva com sucesso!");
+      
+      setFormData({
+        personagem: '',
+        focoEstudo: '',
+        sinaisSimbolicos: '',
+        hipotesesTreino: '',
+        cautelasPedagogicas: '',
+        direcaoSimbolica: '',
+        praticaIntegracao: '',
+        proximoPassoEstudo: ''
+      });
+      
+    } catch (err) {
+      toast.error("Erro ao salvar simulação.");
+      console.error(err);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleArchive = async (id: string) => {
+    try {
+      await archiveSubmission(id);
+      toast.success("Simulação arquivada.");
+    } catch (err) {
+      toast.error("Erro ao arquivar simulação.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
@@ -260,63 +354,213 @@ export default function CasosSimuladosPage() {
         <section className="space-y-8">
           <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
             <FileText className="w-5 h-5" />
-            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Simulação (Modelo)</h2>
+            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Simulação Pedagógica</h2>
           </div>
+          
           <Card className="bg-card/40 border-border rounded-[2.5rem] overflow-hidden">
-            <CardContent className="p-8 sm:p-12 space-y-8 opacity-60">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Nome Fictício</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Selecionar personagem...</div>
+            <CardContent className="p-8 sm:p-12 space-y-8">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Personagem</label>
+                    <Select 
+                      value={formData.personagem} 
+                      onValueChange={(val) => handleInputChange('personagem', val)}
+                    >
+                      <SelectTrigger className="bg-background/50 border-border/50">
+                        <SelectValue placeholder="Escolher personagem..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Lia">Lia</SelectItem>
+                        <SelectItem value="Joana">Joana</SelectItem>
+                        <SelectItem value="Helena">Helena</SelectItem>
+                        <SelectItem value="Rosa">Rosa</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Foco do Estudo</label>
+                    <Input 
+                      placeholder="Tema pedagógico central do caso..." 
+                      className="bg-background/50 border-border/50"
+                      value={formData.focoEstudo}
+                      onChange={(e) => handleInputChange('focoEstudo', e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Foco do Estudo</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Tema pedagógico...</div>
-                </div>
+
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Simbólicos</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Mapear elementos...</div>
+                  <Textarea 
+                    placeholder="Mapear elementos, imagens e tensões percebidas..." 
+                    className="bg-background/50 border-border/50 min-h-[100px]"
+                    value={formData.sinaisSimbolicos}
+                    onChange={(e) => handleInputChange('sinaisSimbolicos', e.target.value)}
+                  />
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses de Treino</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Levante possibilidades pedagógicas...</div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses de Treino</label>
+                    <Textarea 
+                      placeholder="Levante hipóteses de treino e possibilidades pedagógicas..." 
+                      className="bg-background/50 border-border/50 min-h-[120px]"
+                      value={formData.hipotesesTreino}
+                      onChange={(e) => handleInputChange('hipotesesTreino', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas Pedagógicas</label>
+                    <Textarea 
+                      placeholder="O que exige cuidado no estudo deste caso fictício?" 
+                      className="bg-background/50 border-border/50 min-h-[120px]"
+                      value={formData.cautelasPedagogicas}
+                      onChange={(e) => handleInputChange('cautelasPedagogicas', e.target.value)}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas Pedagógicas</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">O que exige cuidado no estudo?</div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Simbólica</label>
+                    <Textarea 
+                      placeholder="Para onde aponta a imagem narrativa?" 
+                      className="bg-background/50 border-border/50 min-h-[100px]"
+                      value={formData.direcaoSimbolica}
+                      onChange={(e) => handleInputChange('direcaoSimbolica', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Prática de Integração</label>
+                    <Textarea 
+                      placeholder="Escolha da prática simbólica de integração..." 
+                      className="bg-background/50 border-border/50 min-h-[100px]"
+                      value={formData.praticaIntegracao}
+                      onChange={(e) => handleInputChange('praticaIntegracao', e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Próximo Passo de Estudo</label>
+                    <Textarea 
+                      placeholder="Ação de aprofundamento ou estudo adicional..." 
+                      className="bg-background/50 border-border/50 min-h-[100px]"
+                      value={formData.proximoPassoEstudo}
+                      onChange={(e) => handleInputChange('proximoPassoEstudo', e.target.value)}
+                    />
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Simbólica</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Para onde aponta a imagem?</div>
+
+                <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-border/10">
+                  <div className="space-y-2 max-w-xl">
+                    <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/80 flex items-center gap-2">
+                      <AlertCircle className="w-3 h-3" /> Aviso Ético de Treino
+                    </span>
+                    <p className="text-[10px] text-muted-foreground leading-relaxed italic">
+                      Este espaço é apenas para treino pedagógico com casos fictícios. Não escreva nomes reais, dados de clientes ou informações sensíveis. Estas respostas não representam atendimento real e permanecem isoladas na Sala de Treinamento.
+                    </p>
+                  </div>
+                  <Button 
+                    type="submit"
+                    className="rounded-full px-10 py-6 h-auto text-xs uppercase tracking-widest font-bold w-full sm:w-auto shadow-glow hover:shadow-glow-primary transition-all duration-300"
+                    disabled={isSubmitting || !formData.personagem || !formData.focoEstudo}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Salvando...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-4 h-4 mr-2" />
+                        Salvar simulação pedagógica
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Prática de Integração</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Escolha da prática simbólica...</div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Próximo Passo de Estudo</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Ação de aprofundamento...</div>
-                </div>
-              </div>
-              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
-                    <AlertCircle className="w-3 h-3" /> Ficha de Simulação Mock — Não persistente
-                  </span>
-                  <p className="text-[9px] text-muted-foreground/40 italic">
-                    Nada preenchido nesta ficha é enviado ao Atlas ou processado por IA.
-                  </p>
-                </div>
-                <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold w-full sm:w-auto" disabled>
-                  Iniciar Simulação
-                </Button>
-              </div>
+              </form>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Histórico de Simulações */}
+        <section className="space-y-8 pt-12">
+          <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center gap-3 text-primary">
+              <Clock className="w-5 h-5" />
+              <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Minhas simulações salvas</h2>
+            </div>
+            <Badge variant="outline" className="text-[10px] uppercase tracking-widest border-primary/20 text-primary/60">
+              {submissions.length} {submissions.length === 1 ? 'Simulação' : 'Simulações'}
+            </Badge>
+          </div>
+
+          {submissionsLoading ? (
+            <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-50">
+              <Loader2 className="w-8 h-8 animate-spin text-primary/40" />
+              <p className="text-xs uppercase tracking-[0.2em] font-bold text-primary/40">Sincronizando registros...</p>
+            </div>
+          ) : submissions.length === 0 ? (
+            <div className="bg-card/20 border border-dashed border-border rounded-3xl p-12 text-center space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-muted/50 flex items-center justify-center mx-auto opacity-40">
+                <Search className="w-6 h-6 text-muted-foreground" />
+              </div>
+              <p className="text-sm text-muted-foreground italic">
+                Suas simulações pedagógicas aparecerão aqui quando forem salvas.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {submissions.map((submission) => {
+                const metadata = (submission.response_metadata as any) || {};
+                return (
+                  <Card key={submission.id} className="bg-card/40 border-border rounded-3xl overflow-hidden group hover:border-primary/20 transition-all duration-500">
+                    <CardContent className="p-6 space-y-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center">
+                            <UserIcon className="w-5 h-5 text-primary/40" />
+                          </div>
+                          <div>
+                            <h4 className="font-display text-primary italic text-lg">{metadata.personagem || 'Sem nome'}</h4>
+                            <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+                              {submission.submitted_at && format(new Date(submission.submitted_at), "dd 'de' MMMM, yyyy", { locale: ptBR })}
+                            </p>
+                          </div>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/5"
+                          onClick={() => handleArchive(submission.id)}
+                        >
+                          <Archive className="w-4 h-4" />
+                        </Button>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-primary/40">Foco do Estudo:</span>
+                          <p className="text-sm font-medium line-clamp-1">{metadata.focoEstudo || 'Não informado'}</p>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-primary/40">Síntese dos Sinais:</span>
+                          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 italic">
+                            {metadata.sinaisSimbolicos || 'Nenhum sinal mapeado.'}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="pt-2 flex justify-end">
+                        <Badge variant="outline" className="text-[9px] uppercase tracking-widest border-primary/10 text-primary/40 px-2 py-0">
+                          ID: {submission.id.substring(0, 8)}
+                        </Badge>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-4">
