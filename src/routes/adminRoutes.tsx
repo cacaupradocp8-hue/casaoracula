@@ -36,12 +36,7 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
       <Route key="adm-cl-rota" path="/admin/clube/rota/:estacaoId" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-preview" path="/admin/clube/preview/:itemId" element={<ProtectedRoute minPortal="admin"><ClubeEditorialPreviewPage /></ProtectedRoute>} />
       
-      {/* ═══ REDIRECIONAMENTOS DE LEGADO (Limpeza) ═══ */}
-      <Route key="adm-cl-legacy-base" path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
-      <Route key="adm-cl-legacy-wild" path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
-      <Route key="adm-bk-legacy" path="/admin/books" element={<Navigate to="/admin/clube/conteudos" replace />} />
-      <Route key="adm-or-portais-legacy" path="/admin/clube/oraculo-portais" element={<Navigate to="/admin/clube/portais" replace />} />
-      <Route key="adm-or-portais-edit-legacy" path="/admin/clube/oraculo-portais/:portalId" element={<Navigate to="/admin/clube/portais" replace />} />
+      {/* ═══ REDIRECIONAMENTOS DE LEGADO (Movidos para legacyRedirects.tsx) ═══ */}
     </>
   );
 }
