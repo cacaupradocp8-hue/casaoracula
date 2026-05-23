@@ -104,8 +104,10 @@ export default function AtlasOracula() {
           />
           <AtlasCard 
             icon={<AlertTriangle className="w-6 h-6 text-accent" />}
-            title="3. Observar riscos"
-            description="Identificar sinais que exigem cautela, encaminhamento, supervisão ou pausa na exploração simbólica."
+            title="3. Observar sinais de cautela"
+            description="Identificar sinais que exigem cuidado, encaminhamento, supervisão ou pausa na exploração simbólica."
+            onClick={() => navigate('/casa-das-maquinas/atlas/observar-cautela')}
+            hasAction
           />
           <AtlasCard 
             icon={<Compass className="w-6 h-6 text-primary" />}
