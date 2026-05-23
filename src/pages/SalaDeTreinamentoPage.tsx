@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
+import { cn } from '@/lib/utils';
 import { BackButton } from '@/components/navigation/BackButton';
 
 export default function SalaDeTreinamentoPage() {
