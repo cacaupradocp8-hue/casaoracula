@@ -166,9 +166,9 @@ export default function ObservarCautelaPage() {
                 <div className="space-y-4">
                   <ConductionLevel 
                     color="green" 
-                    title="Pode seguir com cuidado" 
+                    title="Sinal de estabilidade: seguir com cuidado" 
                     icon={<CheckCircle2 className="w-5 h-5" />}
-                    desc="Situação estável, há contexto suficiente e a profissional pode continuar observando com prudência."
+                    desc="Situação estável, há contexto suficiente e a profissional pode continuar observando com prudência e formulação aberta."
                   />
                   <ConductionLevel 
                     color="yellow" 
