@@ -284,6 +284,48 @@ function CaseMirrorCard({ title, theme, description }: { title: string, theme: s
   );
 }
 
+function SupportArchiveCard({ icon: Icon, title, description, cta, status, requiresAuth, onClick }: { icon: any, title: string, description: string, cta: string, status: string, requiresAuth?: boolean, onClick: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className="group bg-card/40 backdrop-blur-sm border border-border rounded-[2rem] p-8 space-y-6 transition-all duration-500 hover:border-primary/30 hover:shadow-glow relative overflow-hidden cursor-pointer"
+    >
+      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-2xl -z-10 group-hover:bg-primary/10 transition-colors" />
+      
+      <div className="flex items-center justify-between">
+        <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500">
+          <Icon className="w-7 h-7 text-primary/60 group-hover:text-primary" />
+        </div>
+        <Badge variant="outline" className={cn(
+          "text-[10px] uppercase tracking-widest px-3 py-1",
+          requiresAuth ? "border-amber-500/20 text-amber-500/60" : "border-primary/20 text-primary/60"
+        )}>
+          {requiresAuth && <AlertCircle className="w-3 h-3 mr-1 inline" />}
+          {status}
+        </Badge>
+      </div>
+
+      <div className="space-y-3">
+        <h4 className="text-xl font-display text-foreground group-hover:text-primary transition-colors">{title}</h4>
+        <p className="text-sm text-muted-foreground leading-relaxed font-body">
+          {description}
+        </p>
+      </div>
+
+      <div className="pt-2 flex items-center justify-between">
+        <span className="text-[10px] uppercase font-bold tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+          {cta}
+        </span>
+        <div className="w-8 h-8 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/30 transition-all">
+          <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ChevronRight({ className }: { className?: string }) {
   return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>;
 }
+
+export { ClinicaDosContosPage as default };
