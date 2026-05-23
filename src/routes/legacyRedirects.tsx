@@ -113,6 +113,15 @@ export function renderLegacyRedirects() {
       <Route path="/casa-das-maquinas/oraculo/:oracleSlug/tirar" element={<OracleRedirectWithSuffix suffix="/tirar" />} />
       <Route path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<OracleRedirectWithSuffix suffix="/historico" />} />
       <Route path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<OracleRedirectWithSuffix suffix="/biblioteca" />} />
+
+      {/* ─── REDIRECIONAMENTOS DE PLANOS E CONTA ─── */}
+      <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
+      <Route path="/assinatura" element={<Navigate to="/minha-conta" replace />} />
+      <Route path="/billing" element={<Navigate to="/minha-conta" replace />} />
+
+      {/* ─── REDIRECIONAMENTOS DE RELATÓRIOS ANTIGOS ─── */}
+      <Route path="/relatorio/sprint-06" element={<Navigate to="/dashboard-membro" replace />} />
+      <Route path="/relatorio/sprint-07" element={<Navigate to="/dashboard-membro" replace />} />
     </>
   );
 }
