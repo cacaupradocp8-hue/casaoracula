@@ -112,7 +112,9 @@ export default function AtlasOracula() {
           <AtlasCard 
             icon={<Compass className="w-6 h-6 text-primary" />}
             title="4. Definir direção"
-            description="Escolher se o caso pede estabilização, regulação, investigação de crenças, trabalho simbólico, limites ou acompanhamento."
+            description="Escolher se o caso pede estabilização, regulação, investigação de crenças, trabalho simbólico ou limites."
+            onClick={() => navigate('/casa-das-maquinas/atlas/definir-direcao')}
+            hasAction
           />
           <AtlasCard 
             icon={<Zap className="w-6 h-6 text-primary" />}
