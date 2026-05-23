@@ -242,7 +242,7 @@ function SupportLabCard({ icon: Icon, title, description, cta, onClick }: { icon
         <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
           <Icon className="w-5 h-5 text-primary/40 group-hover:text-primary/70" />
         </div>
-        <Badge variant="ghost" className="text-[9px] uppercase tracking-tighter text-muted-foreground/40 font-bold border-none">
+        <Badge variant="outline" className="text-[9px] uppercase tracking-tighter text-muted-foreground/40 font-bold border-none bg-transparent">
           Rota existente
         </Badge>
       </div>
