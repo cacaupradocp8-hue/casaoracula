@@ -26,6 +26,19 @@ import { cn } from '@/lib/utils';
 
 export default function CasosSimuladosPage() {
   const navigate = useNavigate();
+  const { 
+    progress, 
+    loading: progressLoading, 
+    error: progressError, 
+    markStarted, 
+    markCompleted 
+  } = useTrainingProgress("casos-simulados");
+
+  useEffect(() => {
+    if (!progressLoading && !progress) {
+      markStarted();
+    }
+  }, [progressLoading, progress, markStarted]);
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
