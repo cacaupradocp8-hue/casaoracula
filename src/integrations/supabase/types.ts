@@ -21556,6 +21556,99 @@ export type Database = {
           },
         ]
       }
+      training_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          last_activity_at: string
+          module_key: string
+          module_title: string
+          progress_percentage: number
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          module_key: string
+          module_title: string
+          progress_percentage?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          last_activity_at?: string
+          module_key?: string
+          module_title?: string
+          progress_percentage?: number
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      training_submissions: {
+        Row: {
+          case_key: string | null
+          created_at: string
+          exercise_key: string
+          exercise_type: string
+          id: string
+          is_archived: boolean
+          is_fictional: boolean
+          module_key: string
+          prompt_text: string | null
+          response_metadata: Json | null
+          response_text: string
+          submitted_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          case_key?: string | null
+          created_at?: string
+          exercise_key: string
+          exercise_type: string
+          id?: string
+          is_archived?: boolean
+          is_fictional?: boolean
+          module_key: string
+          prompt_text?: string | null
+          response_metadata?: Json | null
+          response_text: string
+          submitted_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          case_key?: string | null
+          created_at?: string
+          exercise_key?: string
+          exercise_type?: string
+          id?: string
+          is_archived?: boolean
+          is_fictional?: boolean
+          module_key?: string
+          prompt_text?: string | null
+          response_metadata?: Json | null
+          response_text?: string
+          submitted_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       travessia_comentarios: {
         Row: {
           conteudo: string
