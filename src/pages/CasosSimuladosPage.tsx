@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Users, 
@@ -12,13 +12,17 @@ import {
   GraduationCap,
   Sparkles,
   ChevronRight,
-  MessageCircle
+  MessageCircle,
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
+import { useTrainingProgress } from '@/hooks/useTrainingData';
+import { cn } from '@/lib/utils';
 
 export default function CasosSimuladosPage() {
   const navigate = useNavigate();
