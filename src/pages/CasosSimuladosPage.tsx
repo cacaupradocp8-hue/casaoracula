@@ -59,7 +59,7 @@ export default function CasosSimuladosPage() {
                 Casos <span className="text-primary italic">Simulados</span>
               </h1>
               <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
-                Um espaço seguro para treinar formulação, perguntas, cautelas e próximos passos com personagens fictícias.
+                Um espaço seguro para treinar formulação, perguntas, cautelas e próximos passos com personagens fictícias. Este treino permanece isolado na Sala de Treinamento.
               </p>
             </div>
         </div>
@@ -73,7 +73,7 @@ export default function CasosSimuladosPage() {
                 <h2 className="text-2xl font-display italic">Progresso da Jornada</h2>
               </div>
               <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-                Este progresso pertence apenas à sua jornada pedagógica na Sala de Treinamento. Ele não é prontuário, não representa atendimento real e não é enviado ao Atlas Orácula profissional.
+                Este progresso pertence apenas à sua jornada pedagógica na Sala de Treinamento. Nada preenchido aqui é enviado ao Atlas Orácula profissional ou processado por IA. Os casos são fictícios e servem apenas para treino pedagógico.
               </p>
             </div>
 
@@ -111,6 +111,9 @@ export default function CasosSimuladosPage() {
                       Marcar percurso como concluído
                     </Button>
                   )}
+                  <p className="text-[10px] text-muted-foreground/60 italic text-center sm:text-right max-w-[200px]">
+                    Este espaço não gera prontuário, diagnóstico ou relatório clínico.
+                  </p>
                 </>
               )}
             </div>
@@ -130,7 +133,7 @@ export default function CasosSimuladosPage() {
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-amber-500 font-display">Treino Ético e Fictício</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Serve para treinar perguntas, prudência e formulação.
+              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Nada preenchido aqui é processado por IA ou enviado ao Atlas Orácula. Os casos são fictícios e servem apenas para treino.
             </p>
           </div>
         </div>
@@ -264,46 +267,51 @@ export default function CasosSimuladosPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <div className="space-y-2">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Nome Fictício</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Selecionar caso...</div>
+                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Selecionar personagem...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Tema Central</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Tema identificado...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Foco do Estudo</label>
+                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Tema pedagógico...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Observados</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Liste os sinais...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Simbólicos</label>
+                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Mapear elementos...</div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses Provisórias</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Levante possibilidades...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses de Treino</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Levante possibilidades pedagógicas...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">O que exige cuidado?</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas Pedagógicas</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">O que exige cuidado no estudo?</div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Possível</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Para onde seguir?</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Simbólica</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Para onde aponta a imagem?</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Intervenção</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Escolha da prática...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Prática de Integração</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Escolha da prática simbólica...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Próximo Passo</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Ação de treino...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Próximo Passo de Estudo</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Ação de aprofundamento...</div>
                 </div>
               </div>
-              <div className="pt-4 flex justify-between items-center">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
-                  <AlertCircle className="w-3 h-3" /> Ficha de Simulação Mock — Não persistente
-                </span>
-                <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold" disabled>
+              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
+                    <AlertCircle className="w-3 h-3" /> Ficha de Simulação Mock — Não persistente
+                  </span>
+                  <p className="text-[9px] text-muted-foreground/40 italic">
+                    Nada preenchido nesta ficha é enviado ao Atlas ou processado por IA.
+                  </p>
+                </div>
+                <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold w-full sm:w-auto" disabled>
                   Iniciar Simulação
                 </Button>
               </div>
@@ -317,7 +325,7 @@ export default function CasosSimuladosPage() {
             <h3 className="text-xl font-display italic">Treinar o ciclo do Atlas</h3>
           </div>
           <p className="text-muted-foreground leading-relaxed max-w-4xl">
-            Cada caso simulado percorre o mesmo ciclo do Atlas Orácula: entender, levantar hipóteses, observar cautelas, definir direção, escolher intervenção e acompanhar evolução. Aqui, tudo acontece em ambiente fictício e pedagógico.
+            Cada caso simulado percorre o mesmo ciclo do Atlas Orácula: entender, levantar hipóteses, observar cautelas, definir direção, escolher intervenção e acompanhar evolução. Este ciclo é apenas uma simulação pedagógica. Ele treina o raciocínio, mas não envia dados ao Atlas Orácula profissional.
           </p>
         </section>
 
