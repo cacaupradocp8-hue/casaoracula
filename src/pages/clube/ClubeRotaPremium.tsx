@@ -97,7 +97,7 @@ export default function ClubeRotaPremium() {
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
           <h2 className="font-display text-2xl text-foreground mb-4">Rota não encontrada</h2>
           <Button onClick={() => navigate('/clube')} variant="outline">
-            Voltar para o Clube
+            Voltar às Rotas
           </Button>
         </div>
       </AppLayout>
