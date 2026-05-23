@@ -137,7 +137,7 @@ export default function ClinicaDosContosPage() {
           items={[
             { label: 'Casa das Máquinas', href: '/casa-das-maquinas' },
             { label: 'Sala de Treinamento', href: '/sala-de-treinamento' },
-            { label: 'Clínica dos Contos' },
+            { label: 'Laboratório dos Contos' },
           ]}
         />
         
@@ -146,7 +146,7 @@ export default function ClinicaDosContosPage() {
             <BackButton />
             <div className="space-y-2">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-display tracking-wide text-foreground leading-tight">
-                Clínica dos <span className="text-primary italic">Contos</span>
+                Laboratório dos <span className="text-primary italic">Contos</span>
               </h1>
               <p className="text-muted-foreground text-sm sm:text-base max-w-2xl leading-relaxed">
                 Um laboratório simbólico para treinar formulação, escuta e intervenção através de histórias, livros e casos-espelho.
@@ -228,10 +228,10 @@ export default function ClinicaDosContosPage() {
         <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-6">
           <div className="flex items-center gap-3 text-primary">
             <GraduationCap className="w-6 h-6" />
-            <h2 className="text-2xl font-display italic">O que é a Clínica dos Contos</h2>
+            <h2 className="text-2xl font-display italic">O que é o Laboratório dos Contos</h2>
           </div>
           <p className="text-muted-foreground text-base sm:text-lg leading-relaxed max-w-4xl">
-            A Clínica dos Contos usa narrativas como espelhos simbólicos para treinar o olhar profissional. Cada história pode revelar temas como vergonha, limites, pertencimento, reconstrução, intuição, medo, autonomia e transformação.
+            O Laboratório dos Contos usa narrativas como espelhos simbólicos para treinar o olhar profissional. Cada história pode revelar temas como vergonha, limites, pertencimento, reconstrução, intuição, medo, autonomia e transformação.
           </p>
         </section>
 
@@ -446,7 +446,7 @@ export default function ClinicaDosContosPage() {
           <div className="flex flex-col gap-2 border-b border-border/10 pb-4">
             <h2 className="text-2xl sm:text-3xl font-display text-primary italic">Acervos e Bibliotecas</h2>
             <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-              Materiais de apoio para aprofundar o treino simbólico, literário e narrativo da Clínica dos Contos.
+              Materiais de apoio para aprofundar o treino simbólico, literário e narrativo do Laboratório dos Contos.
             </p>
           </div>
 
@@ -473,7 +473,7 @@ export default function ClinicaDosContosPage() {
           <div className="bg-muted/30 border border-border/50 rounded-2xl p-5">
             <p className="text-xs text-muted-foreground leading-relaxed text-center italic">
               A Câmara de Narração pode exigir autorização, certificação ou aceite ético. 
-              Caso o acesso não esteja disponível, siga pelo Acervo Simbólico de Referência ou pelo percurso principal da Clínica dos Contos.
+              Caso o acesso não esteja disponível, siga pelo Acervo Simbólico de Referência ou pelo percurso principal do Laboratório dos Contos.
             </p>
           </div>
         </section>
@@ -485,7 +485,7 @@ export default function ClinicaDosContosPage() {
               Como treina o raciocínio do Atlas
             </h3>
             <p className="text-muted-foreground leading-relaxed">
-              A Clínica dos Contos treina as mesmas etapas do Atlas: entender o caso, levantar hipóteses, observar sinais de cautela, definir direção, escolher intervenção e acompanhar evolução. A diferença é que aqui tudo acontece em ambiente fictício, literário e pedagógico.
+              O Laboratório dos Contos treina as mesmas etapas do Atlas: entender o caso, levantar hipóteses, observar sinais de cautela, definir direção, escolher intervenção e acompanhar evolução. A diferença é que aqui tudo acontece em ambiente fictício, literário e pedagógico.
             </p>
           </section>
 
@@ -495,7 +495,7 @@ export default function ClinicaDosContosPage() {
               Das Rotas da Casa para o treino
             </h3>
             <p className="text-muted-foreground leading-relaxed">
-              As Rotas da Casa podem alimentar esta clínica com obras, aulas, áudios e práticas. A leitura deixa de ser apenas conteúdo e passa a ser laboratório de formulação simbólica.
+              As Rotas da Casa podem alimentar este laboratório com obras, aulas, áudios e práticas. A leitura deixa de ser apenas conteúdo e passa a ser laboratório de formulação simbólica.
             </p>
           </section>
         </div>
