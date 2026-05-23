@@ -191,6 +191,13 @@ function AtlasCard({ icon, title, description, onClick, hasAction }: { icon: Rea
             {description}
           </p>
         </CardContent>
+        {hasAction && (
+          <div className="px-6 pb-6 mt-auto">
+            <div className="flex items-center gap-2 text-xs font-medium text-primary">
+              Iniciar Fluxo <ArrowRight className="w-3 h-3" />
+            </div>
+          </div>
+        )}
       </Card>
     </motion.div>
   );
