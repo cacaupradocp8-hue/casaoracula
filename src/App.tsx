@@ -584,9 +584,9 @@ function AppRoutes() {
 
       {/* As rotas de Biblioteca de Travessias estão no jornadaRoutes */}
 
-      {/* Relatórios */}
-      <Route path="/relatorio/sprint-06" element={<ProtectedRoute minPortal="admin"><RelatorioSprint06 /></ProtectedRoute>} />
-      <Route path="/relatorio/sprint-07" element={<ProtectedRoute minPortal="admin"><RelatorioSprint07 /></ProtectedRoute>} />
+      {/* Relatórios internos arquivados */}
+      <Route path="/relatorio/sprint-06" element={<Navigate to="/dashboard-membro" replace />} />
+      <Route path="/relatorio/sprint-07" element={<Navigate to="/dashboard-membro" replace />} />
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
