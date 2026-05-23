@@ -26,6 +26,7 @@ import { renderCasaMaquinasRoutes } from "@/routes/casaMaquinasRoutes";
 import { renderAdminRoutes } from "@/routes/adminRoutes";
 import { CasaMaquinasGuard } from "@/components/routing/CasaMaquinasGuard";
 import { renderJornadaRoutes } from "@/routes/jornadaRoutes";
+import { renderLegacyRedirects } from "@/routes/legacyRedirects";
 
 // Only Auth and NotFound are eagerly loaded (critical path)
 import Auth from "./pages/Auth";
@@ -34,10 +35,6 @@ import NotFound from "./pages/NotFound";
 import Onboarding from "./pages/Onboarding";
 import SalaDaVisitante from "./pages/SalaDaVisitante";
 
-function OracleRedirect({ suffix = '' }: { suffix?: string }) {
-  const { oracleSlug } = useParams();
-  return <Navigate to={`/oraculos/${oracleSlug}${suffix}`} replace />;
-}
 
 // Lazy-loaded pages
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
@@ -275,14 +272,6 @@ function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; a
   return <>{children}</>;
 }
 
-function LegacyCursoRedirect() {
-  const { id } = useParams<{ id: string }>();
-  return <Navigate to={`/cursos/${id}`} replace />;
-}
-function LegacyAulaRedirect() {
-  const { courseId, lessonId } = useParams<{ courseId: string; lessonId: string }>();
-  return <Navigate to={`/cursos/${courseId}/aula/${lessonId}`} replace />;
-}
 
 // ─── Main routes ──────────────────────────────────────────────
 
@@ -302,20 +291,13 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
-      <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
-      <Route path="/admin/clube-livro/legacy" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
-      <Route path="/admin/clube-livro/v1" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      {renderLegacyRedirects()}
       {/* Public */}
       <Route path="/" element={<Welcome />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
 
-      <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
-      <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
-      <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
-      <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
       <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
       <Route path="/vitrine" element={<Vitrine />} />
       <Route path="/desbloqueie" element={<DesbloqueiePage />} />
@@ -328,11 +310,9 @@ function AppRoutes() {
       <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
-      <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
+      
       <Route path="/convite-clube" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
       <Route path="/convite-clube-oracular" element={<ProtectedRoute><ConviteClube /></ProtectedRoute>} />
-      <Route path="/experiencia-gratuita" element={<Navigate to="/quiz/descubra-seu-eixo" replace />} />
-      <Route path="/dashboard" element={<ProtectedRoute><Navigate to="/dashboard-membro" replace /></ProtectedRoute>} />
       <Route path="/dashboard-membro" element={<ProtectedRoute><DashboardMembro /></ProtectedRoute>} />
       {/* /clube is handled by clubeRoutes */}
       <Route path="/salas/:id" element={<ProtectedRoute><SalaDetalhe /></ProtectedRoute>} />
@@ -346,11 +326,11 @@ function AppRoutes() {
 
       {/* Profissional */}
       <Route path="/confirmar-profissional" element={<ProtectedRoute><ConfirmarProfissional /></ProtectedRoute>} />
-      <Route path="/mentoria" element={<Navigate to="/oracula" replace />} />
+      
       <Route path="/casa-tecelas" element={<ProtectedRoute minPortal="oracula"><CasaTecelaAtrio /></ProtectedRoute>} />
       <Route path="/casa-tecelas/interior" element={<ProtectedRoute minPortal="oracula"><CasaTecelaInterior /></ProtectedRoute>} />
       <Route path="/circulo-oracular" element={<ProtectedRoute minPortal="assinante"><CirculoOracularPage /></ProtectedRoute>} />
-      <Route path="/jardim-heroina-app" element={<Navigate to="/meu-jardim" replace />} />
+      
       <Route path="/meu-jardim" element={<ProtectedRoute><JardimHeroinaClientePage /></ProtectedRoute>} />
       <Route path="/jardim" element={<ProtectedRoute><JardimHeroina /></ProtectedRoute>} />
       <Route path="/sala-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeuta /></ProtectedRoute>} />
@@ -369,16 +349,12 @@ function AppRoutes() {
       <Route path="/casa/sustentacao" element={<ProtectedRoute minPortal="oracula"><CasaSustentacao /></ProtectedRoute>} />
       <Route path="/casa/leitura" element={<ProtectedRoute minPortal="oracula"><CasaLeitura /></ProtectedRoute>} />
       <Route path="/casa/circulo" element={<ProtectedRoute minPortal="oracula"><CasaCirculo /></ProtectedRoute>} />
-      <Route path="/casa/jardim" element={<Navigate to="/jardim-da-psique" replace />} />
-      <Route path="/casa/jardim/:id" element={<RedirectWithParams to="/jardim-da-psique/:id" />} />
 
       {/* Orácula */}
       <Route path="/oracula" element={<OraculaPage />} />
       <Route path="/portal-oracula" element={<ProtectedRoute minPortal="aluna"><PortalOraculaPage /></ProtectedRoute>} />
       <Route path="/mentoria-oracular" element={<OraculaPage />} />
       <Route path="/metodo" element={<ProtectedRoute><Metodo /></ProtectedRoute>} />
-      <Route path="/ferramentas-metodo" element={<ProtectedRoute><Navigate to="/ferramentas" replace /></ProtectedRoute>} />
-      <Route path="/sala-do-metodo" element={<ProtectedRoute><Navigate to="/ferramentas" replace /></ProtectedRoute>} />
 
       {/* Labirinto da Heroína */}
       <Route path="/labirinto-heroina" element={<ProtectedRoute minPortal="aluna_formacao"><LabirintoHeroinaPage /></ProtectedRoute>} />
@@ -399,9 +375,9 @@ function AppRoutes() {
       <Route path="/biblioteca" element={<ProtectedRoute><BibliotecaUnificada /></ProtectedRoute>} />
       <Route path="/laboratorio-leitura" element={<ProtectedRoute minPortal="mentorada"><LaboratorioLeitura /></ProtectedRoute>} />
       <Route path="/agentes" element={<ProtectedRoute minPortal="mentorada"><Agentes /></ProtectedRoute>} />
-      <Route path="/salas" element={<ProtectedRoute><Navigate to="/mapa-casa" replace /></ProtectedRoute>} />
+      
       <Route path="/ferramentas" element={<ProtectedRoute><FerramentasHub /></ProtectedRoute>} />
-      <Route path="/ferramentas-vitrine" element={<ProtectedRoute><Navigate to="/ferramentas" replace /></ProtectedRoute>} />
+      
 
       {/* Session Room */}
       <Route path="/session-room" element={<ProtectedRoute minPortal="mentorada"><SessionRoomHome /></ProtectedRoute>} />
@@ -410,7 +386,7 @@ function AppRoutes() {
       <Route path="/session-room/manuais" element={<ProtectedRoute minPortal="mentorada"><ManuaisProtocolo /></ProtectedRoute>} />
       <Route path="/session-room/roteiros" element={<ProtectedRoute minPortal="mentorada"><RoteirosProtocolo /></ProtectedRoute>} />
       <Route path="/atlas-arquetipos" element={<ProtectedRoute minPortal="oracula"><AtlasArquetiposFemininos /></ProtectedRoute>} />
-      <Route path="/ferramentas/sala-de-sessao" element={<Navigate to="/session-room" replace />} />
+      
       <Route path="/ferramentas/mapa-vivo" element={<ProtectedRoute minPortal="mentorada"><MapaVivoList /></ProtectedRoute>} />
       <Route path="/ferramentas/mapa-vivo/:id" element={<ProtectedRoute minPortal="mentorada"><MapaVivoEditor /></ProtectedRoute>} />
 
@@ -418,16 +394,13 @@ function AppRoutes() {
       <Route path="/ferramentas/big5" element={<ProtectedRoute minPortal="mentorada"><Big5 /></ProtectedRoute>} />
       <Route path="/ferramenta/big5-simbolico" element={<ProtectedRoute minPortal="mentorada"><Big5Simbolico /></ProtectedRoute>} />
       
-      <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
+      
       <Route path="/ferramenta/big5-funcional" element={<ProtectedRoute minPortal="mentorada"><Big5Funcional /></ProtectedRoute>} />
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/ferramenta/eneagrama-feminino" element={<ProtectedRoute minPortal="mentorada"><EneagramaFeminino /></ProtectedRoute>} />
       <Route path="/ferramenta/jornada-heroina" element={<ProtectedRoute minPortal="mentorada"><JornadaHeroina /></ProtectedRoute>} />
-      <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
-      <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
-      <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       
-      <Route path="/revelacao-cidadela" element={<Navigate to="/cidadela/revelacao" replace />} />
+      
       <Route path="/ferramentas/oraculo-perguntas" element={<ProtectedRoute minPortal="mentorada"><OraculoPerguntas /></ProtectedRoute>} />
       <Route path="/ferramentas/mapa-oracula" element={<ProtectedRoute minPortal="mentorada"><MapaOracula /></ProtectedRoute>} />
 
@@ -446,10 +419,6 @@ function AppRoutes() {
       <Route path="/mapas-pessoais/:id" element={<ProtectedRoute minPortal="mentorada"><PersonalMapEditor /></ProtectedRoute>} />
 
       {/* Legacy sala redirects */}
-      <Route path="/salas/big5" element={<Navigate to="/ferramentas/big5" replace />} />
-      <Route path="/salas/eneagrama" element={<Navigate to="/ferramentas/eneagrama" replace />} />
-      <Route path="/salas/oraculo-perguntas" element={<Navigate to="/ferramentas/oraculo-perguntas" replace />} />
-      <Route path="/salas/mapa-oracula" element={<Navigate to="/ferramentas/mapa-oracula" replace />} />
 
       {/* More ferramentas */}
       <Route path="/ferramentas/chakras" element={<ProtectedRoute minPortal="mentorada"><Chakras /></ProtectedRoute>} />
@@ -473,12 +442,8 @@ function AppRoutes() {
       <Route path="/ferramentas/tarot" element={<ProtectedRoute minPortal="mentorada"><Tarot /></ProtectedRoute>} />
       <Route path="/ferramentas/constelacao" element={<ProtectedRoute minPortal="mentorada"><Constelacao /></ProtectedRoute>} />
       <Route path="/syntheia" element={<ProtectedRoute minPortal="mentorada"><Syntheia /></ProtectedRoute>} />
-      <Route path="/ferramentas/sintheia" element={<Navigate to="/syntheia" replace />} />
-      <Route path="/ferramentas/agente-analista" element={<ProtectedRoute minPortal="mentorada"><Navigate to="/syntheia?agente=analista" replace /></ProtectedRoute>} />
-      <Route path="/ferramentas/agente-curador" element={<ProtectedRoute minPortal="mentorada"><Navigate to="/syntheia?agente=curador" replace /></ProtectedRoute>} />
-      <Route path="/ferramentas/agente-simbolico" element={<ProtectedRoute minPortal="mentorada"><Navigate to="/syntheia?agente=simbolico" replace /></ProtectedRoute>} />
       <Route path="/ferramentas/espelho-de-consciencia" element={<ProtectedRoute minPortal="mentorada"><EspelhoConsciencia /></ProtectedRoute>} />
-      <Route path="/ferramentas/espelho-consciencia" element={<Navigate to="/ferramentas/espelho-de-consciencia" replace />} />
+      
       <Route path="/ferramentas/mapa-arquetipos-ego" element={<ProtectedRoute minPortal="mentorada"><MapaArquetiposEgo /></ProtectedRoute>} />
       <Route path="/ferramentas/cartografia-torre" element={<ProtectedRoute minPortal="mentorada"><CartografiaTorre /></ProtectedRoute>} />
       <Route path="/ferramentas/plasticidade-psiquica" element={<ProtectedRoute minPortal="mentorada"><PlasticidadePsiquica /></ProtectedRoute>} />
