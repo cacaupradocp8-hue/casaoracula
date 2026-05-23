@@ -91,8 +91,9 @@ export default function SalaDeTreinamentoPage() {
             icon={Compass}
             title="Formulação Guiada"
             description="Aprenda a organizar uma leitura em camadas: queixa, contexto, hipóteses, cautelas, direção, intervenção e evolução."
-            status="Em estruturação"
+            status="Novo"
             primaryIcon={BarChart3}
+            onClick={() => navigate('/sala-de-treinamento/formulacao-guiada')}
           />
           <TrainingModuleCard
             icon={Zap}
@@ -149,6 +150,9 @@ export default function SalaDeTreinamentoPage() {
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/minha-jornada')}>
             Voltar para Minha Jornada
+          </Button>
+          <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/formulacao-guiada')}>
+            Formulação Guiada
           </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
             Voltar para o Atlas

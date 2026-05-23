@@ -128,6 +128,7 @@ const RevelacaoCidadelaPage = React.lazy(() => import("./pages/RevelacaoCidadela
 const SalaDeTreinamentoPage = React.lazy(() => import("./pages/SalaDeTreinamentoPage"));
 const ClinicaDosContosPage = React.lazy(() => import("./pages/ClinicaDosContosPage"));
 const CasosSimuladosPage = React.lazy(() => import("./pages/CasosSimuladosPage"));
+const FormulacaoGuiadaPage = React.lazy(() => import("./pages/FormulacaoGuiadaPage"));
 const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
 const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
@@ -463,6 +464,7 @@ function AppRoutes() {
       <Route path="/sala-de-treinamento" element={<ProtectedRoute><SalaDeTreinamentoPage /></ProtectedRoute>} />
       <Route path="/sala-de-treinamento/clinica-dos-contos" element={<ProtectedRoute><ClinicaDosContosPage /></ProtectedRoute>} />
       <Route path="/sala-de-treinamento/casos-simulados" element={<ProtectedRoute><CasosSimuladosPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento/formulacao-guiada" element={<ProtectedRoute><FormulacaoGuiadaPage /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
