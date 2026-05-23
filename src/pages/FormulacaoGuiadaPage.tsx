@@ -38,6 +38,65 @@ export default function FormulacaoGuiadaPage() {
     markCompleted 
   } = useTrainingProgress("formulacao-guiada");
 
+  const {
+    submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+    submitExercise,
+    archiveSubmission
+  } = useTrainingSubmissions("formulacao-guiada");
+
+  const [formState, setFormState] = useState({
+    situacaoFicticia: '',
+    sinaisSimbolicos: '',
+    hipotesesTreino: '',
+    cautelasPedagogicas: '',
+    direcaoSimbolica: '',
+    praticaIntegracao: '',
+    evolucaoEsperada: '',
+    sintesePedagogica: ''
+  });
+
+  const handleInputChange = (field: keyof typeof formState, value: string) => {
+    setFormState(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSaveFormulation = async () => {
+    if (!formState.sintesePedagogica.trim()) return;
+
+    try {
+      await submitExercise({
+        module_key: "formulacao-guiada",
+        exercise_key: "formulacao-pedagogica-7-camadas",
+        exercise_type: "formulation_practice",
+        case_key: "formulacao-guiada",
+        prompt_text: "Treino de formulação em 7 camadas (Ambiente Pedagógico)",
+        response_text: formState.sintesePedagogica,
+        response_metadata: {
+          ...formState
+        }
+      });
+      
+      // Limpa o formulário após sucesso
+      setFormState({
+        situacaoFicticia: '',
+        sinaisSimbolicos: '',
+        hipotesesTreino: '',
+        cautelasPedagogicas: '',
+        direcaoSimbolica: '',
+        praticaIntegracao: '',
+        evolucaoEsperada: '',
+        sintesePedagogica: ''
+      });
+
+      // Se for a primeira submissão, marca como concluído o percurso visual? 
+      // Ou deixamos a aluna marcar manualmente como está agora.
+      // A instrução não pede para automatizar a conclusão do progresso.
+    } catch (err) {
+      console.error("Erro ao salvar formulação:", err);
+    }
+  };
+
   useEffect(() => {
     if (!progressLoading && !progress) {
       markStarted();
