@@ -85,10 +85,10 @@ export default function ClubeRotasCatalogo() {
               <VozTag size="sm" />
             </div>
             <h1 className="font-display text-3xl md:text-5xl text-foreground leading-[1.05]">
-              A jornada não cabe em um livro só.
+              Rotas da <span className="text-primary italic">Casa</span>
             </h1>
             <p className="font-serif italic text-base md:text-lg text-foreground/65 max-w-xl">
-              Este espaço não é sobre acumular conteúdo. É sobre atravessar experiências.
+              Travessias simbólicas, leituras e práticas de integração para continuar a sua jornada dentro da Casa Orácula.
             </p>
           </motion.div>
 
