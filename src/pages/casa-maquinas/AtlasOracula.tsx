@@ -89,6 +89,8 @@ export default function AtlasOracula() {
             icon={<Search className="w-6 h-6 text-primary" />}
             title="1. Entender o caso"
             description="Reunir história, contexto, queixa, padrões e sinais relevantes antes de escolher qualquer intervenção."
+            onClick={() => navigate('/casa-das-maquinas/atlas/entender-caso')}
+            hasAction
           />
           <AtlasCard 
             icon={<Lightbulb className="w-6 h-6 text-primary" />}
