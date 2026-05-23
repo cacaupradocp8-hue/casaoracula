@@ -41,6 +41,7 @@ const ObservarCautelaPage = React.lazy(() => import('@/pages/casa-maquinas/atlas
 const DefinirDirecaoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/DefinirDirecaoPage'));
 const EscolherIntervencaoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/EscolherIntervencaoPage'));
 const AcompanharEvolucaoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/AcompanharEvolucaoPage'));
+const CasoDemonstrativoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/CasoDemonstrativoPage'));
 // CartografiaPage removed — all cartografia routes redirect to /ferramenta/cartografia-psiquica-oracula
 const TorreVivaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/TorreVivaPage'));
 const LabirintoPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/LabirintoPage'));
@@ -123,6 +124,7 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-atlas-dd" path="/casa-das-maquinas/atlas/definir-direcao" element={<ProtectedRoute minPortal="oracula"><DefinirDirecaoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-ei" path="/casa-das-maquinas/atlas/escolher-intervencao" element={<ProtectedRoute minPortal="oracula"><EscolherIntervencaoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-ae" path="/casa-das-maquinas/atlas/acompanhar-evolucao" element={<ProtectedRoute minPortal="oracula"><AcompanharEvolucaoPage /></ProtectedRoute>} />,
+    <Route key="cm-atlas-demo" path="/casa-das-maquinas/atlas/demo" element={<ProtectedRoute minPortal="oracula"><CasoDemonstrativoPage /></ProtectedRoute>} />,
     <Route key="cm-cart" path="/casa-das-maquinas/ferramentas/cartografia" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />,
     <Route key="cm-tv" path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />,
     <Route key="cm-lab" path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />,
