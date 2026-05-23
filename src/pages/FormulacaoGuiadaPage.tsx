@@ -133,9 +133,9 @@ export default function FormulacaoGuiadaPage() {
             <ShieldCheck className="w-6 h-6 text-amber-500" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-amber-500 font-display">Espaço Pedagógico e Ético</h3>
+            <h3 className="text-lg font-semibold text-amber-500 font-display">Treino Ético e Pedagógico</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Uma boa formulação permanece aberta, contextual e revisável.
+              Este espaço é exclusivo para treino pedagógico com casos fictícios. Não use dados de clientes reais. Nada preenchido aqui é processado por IA, enviado ao Atlas Orácula ou usado como prontuário. A formulação guiada é um exercício de estudo e permanece isolada na Sala de Treinamento.
             </p>
           </div>
         </div>
@@ -208,50 +208,55 @@ export default function FormulacaoGuiadaPage() {
         <section className="space-y-8">
           <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
             <FileText className="w-5 h-5" />
-            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Exercício de Treino (Modelo)</h2>
+            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Exercício Pedagógico (Modelo)</h2>
           </div>
           <Card className="bg-card/40 border-border rounded-[2.5rem] overflow-hidden">
             <CardContent className="p-8 sm:p-12 space-y-8 opacity-60">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Tema do caso fictício</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Ex: Sobrecarga em transição...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Situação fictícia de estudo</label>
+                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Ex: Sobrecarga em transição simbólica...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Queixa aparente</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">O que a personagem diz?</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Queixa pedagógica aparente</label>
+                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">O que a personagem fictícia manifesta?</div>
                 </div>
               </div>
               <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais e Contexto</label>
-                <div className="h-20 border-b border-border/50 text-sm text-muted-foreground italic">O que foi observado no cenário fictício?</div>
+                <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Simbólicos Observados</label>
+                <div className="h-20 border-b border-border/50 text-sm text-muted-foreground italic">O que foi mapeado no cenário de treino?</div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses Provisórias</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Possíveis leituras simbólicas...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses de Treino</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Possíveis leituras e possibilidades pedagógicas...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Pontos de atenção ética...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas Pedagógicas</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Pontos de atenção ética no exercício...</div>
                 </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção e Intervenção</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Próximo passo proposto...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Simbólica Possível</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Próximo passo de estudo proposto...</div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">O que revisar depois?</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Sinais de resposta esperados...</div>
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Evolução esperada no exercício</label>
+                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Sinais de resposta narrativa esperados...</div>
                 </div>
               </div>
-              <div className="pt-4 flex justify-between items-center">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
-                  <AlertCircle className="w-3 h-3" /> Ficha Visual Mock — Não persistente
-                </span>
+              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="space-y-1">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
+                    <AlertCircle className="w-3 h-3" /> Ficha Visual Mock — Isolada da prática real
+                  </span>
+                  <p className="text-[9px] text-muted-foreground/40 italic">
+                    Nada preenchido nesta ficha de estudo é enviado ao Atlas ou processado por IA.
+                  </p>
+                </div>
                 <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold" disabled>
-                  Começar Exercício
+                  Iniciar Exercício Pedagógico
                 </Button>
               </div>
             </CardContent>
@@ -314,10 +319,10 @@ export default function FormulacaoGuiadaPage() {
             <div className="space-y-4">
               <h3 className="text-2xl font-display text-foreground italic">Pronto para aplicar na prática real?</h3>
               <p className="text-muted-foreground leading-relaxed">
-                Na Formulação Guiada, você treina o raciocínio com exercícios pedagógicos e fictícios. No Atlas Orácula, esse mesmo raciocínio é aplicado no contexto profissional da Casa das Máquinas, com mais responsabilidade, cautela e respeito aos limites éticos.
+                Na Formulação Guiada, você treina o raciocínio com exercícios pedagógicos e fictícios que permanecem isolados na Sala de Treinamento. No Atlas Orácula profissional, esse mesmo raciocínio é aplicado com responsabilidade clínica, mas este exercício não envia dados ao Atlas e não cria registro profissional.
               </p>
               <p className="text-xs text-muted-foreground/60 italic max-w-xl mx-auto">
-                Os exercícios desta sala não são salvos como prontuário, não são transferidos para o Atlas e não substituem supervisão profissional.
+                Este espaço não gera prontuário, diagnóstico ou relatório clínico e nada preenchido aqui é processado por IA.
               </p>
             </div>
 
