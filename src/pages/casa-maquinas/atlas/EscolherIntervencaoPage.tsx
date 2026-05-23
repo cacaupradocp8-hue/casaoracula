@@ -219,7 +219,7 @@ export default function EscolherIntervencaoPage() {
                   <NextStepButton icon={<Target className="w-4 h-4" />} title="Rever Direção" onClick={() => navigate('/casa-das-maquinas/atlas/definir-direcao')} />
                   <NextStepButton icon={<ShieldCheck className="w-4 h-4" />} title="Rever Sinais Cautela" onClick={() => navigate('/casa-das-maquinas/atlas/observar-cautela')} />
                   <NextStepButton icon={<Eye className="w-4 h-4" />} title="Levar para Supervisão" status="Em breve" />
-                  <NextStepButton icon={<History className="w-4 h-4" />} title="Acompanhar Evolução" status="Em breve" />
+                  <NextStepButton icon={<History className="w-4 h-4" />} title="Acompanhar Evolução" onClick={() => navigate('/casa-das-maquinas/atlas/acompanhar-evolucao')} />
                   <NextStepButton icon={<LogOut className="w-4 h-4" />} title="Aguardar Contexto" onClick={() => navigate('/casa-das-maquinas/atlas')} />
                 </div>
                 <div className="bg-muted/30 p-4 mt-8 rounded-lg flex items-center justify-center border border-dashed border-muted-foreground/20">
