@@ -232,6 +232,44 @@ export default function SalaDeTreinamentoPage() {
   );
 }
 
+function SupportLabCard({ icon: Icon, title, description, cta, onClick }: { icon: any, title: string, description: string, cta: string, onClick: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className="group bg-card/20 backdrop-blur-sm border border-border/50 rounded-[1.5rem] p-6 space-y-4 transition-all duration-300 hover:border-primary/20 hover:bg-card/40 cursor-pointer relative overflow-hidden"
+    >
+      <div className="flex items-center justify-between">
+        <div className="w-10 h-10 rounded-xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+          <Icon className="w-5 h-5 text-primary/40 group-hover:text-primary/70" />
+        </div>
+        <Badge variant="ghost" className="text-[9px] uppercase tracking-tighter text-muted-foreground/40 font-bold border-none">
+          Rota existente
+        </Badge>
+      </div>
+
+      <div className="space-y-2">
+        <h4 className="text-lg font-display text-foreground/80 group-hover:text-primary transition-colors">{title}</h4>
+        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+          {description}
+        </p>
+      </div>
+
+      <div className="pt-2 flex items-center justify-between">
+        <span className="text-[10px] uppercase font-bold tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+          {cta}
+        </span>
+        <div className="w-6 h-6 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/30 transition-colors">
+          <ChevronRight className="w-3 h-3 text-primary/40 group-hover:text-primary" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ChevronRight({ className }: { className?: string }) {
+  return <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m9 18 6-6-6-6"/></svg>;
+}
+
 function TrainingModuleCard({ icon: Icon, title, description, status, primaryIcon: PrimaryIcon, onClick }: { icon: any, title: string, description: string, status: string, primaryIcon: any, onClick?: () => void }) {
   return (
     <div 
