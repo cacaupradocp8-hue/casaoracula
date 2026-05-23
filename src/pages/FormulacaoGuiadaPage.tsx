@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   Compass, 
@@ -15,16 +15,33 @@ import {
   Zap,
   RefreshCcw,
   MessageCircle,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
+import { useTrainingProgress } from '@/hooks/useTrainingData';
+import { cn } from '@/lib/utils';
 
 export default function FormulacaoGuiadaPage() {
   const navigate = useNavigate();
+  const { 
+    progress, 
+    loading: progressLoading, 
+    error: progressError, 
+    markStarted, 
+    markCompleted 
+  } = useTrainingProgress("formulacao-guiada");
+
+  useEffect(() => {
+    if (!progressLoading && !progress) {
+      markStarted();
+    }
+  }, [progressLoading, progress, markStarted]);
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
@@ -50,10 +67,65 @@ export default function FormulacaoGuiadaPage() {
             </div>
           </div>
           
-          <Badge className="bg-primary/10 text-primary border-primary/20 text-xs px-4 py-2 font-bold uppercase tracking-widest self-start md:self-auto">
-            Laboratório de Raciocínio
-          </Badge>
+          <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
+            {progressLoading ? (
+              <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span className="text-xs uppercase tracking-widest font-bold">Sincronizando...</span>
+              </div>
+            ) : progressError ? (
+              <div className="text-xs text-destructive bg-destructive/5 px-4 py-2 rounded-xl border border-destructive/20">
+                Erro ao salvar progresso
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 bg-primary/5 border border-primary/20 px-4 py-2 rounded-2xl">
+                <div className={cn(
+                  "w-2 h-2 rounded-full",
+                  progress?.status === 'completed' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-primary animate-pulse"
+                )} />
+                <span className="text-xs uppercase tracking-widest font-bold text-primary">
+                  {progress?.status === 'completed' ? 'Treino Concluído' : 
+                   progress?.status === 'in_progress' ? 'Em Andamento' : 'Treino Iniciado'}
+                </span>
+              </div>
+            )}
+            <Badge className="bg-primary/10 text-primary border-primary/20 text-xs px-4 py-2 font-bold uppercase tracking-widest">
+              Laboratório de Raciocínio
+            </Badge>
+          </div>
         </header>
+
+        {/* Card de Progresso Pedagógico */}
+        <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-3 text-primary">
+                <BarChart3 className="w-6 h-6" />
+                <h2 className="text-2xl font-display italic">Progresso em Formulação Guiada</h2>
+              </div>
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                Este progresso pertence apenas à sua jornada pedagógica na Sala de Treinamento. A formulação aqui é exercício de estudo, não prontuário, não atendimento real e não é enviada ao Atlas ou à IA.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
+              {progress?.status !== 'completed' && !progressLoading && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="rounded-full border-primary/30 text-primary hover:bg-primary/10 text-[10px] uppercase font-bold tracking-widest"
+                  onClick={() => markCompleted()}
+                >
+                  <CheckCircle2 className="w-3 h-3 mr-2" />
+                  Marcar percurso como concluído
+                </Button>
+              )}
+              <p className="text-[10px] text-muted-foreground/60 italic text-center sm:text-right max-w-[200px]">
+                Ações de estudo não geram registros clínicos profissionais.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Bloco ético obrigatório */}
         <div className="bg-amber-500/5 border border-amber-500/20 rounded-3xl p-6 sm:p-8 flex items-start gap-4 sm:gap-6">
