@@ -127,6 +127,8 @@ export default function AtlasOracula() {
             icon={<History className="w-6 h-6 text-primary" />}
             title="6. Acompanhar evolução"
             description="Registrar mudanças, padrões recorrentes, respostas às intervenções e próximos passos."
+            onClick={() => navigate('/casa-das-maquinas/atlas/acompanhar-evolucao')}
+            hasAction
           />
         </div>
 
