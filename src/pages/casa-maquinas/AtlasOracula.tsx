@@ -6,18 +6,19 @@ import {
   AlertTriangle, 
   ArrowRight, 
   CheckCircle2, 
-  LayoutDashboard,
   ShieldCheck,
   Zap,
-  BookOpen,
-  Users,
   Search,
   History,
-  Info
+  Info,
+  Layers,
+  Brain,
+  MessageSquare
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
+import { atlasModules } from '@/data/atlasModules';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -25,19 +26,16 @@ const fadeInUp = {
   transition: { duration: 0.5 }
 };
 
-const modules = [
-  { name: 'Big Five', status: 'Em integração' },
-  { name: 'Cartografia Psíquica', status: 'Em integração' },
-  { name: 'R.O.T.A.I / Crenças', status: 'Em breve' },
-  { name: 'Torre Viva', status: 'Em integração' },
-  { name: 'Labirinto', status: 'Em integração' },
-  { name: 'Complexos', status: 'Em breve' },
-  { name: 'Sonhos', status: 'Em integração' },
-  { name: '7 Vozes', status: 'Em integração' },
-  { name: 'Portas', status: 'Em breve' },
-  { name: 'Mapa Vivo', status: 'Em integração' },
-  { name: 'Biblioteca de Intervenções', status: 'Em integração' },
+const thoughtProcess = [
+  { step: 1, title: 'Recolhe sinais', icon: <Search className="w-4 h-4" /> },
+  { step: 2, title: 'Organiza camadas', icon: <Layers className="w-4 h-4" /> },
+  { step: 3, title: 'Levanta hipóteses', icon: <Lightbulb className="w-4 h-4" /> },
+  { step: 4, title: 'Observa riscos', icon: <AlertTriangle className="w-4 h-4" /> },
+  { step: 5, title: 'Sugere direção', icon: <Compass className="w-4 h-4" /> },
+  { step: 6, title: 'Conecta intervenções', icon: <Zap className="w-4 h-4" /> },
+  { step: 7, title: 'Acompanha evolução', icon: <History className="w-4 h-4" /> },
 ];
+
 
 export default function AtlasOracula() {
   return (
