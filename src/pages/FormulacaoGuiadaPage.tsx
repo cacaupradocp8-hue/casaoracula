@@ -229,10 +229,36 @@ export default function FormulacaoGuiadaPage() {
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
             Treinar com Literatura
           </Button>
-          <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Levar para o Atlas
-          </Button>
         </div>
+
+        <section className="mt-12 pt-12 border-t border-border/10 max-w-3xl mx-auto space-y-8">
+          <div className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-8 sm:p-10 space-y-6 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-2">
+              <ShieldCheck className="w-4 h-4 text-primary" />
+              <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Do treino à prática profissional</span>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-2xl font-display text-foreground italic">Pronto para aplicar na prática real?</h3>
+              <p className="text-muted-foreground leading-relaxed">
+                Na Formulação Guiada, você treina o raciocínio com exercícios pedagógicos e fictícios. No Atlas Orácula, esse mesmo raciocínio é aplicado no contexto profissional da Casa das Máquinas, com mais responsabilidade, cautela e respeito aos limites éticos.
+              </p>
+              <p className="text-xs text-muted-foreground/60 italic max-w-xl mx-auto">
+                Os exercícios desta sala não são salvos como prontuário, não são transferidos para o Atlas e não substituem supervisão profissional.
+              </p>
+            </div>
+
+            <div className="pt-4">
+              <Button 
+                className="rounded-full px-10 py-7 h-auto font-bold uppercase tracking-widest text-sm shadow-gold group" 
+                onClick={() => navigate('/casa-das-maquinas/atlas')}
+              >
+                Aplicar raciocínio no Atlas
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
