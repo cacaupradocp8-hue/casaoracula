@@ -186,12 +186,12 @@ export default function ClinicaDosContosPage() {
             </div>
 
             <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
-              {loading ? (
+              {progressLoading ? (
                 <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-xs uppercase tracking-widest font-bold">Sincronizando...</span>
                 </div>
-              ) : error ? (
+              ) : progressError ? (
                 <div className="text-xs text-destructive bg-destructive/5 px-4 py-2 rounded-xl border border-destructive/20">
                   Erro ao salvar progresso
                 </div>
