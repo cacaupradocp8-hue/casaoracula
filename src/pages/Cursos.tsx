@@ -100,7 +100,7 @@ export default function Cursos() {
           <section className="mb-12">
             <div className="flex items-center gap-2 mb-4">
               <Sparkles className="w-5 h-5 text-primary" />
-              <h2 className="font-display text-xl font-semibold">Cursos em Destaque</h2>
+              <h2 className="font-display text-xl font-semibold">Ciclos de Estudo em Destaque</h2>
             </div>
             <CourseGrid 
               courses={featuredCourses as CourseWithProgress[]} 
@@ -114,12 +114,12 @@ export default function Cursos() {
           <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto gap-1">
             <TabsTrigger value="todos" className="gap-2">
               <GraduationCap className="w-4 h-4" />
-              Todos os Cursos
+              Ciclos da Formação
             </TabsTrigger>
             {user && (
               <TabsTrigger value="meus" className="gap-2">
                 <BookOpen className="w-4 h-4" />
-                Meus Cursos
+                Meus Ciclos
                 {enrolledCourses.length > 0 && (
                   <span className="ml-1 text-xs bg-primary/20 px-1.5 py-0.5 rounded-full">
                     {enrolledCourses.length}
