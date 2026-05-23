@@ -480,9 +480,9 @@ function AppRoutes() {
       ))}
 
       {/* Treinamento redirects */}
-      <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
+      
       <Route path="/sala-de-treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaDeTreinamentoPage /></ProtectedRoute>} />
-      <Route path="/sala-treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
+      
       <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
       <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
 
