@@ -58,7 +58,7 @@ export default function ClinicaDosContosPage() {
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-amber-500 font-display">Espaço de Treino e Ética</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              A Clínica dos Contos é um espaço de treino. As narrativas não devem ser usadas para rotular pessoas reais, confirmar diagnósticos ou substituir supervisão profissional. Toda leitura simbólica deve permanecer aberta, contextual e provisória.
+              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Toda leitura simbólica deve permanecer aberta, contextual e provisória.
             </p>
           </div>
         </div>
@@ -207,11 +207,14 @@ export default function ClinicaDosContosPage() {
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento')}>
             Voltar para Sala de Treinamento
           </Button>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/casos-simulados')}>
+            Continuar percurso: Casos Simulados
+          </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/mapa-casa')}>
              Ver Rotas da Casa
           </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Voltar para o Atlas
+            Ver Atlas Orácula
           </Button>
         </div>
       </div>

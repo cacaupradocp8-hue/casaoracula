@@ -59,7 +59,7 @@ export default function CasosSimuladosPage() {
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-amber-500 font-display">Treino Ético e Fictício</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Casos Simulados não são atendimentos reais, não geram diagnóstico e não substituem supervisão. Eles servem para treinar perguntas, prudência, formulação e escolha responsável de próximos passos.
+              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Serve para treinar perguntas, prudência e formulação.
             </p>
           </div>
         </div>
@@ -197,11 +197,14 @@ export default function CasosSimuladosPage() {
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento')}>
             Voltar para Sala de Treinamento
           </Button>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/formulacao-guiada')}>
+            Continuar percurso: Formulação
+          </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
-            Clínica dos Contos
+            Treinar com Literatura
           </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Voltar para o Atlas
+            Ver Atlas Orácula
           </Button>
         </div>
       </div>

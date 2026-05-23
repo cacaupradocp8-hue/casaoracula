@@ -125,6 +125,35 @@ export default function SalaDeTreinamentoPage() {
           />
         </div>
 
+        <section className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-8 sm:p-10 space-y-6">
+          <div className="flex items-center gap-3 text-primary">
+            <Compass className="w-6 h-6" />
+            <h2 className="text-xl font-display italic">Como usar esta sala (Percurso Recomendado)</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Passo 1</span>
+              <h4 className="text-sm font-bold uppercase tracking-tight">Clínica dos Contos</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">Treine leitura simbólica e casos-espelho através da literatura.</p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Passo 2</span>
+              <h4 className="text-sm font-bold uppercase tracking-tight">Casos Simulados</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">Pratique a escuta e formulação com personagens fictícias.</p>
+            </div>
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Passo 3</span>
+              <h4 className="text-sm font-bold uppercase tracking-tight">Formulação Guiada</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">Organize o raciocínio em camadas antes de escolher a intervenção.</p>
+            </div>
+            <div className="space-y-2 border-l border-primary/10 pl-6">
+              <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">Passo 4</span>
+              <h4 className="text-sm font-bold uppercase tracking-tight">Atlas Orácula</h4>
+              <p className="text-xs text-muted-foreground leading-relaxed">Leve o aprendizado para a prática real na Casa das Máquinas.</p>
+            </div>
+          </div>
+        </section>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
           <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-4">
             <h3 className="text-xl font-display text-primary italic">Como esta sala conversa com o Atlas</h3>
@@ -143,19 +172,19 @@ export default function SalaDeTreinamentoPage() {
 
         <div className="flex flex-wrap items-center justify-center gap-4 pt-10">
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
-            Clínica dos Contos
+            Treinar com Literatura
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/casos-simulados')}>
-            Casos Simulados
+            Praticar com Casos Fictícios
+          </Button>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/formulacao-guiada')}>
+            Organizar Formulação
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/minha-jornada')}>
             Voltar para Minha Jornada
           </Button>
-          <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/formulacao-guiada')}>
-            Formulação Guiada
-          </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Voltar para o Atlas
+            Ver Atlas Orácula
           </Button>
         </div>
       </div>
