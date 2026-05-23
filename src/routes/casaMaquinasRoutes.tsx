@@ -38,6 +38,7 @@ const AtlasOracula = React.lazy(() => import('@/pages/casa-maquinas/AtlasOracula
 const EntenderCasoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/EntenderCasoPage'));
 const LevantarHipotesesPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/LevantarHipotesesPage'));
 const ObservarCautelaPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/ObservarCautelaPage'));
+const DefinirDirecaoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/DefinirDirecaoPage'));
 // CartografiaPage removed — all cartografia routes redirect to /ferramenta/cartografia-psiquica-oracula
 const TorreVivaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/TorreVivaPage'));
 const LabirintoPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/LabirintoPage'));
@@ -117,6 +118,7 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-atlas-ec" path="/casa-das-maquinas/atlas/entender-caso" element={<ProtectedRoute minPortal="oracula"><EntenderCasoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-lh" path="/casa-das-maquinas/atlas/levantar-hipoteses" element={<ProtectedRoute minPortal="oracula"><LevantarHipotesesPage /></ProtectedRoute>} />,
     <Route key="cm-atlas-oc" path="/casa-das-maquinas/atlas/observar-cautela" element={<ProtectedRoute minPortal="oracula"><ObservarCautelaPage /></ProtectedRoute>} />,
+    <Route key="cm-atlas-dd" path="/casa-das-maquinas/atlas/definir-direcao" element={<ProtectedRoute minPortal="oracula"><DefinirDirecaoPage /></ProtectedRoute>} />,
     <Route key="cm-cart" path="/casa-das-maquinas/ferramentas/cartografia" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />,
     <Route key="cm-tv" path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />,
     <Route key="cm-lab" path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />,
