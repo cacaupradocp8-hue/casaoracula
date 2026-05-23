@@ -501,9 +501,6 @@ function AppRoutes() {
       <Route path="/oraculos/:oracleSlug/historico" element={<ProtectedRoute><OracleHistory /></ProtectedRoute>} />
       <Route path="/oraculos/:oracleSlug/biblioteca" element={<ProtectedRoute><OracleCardLibrary /></ProtectedRoute>} />
 
-      {/* Legacy curso redirects */}
-      <Route path="/curso/:id" element={<LegacyCursoRedirect />} />
-      <Route path="/curso/:courseId/aula/:lessonId" element={<LegacyAulaRedirect />} />
 
       {/* Cursos */}
       <Route path="/cursos" element={<ProtectedRoute><Cursos /></ProtectedRoute>} />
@@ -535,10 +532,8 @@ function AppRoutes() {
 
       {/* Planos e Conta */}
       <Route path="/planos" element={<Planos />} />
-      <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
+      
       <Route path="/pos-compra" element={<ProtectedRoute><PosCompra /></ProtectedRoute>} />
-      <Route path="/assinatura" element={<ProtectedRoute><Navigate to="/minha-conta" replace /></ProtectedRoute>} />
-      <Route path="/billing" element={<ProtectedRoute><Navigate to="/minha-conta" replace /></ProtectedRoute>} />
       <Route path="/minha-conta" element={<ProtectedRoute><MinhaConta /></ProtectedRoute>} />
       <Route path="/suporte" element={<ProtectedRoute><Suporte /></ProtectedRoute>} />
       <Route path="/checkout/sucesso" element={<ProtectedRoute><CheckoutSucesso /></ProtectedRoute>} />
@@ -549,9 +544,6 @@ function AppRoutes() {
 
       {/* As rotas de Biblioteca de Travessias estão no jornadaRoutes */}
 
-      {/* Relatórios internos arquivados */}
-      <Route path="/relatorio/sprint-06" element={<Navigate to="/dashboard-membro" replace />} />
-      <Route path="/relatorio/sprint-07" element={<Navigate to="/dashboard-membro" replace />} />
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
       <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
