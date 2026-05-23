@@ -40,14 +40,14 @@ const assinanteMenuGroups = () => [
   { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
   { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
-  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
   { 
     key: 'treinamento', 

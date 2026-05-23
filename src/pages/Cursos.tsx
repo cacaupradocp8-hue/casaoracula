@@ -54,13 +54,13 @@ export default function Cursos() {
   return (
     <AppLayout>
       <MobilePageShell
-        badge="Formação"
-        title="Área de Membros"
-        subtitle="Cursos e formações para sua jornada de desenvolvimento"
+        badge="Formação Orácula"
+        title="Formação Orácula"
+        subtitle="Ciclos de estudo e módulos para sua jornada de formação"
         collapsibles={[
           {
             title: "O que encontro aqui?",
-            children: "Cursos completos, módulos aprofundados e formações certificadas para sua prática simbólica e terapêutica.",
+            children: "Módulos aprofundados e ciclos de estudo para sua jornada no Método Orácula.",
           },
           {
             title: "Como usar",
