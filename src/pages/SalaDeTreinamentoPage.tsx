@@ -125,6 +125,46 @@ export default function SalaDeTreinamentoPage() {
           />
         </div>
 
+        <section className="space-y-8 pt-8">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl sm:text-3xl font-display text-primary italic">Laboratórios de Apoio</h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              Recursos já existentes da Casa que ampliam o treino de escuta, narração, literatura e formulação simbólica.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <SupportLabCard
+              icon={FlaskConical}
+              title="Laboratório Oracular"
+              description="Treino 80/20 para transformar obras, símbolos e narrativas em leitura, espelho e prática."
+              cta="Acessar laboratório"
+              onClick={() => navigate('/clube/laboratorio')}
+            />
+            <SupportLabCard
+              icon={MessageCircle}
+              title="Ofício da Voz"
+              description="Espaço de treino para voz, escuta, narração e presença simbólica."
+              cta="Treinar narração"
+              onClick={() => navigate('/narroterapia/audios')}
+            />
+            <SupportLabCard
+              icon={Compass}
+              title="Câmara do Sussurro"
+              description="Ambiente de escuta e treino com casos inspirados em obras e narrativas simbólicas."
+              cta="Entrar na câmara"
+              onClick={() => navigate('/clube/treinamento')}
+            />
+          </div>
+
+          <div className="bg-muted/30 border border-border/50 rounded-2xl p-5">
+            <p className="text-xs text-muted-foreground leading-relaxed text-center">
+              Alguns laboratórios podem depender de permissões, conteúdos liberados ou progresso da aluna. 
+              Caso algo não esteja disponível, mantenha o percurso principal pela Sala de Treinamento.
+            </p>
+          </div>
+        </section>
+
         <section className="bg-primary/5 border border-primary/20 rounded-[2.5rem] p-8 sm:p-10 space-y-6">
           <div className="flex items-center gap-3 text-primary">
             <Compass className="w-6 h-6" />
