@@ -321,6 +321,20 @@ export default function CasosSimuladosPage() {
           </p>
         </section>
 
+        {progress?.status !== 'completed' && !progressLoading && (
+          <div className="flex justify-center pt-8 border-t border-border/10">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-primary text-[10px] uppercase font-bold tracking-widest gap-2"
+              onClick={() => markCompleted()}
+            >
+              <CheckCircle2 className="w-3 h-3" />
+              Marcar percurso como concluído
+            </Button>
+          </div>
+        )}
+
         <div className="flex flex-wrap items-center justify-center gap-4 pt-10">
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento')}>
             Voltar para Sala de Treinamento
