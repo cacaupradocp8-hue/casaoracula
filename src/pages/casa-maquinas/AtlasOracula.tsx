@@ -130,6 +130,13 @@ export default function AtlasOracula() {
             onClick={() => navigate('/casa-das-maquinas/atlas/acompanhar-evolucao')}
             hasAction
           />
+          <AtlasCard 
+            icon={<Brain className="w-6 h-6 text-primary" />}
+            title="Ver caso demonstrativo"
+            description="Explore um caso fictício (Marina) para entender o ciclo completo de formulação no Atlas Orácula."
+            onClick={() => navigate('/casa-das-maquinas/atlas/demo')}
+            hasAction
+          />
         </div>
 
         {/* Módulos que alimentarão o Atlas */}
