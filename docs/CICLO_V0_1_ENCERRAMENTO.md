@@ -15,7 +15,7 @@ Os seguintes documentos técnicos e conceituais foram criados e servem como refe
 A estrutura da Casa Orácula 2.0 V0.1 repousa sobre quatro pilares cujas definições e interfaces estão congeladas:
 1. **Formação Orácula**: Pilar de Ensino.
 2. **Sala de Treinamento**: Pilar de Experimentação.
-3. **Atlas Orácula**: Pilar de Aplicação.
+3. **Atlas Orácula**: Pilar de Aplicicação.
 4. **Rotas da Casa**: Pilar de Continuidade.
 
 ## 4. Decisões Técnicas Preservadas
