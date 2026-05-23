@@ -181,6 +181,42 @@ export default function ClinicaDosContosPage() {
           </Card>
         </section>
 
+        <section className="space-y-8 pt-8">
+          <div className="flex flex-col gap-2 border-b border-border/10 pb-4">
+            <h2 className="text-2xl sm:text-3xl font-display text-primary italic">Acervos e Bibliotecas</h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              Materiais de apoio para aprofundar o treino simbólico, literário e narrativo da Clínica dos Contos.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SupportArchiveCard
+              icon={BookOpen}
+              title="Acervo Simbólico de Referência"
+              description="Contos clássicos e narrativas de referência para estudo, reconhecimento de temas simbólicos e treino do olhar."
+              cta="Explorar acervo"
+              status="Estudo e referência"
+              onClick={() => navigate('/narroterapia/biblioteca-contos')}
+            />
+            <SupportArchiveCard
+              icon={Compass}
+              title="Câmara de Narração Oracular"
+              description="Os 12 contos oficiais da Narroterapia para uso orientado, com contexto ético e autorização adequada."
+              cta="Acessar câmara"
+              status="Requer certificação ativa"
+              requiresAuth
+              onClick={() => navigate('/narroterapia/clinica')}
+            />
+          </div>
+
+          <div className="bg-muted/30 border border-border/50 rounded-2xl p-5">
+            <p className="text-xs text-muted-foreground leading-relaxed text-center italic">
+              A Câmara de Narração pode exigir autorização, certificação ou aceite ético. 
+              Caso o acesso não esteja disponível, siga pelo Acervo Simbólico de Referência ou pelo percurso principal da Clínica dos Contos.
+            </p>
+          </div>
+        </section>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
           <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-4">
             <h3 className="text-xl font-display text-primary italic flex items-center gap-2">
