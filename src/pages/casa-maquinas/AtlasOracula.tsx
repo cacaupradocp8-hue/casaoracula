@@ -6,18 +6,19 @@ import {
   AlertTriangle, 
   ArrowRight, 
   CheckCircle2, 
-  LayoutDashboard,
   ShieldCheck,
   Zap,
-  BookOpen,
-  Users,
   Search,
   History,
-  Info
+  Info,
+  Layers,
+  Brain,
+  MessageSquare
 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CasaMaquinasLayout } from '@/components/casa-maquinas/CasaMaquinasLayout';
+import { atlasModules } from '@/data/atlasModules';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -25,19 +26,16 @@ const fadeInUp = {
   transition: { duration: 0.5 }
 };
 
-const modules = [
-  { name: 'Big Five', status: 'Em integração' },
-  { name: 'Cartografia Psíquica', status: 'Em integração' },
-  { name: 'R.O.T.A.I / Crenças', status: 'Em breve' },
-  { name: 'Torre Viva', status: 'Em integração' },
-  { name: 'Labirinto', status: 'Em integração' },
-  { name: 'Complexos', status: 'Em breve' },
-  { name: 'Sonhos', status: 'Em integração' },
-  { name: '7 Vozes', status: 'Em integração' },
-  { name: 'Portas', status: 'Em breve' },
-  { name: 'Mapa Vivo', status: 'Em integração' },
-  { name: 'Biblioteca de Intervenções', status: 'Em integração' },
+const thoughtProcess = [
+  { step: 1, title: 'Recolhe sinais', icon: <Search className="w-4 h-4" /> },
+  { step: 2, title: 'Organiza camadas', icon: <Layers className="w-4 h-4" /> },
+  { step: 3, title: 'Levanta hipóteses', icon: <Lightbulb className="w-4 h-4" /> },
+  { step: 4, title: 'Observa riscos', icon: <AlertTriangle className="w-4 h-4" /> },
+  { step: 5, title: 'Sugere direção', icon: <Compass className="w-4 h-4" /> },
+  { step: 6, title: 'Conecta intervenções', icon: <Zap className="w-4 h-4" /> },
+  { step: 7, title: 'Acompanha evolução', icon: <History className="w-4 h-4" /> },
 ];
+
 
 export default function AtlasOracula() {
   return (
@@ -64,6 +62,26 @@ export default function AtlasOracula() {
             </CardContent>
           </Card>
         </motion.div>
+
+        {/* Como o Atlas pensa */}
+        <motion.section {...fadeInUp} className="space-y-6">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-xl font-display text-foreground">Como o Atlas pensa</h3>
+            <p className="text-sm text-muted-foreground italic">O fluxo de raciocínio para uma formulação segura.</p>
+          </div>
+          
+          <div className="flex flex-wrap gap-3">
+            {thoughtProcess.map((item) => (
+              <div key={item.step} className="flex items-center gap-3 bg-card/40 border border-border/40 rounded-full px-4 py-2">
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center text-primary text-[10px] font-bold">
+                  {item.icon}
+                </div>
+                <span className="text-xs font-medium text-foreground/80">{item.title}</span>
+                {item.step < 7 && <ArrowRight className="w-3 h-3 text-muted-foreground/30" />}
+              </div>
+            ))}
+          </div>
+        </motion.section>
 
         {/* Grade de Formulação */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -103,22 +121,43 @@ export default function AtlasOracula() {
         <motion.section {...fadeInUp} className="space-y-6">
           <div className="flex flex-col gap-1">
             <h3 className="text-xl font-display text-foreground">Módulos que alimentarão o Atlas</h3>
-            <p className="text-sm text-muted-foreground">O Atlas atua como o eixo integrador das camadas simbólicas da Casa Orácula.</p>
+            <p className="text-sm text-muted-foreground">Cada módulo oferece uma camada específica de leitura clínico-simbólica.</p>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {modules.map((module) => (
-              <Card key={module.name} className="bg-card/40 border-border/40 hover:border-primary/20 transition-all group">
-                <CardContent className="p-4 flex flex-col justify-between h-full gap-2">
-                  <span className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{module.name}</span>
-                  <Badge variant="secondary" className="w-fit text-[10px] uppercase tracking-wider py-0 px-2 font-normal opacity-60">
-                    {module.status}
-                  </Badge>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {atlasModules.map((module) => (
+              <Card key={module.id} className="bg-card/40 border-border/40 hover:border-primary/20 transition-all group h-full flex flex-col">
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-sm font-medium text-foreground group-hover:text-primary transition-colors">
+                      {module.name}
+                    </CardTitle>
+                    <Badge variant="secondary" className="text-[9px] uppercase tracking-wider py-0 px-1.5 font-normal opacity-60">
+                      {module.status === 'em-integracao' ? 'Em integração' : module.status === 'em-breve' ? 'Em breve' : 'Ativo'}
+                    </Badge>
+                  </div>
+                  <p className="text-[11px] text-primary/70 font-medium leading-tight mt-1">{module.function}</p>
+                </CardHeader>
+                <CardContent className="p-4 pt-0 flex-1 flex flex-col gap-3">
+                  <p className="text-[12px] text-muted-foreground leading-relaxed">
+                    {module.description}
+                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground/60 font-semibold">Ajuda a observar:</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {module.observations.map(obs => (
+                        <span key={obs} className="text-[10px] bg-primary/5 text-primary/80 px-2 py-0.5 rounded-md border border-primary/10">
+                          {obs}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
           </div>
         </motion.section>
+
 
       </div>
     </CasaMaquinasLayout>
