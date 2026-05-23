@@ -207,11 +207,14 @@ export default function ClinicaDosContosPage() {
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento')}>
             Voltar para Sala de Treinamento
           </Button>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/casos-simulados')}>
+            Continuar percurso: Casos Simulados
+          </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/mapa-casa')}>
              Ver Rotas da Casa
           </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Voltar para o Atlas
+            Ver Atlas Orácula
           </Button>
         </div>
       </div>

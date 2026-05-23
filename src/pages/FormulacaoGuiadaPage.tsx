@@ -62,7 +62,7 @@ export default function FormulacaoGuiadaPage() {
           <div className="space-y-2">
             <h3 className="text-lg font-semibold text-amber-500 font-display">Espaço Pedagógico e Ético</h3>
             <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-              Formulação não é diagnóstico. Este espaço é pedagógico e usa exercícios simulados. Não substitui supervisão, avaliação profissional ou responsabilidade ética. Uma boa formulação permanece aberta, contextual e revisável.
+              Este espaço é pedagógico. Não usa clientes reais, não gera diagnóstico, não substitui supervisão e não deve ser usado como prontuário ou decisão profissional automática. Uma boa formulação permanece aberta, contextual e revisável.
             </p>
           </div>
         </div>
@@ -224,13 +224,13 @@ export default function FormulacaoGuiadaPage() {
             Voltar para Sala de Treinamento
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/casos-simulados')}>
-            Casos Simulados
+            Praticar com Casos Fictícios
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
-            Clínica dos Contos
+            Treinar com Literatura
           </Button>
           <Button className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/casa-das-maquinas/atlas')}>
-            Voltar para o Atlas
+            Levar para o Atlas
           </Button>
         </div>
       </div>
