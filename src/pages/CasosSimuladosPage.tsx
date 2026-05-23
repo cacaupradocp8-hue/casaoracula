@@ -305,22 +305,8 @@ export default function CasosSimuladosPage() {
                 </span>
                 <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold" disabled>
                   Iniciar Simulação
-          </Button>
-        </div>
-
-        {progress?.status !== 'completed' && !progressLoading && (
-          <div className="flex justify-center pt-8 border-t border-border/10">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="text-muted-foreground hover:text-primary text-[10px] uppercase font-bold tracking-widest gap-2"
-              onClick={() => markCompleted()}
-            >
-              <CheckCircle2 className="w-3 h-3" />
-              Marcar percurso como concluído
-            </Button>
-          </div>
-        )}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </section>
