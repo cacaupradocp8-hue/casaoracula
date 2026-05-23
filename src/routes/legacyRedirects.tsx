@@ -122,6 +122,10 @@ export function renderLegacyRedirects() {
       {/* ─── REDIRECIONAMENTOS DE RELATÓRIOS ANTIGOS ─── */}
       <Route path="/relatorio/sprint-06" element={<Navigate to="/dashboard-membro" replace />} />
       <Route path="/relatorio/sprint-07" element={<Navigate to="/dashboard-membro" replace />} />
+
+      {/* ─── REDIRECIONAMENTOS DE TREINAMENTO ─── */}
+      <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
+      <Route path="/sala-treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
     </>
   );
 }
