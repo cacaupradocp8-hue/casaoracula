@@ -23,12 +23,13 @@ const mainNav: NavItem[] = [
   { label: 'Grupos', path: '/casa-das-maquinas/grupos', icon: UsersRound },
 ];
 const toolsNav: NavItem[] = [
+  { label: 'Atlas Orácula', path: '/casa-das-maquinas/atlas', icon: Compass },
   { label: 'Jardim do Ofício', path: '/casa-das-maquinas/jardim-oficio', icon: Sparkles },
   { label: 'Evolução Clínica', path: '/casa-das-maquinas/treinamento', icon: Brain },
   { label: 'Biblioteca de Intervenções', path: '/casa-das-maquinas/biblioteca', icon: BookOpen },
   { label: 'Ferramentas', path: '/casa-das-maquinas/ferramentas', icon: Wrench },
   { label: '7 Vozes', path: '/casa-das-maquinas/7-vozes', icon: AudioLines },
-  { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Compass },
+  { label: 'Painel Clínico', path: '/casa-das-maquinas/painel-clinico', icon: Layers },
   { label: 'Mapa Vivo', path: '/casa-das-maquinas/mapa-vivo', icon: Map },
   { label: 'Variações', path: '/casa-das-maquinas/variacoes-ferramentas', icon: Layers },
 ];
