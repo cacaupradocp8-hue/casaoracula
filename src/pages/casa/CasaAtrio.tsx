@@ -73,7 +73,7 @@ export default function CasaAtrio() {
             >
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 mb-6">
                 <Heart className="w-4 h-4 text-purple-400" />
-                <span className="text-sm text-purple-300">Espaço de Sustentação</span>
+                <span className="text-sm text-purple-300">Espaço de Continuidade</span>
               </div>
               
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl text-foreground mb-4 leading-tight">
@@ -193,7 +193,7 @@ export default function CasaAtrio() {
         </section>
 
         <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-        <p className="text-center text-muted-foreground/30 text-xs py-8">Acesso exclusivo para assinantes ativas.</p>
+        <p className="text-center text-muted-foreground/30 text-xs py-8">Acesso reservado às Rotas da Casa.</p>
       </div>
     </AppLayout>
   );

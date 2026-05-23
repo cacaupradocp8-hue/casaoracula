@@ -54,7 +54,7 @@ export default function ClubeAcervo() {
                 <span className="text-[10px] tracking-[0.4em] uppercase text-gold/70 font-bold">Obras Atemporais</span>
               </div>
               <h1 className="font-display text-3xl md:text-5xl text-foreground tracking-tight leading-none">
-                Acervo do Clube
+                Acervo Vivo
               </h1>
               <p className="text-muted-foreground/70 text-sm font-serif italic mt-2">
                 {books?.length ?? 0} registros na biblioteca da alma
