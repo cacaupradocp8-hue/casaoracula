@@ -265,62 +265,197 @@ export default function FormulacaoGuiadaPage() {
           </div>
         </section>
 
-        <section className="space-y-8">
+        <section className="space-y-8" id="exercicio-pratico">
           <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
             <FileText className="w-5 h-5" />
-            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Exercício Pedagógico (Modelo)</h2>
+            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Exercício Pedagógico</h2>
           </div>
           <Card className="bg-card/40 border-border rounded-[2.5rem] overflow-hidden">
-            <CardContent className="p-8 sm:p-12 space-y-8 opacity-60">
+            <CardContent className="p-8 sm:p-12 space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Situação fictícia de estudo</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Ex: Sobrecarga em transição simbólica...</div>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Descreva uma situação fictícia ou exercício de estudo. Não inclua nomes reais, clientes, diagnósticos ou dados sensíveis."
+                    value={formState.situacaoFicticia}
+                    onChange={(e) => handleInputChange('situacaoFicticia', e.target.value)}
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Queixa pedagógica aparente</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">O que a personagem fictícia manifesta?</div>
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Simbólicos Observados</label>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="O que foi mapeado no cenário de treino?"
+                    value={formState.sinaisSimbolicos}
+                    onChange={(e) => handleInputChange('sinaisSimbolicos', e.target.value)}
+                  />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Sinais Simbólicos Observados</label>
-                <div className="h-20 border-b border-border/50 text-sm text-muted-foreground italic">O que foi mapeado no cenário de treino?</div>
-              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Hipóteses de Treino</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Possíveis leituras e possibilidades pedagógicas...</div>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Possíveis leituras e possibilidades pedagógicas..."
+                    value={formState.hipotesesTreino}
+                    onChange={(e) => handleInputChange('hipotesesTreino', e.target.value)}
+                  />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautelas Pedagógicas</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Pontos de atenção ética no exercício...</div>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Pontos de atenção ética no exercício..."
+                    value={formState.cautelasPedagogicas}
+                    onChange={(e) => handleInputChange('cautelasPedagogicas', e.target.value)}
+                  />
                 </div>
               </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Direção Simbólica Possível</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Próximo passo de estudo proposto...</div>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Próximo passo de estudo proposto..."
+                    value={formState.direcaoSimbolica}
+                    onChange={(e) => handleInputChange('direcaoSimbolica', e.target.value)}
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Evolução esperada no exercício</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Sinais de resposta narrativa esperados...</div>
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Prática de integração sugerida</label>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Como integrar o aprendizado deste exercício?"
+                    value={formState.praticaIntegracao}
+                    onChange={(e) => handleInputChange('praticaIntegracao', e.target.value)}
+                  />
                 </div>
               </div>
-              <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
-                    <AlertCircle className="w-3 h-3" /> Ficha Visual Mock — Isolada da prática real
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Evolução esperada no exercício (Opcional)</label>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Sinais de resposta narrativa esperados..."
+                    value={formState.evolucaoEsperada}
+                    onChange={(e) => handleInputChange('evolucaoEsperada', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Síntese pedagógica da formulação (Obrigatório)</label>
+                  <textarea 
+                    className="w-full bg-transparent border-b border-border/50 text-sm text-foreground focus:border-primary focus:outline-none min-h-[80px] py-2 resize-none"
+                    placeholder="Resuma o raciocínio central deste treino..."
+                    value={formState.sintesePedagogica}
+                    onChange={(e) => handleInputChange('sintesePedagogica', e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {submissionsError && (
+                <div className="p-4 bg-destructive/10 border border-destructive/20 rounded-2xl text-destructive text-xs">
+                  {submissionsError}
+                </div>
+              )}
+
+              <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-6 border-t border-border/10">
+                <div className="space-y-2">
+                  <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/80 flex items-center gap-2">
+                    <ShieldCheck className="w-3 h-3" /> Compromisso Ético Pedagógico
                   </span>
-                  <p className="text-[9px] text-muted-foreground/40 italic">
-                    Nada preenchido nesta ficha de estudo é enviado ao Atlas ou processado por IA.
+                  <p className="text-[10px] text-muted-foreground leading-relaxed max-w-md">
+                    Este espaço é apenas para treino pedagógico. Não escreva nomes reais, dados de clientes, diagnósticos ou informações sensíveis. Estas respostas não são prontuário, não representam atendimento real e não são enviadas ao Atlas Orácula nem processadas por IA.
                   </p>
                 </div>
-                <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold" disabled>
-                  Iniciar Exercício Pedagógico
+                <Button 
+                  className="rounded-full px-8 py-6 h-auto text-xs uppercase tracking-widest font-bold shadow-lg shadow-primary/20"
+                  disabled={submissionsLoading || !formState.sintesePedagogica.trim()}
+                  onClick={handleSaveFormulation}
+                >
+                  {submissionsLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Salvando...
+                    </>
+                  ) : (
+                    'Salvar formulação pedagógica'
+                  )}
                 </Button>
               </div>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Histórico de Submissões */}
+        <section className="space-y-8 pt-8">
+          <div className="flex items-center justify-between border-b border-border/10 pb-4">
+            <div className="flex items-center gap-3 text-primary">
+              <RefreshCcw className="w-5 h-5" />
+              <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Minhas formulações salvas</h2>
+            </div>
+            <Badge variant="outline" className="text-[10px] uppercase tracking-tighter opacity-60">
+              {submissions.length} registros
+            </Badge>
+          </div>
+
+          {submissionsLoading && submissions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-4">
+              <Loader2 className="w-8 h-8 animate-spin opacity-20" />
+              <p className="text-xs uppercase tracking-widest font-bold opacity-40">Carregando histórico...</p>
+            </div>
+          ) : submissions.length === 0 ? (
+            <div className="bg-card/20 border border-dashed border-border rounded-[2.5rem] py-20 flex flex-col items-center justify-center text-center px-6">
+              <FileText className="w-12 h-12 text-muted-foreground/20 mb-4" />
+              <p className="text-muted-foreground text-sm italic">
+                Suas formulações pedagógicas aparecerão aqui quando forem salvas.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {submissions.map((submission) => {
+                const metadata = submission.response_metadata as any;
+                return (
+                  <Card key={submission.id} className="bg-card/40 border-border rounded-3xl overflow-hidden group hover:border-primary/20 transition-all">
+                    <CardContent className="p-6 sm:p-8 space-y-4">
+                      <div className="flex justify-between items-start gap-4">
+                        <div className="space-y-1">
+                          <h4 className="text-xs font-bold uppercase tracking-widest text-primary/60">
+                            {new Date(submission.submitted_at).toLocaleDateString('pt-BR', { 
+                              day: '2-digit', 
+                              month: 'long', 
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </h4>
+                          <p className="text-sm text-foreground font-medium line-clamp-1">
+                            {metadata?.situacaoFicticia || "Sem descrição da situação"}
+                          </p>
+                        </div>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-destructive transition-colors rounded-full"
+                          onClick={() => archiveSubmission(submission.id)}
+                        >
+                          Arquivar
+                        </Button>
+                      </div>
+                      <div className="p-4 bg-primary/5 rounded-2xl border border-primary/10">
+                        <p className="text-sm text-muted-foreground italic line-clamp-2">
+                          {submission.response_text}
+                        </p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          )}
         </section>
 
         <section className="space-y-8">
