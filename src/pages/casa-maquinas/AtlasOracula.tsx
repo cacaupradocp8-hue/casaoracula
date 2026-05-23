@@ -119,7 +119,9 @@ export default function AtlasOracula() {
           <AtlasCard 
             icon={<Zap className="w-6 h-6 text-primary" />}
             title="5. Escolher intervenção"
-            description="Conectar a leitura do caso com práticas, protocolos, perguntas e recursos adequados."
+            description="Conectar a leitura do caso com práticas, protocolos, perguntas e recursos adequados ao momento."
+            onClick={() => navigate('/casa-das-maquinas/atlas/escolher-intervencao')}
+            hasAction
           />
           <AtlasCard 
             icon={<History className="w-6 h-6 text-primary" />}
