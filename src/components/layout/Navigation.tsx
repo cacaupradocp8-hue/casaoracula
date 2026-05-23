@@ -28,17 +28,17 @@ import {
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
   { key: 'explorar', label: 'Explorar a Casa', icon: Compass, path: '/explorar-a-casa', subitems: [] },
-  { key: 'clube', label: 'Rotas da Casa Orácula', icon: BookOpen, path: '/clube', subitems: [] },
-  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'vitrine', label: 'Conheça a Casa', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'clube', label: 'Rotas', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
 
   { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
-  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'ferramentas', label: 'Práticas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
@@ -48,7 +48,7 @@ const assinanteMenuGroups = () => [
 const alunaMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'formacao', label: 'Formação', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'clube', label: 'Rotas', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
   { 
     key: 'treinamento', 
     label: 'Treinamento', 
@@ -59,7 +59,7 @@ const alunaMenuGroups = () => [
       { label: 'Câmara do Sussurro', path: '/clube/treinamento' },
     ]
   },
-  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'ferramentas', label: 'Práticas', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
@@ -79,7 +79,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
   { key: 'jardim-oficio', label: 'Jardim do Ofício', icon: Flower2, path: '/casa-das-maquinas/jardim-oficio', subitems: [] },
   { key: 'evolucao', label: 'Evolução Clínica', icon: FlaskConical, path: '/casa-das-maquinas/treinamento', subitems: [] },
   { key: 'biblioteca', label: 'Biblioteca de Intervenções', icon: BookOpen, path: '/casa-das-maquinas/biblioteca', subitems: [] },
-  { key: 'ferramentas', label: 'Ferramentas', icon: Wrench, path: '/casa-das-maquinas/ferramentas', subitems: [] },
+  { key: 'ferramentas', label: 'Intervenções', icon: Wrench, path: '/casa-das-maquinas/ferramentas', subitems: [] },
   { key: '7vozes', label: '7 Vozes', icon: Headphones, path: '/casa-das-maquinas/7-vozes', subitems: [] },
   ...(isMentorada ? [{
     key: 'supervisao', label: 'Supervisão', icon: Eye, path: '/casa-das-maquinas/supervisao', subitems: [],
