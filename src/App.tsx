@@ -126,6 +126,7 @@ const MapaVivoEditor = React.lazy(() => import("./pages/MapaVivoEditor"));
 const CartografiaPsiquicaPage = React.lazy(() => import("./pages/CartografiaPsiquicaPage"));
 const RevelacaoCidadelaPage = React.lazy(() => import("./pages/RevelacaoCidadelaPage"));
 const SalaDeTreinamentoPage = React.lazy(() => import("./pages/SalaDeTreinamentoPage"));
+const ClinicaDosContosPage = React.lazy(() => import("./pages/ClinicaDosContosPage"));
 const ComunidadePage = React.lazy(() => import("./pages/ComunidadePage"));
 const AcademiaFormacaoPage = React.lazy(() => import("./pages/AcademiaFormacaoPage"));
 const FormacaoMetodoPage = React.lazy(() => import("./pages/FormacaoMetodoPage"));
@@ -456,6 +457,10 @@ function AppRoutes() {
       
       {/* Relatórios de Auditoria e Teste - Acesso restrito a Admin */}
       <Route path="/relatorio-auditoria-botoes" element={<ProtectedRoute minPortal="admin"><RelatorioAuditoriaBotoes /></ProtectedRoute>} />
+
+      {/* Sala de Treinamento */}
+      <Route path="/sala-de-treinamento" element={<ProtectedRoute><SalaDeTreinamentoPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento/clinica-dos-contos" element={<ProtectedRoute><ClinicaDosContosPage /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
