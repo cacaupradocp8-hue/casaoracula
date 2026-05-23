@@ -1,4 +1,5 @@
 import React from 'react';
+import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { 
   Compass, 
@@ -36,8 +37,10 @@ const thoughtProcess = [
   { step: 7, title: 'Acompanha evolução', icon: <History className="w-4 h-4" /> },
 ];
 
+import { useNavigate } from 'react-router-dom';
 
 export default function AtlasOracula() {
+  const navigate = useNavigate();
   return (
     <CasaMaquinasLayout 
       title="Atlas Orácula"
@@ -89,6 +92,8 @@ export default function AtlasOracula() {
             icon={<Search className="w-6 h-6 text-primary" />}
             title="1. Entender o caso"
             description="Reunir história, contexto, queixa, padrões e sinais relevantes antes de escolher qualquer intervenção."
+            onClick={() => navigate('/casa-das-maquinas/atlas/entender-caso')}
+            hasAction
           />
           <AtlasCard 
             icon={<Lightbulb className="w-6 h-6 text-primary" />}
@@ -164,10 +169,17 @@ export default function AtlasOracula() {
   );
 }
 
-function AtlasCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+function AtlasCard({ icon, title, description, onClick, hasAction }: { icon: React.ReactNode, title: string, description: string, onClick?: () => void, hasAction?: boolean }) {
+  const CardWrapper = onClick ? 'button' : 'div';
   return (
-    <motion.div {...fadeInUp} whileHover={{ y: -4 }} className="h-full">
-      <Card className="h-full border-border/40 bg-card/60 backdrop-blur-sm hover:border-primary/20 transition-all flex flex-col">
+    <motion.div {...fadeInUp} whileHover={{ y: -4 }} className="h-full text-left">
+      <Card 
+        className={cn(
+          "h-full border-border/40 bg-card/60 backdrop-blur-sm transition-all flex flex-col",
+          onClick ? "hover:border-primary/20 cursor-pointer active:scale-[0.98]" : ""
+        )}
+        onClick={onClick}
+      >
         <CardHeader>
           <div className="mb-4 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
             {icon}
@@ -179,6 +191,13 @@ function AtlasCard({ icon, title, description }: { icon: React.ReactNode, title:
             {description}
           </p>
         </CardContent>
+        {hasAction && (
+          <div className="px-6 pb-6 mt-auto">
+            <div className="flex items-center gap-2 text-xs font-medium text-primary">
+              Iniciar Fluxo <ArrowRight className="w-3 h-3" />
+            </div>
+          </div>
+        )}
       </Card>
     </motion.div>
   );
