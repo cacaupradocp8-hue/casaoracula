@@ -36,6 +36,7 @@ const PainelInstitucionalPage = React.lazy(() => import('@/pages/casa-maquinas/P
 const PainelClinicoPage = React.lazy(() => import('@/pages/casa-maquinas/PainelClinicoPage'));
 const AtlasOracula = React.lazy(() => import('@/pages/casa-maquinas/AtlasOracula'));
 const EntenderCasoPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/EntenderCasoPage'));
+const LevantarHipotesesPage = React.lazy(() => import('@/pages/casa-maquinas/atlas/LevantarHipotesesPage'));
 // CartografiaPage removed — all cartografia routes redirect to /ferramenta/cartografia-psiquica-oracula
 const TorreVivaPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/TorreVivaPage'));
 const LabirintoPage = React.lazy(() => import('@/pages/casa-maquinas/ferramentas/LabirintoPage'));
@@ -113,6 +114,7 @@ export function renderCasaMaquinasRoutes(ProtectedRoute: PR) {
     <Route key="cm-trei" path="/casa-das-maquinas/treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaTreinamentoPage /></ProtectedRoute>} />,
     <Route key="cm-atlas" path="/casa-das-maquinas/atlas" element={<ProtectedRoute minPortal="oracula"><AtlasOracula /></ProtectedRoute>} />,
     <Route key="cm-atlas-ec" path="/casa-das-maquinas/atlas/entender-caso" element={<ProtectedRoute minPortal="oracula"><EntenderCasoPage /></ProtectedRoute>} />,
+    <Route key="cm-atlas-lh" path="/casa-das-maquinas/atlas/levantar-hipoteses" element={<ProtectedRoute minPortal="oracula"><LevantarHipotesesPage /></ProtectedRoute>} />,
     <Route key="cm-cart" path="/casa-das-maquinas/ferramentas/cartografia" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />,
     <Route key="cm-tv" path="/casa-das-maquinas/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreVivaPage /></ProtectedRoute>} />,
     <Route key="cm-lab" path="/casa-das-maquinas/ferramentas/labirinto" element={<ProtectedRoute minPortal="oracula"><LabirintoPage /></ProtectedRoute>} />,

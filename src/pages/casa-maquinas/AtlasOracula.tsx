@@ -99,6 +99,8 @@ export default function AtlasOracula() {
             icon={<Lightbulb className="w-6 h-6 text-primary" />}
             title="2. Levantar hipóteses"
             description="Organizar hipóteses possíveis sem transformar formulação em diagnóstico definitivo."
+            onClick={() => navigate('/casa-das-maquinas/atlas/levantar-hipoteses')}
+            hasAction
           />
           <AtlasCard 
             icon={<AlertTriangle className="w-6 h-6 text-accent" />}
