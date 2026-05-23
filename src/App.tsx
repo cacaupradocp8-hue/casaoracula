@@ -169,6 +169,7 @@ const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
 const ExplorarACasa = React.lazy(() => import("./pages/ExplorarACasa"));
 const Vitrine = React.lazy(() => import("./pages/FerramentasVitrine"));
 const DashboardMembro = React.lazy(() => import("./pages/DashboardMembro"));
+const RelatorioAuditoriaBotoes = React.lazy(() => import("./pages/RelatorioAuditoriaBotoes"));
 const PosCompra = React.lazy(() => import("./pages/PosCompra"));
 const CasaAtrio = React.lazy(() => import("./pages/casa/CasaAtrio"));
 const CasaSustentacao = React.lazy(() => import("./pages/casa/CasaSustentacao"));
@@ -190,8 +191,9 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
-const RelatorioSprint06 = React.lazy(() => import("./pages/RelatorioSprint06"));
-const RelatorioSprint07 = React.lazy(() => import("./pages/RelatorioSprint07"));
+// Relatórios movidos para carregamento sob demanda ou removidos
+// const RelatorioSprint06 = React.lazy(() => import("./pages/RelatorioSprint06"));
+// const RelatorioSprint07 = React.lazy(() => import("./pages/RelatorioSprint07"));
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -486,6 +488,9 @@ function AppRoutes() {
 
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
       <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><RoleSpecificGuard allowed={['oracula', 'admin']}><BibliotecaCasos /></RoleSpecificGuard></ProtectedRoute>} />
+      
+      {/* Relatórios de Auditoria e Teste - Acesso restrito a Admin */}
+      <Route path="/relatorio-auditoria-botoes" element={<ProtectedRoute minPortal="admin"><RelatorioAuditoriaBotoes /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
