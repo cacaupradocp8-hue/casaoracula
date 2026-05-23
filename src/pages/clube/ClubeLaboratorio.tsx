@@ -57,7 +57,7 @@ export default function ClubeLaboratorio() {
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         <SectionHeader
           title="Laboratório Oracular"
-          subtitle="Cabine de simulação clínica simbólica — Cartografia → Espelho → Forja"
+          subtitle="Um espaço de prática 80/20 para transformar obras, símbolos e narrativas em leitura, espelho e integração."
           icon={<FlaskConical className="w-5 h-5" />}
         />
 
@@ -66,7 +66,7 @@ export default function ClubeLaboratorio() {
           <div className="flex items-start gap-3 mb-4">
             <Sparkles className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Aqui você lê uma obra como cliente simbólica, atravessa o campo, conecta com sua prática e cria condução terapêutica. Use repetidamente — o laboratório melhora sua escuta real.
+              Aqui você pratica a leitura de uma obra de forma aplicada, atravessando o campo simbólico para integrar novos sentidos à sua jornada e prática profissional.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center">
