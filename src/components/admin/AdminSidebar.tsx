@@ -30,15 +30,15 @@ export interface AdminNavGroup {
 export const adminNavGroups: AdminNavGroup[] = [
   {
     key: 'clube-premium',
-    label: 'Clube Oracular',
+    label: 'Rotas da Casa',
     emoji: '✨',
     icon: Sparkles,
     items: [
-      { key: 'clube', label: 'Hub do Clube', icon: Sparkles, route: '/admin/clube' },
-      { key: 'clube-editorial', label: 'Editorial do Clube', icon: LayoutGrid },
-      { key: 'clube-jornadas', label: 'Estações & Rotas', icon: RefreshCw, route: '/admin/clube/ciclos' },
-      { key: 'clube-acervo', label: 'Acervo Oracular', icon: Library, route: '/admin/clube/conteudos' },
-      { key: 'clube-chat', label: 'Converse com o Livro', icon: MessageSquare, route: '/admin/clube/chat' },
+      { key: 'clube', label: 'Hub das Rotas', icon: Sparkles, route: '/admin/clube' },
+      { key: 'clube-editorial', label: 'Editorial das Rotas', icon: LayoutGrid },
+      { key: 'clube-jornadas', label: 'Estações & Travessias', icon: RefreshCw, route: '/admin/clube/ciclos' },
+      { key: 'clube-acervo', label: 'Acervo das Rotas', icon: Library, route: '/admin/clube/conteudos' },
+      { key: 'clube-chat', label: 'Converse com a Obra', icon: MessageSquare, route: '/admin/clube/chat' },
 
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
     ],

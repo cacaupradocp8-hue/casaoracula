@@ -19,7 +19,7 @@ const planos = [
   {
     nome: 'Atravessar',
     desc: 'Formação completa com travessias e supervisão.',
-    itens: ['Tudo do Explorar', 'Travessias guiadas', 'Clube do Livro', 'Supervisão'],
+    itens: ['Tudo do Explorar', 'Travessias guiadas', 'Rotas da Casa', 'Supervisão'],
     destaque: true,
   },
   {

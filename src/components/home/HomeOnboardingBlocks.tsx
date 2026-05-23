@@ -53,7 +53,7 @@ export function HomeOnboardingBlocks() {
               />
               <OnboardingCard
                 title="Conheça os Planos"
-                description="Descubra o Clube Oracular e a Formação Orácula."
+                description="Descubra as Rotas da Casa e a Formação Orácula."
                 icon={<Layout className="w-6 h-6 text-primary" />}
                 action={() => navigate('/planos')}
                 label="Ver Planos"
@@ -64,11 +64,11 @@ export function HomeOnboardingBlocks() {
           {isSubscriber && (
             <>
               <OnboardingCard
-                title="Clube Oracular"
+                title="Rotas da Casa"
                 description="Acesse o acervo premium, as estações e o Círculo Oracular."
                 icon={<BookOpen className="w-6 h-6 text-gold" />}
                 action={() => navigate('/clube')}
-                label="Entrar no Clube"
+                label="Iniciar Travessia"
                 highlight
               />
               <OnboardingCard
