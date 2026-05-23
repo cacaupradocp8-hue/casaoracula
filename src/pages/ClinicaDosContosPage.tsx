@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
@@ -12,32 +12,123 @@ import {
   Compass,
   GraduationCap,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Send,
+  Trash2,
+  History,
+  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
-import { useTrainingProgress } from '@/hooks/useTrainingData';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { useTrainingProgress, useTrainingSubmissions } from '@/hooks/useTrainingData';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+
+const AVAILABLE_STORIES = [
+  "Patinho Feio",
+  "Barba Azul",
+  "Vasalisa",
+  "La Loba",
+  "Mulher-Esqueleto",
+  "A Bela e a Fera",
+  "O Pequeno Polegar",
+  "A Menina dos Fósforos",
+  "Dona Holle",
+  "Outro conto simbólico"
+];
 
 export default function ClinicaDosContosPage() {
   const navigate = useNavigate();
   const { 
     progress, 
-    loading, 
-    error, 
+    loading: progressLoading, 
+    error: progressError, 
     markStarted, 
     markCompleted 
   } = useTrainingProgress("clinica-dos-contos");
 
+  const {
+    submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+    submitExercise,
+    archiveSubmission
+  } = useTrainingSubmissions("clinica-dos-contos");
+
+  // Form state
+  const [formData, setFormData] = useState({
+    conto: '',
+    simboloCentral: '',
+    reflexaoSimbolica: '',
+    perguntaIntegracao: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     // Sincroniza o início do estudo apenas se ainda não foi iniciado
-    if (!loading && !progress) {
+    if (!progressLoading && !progress) {
       markStarted();
     }
-  }, [loading, progress, markStarted]);
+  }, [progressLoading, progress, markStarted]);
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.conto || !formData.simboloCentral || !formData.reflexaoSimbolica) {
+      toast.error("Por favor, preencha os campos obrigatórios.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await submitExercise({
+        module_key: "clinica-dos-contos",
+        exercise_key: "reflexao-simbolica-conto",
+        exercise_type: "guided_reflection",
+        case_key: formData.conto.toLowerCase().replace(/\s+/g, '-'),
+        prompt_text: "Reflexão simbólica sobre conto ou narrativa",
+        response_text: formData.reflexaoSimbolica,
+        response_metadata: {
+          conto: formData.conto,
+          simboloCentral: formData.simboloCentral,
+          perguntaIntegracao: formData.perguntaIntegracao
+        }
+      });
+      
+      toast.success("Reflexão simbólica salva com sucesso!");
+      setFormData({
+        conto: '',
+        simboloCentral: '',
+        reflexaoSimbolica: '',
+        perguntaIntegracao: ''
+      });
+    } catch (err) {
+      console.error("Erro ao enviar submissão:", err);
+      toast.error("Erro ao salvar sua reflexão.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleArchive = async (id: string) => {
+    try {
+      await archiveSubmission(id);
+      toast.success("Reflexão arquivada.");
+    } catch (err) {
+      toast.error("Erro ao arquivar reflexão.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
