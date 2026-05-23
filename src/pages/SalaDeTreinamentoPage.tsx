@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
+import { cn } from '@/lib/utils';
 import { BackButton } from '@/components/navigation/BackButton';
 
 export default function SalaDeTreinamentoPage() {
@@ -74,8 +75,9 @@ export default function SalaDeTreinamentoPage() {
             icon={BookOpen}
             title="Clínica dos Contos"
             description="Use histórias como casos-espelho para reconhecer vergonha, limites, reconstrução, intuição, pertencimento e padrões relacionais."
-            status="Em estruturação"
+            status="Novo"
             primaryIcon={Sparkles}
+            onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}
           />
           <TrainingModuleCard
             icon={Users}
@@ -138,7 +140,7 @@ export default function SalaDeTreinamentoPage() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-4 pt-10">
-          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" disabled>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
             Clínica dos Contos
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" disabled>
@@ -156,9 +158,15 @@ export default function SalaDeTreinamentoPage() {
   );
 }
 
-function TrainingModuleCard({ icon: Icon, title, description, status, primaryIcon: PrimaryIcon }: { icon: any, title: string, description: string, status: string, primaryIcon: any }) {
+function TrainingModuleCard({ icon: Icon, title, description, status, primaryIcon: PrimaryIcon, onClick }: { icon: any, title: string, description: string, status: string, primaryIcon: any, onClick?: () => void }) {
   return (
-    <div className="group bg-card/40 backdrop-blur-sm border border-border rounded-[2rem] p-8 space-y-6 transition-all duration-500 hover:border-primary/30 hover:shadow-glow relative overflow-hidden">
+    <div 
+      onClick={onClick}
+      className={cn(
+        "group bg-card/40 backdrop-blur-sm border border-border rounded-[2rem] p-8 space-y-6 transition-all duration-500 hover:border-primary/30 hover:shadow-glow relative overflow-hidden",
+        onClick ? "cursor-pointer" : "opacity-80"
+      )}
+    >
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
       
       <div className="flex items-center justify-between">
