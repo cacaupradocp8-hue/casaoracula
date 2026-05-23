@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
@@ -12,32 +12,123 @@ import {
   Compass,
   GraduationCap,
   CheckCircle2,
-  Loader2
+  Loader2,
+  Send,
+  Trash2,
+  History,
+  Info
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
-import { useTrainingProgress } from '@/hooks/useTrainingData';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
+import { useTrainingProgress, useTrainingSubmissions } from '@/hooks/useTrainingData';
 import { cn } from '@/lib/utils';
+import { toast } from 'sonner';
+
+const AVAILABLE_STORIES = [
+  "Patinho Feio",
+  "Barba Azul",
+  "Vasalisa",
+  "La Loba",
+  "Mulher-Esqueleto",
+  "A Bela e a Fera",
+  "O Pequeno Polegar",
+  "A Menina dos Fósforos",
+  "Dona Holle",
+  "Outro conto simbólico"
+];
 
 export default function ClinicaDosContosPage() {
   const navigate = useNavigate();
   const { 
     progress, 
-    loading, 
-    error, 
+    loading: progressLoading, 
+    error: progressError, 
     markStarted, 
     markCompleted 
   } = useTrainingProgress("clinica-dos-contos");
 
+  const {
+    submissions,
+    loading: submissionsLoading,
+    error: submissionsError,
+    submitExercise,
+    archiveSubmission
+  } = useTrainingSubmissions("clinica-dos-contos");
+
+  // Form state
+  const [formData, setFormData] = useState({
+    conto: '',
+    simboloCentral: '',
+    reflexaoSimbolica: '',
+    perguntaIntegracao: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     // Sincroniza o início do estudo apenas se ainda não foi iniciado
-    if (!loading && !progress) {
+    if (!progressLoading && !progress) {
       markStarted();
     }
-  }, [loading, progress, markStarted]);
+  }, [progressLoading, progress, markStarted]);
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.conto || !formData.simboloCentral || !formData.reflexaoSimbolica) {
+      toast.error("Por favor, preencha os campos obrigatórios.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      await submitExercise({
+        module_key: "clinica-dos-contos",
+        exercise_key: "reflexao-simbolica-conto",
+        exercise_type: "guided_reflection",
+        case_key: formData.conto.toLowerCase().replace(/\s+/g, '-'),
+        prompt_text: "Reflexão simbólica sobre conto ou narrativa",
+        response_text: formData.reflexaoSimbolica,
+        response_metadata: {
+          conto: formData.conto,
+          simboloCentral: formData.simboloCentral,
+          perguntaIntegracao: formData.perguntaIntegracao
+        }
+      });
+      
+      toast.success("Reflexão simbólica salva com sucesso!");
+      setFormData({
+        conto: '',
+        simboloCentral: '',
+        reflexaoSimbolica: '',
+        perguntaIntegracao: ''
+      });
+    } catch (err) {
+      console.error("Erro ao enviar submissão:", err);
+      toast.error("Erro ao salvar sua reflexão.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleArchive = async (id: string) => {
+    try {
+      await archiveSubmission(id);
+      toast.success("Reflexão arquivada.");
+    } catch (err) {
+      toast.error("Erro ao arquivar reflexão.");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
@@ -95,12 +186,12 @@ export default function ClinicaDosContosPage() {
             </div>
 
             <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
-              {loading ? (
+              {progressLoading ? (
                 <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
                   <Loader2 className="w-4 h-4 animate-spin" />
                   <span className="text-xs uppercase tracking-widest font-bold">Sincronizando...</span>
                 </div>
-              ) : error ? (
+              ) : progressError ? (
                 <div className="text-xs text-destructive bg-destructive/5 px-4 py-2 rounded-xl border border-destructive/20">
                   Erro ao salvar progresso
                 </div>
@@ -205,51 +296,150 @@ export default function ClinicaDosContosPage() {
           </div>
         </section>
 
-        <section className="space-y-8">
+        <section className="space-y-8" id="ficha-treino">
           <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
             <FileText className="w-5 h-5" />
-            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Treino (Modelo)</h2>
+            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Ficha de Reflexão Simbólica</h2>
           </div>
+          
           <Card className="bg-card/40 border-border rounded-[2rem] overflow-hidden">
-            <CardContent className="p-8 sm:p-12 space-y-8 opacity-60">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Obra ou conto</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Selecionar obra...</div>
+            <CardContent className="p-8 sm:p-12">
+              <form onSubmit={handleFormSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/80">Conto ou narrativa estudada*</label>
+                    <Select 
+                      value={formData.conto} 
+                      onValueChange={(val) => setFormData(prev => ({ ...prev, conto: val }))}
+                    >
+                      <SelectTrigger className="bg-background/50 border-border/50 rounded-xl">
+                        <SelectValue placeholder="Selecionar obra..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {AVAILABLE_STORIES.map(story => (
+                          <SelectItem key={story} value={story}>{story}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase font-bold tracking-widest text-primary/80">Símbolo central percebido*</label>
+                    <Input 
+                      placeholder="Ex: A chave, a boneca, a pele..."
+                      className="bg-background/50 border-border/50 rounded-xl"
+                      value={formData.simboloCentral}
+                      onChange={(e) => setFormData(prev => ({ ...prev, simboloCentral: e.target.value }))}
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Símbolo central</label>
-                  <div className="h-10 border-b border-border/50 text-sm text-muted-foreground italic">Descreva o símbolo...</div>
+
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/80">Reflexão Simbólica*</label>
+                  <Textarea 
+                    placeholder="Escreva a sua leitura simbólica. Não inclua nomes reais, dados de clientes, diagnósticos ou informações sensíveis."
+                    className="bg-background/50 border-border/50 rounded-2xl min-h-[160px] resize-none"
+                    value={formData.reflexaoSimbolica}
+                    onChange={(e) => setFormData(prev => ({ ...prev, reflexaoSimbolica: e.target.value }))}
+                  />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Fenómeno psíquico observado</label>
-                <div className="h-20 border-b border-border/50 text-sm text-muted-foreground italic">Qual movimento psíquico este conto espelha?</div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Pergunta Clínica</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Que pergunta este conto abre?</div>
+
+                <div className="space-y-3">
+                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/80">Pergunta de Integração (Opcional)</label>
+                  <Textarea 
+                    placeholder="Que pergunta este conto abre para a sua escuta, estudo ou prática simbólica?"
+                    className="bg-background/50 border-border/50 rounded-2xl min-h-[100px] resize-none"
+                    value={formData.perguntaIntegracao}
+                    onChange={(e) => setFormData(prev => ({ ...prev, perguntaIntegracao: e.target.value }))}
+                  />
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Cautela Ética</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Que cuidado este tema exige?</div>
+
+                <div className="pt-4 flex flex-col sm:flex-row justify-between items-center gap-6">
+                  <div className="bg-amber-500/10 border border-amber-500/20 px-4 py-3 rounded-2xl flex items-center gap-3 max-w-md">
+                    <Info className="w-5 h-5 text-amber-500 shrink-0" />
+                    <p className="text-[10px] leading-tight text-amber-500/80 font-medium">
+                      Este espaço é pedagógico. Não use dados reais de clientes. Suas respostas não são prontuário e são salvas apenas para seu acompanhamento de treino.
+                    </p>
+                  </div>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting}
+                    className="rounded-full px-8 py-6 h-auto text-xs uppercase tracking-widest font-bold group"
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4 mr-2 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                    )}
+                    Salvar reflexão simbólica
+                  </Button>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase font-bold tracking-widest text-primary/60">Prática Sugerida</label>
-                  <div className="h-16 border-b border-border/50 text-sm text-muted-foreground italic">Sugestão de integração...</div>
-                </div>
-              </div>
-              <div className="pt-4 flex justify-between items-center">
-                <span className="text-[10px] uppercase font-bold tracking-widest text-amber-500/60 flex items-center gap-2">
-                  <AlertCircle className="w-3 h-3" /> Ficha Visual Mock — Não persistente
-                </span>
-                <Button variant="outline" className="rounded-full px-6 text-xs uppercase tracking-widest font-bold" disabled>
-                  Treinar Ficha
-                </Button>
-              </div>
+              </form>
             </CardContent>
           </Card>
+        </section>
+
+        {/* Histórico de Reflexões */}
+        <section className="space-y-8">
+          <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
+            <History className="w-5 h-5" />
+            <h2 className="text-xl font-display tracking-widest uppercase text-xs font-bold">Minhas Reflexões Salvas</h2>
+          </div>
+
+          {submissionsLoading ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4 opacity-50">
+              <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              <p className="text-xs uppercase tracking-widest font-bold">Carregando histórico...</p>
+            </div>
+          ) : submissions.length === 0 ? (
+            <div className="bg-card/20 border border-dashed border-border rounded-3xl p-12 text-center space-y-4">
+              <FileText className="w-12 h-12 text-muted-foreground/20 mx-auto" />
+              <p className="text-sm text-muted-foreground italic">Suas reflexões simbólicas aparecerão aqui quando forem salvas.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6">
+              {submissions.map((sub) => (
+                <Card key={sub.id} className="bg-card/30 border-border/50 rounded-[1.5rem] overflow-hidden group hover:border-primary/20 transition-colors">
+                  <CardContent className="p-6 sm:p-8 space-y-4">
+                    <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                      <div className="space-y-1">
+                        <Badge variant="outline" className="text-[10px] border-primary/20 text-primary uppercase tracking-widest">
+                          {sub.response_metadata?.conto || 'Conto não identificado'}
+                        </Badge>
+                        <h4 className="text-lg font-display text-foreground italic">
+                          {sub.response_metadata?.simboloCentral || 'Símbolo central'}
+                        </h4>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
+                          {new Date(sub.submitted_at).toLocaleDateString('pt-PT')}
+                        </span>
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-full"
+                          onClick={() => handleArchive(sub.id)}
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3 italic">
+                        "{sub.response_text}"
+                      </p>
+                      {sub.response_metadata?.perguntaIntegracao && (
+                        <div className="pt-2 border-t border-border/5 space-y-1">
+                          <p className="text-[10px] uppercase font-bold text-primary/40 tracking-widest">Pergunta aberta:</p>
+                          <p className="text-xs text-muted-foreground">{sub.response_metadata.perguntaIntegracao}</p>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
 
         <section className="space-y-8 pt-8">
