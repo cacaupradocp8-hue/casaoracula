@@ -80,8 +80,8 @@ export default function EscolherIntervencaoPage() {
           <CardContent className="p-4 flex gap-3 items-start">
             <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground leading-relaxed italic">
-              O Atlas Orácula não prescreve intervenções nem substitui a autonomia profissional. 
-              <strong> Este fluxo apoia a escolha consciente, ética e contextualizada do próximo passo clínico.</strong>
+              O Atlas Orácula não prescreve intervenções, não define tratamentos nem substitui a autonomia profissional. 
+              <strong> Este fluxo apoia a escolha consciente, ética e contextualizada da direção clínica.</strong>
             </p>
           </CardContent>
         </Card>

@@ -205,13 +205,13 @@ export default function AcompanharEvolucaoPage() {
                     color="orange"
                   />
                   <InterpretationCard 
-                    title="Supervisionar" 
-                    desc="Quando há dúvida profissional, intensidade, ambiguidade ou necessidade de outro olhar."
+                    title="Supervisão" 
+                    desc="Quando há dúvida profissional, intensidade, ambiguidade ou necessidade de suporte externo."
                     color="purple"
                   />
                   <InterpretationCard 
-                    title="Encaminhar" 
-                    desc="Quando o caso pede cuidado especializado, rede de suporte ou avaliação profissional adequada."
+                    title="Encaminhamento" 
+                    desc="Quando o caso pede cuidado especializado, suporte em rede ou suporte profissional adequado."
                     color="red"
                   />
                 </div>
@@ -245,10 +245,10 @@ export default function AcompanharEvolucaoPage() {
                   <div className="p-6 rounded-2xl border border-primary/20 bg-primary/5 space-y-4">
                     <div className="flex items-center gap-2 text-primary">
                       <LineChart className="w-4 h-4" />
-                      <span className="text-xs font-semibold uppercase tracking-wider">Síntese de Evolução</span>
+                      <span className="text-xs font-semibold uppercase tracking-wider">Síntese de Evolução Provisória</span>
                     </div>
                     <Textarea 
-                      defaultValue="A evolução ainda deve ser observada com prudência. Alguns sinais sugerem continuidade da direção escolhida, enquanto outros pedem ajuste de ritmo, mais contexto e possível supervisão antes de aprofundar."
+                      defaultValue="A evolução ainda deve ser observada com prudência e formulação aberta. Alguns sinais sugerem continuidade da direção escolhida, enquanto outros pedem ajuste de ritmo, mais contexto e possível supervisão ou suporte especializado."
                       className="min-h-[100px] bg-background/40 italic text-muted-foreground"
                     />
                   </div>

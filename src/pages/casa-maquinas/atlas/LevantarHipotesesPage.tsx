@@ -36,10 +36,10 @@ const steps = [
 ];
 
 const hypothesisOptions = [
-  'Traço de personalidade', 'Estado emocional temporário', 'Defesa psíquica', 
-  'Crença nuclear', 'Padrão relacional', 'Contexto de vida', 
-  'Sobrecarga ou exaustão', 'Repetição simbólica', 'Material onírico ou imagético', 
-  'Parte interna em conflito', 'Necessidade de supervisão', 'Necessidade de encaminhamento'
+  'Padrão de temperamento', 'Estado emocional reativo', 'Camada de proteção psíquica', 
+  'Pilar de crença nuclear', 'Dinâmica relacional', 'Impacto do contexto de vida', 
+  'Sinal de sobrecarga', 'Padrão simbólico recorrente', 'Material onírico ou imagético', 
+  'Conflito entre partes internas', 'Necessidade de supervisão', 'Necessidade de encaminhamento responsável'
 ];
 
 export default function LevantarHipotesesPage() {
@@ -80,8 +80,8 @@ export default function LevantarHipotesesPage() {
           <CardContent className="p-4 flex gap-3 items-start">
             <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
             <p className="text-xs text-muted-foreground leading-relaxed italic">
-              O Atlas Orácula não confirma diagnósticos nem identifica transtornos automaticamente. 
-              <strong> Este fluxo serve apenas para organizar hipóteses e apoiar a supervisão do caso.</strong>
+              O Atlas Orácula não confirma diagnósticos, não detecta transtornos nem identifica patologias automaticamente. 
+              <strong> Este fluxo serve apenas para organizar hipóteses e apoiar a formulação provisória e a supervisão do caso.</strong>
             </p>
           </CardContent>
         </Card>
