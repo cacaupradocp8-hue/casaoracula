@@ -112,9 +112,9 @@ export default function FormacaoMetodoPage() {
   return (
     <AppLayout>
       <MobilePageShell
-        badge="Formação"
-        title="Formação no Método Orácula"
-        subtitle="Sua jornada de certificação como Facilitadora Orácula"
+        badge="Formação Orácula"
+        title="Ensino do Método Orácula"
+        subtitle="Sua jornada de formação e aprofundamento no método"
       >
         <div className="pb-20 space-y-10">
           {/* Welcome Hero */}
@@ -126,15 +126,15 @@ export default function FormacaoMetodoPage() {
             <div className="relative z-10 space-y-4">
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-6 h-6 text-gold" />
-                <span className="text-sm font-medium text-gold">Bem-vinda à Formação</span>
+                <span className="text-sm font-medium text-gold">Bem-vinda à Formação Orácula</span>
               </div>
               <h2 className="font-display text-xl md:text-2xl font-bold text-foreground leading-tight">
                 Uma jornada de profundidade, ética e competência simbólica
               </h2>
               <p className="text-foreground/80 leading-relaxed max-w-2xl">
-                A Formação no Método Orácula é um processo progressivo de certificação que integra
-                ferramentas de leitura de campo, narrativas simbólicas, condução de sessões e
-                sustentação profissional. Cada módulo foi desenhado para construir maturidade clínica real.
+                A Formação no Método Orácula é um processo progressivo de estudo que integra
+                ferramentas de leitura de campo, narrativas simbólicas e ciclos de aprendizado.
+                Cada módulo foi desenhado para construir maturidade real. Depois de estudar o método, pratique na Sala de Treinamento.
               </p>
 
               {user && (
@@ -152,7 +152,7 @@ export default function FormacaoMetodoPage() {
           {/* Quick Actions */}
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {[
-              { icon: BookOpen, label: 'Módulos', href: '#modules', color: 'text-gold' },
+              { icon: BookOpen, label: 'Ciclos', href: '#modules', color: 'text-gold' },
               { icon: Zap, label: 'Treinamento', href: '/sala-de-treinamento', color: 'text-primary' },
               { icon: Sparkles, label: 'Simulação', href: '/sala-de-treinamento', color: 'text-purple-400' },
               { icon: MessageCircle, label: 'Fórum', href: '/formacao-metodo/forum', color: 'text-blue-400' },
@@ -192,7 +192,7 @@ export default function FormacaoMetodoPage() {
           <section id="modules">
             <div className="flex items-center gap-2 mb-4">
               <BookOpen className="w-5 h-5 text-gold/60" />
-              <h2 className="font-display text-lg font-semibold text-foreground">Módulos & Cursos</h2>
+              <h2 className="font-display text-lg font-semibold text-foreground">Ciclos de Estudo</h2>
             </div>
 
             {isLoading ? (
@@ -221,7 +221,7 @@ export default function FormacaoMetodoPage() {
                           )}
                           <div className="flex-1 min-w-0 space-y-1.5">
                             <div className="flex items-center gap-2">
-                              <span className="text-xs text-foreground/60">Módulo {i + 1}</span>
+                              <span className="text-xs text-foreground/60">Ciclo {i + 1}</span>
                               {course.tags.map(t => (
                                 <Badge key={t} variant="outline" className="text-xs border-border/30">{t}</Badge>
                               ))}

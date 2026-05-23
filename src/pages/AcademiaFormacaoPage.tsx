@@ -209,7 +209,7 @@ export default function AcademiaFormacaoPage() {
 
   if (loading) {
     return (
-      <CasaMaquinasLayout title="Academia Orácula" subtitle="Carregando...">
+      <CasaMaquinasLayout title="Academia de Mestria" subtitle="Carregando...">
         <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
       </CasaMaquinasLayout>
     );
@@ -225,11 +225,11 @@ export default function AcademiaFormacaoPage() {
       <CasaMaquinasLayout title={selectedCourse.titulo} subtitle={selectedCourse.subtitulo || ''}>
         <PageBreadcrumb
           items={[
-            { label: 'Academia', href: '/academia-formacao' },
+            { label: 'Academia de Mestria', href: '/academia-formacao' },
             { label: selectedCourse.titulo },
           ]}
         />
-        <BackButton onClick={() => setSelectedCourse(null)} label="Voltar à Academia" />
+        <BackButton onClick={() => setSelectedCourse(null)} label="Voltar à Academia de Mestria" />
 
         {loadingDetail ? (
           <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
@@ -239,7 +239,7 @@ export default function AcademiaFormacaoPage() {
             <Card className="bg-[#0F2438] border-primary/15">
               <CardContent className="pt-6 space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  <Badge className="bg-primary/15 text-primary">{selectedCourse.tipo_curso || 'formação'}</Badge>
+                  <Badge className="bg-primary/15 text-primary">{selectedCourse.tipo_curso || 'módulo'}</Badge>
                   {selectedCourse.nivel && <Badge variant="outline">{selectedCourse.nivel}</Badge>}
                   {selectedCourse.duracao_estimada && <Badge variant="outline"><Clock className="w-3 h-3 mr-1" />{selectedCourse.duracao_estimada}</Badge>}
                 </div>
@@ -271,7 +271,7 @@ export default function AcademiaFormacaoPage() {
             {isEnrolled && modules.length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-sm font-medium text-foreground flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-primary" /> Módulos e Aulas
+                  <BookOpen className="w-4 h-4 text-primary" /> Ciclos e Aulas
                 </h3>
                 {modules.map(mod => {
                   const modLessons = lessons.filter(l => l.module_id === mod.id);
@@ -316,7 +316,7 @@ export default function AcademiaFormacaoPage() {
               <Card className="bg-[#0F2438] border-primary/15">
                 <CardHeader>
                   <CardTitle className="text-sm text-foreground flex items-center gap-2">
-                    <Award className="w-4 h-4 text-primary" /> Projeto de Mestria
+                    <Award className="w-4 h-4 text-primary" /> Prática de Mestria Oracular
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -341,9 +341,9 @@ export default function AcademiaFormacaoPage() {
                     </div>
                   ) : (
                     <div className="text-center py-4 space-y-3">
-                      <p className="text-sm text-muted-foreground">Submeta seu projeto de mestria para avaliação.</p>
+                      <p className="text-sm text-muted-foreground">Submeta sua prática de mestria para avaliação. O Atlas Orácula aplica este raciocínio na Casa das Máquinas, em contexto profissional.</p>
                       <Button onClick={() => setProjetoOpen(true)} className="bg-primary text-primary-foreground">
-                        <Upload className="w-4 h-4 mr-2" /> Enviar Projeto
+                        <Upload className="w-4 h-4 mr-2" /> Enviar Prática
                       </Button>
                     </div>
                   )}
@@ -370,7 +370,7 @@ export default function AcademiaFormacaoPage() {
         {/* Projeto Dialog */}
         <Dialog open={projetoOpen} onOpenChange={setProjetoOpen}>
           <DialogContent className="bg-[#0B1B2B] border-primary/20">
-            <DialogHeader><DialogTitle className="text-foreground">Enviar Projeto de Mestria</DialogTitle></DialogHeader>
+            <DialogHeader><DialogTitle className="text-foreground">Enviar Prática de Mestria</DialogTitle></DialogHeader>
             <div className="space-y-3 mt-2">
               <Input value={projetoForm.titulo} onChange={e => setProjetoForm(f => ({ ...f, titulo: e.target.value }))}
                 placeholder="Título do projeto" className="bg-background border-primary/10" maxLength={200} />
