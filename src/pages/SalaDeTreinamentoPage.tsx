@@ -83,8 +83,9 @@ export default function SalaDeTreinamentoPage() {
             icon={Users}
             title="Casos Simulados"
             description="Pratique leitura de contexto, sinais, hipóteses, cautelas, direção e intervenção sem usar clientes reais."
-            status="Em estruturação"
+            status="Novo"
             primaryIcon={Target}
+            onClick={() => navigate('/sala-de-treinamento/casos-simulados')}
           />
           <TrainingModuleCard
             icon={Compass}
@@ -143,7 +144,7 @@ export default function SalaDeTreinamentoPage() {
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/clinica-dos-contos')}>
             Clínica dos Contos
           </Button>
-          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" disabled>
+          <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/sala-de-treinamento/casos-simulados')}>
             Casos Simulados
           </Button>
           <Button variant="outline" className="rounded-full px-8 py-6 h-auto font-bold uppercase tracking-widest text-xs" onClick={() => navigate('/minha-jornada')}>
