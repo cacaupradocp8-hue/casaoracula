@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
+import { cn } from '@/lib/utils';
 
 export default function ClinicaDosContosPage() {
   const navigate = useNavigate();
@@ -181,6 +182,42 @@ export default function ClinicaDosContosPage() {
           </Card>
         </section>
 
+        <section className="space-y-8 pt-8">
+          <div className="flex flex-col gap-2 border-b border-border/10 pb-4">
+            <h2 className="text-2xl sm:text-3xl font-display text-primary italic">Acervos e Bibliotecas</h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              Materiais de apoio para aprofundar o treino simbólico, literário e narrativo da Clínica dos Contos.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <SupportArchiveCard
+              icon={BookOpen}
+              title="Acervo Simbólico de Referência"
+              description="Contos clássicos e narrativas de referência para estudo, reconhecimento de temas simbólicos e treino do olhar."
+              cta="Explorar acervo"
+              status="Estudo e referência"
+              onClick={() => navigate('/narroterapia/biblioteca-contos')}
+            />
+            <SupportArchiveCard
+              icon={Compass}
+              title="Câmara de Narração Oracular"
+              description="Os 12 contos oficiais da Narroterapia para uso orientado, com contexto ético e autorização adequada."
+              cta="Acessar câmara"
+              status="Requer certificação ativa"
+              requiresAuth
+              onClick={() => navigate('/narroterapia/clinica')}
+            />
+          </div>
+
+          <div className="bg-muted/30 border border-border/50 rounded-2xl p-5">
+            <p className="text-xs text-muted-foreground leading-relaxed text-center italic">
+              A Câmara de Narração pode exigir autorização, certificação ou aceite ético. 
+              Caso o acesso não esteja disponível, siga pelo Acervo Simbólico de Referência ou pelo percurso principal da Clínica dos Contos.
+            </p>
+          </div>
+        </section>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8">
           <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-4">
             <h3 className="text-xl font-display text-primary italic flex items-center gap-2">
@@ -243,6 +280,46 @@ function CaseMirrorCard({ title, theme, description }: { title: string, theme: s
         <Button variant="ghost" size="sm" className="p-0 h-auto text-[10px] uppercase font-bold tracking-widest text-primary/60 hover:text-primary transition-colors hover:bg-transparent" disabled>
           Ver Detalhes <ChevronRight className="w-3 h-3 ml-1" />
         </Button>
+      </div>
+    </div>
+  );
+}
+
+function SupportArchiveCard({ icon: Icon, title, description, cta, status, requiresAuth, onClick }: { icon: any, title: string, description: string, cta: string, status: string, requiresAuth?: boolean, onClick: () => void }) {
+  return (
+    <div 
+      onClick={onClick}
+      className="group bg-card/40 backdrop-blur-sm border border-border rounded-[2rem] p-8 space-y-6 transition-all duration-500 hover:border-primary/30 hover:shadow-glow relative overflow-hidden cursor-pointer"
+    >
+      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 blur-2xl -z-10 group-hover:bg-primary/10 transition-colors" />
+      
+      <div className="flex items-center justify-between">
+        <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500">
+          <Icon className="w-7 h-7 text-primary/60 group-hover:text-primary" />
+        </div>
+        <Badge variant="outline" className={cn(
+          "text-[10px] uppercase tracking-widest px-3 py-1",
+          requiresAuth ? "border-amber-500/20 text-amber-500/60" : "border-primary/20 text-primary/60"
+        )}>
+          {requiresAuth && <AlertCircle className="w-3 h-3 mr-1 inline" />}
+          {status}
+        </Badge>
+      </div>
+
+      <div className="space-y-3">
+        <h4 className="text-xl font-display text-foreground group-hover:text-primary transition-colors">{title}</h4>
+        <p className="text-sm text-muted-foreground leading-relaxed font-body">
+          {description}
+        </p>
+      </div>
+
+      <div className="pt-2 flex items-center justify-between">
+        <span className="text-[10px] uppercase font-bold tracking-widest text-primary/60 group-hover:text-primary transition-colors">
+          {cta}
+        </span>
+        <div className="w-8 h-8 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/30 transition-all">
+          <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary" />
+        </div>
       </div>
     </div>
   );
