@@ -126,6 +126,63 @@ export default function CasosSimuladosPage() {
           </div>
         </section>
 
+        <section className="space-y-8 pt-8">
+          <div className="flex flex-col gap-2 border-b border-border/10 pb-4">
+            <h2 className="text-2xl sm:text-3xl font-display text-primary italic">Escuta Ativa e Casos de Obras</h2>
+            <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+              Antes de formular, aprenda a escutar o campo simbólico de uma narrativa.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 max-w-2xl mx-auto">
+            <div 
+              onClick={() => navigate('/clube/treinamento')}
+              className="group bg-card/40 backdrop-blur-sm border border-border rounded-[2rem] p-8 space-y-6 transition-all duration-500 hover:border-primary/30 hover:shadow-glow relative overflow-hidden cursor-pointer"
+            >
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 blur-3xl -z-10 group-hover:bg-primary/10 transition-colors" />
+              
+              <div className="flex items-center justify-between">
+                <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-all duration-500">
+                  <MessageCircle className="w-7 h-7 text-primary/60 group-hover:text-primary" />
+                </div>
+                <Badge variant="outline" className="text-[10px] uppercase tracking-widest px-3 py-1 border-primary/20 text-primary/60">
+                  Rota existente
+                </Badge>
+              </div>
+
+              <div className="space-y-3">
+                <h4 className="text-2xl font-display text-foreground group-hover:text-primary transition-colors">Câmara do Sussurro</h4>
+                <p className="text-sm text-muted-foreground leading-relaxed font-body">
+                  Treine a sua escuta imersiva com casos inspirados nas obras e narrativas simbólicas da Casa. 
+                  A Câmara do Sussurro ajuda a perceber atmosfera, sinais, imagens e tensões antes de organizar uma formulação.
+                </p>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60 group-hover:text-primary transition-colors">
+                  Entrar na Câmara do Sussurro
+                </span>
+                <div className="w-8 h-8 rounded-full border border-primary/10 flex items-center justify-center group-hover:border-primary/30 transition-all">
+                  <ChevronRight className="w-4 h-4 text-primary/40 group-hover:text-primary" />
+                </div>
+              </div>
+
+              <div className="pt-4 border-t border-border/10">
+                <p className="text-[10px] text-muted-foreground/40 italic">
+                  Acesso conforme as permissões da Casa.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-muted/30 border border-border/50 rounded-2xl p-5 max-w-2xl mx-auto">
+            <p className="text-xs text-muted-foreground leading-relaxed text-center italic">
+              Os casos da Câmara do Sussurro são parte de um percurso pedagógico e simbólico. 
+              Eles não representam atendimento real, não geram diagnóstico e devem ser usados como treino de escuta, percepção e formulação.
+            </p>
+          </div>
+        </section>
+
         <section className="space-y-8">
           <div className="flex items-center gap-3 text-primary border-b border-border/10 pb-4">
             <FileText className="w-5 h-5" />
