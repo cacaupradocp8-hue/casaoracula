@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
@@ -10,17 +10,34 @@ import {
   Target, 
   BarChart3, 
   Compass,
-  GraduationCap
+  GraduationCap,
+  CheckCircle2,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { PageBreadcrumb } from '@/components/navigation/PageBreadcrumb';
 import { BackButton } from '@/components/navigation/BackButton';
+import { useTrainingProgress } from '@/hooks/useTrainingData';
 import { cn } from '@/lib/utils';
 
 export default function ClinicaDosContosPage() {
   const navigate = useNavigate();
+  const { 
+    progress, 
+    loading, 
+    error, 
+    markStarted, 
+    markCompleted 
+  } = useTrainingProgress("clinica-dos-contos");
+
+  useEffect(() => {
+    // Sincroniza o início do estudo apenas se ainda não foi iniciado
+    if (!loading && !progress) {
+      markStarted();
+    }
+  }, [loading, progress, markStarted]);
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-24 pattern-geometric overflow-x-hidden">
@@ -63,6 +80,59 @@ export default function ClinicaDosContosPage() {
             </p>
           </div>
         </div>
+
+        {/* Card de Progresso Pedagógico */}
+        <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-4 max-w-2xl">
+              <div className="flex items-center gap-3 text-primary">
+                <BarChart3 className="w-6 h-6" />
+                <h2 className="text-2xl font-display italic">Progresso da Jornada</h2>
+              </div>
+              <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
+                Este progresso pertence apenas à sua jornada pedagógica na Sala de Treinamento. Ele não é prontuário, não representa atendimento real e não é enviado ao Atlas Orácula profissional.
+              </p>
+            </div>
+
+            <div className="flex flex-col items-center sm:items-end gap-3 shrink-0">
+              {loading ? (
+                <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span className="text-xs uppercase tracking-widest font-bold">Sincronizando...</span>
+                </div>
+              ) : error ? (
+                <div className="text-xs text-destructive bg-destructive/5 px-4 py-2 rounded-xl border border-destructive/20">
+                  Erro ao salvar progresso
+                </div>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2 bg-primary/5 border border-primary/20 px-4 py-2 rounded-2xl">
+                    <div className={cn(
+                      "w-2 h-2 rounded-full",
+                      progress?.status === 'completed' ? "bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" : "bg-primary animate-pulse"
+                    )} />
+                    <span className="text-xs uppercase tracking-widest font-bold text-primary">
+                      {progress?.status === 'completed' ? 'Estudo Concluído' : 
+                       progress?.status === 'in_progress' ? 'Em Andamento' : 'Estudo Iniciado'}
+                    </span>
+                  </div>
+                  
+                  {progress?.status !== 'completed' && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full border-primary/30 text-primary hover:bg-primary/10 text-[10px] uppercase font-bold tracking-widest"
+                      onClick={() => markCompleted()}
+                    >
+                      <CheckCircle2 className="w-3 h-3 mr-2" />
+                      Marcar como concluído
+                    </Button>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </section>
 
         <section className="bg-card/40 border border-border rounded-[2.5rem] p-8 sm:p-10 space-y-6">
           <div className="flex items-center gap-3 text-primary">
