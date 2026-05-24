@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { CourseWithProgress } from '@/types/course';
+import { CourseWithProgress, CourseLesson } from '@/types/course';
+import { calculateCourseProgress } from '@/utils/courseProgress';
 
 export function useCourses() {
   const { user } = useAuth();
@@ -60,13 +61,15 @@ export function useCourses() {
 
       return coursesData.map(course => {
         const enrollment = enrollments.find(e => e.course_id === course.id) || null;
-        const courseLessonIds = lessonsByCourseMap.get(course.id) || [];
-        const totalLessons = courseLessonIds.length;
-        const completedLessons = progress.filter(p => courseLessonIds.includes(p.lesson_id)).length;
-        
-        const progressPercent = totalLessons > 0 
-          ? Math.round((completedLessons / totalLessons) * 100) 
-          : 0;
+        const courseLessons = lessons.filter(lesson => {
+          const courseId = moduleToCourseMap.get(lesson.module_id);
+          return courseId === course.id;
+        }) as CourseLesson[];
+
+        const { totalLessons, completedLessons, progressPercent } = calculateCourseProgress(
+          courseLessons,
+          progress
+        );
 
         return {
           ...course,
