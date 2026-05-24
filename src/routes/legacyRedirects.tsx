@@ -56,11 +56,11 @@ export function renderLegacyRedirects() {
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
-      <Route path="/tour" element={<Navigate to="/mapa-casa" replace />} />
+      
       <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
       <Route path="/dashboard" element={<Navigate to="/dashboard-membro" replace />} />
       <Route path="/mentoria" element={<Navigate to="/oracula" replace />} />
-      <Route path="/experiencia-gratuita" element={<Navigate to="/quiz/descubra-seu-eixo" replace />} />
+      
       
       {/* ─── REDIRECIONAMENTOS DE CURSOS V1/V2 ─── */}
       <Route path="/course/:id" element={<LegacyCursoRedirect />} />
@@ -119,9 +119,6 @@ export function renderLegacyRedirects() {
       <Route path="/assinatura" element={<Navigate to="/minha-conta" replace />} />
       <Route path="/billing" element={<Navigate to="/minha-conta" replace />} />
 
-      {/* ─── REDIRECIONAMENTOS DE RELATÓRIOS ANTIGOS ─── */}
-      <Route path="/relatorio/sprint-06" element={<Navigate to="/dashboard-membro" replace />} />
-      <Route path="/relatorio/sprint-07" element={<Navigate to="/dashboard-membro" replace />} />
 
       {/* ─── REDIRECIONAMENTOS DE TREINAMENTO ─── */}
       <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
