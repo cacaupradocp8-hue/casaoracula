@@ -10,6 +10,7 @@ import {
   CourseModuleWithLessons 
 } from '@/types/course';
 import { useToast } from '@/hooks/use-toast';
+import { calculateCourseProgress } from '@/utils/courseProgress';
 
 interface UseCourseDetailResult {
   course: Course | null;
@@ -202,11 +203,12 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
     fetchCourse();
   }, [fetchCourse]);
 
-  // Calculate totals
+  // Calculate totals using shared helper
   const allLessons = modules.flatMap(m => m.lessons);
-  const totalLessons = allLessons.length;
-  const completedLessons = allLessons.filter(l => progress.get(l.id)?.completed).length;
-  const progressPercent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+  const { totalLessons, completedLessons, progressPercent } = calculateCourseProgress(
+    allLessons,
+    progress
+  );
 
   return {
     course,
