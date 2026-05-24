@@ -32,6 +32,11 @@ function LegacyAulaRedirect() {
 export function renderLegacyRedirects() {
   return (
     <>
+      {/* ─── NÚCLEO: DASHBOARD E ONBOARDING ─── */}
+      <Route path="/dashboard" element={<Navigate to="/dashboard-membro" replace />} />
+      <Route path="/tour" element={<Navigate to="/dashboard-membro" replace />} />
+      <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
+
       {/* ─── REDIRECIONAMENTOS SAAS E APP ANTIGOS ─── */}
       <Route path="/saas/clientes/:clienteId/mapa-cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />
       <Route path="/saas/clientes/:clienteId/relatorio-jornada" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/relatorio-jornada" />} />
@@ -45,45 +50,42 @@ export function renderLegacyRedirects() {
       <Route path="/saas/biblioteca" element={<Navigate to="/casa-das-maquinas/biblioteca" replace />} />
       <Route path="/app/clientes/:clienteId/cidadela" element={<RedirectWithParams to="/casa-das-maquinas/clientes/:clienteId/mapa-cidadela" />} />
 
-      {/* ─── REDIRECIONAMENTOS DE ADMIN E CLUBE ─── */}
+      {/* ─── REDIRECIONAMENTOS DE ADMIN ─── */}
       <Route path="/admin/clube-livro" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube-livro/*" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/books" element={<Navigate to="/admin/clube/conteudos" replace />} />
+      <Route path="/admin/vitrine-cards" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube/oraculo-portais" element={<Navigate to="/admin/clube/portais" replace />} />
       <Route path="/admin/clube/oraculo-portais/:portalId" element={<Navigate to="/admin/clube/portais" replace />} />
 
-      {/* ─── REDIRECIONAMENTOS DE FORMAÇÃO E CONTEÚDO ─── */}
+      {/* ─── REDIRECIONAMENTOS DE CLUBE E CONTEÚDO ─── */}
+      <Route path="/biblioteca-das-travessias" element={<Navigate to="/clube/acervo" replace />} />
+      <Route path="/biblioteca-das-travessias/*" element={<Navigate to="/clube/acervo" replace />} />
+      <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
+      
+      {/* ─── REDIRECIONAMENTOS DE FORMAÇÃO E CURSOS ─── */}
+      <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
       <Route path="/formacao-oracula" element={<Navigate to="/oracula" replace />} />
       <Route path="/formacao-viva" element={<Navigate to="/oracula" replace />} />
-      <Route path="/formacao" element={<Navigate to="/cursos" replace />} />
-      
-      <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
-      <Route path="/dashboard" element={<Navigate to="/dashboard-membro" replace />} />
       <Route path="/mentoria" element={<Navigate to="/oracula" replace />} />
       
-      
-      {/* ─── REDIRECIONAMENTOS DE CURSOS V1/V2 ─── */}
       <Route path="/course/:id" element={<LegacyCursoRedirect />} />
       <Route path="/course/:courseId/lesson/:lessonId" element={<LegacyAulaRedirect />} />
       <Route path="/curso/:id" element={<LegacyCursoRedirect />} />
       <Route path="/curso/:courseId/aula/:lessonId" element={<LegacyAulaRedirect />} />
 
-      {/* ─── REDIRECIONAMENTOS DE CASA E JARDIM ─── */}
-      <Route path="/jardim-heroina-app" element={<Navigate to="/meu-jardim" replace />} />
-      <Route path="/casa/jardim" element={<Navigate to="/jardim-da-psique" replace />} />
-      <Route path="/casa/jardim/:id" element={<RedirectWithParams to="/jardim-da-psique/:id" />} />
-
-      {/* ─── REDIRECIONAMENTOS DE FERRAMENTAS E SALAS ─── */}
-      <Route path="/ferramentas-metodo" element={<Navigate to="/ferramentas" replace />} />
+      {/* ─── REDIRECIONAMENTOS DE FERRAMENTAS E MÉTODO ─── */}
+      <Route path="/ferramentas-metodo" element={<Navigate to="/sala-de-treinamento" replace />} />
       <Route path="/sala-do-metodo" element={<Navigate to="/ferramentas" replace />} />
-      <Route path="/salas" element={<Navigate to="/mapa-casa" replace />} />
       <Route path="/ferramentas-vitrine" element={<Navigate to="/ferramentas" replace />} />
+      <Route path="/salas" element={<Navigate to="/mapa-casa" replace />} />
       <Route path="/ferramentas/sala-de-sessao" element={<Navigate to="/session-room" replace />} />
+      <Route path="/revelacao-cidadela" element={<Navigate to="/cidadela/revelacao" replace />} />
+      
       <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramenta/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/cartografia-psiquica" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
       <Route path="/ferramentas/cartografia-psiquica-oracula" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
-      <Route path="/revelacao-cidadela" element={<Navigate to="/cidadela/revelacao" replace />} />
       
       <Route path="/salas/big5" element={<Navigate to="/ferramentas/big5" replace />} />
       <Route path="/salas/eneagrama" element={<Navigate to="/ferramentas/eneagrama" replace />} />
@@ -95,6 +97,11 @@ export function renderLegacyRedirects() {
       <Route path="/ferramentas/agente-curador" element={<Navigate to="/syntheia?agente=curador" replace />} />
       <Route path="/ferramentas/agente-simbolico" element={<Navigate to="/syntheia?agente=simbolico" replace />} />
       <Route path="/ferramentas/espelho-consciencia" element={<Navigate to="/ferramentas/espelho-de-consciencia" replace />} />
+
+      {/* ─── REDIRECIONAMENTOS DE CASA E JARDIM ─── */}
+      <Route path="/jardim-heroina-app" element={<Navigate to="/meu-jardim" replace />} />
+      <Route path="/casa/jardim" element={<Navigate to="/jardim-da-psique" replace />} />
+      <Route path="/casa/jardim/:id" element={<RedirectWithParams to="/jardim-da-psique/:id" />} />
 
       {/* ─── REDIRECIONAMENTOS DE CASA DAS MÁQUINAS ─── */}
       <Route path="/casa-das-maquinas/ferramentas/cartografia" element={<Navigate to="/ferramenta/cartografia-psiquica-oracula" replace />} />
@@ -114,15 +121,13 @@ export function renderLegacyRedirects() {
       <Route path="/casa-das-maquinas/oraculo/:oracleSlug/historico" element={<OracleRedirectWithSuffix suffix="/historico" />} />
       <Route path="/casa-das-maquinas/oraculo/:oracleSlug/biblioteca" element={<OracleRedirectWithSuffix suffix="/biblioteca" />} />
 
-      {/* ─── REDIRECIONAMENTOS DE PLANOS E CONTA ─── */}
-      <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
-      <Route path="/assinatura" element={<Navigate to="/minha-conta" replace />} />
-      <Route path="/billing" element={<Navigate to="/minha-conta" replace />} />
-
-
       {/* ─── REDIRECIONAMENTOS DE TREINAMENTO ─── */}
       <Route path="/treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
       <Route path="/sala-treinamento" element={<Navigate to="/sala-de-treinamento" replace />} />
+
+      {/* ─── REDIRECIONAMENTOS DE CONTA E PAGAMENTO ─── */}
+      <Route path="/assinatura" element={<Navigate to="/minha-conta" replace />} />
+      <Route path="/billing" element={<Navigate to="/minha-conta" replace />} />
     </>
   );
 }
