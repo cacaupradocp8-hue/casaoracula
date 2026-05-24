@@ -4,6 +4,7 @@ import { Route, Navigate } from "react-router-dom";
 // Lazy-loaded pages (Importing same components used in App.tsx)
 const ClubeRotasCatalogo = React.lazy(() => import("@/pages/clube/ClubeRotasCatalogo"));
 const ClubeRotaPremium = React.lazy(() => import("@/pages/clube/ClubeRotaPremium"));
+const ClubeAcervo = React.lazy(() => import("@/pages/clube/ClubeAcervo"));
 const Travessias = React.lazy(() => import("@/pages/Travessias"));
 const TravessiaDetalhe = React.lazy(() => import("@/pages/TravessiaDetalhe"));
 const BibliotecaTravessiaDetalhe = React.lazy(() => import("@/pages/BibliotecaTravessiaDetalhe"));
@@ -28,6 +29,7 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       {/* Clube */}
       <Route path="/clube" element={<ProtectedRoute minPortal="assinante"><ClubeRotasCatalogo /></ProtectedRoute>} />
       <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
+      <Route path="/clube/acervo" element={<ProtectedRoute minPortal="assinante"><ClubeAcervo /></ProtectedRoute>} />
       
       {/* Biblioteca de Travessias - Redirects para a Unificada */}
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
