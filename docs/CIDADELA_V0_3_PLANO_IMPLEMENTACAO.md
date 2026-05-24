@@ -1,7 +1,7 @@
 # Plano de Implementação da Cidadela V0.3
 
 ## 1. Status do planejamento
-`CIDADELA_V0_3_PLANNED`
+`CIDADELA_V0_3_PLAN_REFINED_WITH_DOMAIN_SEPARATION`
 
 Esta etapa é exclusivamente documental e estratégica. Nenhuma alteração de código, rota, banco de dados ou lógica de permissões foi realizada nesta fase.
 
@@ -43,8 +43,8 @@ Fragmentação da experiência. Os dados de progresso estão espalhados entre o 
 - `ProximosPassosCard`: Recomendação de continuidade imediata.
 - `TrilhasEmAndamento`: Agregação de Rotas, Sala e Formação.
 
-### Hook agregador sugerido
-- `useCidadelaOverview`: Camada de composição que busca dados de `user_cidadela_estado`, matrículas e progresso pedagógico sem realizar escritas ou cálculos complexos.
+### Hook agregador sugerido (Futuro)
+- `useCidadelaOverview`: Camada de composição futura que agregará estado pessoal, progresso de Rotas, Sala e Formação para expor dados seguros para a UI. Não deve acessar dados de clientes, Casa das Máquinas ou `districtState` clínico. Não deve ser criado na etapa inicial da V0.3.
 
 ### Camada de dados
 - Utilizar `src/lib/dal/cidadelaEstado.ts` e services de progresso existentes.
@@ -61,13 +61,20 @@ Fragmentação da experiência. Os dados de progresso estão espalhados entre o 
 | Progresso Formação | `matriculas` / `academy_progress` | ✅ | Status de conclusão |
 | Próximos passos | Lógica de overview | ✅ | Sugestão pedagógica |
 
-## 7. Dados proibidos ou adiados
-- **NÃO ENTRA**: Dados de clientes da terapeuta.
-- **NÃO ENTRA**: Prontuários ou relatórios clínicos.
-- **NÃO ENTRA**: Ferramentas operacionais da Casa das Máquinas.
-- **NÃO ENTRA**: Atlas ou IA (Syntheia).
-- **NÃO ENTRA**: Scores psicológicos ou diagnósticos médicos.
-- **NÃO ENTRA**: Linguagem de performance (rankings, notas).
+## 7. Dados proibidos ou fora do escopo da V0.3
+- **NÃO ENTRA**: Clientes e sessões.
+- **NÃO ENTRA**: Casa das Máquinas.
+- **NÃO ENTRA**: Jardim da Heroína.
+- **NÃO ENTRA**: Mapa coletivo.
+- **NÃO ENTRA**: Cidadela da cliente.
+- **NÃO ENTRA**: Cidadela profissional da terapeuta.
+- **NÃO ENTRA**: Dados terapêuticos.
+- **NÃO ENTRA**: `MandalaMode: 'clinico'` ou `'coletivo'`.
+- **NÃO ENTRA**: `useClienteCityState`.
+- **NÃO ENTRA**: Atlas, IA ou Syntheia.
+- **NÃO ENTRA**: Diagnósticos, prontuários ou laudos.
+- **NÃO ENTRA**: Scoring psicológico ou avaliação clínica.
+- **NÃO ENTRA**: Recomendação terapêutica automatizada.
 
 ## 8. Escopo mínimo seguro da V0.3
 
@@ -104,8 +111,10 @@ Deve ser preservada como a experiência de "nascimento" ou "revelação" do mapa
 
 ## 13. Riscos simbólicos e éticos
 - Transformar a jornada simbólica em um painel de "tarefas a fazer".
-- Uso de linguagem excessivamente clínica ou de performance.
+- Uso de linguagem excessivamente clínica ou de performance. Deve-se preferir termos como cartografia simbólica, mapa vivo, leitura simbólica, estado da jornada, travessia, avanço pedagógico, orientação simbólica ou registro de percurso.
 - Exposição acidental de dados sensíveis se a camada de overview não for rigorosa.
+- Confusão entre o domínio pessoal da aluna e domínios clínicos/profissionais.
+- Uso indevido de termos como diagnóstico, laudo, prontuário, score psicológico, avaliação clínica ou recomendação terapêutica automatizada.
 
 ## 14. Ordem recomendada de implementação
 1. Implementar `useCidadelaOverview` (composição de dados).
@@ -116,11 +125,24 @@ Deve ser preservada como a experiência de "nascimento" ou "revelação" do mapa
 6. Documentar o encerramento da V0.3.
 
 ## 15. Critérios de aceite da V0.3
-- Rota `/cidadela` acessível e funcional.
+- Rota `/cidadela` acessível e funcional, representando apenas a jornada da própria habitante.
 - `/dashboard-membro` e `/minha-jornada` permanecem operacionais.
-- Nenhum dado clínico ou de terceiros é exposto.
+- Nenhuma query deve buscar clientes ou dados da Casa das Máquinas/Jardim da Heroína.
+- Nenhum dado clínico, de terceiros, ou modo clínico/coletivo é usado/exposto.
+- Não deve haver Atlas, IA ou linguagem de prontuário/diagnóstico.
 - Sem novas migrations ou alterações de RLS.
 - Sucesso nos testes de `tsc` e build.
+- Preservar portabilidade fora do Lovable.
 
-## 16. Decisão final
-`CIDADELA_V0_3_PLAN_READY`
+## Adendo: Separação de Domínios da Cidadela
+
+1. A Cidadela é um sistema de mapas por contexto, não uma página única.
+2. A implementação V0.3 inicial será restrita à Cidadela pessoal da aluna/habitante.
+3. Dados de terapeuta, cliente, mapa coletivo, Jardim da Heroína e Casa das Máquinas ficam fora deste ciclo.
+4. `districtState` clínico ou terapêutico não deve ser misturado com `user_cidadela_estado`.
+5. `useJornadaHabitante` deve ser tratado como principal orquestrador da jornada pessoal.
+6. `useCidadelaOverview` pode ser planejado como hook agregador futuro, mas não deve ser criado nesta etapa.
+7. O termo “diagnóstico” deve ser evitado na experiência da Cidadela V0.3.
+
+## 18. Decisão final
+`CIDADELA_V0_3_PLAN_REFINED_WITH_DOMAIN_SEPARATION`
