@@ -21,6 +21,7 @@ interface UseCourseDetailResult {
   completedLessons: number;
   progressPercent: number;
   markLessonComplete: (lessonId: string) => Promise<void>;
+  enrollInFreeCourse: () => Promise<void>;
   refetch: () => Promise<void>;
 }
 
@@ -163,6 +164,40 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
     }
   };
 
+  const enrollInFreeCourse = async () => {
+    if (!user || !course || course.pricing_model !== 'free' || enrollment) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('course_enrollments')
+        .upsert({
+          user_id: user.id,
+          course_id: course.id,
+          ativo: true,
+          status: 'active',
+          data_inicio: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,course_id'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        setEnrollment(data as CourseEnrollment);
+      }
+    } catch (error) {
+      console.error('Error enrolling in free course:', error);
+      toast({
+        title: 'Erro ao iniciar curso',
+        description: 'Não foi possível realizar sua matrícula automática.',
+        variant: 'destructive'
+      });
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchCourse();
   }, [fetchCourse]);
@@ -183,6 +218,7 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
     completedLessons,
     progressPercent,
     markLessonComplete,
+    enrollInFreeCourse,
     refetch: fetchCourse
   };
 }

@@ -39,7 +39,8 @@ export default function CursoDetalhe() {
   const { user } = useAuth();
   const { 
     course, modules, enrollment, progress, isLoading,
-    totalLessons, completedLessons, progressPercent
+    totalLessons, completedLessons, progressPercent,
+    enrollInFreeCourse
   } = useCourseDetail(id);
   const { hasAccess, getLockReason } = useCourseAccess();
 
@@ -96,7 +97,20 @@ export default function CursoDetalhe() {
   };
 
   const firstLesson = getFirstAccessibleLesson();
-  const handleStartCourse = () => { if (firstLesson) navigate(`/cursos/${course.id}/aula/${firstLesson.id}`); };
+  const handleStartCourse = async () => { 
+    if (!firstLesson) return;
+
+    if (course.pricing_model === 'free' && !enrollment) {
+      try {
+        await enrollInFreeCourse();
+        navigate(`/cursos/${course.id}/aula/${firstLesson.id}`);
+      } catch (error) {
+        // Error is handled in the hook
+      }
+    } else {
+      navigate(`/cursos/${course.id}/aula/${firstLesson.id}`); 
+    }
+  };
 
   return (
     <AppLayout>
