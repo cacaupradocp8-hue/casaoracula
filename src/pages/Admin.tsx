@@ -71,7 +71,7 @@ const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarr
 
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
 const AdminEstudioOracular = lazy(() => import('@/components/admin/AdminEstudioOracular'));
-const AdminVitrineCards = lazy(() => import('@/pages/admin/AdminVitrineCards'));
+// AdminVitrineCards removed as it was legacy orphan code
 const AdminPortalJunguianoTab = lazy(() => import('@/components/admin/AdminPortalJunguianoTab').then(m => ({ default: m.AdminPortalJunguianoTab })));
 const AdminCertificacaoTab = lazy(() => import('@/components/admin/AdminCertificacaoTab').then(m => ({ default: m.AdminCertificacaoTab })));
 const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePanel').then(m => ({ default: m.UpsellMachinePanel })));
@@ -129,7 +129,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   
   'audios': AdminAudiosTab,
   'galeria': AdminGaleriaTab,
-  'vitrine': AdminVitrineCards,
+  // 'vitrine': AdminVitrineCards, removed as it was legacy orphan code
   
   // COMUNIDADE
   'casa-oracula': AdminCasaOraculaTab,
