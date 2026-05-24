@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { addTravessiaToHistorico } from '@/lib/dal/cidadelaEstado';
 
 // ================================================
 // ROTA ORACULAR — Hook central de estado da estrada
@@ -320,9 +321,41 @@ export function useRotaOracular() {
         });
 
       if (error) throw error;
+
+      // Gatilho de integração Cidadela-Rotas
+      // Recalcula progresso após a conclusão deste ponto para checar 100%
+      const { data: updatedProg } = await supabase
+        .from('clube_rota_progresso')
+        .select('status, rota_item_id')
+        .eq('user_id', user.id)
+        .eq('estacao_id', estacaoAtual.id);
+      
+      const updatedProgArray = updatedProg || [];
+      const totalOb = (itensRota || []).filter(i => i.obrigatorio).length;
+      const doneOb = updatedProgArray.filter(p => {
+        const item = (itensRota || []).find(i => i.id === p.rota_item_id);
+        return item?.obrigatorio && p.status === 'completed';
+      }).length;
+
+      if (totalOb > 0 && doneOb >= totalOb) {
+        console.log('[useRotaOracular] Estação 100% concluída. Registrando na Cidadela...');
+        await addTravessiaToHistorico(user.id, {
+          distrito: estacaoAtual.titulo,
+          tipo: 'estacao_concluida',
+          completado_em: new Date().toISOString(),
+          contexto: `rota_estacao_${estacaoAtual.id}`,
+          metadata: {
+            origem: "rotas-da-casa",
+            estacao_id: estacaoAtual.id,
+            estacao_numero: estacaoAtual.numero,
+            titulo_visual: estacaoAtual.titulo
+          }
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['rota-progresso'] });
+      queryClient.invalidateQueries({ queryKey: ['cidadela-estado'] });
       queryClient.invalidateQueries({ queryKey: ['cidadela-mapa'] });
       toast.success('Progresso registrado na sua jornada!');
     },

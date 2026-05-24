@@ -41,10 +41,17 @@ export async function upsertCidadelaEstado(
 
 export async function addTravessiaToHistorico(
   userId: string,
-  travessia: { distrito: string; tipo: string; completado_em: string; contexto?: string }
+  travessia: { distrito: string; tipo: string; completado_em: string; contexto?: string; metadata?: any }
 ) {
   const current = await getCidadelaEstado(userId);
   const historico = current?.historico_travessias || [];
+  
+  // Idempotência baseada no campo contexto
+  if (travessia.contexto && historico.some((t: any) => t.contexto === travessia.contexto)) {
+    console.log(`[Cidadela] Travessia com contexto ${travessia.contexto} já existe. Ignorando.`);
+    return;
+  }
+
   historico.push(travessia);
 
   const distritos = current?.distritos_ativados || [];
