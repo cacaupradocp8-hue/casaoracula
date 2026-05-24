@@ -83,7 +83,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       
       { key: 'audios', label: 'Áudios & Sons', icon: Headphones },
       { key: 'galeria', label: 'Galeria de Mídias', icon: GalleryIcon },
-      { key: 'vitrine', label: 'Vitrine de Cards', icon: LayoutGrid },
+      // { key: 'vitrine', label: 'Vitrine de Cards', icon: LayoutGrid }, removed as it was legacy orphan code
     ],
   },
   {
