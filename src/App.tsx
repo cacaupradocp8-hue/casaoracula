@@ -191,9 +191,7 @@ const TriadeMetodo = React.lazy(() => import("./pages/metodo/TriadeMetodo"));
 const LabirintoHeroinaPage = React.lazy(() => import("./pages/labirinto-heroina/LabirintoHeroinaPraticoPage"));
 const Admin = React.lazy(() => import("./pages/Admin"));
 const DesbloqueiePage = React.lazy(() => import("./pages/DesbloqueiePage"));
-// Relatórios movidos para carregamento sob demanda ou removidos
-// const RelatorioSprint06 = React.lazy(() => import("./pages/RelatorioSprint06"));
-// const RelatorioSprint07 = React.lazy(() => import("./pages/RelatorioSprint07"));
+
 
 // ─── Utility components ───────────────────────────────────────
 
@@ -489,8 +487,7 @@ function AppRoutes() {
       ))}
 
       {/* Treinamento redirects */}
-      
-      <Route path="/sala-de-treinamento" element={<ProtectedRoute minPortal="aluna_formacao"><SalaDeTreinamentoPage /></ProtectedRoute>} />
+
       
       <Route path="/comunidade" element={<ProtectedRoute><ComunidadePage /></ProtectedRoute>} />
       <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
