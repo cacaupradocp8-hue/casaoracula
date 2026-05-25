@@ -72,11 +72,11 @@ export function HomeOnboardingBlocks() {
                 highlight
               />
               <OnboardingCard
-                title="Minha Jornada"
-                description="Continue sua evolução e acompanhe suas travessias."
+                title="Cidadela"
+                description="Veja seu percurso simbólico dentro da Casa e acompanhe suas travessias."
                 icon={<Compass className="w-6 h-6 text-gold" />}
-                action={() => navigate('/minha-jornada')}
-                label="Continuar"
+                action={() => navigate('/cidadela')}
+                label="Explorar Cidadela"
               />
               <OnboardingCard
                 title="Biblioteca"
@@ -99,11 +99,11 @@ export function HomeOnboardingBlocks() {
                 highlight
               />
               <OnboardingCard
-                title="Minha Jornada"
-                description="Acompanhe seu progresso e desenvolvimento oracular."
+                title="Cidadela"
+                description="Seu mapa na Casa: acompanhe seu desenvolvimento oracular."
                 icon={<Compass className="w-6 h-6 text-primary" />}
-                action={() => navigate('/minha-jornada')}
-                label="Ver Mapa"
+                action={() => navigate('/cidadela')}
+                label="Abrir Cidadela"
               />
               <OnboardingCard
                 title="Práticas e Biblioteca"
@@ -138,7 +138,7 @@ export function HomeOnboardingBlocks() {
         >
           <div className="flex items-center gap-2 mb-4">
             <Layout className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-display text-foreground">Minha Jornada</h2>
+            <h2 className="text-xl font-display text-foreground">Cidadela</h2>
           </div>
           
           <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
@@ -148,13 +148,13 @@ export function HomeOnboardingBlocks() {
                   <Compass className="w-8 h-8 text-primary" />
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h3 className="text-lg font-medium text-foreground mb-1">Mapa da Jornada</h3>
+                  <h3 className="text-lg font-medium text-foreground mb-1">Seu mapa na Casa</h3>
                   <p className="text-sm text-muted-foreground">
-                    Acompanhe seu progresso, próximas travessias e o desenvolvimento da sua voz oracular.
+                    Veja seu percurso simbólico dentro da Casa e as próximas travessias da sua voz oracular.
                   </p>
                 </div>
-                <Button onClick={() => navigate('/minha-jornada')} className="shrink-0">
-                  Ver Mapa <ArrowRight className="w-4 h-4 ml-2" />
+                <Button onClick={() => navigate('/cidadela')} className="shrink-0">
+                  Explorar Cidadela <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
               </div>
             </CardContent>
