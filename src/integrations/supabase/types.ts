@@ -8665,6 +8665,9 @@ export type Database = {
       }
       conteudo_aulas: {
         Row: {
+          archive_reason: string | null
+          archived_at: string | null
+          archived_by: string | null
           audio_url: string | null
           created_at: string
           descricao_curta: string
@@ -8681,6 +8684,9 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           audio_url?: string | null
           created_at?: string
           descricao_curta?: string
@@ -8697,6 +8703,9 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           audio_url?: string | null
           created_at?: string
           descricao_curta?: string
@@ -8724,6 +8733,9 @@ export type Database = {
       }
       conteudo_travessias: {
         Row: {
+          archive_reason: string | null
+          archived_at: string | null
+          archived_by: string | null
           capa_url: string | null
           created_at: string
           descricao: string
@@ -8739,6 +8751,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string
@@ -8754,6 +8769,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string
