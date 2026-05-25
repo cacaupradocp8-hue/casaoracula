@@ -51,44 +51,9 @@ import {
 function useAvailableRoutes() {
   const { data: routes = [], isLoading } = useQuery({
     queryKey: ["admin-available-routes"],
-    queryFn: async () => {
-      const [coursesRes, salasRes, toolsRes] = await Promise.all([
-        supabase.from("courses").select("id, titulo, publicado").order("titulo"),
-        supabase.from("salas").select("id, nome_exibicao, ativa").order("nome_exibicao"),
-        supabase.from("sala_ferramentas").select("id, ferramenta_nome, rota, ativa, slug").order("ferramenta_nome"),
-      ]);
+    queryFn: getAvailableAdminRouteOptions,
+    staleTime: 60_000,
 
-      const options: RouteOption[] = [];
-
-      salasRes.data?.forEach((s) => {
-        options.push({
-          value: `/sala/${s.id}`,
-          label: `${s.nome_exibicao}${s.ativa ? "" : " (inativa)"}`,
-          group: "Salas",
-        });
-      });
-
-      coursesRes.data?.forEach((c) => {
-        options.push({
-          value: `/curso/${c.id}`,
-          label: `${c.titulo}${c.publicado ? "" : " (rascunho)"}`,
-          group: "Cursos",
-        });
-      });
-
-      toolsRes.data?.forEach((t) => {
-        const route = t.rota || (t.slug ? `/ferramenta/${t.slug}` : null);
-        if (route) {
-          options.push({
-            value: route,
-            label: `${t.ferramenta_nome}${t.ativa ? "" : " (inativa)"}`,
-            group: "Ferramentas",
-          });
-        }
-      });
-
-      return options;
-    },
     staleTime: 60_000,
   });
 
