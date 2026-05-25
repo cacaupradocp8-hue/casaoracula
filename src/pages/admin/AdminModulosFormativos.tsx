@@ -36,13 +36,17 @@ import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Up
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
+// ── DAL Readonly ─────────────────────────────────────
+import { 
+  listAdminModulosFormativos, 
+  getAdminBannerSettings, 
+  getAvailableAdminRouteOptions,
+  type ModuloFormativo,
+  type RouteOption
+} from "@/lib/dal/admin/adminFormacaoRead";
+
 // ── Route Options Hook ────────────────────────────────
 
-interface RouteOption {
-  value: string;
-  label: string;
-  group: string;
-}
 
 function useAvailableRoutes() {
   const { data: routes = [], isLoading } = useQuery({
