@@ -115,7 +115,7 @@ export function useCidadelaOverview(): CidadelaOverview {
     };
 
     // PRÓXIMO PASSO SEGURO
-    // Lógica de prioridade: Jornada > Formação > Rotas
+    // Lógica de prioridade: Formação > Treinamento > Rotas > Jornada
     let proximoPasso: CidadelaOverview['proximoPasso'] = null;
 
     if (formacao.proximoCurso) {
@@ -125,6 +125,13 @@ export function useCidadelaOverview(): CidadelaOverview {
         href: formacao.proximoCurso.href,
         tipo: 'formacao'
       };
+    } else if (treinamento.proximoTreino) {
+      proximoPasso = {
+        titulo: treinamento.proximoTreino.titulo,
+        descricao: 'Aperfeiçoe suas habilidades na Sala de Treinamento.',
+        href: treinamento.proximoTreino.href,
+        tipo: 'treinamento'
+      };
     } else if (rotas.proximaRota) {
       proximoPasso = {
         titulo: rotas.proximaRota.titulo,
@@ -133,6 +140,7 @@ export function useCidadelaOverview(): CidadelaOverview {
         tipo: 'rotas'
       };
     } else {
+
       proximoPasso = {
         titulo: 'Explorar Cidadela',
         descricao: 'Sua jornada continua no coração da Casa.',
