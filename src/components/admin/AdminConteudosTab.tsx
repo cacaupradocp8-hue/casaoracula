@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink, Archive } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 import { AudioUpload } from './AudioUpload';
 import { Separator } from '@/components/ui/separator';
@@ -88,6 +88,8 @@ export function AdminConteudosTab() {
 
   // Delete dialog state
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
+  const [archiveReason, setArchiveReason] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<{ type: 'portal' | 'aula'; id: string; title: string } | null>(null);
 
   useEffect(() => {
@@ -356,10 +358,56 @@ export function AdminConteudosTab() {
     setAulaDialogOpen(false);
   };
 
-  // Delete
+  // Archive / Delete
   const openDeleteDialog = (type: 'portal' | 'aula', id: string, title: string) => {
     setDeleteTarget({ type, id, title });
     setDeleteDialogOpen(true);
+  };
+
+  const openArchiveDialog = (type: 'portal' | 'aula', id: string, title: string) => {
+    setDeleteTarget({ type, id, title });
+    setArchiveReason('');
+    setArchiveDialogOpen(true);
+  };
+
+  const handleArchive = async () => {
+    if (!deleteTarget) return;
+
+    if (!archiveReason.trim()) {
+      toast.error('O motivo do arquivamento é obrigatório');
+      return;
+    }
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      const table = deleteTarget.type === 'portal' ? 'conteudo_travessias' : 'conteudo_aulas';
+      
+      const { error } = await supabase
+        .from(table)
+        .update({
+          archived_at: new Date().toISOString(),
+          archived_by: user?.id,
+          archive_reason: archiveReason
+        })
+        .eq('id', deleteTarget.id);
+
+      if (error) throw error;
+
+      toast.success(`${deleteTarget.type === 'portal' ? 'Portal' : 'Aula'} arquivado(a) com sucesso`);
+      
+      if (deleteTarget.type === 'portal') {
+        fetchPortais();
+      } else {
+        const aula = Object.values(aulas).flat().find((a) => a.id === deleteTarget.id);
+        if (aula) fetchAulas(aula.travessia_id);
+      }
+
+      setArchiveDialogOpen(false);
+      setDeleteTarget(null);
+    } catch (error) {
+      toast.error('Erro ao arquivar');
+      console.error(error);
+    }
   };
 
   const handleDelete = async () => {
