@@ -53,9 +53,8 @@ function useAvailableRoutes() {
     queryKey: ["admin-available-routes"],
     queryFn: getAvailableAdminRouteOptions,
     staleTime: 60_000,
-
-    staleTime: 60_000,
   });
+
 
   return { routes, isLoading };
 }
