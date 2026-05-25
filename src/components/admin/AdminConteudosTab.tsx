@@ -19,53 +19,17 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Database } from '@/integrations/supabase/types';
 
-type PortalType = Database['public']['Enums']['portal_type'];
-
-interface Sala {
-  id: string;
-  nome_exibicao: string;
-  nivel_minimo: string;
-}
-
-interface Portal {
-  id: string;
-  titulo: string;
-  subtitulo: string;
-  descricao: string;
-  texto_introducao: string;
-  descricao_pedagogica: string;
-  ordem: number;
-  portal_minimo: PortalType;
-  sala_id: string | null;
-  capa_url: string | null;
-  publicado: boolean;
-}
-
-interface Aula {
-  id: string;
-  travessia_id: string;
-  titulo: string;
-  descricao_curta: string;
-  texto_aula: string | null;
-  ordem: number;
-  video_url: string | null;
-  audio_url: string | null;
-  pdf_url: string | null;
-  materiais_url: string | null;
-  portal_minimo: PortalType;
-  publicado: boolean;
-}
-
-interface Ferramenta {
-  id: string;
-  ferramenta_nome: string;
-  ferramenta_descricao: string;
-  icone: string | null;
-  ativa: boolean;
-  ordem: number;
-  sala_id: string;
-  portal_id: string | null;
-}
+import { 
+  listAdminConteudoPortais, 
+  listAdminConteudoAulas, 
+  listAdminSalasAtivas, 
+  listAdminSalaFerramentas,
+  type Portal,
+  type Aula,
+  type Sala,
+  type Ferramenta,
+  type PortalType
+} from '@/lib/dal/admin/adminPortalsRead';
 
 const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
@@ -134,58 +98,32 @@ export function AdminConteudosTab() {
 
   const fetchPortais = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('conteudo_travessias')
-      .select('*')
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminConteudoPortais();
+      setPortais(data);
+    } catch (error) {
       toast.error('Erro ao carregar portais');
       console.error(error);
-    } else {
-      // Map data to Portal interface
-      const mappedPortais: Portal[] = (data || []).map((item: any) => ({
-        id: item.id,
-        titulo: item.titulo,
-        subtitulo: item.subtitulo || '',
-        descricao: item.descricao,
-        texto_introducao: item.texto_introducao || '',
-        descricao_pedagogica: item.descricao_pedagogica || '',
-        ordem: item.ordem,
-        portal_minimo: item.portal_minimo,
-        sala_id: item.sala_id,
-        capa_url: item.capa_url,
-        publicado: item.publicado ?? true,
-      }));
-      setPortais(mappedPortais);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchSalas = async () => {
-    const { data, error } = await supabase
-      .from('salas')
-      .select('id, nome_exibicao, nivel_minimo')
-      .eq('ativa', true)
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminSalasAtivas();
+      setSalas(data);
+    } catch (error) {
       console.error('Erro ao carregar salas:', error);
-    } else {
-      setSalas(data || []);
     }
   };
 
   const fetchFerramentas = async () => {
-    const { data, error } = await supabase
-      .from('sala_ferramentas')
-      .select('id, ferramenta_nome, ferramenta_descricao, icone, ativa, ordem, sala_id, portal_id')
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminSalaFerramentas();
+      setFerramentas(data);
+    } catch (error) {
       console.error('Erro ao carregar ferramentas:', error);
-    } else {
-      setFerramentas(data || []);
     }
   };
 
@@ -229,31 +167,12 @@ export function AdminConteudosTab() {
   };
 
   const fetchAulas = async (portalId: string) => {
-    const { data, error } = await supabase
-      .from('conteudo_aulas')
-      .select('*')
-      .eq('travessia_id', portalId)
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminConteudoAulas(portalId);
+      setAulas((prev) => ({ ...prev, [portalId]: data }));
+    } catch (error) {
       toast.error('Erro ao carregar aulas');
       console.error(error);
-    } else {
-      const mappedAulas: Aula[] = (data || []).map((item: any) => ({
-        id: item.id,
-        travessia_id: item.travessia_id,
-        titulo: item.titulo,
-        descricao_curta: item.descricao_curta,
-        texto_aula: item.texto_aula,
-        ordem: item.ordem,
-        video_url: item.video_url,
-        audio_url: item.audio_url,
-        pdf_url: item.pdf_url,
-        materiais_url: item.materiais_url,
-        portal_minimo: item.portal_minimo,
-        publicado: item.publicado ?? true,
-      }));
-      setAulas((prev) => ({ ...prev, [portalId]: mappedAulas }));
     }
   };
 
