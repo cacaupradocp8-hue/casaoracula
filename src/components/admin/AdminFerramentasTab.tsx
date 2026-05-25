@@ -12,26 +12,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Plus, Edit, Trash2, Brain, Compass, HelpCircle, Save, ClipboardList, Wrench, ExternalLink, Sparkles } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
-// Type for Ferramenta (from sala_ferramentas)
-interface Ferramenta {
-  id: string;
-  ferramenta_nome: string;
-  ferramenta_chave: string;
-  ferramenta_descricao: string | null;
-  rota: string | null;
-  icone: string | null;
-  sala_id: string | null;
-  familia_id: string | null;
-  ordem: number;
-  ativa: boolean;
-  tipo_ferramenta: string | null;
-  origem_metodologica: string | null;
-  vinculo_metodologico: string | null;
-  finalidade_pratica: string | null;
-}
+import { 
+  listAdminSalasForFerramentas, 
+  listAdminSalaFerramentasFull,
+  type FerramentaFull as Ferramenta 
+} from '@/lib/dal/admin/adminSalasFerramentasRead.ts';
 
 interface TravessiaFamilia {
+// ... keep existing code
   id: string;
   nome: string;
   icone: string | null;
@@ -183,16 +171,21 @@ function CatalogoFerramentasSection() {
   }, []);
 
   const fetchData = async () => {
-    const [ferramentasRes, salasRes, familiasRes] = await Promise.all([
-      supabase.from('sala_ferramentas').select('*').order('ordem'),
-      supabase.from('salas').select('id, nome_exibicao').eq('ativa', true).order('ordem'),
-      supabase.from('travessia_familias').select('id, nome, icone').eq('ativa', true).order('ordem')
-    ]);
+    try {
+      const [ferramentasData, salasData, familiasRes] = await Promise.all([
+        listAdminSalaFerramentasFull(),
+        listAdminSalasForFerramentas(),
+        supabase.from('travessia_familias').select('id, nome, icone').eq('ativa', true).order('ordem')
+      ]);
 
-    if (ferramentasRes.data) setFerramentas(ferramentasRes.data);
-    if (salasRes.data) setSalas(salasRes.data);
-    if (familiasRes.data) setFamilias(familiasRes.data);
-    setLoading(false);
+      setFerramentas(ferramentasData as Ferramenta[]);
+      setSalas(salasData || []);
+      if (familiasRes.data) setFamilias(familiasRes.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getSalaNome = (salaId: string | null) => {
@@ -306,7 +299,11 @@ function CatalogoFerramentasSection() {
       tipo_ferramenta: null,
       origem_metodologica: null,
       vinculo_metodologico: null,
-      finalidade_pratica: null
+      finalidade_pratica: null,
+      tipo: 'custom',
+      portal_minimo: 'pre_iniciada',
+      has_blocks: true,
+      slug: null
     });
     setIsCreating(true);
     setDialogOpen(true);
