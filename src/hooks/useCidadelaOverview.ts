@@ -44,8 +44,16 @@ export function useCidadelaOverview(): CidadelaOverview {
     isLoading: loadingFormacao 
   } = useFormationProgress();
 
+  const {
+    modulosIniciados,
+    exerciciosConcluidos,
+    proximoTreino,
+    loading: loadingTreinamento
+  } = useTrainingOverview();
+
   // Consolidação de loading
-  const isLoading = loadingJornada || loadingCidadela || loadingRotas || loadingFormacao;
+  const isLoading = loadingJornada || loadingCidadela || loadingRotas || loadingFormacao || loadingTreinamento;
+
 
   // 2. Processar Overview via useMemo
   const overview = useMemo((): Omit<CidadelaOverview, 'isLoading' | 'error'> => {
