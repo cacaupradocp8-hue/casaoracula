@@ -531,15 +531,9 @@ export default function AdminModulosFormativos() {
 
   const { data: modulos, isLoading } = useQuery({
     queryKey: ["admin-modulos-formativos"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("modulos_formativos")
-        .select("*")
-        .order("ordem_exibicao", { ascending: true });
-      if (error) throw error;
-      return data as ModuloFormativo[];
-    },
+    queryFn: listAdminModulosFormativos,
   });
+
 
   const saveMutation = useMutation({
     mutationFn: async (data: { id?: string; form: ModuloForm }) => {
