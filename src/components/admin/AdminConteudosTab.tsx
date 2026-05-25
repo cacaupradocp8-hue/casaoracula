@@ -98,58 +98,32 @@ export function AdminConteudosTab() {
 
   const fetchPortais = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from('conteudo_travessias')
-      .select('*')
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminConteudoPortais();
+      setPortais(data);
+    } catch (error) {
       toast.error('Erro ao carregar portais');
       console.error(error);
-    } else {
-      // Map data to Portal interface
-      const mappedPortais: Portal[] = (data || []).map((item: any) => ({
-        id: item.id,
-        titulo: item.titulo,
-        subtitulo: item.subtitulo || '',
-        descricao: item.descricao,
-        texto_introducao: item.texto_introducao || '',
-        descricao_pedagogica: item.descricao_pedagogica || '',
-        ordem: item.ordem,
-        portal_minimo: item.portal_minimo,
-        sala_id: item.sala_id,
-        capa_url: item.capa_url,
-        publicado: item.publicado ?? true,
-      }));
-      setPortais(mappedPortais);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const fetchSalas = async () => {
-    const { data, error } = await supabase
-      .from('salas')
-      .select('id, nome_exibicao, nivel_minimo')
-      .eq('ativa', true)
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminSalasAtivas();
+      setSalas(data);
+    } catch (error) {
       console.error('Erro ao carregar salas:', error);
-    } else {
-      setSalas(data || []);
     }
   };
 
   const fetchFerramentas = async () => {
-    const { data, error } = await supabase
-      .from('sala_ferramentas')
-      .select('id, ferramenta_nome, ferramenta_descricao, icone, ativa, ordem, sala_id, portal_id')
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminSalaFerramentas();
+      setFerramentas(data);
+    } catch (error) {
       console.error('Erro ao carregar ferramentas:', error);
-    } else {
-      setFerramentas(data || []);
     }
   };
 
