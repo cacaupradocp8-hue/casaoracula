@@ -77,6 +77,7 @@ export default function PortalDetalhe() {
         .select('*')
         .eq('id', id)
         .eq('publicado', true)
+        .is('archived_at', null)
         .maybeSingle();
 
       if (portalError || !portalData) {
@@ -102,6 +103,7 @@ export default function PortalDetalhe() {
         .select('id, titulo, descricao_curta, ordem, portal_minimo')
         .eq('travessia_id', id)
         .eq('publicado', true)
+        .is('archived_at', null)
         .order('ordem');
 
       if (aulasError) {

@@ -78,7 +78,7 @@ export default function Portais() {
     setIsLoading(true);
     const visitante = portalTipo === "visitante";
     try {
-      let query = supabase.from("conteudo_travessias").select("*").order("ordem");
+      let query = supabase.from("conteudo_travessias").select("*").is("archived_at", null).order("ordem");
       if (!visitante) query = query.eq("publicado", true);
       const { data: portalsData, error: portalsError } = await query;
       if (portalsError) throw portalsError;
@@ -86,7 +86,7 @@ export default function Portais() {
       setPortals(safePortals);
       if (safePortals.length === 0) { setProgress({}); setNextAulas({}); return; }
 
-      const { data: aulasData } = await supabase.from("conteudo_aulas").select("id, travessia_id, ordem").eq("publicado", true).order("ordem");
+      const { data: aulasData } = await supabase.from("conteudo_aulas").select("id, travessia_id, ordem").eq("publicado", true).is("archived_at", null).order("ordem");
       let userProgress: { aula_id: string }[] = [];
       if (user?.id) {
         const { data: progressData } = await supabase.from("user_aula_progress").select("aula_id").eq("user_id", user.id);

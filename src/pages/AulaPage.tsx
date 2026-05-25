@@ -92,6 +92,7 @@ export default function AulaPage() {
         .select('*')
         .eq('id', id)
         .eq('publicado', true)
+        .is('archived_at', null)
         .maybeSingle();
 
       if (aulaError) throw aulaError;

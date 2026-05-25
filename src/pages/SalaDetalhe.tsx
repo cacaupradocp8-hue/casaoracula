@@ -129,6 +129,7 @@ export default function SalaDetalhe() {
           .select("*")
           .eq("sala_id", id)
           .eq("publicado", true)
+          .is("archived_at", null)
           .order("ordem");
         
         setPortais(portaisRes.data || []);
