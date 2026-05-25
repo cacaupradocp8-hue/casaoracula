@@ -9058,6 +9058,9 @@ export type Database = {
       }
       course_lessons: {
         Row: {
+          archive_reason: string | null
+          archived_at: string | null
+          archived_by: string | null
           audio_url: string | null
           capa_url: string | null
           content_type: Database["public"]["Enums"]["content_type"]
@@ -9080,6 +9083,9 @@ export type Database = {
           video_url: string | null
         }
         Insert: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           audio_url?: string | null
           capa_url?: string | null
           content_type?: Database["public"]["Enums"]["content_type"]
@@ -9102,6 +9108,9 @@ export type Database = {
           video_url?: string | null
         }
         Update: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           audio_url?: string | null
           capa_url?: string | null
           content_type?: Database["public"]["Enums"]["content_type"]
@@ -9183,6 +9192,9 @@ export type Database = {
       }
       course_modules: {
         Row: {
+          archive_reason: string | null
+          archived_at: string | null
+          archived_by: string | null
           cards_leitura: Json | null
           check_maturidade: Json | null
           course_id: string
@@ -9206,6 +9218,9 @@ export type Database = {
           video_principal_url: string | null
         }
         Insert: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           cards_leitura?: Json | null
           check_maturidade?: Json | null
           course_id: string
@@ -9229,6 +9244,9 @@ export type Database = {
           video_principal_url?: string | null
         }
         Update: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           cards_leitura?: Json | null
           check_maturidade?: Json | null
           course_id?: string
@@ -9319,6 +9337,9 @@ export type Database = {
       }
       courses: {
         Row: {
+          archive_reason: string | null
+          archived_at: string | null
+          archived_by: string | null
           capa_url: string | null
           created_at: string
           descricao: string
@@ -9346,6 +9367,9 @@ export type Database = {
           video_preview_url: string | null
         }
         Insert: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string
@@ -9373,6 +9397,9 @@ export type Database = {
           video_preview_url?: string | null
         }
         Update: {
+          archive_reason?: string | null
+          archived_at?: string | null
+          archived_by?: string | null
           capa_url?: string | null
           created_at?: string
           descricao?: string
