@@ -45,6 +45,7 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
         .from('courses')
         .select('*')
         .eq('id', courseId)
+        .is('archived_at', null)
         .single();
 
       if (courseError) throw courseError;
@@ -55,6 +56,7 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
         .from('course_modules')
         .select('*')
         .eq('course_id', courseId)
+        .is('archived_at', null)
         .order('ordem', { ascending: true });
 
       if (modulesError) throw modulesError;
@@ -64,6 +66,7 @@ export function useCourseDetail(courseId: string | undefined): UseCourseDetailRe
       const { data: lessonsData, error: lessonsError } = await supabase
         .from('course_lessons')
         .select('*')
+        .is('archived_at', null)
         .in('module_id', moduleIds.length > 0 ? moduleIds : ['none'])
         .order('ordem', { ascending: true });
 

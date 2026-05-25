@@ -20,7 +20,7 @@ export function calculateCourseProgress(
   userProgress: CourseLessonProgress[] | Map<string, CourseLessonProgress>
 ): CourseProgressResult {
   // Only count published lessons
-  const publishedLessons = lessons.filter(lesson => lesson.publicado);
+  const publishedLessons = lessons.filter(lesson => lesson.publicado && !(lesson as any).archived_at);
   const totalLessons = publishedLessons.length;
   
   if (totalLessons === 0) {

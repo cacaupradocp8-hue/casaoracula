@@ -54,6 +54,7 @@ export default function CursoAula() {
           .from('course_lessons')
           .select('*')
           .eq('id', lessonId)
+          .is('archived_at', null)
           .single();
 
         if (error) throw error;

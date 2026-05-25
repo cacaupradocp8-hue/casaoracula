@@ -83,6 +83,7 @@ export default function AcademiaFormacaoPage() {
       .from('courses')
       .select('*')
       .eq('publicado', true)
+      .is('archived_at', null)
       .order('ordem');
     setCourses((coursesData as unknown as Course[]) || []);
 
@@ -124,7 +125,7 @@ export default function AcademiaFormacaoPage() {
     setLoadingDetail(true);
 
     const [modulesRes, progressRes, projetoRes] = await Promise.all([
-      supabase.from('course_modules').select('*').eq('course_id', course.id).eq('publicado', true).order('ordem'),
+      supabase.from('course_modules').select('*').eq('course_id', course.id).eq('publicado', true).is('archived_at', null).order('ordem'),
       user ? supabase.from('course_lesson_progress').select('lesson_id, completed').eq('user_id', user.id) : Promise.resolve({ data: [] }),
       user ? supabase.from('projetos_mestria').select('*').eq('user_id', user.id).eq('course_id', course.id).maybeSingle() : Promise.resolve({ data: null }),
     ]);
@@ -141,6 +142,7 @@ export default function AcademiaFormacaoPage() {
         .select('*')
         .in('module_id', modIds)
         .eq('publicado', true)
+        .is('archived_at', null)
         .order('ordem');
       setLessons((lessonsData as unknown as Lesson[]) || []);
     } else {

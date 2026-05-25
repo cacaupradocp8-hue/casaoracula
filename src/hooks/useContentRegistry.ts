@@ -53,7 +53,7 @@ export function useContentRegistry(): UseContentRegistryResult {
         supabase.from('quizzes').select('*'),
         supabase.from('quiz_resultados').select('*'),
         supabase.from('conteudo_travessias').select('*'),
-        supabase.from('courses').select('*'),
+        supabase.from('courses').select('*').is('archived_at', null),
         supabase.from('agentes').select('*'),
         supabase.from('content_blocks').select('context_type, context_id').limit(1000),
       ]);

@@ -31,6 +31,7 @@ export default function CursoModulo() {
           .from('course_modules')
           .select('*')
           .eq('id', moduleId)
+          .is('archived_at', null)
           .single();
 
         if (error) throw error;

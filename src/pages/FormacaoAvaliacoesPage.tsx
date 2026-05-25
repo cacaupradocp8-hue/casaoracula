@@ -99,6 +99,7 @@ export default function FormacaoAvaliacoesPage() {
         .from('courses')
         .select('id')
         .eq('publicado', true)
+        .is('archived_at', null)
         .limit(1);
 
       const courseId = courses?.[0]?.id;

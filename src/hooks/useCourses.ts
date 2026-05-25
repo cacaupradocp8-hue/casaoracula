@@ -14,6 +14,7 @@ export function useCourses() {
       const { data: coursesData, error: coursesError } = await supabase
         .from('courses')
         .select('*')
+        .is('archived_at', null)
         .order('destaque', { ascending: false })
         .order('ordem', { ascending: true });
 
@@ -35,9 +36,9 @@ export function useCourses() {
         ] = await Promise.all([
           supabase.from('course_enrollments').select('*').eq('user_id', user.id),
           supabase.from('course_lesson_progress').select('*').eq('user_id', user.id).eq('completed', true),
-          supabase.from('course_modules').select('id, course_id').in('course_id', coursesData.map(c => c.id)),
+          supabase.from('course_modules').select('id, course_id').is('archived_at', null).in('course_id', coursesData.map(c => c.id)),
           // We fetch all lessons for these modules to calculate totals
-          supabase.from('course_lessons').select('id, module_id')
+          supabase.from('course_lessons').select('id, module_id').is('archived_at', null)
         ]);
 
         enrollments = enrollmentsResult.data || [];
