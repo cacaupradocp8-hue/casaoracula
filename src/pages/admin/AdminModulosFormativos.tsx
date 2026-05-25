@@ -124,11 +124,8 @@ function RotaDestinoField({ value, onChange }: { value: string; onChange: (v: st
 }
 
 // ── Types ──────────────────────────────────────────────
-
-// ModuloFormativo type imported from DAL
-
-
 type ModuloForm = Omit<ModuloFormativo, "id" | "created_at" | "updated_at">;
+
 
 const EMPTY_FORM: ModuloForm = {
   nome_modulo: "",
