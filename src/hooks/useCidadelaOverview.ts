@@ -157,7 +157,17 @@ export function useCidadelaOverview(): CidadelaOverview {
       formacao,
       proximoPasso
     };
-  }, [estagioInfo, progressoJornada, estadoCidadela, rotasData, formacaoProgress]);
+  }, [
+    estagioInfo, 
+    progressoJornada, 
+    estadoCidadela, 
+    rotasData, 
+    formacaoProgress, 
+    modulosIniciados, 
+    exerciciosConcluidos, 
+    proximoTreino
+  ]);
+
 
   return {
     ...overview,
