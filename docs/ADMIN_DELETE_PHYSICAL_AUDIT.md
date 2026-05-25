@@ -40,7 +40,41 @@ O Admin possui um **risco crítico de perda editorial e quebra relacional** devi
 | `courses` | Não | Não | Não | Não | Não | Apenas `publicado: boolean` |
 | `conteudo_aulas` | Não | Não | Não | Não | Não | Apenas `publicado: boolean` |
 
-## 5. Riscos por domínio
+## 5. Respostas às perguntas estratégicas
+
+1. **Componentes com `.delete()`**: `AdminModulosFormativos.tsx`, `AdminCursosTab.tsx`, `AdminConteudosTab.tsx`, `AdminSalasTab.tsx`, `AdminFerramentasTab.tsx`, `AdminQuizTab.tsx`, entre outros menores.
+2. **Delete indireto**: `AdminConteudosTab` deleta aulas automaticamente ao deletar um portal.
+3. **Tabelas com delete físico**: `modulos_formativos`, `courses`, `course_modules`, `course_lessons`, `conteudo_travessias`, `conteudo_aulas`, `salas`, `sala_ferramentas`, `portal_salas`, `agentes`, `quizzes`.
+4. **Confirmação visual**: Sim, na maioria via `AlertDialog`.
+5. **Toast**: Sim, implementado em quase todos os fluxos observados.
+6. **Invalidação de cache**: Sim, via `queryClient.invalidateQueries` ou re-fetch local.
+7. **Cascade/Órfãos**: Existe risco alto de órfãos ou erros de FK em tabelas que não tratam dependências manualmente no código (ex: `courses` -> `course_modules`).
+8. **Campo `deleted_at`**: Inexistente em todas as tabelas auditadas.
+9. **Campo `archived_at`**: Inexistente em todas as tabelas auditadas.
+10. **Campo `is_archived`**: Inexistente em todas as tabelas auditadas.
+11. **Campo `ativo/ativa`**: Existe em `salas` e `sala_ferramentas`.
+12. **Status (draft/pub)**: Existe em `modulos_formativos` e `courses`.
+13. **Despublicar vs Apagar**: Atualmente, despublicar apenas oculta; apagar remove permanentemente.
+14. **Risco conteúdo publicado**: Alto, não há trava para apagar itens publicados.
+15. **Risco conteúdo alunas**: Crítico, apagar aulas remove o progresso vinculado.
+16. **Risco Clube**: Médio/Alto, dependendo da tabela (jornadas/estrada).
+17. **Risco Cidadela**: Baixo, mas existente em vínculos de salas.
+18. **Risco Casa das Máquinas**: Alto em ferramentas e salas.
+19. **Risco Jardim da Heroína**: Baixo (auditoria em curso).
+20. **Risco ferramentas**: Alto, ferramentas apagadas quebram rotas e sessões.
+21. **Risco curso com filhos**: Existente, pode gerar erro de chave estrangeira se não houver cascade no banco.
+22. **Risco aula com progresso**: Crítico (perda de histórico).
+23. **Risco usuário/role**: Não auditado delete de usuário nesta etapa, mas crítico se existir.
+24. **Log de auditoria**: Não aparente nas tabelas de conteúdo.
+25. **Histórico de versão**: Inexistente.
+26. **Soft delete prioritário**: `conteudo_aulas` e `course_lessons`.
+27. **Delete físico temporário**: Tabelas de configuração menor ou temporária.
+28. **Bloqueio imediato**: Delete de Cursos e Portais sem verificação de filhos.
+29. **Menor implementação segura**: Trocar `.delete()` por `.update({ active: false })` onde houver o campo.
+30. **Migrations futuras**: Adição de `archived_at` e `status` em todas as tabelas de conteúdo.
+
+## 6. Riscos por domínio
+
 
 - **Formação**: Risco de quebrar a jornada principal se módulos forem apagados.
 - **Cursos**: Excluir uma aula física remove o registro de progresso (viewed) de todas as alunas que a assistiram.
