@@ -15,6 +15,9 @@ export interface Portal {
   sala_id: string | null;
   capa_url: string | null;
   publicado: boolean;
+  archived_at: string | null;
+  archived_by: string | null;
+  archive_reason: string | null;
 }
 
 export interface Aula {
@@ -30,6 +33,9 @@ export interface Aula {
   materiais_url: string | null;
   portal_minimo: PortalType;
   publicado: boolean;
+  archived_at: string | null;
+  archived_by: string | null;
+  archive_reason: string | null;
 }
 
 export interface Sala {
@@ -57,6 +63,7 @@ export async function listAdminConteudoPortais(): Promise<Portal[]> {
   const { data, error } = await supabase
     .from('conteudo_travessias')
     .select('*')
+    .is('archived_at', null)
     .order('ordem', { ascending: true });
 
   if (error) throw error;
@@ -73,6 +80,9 @@ export async function listAdminConteudoPortais(): Promise<Portal[]> {
     sala_id: item.sala_id,
     capa_url: item.capa_url,
     publicado: item.publicado ?? true,
+    archived_at: item.archived_at,
+    archived_by: item.archived_by,
+    archive_reason: item.archive_reason,
   })) as Portal[];
 }
 
@@ -86,6 +96,7 @@ export async function listAdminConteudoAulas(travessiaId: string): Promise<Aula[
     .from('conteudo_aulas')
     .select('*')
     .eq('travessia_id', travessiaId)
+    .is('archived_at', null)
     .order('ordem', { ascending: true });
 
   if (error) throw error;
@@ -103,6 +114,9 @@ export async function listAdminConteudoAulas(travessiaId: string): Promise<Aula[
     materiais_url: item.materiais_url,
     portal_minimo: item.portal_minimo,
     publicado: item.publicado ?? true,
+    archived_at: item.archived_at,
+    archived_by: item.archived_by,
+    archive_reason: item.archive_reason,
   })) as Aula[];
 }
 
