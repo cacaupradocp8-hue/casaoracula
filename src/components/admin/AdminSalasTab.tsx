@@ -1,53 +1,17 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { 
+  listAdminSalasFull, 
+  listAdminSalaFerramentasFull, 
+  listAdminPortalSalas,
+  type SalaFull as Sala,
+  type FerramentaFull as Ferramenta,
+  type PortalSala,
+  type NivelSala,
+  type PortalType
+} from "@/lib/dal/admin/adminSalasFerramentasRead.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users, Blocks, ExternalLink, LayoutGrid } from "lucide-react";
-
-type NivelSala = "NIVEL_0" | "NIVEL_1" | "NIVEL_2" | "NIVEL_3";
-type PortalType = "visitante" | "pre_iniciada" | "iniciada" | "admin";
-
-interface Sala {
-  id: string;
-  nivel_minimo: NivelSala;
-  nome_exibicao: string;
-  texto_entrada: string;
-  texto_bloqueio: string;
-  ativa: boolean;
-  ordem: number;
-}
-
-interface Ferramenta {
-  id: string;
-  sala_id: string;
-  ferramenta_chave: string;
-  ferramenta_nome: string;
-  ferramenta_descricao: string;
-  icone: string;
-  rota: string;
-  ordem: number;
-  ativa: boolean;
-  tipo: string | null;
-  portal_minimo: PortalType;
-  has_blocks: boolean;
-  slug: string | null;
-}
-
-interface PortalSala {
-  id: string;
-  portal_type: PortalType;
-  sala_id: string;
-}
+// ... keep existing code
 
 const NIVEL_LABELS: Record<NivelSala, string> = {
   NIVEL_0: "Visitante (Nível 0)",
@@ -100,32 +64,22 @@ export function AdminSalasTab() {
   const fetchData = async () => {
     setLoading(true);
 
-    const [salasRes, ferramentasRes, portalSalasRes] = await Promise.all([
-      supabase.from("salas").select("*").order("ordem"),
-      supabase.from("sala_ferramentas").select("*").order("ordem"),
-      supabase.from("portal_salas").select("*"),
-    ]);
+    try {
+      const [salasData, ferramentasData, portalSalasData] = await Promise.all([
+        listAdminSalasFull(),
+        listAdminSalaFerramentasFull(),
+        listAdminPortalSalas(),
+      ]);
 
-    if (salasRes.error) {
-      toast.error("Erro ao carregar salas");
-      console.error(salasRes.error);
-    } else {
-      setSalas((salasRes.data as Sala[]) || []);
+      setSalas(salasData as Sala[]);
+      setFerramentas(ferramentasData as Ferramenta[]);
+      setPortalSalas(portalSalasData);
+    } catch (error) {
+      toast.error("Erro ao carregar dados");
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
-
-    if (ferramentasRes.error) {
-      console.error(ferramentasRes.error);
-    } else {
-      setFerramentas((ferramentasRes.data as Ferramenta[]) || []);
-    }
-
-    if (portalSalasRes.error) {
-      console.error(portalSalasRes.error);
-    } else {
-      setPortalSalas((portalSalasRes.data as PortalSala[]) || []);
-    }
-
-    setLoading(false);
   };
 
   useEffect(() => {
