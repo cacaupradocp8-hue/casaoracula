@@ -114,6 +114,11 @@ const Tarot = React.lazy(() => import("./pages/salas/Tarot"));
 const Constelacao = React.lazy(() => import("./pages/salas/Constelacao"));
 const Syntheia = React.lazy(() => import("./pages/Syntheia"));
 const FerramentaDinamica = React.lazy(() => import("./pages/FerramentaDinamica"));
+const PrimeiraLeituraPage = React.lazy(() => import("./pages/PrimeiraLeituraPage"));
+
+
+
+
 
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
@@ -306,6 +311,8 @@ function AppRoutes() {
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
       <Route path="/sala-da-visitante" element={<SalaDaVisitante />} />
+      <Route path="/sala-da-visitante/primeira-leitura" element={<PrimeiraLeituraPage />} />
+
 
       {/* Core navigation */}
       <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
