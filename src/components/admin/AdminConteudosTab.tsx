@@ -11,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink, Archive } from 'lucide-react';
+import { Plus, Pencil, Trash2, ChevronDown, ChevronRight, BookOpen, Video, DoorOpen, Music, FileText, Type, Eye, EyeOff, Image, Wrench, ExternalLink, Archive } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 import { AudioUpload } from './AudioUpload';
 import { Separator } from '@/components/ui/separator';
