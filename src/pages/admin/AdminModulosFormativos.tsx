@@ -189,17 +189,9 @@ function BannerConfigPanel() {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["admin-banner-settings"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("app_settings")
-        .select("key, value")
-        .in("key", BANNER_KEYS);
-      if (error) throw error;
-      const map: Record<string, string> = {};
-      data?.forEach((s) => (map[s.key] = s.value));
-      return map;
-    },
+    queryFn: () => getAdminBannerSettings(BANNER_KEYS),
   });
+
 
   useEffect(() => {
     if (settings) setBannerForm(settings);
