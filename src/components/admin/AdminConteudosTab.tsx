@@ -605,22 +605,26 @@ export function AdminConteudosTab() {
                         )}
                       </Button>
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
-                          openPortalDialog(portal);
+                          openArchiveDialog('portal', portal.id, portal.titulo);
                         }}
+                        className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
+                        title="Arquivar portal"
                       >
-                        <Pencil className="w-4 h-4" />
+                        <Archive className="w-4 h-4" />
                       </Button>
                       <Button
-                        variant="destructive"
+                        variant="ghost"
                         size="icon"
                         onClick={(e) => {
                           e.stopPropagation();
                           openDeleteDialog('portal', portal.id, portal.titulo);
                         }}
+                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                        title="Excluir permanentemente"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -790,7 +794,17 @@ export function AdminConteudosTab() {
                                     <Button
                                       variant="ghost"
                                       size="icon"
+                                      onClick={() => openArchiveDialog('aula', aula.id, aula.titulo)}
+                                      className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
+                                      title="Arquivar aula"
+                                    >
+                                      <Archive className="w-3 h-3" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
                                       onClick={() => openDeleteDialog('aula', aula.id, aula.titulo)}
+                                      title="Excluir permanentemente"
                                     >
                                       <Trash2 className="w-3 h-3 text-destructive" />
                                     </Button>
@@ -1126,21 +1140,49 @@ export function AdminConteudosTab() {
         </DialogContent>
       </Dialog>
 
+      {/* Archive Dialog */}
+      <Dialog open={archiveDialogOpen} onOpenChange={setArchiveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Arquivar {deleteTarget?.type === 'portal' ? 'Portal' : 'Aula'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p className="text-sm text-muted-foreground">
+              Você está prestes a arquivar <strong>{deleteTarget?.title}</strong>. 
+              Este conteúdo não será mais visível para os alunos, mas permanecerá salvo no banco de dados.
+            </p>
+            <div className="space-y-2">
+              <Label htmlFor="archiveReason">Motivo do arquivamento</Label>
+              <Textarea
+                id="archiveReason"
+                placeholder="Descreva o motivo pelo qual este conteúdo está sendo arquivado..."
+                value={archiveReason}
+                onChange={(e) => setArchiveReason(e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setArchiveDialogOpen(false)}>Cancelar</Button>
+            <Button onClick={handleArchive} className="bg-amber-500 hover:bg-amber-600 text-white">Arquivar Conteúdo</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       {/* Delete Confirmation */}
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
+            <AlertDialogTitle>Confirmar exclusão permanente</AlertDialogTitle>
             <AlertDialogDescription>
               {deleteTarget?.type === 'portal'
-                ? `Excluir o portal "${deleteTarget?.title}" e todas as suas aulas? Esta ação não pode ser desfeita.`
-                : `Excluir a aula "${deleteTarget?.title}"? Esta ação não pode ser desfeita.`}
+                ? `Excluir permanentemente o portal "${deleteTarget?.title}" e todas as suas aulas? Esta ação não pode ser desfeita e removerá todos os dados do servidor.`
+                : `Excluir permanentemente a aula "${deleteTarget?.title}"? Esta ação não pode ser desfeita e removerá todos os dados do servidor.`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Excluir
+              Excluir Permanentemente
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
