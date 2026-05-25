@@ -3,11 +3,9 @@ import { useJornadaHabitante } from './useJornadaHabitante';
 import { useCidadelaEstado } from './useCidadelaEstado';
 import { useTodasRotas } from './useTodasRotas';
 import { useFormationProgress } from './useFormationProgress';
-// useTrainingProgress e useTrainingSubmissions requerem moduleKey,
-// para um overview geral usaremos o service diretamente ou deixaremos campos neutros se não houver listagem global pronta.
-// Como o objetivo é read-only e agregador, vamos focar nos dados disponíveis.
-
+import { useTrainingOverview } from './useTrainingOverview';
 import { CidadelaOverview } from '@/types/cidadelaOverview';
+
 
 /**
  * HOOK AGREGADOR useCidadelaOverview V0.3
@@ -46,8 +44,16 @@ export function useCidadelaOverview(): CidadelaOverview {
     isLoading: loadingFormacao 
   } = useFormationProgress();
 
+  const {
+    modulosIniciados,
+    exerciciosConcluidos,
+    proximoTreino,
+    loading: loadingTreinamento
+  } = useTrainingOverview();
+
   // Consolidação de loading
-  const isLoading = loadingJornada || loadingCidadela || loadingRotas || loadingFormacao;
+  const isLoading = loadingJornada || loadingCidadela || loadingRotas || loadingFormacao || loadingTreinamento;
+
 
   // 2. Processar Overview via useMemo
   const overview = useMemo((): Omit<CidadelaOverview, 'isLoading' | 'error'> => {
@@ -85,12 +91,16 @@ export function useCidadelaOverview(): CidadelaOverview {
         : null
     };
 
-    // TREINAMENTO (Campos neutros na V0.3 inicial por falta de hook de listagem global estável)
+    // TREINAMENTO
     const treinamento = {
-      modulosIniciados: 0,
-      exerciciosConcluidos: 0,
-      proximoTreino: null
+      modulosIniciados,
+      exerciciosConcluidos,
+      proximoTreino: proximoTreino ? {
+        titulo: proximoTreino.module_title,
+        href: `/treinamento/${proximoTreino.module_key}`
+      } : null
     };
+
 
     // FORMAÇÃO ORÁCULA
     const formacao = {
@@ -105,7 +115,7 @@ export function useCidadelaOverview(): CidadelaOverview {
     };
 
     // PRÓXIMO PASSO SEGURO
-    // Lógica de prioridade: Jornada > Formação > Rotas
+    // Lógica de prioridade: Formação > Treinamento > Rotas > Jornada
     let proximoPasso: CidadelaOverview['proximoPasso'] = null;
 
     if (formacao.proximoCurso) {
@@ -115,6 +125,13 @@ export function useCidadelaOverview(): CidadelaOverview {
         href: formacao.proximoCurso.href,
         tipo: 'formacao'
       };
+    } else if (treinamento.proximoTreino) {
+      proximoPasso = {
+        titulo: treinamento.proximoTreino.titulo,
+        descricao: 'Aperfeiçoe suas habilidades na Sala de Treinamento.',
+        href: treinamento.proximoTreino.href,
+        tipo: 'treinamento'
+      };
     } else if (rotas.proximaRota) {
       proximoPasso = {
         titulo: rotas.proximaRota.titulo,
@@ -123,6 +140,7 @@ export function useCidadelaOverview(): CidadelaOverview {
         tipo: 'rotas'
       };
     } else {
+
       proximoPasso = {
         titulo: 'Explorar Cidadela',
         descricao: 'Sua jornada continua no coração da Casa.',
@@ -139,7 +157,17 @@ export function useCidadelaOverview(): CidadelaOverview {
       formacao,
       proximoPasso
     };
-  }, [estagioInfo, progressoJornada, estadoCidadela, rotasData, formacaoProgress]);
+  }, [
+    estagioInfo, 
+    progressoJornada, 
+    estadoCidadela, 
+    rotasData, 
+    formacaoProgress, 
+    modulosIniciados, 
+    exerciciosConcluidos, 
+    proximoTreino
+  ]);
+
 
   return {
     ...overview,

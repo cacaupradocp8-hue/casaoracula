@@ -63,7 +63,29 @@ export async function getModuleProgress(moduleKey: string): Promise<TrainingProg
 }
 
 /**
+ * Lista todo o progresso de treinamento da usuária
+ */
+export async function listAllProgress(): Promise<TrainingProgress[]> {
+  try {
+    const userId = await getAuthenticatedUserId();
+    
+    const { data, error } = await supabase
+      .from('training_progress')
+      .select('*')
+      .eq('user_id', userId)
+      .order('last_activity_at', { ascending: false });
+
+    if (error) throw error;
+    return data as TrainingProgress[];
+  } catch (error) {
+    console.error(`[TrainingService] Erro ao listar todo o progresso:`, error);
+    throw error;
+  }
+}
+
+/**
  * Cria ou atualiza o progresso de um módulo
+
  * Garante que o user_id venha da sessão autenticada
  */
 export async function upsertProgress(
