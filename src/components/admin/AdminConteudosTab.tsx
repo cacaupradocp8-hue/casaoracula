@@ -19,53 +19,17 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Database } from '@/integrations/supabase/types';
 
-type PortalType = Database['public']['Enums']['portal_type'];
-
-interface Sala {
-  id: string;
-  nome_exibicao: string;
-  nivel_minimo: string;
-}
-
-interface Portal {
-  id: string;
-  titulo: string;
-  subtitulo: string;
-  descricao: string;
-  texto_introducao: string;
-  descricao_pedagogica: string;
-  ordem: number;
-  portal_minimo: PortalType;
-  sala_id: string | null;
-  capa_url: string | null;
-  publicado: boolean;
-}
-
-interface Aula {
-  id: string;
-  travessia_id: string;
-  titulo: string;
-  descricao_curta: string;
-  texto_aula: string | null;
-  ordem: number;
-  video_url: string | null;
-  audio_url: string | null;
-  pdf_url: string | null;
-  materiais_url: string | null;
-  portal_minimo: PortalType;
-  publicado: boolean;
-}
-
-interface Ferramenta {
-  id: string;
-  ferramenta_nome: string;
-  ferramenta_descricao: string;
-  icone: string | null;
-  ativa: boolean;
-  ordem: number;
-  sala_id: string;
-  portal_id: string | null;
-}
+import { 
+  listAdminConteudoPortais, 
+  listAdminConteudoAulas, 
+  listAdminSalasAtivas, 
+  listAdminSalaFerramentas,
+  type Portal,
+  type Aula,
+  type Sala,
+  type Ferramenta,
+  type PortalType
+} from '@/lib/dal/admin/adminPortalsRead';
 
 const PORTAL_LABELS: Record<string, string> = {
   visitante: 'Visitante',
