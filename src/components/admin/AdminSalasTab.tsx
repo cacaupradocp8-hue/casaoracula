@@ -11,7 +11,18 @@ import {
   type PortalType
 } from "@/lib/dal/admin/adminSalasFerramentasRead.ts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// ... keep existing code
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { Loader2, Edit, DoorOpen, Plus, Trash2, Wrench, Users, Blocks, ExternalLink, LayoutGrid } from "lucide-react";
 
 const NIVEL_LABELS: Record<NivelSala, string> = {
   NIVEL_0: "Visitante (Nível 0)",
@@ -20,7 +31,7 @@ const NIVEL_LABELS: Record<NivelSala, string> = {
   NIVEL_3: "Guardiã (Nível 3)",
 };
 
-const PORTAL_LABELS: Record<PortalType, string> = {
+const PORTAL_LABELS: Partial<Record<PortalType, string>> = {
   visitante: "Visitante",
   pre_iniciada: "Pré-Iniciada",
   iniciada: "Iniciada ORÁCULA",

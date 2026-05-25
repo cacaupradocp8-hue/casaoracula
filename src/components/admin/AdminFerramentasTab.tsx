@@ -299,7 +299,11 @@ function CatalogoFerramentasSection() {
       tipo_ferramenta: null,
       origem_metodologica: null,
       vinculo_metodologico: null,
-      finalidade_pratica: null
+      finalidade_pratica: null,
+      tipo: 'custom',
+      portal_minimo: 'pre_iniciada',
+      has_blocks: true,
+      slug: null
     });
     setIsCreating(true);
     setDialogOpen(true);
