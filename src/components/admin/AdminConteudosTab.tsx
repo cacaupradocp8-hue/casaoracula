@@ -87,7 +87,6 @@ export function AdminConteudosTab() {
   });
 
   // Delete dialog state
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [archiveDialogOpen, setArchiveDialogOpen] = useState(false);
   const [archiveReason, setArchiveReason] = useState('');
   const [deleteTarget, setDeleteTarget] = useState<{ type: 'portal' | 'aula'; id: string; title: string } | null>(null);
@@ -359,11 +358,6 @@ export function AdminConteudosTab() {
   };
 
   // Archive / Delete
-  const openDeleteDialog = (type: 'portal' | 'aula', id: string, title: string) => {
-    setDeleteTarget({ type, id, title });
-    setDeleteDialogOpen(true);
-  };
-
   const openArchiveDialog = (type: 'portal' | 'aula', id: string, title: string) => {
     setDeleteTarget({ type, id, title });
     setArchiveReason('');
@@ -408,53 +402,6 @@ export function AdminConteudosTab() {
       toast.error('Erro ao arquivar');
       console.error(error);
     }
-  };
-
-  const handleDelete = async () => {
-    if (!deleteTarget) return;
-
-    if (deleteTarget.type === 'portal') {
-      // First delete all associated aulas
-      const { error: aulasError } = await supabase
-        .from('conteudo_aulas')
-        .delete()
-        .eq('travessia_id', deleteTarget.id);
-
-      if (aulasError) {
-        toast.error('Erro ao excluir aulas do portal');
-        console.error(aulasError);
-        return;
-      }
-
-      const { error } = await supabase
-        .from('conteudo_travessias')
-        .delete()
-        .eq('id', deleteTarget.id);
-
-      if (error) {
-        toast.error('Erro ao excluir portal');
-        console.error(error);
-      } else {
-        toast.success('Portal excluído');
-        fetchPortais();
-      }
-    } else {
-      const aula = Object.values(aulas).flat().find((a) => a.id === deleteTarget.id);
-      const { error } = await supabase
-        .from('conteudo_aulas')
-        .delete()
-        .eq('id', deleteTarget.id);
-
-      if (error) {
-        toast.error('Erro ao excluir aula');
-        console.error(error);
-      } else {
-        toast.success('Aula excluída');
-        if (aula) fetchAulas(aula.travessia_id);
-      }
-    }
-    setDeleteDialogOpen(false);
-    setDeleteTarget(null);
   };
 
   // Toggle publicado inline
@@ -625,18 +572,6 @@ export function AdminConteudosTab() {
                         title="Arquivar portal"
                       >
                         <Archive className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openDeleteDialog('portal', portal.id, portal.titulo);
-                        }}
-                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        title="Excluir permanentemente"
-                      >
-                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
@@ -809,14 +744,6 @@ export function AdminConteudosTab() {
                                       title="Arquivar aula"
                                     >
                                       <Archive className="w-3 h-3" />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      onClick={() => openDeleteDialog('aula', aula.id, aula.titulo)}
-                                      title="Excluir permanentemente"
-                                    >
-                                      <Trash2 className="w-3 h-3 text-destructive" />
                                     </Button>
                                   </div>
                                 </TableCell>
@@ -1177,26 +1104,6 @@ export function AdminConteudosTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Delete Confirmation */}
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Confirmar exclusão permanente</AlertDialogTitle>
-            <AlertDialogDescription>
-              {deleteTarget?.type === 'portal'
-                ? `Excluir permanentemente o portal "${deleteTarget?.title}" e todas as suas aulas? Esta ação não pode ser desfeita e removerá todos os dados do servidor.`
-                : `Excluir permanentemente a aula "${deleteTarget?.title}"? Esta ação não pode ser desfeita e removerá todos os dados do servidor.`}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Excluir Permanentemente
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }
