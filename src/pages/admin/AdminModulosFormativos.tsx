@@ -126,20 +126,8 @@ function RotaDestinoField({ value, onChange }: { value: string; onChange: (v: st
 
 // ── Types ──────────────────────────────────────────────
 
-interface ModuloFormativo {
-  id: string;
-  nome_modulo: string;
-  tipo_modulo: string;
-  descricao_curta: string | null;
-  imagem_capa: string | null;
-  ordem_exibicao: number;
-  nivel_acesso: string;
-  status_publicacao: string;
-  destaque_vitrine: boolean;
-  rota_destino: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// ModuloFormativo type imported from DAL
+
 
 type ModuloForm = Omit<ModuloFormativo, "id" | "created_at" | "updated_at">;
 
