@@ -60,7 +60,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
       </div>
 
       <div className="space-y-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-amber-500/80">O Veredito do Símbolo</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-amber-500/80">Leitura do Símbolo</span>
         <h2 className={`text-3xl font-serif ${data.color}`}>
           {data.title}
         </h2>
