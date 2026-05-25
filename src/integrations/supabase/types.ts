@@ -8723,6 +8723,27 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "conteudo_aulas_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conteudo_aulas_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "conteudo_aulas_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "conteudo_aulas_travessia_id_fkey"
             columns: ["travessia_id"]
             isOneToOne: false
@@ -8787,6 +8808,27 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "conteudo_travessias_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conteudo_travessias_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "v_formation_progress"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "conteudo_travessias_archived_by_fkey"
+            columns: ["archived_by"]
+            isOneToOne: false
+            referencedRelation: "view_user_stagnation"
+            referencedColumns: ["user_id"]
+          },
           {
             foreignKeyName: "conteudo_travessias_sala_id_fkey"
             columns: ["sala_id"]
