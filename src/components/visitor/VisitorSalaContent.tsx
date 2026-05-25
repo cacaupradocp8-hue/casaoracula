@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
@@ -34,6 +34,13 @@ export function VisitorSalaContent() {
     setIsTransitioning(true);
     setTimeout(() => {
       navigate('/quiz/descubra-seu-eixo');
+    }, 1400);
+  }, [navigate]);
+
+  const handleStartFirstReading = useCallback(() => {
+    setIsTransitioning(true);
+    setTimeout(() => {
+      navigate('/sala-da-visitante/primeira-leitura');
     }, 1400);
   }, [navigate]);
 
@@ -159,55 +166,78 @@ export function VisitorSalaContent() {
           </motion.section>
         )}
 
-        {/* SECTION 3 — Micro-ritual + CTA */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2.2, duration: 1 }}
-          className="relative z-10 flex flex-col items-center text-center mt-14 space-y-8"
-        >
-          {/* Micro-ritual — convite à pausa */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.6, duration: 1.2 }}
-            className="text-muted-foreground/50 text-xs tracking-[0.25em] uppercase"
-          >
-            Respire um instante…
-          </motion.p>
+      {/* SECTION 3 — Primeira Leitura (Novo Convite Premium) */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.2, duration: 1 }}
+        className="relative z-10 w-full max-w-lg mt-14"
+      >
+        <div className="group relative rounded-3xl p-[1px] bg-gradient-to-b from-primary/30 via-primary/5 to-transparent overflow-hidden">
+          <div className="relative rounded-[23px] bg-card/40 backdrop-blur-md border border-primary/10 p-8 flex flex-col items-center text-center space-y-6">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
+              <Sparkles className="w-6 h-6 text-primary" />
+            </div>
+            
+            <div className="space-y-2">
+              <h2 className="font-display text-2xl text-primary">Primeira Leitura Orácula</h2>
+              <p className="text-muted-foreground text-sm leading-relaxed italic">
+                "Antes de escolher um caminho, observe como você lê uma travessia."
+              </p>
+            </div>
 
-          {/* Linha sutil de separação */}
-          <div className="w-10 h-px bg-primary/15" />
+            <p className="text-foreground/70 text-sm leading-relaxed max-w-[280px]">
+              Uma experiência simbólica gratuita para perceber seu modo de escuta e receber um primeiro espelho da Casa.
+            </p>
 
-          {/* CTA como portal */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 3, duration: 0.8 }}
-          >
             <Button
               variant="gold"
               size="lg"
-              onClick={handleStartQuiz}
+              onClick={handleStartFirstReading}
               disabled={isTransitioning}
-              className="gap-2.5 px-10 py-3 text-base relative overflow-hidden group"
+              className="w-full gap-2.5 py-6 text-base relative overflow-hidden group/btn"
             >
-              <span className="relative z-10">Descobrir minha Voz</span>
-              <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover:translate-x-0.5" />
-              {/* Shimmer hover effect */}
-              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-primary-foreground/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              <span className="relative z-10">Atravessar o Limiar</span>
+              <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
-          </motion.div>
+            
+            <p className="text-[10px] text-muted-foreground/40 tracking-[0.15em] uppercase">
+              Início Contemplativo • Gratuito
+            </p>
+          </div>
+        </div>
+      </motion.section>
 
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 3.4, duration: 0.8 }}
-            className="text-[11px] text-muted-foreground/30 tracking-[0.15em]"
+      {/* SECTION 4 — Quiz da Voz (Caminho Complementar) */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 3, duration: 1 }}
+        className="relative z-10 flex flex-col items-center text-center mt-12 space-y-6"
+      >
+        <div className="w-10 h-px bg-primary/15" />
+        
+        <div className="space-y-4">
+          <p className="text-muted-foreground/60 text-xs md:text-sm max-w-xs leading-relaxed">
+            Ou, se preferir o caminho identitário da Formação:
+          </p>
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleStartQuiz}
+            disabled={isTransitioning}
+            className="text-primary hover:text-primary/80 hover:bg-primary/5 gap-2 group px-6"
           >
+            Descobrir minha Voz (Quiz)
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+          </Button>
+          
+          <p className="text-[10px] text-muted-foreground/30 tracking-[0.1em]">
             Leva menos de 3 minutos
-          </motion.p>
-        </motion.section>
+          </p>
+        </div>
+      </motion.section>
 
         {/* SECTION 4 — Caminho simbólico (discreto) */}
         <motion.section
