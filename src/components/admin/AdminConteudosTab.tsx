@@ -605,6 +605,16 @@ export function AdminConteudosTab() {
                         )}
                       </Button>
                       <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openPortalDialog(portal);
+                        }}
+                      >
+                        <Pencil className="w-4 h-4" />
+                      </Button>
+                      <Button
                         variant="ghost"
                         size="icon"
                         onClick={(e) => {
