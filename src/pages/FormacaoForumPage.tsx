@@ -28,6 +28,7 @@ export default function FormacaoForumPage() {
           .from('courses')
           .select('id, titulo')
           .eq('publicado', true)
+          .is('archived_at', null)
           .order('ordem');
 
         if (!coursesData) { setIsLoading(false); return; }
@@ -39,6 +40,7 @@ export default function FormacaoForumPage() {
             .select('id, titulo, ordem')
             .eq('course_id', c.id)
             .eq('publicado', true)
+            .is('archived_at', null)
             .order('ordem');
 
           (mods || []).forEach(m => allModules.push({

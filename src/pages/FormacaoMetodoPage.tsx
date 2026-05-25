@@ -55,6 +55,7 @@ export default function FormacaoMetodoPage() {
           .from('courses')
           .select('id, titulo, subtitulo, descricao, capa_url, duracao_estimada, tags')
           .eq('publicado', true)
+          .is('archived_at', null)
           .order('ordem', { ascending: true });
 
         if (!coursesData) { setIsLoading(false); return; }
@@ -66,14 +67,15 @@ export default function FormacaoMetodoPage() {
           const { count: lessonCount } = await supabase
             .from('course_lessons')
             .select('id', { count: 'exact', head: true })
+            .is('archived_at', null)
             .in('module_id', 
-              (await supabase.from('course_modules').select('id').eq('course_id', c.id)).data?.map(m => m.id) || []
+              (await supabase.from('course_modules').select('id').is('archived_at', null).eq('course_id', c.id)).data?.map(m => m.id) || []
             );
 
           let completed = 0;
           if (user) {
-            const moduleIds = (await supabase.from('course_modules').select('id').eq('course_id', c.id)).data?.map(m => m.id) || [];
-            const lessonIds = (await supabase.from('course_lessons').select('id').in('module_id', moduleIds.length > 0 ? moduleIds : ['none'])).data?.map(l => l.id) || [];
+            const moduleIds = (await supabase.from('course_modules').select('id').is('archived_at', null).eq('course_id', c.id)).data?.map(m => m.id) || [];
+            const lessonIds = (await supabase.from('course_lessons').select('id').is('archived_at', null).in('module_id', moduleIds.length > 0 ? moduleIds : ['none'])).data?.map(l => l.id) || [];
             if (lessonIds.length > 0) {
               const { count } = await supabase
                 .from('course_lesson_progress')
