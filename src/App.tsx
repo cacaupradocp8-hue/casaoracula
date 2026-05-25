@@ -116,7 +116,8 @@ const Syntheia = React.lazy(() => import("./pages/Syntheia"));
 const FerramentaDinamica = React.lazy(() => import("./pages/FerramentaDinamica"));
 const PrimeiraLeituraPage = React.lazy(() => import("./pages/PrimeiraLeituraPage"));
 
-const PrimeiraLeituraPage = React.lazy(() => import("./pages/PrimeiraLeituraPage"));
+
+
 
 
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
