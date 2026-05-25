@@ -91,12 +91,16 @@ export function useCidadelaOverview(): CidadelaOverview {
         : null
     };
 
-    // TREINAMENTO (Campos neutros na V0.3 inicial por falta de hook de listagem global estável)
+    // TREINAMENTO
     const treinamento = {
-      modulosIniciados: 0,
-      exerciciosConcluidos: 0,
-      proximoTreino: null
+      modulosIniciados,
+      exerciciosConcluidos,
+      proximoTreino: proximoTreino ? {
+        titulo: proximoTreino.module_title,
+        href: `/treinamento/${proximoTreino.module_key}`
+      } : null
     };
+
 
     // FORMAÇÃO ORÁCULA
     const formacao = {
