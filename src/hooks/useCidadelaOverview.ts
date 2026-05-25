@@ -3,11 +3,9 @@ import { useJornadaHabitante } from './useJornadaHabitante';
 import { useCidadelaEstado } from './useCidadelaEstado';
 import { useTodasRotas } from './useTodasRotas';
 import { useFormationProgress } from './useFormationProgress';
-// useTrainingProgress e useTrainingSubmissions requerem moduleKey,
-// para um overview geral usaremos o service diretamente ou deixaremos campos neutros se não houver listagem global pronta.
-// Como o objetivo é read-only e agregador, vamos focar nos dados disponíveis.
-
+import { useTrainingOverview } from './useTrainingOverview';
 import { CidadelaOverview } from '@/types/cidadelaOverview';
+
 
 /**
  * HOOK AGREGADOR useCidadelaOverview V0.3
