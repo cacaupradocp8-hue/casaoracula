@@ -10,6 +10,8 @@ const TravessiaDetalhe = React.lazy(() => import("@/pages/TravessiaDetalhe"));
 const BibliotecaTravessiaDetalhe = React.lazy(() => import("@/pages/BibliotecaTravessiaDetalhe"));
 const BibliotecaTravessiasFamilia = React.lazy(() => import("@/pages/BibliotecaTravessiasFamilia"));
 const MinhaJornada = React.lazy(() => import("@/pages/MinhaJornada"));
+const CidadelaPage = React.lazy(() => import("@/pages/CidadelaPage"));
+
 
 /**
  * Renderiza as rotas relacionadas à Jornada Simbólica e ao Clube.
@@ -21,6 +23,8 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       {/* Core navigation - Jornada */}
       <Route path="/jornada" element={<ProtectedRoute><Navigate to="/minha-jornada" replace /></ProtectedRoute>} />
       <Route path="/minha-jornada" element={<ProtectedRoute><MinhaJornada /></ProtectedRoute>} />
+      <Route path="/cidadela" element={<ProtectedRoute><CidadelaPage /></ProtectedRoute>} />
+
       
       {/* Travessias */}
       <Route path="/travessias" element={<ProtectedRoute><Travessias /></ProtectedRoute>} />
