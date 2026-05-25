@@ -34,10 +34,10 @@ export function SuaVozResumo({ voz, welcomeName }: Props) {
           </p>
         </div>
         <button
-          onClick={() => navigate('/quiz')}
+          onClick={() => navigate('/cidadela')}
           className="text-[10px] text-primary/40 hover:text-primary/70 transition-colors shrink-0 flex items-center gap-1"
         >
-          Aprofundar <ArrowRight className="w-3 h-3" />
+          Ver na Cidadela <ArrowRight className="w-3 h-3" />
         </button>
       </div>
     </motion.section>
