@@ -23,6 +23,8 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       {/* Core navigation - Jornada */}
       <Route path="/jornada" element={<ProtectedRoute><Navigate to="/minha-jornada" replace /></ProtectedRoute>} />
       <Route path="/minha-jornada" element={<ProtectedRoute><MinhaJornada /></ProtectedRoute>} />
+      <Route path="/cidadela" element={<ProtectedRoute><CidadelaPage /></ProtectedRoute>} />
+
       
       {/* Travessias */}
       <Route path="/travessias" element={<ProtectedRoute><Travessias /></ProtectedRoute>} />
