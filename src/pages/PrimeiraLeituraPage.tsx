@@ -26,13 +26,13 @@ const PrimeiraLeituraPage = () => {
     handleNextStep();
   };
 
-  // Lógica simples de resultado simbólico (frontend-only)
-  const getResultType = (): 'fogo' | 'terra' | 'ar' | 'agua' => {
+  // Lógica de resultado simbólico (frontend-only) baseada no planejamento
+  const getResultType = (): 'visao' | 'raiz' | 'teia' | 'sombras' => {
     const val = responses.q1 || '';
-    if (val === 'action') return 'fogo';
-    if (val === 'observation') return 'terra';
-    if (val === 'thought') return 'ar';
-    return 'agua';
+    if (val === 'action') return 'visao';
+    if (val === 'observation') return 'raiz';
+    if (val === 'thought') return 'teia';
+    return 'sombras';
   };
 
   return (

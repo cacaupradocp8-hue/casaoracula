@@ -1,47 +1,47 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Flame, Wind, Mountain } from 'lucide-react';
+import { Eye, Cloud, Mountain, Moon } from 'lucide-react';
 
 interface ResultCardProps {
-  type: 'fogo' | 'terra' | 'ar' | 'agua';
+  type: 'visao' | 'raiz' | 'teia' | 'sombras';
 }
 
 const resultData = {
-  fogo: {
-    title: "Chama Impulsionadora",
-    description: "Sua leitura sugere que você se move por visões que ainda não se concretizaram. Há uma pressa sagrada em sua busca, um desejo de transformar a realidade através da vontade.",
-    advice: "A Casa Orácula convida você a encontrar o centro imóvel de sua própria chama.",
-    icon: Flame,
-    color: "text-orange-500",
-    bgColor: "bg-orange-500/10",
-    borderColor: "border-orange-500/20"
+  visao: {
+    title: "O Clarão da Visão",
+    description: "Sua leitura sugere que você se move por lampejos de clareza que antecipam o tempo. Há uma pressa sagrada em sua busca, um desejo de iluminar o que ainda está oculto sob a superfície do cotidiano.",
+    advice: "A Casa Orácula convida você a encontrar o centro imóvel de sua própria percepção.",
+    icon: Eye,
+    color: "text-amber-500",
+    bgColor: "bg-amber-500/10",
+    borderColor: "border-amber-500/20"
   },
-  terra: {
-    title: "Raiz Profunda",
-    description: "Sua leitura revela uma alma que busca solidez e continuidade. Você é quem sustenta, quem observa o tempo longo e valoriza o que pode ser tocado e construído com as mãos.",
+  raiz: {
+    title: "O Silêncio da Raiz",
+    description: "Sua leitura revela uma alma que busca a solidez do que permanece. Você é quem sustenta, quem observa o tempo longo e valoriza a construção que exige paciência e presença na terra.",
     advice: "A Casa Orácula sugere que você olhe para o que cresce no escuro, além do que é visível.",
     icon: Mountain,
     color: "text-emerald-500",
     bgColor: "bg-emerald-500/10",
     borderColor: "border-emerald-500/20"
   },
-  ar: {
-    title: "Vento da Mudança",
-    description: "Sua leitura indica uma mente que habita os espaços entre as coisas. Sua curiosidade é sua bússola, e sua liberdade é o ar que você respira. Você traduz o invisível.",
-    advice: "A Casa Orácula propõe que você ancore seu pensamento em uma prática ritual.",
-    icon: Wind,
+  teia: {
+    title: "O Olhar da Teia",
+    description: "Sua leitura indica uma mente que habita os espaços entre as coisas, percebendo os fios invisíveis que conectam os destinos. Sua curiosidade é sua bússola, e a liberdade é o ar que você respira.",
+    advice: "A Casa Orácula propõe que você ancore sua percepção em uma prática de escuta dedicada.",
+    icon: Cloud,
     color: "text-cyan-500",
     bgColor: "bg-cyan-500/10",
     borderColor: "border-cyan-500/20"
   },
-  agua: {
-    title: "Mar de Memória",
-    description: "Sua leitura aponta para uma sensibilidade que capta as correntes sutis do ambiente. Você sente antes de pensar, e suas emoções são oceanos que carregam sabedoria antiga.",
-    advice: "A Casa Orácula oferece um cais seguro para que você possa mergulhar sem se perder.",
-    icon: ShieldCheck,
-    color: "text-blue-500",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/20"
+  sombras: {
+    title: "A Escuta das Sombras",
+    description: "Sua leitura aponta para uma sensibilidade que capta as correntes sutis e os ecos do passado. Você sente os contornos do mistério antes que ele se revele por inteiro.",
+    advice: "A Casa Orácula oferece um cais seguro para que você possa mergulhar em sua própria profundidade.",
+    icon: Moon,
+    color: "text-indigo-500",
+    bgColor: "bg-indigo-500/10",
+    borderColor: "border-indigo-500/20"
   }
 };
 
