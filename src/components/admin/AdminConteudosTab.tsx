@@ -167,31 +167,12 @@ export function AdminConteudosTab() {
   };
 
   const fetchAulas = async (portalId: string) => {
-    const { data, error } = await supabase
-      .from('conteudo_aulas')
-      .select('*')
-      .eq('travessia_id', portalId)
-      .order('ordem', { ascending: true });
-
-    if (error) {
+    try {
+      const data = await listAdminConteudoAulas(portalId);
+      setAulas((prev) => ({ ...prev, [portalId]: data }));
+    } catch (error) {
       toast.error('Erro ao carregar aulas');
       console.error(error);
-    } else {
-      const mappedAulas: Aula[] = (data || []).map((item: any) => ({
-        id: item.id,
-        travessia_id: item.travessia_id,
-        titulo: item.titulo,
-        descricao_curta: item.descricao_curta,
-        texto_aula: item.texto_aula,
-        ordem: item.ordem,
-        video_url: item.video_url,
-        audio_url: item.audio_url,
-        pdf_url: item.pdf_url,
-        materiais_url: item.materiais_url,
-        portal_minimo: item.portal_minimo,
-        publicado: item.publicado ?? true,
-      }));
-      setAulas((prev) => ({ ...prev, [portalId]: mappedAulas }));
     }
   };
 
