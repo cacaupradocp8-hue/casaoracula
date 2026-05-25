@@ -36,57 +36,25 @@ import { Plus, Pencil, Trash2, ArrowUp, ArrowDown, Star, Loader2, Film, Save, Up
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
+// ── DAL Readonly ─────────────────────────────────────
+import { 
+  listAdminModulosFormativos, 
+  getAdminBannerSettings, 
+  getAvailableAdminRouteOptions,
+  type ModuloFormativo,
+  type RouteOption
+} from "@/lib/dal/admin/adminFormacaoRead";
+
 // ── Route Options Hook ────────────────────────────────
 
-interface RouteOption {
-  value: string;
-  label: string;
-  group: string;
-}
 
 function useAvailableRoutes() {
   const { data: routes = [], isLoading } = useQuery({
     queryKey: ["admin-available-routes"],
-    queryFn: async () => {
-      const [coursesRes, salasRes, toolsRes] = await Promise.all([
-        supabase.from("courses").select("id, titulo, publicado").order("titulo"),
-        supabase.from("salas").select("id, nome_exibicao, ativa").order("nome_exibicao"),
-        supabase.from("sala_ferramentas").select("id, ferramenta_nome, rota, ativa, slug").order("ferramenta_nome"),
-      ]);
-
-      const options: RouteOption[] = [];
-
-      salasRes.data?.forEach((s) => {
-        options.push({
-          value: `/sala/${s.id}`,
-          label: `${s.nome_exibicao}${s.ativa ? "" : " (inativa)"}`,
-          group: "Salas",
-        });
-      });
-
-      coursesRes.data?.forEach((c) => {
-        options.push({
-          value: `/curso/${c.id}`,
-          label: `${c.titulo}${c.publicado ? "" : " (rascunho)"}`,
-          group: "Cursos",
-        });
-      });
-
-      toolsRes.data?.forEach((t) => {
-        const route = t.rota || (t.slug ? `/ferramenta/${t.slug}` : null);
-        if (route) {
-          options.push({
-            value: route,
-            label: `${t.ferramenta_nome}${t.ativa ? "" : " (inativa)"}`,
-            group: "Ferramentas",
-          });
-        }
-      });
-
-      return options;
-    },
+    queryFn: getAvailableAdminRouteOptions,
     staleTime: 60_000,
   });
+
 
   return { routes, isLoading };
 }
@@ -156,23 +124,8 @@ function RotaDestinoField({ value, onChange }: { value: string; onChange: (v: st
 }
 
 // ── Types ──────────────────────────────────────────────
-
-interface ModuloFormativo {
-  id: string;
-  nome_modulo: string;
-  tipo_modulo: string;
-  descricao_curta: string | null;
-  imagem_capa: string | null;
-  ordem_exibicao: number;
-  nivel_acesso: string;
-  status_publicacao: string;
-  destaque_vitrine: boolean;
-  rota_destino: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 type ModuloForm = Omit<ModuloFormativo, "id" | "created_at" | "updated_at">;
+
 
 const EMPTY_FORM: ModuloForm = {
   nome_modulo: "",
@@ -233,17 +186,10 @@ function BannerConfigPanel() {
 
   const { data: settings, isLoading } = useQuery({
     queryKey: ["admin-banner-settings"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("app_settings")
-        .select("key, value")
-        .in("key", BANNER_KEYS);
-      if (error) throw error;
-      const map: Record<string, string> = {};
-      data?.forEach((s) => (map[s.key] = s.value));
-      return map;
-    },
+    queryFn: () => getAdminBannerSettings(BANNER_KEYS),
   });
+
+
 
   useEffect(() => {
     if (settings) setBannerForm(settings);
@@ -583,15 +529,10 @@ export default function AdminModulosFormativos() {
 
   const { data: modulos, isLoading } = useQuery({
     queryKey: ["admin-modulos-formativos"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("modulos_formativos")
-        .select("*")
-        .order("ordem_exibicao", { ascending: true });
-      if (error) throw error;
-      return data as ModuloFormativo[];
-    },
+    queryFn: listAdminModulosFormativos,
   });
+
+
 
   const saveMutation = useMutation({
     mutationFn: async (data: { id?: string; form: ModuloForm }) => {
