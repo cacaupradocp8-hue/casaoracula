@@ -73,7 +73,7 @@ export default function DashboardMembro() {
 
         {/* 1. Bússola — full width */}
         <BussolaAtual
-          leituraMomento={bussola.leituraMomento}
+          leituraSimbolica={bussola.leituraSimbolica}
           distritoDominante={bussola.distritoDominante}
           distritoTensao={bussola.distritoTensao}
           nivelIntegracao={bussola.nivelIntegracao}

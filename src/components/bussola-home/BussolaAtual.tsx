@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import type { DistritoResumo } from '@/hooks/useBussolaOracular';
 
 interface Props {
-  leituraMomento: string | null;
+  leituraSimbolica: string | null;
   distritoDominante: DistritoResumo | null;
   distritoTensao: DistritoResumo | null;
   nivelIntegracao: 'inicio' | 'travessia' | 'integracao';
@@ -17,7 +17,7 @@ const NIVEL_BADGE: Record<string, { label: string; style: string }> = {
   integracao: { label: 'Integração', style: 'bg-emerald-500/10 text-emerald-600/70 border-emerald-500/15' },
 };
 
-export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao, nivelIntegracao, temCartografia, welcomeName }: Props) {
+export function BussolaAtual({ leituraSimbolica, distritoDominante, distritoTensao, nivelIntegracao, temCartografia, welcomeName }: Props) {
   if (!temCartografia) {
     return (
       <motion.section
@@ -89,12 +89,12 @@ export function BussolaAtual({ leituraMomento, distritoDominante, distritoTensao
           </div>
         </div>
 
-        {/* Leitura clínica direta */}
-        {leituraMomento && (
+        {/* Leitura simbólica e pedagógica */}
+        {leituraSimbolica && (
           <div className="relative pt-2">
             <div className="absolute left-0 top-0 w-8 h-px bg-gradient-to-r from-gold/50 to-transparent" />
             <p className="text-lg sm:text-xl text-foreground/90 leading-relaxed font-display italic tracking-wide pl-2 border-l-2 border-gold/20">
-              "{leituraMomento}"
+              "{leituraSimbolica}"
             </p>
           </div>
         )}

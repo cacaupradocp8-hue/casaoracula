@@ -70,7 +70,7 @@ export interface LeituraRecomendada {
   motivo: string | null;
 }
 
-export interface AlertaClinico {
+export interface AvisoDeTensao {
   mensagem: string;
   tipo: 'atencao' | 'observacao';
 }
@@ -85,12 +85,12 @@ export interface BussolaData {
   distritoTensao: DistritoResumo | null;
   nivelIntegracao: 'inicio' | 'travessia' | 'integracao';
   corHex: string;
-  leituraMomento: string | null;
+  leituraSimbolica: string | null;
   leitura: LeituraRecomendada;
   acaoPrincipal: RecomendacaoAcao;
   acoesSecundarias: RecomendacaoAcao[];
   praticasSugeridas: { icon: string; label: string; path: string }[];
-  alertas: AlertaClinico[];
+  alertas: AvisoDeTensao[];
   // Dados brutos para CidadelaMapSVG
   distritosRaw: Record<string, any>;
 }
@@ -118,7 +118,7 @@ function calcNivelIntegracao(distritos: Record<string, any>): 'inicio' | 'traves
   return 'inicio';
 }
 
-function gerarLeituraClinica(
+function gerarLeituraSimbolica(
   dominante: DistritoResumo | null,
   tensao: DistritoResumo | null,
   nivel: 'inicio' | 'travessia' | 'integracao',
@@ -155,11 +155,11 @@ function gerarLeituraClinica(
   return parts.join(' ');
 }
 
-function gerarAlertasClinicosFromEstado(
+function gerarAvisosDeTensaoFromEstado(
   tensao: DistritoResumo | null,
   distritos: Record<string, any>,
-): AlertaClinico[] {
-  const alertas: AlertaClinico[] = [];
+): AvisoDeTensao[] {
+  const alertas: AvisoDeTensao[] = [];
 
   if (tensao) {
     const meta = DISTRITOS_META[tensao.key];
@@ -311,9 +311,9 @@ export function useBussolaOracular(): BussolaData {
     const nivelIntegracao = calcNivelIntegracao(distritos);
     const corHex = carto?.metadata_json?.cor_hex || '#C9A24A';
 
-    // LEITURA DO MOMENTO — Clínica e direta
-    const leituraMomento = temCartografia
-      ? gerarLeituraClinica(distritoDominante, distritoTensao, nivelIntegracao, carto)
+    // LEITURA SIMBÓLICA — simbólica e pedagógica
+    const leituraSimbolica = temCartografia
+      ? gerarLeituraSimbolica(distritoDominante, distritoTensao, nivelIntegracao, carto)
       : null;
 
     // AÇÃO PRINCIPAL + SECUNDÁRIAS
@@ -366,7 +366,7 @@ export function useBussolaOracular(): BussolaData {
     const praticasSugeridas = gerarPraticasFiltradas(nivelIntegracao, !!distritoTensao);
 
     // ALERTAS
-    const alertas = temCartografia ? gerarAlertasClinicosFromEstado(distritoTensao, distritos) : [];
+    const alertas = temCartografia ? gerarAvisosDeTensaoFromEstado(distritoTensao, distritos) : [];
 
     return {
       loading,
@@ -378,7 +378,7 @@ export function useBussolaOracular(): BussolaData {
       distritoTensao,
       nivelIntegracao,
       corHex,
-      leituraMomento,
+      leituraSimbolica,
       leitura,
       acaoPrincipal,
       acoesSecundarias,

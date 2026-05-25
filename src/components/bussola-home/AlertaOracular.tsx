@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { AlertTriangle, Eye } from 'lucide-react';
-import type { AlertaClinico } from '@/hooks/useBussolaOracular';
+import type { AvisoDeTensao } from '@/hooks/useBussolaOracular';
 
 interface Props {
-  alertas: AlertaClinico[];
+  alertas: AvisoDeTensao[];
 }
 
 const ICONS = {
