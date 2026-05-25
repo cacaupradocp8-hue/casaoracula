@@ -79,12 +79,21 @@ export function MiniMapaCidadela(props: Props) {
         <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40">
           Sua CidaDELA
         </p>
-        <button
-          onClick={() => navigate('/cidadela/revelacao')}
-          className="text-[10px] text-primary/50 hover:text-primary/80 transition-colors flex items-center gap-1"
-        >
-          Ver mapa completo <ArrowRight className="w-3 h-3" />
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate('/cidadela')}
+            className="text-[10px] text-primary/50 hover:text-primary/80 transition-colors flex items-center gap-1"
+          >
+            Visão Geral <ArrowRight className="w-3 h-3" />
+          </button>
+          <button
+            onClick={() => navigate('/cidadela/revelacao')}
+            className="text-[10px] text-primary/50 hover:text-primary/80 transition-colors flex items-center gap-1"
+          >
+            Ver mapa completo <ArrowRight className="w-3 h-3" />
+          </button>
+        </div>
+
       </div>
 
       <div className="w-full overflow-hidden rounded-2xl border border-border/20 bg-muted/10 p-3 transition-all hover:border-primary/20">
