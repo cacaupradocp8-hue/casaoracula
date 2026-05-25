@@ -45,6 +45,7 @@ export default function PortalOraculaPage() {
         .from('conteudo_travessias')
         .select('*')
         .eq('publicado', true)
+        .is('archived_at', null)
         .order('ordem', { ascending: true });
       if (error) throw error;
 

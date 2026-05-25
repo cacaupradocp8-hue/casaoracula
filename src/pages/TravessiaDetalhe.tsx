@@ -349,6 +349,7 @@ export default function TravessiaDetalhe() {
         .select('id, titulo, descricao_curta, ordem, publicado')
         .eq('travessia_id', travessia.id)
         .eq('publicado', true)
+        .is('archived_at', null)
         .order('ordem', { ascending: true });
       
       if (error) throw error;
