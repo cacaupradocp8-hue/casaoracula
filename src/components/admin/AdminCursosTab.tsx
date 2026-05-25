@@ -26,6 +26,11 @@ import {
   Target
 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { 
+  listAdminCourses, 
+  listAdminCourseModules, 
+  listAdminCourseLessons 
+} from '@/lib/dal/admin/adminCoursesRead';
 import { useToast } from '@/hooks/use-toast';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
 import { ImageUpload } from './ImageUpload';
@@ -78,17 +83,18 @@ export function AdminCursosTab() {
   const fetchData = async () => {
     setIsLoading(true);
     try {
-      const [coursesRes, modulesRes, lessonsRes, enrollmentsRes, salasRes] = await Promise.all([
-        supabase.from('courses').select('*').order('ordem'),
-        supabase.from('course_modules').select('*').order('ordem'),
-        supabase.from('course_lessons').select('*').order('ordem'),
+      const [coursesData, modulesData, lessonsData, enrollmentsRes, salasRes] = await Promise.all([
+        listAdminCourses(),
+        listAdminCourseModules(),
+        listAdminCourseLessons(),
         supabase.from('course_enrollments').select('*').order('created_at', { ascending: false }),
         supabase.from('salas').select('id, nome_exibicao, ativa').order('ordem')
       ]);
 
-      if (coursesRes.data) setCourses(coursesRes.data as Course[]);
-      if (modulesRes.data) setModules(modulesRes.data as CourseModule[]);
-      if (lessonsRes.data) setLessons(lessonsRes.data as CourseLesson[]);
+      setCourses(coursesData);
+      setModules(modulesData);
+      setLessons(lessonsData);
+      
       if (enrollmentsRes.data) setEnrollments(enrollmentsRes.data as CourseEnrollment[]);
       if (salasRes.data) setSalas(salasRes.data);
     } catch (error) {
