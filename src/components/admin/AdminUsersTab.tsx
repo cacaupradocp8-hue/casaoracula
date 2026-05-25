@@ -9,14 +9,8 @@ import { Users, Search, Eye, Crown, Heart, GraduationCap, Sparkles, Star } from 
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
+import { listAdminUsers, getAdminUserStats, AdminUser } from '@/lib/dal/admin/adminUsersRead';
 
-interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  portal: PortalType;
-  createdAt: Date;
-}
 
 export function AdminUsersTab() {
   const { toast } = useToast();
@@ -31,29 +25,7 @@ export function AdminUsersTab() {
 
   const fetchUsers = async () => {
     try {
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, email, nome, created_at');
-
-      if (profilesError) throw profilesError;
-
-      const { data: roles, error: rolesError } = await supabase
-        .from('user_roles')
-        .select('user_id, portal');
-
-      if (rolesError) throw rolesError;
-
-      const usersData: AdminUser[] = (profiles || []).map(profile => {
-        const role = roles?.find(r => r.user_id === profile.id);
-        return {
-          id: profile.id,
-          name: profile.nome || 'Sem nome',
-          email: profile.email || '',
-          portal: (role?.portal as PortalType) || 'visitante',
-          createdAt: new Date(profile.created_at),
-        };
-      });
-
+      const usersData = await listAdminUsers();
       setUsers(usersData);
     } catch (error) {
       console.error('Error fetching users:', error);
@@ -66,6 +38,7 @@ export function AdminUsersTab() {
       setLoading(false);
     }
   };
+
 
   const handlePortalChange = async (userId: string, newPortal: PortalType) => {
     try {
@@ -107,14 +80,8 @@ export function AdminUsersTab() {
     return matchesSearch && matchesPortal;
   });
 
-  const stats = {
-    total: users.length,
-    visitante: users.filter(u => u.portal === 'visitante').length,
-    aluna: users.filter(u => ['aluna', 'mentorada', 'aluna_formacao', 'pre_iniciada'].includes(u.portal as string)).length,
-    oracula: users.filter(u => ['oracula', 'iniciada'].includes(u.portal as string)).length,
-    assinante: users.filter(u => u.portal === 'assinante').length,
-    admin: users.filter(u => u.portal === 'admin').length,
-  };
+  const stats = getAdminUserStats(users);
+
 
   if (loading) {
     return (
