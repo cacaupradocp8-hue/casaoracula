@@ -36,7 +36,7 @@ const PrimeiraLeituraPage = () => {
   };
 
   return (
-    <AppLayout showNavigation={false}>
+    <AppLayout>
       <div className="min-h-[calc(100vh-4rem)] bg-background flex flex-col items-center justify-center py-10">
         <AnimatePresence mode="wait">
           {currentStep === 'intro' && (
