@@ -166,18 +166,13 @@ export function VisitorSalaContent() {
             </div>
             
             <div className="space-y-4">
+              <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Atravessar o Limiar</p>
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
-                Antes de escolher um caminho, descubra como a sua escuta lê uma história.
+                "Antes de escolher um caminho, observe como você lê uma travessia."
               </h2>
-              <p className="text-foreground/70 text-sm md:text-base leading-relaxed italic max-w-[320px] mx-auto">
-                Leitura Orácular é uma experiência, para revelar o primeiro modo como você organiza sentido, cuidado e travessia diante de um caso-espelho.
+              <p className="text-foreground/70 text-sm md:text-base leading-relaxed italic max-w-[340px] mx-auto">
+                Uma experiência simbólica gratuita para perceber seu modo de escuta e receber um primeiro espelho da Casa.
               </p>
-            </div>
-
-            <div className="space-y-1 py-2">
-              <p className="text-muted-foreground text-xs leading-relaxed">Não é um teste de personalidade.</p>
-              <p className="text-muted-foreground text-xs leading-relaxed">Não é uma previsão.</p>
-              <p className="text-muted-foreground text-xs leading-relaxed font-medium text-primary/60">É uma demonstração do método da Casa.</p>
             </div>
 
             <Button
