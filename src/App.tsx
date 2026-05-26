@@ -311,7 +311,9 @@ function AppRoutes() {
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
       <Route path="/sala-da-visitante" element={<SalaDaVisitante />} />
-      <Route path="/sala-da-visitante/primeira-leitura" element={<PrimeiraLeituraPage />} />
+      <Route path="/primeira-leitura" element={<PrimeiraLeituraPage />} />
+      <Route path="/sala-da-visitante/primeira-leitura" element={<Navigate to="/primeira-leitura" replace />} />
+
 
 
       {/* Core navigation */}
@@ -457,7 +459,7 @@ function AppRoutes() {
       <Route path="/ferramentas/plasticidade-psiquica" element={<ProtectedRoute minPortal="mentorada"><PlasticidadePsiquica /></ProtectedRoute>} />
 
       <Route path="/quiz/:quizId" element={<QuizPage />} />
-      <Route path="/quiz/:quizId/resultado" element={<QuizPage />} />
+
 
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
       <Route path="/biblioteca-casos" element={<ProtectedRoute minPortal="oracula"><RoleSpecificGuard allowed={['oracula', 'admin']}><BibliotecaCasos /></RoleSpecificGuard></ProtectedRoute>} />

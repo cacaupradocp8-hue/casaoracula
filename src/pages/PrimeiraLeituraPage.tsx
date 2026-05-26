@@ -37,7 +37,8 @@ const PrimeiraLeituraPage = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-[calc(100vh-4rem)] bg-background flex flex-col items-center justify-center py-10">
+      <div className="min-h-[calc(100vh-4rem)] bg-background flex flex-col items-center justify-center py-10 pb-24 md:pb-10">
+
         <AnimatePresence mode="wait">
           {currentStep === 'intro' && (
             <LimiarIntro key="intro" onNext={handleNextStep} />
