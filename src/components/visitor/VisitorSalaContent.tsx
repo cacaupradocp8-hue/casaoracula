@@ -28,12 +28,6 @@ export function VisitorSalaContent() {
     isCloudflareVideoId(videoUrl) ? videoUrl : extractVideoId(videoUrl)
   ) : null;
 
-  const handleStartQuiz = useCallback(() => {
-    setIsTransitioning(true);
-    setTimeout(() => {
-      navigate('/quiz/descubra-seu-eixo');
-    }, 1400);
-  }, [navigate]);
 
   const handleStartFirstReading = useCallback(() => {
     setIsTransitioning(true);
@@ -124,7 +118,7 @@ export function VisitorSalaContent() {
               transition={{ delay: 1.8, duration: 0.8 }}
               className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide leading-tight"
             >
-              Antes de escolher um caminho, observe como você lê uma história.
+              Antes de escolher um caminho, descubra como a sua escuta lê uma história.
             </motion.h1>
 
 
@@ -168,11 +162,16 @@ export function VisitorSalaContent() {
             <div className="space-y-4">
               <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Atravessar o Limiar</p>
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
-                "Antes de escolher um caminho, observe como você lê uma travessia."
+                "Antes de escolher um caminho, descubra como a sua escuta lê uma história."
               </h2>
-              <p className="text-foreground/70 text-sm md:text-base leading-relaxed italic max-w-[340px] mx-auto">
-                Uma experiência simbólica gratuita para perceber seu modo de escuta e receber um primeiro espelho da Casa.
+              <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
+                A Primeira Leitura Orácula é uma experiência, para revelar o primeiro modo como você organiza sentido, cuidado e travessia diante de um caso-espelho.
               </p>
+              <div className="flex flex-col items-center gap-1.5 pt-2">
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é um teste de personalidade</p>
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é uma previsão</p>
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">É uma demonstração do método da Casa</p>
+              </div>
             </div>
 
             <Button
