@@ -15,31 +15,33 @@ export const LimiarIntro: React.FC<LimiarIntroProps> = ({ onNext }) => {
       exit={{ opacity: 0, y: -20 }}
       className="flex flex-col items-center text-center space-y-8 py-12 px-4 max-w-2xl mx-auto"
     >
-      <div className="w-20 h-20 rounded-full bg-amber-500/10 flex items-center justify-center animate-pulse">
-        <Sparkles className="w-10 h-10 text-amber-500" />
+      <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center animate-pulse">
+        <Sparkles className="w-10 h-10 text-primary" />
       </div>
       
       <div className="space-y-4">
-        <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-amber-500">
-          O Limiar do Ver
+        <h1 className="text-4xl md:text-5xl font-serif tracking-tight text-primary">
+          Primeira Leitura Orácula
         </h1>
         <p className="text-xl text-muted-foreground leading-relaxed italic">
-          "Onde a razão silencia, a imagem fala. Onde o caminho se bifurca, o símbolo guia."
+          "A imagem é a porta pela qual a alma se comunica com o mundo."
         </p>
       </div>
 
+
       <div className="max-w-md bg-card/50 backdrop-blur-sm border border-border/50 p-6 rounded-2xl shadow-xl">
         <p className="text-base text-foreground/80 leading-relaxed mb-6">
-          Você acaba de cruzar o portal da Casa Orácula. Esta não é uma análise lógica, mas uma Primeira Leitura — um lampejo de como sua psique se projeta nos símbolos que habitam este espaço.
+          Esta não é uma análise lógica, mas uma demonstração do método da Casa — uma Primeira Leitura baseada em um caso-espelho para observar seu modo de escuta.
         </p>
-        <p className="text-sm text-amber-500 font-medium mb-8">
-          Sinta a atmosfera. Não tente entender. Apenas observe.
+        <p className="text-sm text-primary font-medium mb-8">
+          Observe a imagem e sinta como ela ressoa em você.
         </p>
+
         
         <Button 
           onClick={onNext}
           size="lg"
-          className="w-full bg-amber-600 hover:bg-amber-700 text-white font-medium py-6 rounded-xl transition-all duration-300"
+          className="w-full bg-primary hover:opacity-90 text-primary-foreground font-medium py-6 rounded-xl transition-all duration-300"
         >
           Iniciar Primeira Leitura
         </Button>
