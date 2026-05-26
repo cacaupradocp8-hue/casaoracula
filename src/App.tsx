@@ -307,12 +307,14 @@ function AppRoutes() {
       <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
       <Route path="/vitrine" element={<Vitrine />} />
       <Route path="/desbloqueie" element={<DesbloqueiePage />} />
+      <Route path="/oracula-formacao" element={<OraculaSalesPage />} />
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
       <Route path="/sala-da-visitante" element={<SalaDaVisitante />} />
       <Route path="/primeira-leitura" element={<PrimeiraLeituraPage />} />
       <Route path="/sala-da-visitante/primeira-leitura" element={<Navigate to="/primeira-leitura" replace />} />
+
 
 
 
@@ -459,6 +461,8 @@ function AppRoutes() {
       <Route path="/ferramentas/plasticidade-psiquica" element={<ProtectedRoute minPortal="mentorada"><PlasticidadePsiquica /></ProtectedRoute>} />
 
       <Route path="/quiz/:quizId" element={<QuizPage />} />
+      <Route path="/quiz/voz-da-alma" element={<QuizPage />} />
+
 
 
       <Route path="/ferramentas/torre-viva" element={<ProtectedRoute minPortal="oracula"><TorreViva /></ProtectedRoute>} />
