@@ -44,6 +44,7 @@ interface Sala {
 }
 
 export function AdminCursosTab() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [courses, setCourses] = useState<Course[]>([]);
   const [modules, setModules] = useState<CourseModule[]>([]);
@@ -150,16 +151,23 @@ export function AdminCursosTab() {
   };
 
   const handleDeleteCourse = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este curso? Todos os módulos e aulas serão excluídos.')) return;
+    if (!confirm('Tem certeza que deseja arquivar este curso? Ele não aparecerá mais para as alunas, mas os dados serão preservados.')) return;
     
     try {
-      const { error } = await supabase.from('courses').delete().eq('id', id);
+      const { error } = await supabase
+        .from('courses')
+        .update({
+          archived_at: new Date().toISOString(),
+          archived_by: user?.id ?? null,
+        })
+        .eq('id', id);
+
       if (error) throw error;
-      toast({ title: 'Curso excluído!' });
+      toast({ title: 'Curso arquivado!' });
       fetchData();
     } catch (error) {
-      console.error('Error deleting course:', error);
-      toast({ title: 'Erro ao excluir curso', variant: 'destructive' });
+      console.error('Error archiving course:', error);
+      toast({ title: 'Erro ao arquivar curso', variant: 'destructive' });
     }
   };
 
@@ -198,16 +206,23 @@ export function AdminCursosTab() {
   };
 
   const handleDeleteModule = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir este módulo? Todas as aulas serão excluídas.')) return;
+    if (!confirm('Tem certeza que deseja arquivar este módulo? Ele não aparecerá mais na grade curricular, mas os dados serão preservados.')) return;
     
     try {
-      const { error } = await supabase.from('course_modules').delete().eq('id', id);
+      const { error } = await supabase
+        .from('course_modules')
+        .update({
+          archived_at: new Date().toISOString(),
+          archived_by: user?.id ?? null,
+        })
+        .eq('id', id);
+
       if (error) throw error;
-      toast({ title: 'Módulo excluído!' });
+      toast({ title: 'Módulo arquivado!' });
       fetchData();
     } catch (error) {
-      console.error('Error deleting module:', error);
-      toast({ title: 'Erro ao excluir módulo', variant: 'destructive' });
+      console.error('Error archiving module:', error);
+      toast({ title: 'Erro ao arquivar módulo', variant: 'destructive' });
     }
   };
 
@@ -266,16 +281,23 @@ export function AdminCursosTab() {
   };
 
   const handleDeleteLesson = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta aula?')) return;
+    if (!confirm('Tem certeza que deseja arquivar esta aula? Ela não aparecerá mais para as alunas, mas o progresso será preservado.')) return;
     
     try {
-      const { error } = await supabase.from('course_lessons').delete().eq('id', id);
+      const { error } = await supabase
+        .from('course_lessons')
+        .update({
+          archived_at: new Date().toISOString(),
+          archived_by: user?.id ?? null,
+        })
+        .eq('id', id);
+
       if (error) throw error;
-      toast({ title: 'Aula excluída!' });
+      toast({ title: 'Aula arquivada!' });
       fetchData();
     } catch (error) {
-      console.error('Error deleting lesson:', error);
-      toast({ title: 'Erro ao excluir aula', variant: 'destructive' });
+      console.error('Error archiving lesson:', error);
+      toast({ title: 'Erro ao arquivar aula', variant: 'destructive' });
     }
   };
 
@@ -533,6 +555,7 @@ export function AdminCursosTab() {
                         size="icon" 
                         variant="ghost"
                         onClick={() => handleDeleteCourse(course.id)}
+                        title="Arquivar"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -682,6 +705,7 @@ export function AdminCursosTab() {
                             size="icon" 
                             variant="ghost"
                             onClick={() => handleDeleteModule(module.id)}
+                            title="Arquivar"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
