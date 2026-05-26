@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Eye, Flame, Moon } from 'lucide-react';
 import { ArchetypeType } from '@/hooks/useOnboarding';
-import { FlowerOfLife } from '@/components/sacred-geometry/FlowerOfLife';
+
 import { AmbientPlayer } from '@/components/onboarding/AmbientPlayer';
 import { useOnboardingAudio } from '@/hooks/useOnboardingAudio';
 
@@ -52,13 +52,10 @@ export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
       {/* Deep gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-midnight via-background to-midnight-light" />
       
-      {/* Flower of Life sacred geometry background */}
+      {/* Ambient background decoration */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <FlowerOfLife 
-          size={Math.min(800, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 800)} 
-          opacity={0.06} 
-          animated={true}
-          className="text-gold"
+        <div 
+          className="w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]"
         />
       </div>
       
@@ -89,15 +86,10 @@ export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
             <span className="text-sm text-gold/80 font-medium tracking-wide">O Chamado</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="font-display text-2xl md:text-4xl font-light text-foreground leading-relaxed"
-          >
-            Qual é o chamado que te trouxe <br />
-            <span className="text-gold-gradient font-medium">a esta Casa?</span>
-          </motion.h1>
+            <h1 className="font-display text-2xl md:text-3xl font-light text-foreground leading-relaxed">
+              Sua escuta é o seu <span className="text-gold-gradient font-medium italic">instrumento.</span> <br />
+              <span className="text-sm md:text-base text-muted-foreground font-sans tracking-widest uppercase mt-4 block">Bem-vinda à Casa Oráculo.</span>
+            </h1>
         </div>
 
         {/* Archetype Cards */}
