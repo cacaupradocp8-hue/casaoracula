@@ -6,18 +6,16 @@ import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
-import { BreathingMandala } from '@/components/visitor/BreathingMandala';
+import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
  * 
  * Experiência sensorial de chegada:
- * 1. Mandala respirando — presença contemplativa
- * 2. Texto como porta — curto, profundo, claro
- * 3. Micro-ritual — convite à pausa
- * 4. CTA como portal — Descobrir minha Voz
- * 5. Caminho simbólico — Quiz → Travessia → Casa
+ * 1. Logo da Casa — Identidade e limpeza visual
+ * 2. Texto como porta — curto, profundo, claro (refinado)
+ * 3. Primeira Leitura — O novo limiar público
  */
 export function VisitorSalaContent() {
   const navigate = useNavigate();
@@ -40,7 +38,7 @@ export function VisitorSalaContent() {
   const handleStartFirstReading = useCallback(() => {
     setIsTransitioning(true);
     setTimeout(() => {
-      navigate('/sala-da-visitante/primeira-leitura');
+      navigate('/primeira-leitura');
     }, 1400);
   }, [navigate]);
 
@@ -74,12 +72,6 @@ export function VisitorSalaContent() {
         )}
       </AnimatePresence>
 
-      <style>{`
-        @keyframes sala-breathe {
-          0%, 100% { transform: scale(1); opacity: 0.7; }
-          50% { transform: scale(1.08); opacity: 1; }
-        }
-      `}</style>
       <div className="min-h-[85vh] flex flex-col items-center justify-center relative overflow-hidden py-10 px-4">
 
         {/* Background atmosphere — partículas + gradientes */}
@@ -90,57 +82,49 @@ export function VisitorSalaContent() {
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[200px] h-[100px] rounded-full bg-accent/[0.04] blur-[60px]" />
         </div>
 
-        {/* SECTION 1 — Mandala + Texto */}
+        {/* SECTION 1 — Logo + Boas-vindas */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.8, ease: 'easeOut' }}
-          className="relative z-10 flex flex-col items-center text-center space-y-10 max-w-lg"
+          className="relative z-10 flex flex-col items-center text-center space-y-8 max-w-md"
         >
-          {/* Mandala with breathing */}
-          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div
-              style={{
-                position: 'absolute',
-                width: 320,
-                height: 320,
-                background: 'radial-gradient(circle, rgba(201,164,92,0.1) 0%, transparent 65%)',
-                animation: 'sala-breathe 6s ease-in-out infinite',
-                pointerEvents: 'none',
-              }}
-            />
-            <div style={{ position: 'relative', zIndex: 2, animation: 'sala-breathe 6s ease-in-out infinite' }}>
-              <BreathingMandala />
-            </div>
-          </div>
+          {/* Logo — porta de entrada */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.5, duration: 1 }}
+          >
+            <Logo variant="vertical" size="md" className="mb-2" />
+          </motion.div>
 
           {/* Texto — porta simbólica */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <motion.p
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.8 }}
-              className="text-muted-foreground text-sm md:text-base tracking-wide"
+              transition={{ delay: 1, duration: 0.8 }}
+              className="text-muted-foreground text-xs tracking-[0.15em] uppercase"
             >
-              Antes de entrar na Casa…
+              Bem-vinda à Casa Orácula
             </motion.p>
 
             <motion.p
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.2, duration: 0.8 }}
-              className="text-foreground/90 text-base md:text-lg leading-relaxed"
+              transition={{ delay: 1.4, duration: 0.8 }}
+              className="text-foreground/80 text-sm md:text-base leading-relaxed px-4"
             >
-              existe uma pergunta que precisa ser ouvida.
+              Um espaço para mulheres que escutam o invisível e transformam essa escuta em método.
             </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.6, duration: 0.8 }}
-              className="font-display text-3xl md:text-4xl text-primary pt-2"
+              transition={{ delay: 1.8, duration: 0.8 }}
+              className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide"
             >
-              Sua Voz.
+              Primeira Leitura Orácula
             </motion.h1>
           </div>
         </motion.section>
@@ -166,12 +150,12 @@ export function VisitorSalaContent() {
           </motion.section>
         )}
 
-      {/* SECTION 3 — Primeira Leitura (Novo Convite Premium) */}
+      {/* SECTION 3 — Primeira Leitura (Convite Principal) */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 2.2, duration: 1 }}
-        className="relative z-10 w-full max-w-lg mt-14"
+        className="relative z-10 w-full max-w-md mt-12"
       >
         <div className="group relative rounded-3xl p-[1px] bg-gradient-to-b from-primary/30 via-primary/5 to-transparent overflow-hidden">
           <div className="relative rounded-[23px] bg-card/40 backdrop-blur-md border border-primary/10 p-8 flex flex-col items-center text-center space-y-6">
@@ -180,8 +164,8 @@ export function VisitorSalaContent() {
             </div>
             
             <div className="space-y-2">
-              <h2 className="font-display text-2xl text-primary">Primeira Leitura Orácula</h2>
-              <p className="text-muted-foreground text-sm leading-relaxed italic">
+              <h2 className="font-display text-xl md:text-2xl text-primary">Atravessar o Limiar</h2>
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed italic">
                 "Antes de escolher um caminho, observe como você lê uma travessia."
               </p>
             </div>
@@ -197,7 +181,7 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-6 text-base relative overflow-hidden group/btn"
             >
-              <span className="relative z-10">Atravessar o Limiar</span>
+              <span className="relative z-10">Iniciar Primeira Leitura</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
             
@@ -218,7 +202,7 @@ export function VisitorSalaContent() {
         <div className="w-10 h-px bg-primary/15" />
         
         <div className="space-y-4">
-          <p className="text-muted-foreground/60 text-xs md:text-sm max-w-xs leading-relaxed">
+          <p className="text-muted-foreground/60 text-[10px] md:text-xs max-w-xs leading-relaxed">
             Ou, se preferir o caminho identitário da Formação:
           </p>
           
@@ -227,7 +211,7 @@ export function VisitorSalaContent() {
             size="sm"
             onClick={handleStartQuiz}
             disabled={isTransitioning}
-            className="text-primary hover:text-primary/80 hover:bg-primary/5 gap-2 group px-6"
+            className="text-primary hover:text-primary/80 hover:bg-primary/5 gap-2 group px-6 text-xs md:text-sm"
           >
             Descobrir minha Voz (Quiz)
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
@@ -239,16 +223,16 @@ export function VisitorSalaContent() {
         </div>
       </motion.section>
 
-        {/* SECTION 4 — Caminho simbólico (discreto) */}
+        {/* SECTION 5 — Caminho simbólico (discreto) */}
         <motion.section
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 3.8, duration: 1.2 }}
-          className="relative z-10 mt-20"
+          className="relative z-10 mt-16"
         >
-          <div className="flex items-center gap-3 text-[11px] text-muted-foreground/25">
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground/25">
             <span className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-            <span>Quiz da Voz</span>
+            <span>Primeira Leitura</span>
             <span className="w-4 h-px bg-primary/15" />
             <span>Travessia</span>
             <span className="w-4 h-px bg-primary/15" />
@@ -261,10 +245,10 @@ export function VisitorSalaContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 4.2, duration: 1.5 }}
-          className="relative z-10 text-center mt-16 pb-6"
+          className="relative z-10 text-center mt-12 pb-6"
         >
           <div className="w-6 h-px bg-primary/10 mx-auto mb-4" />
-          <p className="text-[10px] text-muted-foreground/20 leading-relaxed max-w-[260px] mx-auto italic">
+          <p className="text-[9px] md:text-[10px] text-muted-foreground/20 leading-relaxed max-w-[240px] mx-auto italic">
             A Casa Orácula ensina como sustentar processos humanos com consciência.
           </p>
         </motion.div>
