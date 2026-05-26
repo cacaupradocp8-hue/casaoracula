@@ -113,19 +113,20 @@ export function VisitorSalaContent() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4, duration: 0.8 }}
-              className="text-foreground/80 text-sm md:text-base leading-relaxed px-4 font-serif italic"
+              className="text-foreground/70 text-sm md:text-base leading-relaxed px-4 font-serif italic max-w-sm"
             >
-              "A Casa Orácula é um espaço para mulheres que escutam o invisível e transformam essa escuta em método."
+              "A Casa Orácula é um espaço para mulheres que escutam o invisível e transformam essa escuta em inteligência simbólica."
             </motion.p>
 
             <motion.h1
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.8, duration: 0.8 }}
-              className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide"
+              className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide leading-tight"
             >
               Antes de escolher um caminho, observe como você lê uma história.
             </motion.h1>
+
 
           </div>
         </motion.section>
@@ -158,21 +159,21 @@ export function VisitorSalaContent() {
         transition={{ delay: 2.2, duration: 1 }}
         className="relative z-10 w-full max-w-md mt-12"
       >
-        <div className="group relative rounded-3xl p-[1px] bg-gradient-to-b from-primary/30 via-primary/5 to-transparent overflow-hidden">
-          <div className="relative rounded-[23px] bg-card/40 backdrop-blur-md border border-primary/10 p-8 flex flex-col items-center text-center space-y-6">
+        <div className="group relative rounded-3xl p-[1px] bg-gradient-to-b from-primary/40 via-primary/5 to-transparent overflow-hidden">
+          <div className="relative rounded-[23px] bg-card/60 backdrop-blur-xl border border-primary/10 p-8 flex flex-col items-center text-center space-y-6">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-              <Sparkles className="w-6 h-6 text-primary" />
+              <Sparkles className="w-5 h-5 text-primary" />
             </div>
             
-            <div className="space-y-2">
-              <h2 className="font-display text-xl md:text-2xl text-primary">Atravessar o Limiar</h2>
-              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed italic">
-                "Antes de escolher um caminho, observe como você lê uma travessia."
+            <div className="space-y-3">
+              <h2 className="font-display text-xl md:text-2xl text-primary">Primeira Leitura Orácula</h2>
+              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed italic max-w-[240px]">
+                "A forma como você lê revela a forma como você conduz."
               </p>
             </div>
 
             <p className="text-foreground/70 text-sm leading-relaxed max-w-[280px]">
-              Uma experiência simbólica gratuita para perceber seu modo de escuta e receber um primeiro espelho da Casa.
+              Uma experiência simbólica para perceber seu modo de escuta por meio de um caso-espelho da Casa.
             </p>
 
             <Button
@@ -180,49 +181,45 @@ export function VisitorSalaContent() {
               size="lg"
               onClick={handleStartFirstReading}
               disabled={isTransitioning}
-              className="w-full gap-2.5 py-6 text-base relative overflow-hidden group/btn"
+              className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Iniciar Primeira Leitura</span>
+              <span className="relative z-10">Iniciar Experiência</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
             
-            <p className="text-[10px] text-muted-foreground/40 tracking-[0.15em] uppercase">
-              Início Contemplativo • Gratuito
+            <p className="text-[10px] text-muted-foreground/30 tracking-[0.2em] uppercase">
+              Demonstração de Método • Gratuito
             </p>
           </div>
         </div>
       </motion.section>
 
-      {/* SECTION 4 — Quiz da Voz (Caminho Complementar) */}
+
+      {/* SECTION 4 — Quiz da Voz (Caminho Complementar — Agora mais discreto) */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 3, duration: 1 }}
-        className="relative z-10 flex flex-col items-center text-center mt-12 space-y-6"
+        className="relative z-10 flex flex-col items-center text-center mt-12 space-y-4"
       >
-        <div className="w-10 h-px bg-primary/15" />
+        <div className="w-8 h-px bg-primary/10" />
         
-        <div className="space-y-4">
-          <p className="text-muted-foreground/60 text-[10px] md:text-xs max-w-xs leading-relaxed">
-            Ou, se preferir o caminho identitário da Formação:
+        <div className="space-y-3">
+          <p className="text-muted-foreground/40 text-[10px] uppercase tracking-widest">
+            Outras Camadas
           </p>
           
-          <Button
-            variant="ghost"
-            size="sm"
+          <button
             onClick={handleStartQuiz}
             disabled={isTransitioning}
-            className="text-primary hover:text-primary/80 hover:bg-primary/5 gap-2 group px-6 text-xs md:text-sm"
+            className="text-muted-foreground/60 hover:text-primary/70 transition-colors text-xs flex items-center gap-2 group"
           >
             Descobrir minha Voz (Quiz)
-            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-          </Button>
-          
-          <p className="text-[10px] text-muted-foreground/30 tracking-[0.1em]">
-            Leva menos de 3 minutos
-          </p>
+            <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+          </button>
         </div>
       </motion.section>
+
 
         {/* SECTION 5 — Caminho simbólico (discreto) */}
         <motion.section

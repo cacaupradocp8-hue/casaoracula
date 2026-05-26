@@ -13,29 +13,34 @@ export const LimiarIntro: React.FC<LimiarIntroProps> = ({ onNext }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="flex flex-col items-center text-center space-y-12 py-12 px-6 max-w-2xl mx-auto"
+      className="flex flex-col items-center text-center space-y-10 py-12 px-6 max-w-xl mx-auto"
     >
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
       >
-        <Logo variant="vertical" size="sm" className="opacity-40" />
+        <Logo variant="vertical" size="sm" className="opacity-20 grayscale" />
       </motion.div>
       
-      <div className="space-y-6">
-        <h1 className="text-3xl md:text-4xl font-display tracking-tight text-primary">
+      <div className="space-y-8">
+        <h1 className="text-xl md:text-2xl font-display tracking-wide text-primary/90">
           Antes de entrar, uma pergunta.
         </h1>
-        <div className="space-y-4 text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mx-auto font-serif italic">
-          <p>Nem toda terapeuta escuta a mesma coisa quando olha para uma história.</p>
-          <div className="space-y-1 not-italic font-sans text-xs md:text-sm tracking-wide uppercase opacity-70">
-            <p>Algumas percebem a dor.</p>
-            <p>Outras, a defesa.</p>
-            <p>Outras, o padrão.</p>
-            <p>Outras, o símbolo.</p>
+        
+        <div className="space-y-6 text-sm md:text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
+          <p className="font-serif italic text-foreground/70">
+            Nem toda terapeuta escuta a mesma coisa quando olha para uma história.
+          </p>
+          
+          <div className="space-y-2 py-4 border-y border-primary/5">
+            <p className="tracking-wide">Algumas percebem a dor.</p>
+            <p className="tracking-wide">Outras, a defesa.</p>
+            <p className="tracking-wide">Outras, o padrão.</p>
+            <p className="tracking-wide">Outras, o símbolo.</p>
           </div>
-          <p className="pt-4 text-foreground/80 not-italic font-sans text-base md:text-lg">
+          
+          <p className="text-foreground/80 font-medium">
             A forma como você lê revela a forma como você conduz.
           </p>
         </div>
@@ -45,10 +50,11 @@ export const LimiarIntro: React.FC<LimiarIntroProps> = ({ onNext }) => {
         onClick={onNext}
         size="lg"
         variant="gold"
-        className="px-12 py-7 text-base rounded-full transition-all duration-500 shadow-xl shadow-primary/10 hover:shadow-primary/20 hover:scale-[1.02]"
+        className="px-10 py-6 text-sm md:text-base rounded-full transition-all duration-700 hover:scale-[1.01] bg-primary/90 hover:bg-primary shadow-none mt-4"
       >
         Atravessar o primeiro limiar
       </Button>
     </motion.div>
+
   );
 };
