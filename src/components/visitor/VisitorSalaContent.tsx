@@ -115,7 +115,7 @@ export function VisitorSalaContent() {
               transition={{ delay: 1.4, duration: 0.8 }}
               className="text-foreground/80 text-sm md:text-base leading-relaxed px-4 font-serif italic"
             >
-              "Um espaço para mulheres que escutam o invisível e transformam essa escuta em método."
+              "A Casa Orácula é um espaço para mulheres que escutam o invisível e transformam essa escuta em método."
             </motion.p>
 
             <motion.h1
@@ -124,8 +124,9 @@ export function VisitorSalaContent() {
               transition={{ delay: 1.8, duration: 0.8 }}
               className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide"
             >
-              Primeira Leitura Orácula
+              Antes de escolher um caminho, observe como você lê uma história.
             </motion.h1>
+
           </div>
         </motion.section>
 

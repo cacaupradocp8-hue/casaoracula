@@ -28,10 +28,9 @@ const PrimeiraLeituraPage = () => {
 
   // Lógica de resultado baseada na escolha de escuta
   const getResultType = () => {
-    if (selectedEscuta === 'escuta-simbolica') return 'simbolica';
-    if (selectedEscuta === 'escuta-operacional') return 'operacional';
-    return 'clinica';
+    return selectedEscuta || 'padrao-relacional';
   };
+
 
 
   return (
@@ -54,11 +53,12 @@ const PrimeiraLeituraPage = () => {
               <div className="animate-bounce mt-8">
                 <button 
                   onClick={() => handleNextStep()}
-                  className="text-primary font-medium flex flex-col items-center gap-2"
+                  className="text-primary font-medium flex flex-col items-center gap-2 group"
                 >
-                  <span className="text-sm uppercase tracking-widest font-display">Continuar Travessia</span>
+                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Quero aprofundar minha escuta</span>
                   <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
                 </button>
+
               </div>
             </div>
           )}

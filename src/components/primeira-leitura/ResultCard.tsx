@@ -1,38 +1,40 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Search, BookOpen, MessageSquareText, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 interface ResultCardProps {
-  type: 'simbolica' | 'operacional' | 'clinica';
+  type: string;
 }
 
-const resultData = {
-  simbolica: {
-    title: "Escuta Simbólica",
-    subtitle: "A Geometria do Invisível",
-    description: "Ao focar no 'apagão dos sonhos', sua escuta detectou a falha no sistema de processamento de imagens da psique. Marina não perdeu a produtividade, perdeu a capacidade de simbolizar o próprio desejo.",
-    insight: "Sua leitura indica uma afinidade natural com a Casa Orácula — você percebe que o sintoma não é um erro, mas uma linguagem.",
-    icon: Search,
+const resultData: Record<string, { title: string; text: string }> = {
+  'padrao-relacional': {
+    title: "Você percebe padrões antes de eventos.",
+    text: "Sua escuta tende a notar repetições: o modo como uma história se organiza, volta e se repete em vínculos, escolhas e reações. Isso é potente, porque ajuda a enxergar a estrutura por trás do episódio. Mas também pede cuidado: nem toda repetição nasce do mesmo lugar. Às vezes há defesa, exaustão, contexto ou uma camada simbólica mais profunda. Na Casa Orácula, leitura simbólica não é reduzir uma pessoa a um padrão. É aprender a diferenciar camadas."
   },
-  operacional: {
-    title: "Escuta Operacional",
-    subtitle: "A Engrenagem da Identidade",
-    description: "Você priorizou o descompasso entre o 'sucesso' e a 'verdade'. Sua leitura percebe o custo invisível da performance: Marina está operando um software identitário que não pertence à sua natureza original.",
-    insight: "Seu olhar é estratégico e profundo. Você busca a eficiência da alma, não apenas o resultado do mundo.",
-    icon: BookOpen,
+  'crenca-central': {
+    title: "Você percebe narrativas antes de sintomas.",
+    text: "Sua escuta tende a localizar histórias internas que organizam comportamento. Você percebe quando uma pessoa vive presa a uma ideia silenciosa sobre valor, merecimento, dever ou pertencimento. Isso é potente. Mas traz um risco: interpretar tudo como crença e ignorar corpo, contexto, defesa ou história. Na Casa Orácula, a leitura simbólica aprende a diferenciar narrativa, proteção e travessia."
   },
-  clinica: {
-    title: "Escuta Clínica",
-    subtitle: "O Pulso da Presença",
-    description: "Você ouviu o 'fora do ar' — a dissociação entre corpo e biografia. Sua escuta percebe que Marina está desabitada de si mesma, mantendo uma estrutura sólida sobre um vazio de sentido sensorial.",
-    insight: "Sua escuta é compassiva e estruturante. Você sabe que antes da técnica, é preciso restabelecer a presença.",
-    icon: MessageSquareText,
+  'hipercontrole': {
+    title: "Você percebe estratégias de proteção.",
+    text: "Sua escuta nota quando alguém tenta manter tudo de pé por meio de controle, vigilância ou excesso de responsabilidade. Isso revela uma sensibilidade para defesas e formas de proteção. Mas o cuidado é não tratar toda organização como rigidez. Às vezes, o controle foi a única linguagem possível para atravessar uma história. Na Casa Orácula, aprendemos a ler a proteção antes de tentar desmontá-la."
+  },
+  'exaustao-emocional': {
+    title: "Você percebe dor antes de estrutura.",
+    text: "Sua escuta reconhece rapidamente o cansaço, a sobrecarga e o peso emocional de uma história. Isso cria acolhimento. Mas também pode gerar superidentificação: quando vemos só a dor, podemos perder a arquitetura que sustenta aquela repetição. Na Casa Orácula, acolher é apenas a primeira camada. Depois vem a diferenciação."
+  },
+  'ferida-vinculo': {
+    title: "Você percebe vínculo e necessidade de segurança.",
+    text: "Sua escuta tende a notar como a história de alguém se organiza em torno de pertencimento, medo de abandono, cobrança ou busca de reconhecimento. Isso pode abrir uma leitura muito delicada. Mas pede cuidado: vínculo não explica tudo sozinho. Às vezes há crença, defesa, contexto ou símbolo operando junto. Na Casa Orácula, a escuta amadurece quando aprende a não escolher uma única camada cedo demais."
+  },
+  'conflito-simbolico': {
+    title: "Você percebe símbolos e tensões de sentido.",
+    text: "Sua escuta procura a imagem por trás da história. Você percebe quando uma frase, um gesto ou uma repetição carrega mais do que uma explicação imediata. Isso é uma força da leitura simbólica. Mas também exige rigor: símbolo sem método vira interpretação solta. Na Casa Orácula, o símbolo não substitui a realidade. Ele organiza a travessia."
   }
 };
 
 export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
-  const data = resultData[type] || resultData.simbolica;
-  const Icon = data.icon;
+  const data = resultData[type] || resultData['padrao-relacional'];
 
   return (
     <motion.div 
@@ -40,35 +42,24 @@ export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
       animate={{ opacity: 1, scale: 1 }}
       className="w-full max-w-2xl mx-auto rounded-[40px] border border-primary/10 bg-card/40 p-8 md:p-12 text-center space-y-8 shadow-sm backdrop-blur-xl relative overflow-hidden"
     >
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-      
       <div className="space-y-6">
-        <div className="w-14 h-14 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center mx-auto mb-2">
-          <Icon className="w-7 h-7 text-primary/70" />
-        </div>
-
-        <div className="space-y-2">
+        <div className="space-y-3">
           <p className="text-[10px] uppercase tracking-[0.4em] text-primary/40 font-medium">Devolutiva</p>
-          <h2 className="text-3xl md:text-4xl font-display text-primary leading-tight">
+          <h2 className="text-2xl md:text-3xl font-display text-primary leading-tight px-4">
             {data.title}
           </h2>
-          <p className="text-sm font-medium text-primary/60 tracking-widest uppercase">{data.subtitle}</p>
         </div>
 
-        <p className="text-lg text-foreground/80 leading-relaxed font-serif italic max-w-lg mx-auto">
-          "{data.description}"
-        </p>
-
-        <div className="pt-6 border-t border-primary/5">
-          <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-md mx-auto">
-            {data.insight}
-          </p>
+        <div className="space-y-4 text-sm md:text-base text-foreground/80 leading-relaxed font-serif italic max-w-lg mx-auto">
+          {data.text.split('. ').map((sentence, i, arr) => (
+            <p key={i}>{sentence}{i < arr.length - 1 ? '.' : ''}</p>
+          ))}
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-2 pt-4">
-        <ShieldCheck className="w-4 h-4 text-primary/30" />
-        <span className="text-[9px] uppercase tracking-widest text-primary/30">Protocolo Casa Orácula 2.0</span>
+      <div className="flex items-center justify-center gap-2 pt-8 opacity-30">
+        <ShieldCheck className="w-4 h-4 text-primary" />
+        <span className="text-[9px] uppercase tracking-widest text-primary">Protocolo de Leitura Simbólica</span>
       </div>
     </motion.div>
   );
