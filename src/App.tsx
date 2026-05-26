@@ -307,7 +307,8 @@ function AppRoutes() {
       <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
       <Route path="/vitrine" element={<Vitrine />} />
       <Route path="/desbloqueie" element={<DesbloqueiePage />} />
-      <Route path="/oracula-formacao" element={<OraculaSalesPage />} />
+      <Route path="/oracula-formacao" element={<OraculaPage />} />
+
 
       {/* Onboarding & Visitor */}
       <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
