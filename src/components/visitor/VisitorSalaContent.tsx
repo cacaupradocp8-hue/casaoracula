@@ -170,7 +170,7 @@ export function VisitorSalaContent() {
                 Antes de escolher um caminho, descubra como a sua escuta lê uma história.
               </h2>
               <p className="text-foreground/70 text-sm md:text-base leading-relaxed italic max-w-[320px] mx-auto">
-                A Primeira Leitura Orácula é uma experiência gratuita para revelar o primeiro modo como você organiza sentido, cuidado e travessia diante de um caso-espelho.
+                Leitura Orácular é uma experiência, para revelar o primeiro modo como você organiza sentido, cuidado e travessia diante de um caso-espelho.
               </p>
             </div>
 
