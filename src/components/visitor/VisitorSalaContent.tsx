@@ -152,7 +152,7 @@ export function VisitorSalaContent() {
           </motion.section>
         )}
 
-      {/* SECTION 3 — Primeira Leitura (Convite Principal) */}
+      {/* SECTION 3 — Atravessar o Limiar (Convite Principal) */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -166,14 +166,14 @@ export function VisitorSalaContent() {
             </div>
             
             <div className="space-y-3">
-              <h2 className="font-display text-xl md:text-2xl text-primary">Primeira Leitura Orácula</h2>
-              <p className="text-muted-foreground text-xs md:text-sm leading-relaxed italic max-w-[240px]">
-                "A forma como você lê revela a forma como você conduz."
+              <h2 className="font-display text-xl md:text-2xl text-primary">Atravessar o Limiar</h2>
+              <p className="text-foreground/70 text-sm md:text-base leading-relaxed italic max-w-[280px]">
+                "Antes de escolher um caminho, observe como você lê uma travessia."
               </p>
             </div>
 
-            <p className="text-foreground/70 text-sm leading-relaxed max-w-[280px]">
-              Uma experiência simbólica para perceber seu modo de escuta por meio de um caso-espelho da Casa.
+            <p className="text-muted-foreground text-xs leading-relaxed max-w-[280px]">
+              Uma experiência simbólica gratuita para perceber seu modo de escuta e receber um primeiro espelho da Casa.
             </p>
 
             <Button
@@ -183,7 +183,7 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Iniciar Experiência</span>
+              <span className="relative z-10">Iniciar Primeira Leitura</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
             
@@ -191,32 +191,6 @@ export function VisitorSalaContent() {
               Demonstração de Método • Gratuito
             </p>
           </div>
-        </div>
-      </motion.section>
-
-
-      {/* SECTION 4 — Quiz da Voz (Caminho Complementar — Agora mais discreto) */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 3, duration: 1 }}
-        className="relative z-10 flex flex-col items-center text-center mt-12 space-y-4"
-      >
-        <div className="w-8 h-px bg-primary/10" />
-        
-        <div className="space-y-3">
-          <p className="text-muted-foreground/40 text-[10px] uppercase tracking-widest">
-            Outras Camadas
-          </p>
-          
-          <button
-            onClick={handleStartQuiz}
-            disabled={isTransitioning}
-            className="text-muted-foreground/60 hover:text-primary/70 transition-colors text-xs flex items-center gap-2 group"
-          >
-            Descobrir minha Voz (Quiz)
-            <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-          </button>
         </div>
       </motion.section>
 

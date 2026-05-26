@@ -18,7 +18,7 @@ export const PathSelector: React.FC = () => {
           Caminhos de Aprofundamento
         </h3>
         <p className="text-muted-foreground max-w-lg mx-auto text-sm md:text-base leading-relaxed italic font-serif">
-          "A Casa se revela por camadas. Onde sua escuta deseja habitar agora?"
+          A Casa se revela por camadas. Onde sua escuta deseja habitar agora?
         </p>
       </div>
 
