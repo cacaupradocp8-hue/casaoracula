@@ -45,7 +45,7 @@ export const PathSelector: React.FC = () => {
           <div className="space-y-2">
             <h4 className="text-lg font-display text-primary/70">Quiz da Voz</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
-              Segunda camada: se quiser reconhecer a linguagem simbólica que mais se aproxima da sua forma de escutar.
+              Segunda camada: para reconhecer a linguagem simbólica que mais se aproxima da sua forma de escutar.
             </p>
           </div>
           <Button 
