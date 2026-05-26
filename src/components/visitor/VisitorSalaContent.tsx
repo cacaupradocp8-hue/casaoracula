@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
-import { BreathingMandala } from '@/components/visitor/BreathingMandala';
+import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 
 /**
