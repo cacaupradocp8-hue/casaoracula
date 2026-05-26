@@ -16,13 +16,11 @@ interface WelcomeCopy {
 const WELCOME_COPY: Record<string, WelcomeCopy> = {
   default: {
     icon: <Home className="w-8 h-8" />,
-    greeting: 'Bem-vinda à Casa Orácula.',
+    greeting: 'A Casa Orácula é o lugar da sua escuta.',
     message: [
-      'Aqui, você não entra para consumir conteúdos.',
-      'Você entra para atravessar processos, organizar sua linguagem simbólica e transformar cuidado em método.',
-      'A Casa se revela por camadas.\nPrimeiro, a Voz.\nDepois, a Travessia.\nEntão, o Mapa.',
+      'Aqui, você organiza sentido, cuidado e travessia.',
     ],
-    closing: 'Comece pelo primeiro limiar.',
+    closing: 'Bem-vinda.',
   },
 };
 
@@ -58,22 +56,6 @@ export function WelcomeCopyByProfile({ profileTag, userName, onContinue }: Welco
           <Logo size="lg" variant="vertical" className="justify-center" />
         </motion.div>
 
-        {/* Icon */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-          className="flex justify-center"
-        >
-          <div className="relative w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
-            {copy.icon}
-            <motion.div
-              animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0, 0.2] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute inset-0 rounded-full border border-gold/20"
-            />
-          </div>
-        </motion.div>
 
         {/* Greeting with name */}
         {userName && (
