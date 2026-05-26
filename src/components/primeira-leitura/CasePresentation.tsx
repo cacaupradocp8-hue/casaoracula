@@ -30,17 +30,19 @@ export const CasePresentation: React.FC<CasePresentationProps> = ({ onNext }) =>
       </div>
 
       <div className="w-full bg-card/40 border border-primary/10 rounded-[32px] p-8 md:p-12 shadow-sm backdrop-blur-sm">
-        <div className="space-y-6 text-foreground/90 max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            <span className="font-display text-lg tracking-wide text-primary">Marina, 42 anos.</span>
+        <div className="space-y-8 text-foreground/90 max-w-2xl mx-auto">
+          <div className="space-y-4">
+            <p className="font-display text-xl tracking-wide text-primary">Marina, 42 anos.</p>
+            <p className="text-sm md:text-base opacity-80">Muito competente.</p>
+            <p className="text-sm md:text-base opacity-80">Sustenta todos à sua volta.</p>
+            <p className="text-sm md:text-base opacity-80">Relacionamentos intensos e exaustivos.</p>
+            <p className="text-sm md:text-base opacity-80">Dorme mal.</p>
+            <p className="text-sm md:text-base opacity-80">Sente culpa quando descansa.</p>
           </div>
           
-          <div className="space-y-4 text-sm md:text-base leading-relaxed opacity-90">
-            <p>Muito competente. Sustenta todos à sua volta.</p>
-            <p>Relacionamentos intensos e exaustivos. Dorme mal.</p>
-            <p>Sente culpa quando descansa.</p>
-            <p className="pt-2 font-serif italic text-base md:text-lg border-l-2 border-primary/20 pl-4">
+          <div className="pt-4 border-t border-primary/5">
+            <p className="text-muted-foreground text-xs uppercase tracking-widest mb-3">Costuma dizer:</p>
+            <p className="font-serif italic text-lg md:text-xl text-primary/90 pl-4 border-l-2 border-primary/30">
               “Se eu parar, tudo desmorona.”
             </p>
           </div>
