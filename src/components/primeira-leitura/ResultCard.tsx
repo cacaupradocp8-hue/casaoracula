@@ -8,13 +8,14 @@ interface ResultCardProps {
 
 const resultData = {
   visao: {
-    title: "O Clarão da Visão",
-    description: "Sua leitura sugere que você se move por lampejos de clareza que antecipam o tempo. Há uma pressa sagrada em sua busca, um desejo de iluminar o que ainda está oculto sob a superfície do cotidiano.",
-    advice: "A Casa Orácula convida você a encontrar o centro imóvel de sua própria percepção.",
+    title: "A Escuta Iniciática",
+    description: "Ao observar o caso-espelho, sua percepção cruzou o primeiro limiar da Casa. Você demonstra uma prontidão para a leitura que vai além da superfície, buscando o que pulsa no silêncio entre as palavras.",
+    advice: "A Casa Orácula convida você a aprofundar essa escuta através da Travessia 00.",
     icon: Eye,
-    color: "text-amber-500",
-    bgColor: "bg-amber-500/10",
-    borderColor: "border-amber-500/20"
+    color: "text-primary",
+    bgColor: "bg-primary/10",
+    borderColor: "border-primary/20"
+
   },
   raiz: {
     title: "O Silêncio da Raiz",
@@ -60,7 +61,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
       </div>
 
       <div className="space-y-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-amber-500/80">Leitura do Símbolo</span>
+        <span className="text-xs font-bold uppercase tracking-widest text-primary/80">Devolutiva do Limiar</span>
         <h2 className={`text-3xl font-serif ${data.color}`}>
           {data.title}
         </h2>
@@ -70,7 +71,7 @@ export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
         "{data.description}"
       </p>
 
-      <div className="h-px w-24 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent mx-auto" />
+      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto" />
 
       <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
         {data.advice}

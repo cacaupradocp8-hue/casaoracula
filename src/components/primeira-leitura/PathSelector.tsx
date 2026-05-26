@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Map, Lock } from 'lucide-react';
+import { Sparkles, Map, Lock, Route } from 'lucide-react';
 
 export const PathSelector: React.FC = () => {
   const navigate = useNavigate();
@@ -14,11 +14,12 @@ export const PathSelector: React.FC = () => {
       className="flex flex-col items-center space-y-12 py-12 px-4 max-w-4xl mx-auto w-full"
     >
       <div className="text-center space-y-4">
-        <h3 className="text-2xl font-serif text-amber-500">
-          A Leitura está Completa. Para onde agora?
+        <h3 className="text-2xl font-serif text-primary">
+          Sua Primeira Leitura está Completa.
         </h3>
+
         <p className="text-muted-foreground max-w-lg mx-auto">
-          Este foi apenas o primeiro passo no Limiar. A Casa Orácula possui muitos outros cômodos e profundidades para quem deseja cruzar o portal.
+          Você cruzou o limiar. Agora, o caminho se abre em camadas: da escuta guiada à formação profunda.
         </p>
       </div>
 
@@ -69,7 +70,7 @@ export const PathSelector: React.FC = () => {
       <Button 
         variant="ghost" 
         onClick={() => navigate('/sala-da-visitante')}
-        className="text-muted-foreground hover:text-amber-500"
+        className="text-muted-foreground hover:text-primary"
       >
         Voltar para a Sala da Visitante
       </Button>

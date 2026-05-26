@@ -47,10 +47,10 @@ const PrimeiraLeituraPage = () => {
               <div className="animate-bounce mt-8">
                 <button 
                   onClick={handleNextStep}
-                  className="text-amber-500 font-medium flex flex-col items-center gap-2"
+                  className="text-primary font-medium flex flex-col items-center gap-2"
                 >
                   <span className="text-sm uppercase tracking-widest">Cruzar o Limiar</span>
-                  <div className="w-px h-12 bg-gradient-to-b from-amber-500 to-transparent" />
+                  <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
                 </button>
               </div>
             </div>
