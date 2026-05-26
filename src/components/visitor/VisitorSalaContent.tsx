@@ -113,9 +113,9 @@ export function VisitorSalaContent() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4, duration: 0.8 }}
-              className="text-foreground/80 text-sm md:text-base leading-relaxed px-4"
+              className="text-foreground/80 text-sm md:text-base leading-relaxed px-4 font-serif italic"
             >
-              Um espaço para mulheres que escutam o invisível e transformam essa escuta em método.
+              "Um espaço para mulheres que escutam o invisível e transformam essa escuta em método."
             </motion.p>
 
             <motion.h1
