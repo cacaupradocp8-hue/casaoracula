@@ -186,12 +186,21 @@ export function AdminQuizTab() {
   };
 
   const handleDeleteQuiz = async (id: string) => {
-    if (!confirm("Excluir quiz e todas as perguntas?")) return;
-    const { error } = await supabase.from("quizzes").delete().eq("id", id);
+    if (!confirm("Arquivar este quiz? Ele deixará de ser visível, mas os resultados das alunas serão preservados.")) return;
+    
+    // ✅ Safety Fix: Convert physical delete to logical archive
+    const { error } = await supabase
+      .from("quizzes")
+      .update({ 
+        ativo: false,
+        archived_at: new Date().toISOString()
+      } as any)
+      .eq("id", id);
+      
     if (error) {
-      toast.error("Erro ao excluir");
+      toast.error("Erro ao arquivar");
     } else {
-      toast.success("Quiz excluído");
+      toast.success("Quiz arquivado");
       if (selectedQuiz?.id === id) setSelectedQuiz(null);
       fetchData();
     }

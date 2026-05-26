@@ -201,19 +201,23 @@ export function AdminTravessiasTab() {
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
+      // ✅ Safety Fix: Convert physical delete to logical archive
       const { error } = await supabase
         .from('travessias')
-        .delete()
+        .update({ 
+          ativa: false,
+          archived_at: new Date().toISOString(),
+        } as any)
         .eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-travessias'] });
-      toast.success('Travessia excluída!');
+      toast.success('Travessia arquivada!');
     },
     onError: (error) => {
-      console.error('Error deleting travessia:', error);
-      toast.error('Erro ao excluir travessia');
+      console.error('Error archiving travessia:', error);
+      toast.error('Erro ao arquivar travessia');
     },
   });
 

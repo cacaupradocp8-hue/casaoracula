@@ -263,15 +263,22 @@ export function AdminSalasTab() {
   };
 
   const handleDeleteFerramenta = async (id: string) => {
-    if (!confirm("Remover esta ferramenta?")) return;
+    if (!confirm("Arquivar esta ferramenta? Os dados serão preservados.")) return;
 
-    const { error } = await supabase.from("sala_ferramentas").delete().eq("id", id);
+    // ✅ Safety Fix: Convert physical delete to logical archive
+    const { error } = await supabase
+      .from("sala_ferramentas")
+      .update({ 
+        ativa: false, 
+        archived_at: new Date().toISOString() 
+      } as any)
+      .eq("id", id);
 
     if (error) {
-      toast.error("Erro ao remover ferramenta");
+      toast.error("Erro ao arquivar ferramenta");
       console.error(error);
     } else {
-      toast.success("Ferramenta removida");
+      toast.success("Ferramenta arquivada");
       fetchData();
     }
   };
