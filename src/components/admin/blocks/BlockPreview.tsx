@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { ContentBlock, ContentBlockType, BLOCK_TYPE_META } from '@/types/modular';
 import { 
   FileText, 
@@ -122,7 +123,7 @@ export function BlockPreview({ block, compact = false }: BlockPreviewProps) {
           <div 
             className="prose prose-sm dark:prose-invert max-h-24 overflow-hidden"
             dangerouslySetInnerHTML={{ 
-              __html: (content.html as string)?.slice(0, 200) + '...' || '<em>Sem conteúdo</em>' 
+              __html: DOMPurify.sanitize((content.html as string)?.slice(0, 200) + '...' || '<em>Sem conteúdo</em>')
             }}
           />
         )}

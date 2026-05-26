@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -75,7 +76,7 @@ export function QuizResultView({ primaryResult, secondaryResult }: QuizResultVie
         <div className="max-w-2xl mx-auto">
           <div 
             className="prose prose-invert prose-gold max-w-none text-foreground/90 leading-relaxed text-lg italic text-center"
-            dangerouslySetInnerHTML={{ __html: primaryResult.texto_interpretativo }}
+            dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(primaryResult.texto_interpretativo) }}
           />
         </div>
       </motion.section>
