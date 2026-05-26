@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const bootInfo = (...args: unknown[]) => { if (IS_DEV) console.info(...args as []); };
   const bootWarn = (...args: unknown[]) => { if (IS_DEV) console.warn(...args as []); };
   useEffect(() => {
-    console.info(`${AUTH_BOOT_LOG_PREFIX} AuthProvider montado`, { isAuthReady, isLoading, isAuthenticated: !!user });
+    bootInfo(`${AUTH_BOOT_LOG_PREFIX} AuthProvider montado`, { isAuthReady, isLoading, isAuthenticated: !!user });
   }, []);
 
   const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -59,7 +59,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
       try {
-        console.info(`${AUTH_BOOT_LOG_PREFIX} carregando perfil`, { userId, attempt, maxAttempts });
+        bootInfo(`${AUTH_BOOT_LOG_PREFIX} carregando perfil`, { userId, attempt, maxAttempts });
 
         const [
           { data: profile, error: profileError },
@@ -123,7 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         setAuthError(null);
-        console.info(`${AUTH_BOOT_LOG_PREFIX} perfil carregado`, {
+        bootInfo(`${AUTH_BOOT_LOG_PREFIX} perfil carregado`, {
           userId,
           portal: role?.portal || 'visitante',
           isMatriculada: !!matricula,
@@ -159,7 +159,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         setAuthError(null);
-        console.warn(`${AUTH_BOOT_LOG_PREFIX} perfil indisponível; fallback seguro ativado`, { userId });
+        bootWarn(`${AUTH_BOOT_LOG_PREFIX} perfil indisponível; fallback seguro ativado`, { userId });
         return true;
       }
     } catch (fallbackError) {
@@ -207,12 +207,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let isMounted = true;
 
-    console.info(`${AUTH_BOOT_LOG_PREFIX} inicializando fluxo de boot da autenticação`);
+    bootInfo(`${AUTH_BOOT_LOG_PREFIX} inicializando fluxo de boot da autenticação`);
 
     const syncSession = (nextSession: Session | null, isInitialSync = false) => {
       if (!isMounted) return;
 
-      console.info(`${AUTH_BOOT_LOG_PREFIX} syncSession`, {
+      bootInfo(`${AUTH_BOOT_LOG_PREFIX} syncSession`, {
         isInitialSync,
         hasSession: !!nextSession,
         userId: nextSession?.user?.id ?? null,
@@ -245,7 +245,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, nextSession) => {
-      console.info(`${AUTH_BOOT_LOG_PREFIX} evento auth recebido`, {
+      bootInfo(`${AUTH_BOOT_LOG_PREFIX} evento auth recebido`, {
         event,
         hasSession: !!nextSession,
         userId: nextSession?.user?.id ?? null,
@@ -261,7 +261,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       'Tempo limite ao restaurar sua sessão.'
     )
       .then(({ data: { session: initialSession } }) => {
-        console.info(`${AUTH_BOOT_LOG_PREFIX} leitura do usuário autenticado`, {
+        bootInfo(`${AUTH_BOOT_LOG_PREFIX} leitura do usuário autenticado`, {
           hasSession: !!initialSession,
           userId: initialSession?.user?.id ?? null,
         });
