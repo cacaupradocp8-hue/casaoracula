@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Eye, Flame, Moon } from 'lucide-react';
 import { ArchetypeType } from '@/hooks/useOnboarding';
-
+import { FlowerOfLife } from '@/components/sacred-geometry/FlowerOfLife';
 import { AmbientPlayer } from '@/components/onboarding/AmbientPlayer';
 import { useOnboardingAudio } from '@/hooks/useOnboardingAudio';
 
@@ -52,10 +52,13 @@ export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
       {/* Deep gradient background */}
       <div className="absolute inset-0 bg-gradient-to-b from-midnight via-background to-midnight-light" />
       
-      {/* Ambient background decoration */}
+      {/* Flower of Life sacred geometry background */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <div 
-          className="w-[600px] h-[600px] bg-gold/5 rounded-full blur-[120px]"
+        <FlowerOfLife 
+          size={Math.min(800, typeof window !== 'undefined' ? window.innerWidth * 0.9 : 800)} 
+          opacity={0.06} 
+          animated={true}
+          className="text-gold"
         />
       </div>
       
@@ -74,7 +77,6 @@ export function CallScreen({ onSelectArchetype, isLoading }: CallScreenProps) {
         transition={{ duration: 1.2, ease: 'easeOut' }}
         className="relative z-10 max-w-3xl w-full text-center space-y-12"
       >
-        {/* Title */}
         <div className="space-y-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
