@@ -1,60 +1,86 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
+import { BookOpen, Search, MessageSquareText } from 'lucide-react';
 
 interface CasePresentationProps {
-  onNext: () => void;
+  onNext: (escutaId: string) => void;
 }
 
 export const CasePresentation: React.FC<CasePresentationProps> = ({ onNext }) => {
   return (
     <motion.div 
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 1.05 }}
-      className="flex flex-col items-center text-center space-y-8 py-12 px-4 max-w-3xl mx-auto"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="flex flex-col items-center space-y-12 py-12 px-6 max-w-4xl mx-auto w-full"
     >
-      <div className="relative group">
-        <div className="absolute -inset-1 bg-gradient-to-r from-primary/30 to-primary/10 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
-        <div className="relative bg-card border border-border/50 rounded-2xl p-1 overflow-hidden shadow-2xl">
-          <img 
-            src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=800&auto=format&fit=crop" 
-            alt="Caso-espelho: O Silêncio da Presença" 
-            className="w-full h-64 md:h-80 object-cover rounded-xl"
-          />
+      <div className="text-center space-y-4">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-primary/50 font-medium">Caso-Espelho • 01</span>
+        <h2 className="text-3xl md:text-4xl font-display text-primary">O Caso Marina</h2>
+      </div>
+
+      <div className="w-full bg-card/30 border border-primary/10 rounded-[32px] p-8 md:p-12 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-6 text-primary/5">
+          <BookOpen size={120} />
+        </div>
+        
+        <div className="relative z-10 space-y-6 text-foreground/90 font-serif text-lg md:text-xl leading-relaxed italic max-w-2xl">
+          <p>
+            "Marina construiu uma carreira sólida, mas sente que algo nela está 'fora do ar'. Ela tem sucesso externo, mas descreve uma sensação constante de que está vivendo a vida de outra pessoa."
+          </p>
+          <p>
+            "Ao falar sobre isso, ela menciona que parou de sonhar. Literalmente. Suas noites são um apagão cinzento, enquanto seus dias são uma sucessão impecável de planilhas e resultados."
+          </p>
+        </div>
+      </div>
+
+      <div className="w-full max-w-2xl space-y-8">
+        <div className="text-center space-y-2">
+          <h3 className="text-lg font-display text-primary/80">Onde você ancora sua escuta?</h3>
+          <p className="text-sm text-muted-foreground">Escolha a porta de entrada para esta leitura:</p>
         </div>
 
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button 
+            onClick={() => onNext('escuta-simbolica')}
+            className="flex flex-col items-center p-6 rounded-2xl border border-primary/10 bg-card/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 text-center space-y-4 group"
+          >
+            <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Search className="w-6 h-6 text-primary/60" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-display text-sm text-primary">Simbólica</p>
+              <p className="text-[10px] text-muted-foreground leading-tight">O apagão dos sonhos e o excesso de cinza.</p>
+            </div>
+          </button>
 
-      <div className="space-y-4">
-        <h2 className="text-2xl md:text-3xl font-serif text-primary">
-          O Caso-Espelho: O Olhar que Escuta
-        </h2>
-        <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-          Observe a imagem acima. Uma mulher em silêncio, onde o olhar parece atravessar o que é visível. Se você fosse realizar uma leitura deste campo agora, qual seria sua primeira escolha de escuta?
-        </p>
+          <button 
+            onClick={() => onNext('escuta-operacional')}
+            className="flex flex-col items-center p-6 rounded-2xl border border-primary/10 bg-card/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 text-center space-y-4 group"
+          >
+            <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <BookOpen className="w-6 h-6 text-primary/60" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-display text-sm text-primary">Operacional</p>
+              <p className="text-[10px] text-muted-foreground leading-tight">O sucesso externo versus a vida de 'outra pessoa'.</p>
+            </div>
+          </button>
 
-      </div>
-
-      <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-        <Button 
-          onClick={onNext}
-          variant="outline"
-          className="flex-1 py-8 border-primary/20 hover:bg-primary/5 group"
-
-        >
-          <Eye className="mr-2 h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-          Escutar o Olhar
-
-        </Button>
-        <Button 
-          onClick={onNext}
-          variant="outline"
-          className="flex-1 py-8 border-primary/20 hover:bg-primary/5 group"
-        >
-          Escutar o Silêncio
-        </Button>
+          <button 
+            onClick={() => onNext('escuta-clinica')}
+            className="flex flex-col items-center p-6 rounded-2xl border border-primary/10 bg-card/50 hover:bg-primary/5 hover:border-primary/30 transition-all duration-300 text-center space-y-4 group"
+          >
+            <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <MessageSquareText className="w-6 h-6 text-primary/60" />
+            </div>
+            <div className="space-y-1">
+              <p className="font-display text-sm text-primary">Clínica</p>
+              <p className="text-[10px] text-muted-foreground leading-tight">A sensação de estar 'fora do ar' e a perda de viço.</p>
+            </div>
+          </button>
+        </div>
       </div>
     </motion.div>
   );

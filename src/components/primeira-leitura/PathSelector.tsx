@@ -2,101 +2,96 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, Map, Lock, Route } from 'lucide-react';
+import { Sparkles, ArrowRight, BookOpen, Compass } from 'lucide-react';
 
 export const PathSelector: React.FC = () => {
   const navigate = useNavigate();
 
   return (
     <motion.div 
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center space-y-12 py-12 px-4 max-w-4xl mx-auto w-full"
+      className="flex flex-col items-center space-y-12 py-12 px-6 max-w-4xl mx-auto w-full"
     >
       <div className="text-center space-y-4">
-        <h3 className="text-2xl font-serif text-primary">
-          Sua Primeira Leitura está Completa.
+        <h3 className="text-2xl md:text-3xl font-display text-primary">
+          O Limiar foi Cruzado.
         </h3>
-
-        <p className="text-muted-foreground max-w-lg mx-auto">
-          Você cruzou o limiar. Agora, o caminho se abre em camadas: da escuta guiada à formação profunda.
+        <p className="text-muted-foreground max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+          Sua Primeira Leitura revelou uma prontidão. A Casa Orácula não é apenas um destino, é um laboratório de inteligência simbólica.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
-        {/* Opção 1: Travessia 00 (Aprofundamento Gratuito/Visitante) */}
-        <div className="bg-card/40 border border-border/50 rounded-3xl p-8 flex flex-col items-center text-center space-y-6 hover:bg-card/60 transition-colors shadow-lg">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Route className="w-8 h-8 text-primary" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
+        {/* Opção 1: Travessia 00 */}
+        <div className="bg-card/40 border border-primary/5 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 hover:bg-card/60 transition-all duration-500 shadow-sm group">
+          <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10 group-hover:scale-110 transition-transform">
+            <Compass className="w-7 h-7 text-primary/60" />
           </div>
           <div className="space-y-2">
-            <h4 className="text-xl font-semibold">Travessia 00</h4>
-            <p className="text-sm text-muted-foreground">
-              O Limiar da Casa: 7 dias de escuta guiada para habitar o método.
+            <h4 className="text-lg font-display text-primary">Travessia 00</h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              O início do método. 7 dias de escuta guiada para habitar a Casa.
             </p>
           </div>
           <Button 
             onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
-            variant="outline"
-            className="w-full py-6 rounded-xl border-primary/20 hover:border-primary/50"
+            variant="gold"
+            className="w-full py-6 rounded-2xl shadow-lg shadow-primary/5"
           >
             Iniciar Travessia 00
           </Button>
         </div>
 
-        {/* Opção 2: Quiz da Voz (Segunda Camada) */}
-        <div className="bg-card/40 border border-border/50 rounded-3xl p-8 flex flex-col items-center text-center space-y-6 hover:bg-card/60 transition-colors shadow-lg">
-          <div className="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <Sparkles className="w-8 h-8 text-primary" />
+        {/* Opção 2: Quiz da Voz */}
+        <div className="bg-card/20 border border-white/5 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 hover:bg-card/40 transition-all duration-500 shadow-sm group">
+          <div className="w-14 h-14 rounded-2xl bg-primary/5 flex items-center justify-center border border-primary/10 group-hover:scale-110 transition-transform">
+            <Sparkles className="w-7 h-7 text-primary/40" />
           </div>
           <div className="space-y-2">
-            <h4 className="text-xl font-semibold">Quiz da Voz</h4>
-            <p className="text-sm text-muted-foreground">
-              Descubra seu eixo simbólico e sua voz de condução oracular.
+            <h4 className="text-lg font-display text-primary/70">Quiz da Voz</h4>
+            <p className="text-xs text-muted-foreground/60 leading-relaxed">
+              Identifique seu eixo simbólico e sua voz de condução.
             </p>
           </div>
           <Button 
             onClick={() => navigate('/quiz/descubra-seu-eixo')}
             variant="outline"
-            className="w-full py-6 rounded-xl border-primary/20 hover:border-primary/50"
+            className="w-full py-6 rounded-2xl border-primary/10 hover:bg-primary/5"
           >
-            Descobrir minha Voz
+            Segunda Camada
           </Button>
         </div>
       </div>
 
-      {/* Opção 3: Clube Oracula (Conversão) */}
-      <div className="relative w-full max-w-2xl overflow-hidden bg-gradient-to-br from-primary/90 to-primary/70 rounded-3xl p-8 flex flex-col md:flex-row items-center text-center md:text-left gap-8 shadow-2xl">
-        <div className="absolute top-0 right-0 p-4">
-          <Sparkles className="w-6 h-6 text-white/20 animate-pulse" />
+      <div className="w-full max-w-2xl bg-gradient-to-br from-primary/10 to-transparent border border-primary/10 rounded-[32px] p-8 flex flex-col md:flex-row items-center gap-8 shadow-sm">
+        <div className="w-16 h-16 shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+          <BookOpen className="w-8 h-8 text-primary" />
         </div>
-        <div className="w-20 h-20 shrink-0 rounded-2xl bg-white/10 flex items-center justify-center">
-          <Lock className="w-10 h-10 text-white" />
-        </div>
-        <div className="flex-1 space-y-4">
+        <div className="flex-1 space-y-4 text-center md:text-left">
           <div className="space-y-1">
-            <h4 className="text-2xl font-semibold text-white">Clube & Escola Orácula</h4>
-            <p className="text-sm text-white/80">
-              Acesso completo à Cartografia da Cidadela, travessias avançadas e formação profissional.
+            <h4 className="text-xl font-display text-primary">Clube & Escola</h4>
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Formação avançada para quem deseja transformar a escuta em profissão e método.
             </p>
           </div>
           <Button 
             onClick={() => navigate('/clube')}
-            className="w-full md:w-auto px-8 py-6 rounded-xl bg-white text-primary hover:bg-white/90 font-bold shadow-xl"
+            variant="ghost"
+            className="w-full md:w-auto text-primary hover:bg-primary/5 gap-2 group"
           >
-            Conhecer o Clube
+            Conhecer o Aprofundamento
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </Button>
         </div>
       </div>
-
       
-      <Button 
-        variant="ghost" 
+      <button 
         onClick={() => navigate('/sala-da-visitante')}
-        className="text-muted-foreground hover:text-primary"
+        className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary/60 transition-colors"
       >
-        Voltar para a Sala da Visitante
-      </Button>
+        Voltar à Sala da Visitante
+      </button>
     </motion.div>
   );
 };

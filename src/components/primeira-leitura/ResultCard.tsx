@@ -1,81 +1,75 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Eye, Cloud, Mountain, Moon } from 'lucide-react';
+import { Search, BookOpen, MessageSquareText, ShieldCheck } from 'lucide-react';
 
 interface ResultCardProps {
-  type: 'visao' | 'raiz' | 'teia' | 'sombras';
+  type: 'simbolica' | 'operacional' | 'clinica';
 }
 
 const resultData = {
-  visao: {
-    title: "A Escuta Iniciática",
-    description: "Ao observar o caso-espelho, sua percepção cruzou o primeiro limiar da Casa. Você demonstra uma prontidão para a leitura que vai além da superfície, buscando o que pulsa no silêncio entre as palavras.",
-    advice: "A Casa Orácula convida você a aprofundar essa escuta através da Travessia 00.",
-    icon: Eye,
-    color: "text-primary",
-    bgColor: "bg-primary/10",
-    borderColor: "border-primary/20"
-
+  simbolica: {
+    title: "Escuta Simbólica",
+    subtitle: "A Geometria do Invisível",
+    description: "Ao focar no 'apagão dos sonhos', sua escuta detectou a falha no sistema de processamento de imagens da psique. Marina não perdeu a produtividade, perdeu a capacidade de simbolizar o próprio desejo.",
+    insight: "Sua leitura indica uma afinidade natural com a Casa Orácula — você percebe que o sintoma não é um erro, mas uma linguagem.",
+    icon: Search,
   },
-  raiz: {
-    title: "O Silêncio da Raiz",
-    description: "Sua leitura revela uma alma que busca a solidez do que permanece. Você é quem sustenta, quem observa o tempo longo e valoriza a construção que exige paciência e presença na terra.",
-    advice: "A Casa Orácula sugere que você olhe para o que cresce no escuro, além do que é visível.",
-    icon: Mountain,
-    color: "text-emerald-500",
-    bgColor: "bg-emerald-500/10",
-    borderColor: "border-emerald-500/20"
+  operacional: {
+    title: "Escuta Operacional",
+    subtitle: "A Engrenagem da Identidade",
+    description: "Você priorizou o descompasso entre o 'sucesso' e a 'verdade'. Sua leitura percebe o custo invisível da performance: Marina está operando um software identitário que não pertence à sua natureza original.",
+    insight: "Seu olhar é estratégico e profundo. Você busca a eficiência da alma, não apenas o resultado do mundo.",
+    icon: BookOpen,
   },
-  teia: {
-    title: "O Olhar da Teia",
-    description: "Sua leitura indica uma mente que habita os espaços entre as coisas, percebendo os fios invisíveis que conectam os destinos. Sua curiosidade é sua bússola, e a liberdade é o ar que você respira.",
-    advice: "A Casa Orácula propõe que você ancore sua percepção em uma prática de escuta dedicada.",
-    icon: Cloud,
-    color: "text-cyan-500",
-    bgColor: "bg-cyan-500/10",
-    borderColor: "border-cyan-500/20"
-  },
-  sombras: {
-    title: "A Escuta das Sombras",
-    description: "Sua leitura aponta para uma sensibilidade que capta as correntes sutis e os ecos do passado. Você sente os contornos do mistério antes que ele se revele por inteiro.",
-    advice: "A Casa Orácula oferece um cais seguro para que você possa mergulhar em sua própria profundidade.",
-    icon: Moon,
-    color: "text-indigo-500",
-    bgColor: "bg-indigo-500/10",
-    borderColor: "border-indigo-500/20"
+  clinica: {
+    title: "Escuta Clínica",
+    subtitle: "O Pulso da Presença",
+    description: "Você ouviu o 'fora do ar' — a dissociação entre corpo e biografia. Sua escuta percebe que Marina está desabitada de si mesma, mantendo uma estrutura sólida sobre um vazio de sentido sensorial.",
+    insight: "Sua escuta é compassiva e estruturante. Você sabe que antes da técnica, é preciso restabelecer a presença.",
+    icon: MessageSquareText,
   }
 };
 
 export const ResultCard: React.FC<ResultCardProps> = ({ type }) => {
-  const data = resultData[type];
+  const data = resultData[type] || resultData.simbolica;
   const Icon = data.icon;
 
   return (
     <motion.div 
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.98 }}
       animate={{ opacity: 1, scale: 1 }}
-      className={`w-full max-w-xl mx-auto rounded-3xl border ${data.borderColor} ${data.bgColor} p-8 text-center space-y-6 shadow-2xl backdrop-blur-md`}
+      className="w-full max-w-2xl mx-auto rounded-[40px] border border-primary/10 bg-card/40 p-8 md:p-12 text-center space-y-8 shadow-sm backdrop-blur-xl relative overflow-hidden"
     >
-      <div className={`w-20 h-20 rounded-full ${data.bgColor} flex items-center justify-center mx-auto border ${data.borderColor}`}>
-        <Icon className={`w-10 h-10 ${data.color}`} />
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+      
+      <div className="space-y-6">
+        <div className="w-14 h-14 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-center mx-auto mb-2">
+          <Icon className="w-7 h-7 text-primary/70" />
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-[10px] uppercase tracking-[0.4em] text-primary/40 font-medium">Devolutiva</p>
+          <h2 className="text-3xl md:text-4xl font-display text-primary leading-tight">
+            {data.title}
+          </h2>
+          <p className="text-sm font-medium text-primary/60 tracking-widest uppercase">{data.subtitle}</p>
+        </div>
+
+        <p className="text-lg text-foreground/80 leading-relaxed font-serif italic max-w-lg mx-auto">
+          "{data.description}"
+        </p>
+
+        <div className="pt-6 border-t border-primary/5">
+          <p className="text-sm text-muted-foreground/80 leading-relaxed max-w-md mx-auto">
+            {data.insight}
+          </p>
+        </div>
       </div>
 
-      <div className="space-y-2">
-        <span className="text-xs font-bold uppercase tracking-widest text-primary/80">Devolutiva do Limiar</span>
-        <h2 className={`text-3xl font-serif ${data.color}`}>
-          {data.title}
-        </h2>
+      <div className="flex items-center justify-center gap-2 pt-4">
+        <ShieldCheck className="w-4 h-4 text-primary/30" />
+        <span className="text-[9px] uppercase tracking-widest text-primary/30">Protocolo Casa Orácula 2.0</span>
       </div>
-
-      <p className="text-lg text-foreground/90 leading-relaxed italic">
-        "{data.description}"
-      </p>
-
-      <div className="h-px w-24 bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto" />
-
-      <p className="text-sm text-muted-foreground font-medium uppercase tracking-wider">
-        {data.advice}
-      </p>
     </motion.div>
   );
 };
