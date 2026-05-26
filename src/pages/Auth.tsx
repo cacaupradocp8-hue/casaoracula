@@ -294,7 +294,7 @@ export default function Auth() {
                     }
                   }}
                 >
-                  <motion.div variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="space-y-2.5">
+                  <motion.div variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="space-y-3">
                     <Label htmlFor="login-email" className="text-foreground/70 text-xs font-medium uppercase tracking-wider ml-1">Email</Label>
                     <input
                       id="login-email"
@@ -306,7 +306,8 @@ export default function Auth() {
                       className="flex h-12 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-gold/30 transition-all"
                     />
                   </motion.div>
-                  <motion.div variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="space-y-2.5">
+                  <motion.div variants={{ hidden: { y: 10, opacity: 0 }, visible: { y: 0, opacity: 1 } }} className="space-y-3">
+
                     <div className="flex justify-between items-center ml-1">
                       <Label htmlFor="login-password" className="text-foreground/70 text-xs font-medium uppercase tracking-wider">Senha</Label>
                     </div>
