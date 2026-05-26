@@ -118,7 +118,7 @@ export function VisitorSalaContent() {
               transition={{ delay: 1.8, duration: 0.8 }}
               className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide leading-tight"
             >
-              Antes de escolher um caminho, descubra como a sua escuta lê uma história.
+              Atravessar o Limiar
             </motion.h1>
 
 
@@ -160,9 +160,9 @@ export function VisitorSalaContent() {
             </div>
             
             <div className="space-y-4">
-              <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Atravessar o Limiar</p>
+              <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Primeira Leitura</p>
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
-                "Antes de escolher um caminho, descubra como a sua escuta lê uma história."
+                Revele o seu primeiro modo de escuta.
               </h2>
               <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
                 A Primeira Leitura Orácula é uma experiência, para revelar o primeiro modo como você organiza sentido, cuidado e travessia diante de um caso-espelho.
