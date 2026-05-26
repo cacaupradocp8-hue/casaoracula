@@ -20,7 +20,7 @@ export const LimiarIntro: React.FC<LimiarIntroProps> = ({ onNext }) => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
       >
-        <Logo variant="vertical" size="sm" className="opacity-20 grayscale" />
+        <Logo variant="vertical" size="sm" className="opacity-80" />
       </motion.div>
       
       <div className="space-y-8">
