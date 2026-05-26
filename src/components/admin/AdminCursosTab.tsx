@@ -32,6 +32,7 @@ import {
   listAdminCourseLessons 
 } from '@/lib/dal/admin/adminCoursesRead';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Course, CourseModule, CourseLesson, CourseEnrollment, PricingModel, ContentType } from '@/types/course';
 import { ImageUpload } from './ImageUpload';
 import { PedagogicalModuleEditor } from './PedagogicalModuleEditor';
