@@ -43,7 +43,7 @@ export const PathSelector: React.FC = () => {
         {/* Caminho 2: Quiz da Voz */}
         <div className="bg-card/30 border border-primary/5 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 shadow-sm">
           <div className="space-y-2">
-            <h4 className="text-lg font-display text-primary/70">Quiz da Voz</h4>
+            <h4 className="text-lg font-display text-primary">Quiz da Voz</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Segunda camada: para reconhecer a linguagem simbólica que mais se aproxima da sua forma de escutar.
             </p>
@@ -60,7 +60,7 @@ export const PathSelector: React.FC = () => {
         {/* Caminho 3: Clube / Escola */}
         <div className="bg-card/30 border border-primary/5 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 shadow-sm">
           <div className="space-y-2">
-            <h4 className="text-lg font-display text-primary/70">Clube & Escola</h4>
+            <h4 className="text-lg font-display text-primary">Clube & Escola</h4>
             <p className="text-xs text-muted-foreground leading-relaxed">
               Para continuar treinando leitura, método e travessia em um espaço de aprofundamento.
             </p>
