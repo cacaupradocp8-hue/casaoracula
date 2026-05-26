@@ -43,6 +43,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const AUTH_BOOT_LOG_PREFIX = '[boot-debug][auth-context]';
+  // Gate verbose auth boot logs to development only to avoid leaking
+  // user IDs, portal levels, and session metadata in production console.
+  const IS_DEV = import.meta.env.DEV;
+  const bootInfo = (...args: unknown[]) => { if (IS_DEV) console.info(...args as []); };
+  const bootWarn = (...args: unknown[]) => { if (IS_DEV) console.warn(...args as []); };
   useEffect(() => {
     console.info(`${AUTH_BOOT_LOG_PREFIX} AuthProvider montado`, { isAuthReady, isLoading, isAuthenticated: !!user });
   }, []);
