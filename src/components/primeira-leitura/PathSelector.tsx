@@ -49,7 +49,7 @@ export const PathSelector: React.FC = () => {
             </p>
           </div>
           <Button 
-            onClick={() => navigate('/quiz/voz-da-soul')}
+            onClick={() => navigate('/quiz/voz-da-alma')}
             variant="outline"
             className="w-full py-6 rounded-2xl border-primary/10 hover:bg-primary/5"
           >
