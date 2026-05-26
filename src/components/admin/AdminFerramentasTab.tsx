@@ -259,14 +259,21 @@ function CatalogoFerramentasSection() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta ferramenta?')) return;
+    if (!confirm('Tem certeza que deseja arquivar esta ferramenta? Os dados serão preservados.')) return;
     
-    const { error } = await supabase.from('sala_ferramentas').delete().eq('id', id);
+    // ✅ Safety Fix: Convert physical delete to logical archive
+    const { error } = await supabase
+      .from('sala_ferramentas')
+      .update({ 
+        ativa: false,
+        archived_at: new Date().toISOString()
+      } as any)
+      .eq('id', id);
     
     if (error) {
-      toast({ title: 'Erro ao excluir', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erro ao arquivar', description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: 'Ferramenta excluída' });
+      toast({ title: 'Ferramenta arquivada' });
       fetchData();
     }
   };

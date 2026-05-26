@@ -162,8 +162,18 @@ export function AdminAgentesTab() {
   };
 
   const remove = async (id: string) => {
-    await supabase.from('agentes').delete().eq('id', id);
-    toast({ title: 'Excluído!' });
+    // ✅ Safety Fix: Disable instead of physical delete (agents don't have archived_at yet)
+    const { error } = await supabase
+      .from('agentes')
+      .update({ status: 'inativo' })
+      .eq('id', id);
+    
+    if (error) {
+      toast({ title: 'Erro ao desativar', description: error.message, variant: 'destructive' });
+      return;
+    }
+    
+    toast({ title: 'Desativado!' });
     fetchAgentes();
   };
 
