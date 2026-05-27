@@ -35,6 +35,7 @@ export function renderLegacyRedirects() {
       {/* ─── NÚCLEO: DASHBOARD E ONBOARDING ─── */}
       <Route path="/dashboard" element={<Navigate to="/dashboard-membro" replace />} />
       <Route path="/tour" element={<Navigate to="/sala-da-visitante" replace />} />
+      <Route path="/onboarding" element={<Navigate to="/dashboard-membro" replace />} />
       <Route path="/comece-aqui" element={<Navigate to="/sala-da-visitante" replace />} />
 
       {/* ─── REDIRECIONAMENTOS SAAS E APP ANTIGOS ─── */}
