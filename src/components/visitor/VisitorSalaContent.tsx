@@ -165,6 +165,9 @@ export function VisitorSalaContent() {
                 Comece pela Primeira Leitura
               </h2>
               <div className="space-y-3">
+                <p className="text-foreground/60 text-xs uppercase tracking-widest font-medium">
+                  Depois de conhecer a Casa, atravesse a primeira experiência prática.
+                </p>
                 <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
                   Você vai ler um caso-espelho, escolher o que sua escuta percebe primeiro e receber uma devolutiva breve sobre esse olhar.
                 </p>
