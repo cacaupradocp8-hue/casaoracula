@@ -88,6 +88,7 @@ export function AdminClubeEditorialTab() {
       const { data, error } = await supabase
         .from('clube_estacoes')
         .select('*')
+        .neq('status', 'archived')
         .order('numero', { ascending: false });
       if (error) throw error;
       return data;
@@ -103,6 +104,7 @@ export function AdminClubeEditorialTab() {
           *,
           estacao:clube_estacoes(titulo)
         `)
+        .neq('status', 'archived')
         .order('estacao_id')
         .order('ordem');
       if (error) throw error;
@@ -205,13 +207,22 @@ export function AdminClubeEditorialTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('clube_estacoes')
-        .delete()
+        .update({ status: 'archived', ativa: false, publicada: false })
         .eq('id', id);
       if (error) throw error;
+      
+      await createAuditLog({
+        tabela: 'clube_estacoes',
+        registro_id: id,
+        acao: 'UPDATE',
+        campo_alterado: 'status',
+        valor_anterior: 'active',
+        valor_novo: 'archived'
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
-      toast.success('Estação removida');
+      toast.success('Estação arquivada (exclusão física desabilitada)');
     }
   });
 
@@ -294,13 +305,22 @@ export function AdminClubeEditorialTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('clube_rota_itens')
-        .delete()
+        .update({ status: 'archived', publicado: false })
         .eq('id', id);
       if (error) throw error;
+
+      await createAuditLog({
+        tabela: 'clube_rota_itens',
+        registro_id: id,
+        acao: 'UPDATE',
+        campo_alterado: 'status',
+        valor_anterior: 'active',
+        valor_novo: 'archived'
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
-      toast.success('Item removido');
+      toast.success('Item arquivado para segurança');
     }
   });
 
@@ -472,11 +492,11 @@ export function AdminClubeEditorialTab() {
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => {
-                      if (window.confirm(`Excluir a estação "${e.titulo}"? Esta ação não pode ser desfeita.`)) {
+                      if (window.confirm(`Arquivar a estação "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
                         deleteEstacao.mutate(e.id);
                       }
                     }}>
-                      <Trash2 className="w-4 h-4 text-white/20 hover:text-destructive transition-colors" />
+                      <Trash2 className="w-4 h-4 text-white/20 hover:text-amber-500 transition-colors" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -562,12 +582,12 @@ export function AdminClubeEditorialTab() {
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
                           <Layout className="w-4 h-4" /> Ver no Clube
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => {
-                          if (window.confirm(`Excluir o item "${item.titulo}"?`)) {
+                        <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
+                          if (window.confirm(`Arquivar o item "${item.titulo}" por segurança?`)) {
                             deleteItem.mutate(item.id);
                           }
                         }}>
-                          <Trash2 className="w-4 h-4" /> Excluir Item
+                          <Trash2 className="w-4 h-4" /> Arquivar Item
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
