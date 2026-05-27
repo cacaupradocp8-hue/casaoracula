@@ -290,21 +290,6 @@ export function AdminClubeEditorialTab() {
     }
   });
 
-  const handleCreateItem = () => {
-    const lastOrder = itensRota?.length ? Math.max(...itensRota.map(i => i.ordem)) : 0;
-    const activeEstacao = estacoes?.find(e => e.ativa);
-    
-    setEditingItem({
-      titulo: 'Novo Passo',
-      slug: 'novo-passo',
-      ordem: lastOrder + 10,
-      estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
-      tipo: 'portal',
-      publicado: false,
-      status: 'draft',
-      metadata: { audios: [], perguntas_sugeridas: [] }
-  });
-
   const deleteItem = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
@@ -318,6 +303,21 @@ export function AdminClubeEditorialTab() {
       toast.success('Item removido');
     }
   });
+
+  const handleCreateItem = () => {
+    const lastOrder = itensRota?.length ? Math.max(...itensRota.map(i => i.ordem)) : 0;
+    const activeEstacao = estacoes?.find(e => e.ativa);
+    
+    setEditingItem({
+      titulo: 'Novo Passo',
+      slug: 'novo-passo',
+      ordem: lastOrder + 10,
+      estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
+      tipo: 'portal',
+      publicado: false,
+      status: 'draft',
+      metadata: { audios: [], perguntas_sugeridas: [] }
+    });
     setPrevItem({});
     setIsItemDialogOpen(true);
   };
