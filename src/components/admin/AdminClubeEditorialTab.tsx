@@ -574,7 +574,7 @@ export function AdminClubeEditorialTab() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Editar Item
+                          <Edit3 className="w-4 h-4" /> Desvelar Portal
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
                           <Eye className="w-4 h-4" /> Pré-visualizar
