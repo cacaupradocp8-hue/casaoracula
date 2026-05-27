@@ -329,14 +329,24 @@ export function AdminClubeEditorialTab() {
     const activeEstacao = estacoes?.find(e => e.ativa);
     
     setEditingItem({
-      titulo: 'Novo Portal',
-      slug: 'novo-passo',
+      titulo: 'Nova Estação',
+      slug: 'nova-estacao',
       ordem: lastOrder + 10,
       estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
       tipo: 'portal',
       publicado: false,
       status: 'draft',
-      metadata: { audios: [], perguntas_sugeridas: [] }
+      metadata: { 
+        audios: [], 
+        abertura_imersiva: '',
+        caso_espelho: { titulo: '', relato: '', contexto_simbolico: '' },
+        desafio_terapeuta: { pergunta_principal: '', opcoes_leitura: '' },
+        revelacao_estacao: { leitura_modelo: '', hipotese_simbolica: '', conducao_justa: '', risco_etico: '' },
+        erro_comum: '',
+        missao_campo: '',
+        pergunta_narrativa: '',
+        oraculo_estacao: { palavra: '', movimento: '', frase_fechamento: '' }
+      }
     });
     setPrevItem({});
     setIsItemDialogOpen(true);
@@ -381,7 +391,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Layout className="w-4 h-4 text-gold" /> Jornadas Ativas
+              <Layout className="w-4 h-4 text-gold" /> Rotas Ativas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -391,7 +401,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-gold" /> Portais de Luz
+              <MapIcon className="w-4 h-4 text-gold" /> Estações Criadas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -415,7 +425,7 @@ export function AdminClubeEditorialTab() {
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Procurar por travessia ou obra..." 
+            placeholder="Procurar por rota ou obra..." 
             className="pl-10 bg-midnight/40 border-white/10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -428,7 +438,7 @@ export function AdminClubeEditorialTab() {
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
             const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
             setEditingEstacao({
-              titulo: 'Nova Estação',
+              titulo: 'Nova Rota',
               subtitulo: '',
               numero: lastNum + 1,
               publicada: false,
@@ -438,7 +448,7 @@ export function AdminClubeEditorialTab() {
             setPrevEstacao({});
             setIsEstacaoDialogOpen(true);
           }}>
-            <Plus className="w-4 h-4" /> Nova Estação
+            <Plus className="w-4 h-4" /> Nova Rota
           </Button>
         </div>
       </div>
@@ -446,7 +456,7 @@ export function AdminClubeEditorialTab() {
       {/* Estações Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Estações da Travessia</h2>
+          <h2 className="font-display text-xl text-white/90">Rotas do Clube</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
         </div>
         
@@ -492,7 +502,7 @@ export function AdminClubeEditorialTab() {
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => {
-                      if (window.confirm(`Arquivar a estação "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
+                      if (window.confirm(`Arquivar a rota "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
                         deleteEstacao.mutate(e.id);
                       }
                     }}>
@@ -509,7 +519,7 @@ export function AdminClubeEditorialTab() {
       {/* Itens de Rota Section */}
       <div className="space-y-4 pt-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Estações e Portais</h2>
+          <h2 className="font-display text-xl text-white/90">Estações da Travessia</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
           <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
             <Plus className="w-3 h-3" /> Nova Estação
@@ -521,8 +531,8 @@ export function AdminClubeEditorialTab() {
             <TableHeader className="bg-white/[0.02]">
               <TableRow>
                 <TableHead>Ritmo</TableHead>
-                <TableHead>Portal</TableHead>
-                <TableHead>Jornada</TableHead>
+                <TableHead>Estação</TableHead>
+                <TableHead>Rota do Clube</TableHead>
                 <TableHead>Essência</TableHead>
                 <TableHead>Arquétipos</TableHead>
                 <TableHead>Status</TableHead>
@@ -541,7 +551,7 @@ export function AdminClubeEditorialTab() {
                       <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.slug}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs">{item.estacao?.titulo || 'Sem Estação'}</TableCell>
+                  <TableCell className="text-xs">{item.estacao?.titulo || 'Sem Rota'}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="text-[10px] uppercase font-bold border-white/10">
                       {item.tipo}
@@ -574,16 +584,16 @@ export function AdminClubeEditorialTab() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Publicar Estação
+                          <Edit3 className="w-4 h-4" /> Editar Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
                           <Eye className="w-4 h-4" /> Pré-visualizar
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
-                          <Layout className="w-4 h-4" /> Ver no Clube
+                          <Layout className="w-4 h-4" /> Ver Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
-                          if (window.confirm(`Arquivar o item "${item.titulo}" por segurança?`)) {
+                          if (window.confirm(`Arquivar a estação "${item.titulo}" por segurança?`)) {
                             deleteItem.mutate(item.id);
                           }
                         }}>
@@ -607,13 +617,13 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Estação</DialogTitle>
-            <DialogDescription>Ajuste os fundamentos desta estação no Clube.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Editar Rota</DialogTitle>
+            <DialogDescription>Ajuste os fundamentos desta rota no Clube.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título da Estação</Label>
+              <Label htmlFor="titulo">Título da Rota</Label>
               <Input 
                 id="titulo" 
                 defaultValue={editingEstacao?.titulo} 
@@ -666,7 +676,7 @@ export function AdminClubeEditorialTab() {
                 onChange={(e) => setEditingEstacao({...editingEstacao, ativa: e.target.checked})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
-              <Label htmlFor="ativa">Jornada Ativa</Label>
+              <Label htmlFor="ativa">Rota Ativa</Label>
             </div>
             <div className="flex items-center gap-2">
               <input 
@@ -724,7 +734,7 @@ export function AdminClubeEditorialTab() {
                 createEstacao.mutate(editingEstacao);
               }
             }}>
-              {editingEstacao?.id ? 'Salvar Estação' : 'Salvar e criar próxima estação'}
+              {editingEstacao?.id ? 'Salvar Rota' : 'Salvar e criar próxima rota'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -732,179 +742,548 @@ export function AdminClubeEditorialTab() {
 
       {/* Edit Item Dialog */}
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
-        <DialogContent className="bg-midnight border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="text-gold font-display">Edição da Travessia</DialogTitle>
-            <DialogDescription>Ajuste os blocos editoriais e a cartografia desta estação.</DialogDescription>
+        <DialogContent className="bg-midnight border-white/10 max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
+          <DialogHeader className="border-b border-white/5 pb-4">
+            <DialogTitle className="text-2xl text-gold font-display">Editor de Travessia</DialogTitle>
+            <DialogDescription>Refinando a experiência da Estação na Rota dos Lobos.</DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-6 py-4">
-            <div className="space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Identidade da Estação</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="item-titulo">Título da Estação</Label>
-                <Input 
-                  id="item-titulo" 
-                  defaultValue={editingItem?.titulo} 
-                  onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})}
-                  className="bg-white/5 border-white/10"
-                />
+          <div className="space-y-10 py-6">
+            {/* Bloco 1 — Identidade da Estação */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gold/90">1. Identidade da Estação</h3>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-slug">Slug (URL)</Label>
-                <Input 
-                  id="item-slug" 
-                  defaultValue={editingItem?.slug} 
-                  onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
-                  className="bg-white/5 border-white/10 font-mono text-xs"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2 space-y-2">
+                  <Label htmlFor="item-titulo">Nome da Estação (Público)</Label>
+                  <Input 
+                    id="item-titulo" 
+                    defaultValue={editingItem?.titulo} 
+                    onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})}
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="item-tipo">Tipo de Estação</Label>
+                  <select 
+                    id="item-tipo"
+                    className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                    value={editingItem?.tipo}
+                    onChange={(e) => setEditingItem({...editingItem, tipo: e.target.value})}
+                  >
+                    <option value="portal">Portal / Texto</option>
+                    <option value="audio">Áudio / Escuta</option>
+                    <option value="laboratorio">Laboratório 80/20</option>
+                    <option value="chat_livro">Chat com o Livro</option>
+                    <option value="jardim">Jardim da Psique</option>
+                    <option value="encontro">Encontro ao Vivo</option>
+                  </select>
+                </div>
+                <div className="md:col-span-2 space-y-2">
+                  <Label htmlFor="item-subtitulo">Subtítulo simbólico</Label>
+                  <Input 
+                    id="item-subtitulo" 
+                    defaultValue={editingItem?.subtitulo} 
+                    onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="item-estacao">Rota Vinculada</Label>
+                  <select 
+                    id="item-estacao"
+                    className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                    value={editingItem?.estacao_id}
+                    onChange={(e) => setEditingItem({...editingItem, estacao_id: e.target.value})}
+                  >
+                    {estacoes?.map(e => (
+                      <option key={e.id} value={e.id}>{e.titulo}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="item-slug">Slug da URL</Label>
+                  <Input 
+                    id="item-slug" 
+                    defaultValue={editingItem?.slug} 
+                    onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
+                    className="bg-white/5 border-white/10 font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="item-ordem">Ordem na Travessia</Label>
+                  <Input 
+                    id="item-ordem" 
+                    type="number"
+                    defaultValue={editingItem?.ordem} 
+                    onChange={(e) => setEditingItem({...editingItem, ordem: parseInt(e.target.value)})}
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-subtitulo">Subtítulo</Label>
-                <Input 
-                  id="item-subtitulo" 
-                  defaultValue={editingItem?.subtitulo} 
-                  onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
-                  className="bg-white/5 border-white/10"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-ordem">Ordem na Sequência</Label>
-                <Input 
-                  id="item-ordem" 
-                  type="number"
-                  defaultValue={editingItem?.ordem} 
-                  onChange={(e) => setEditingItem({...editingItem, ordem: parseInt(e.target.value)})}
-                  className="bg-white/5 border-white/10"
-                />
-              </div>
-            </div>
-          </div>
+            </section>
 
-          {/* Seção Simbólica */}
-            <div className="p-4 rounded-lg bg-white/[0.02] border border-white/5 space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Blocos Editoriais</h3>
+            {/* Bloco 2 — Estado da Travessia */}
+            <section className="space-y-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
+              <div className="flex items-center gap-2 border-l-2 border-blue-400 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-blue-400">2. Estado da Travessia</h3>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="porta">Abertura Imersiva</Label>
+                  <Label htmlFor="porta">Porta Ativa</Label>
                   <Input 
                     id="porta" 
                     defaultValue={editingItem?.porta} 
                     onChange={(e) => setEditingItem({...editingItem, porta: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
+                    className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="campo">Caso-Espelho</Label>
+                  <Label htmlFor="campo">Campo Simbólico</Label>
                   <Input 
                     id="campo" 
                     defaultValue={editingItem?.campo} 
                     onChange={(e) => setEditingItem({...editingItem, campo: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
+                    className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="torre">Desafio da Terapeuta</Label>
+                  <Label htmlFor="torre">Torre Observada</Label>
                   <Input 
                     id="torre" 
                     defaultValue={editingItem?.torre} 
                     onChange={(e) => setEditingItem({...editingItem, torre: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
+                    className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="labirinto">Revelação da Estação</Label>
+                  <Label htmlFor="labirinto">Labirinto Recorrente</Label>
                   <Input 
                     id="labirinto" 
                     defaultValue={editingItem?.labirinto} 
                     onChange={(e) => setEditingItem({...editingItem, labirinto: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
+                    className="bg-white/5 border-white/10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="oraculo">Oráculo da Estação</Label>
+                <div className="md:col-span-2 space-y-2">
+                  <Label htmlFor="frase_guia">Frase-Guia da Estação</Label>
                   <Input 
-                    id="oraculo" 
+                    id="frase_guia" 
                     defaultValue={editingItem?.frase_guia} 
                     onChange={(e) => setEditingItem({...editingItem, frase_guia: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                    placeholder="Frase ou mensagem do oráculo..."
+                    className="bg-white/5 border-white/10 italic text-gold/80"
+                    placeholder="A frase que orienta este passo..."
                   />
                 </div>
               </div>
-                <div className="space-y-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="link" className="p-0 h-auto text-xs text-gold/60 hover:text-gold">
-                        Configuração Avançada
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-midnight border-white/10 w-[500px] p-4">
-                      <Label htmlFor="metadata" className="mb-2 block">Metadados e Áudios de Travessia</Label>
-                      <textarea 
-                        id="metadata" 
-                        className="w-full min-h-[200px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
-                        defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
-                        onChange={(e) => {
-                          try {
-                            const parsed = JSON.parse(e.target.value);
-                            setEditingItem({...editingItem, metadata: parsed});
-                          } catch (err) {}
-                        }}
-                      />
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-            </div>
+            </section>
 
-            {/* Prompts e Textos */}
-            <div className="space-y-4">
-               <div className="space-y-2">
-                  <Label htmlFor="jardim_prompt">Jardim e Missão de Campo</Label>
+            {/* Bloco 3 — Abertura Imersiva */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 border-l-2 border-purple-400 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-purple-400">3. Abertura Imersiva</h3>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="abertura">Texto de Abertura (Markdown)</Label>
+                <textarea 
+                  id="abertura" 
+                  className="w-full min-h-[150px] rounded-md bg-white/5 border border-white/10 p-4 text-sm leading-relaxed"
+                  defaultValue={editingItem?.metadata?.abertura_imersiva}
+                  onChange={(e) => setEditingItem({
+                    ...editingItem, 
+                    metadata: { ...(editingItem.metadata || {}), abertura_imersiva: e.target.value }
+                  })}
+                  placeholder="Inicie a travessia com profundidade..."
+                />
+              </div>
+            </section>
+
+            {/* Bloco 4 — Áudio de Travessia */}
+            <section className="space-y-4 p-4 rounded-lg bg-gold/5 border border-gold/10">
+              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gold">4. Áudio de Travessia</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Título do Áudio</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.audios?.[0]?.titulo} 
+                    onChange={(e) => {
+                      const audios = [...(editingItem.metadata?.audios || [])];
+                      if (audios.length === 0) audios.push({});
+                      audios[0] = { ...audios[0], titulo: e.target.value };
+                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                    }}
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Tipo/Contexto</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.audios?.[0]?.tipo} 
+                    onChange={(e) => {
+                      const audios = [...(editingItem.metadata?.audios || [])];
+                      if (audios.length === 0) audios.push({});
+                      audios[0] = { ...audios[0], tipo: e.target.value };
+                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                    }}
+                    placeholder="Ex: Meditação Guiada, Aula Teórica"
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>URL / Caminho do Arquivo</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.audios?.[0]?.url} 
+                    onChange={(e) => {
+                      const audios = [...(editingItem.metadata?.audios || [])];
+                      if (audios.length === 0) audios.push({});
+                      audios[0] = { ...audios[0], url: e.target.value };
+                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                    }}
+                    className="bg-white/5 border-white/10 font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Duração</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.audios?.[0]?.duracao} 
+                    onChange={(e) => {
+                      const audios = [...(editingItem.metadata?.audios || [])];
+                      if (audios.length === 0) audios.push({});
+                      audios[0] = { ...audios[0], duracao: e.target.value };
+                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                    }}
+                    placeholder="Ex: 15:00"
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Bloco 5 — Caso-Espelho */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 border-l-2 border-emerald-400 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-400">5. Caso-Espelho</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Título do Caso</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.caso_espelho?.titulo} 
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), titulo: e.target.value } 
+                      }
+                    })}
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Relato do Caso</Label>
+                  <textarea 
+                    className="w-full min-h-[100px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                    defaultValue={editingItem?.metadata?.caso_espelho?.relato}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), relato: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Contexto Simbólico</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm italic"
+                    defaultValue={editingItem?.metadata?.caso_espelho?.contexto_simbolico}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), contexto_simbolico: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Bloco 6 — Desafio da Terapeuta */}
+            <section className="space-y-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
+              <div className="flex items-center gap-2 border-l-2 border-amber-400 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-amber-400">6. Desafio da Terapeuta</h3>
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Pergunta Principal</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.desafio_terapeuta?.pergunta_principal} 
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        desafio_terapeuta: { ...(editingItem.metadata?.desafio_terapeuta || {}), pergunta_principal: e.target.value } 
+                      }
+                    })}
+                    className="bg-white/5 border-white/10 text-gold"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Opções de Leitura / Caminhos</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                    defaultValue={editingItem?.metadata?.desafio_terapeuta?.opcoes_leitura}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        desafio_terapeuta: { ...(editingItem.metadata?.desafio_terapeuta || {}), opcoes_leitura: e.target.value } 
+                      }
+                    })}
+                    placeholder="Descreva as possibilidades de interpretação..."
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Bloco 7 — Revelação da Estação */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 border-l-2 border-rose-400 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-rose-400">7. Revelação da Estação</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Leitura-modelo</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                    defaultValue={editingItem?.metadata?.revelacao_estacao?.leitura_modelo}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), leitura_modelo: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Hipótese simbólica</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                    defaultValue={editingItem?.metadata?.revelacao_estacao?.hipotese_simbolica}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), hipotese_simbolica: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Condução justa</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                    defaultValue={editingItem?.metadata?.revelacao_estacao?.conducao_justa}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), conducao_justa: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Risco ético</Label>
+                  <textarea 
+                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm border-rose-500/20"
+                    defaultValue={editingItem?.metadata?.revelacao_estacao?.risco_etico}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), risco_etico: e.target.value } 
+                      }
+                    })}
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Bloco 8 — Erro Comum */}
+            <section className="space-y-4 p-4 rounded-lg bg-red-500/5 border border-red-500/10">
+              <div className="flex items-center gap-2 border-l-2 border-red-500 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-red-500">8. Erro Comum</h3>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="erro">O que evitar nesta estação</Label>
+                <textarea 
+                  id="erro" 
+                  className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                  defaultValue={editingItem?.metadata?.erro_comum}
+                  onChange={(e) => setEditingItem({
+                    ...editingItem, 
+                    metadata: { ...(editingItem.metadata || {}), erro_comum: e.target.value }
+                  })}
+                  placeholder="Erros de interpretação ou condução comuns..."
+                />
+              </div>
+            </section>
+
+            {/* Bloco 9 — Jardim e Missão de Campo */}
+            <section className="space-y-4">
+              <div className="flex items-center gap-2 border-l-2 border-emerald-500 pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500">9. Jardim e Missão de Campo</h3>
+              </div>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="jardim_prompt">Registro no Jardim (Prompt para a IA)</Label>
                   <textarea 
                     id="jardim_prompt" 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.jardim_prompt}
                     onChange={(e) => setEditingItem({...editingItem, jardim_prompt: e.target.value})}
+                    placeholder="Instrução para a reflexão no Jardim da Psique..."
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cenario_treinamento">Erro Comum</Label>
+                  <Label>Missão de Campo</Label>
                   <textarea 
-                    id="cenario_treinamento" 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.cenario_treinamento}
-                    onChange={(e) => setEditingItem({...editingItem, cenario_treinamento: e.target.value})}
+                    defaultValue={editingItem?.metadata?.missao_campo}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { ...(editingItem.metadata || {}), missao_campo: e.target.value }
+                    })}
+                    placeholder="Exercício prático fora do app..."
                   />
                 </div>
-            </div>
-
-            <div className="space-y-4 pt-2 border-t border-white/5">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Estado da Travessia</h3>
-              <div className="flex items-center gap-2">
-                <input 
-                  type="checkbox" 
-                  id="publicado-item" 
-                  defaultChecked={editingItem?.publicado}
-                  onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
-                  className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
-                />
-                <Label htmlFor="publicado-item">Publicado (Ativar na Rota)</Label>
+                <div className="space-y-2">
+                  <Label>Pergunta Narrativa</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.pergunta_narrativa}
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { ...(editingItem.metadata || {}), pergunta_narrativa: e.target.value }
+                    })}
+                    className="bg-white/5 border-white/10 italic"
+                  />
+                </div>
               </div>
+            </section>
+
+            {/* Bloco 10 — Oráculo da Estação */}
+            <section className="space-y-4 p-4 rounded-lg bg-gold/5 border border-gold/20">
+              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
+                <h3 className="text-sm font-bold uppercase tracking-widest text-gold">10. Oráculo da Estação</h3>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label>Palavra da Estação</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.oraculo_estacao?.palavra} 
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), palavra: e.target.value } 
+                      }
+                    })}
+                    className="bg-white/5 border-white/10 text-center font-bold"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Movimento</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.oraculo_estacao?.movimento} 
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), movimento: e.target.value } 
+                      }
+                    })}
+                    className="bg-white/5 border-white/10 text-center"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Frase de Fechamento</Label>
+                  <Input 
+                    defaultValue={editingItem?.metadata?.oraculo_estacao?.frase_fechamento} 
+                    onChange={(e) => setEditingItem({
+                      ...editingItem, 
+                      metadata: { 
+                        ...(editingItem.metadata || {}), 
+                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), frase_fechamento: e.target.value } 
+                      }
+                    })}
+                    className="bg-white/5 border-white/10 italic"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Bloco 11 — Configuração Avançada */}
+            <section className="pt-4 border-t border-white/10">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-between gap-2 text-xs text-white/40 hover:text-white/60">
+                    <span>11. Configuração Avançada (Metadados Brutos)</span>
+                    <Settings2 className="w-3 h-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-midnight border-white/10 w-[600px] p-6" side="top">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="metadata" className="text-gold font-bold">JSON de Metadados</Label>
+                      <Badge variant="outline" className="text-[10px] opacity-50">Edição direta</Badge>
+                    </div>
+                    <textarea 
+                      id="metadata" 
+                      className="w-full min-h-[300px] rounded-md bg-black/40 border border-white/10 p-4 text-xs font-mono text-emerald-400/90 leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
+                      value={JSON.stringify(editingItem?.metadata, null, 2)}
+                      onChange={(e) => {
+                        try {
+                          const parsed = JSON.parse(e.target.value);
+                          setEditingItem({...editingItem, metadata: parsed});
+                        } catch (err) {
+                          // Silently fail on invalid JSON during typing
+                        }
+                      }}
+                    />
+                    <p className="text-[10px] text-white/20 italic">
+                      Atenção: alterações manuais aqui podem sobrescrever os campos visuais acima se não houver sincronia.
+                    </p>
+                  </div>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </section>
+
+            {/* Publicação */}
+            <div className="flex items-center gap-2 pt-4 border-t border-white/5">
+              <input 
+                type="checkbox" 
+                id="publicado-item" 
+                checked={editingItem?.publicado}
+                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
+                className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
+              />
+              <Label htmlFor="publicado-item" className="text-sm font-medium">Publicar Estação (Visível na Rota)</Label>
             </div>
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="border-t border-white/5 pt-4">
             <Button variant="ghost" onClick={() => setIsItemDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => {
-              if (editingItem.id) {
-                updateItem.mutate(editingItem);
-              } else {
-                createItem.mutate(editingItem);
-              }
+            <Button className="bg-gold text-midnight hover:bg-gold/90 font-bold" onClick={() => {
+              editingItem.id ? updateItem.mutate(editingItem) : createItem.mutate(editingItem)
             }}>
-              Salvar Estação
+              {editingItem?.id ? 'Salvar Estação' : 'Criar Estação'}
             </Button>
           </DialogFooter>
         </DialogContent>
