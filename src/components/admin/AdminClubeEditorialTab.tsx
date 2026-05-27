@@ -21,7 +21,8 @@ import {
   User,
   ArrowUpDown,
   Calendar,
-  Music
+  Music,
+  Trash2
 } from 'lucide-react';
 import { AdminClubeAudioteca } from './AdminClubeAudioteca';
 import { 
@@ -147,7 +148,7 @@ export function AdminClubeEditorialTab() {
 
   const updateEstacao = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, ...updates } = payload;
+      const { id, created_at, updated_at, ...updates } = payload;
       const { error } = await supabase
         .from('clube_estacoes')
         .update(updates)
@@ -179,9 +180,54 @@ export function AdminClubeEditorialTab() {
     }
   });
 
+  const createEstacao = useMutation({
+    mutationFn: async (payload: any) => {
+      const { id, created_at, updated_at, ...estacao } = payload;
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .insert(estacao);
+      if (error) throw error;
+      
+      await createAuditLog({
+        tabela: 'clube_estacoes',
+        acao: 'INSERT',
+        valor_novo: estacao.titulo
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
+      toast.success('Nova estação criada com sucesso');
+      setIsEstacaoDialogOpen(false);
+    }
+  });
+
+  const deleteEstacao = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
+      toast.success('Estação removida');
+    }
+  });
+
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, ...updates } = payload;
+      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
+      const { 
+        id, 
+        estacao, 
+        created_at, 
+        updated_at, 
+        profiles,
+        count,
+        ...updates 
+      } = payload;
+      
       const { error } = await supabase
         .from('clube_rota_itens')
         .update(updates)
@@ -215,7 +261,17 @@ export function AdminClubeEditorialTab() {
 
   const createItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, ...item } = payload;
+      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
+      const { 
+        id, 
+        estacao, 
+        created_at, 
+        updated_at, 
+        profiles,
+        count,
+        ...item 
+      } = payload;
+      
       const { error } = await supabase
         .from('clube_rota_itens')
         .insert(item);
@@ -231,6 +287,20 @@ export function AdminClubeEditorialTab() {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
       toast.success('Novo item criado com sucesso');
       setIsItemDialogOpen(false);
+    }
+  });
+
+  const deleteItem = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
+      toast.success('Item removido');
     }
   });
 
@@ -335,7 +405,19 @@ export function AdminClubeEditorialTab() {
           <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10">
             <Filter className="w-4 h-4" /> Filtros
           </Button>
-          <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90">
+          <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+            const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
+            setEditingEstacao({
+              titulo: 'Nova Estação',
+              subtitulo: '',
+              numero: lastNum + 1,
+              publicada: false,
+              ativa: false,
+              livro_titulo: ''
+            });
+            setPrevEstacao({});
+            setIsEstacaoDialogOpen(true);
+          }}>
             <Plus className="w-4 h-4" /> Nova Estação
           </Button>
         </div>
@@ -385,9 +467,16 @@ export function AdminClubeEditorialTab() {
                   <TableCell className="text-xs text-muted-foreground">
                     {e.updated_at ? new Date(e.updated_at).toLocaleDateString() : 'N/A'}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" onClick={() => handleEditEstacao(e)}>
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      if (window.confirm(`Excluir a estação "${e.titulo}"? Esta ação não pode ser desfeita.`)) {
+                        deleteEstacao.mutate(e.id);
+                      }
+                    }}>
+                      <Trash2 className="w-4 h-4 text-white/20 hover:text-destructive transition-colors" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -472,6 +561,13 @@ export function AdminClubeEditorialTab() {
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
                           <Layout className="w-4 h-4" /> Ver no Clube
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => {
+                          if (window.confirm(`Excluir o item "${item.titulo}"?`)) {
+                            deleteItem.mutate(item.id);
+                          }
+                        }}>
+                          <Trash2 className="w-4 h-4" /> Excluir Item
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -598,8 +694,17 @@ export function AdminClubeEditorialTab() {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsEstacaoDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => updateEstacao.mutate(editingEstacao)}>
-              Salvar Alterações
+            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+              if (editingEstacao.id) {
+                updateEstacao.mutate(editingEstacao);
+              } else {
+                // createEstacao - Podemos usar o mesmo updateEstacao se ele suportar insert
+                // Mas vamos ser explícitos e criar uma nova se necessário.
+                // Por agora, vamos assumir que o usuário quer que funcione.
+                createEstacao.mutate(editingEstacao);
+              }
+            }}>
+              {editingEstacao?.id ? 'Salvar Alterações' : 'Criar Estação'}
             </Button>
           </DialogFooter>
         </DialogContent>
