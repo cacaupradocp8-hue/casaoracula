@@ -381,7 +381,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Layout className="w-4 h-4 text-gold" /> Estações Ativas
+              <Layout className="w-4 h-4 text-gold" /> Jornadas Ativas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -391,7 +391,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-gold" /> Itens de Rota
+              <MapIcon className="w-4 h-4 text-gold" /> Portais de Luz
             </CardTitle>
           </CardHeader>
           <CardContent>
