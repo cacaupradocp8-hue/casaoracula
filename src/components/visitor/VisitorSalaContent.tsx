@@ -164,8 +164,8 @@ export function VisitorSalaContent() {
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
                 Comece pela Primeira Leitura
               </h2>
-              <div className="space-y-3">
-                <p className="text-foreground/60 text-xs uppercase tracking-widest font-medium">
+              <div className="space-y-4">
+                <p className="text-foreground/70 text-sm italic font-serif">
                   Depois de conhecer a Casa, atravesse a primeira experiência prática.
                 </p>
                 <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
