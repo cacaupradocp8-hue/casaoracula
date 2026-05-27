@@ -36,6 +36,7 @@ import SalaDaVisitante from "./pages/SalaDaVisitante";
 
 
 // Lazy-loaded pages
+const Onboarding = React.lazy(() => import("./pages/Onboarding"));
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
 const ClubeRotasCatalogo = React.lazy(() => import("./pages/clube/ClubeRotasCatalogo"));
 const ClubeRotaPremium = React.lazy(() => import("./pages/clube/ClubeRotaPremium"));
@@ -306,6 +307,8 @@ function AppRoutes() {
 
 
 
+      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+      
       {/* Core navigation */}
       
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
