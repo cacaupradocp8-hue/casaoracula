@@ -822,21 +822,27 @@ export function AdminClubeEditorialTab() {
                 </div>
               </div>
                 <div className="space-y-2">
-                  <Label htmlFor="metadata">Metadados JSON (Audios, Perguntas, etc)</Label>
-                  <textarea 
-                    id="metadata" 
-                    className="w-full min-h-[120px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
-                    defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingItem({...editingItem, metadata: parsed});
-                      } catch (err) {
-                        // Keep as string if invalid JSON while typing
-                      }
-                    }}
-                  />
-                  <p className="text-[10px] text-muted-foreground italic">Cuidado: Formato JSON rigoroso exigido.</p>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="link" className="p-0 h-auto text-xs text-gold/60 hover:text-gold">
+                        Configurações Profundas (JSON)
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-midnight border-white/10 w-[500px] p-4">
+                      <Label htmlFor="metadata" className="mb-2 block">Metadados (Áudios e Perguntas)</Label>
+                      <textarea 
+                        id="metadata" 
+                        className="w-full min-h-[200px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
+                        defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            setEditingItem({...editingItem, metadata: parsed});
+                          } catch (err) {}
+                        }}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
             </div>
 
