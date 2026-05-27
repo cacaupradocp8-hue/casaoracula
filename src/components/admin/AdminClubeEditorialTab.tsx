@@ -428,7 +428,7 @@ export function AdminClubeEditorialTab() {
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
             const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
             setEditingEstacao({
-              titulo: 'Nova Jornada',
+              titulo: 'Nova Estação',
               subtitulo: '',
               numero: lastNum + 1,
               publicada: false,
@@ -438,7 +438,7 @@ export function AdminClubeEditorialTab() {
             setPrevEstacao({});
             setIsEstacaoDialogOpen(true);
           }}>
-            <Plus className="w-4 h-4" /> Nova Jornada
+            <Plus className="w-4 h-4" /> Nova Estação
           </Button>
         </div>
       </div>
@@ -446,7 +446,7 @@ export function AdminClubeEditorialTab() {
       {/* Estações Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Círculos de Travessia</h2>
+          <h2 className="font-display text-xl text-white/90">Estações da Travessia</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
         </div>
         
@@ -509,10 +509,10 @@ export function AdminClubeEditorialTab() {
       {/* Itens de Rota Section */}
       <div className="space-y-4 pt-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Santuários e Portais</h2>
+          <h2 className="font-display text-xl text-white/90">Estações e Portais</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
           <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
-            <Plus className="w-3 h-3" /> Novo Portal
+            <Plus className="w-3 h-3" /> Nova Estação
           </Button>
         </div>
         
@@ -574,7 +574,7 @@ export function AdminClubeEditorialTab() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Desvelar Portal
+                          <Edit3 className="w-4 h-4" /> Publicar Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
                           <Eye className="w-4 h-4" /> Pré-visualizar
@@ -587,7 +587,7 @@ export function AdminClubeEditorialTab() {
                             deleteItem.mutate(item.id);
                           }
                         }}>
-                          <Trash2 className="w-4 h-4" /> Arquivar Item
+                          <Trash2 className="w-4 h-4" /> Arquivar Estação
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -607,13 +607,13 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Configurar Travessia</DialogTitle>
-            <DialogDescription>Ajuste os fundamentos desta jornada no Clube.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Editar Estação</DialogTitle>
+            <DialogDescription>Ajuste os fundamentos desta estação no Clube.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título da Travessia</Label>
+              <Label htmlFor="titulo">Título da Estação</Label>
               <Input 
                 id="titulo" 
                 defaultValue={editingEstacao?.titulo} 
@@ -724,7 +724,7 @@ export function AdminClubeEditorialTab() {
                 createEstacao.mutate(editingEstacao);
               }
             }}>
-              {editingEstacao?.id ? 'Salvar Alterações' : 'Criar Estação'}
+              {editingEstacao?.id ? 'Salvar Estação' : 'Salvar e criar próxima estação'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -734,15 +734,16 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Tecedura do Portal</DialogTitle>
-            <DialogDescription>Ajuste os textos simbólicos e a cartografia da travessia.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Edição da Travessia</DialogTitle>
+            <DialogDescription>Ajuste os blocos editoriais e a cartografia desta estação.</DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
-            {/* Seção Básica */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Identidade da Estação</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="item-titulo">Título do Portal</Label>
+                <Label htmlFor="item-titulo">Título da Estação</Label>
                 <Input 
                   id="item-titulo" 
                   defaultValue={editingItem?.titulo} 
@@ -760,7 +761,7 @@ export function AdminClubeEditorialTab() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="item-subtitulo">Subtítulo Simbólico</Label>
+                <Label htmlFor="item-subtitulo">Subtítulo</Label>
                 <Input 
                   id="item-subtitulo" 
                   defaultValue={editingItem?.subtitulo} 
@@ -779,13 +780,14 @@ export function AdminClubeEditorialTab() {
                 />
               </div>
             </div>
+          </div>
 
-            {/* Seção Simbólica */}
+          {/* Seção Simbólica */}
             <div className="p-4 rounded-lg bg-white/[0.02] border border-white/5 space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Cartografia Simbólica</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Blocos Editoriais</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="porta">A Porta</Label>
+                  <Label htmlFor="porta">Abertura Imersiva</Label>
                   <Input 
                     id="porta" 
                     defaultValue={editingItem?.porta} 
@@ -794,7 +796,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="campo">O Campo</Label>
+                  <Label htmlFor="campo">Caso-Espelho</Label>
                   <Input 
                     id="campo" 
                     defaultValue={editingItem?.campo} 
@@ -803,7 +805,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="torre">A Torre</Label>
+                  <Label htmlFor="torre">Desafio da Terapeuta</Label>
                   <Input 
                     id="torre" 
                     defaultValue={editingItem?.torre} 
@@ -812,7 +814,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="labirinto">O Labirinto</Label>
+                  <Label htmlFor="labirinto">Revelação da Estação</Label>
                   <Input 
                     id="labirinto" 
                     defaultValue={editingItem?.labirinto} 
@@ -820,16 +822,26 @@ export function AdminClubeEditorialTab() {
                     className="bg-white/5 border-white/10 text-xs"
                   />
                 </div>
+                <div className="space-y-2">
+                  <Label htmlFor="oraculo">Oráculo da Estação</Label>
+                  <Input 
+                    id="oraculo" 
+                    defaultValue={editingItem?.frase_guia} 
+                    onChange={(e) => setEditingItem({...editingItem, frase_guia: e.target.value})}
+                    className="bg-white/5 border-white/10 text-xs"
+                    placeholder="Frase ou mensagem do oráculo..."
+                  />
+                </div>
               </div>
                 <div className="space-y-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="link" className="p-0 h-auto text-xs text-gold/60 hover:text-gold">
-                        Configurações Profundas (JSON)
+                        Configuração Avançada
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="bg-midnight border-white/10 w-[500px] p-4">
-                      <Label htmlFor="metadata" className="mb-2 block">Metadados (Áudios e Perguntas)</Label>
+                      <Label htmlFor="metadata" className="mb-2 block">Metadados e Áudios de Travessia</Label>
                       <textarea 
                         id="metadata" 
                         className="w-full min-h-[200px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
@@ -849,7 +861,7 @@ export function AdminClubeEditorialTab() {
             {/* Prompts e Textos */}
             <div className="space-y-4">
                <div className="space-y-2">
-                  <Label htmlFor="jardim_prompt">Pergunta para o Jardim (Diário)</Label>
+                  <Label htmlFor="jardim_prompt">Jardim e Missão de Campo</Label>
                   <textarea 
                     id="jardim_prompt" 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
@@ -858,7 +870,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cenario_treinamento">Cenário Laboratório 80/20</Label>
+                  <Label htmlFor="cenario_treinamento">Erro Comum</Label>
                   <textarea 
                     id="cenario_treinamento" 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
@@ -868,15 +880,18 @@ export function AdminClubeEditorialTab() {
                 </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              <input 
-                type="checkbox" 
-                id="publicado-item" 
-                defaultChecked={editingItem?.publicado}
-                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
-                className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
-              />
-              <Label htmlFor="publicado-item">Publicado e visível na Rota</Label>
+            <div className="space-y-4 pt-2 border-t border-white/5">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Estado da Travessia</h3>
+              <div className="flex items-center gap-2">
+                <input 
+                  type="checkbox" 
+                  id="publicado-item" 
+                  defaultChecked={editingItem?.publicado}
+                  onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
+                  className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
+                />
+                <Label htmlFor="publicado-item">Publicado (Ativar na Rota)</Label>
+              </div>
             </div>
           </div>
 
@@ -889,7 +904,7 @@ export function AdminClubeEditorialTab() {
                 createItem.mutate(editingItem);
               }
             }}>
-              {editingItem?.id ? 'Salvar Alterações' : 'Criar Item'}
+              Salvar Estação
             </Button>
           </DialogFooter>
         </DialogContent>
