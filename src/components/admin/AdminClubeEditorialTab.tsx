@@ -200,6 +200,20 @@ export function AdminClubeEditorialTab() {
     }
   });
 
+  const deleteEstacao = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
+      toast.success('Estação removida');
+    }
+  });
+
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
       // Garantir que campos relacionais ou metadados de sistema não sejam enviados
@@ -288,7 +302,21 @@ export function AdminClubeEditorialTab() {
       publicado: false,
       status: 'draft',
       metadata: { audios: [], perguntas_sugeridas: [] }
-    });
+  });
+
+  const deleteItem = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
+      toast.success('Item removido');
+    }
+  });
     setPrevItem({});
     setIsItemDialogOpen(true);
   };
