@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useAdminPreviewOptional } from '@/contexts/AdminPreviewContext';
-import { useOnboarding } from '@/hooks/useOnboarding';
+
 import { useLocation } from 'react-router-dom';
 import { PortalType, canAccessFeature } from '@/types/portal';
 
@@ -23,7 +23,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
   const preview = useAdminPreviewOptional();
   const location = useLocation();
 
-  const isOnboardingRoute = location.pathname === '/onboarding';
+  
   const isPosCompraRoute = location.pathname === '/pos-compra';
 
   const isVisitorJourneyRoute =
@@ -35,14 +35,7 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
     location.pathname === '/experiencia-gratuita';
 
 
-  const isAdmin = user?.portal === 'admin';
-  const isVisitor = user?.portal === 'visitante';
-  const shouldSkipOnboarding = isAdmin || isVisitor || isVisitorJourneyRoute;
-
-
-  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({
-    enabled: !shouldSkipOnboarding,
-  });
+  const shouldSkipOnboarding = true;
 
   // Auth not ready
   if (!isAuthReady || isLoading) {
@@ -62,24 +55,6 @@ export function useRouteGuard(minPortal: PortalType = 'visitante'): RouteGuardRe
     return { status: 'redirect', to: '/auth' };
   }
 
-  // Onboarding loading
-  if (!shouldSkipOnboarding && onboardingLoading) {
-    logRouteStep('onboarding pendente', { path: location.pathname, userId: user?.id ?? null });
-    return { status: 'loading' };
-  }
-
-  // Onboarding error: fail-open
-  if (onboardingError && location.pathname !== '/onboarding') {
-    logRouteStep('falha no onboarding, fail-open para dashboard', { path: location.pathname, onboardingError }, 'warn');
-  }
-
-  // Redirect to onboarding if not completed
-  if (!onboardingCompleted && !onboardingError && !isOnboardingRoute && !isAdmin && !isVisitor && !isVisitorJourneyRoute) {
-    logRouteStep('definição da rota pós-login: /onboarding', {
-      from: location.pathname, userId: user?.id ?? null, onboardingCompleted,
-    }, 'warn');
-    return { status: 'redirect', to: '/onboarding' };
-  }
 
   // Portal access check
   const isAdminRoute = minPortal === 'admin';

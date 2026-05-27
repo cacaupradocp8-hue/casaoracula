@@ -120,7 +120,7 @@ export default function Auth() {
         body: { email: signupEmail, userName: signupName, includeWaitingListLink: true },
       }).then(({ error }) => { if (error) console.error('Error sending welcome email:', error); });
       toast({ title: 'Conta criada', description: 'Seja bem-vinda à Casa ORÁCULA.' });
-      navigate('/onboarding');
+      navigate('/dashboard-membro');
     } else {
       toast({ title: 'Erro ao criar conta', description: result.error, variant: 'destructive' });
     }
