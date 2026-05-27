@@ -562,6 +562,38 @@ export function AdminClubeEditorialTab() {
               />
               <Label htmlFor="publicada">Publicada (Visível)</Label>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="item-estacao">Estação Vinculada</Label>
+                <select 
+                  id="item-estacao"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                  value={editingItem?.estacao_id}
+                  onChange={(e) => setEditingItem({...editingItem, estacao_id: e.target.value})}
+                >
+                  {estacoes?.map(e => (
+                    <option key={e.id} value={e.id}>{e.titulo} ({e.livro_titulo})</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-tipo">Tipo de Conteúdo</Label>
+                <select 
+                  id="item-tipo"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                  value={editingItem?.tipo}
+                  onChange={(e) => setEditingItem({...editingItem, tipo: e.target.value})}
+                >
+                  <option value="portal">Portal / Texto</option>
+                  <option value="audio">Áudio / Escuta</option>
+                  <option value="laboratorio">Laboratório 80/20</option>
+                  <option value="chat_livro">Chat com o Livro</option>
+                  <option value="jardim">Jardim da Psique</option>
+                  <option value="encontro">Encontro ao Vivo</option>
+                </select>
+              </div>
+            </div>
           </div>
 
           <DialogFooter>
