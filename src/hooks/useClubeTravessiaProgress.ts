@@ -93,7 +93,7 @@ export function useClubeTravessiaProgress(ponto: any, estacaoId?: string) {
 
     const checkChatStatus = (): StepStatus => {
       if (!hasChat) return 'not_started';
-      return chatInteractions.length > 0 ? 'completed' : 'not_started';
+      return (chatInteractions?.length ?? 0) > 0 ? 'completed' : 'not_started';
     };
 
     const rawSteps = [
