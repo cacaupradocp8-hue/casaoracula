@@ -40,7 +40,7 @@ export function HomeOnboardingBlocks() {
                 title="Descubra sua Voz"
                 description="Inicie sua jornada revelando seu mapa interior através do Quiz do Eixo."
                 icon={<Compass className="w-6 h-6 text-primary" />}
-                action={() => navigate('/quiz/descubra-seu-eixo')}
+                action={() => navigate('/dashboard-membro')}
                 label="Iniciar Quiz"
                 highlight
               />

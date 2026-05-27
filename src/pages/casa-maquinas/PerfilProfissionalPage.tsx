@@ -137,7 +137,7 @@ export default function PerfilProfissionalPage() {
               ) : (
                 <div className="text-center py-6 space-y-3">
                   <p className="text-sm text-muted-foreground">Sua voz ainda não foi revelada.</p>
-                  <Link to="/quiz/descubra-seu-eixo">
+                  <Link to="/dashboard-membro">
                     <Button variant="gold" size="sm" className="gap-2">
                       Descobrir minha Voz <ArrowRight className="w-3.5 h-3.5" />
                     </Button>
