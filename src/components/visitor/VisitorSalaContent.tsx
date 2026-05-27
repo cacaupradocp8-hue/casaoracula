@@ -92,13 +92,12 @@ export function VisitorSalaContent() {
             <Logo variant="vertical" size="md" className="mb-2" />
           </motion.div>
 
-          {/* Texto — porta simbólica */}
-          <div className="space-y-4">
+          <div className=\"space-y-6\">
             <motion.p
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1, duration: 0.8 }}
-              className="text-muted-foreground text-xs tracking-[0.15em] uppercase"
+              className=\"text-muted-foreground text-xs tracking-[0.15em] uppercase\"
             >
               Bem-vinda à Casa Orácula
             </motion.p>
@@ -107,21 +106,19 @@ export function VisitorSalaContent() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4, duration: 0.8 }}
-              className="text-foreground/70 text-sm md:text-base leading-relaxed px-4 font-serif italic max-w-sm"
+              className=\"text-foreground/90 text-base md:text-lg font-display tracking-wide px-4\"
             >
-              "A Casa Orácula é um espaço para mulheres que escutam o invisível e transformam essa escuta em inteligência simbólica."
+              Nem toda terapeuta escuta uma história da mesma forma.
             </motion.p>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 8 }}
+            <motion.p
+              initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.8, duration: 0.8 }}
-              className="font-display text-xl md:text-2xl text-primary pt-2 tracking-wide leading-tight"
+              className=\"text-foreground/70 text-sm md:text-base leading-relaxed px-4 font-serif italic max-w-sm mx-auto\"
             >
-              Atravessar o Limiar
-            </motion.h1>
-
-
+              A Casa Orácula foi criada para profissionais que desejam transformar sensibilidade simbólica em leitura estruturada, método e travessia.
+            </motion.p>
           </div>
         </motion.section>
 
@@ -186,7 +183,7 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Iniciar Primeira Leitura</span>
+              <span className=\"relative z-10\">Descobrir minha Primeira Leitura</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
             
