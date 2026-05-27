@@ -111,14 +111,21 @@ export function VisitorSalaContent() {
               Nem toda terapeuta escuta uma história da mesma forma.
             </motion.p>
 
-            <motion.p
+            <motion.div
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.8, duration: 0.8 }}
-              className="text-foreground/70 text-sm md:text-base leading-relaxed px-4 font-serif italic max-w-sm mx-auto"
+              className="space-y-6 px-4"
             >
-              A Casa Orácula foi criada para profissionais que desejam transformar sensibilidade simbólica em leitura estruturada, método e travessia.
-            </motion.p>
+              <p className="text-foreground/80 text-sm md:text-base leading-relaxed">
+                Aqui, símbolos não substituem a realidade.<br />
+                Eles ajudam a organizar sentido, leitura e travessia.
+              </p>
+
+              <p className="text-foreground/70 text-sm md:text-base leading-relaxed font-serif italic max-w-sm mx-auto">
+                A Casa Orácula é um espaço de formação e prática para terapeutas que trabalham com linguagem simbólica, histórias e processos de transformação.
+              </p>
+            </motion.div>
           </div>
         </motion.section>
 
