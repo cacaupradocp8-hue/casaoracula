@@ -502,7 +502,7 @@ export function AdminClubeEditorialTab() {
             </TableHeader>
             <TableBody>
               {loadingEstacoes ? (
-                <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando estações...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando rotas do clube...</TableCell></TableRow>
               ) : filteredEstacoes?.map((e) => (
                 <TableRow key={e.id} className="hover:bg-white/[0.01] transition-colors">
                   <TableCell className="font-mono text-gold/60">{e.numero}</TableCell>
