@@ -446,7 +446,7 @@ export function AdminClubeEditorialTab() {
       {/* Estações Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Estações do Clube</h2>
+          <h2 className="font-display text-xl text-white/90">Círculos de Travessia</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
         </div>
         
