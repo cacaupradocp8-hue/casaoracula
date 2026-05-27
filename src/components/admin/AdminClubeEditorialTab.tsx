@@ -569,7 +569,7 @@ export function AdminClubeEditorialTab() {
             </TableHeader>
             <TableBody>
               {loadingItens ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8">Carregando itens da rota...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="text-center py-8">Carregando estações da travessia...</TableCell></TableRow>
               ) : itensRota?.map((item) => (
                 <TableRow key={item.id} className="hover:bg-white/[0.01] transition-colors">
                   <TableCell className="font-mono text-gold/60">#{item.ordem}</TableCell>
