@@ -502,7 +502,7 @@ export function AdminClubeEditorialTab() {
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => {
-                      if (window.confirm(`Arquivar a estação "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
+                      if (window.confirm(`Arquivar a rota "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
                         deleteEstacao.mutate(e.id);
                       }
                     }}>
@@ -584,7 +584,7 @@ export function AdminClubeEditorialTab() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Publicar Estação
+                          <Edit3 className="w-4 h-4" /> Editar Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
                           <Eye className="w-4 h-4" /> Pré-visualizar
@@ -593,7 +593,7 @@ export function AdminClubeEditorialTab() {
                           <Layout className="w-4 h-4" /> Ver Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
-                          if (window.confirm(`Arquivar o item "${item.titulo}" por segurança?`)) {
+                          if (window.confirm(`Arquivar a estação "${item.titulo}" por segurança?`)) {
                             deleteItem.mutate(item.id);
                           }
                         }}>
