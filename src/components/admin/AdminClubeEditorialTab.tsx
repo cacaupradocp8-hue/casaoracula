@@ -381,7 +381,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Layout className="w-4 h-4 text-gold" /> Jornadas Ativas
+              <Layout className="w-4 h-4 text-gold" /> Rotas Ativas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -391,7 +391,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-gold" /> Portais de Luz
+              <MapIcon className="w-4 h-4 text-gold" /> Estações Criadas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -415,7 +415,7 @@ export function AdminClubeEditorialTab() {
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Procurar por travessia ou obra..." 
+            placeholder="Procurar por rota ou obra..." 
             className="pl-10 bg-midnight/40 border-white/10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -428,7 +428,7 @@ export function AdminClubeEditorialTab() {
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
             const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
             setEditingEstacao({
-              titulo: 'Nova Estação',
+              titulo: 'Nova Rota',
               subtitulo: '',
               numero: lastNum + 1,
               publicada: false,
@@ -438,7 +438,7 @@ export function AdminClubeEditorialTab() {
             setPrevEstacao({});
             setIsEstacaoDialogOpen(true);
           }}>
-            <Plus className="w-4 h-4" /> Nova Estação
+            <Plus className="w-4 h-4" /> Nova Rota
           </Button>
         </div>
       </div>
@@ -521,8 +521,8 @@ export function AdminClubeEditorialTab() {
             <TableHeader className="bg-white/[0.02]">
               <TableRow>
                 <TableHead>Ritmo</TableHead>
-                <TableHead>Portal</TableHead>
-                <TableHead>Jornada</TableHead>
+                <TableHead>Estação</TableHead>
+                <TableHead>Rota do Clube</TableHead>
                 <TableHead>Essência</TableHead>
                 <TableHead>Arquétipos</TableHead>
                 <TableHead>Status</TableHead>
@@ -541,7 +541,7 @@ export function AdminClubeEditorialTab() {
                       <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.slug}</span>
                     </div>
                   </TableCell>
-                  <TableCell className="text-xs">{item.estacao?.titulo || 'Sem Estação'}</TableCell>
+                  <TableCell className="text-xs">{item.estacao?.titulo || 'Sem Rota'}</TableCell>
                   <TableCell>
                     <Badge variant="outline" className="text-[10px] uppercase font-bold border-white/10">
                       {item.tipo}
@@ -580,7 +580,7 @@ export function AdminClubeEditorialTab() {
                           <Eye className="w-4 h-4" /> Pré-visualizar
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
-                          <Layout className="w-4 h-4" /> Ver no Clube
+                          <Layout className="w-4 h-4" /> Ver Estação
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
                           if (window.confirm(`Arquivar o item "${item.titulo}" por segurança?`)) {
