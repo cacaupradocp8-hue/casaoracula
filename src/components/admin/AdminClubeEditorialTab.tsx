@@ -415,7 +415,7 @@ export function AdminClubeEditorialTab() {
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Buscar estação ou livro..." 
+            placeholder="Procurar por travessia ou obra..." 
             className="pl-10 bg-midnight/40 border-white/10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -428,7 +428,7 @@ export function AdminClubeEditorialTab() {
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
             const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
             setEditingEstacao({
-              titulo: 'Nova Estação',
+              titulo: 'Nova Jornada',
               subtitulo: '',
               numero: lastNum + 1,
               publicada: false,
@@ -438,7 +438,7 @@ export function AdminClubeEditorialTab() {
             setPrevEstacao({});
             setIsEstacaoDialogOpen(true);
           }}>
-            <Plus className="w-4 h-4" /> Nova Estação
+            <Plus className="w-4 h-4" /> Nova Jornada
           </Button>
         </div>
       </div>
