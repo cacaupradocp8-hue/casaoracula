@@ -587,7 +587,7 @@ export function AdminClubeEditorialTab() {
                             deleteItem.mutate(item.id);
                           }
                         }}>
-                          <Trash2 className="w-4 h-4" /> Arquivar Item
+                          <Trash2 className="w-4 h-4" /> Arquivar Estação
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
