@@ -181,7 +181,7 @@ export function AdminClubeEditorialTab() {
 
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, ...updates } = payload;
+      const { id, estacao, created_at, updated_at, ...updates } = payload;
       const { error } = await supabase
         .from('clube_rota_itens')
         .update(updates)
@@ -552,6 +552,24 @@ export function AdminClubeEditorialTab() {
                 />
               </div>
               <div className="space-y-2">
+                <Label htmlFor="item-slug">Slug (URL)</Label>
+                <Input 
+                  id="item-slug" 
+                  defaultValue={editingItem?.slug} 
+                  onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
+                  className="bg-white/5 border-white/10 font-mono text-xs"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-subtitulo">Subtítulo Simbólico</Label>
+                <Input 
+                  id="item-subtitulo" 
+                  defaultValue={editingItem?.subtitulo} 
+                  onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
+                  className="bg-white/5 border-white/10"
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="item-ordem">Ordem na Sequência</Label>
                 <Input 
                   id="item-ordem" 
@@ -604,6 +622,23 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
               </div>
+                <div className="space-y-2">
+                  <Label htmlFor="metadata">Metadados JSON (Audios, Perguntas, etc)</Label>
+                  <textarea 
+                    id="metadata" 
+                    className="w-full min-h-[120px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
+                    defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
+                    onChange={(e) => {
+                      try {
+                        const parsed = JSON.parse(e.target.value);
+                        setEditingItem({...editingItem, metadata: parsed});
+                      } catch (err) {
+                        // Keep as string if invalid JSON while typing
+                      }
+                    }}
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Cuidado: Formato JSON rigoroso exigido.</p>
+                </div>
             </div>
 
             {/* Prompts e Textos */}
