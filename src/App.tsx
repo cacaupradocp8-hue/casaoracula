@@ -32,7 +32,6 @@ import { renderLegacyRedirects } from "@/routes/legacyRedirects";
 import Auth from "./pages/Auth";
 // Dashboard and DashboardMembro are the active member landing pages
 import NotFound from "./pages/NotFound";
-import Onboarding from "./pages/Onboarding";
 import SalaDaVisitante from "./pages/SalaDaVisitante";
 
 
@@ -40,7 +39,7 @@ import SalaDaVisitante from "./pages/SalaDaVisitante";
 const ResetPassword = React.lazy(() => import("./pages/ResetPassword"));
 const ClubeRotasCatalogo = React.lazy(() => import("./pages/clube/ClubeRotasCatalogo"));
 const ClubeRotaPremium = React.lazy(() => import("./pages/clube/ClubeRotaPremium"));
-const Welcome = React.lazy(() => import("./pages/Welcome"));
+
 const BibliotecaUnificada = React.lazy(() => import("./pages/BibliotecaUnificada"));
 const BibliotecaCasos = React.lazy(() => import("./pages/BibliotecaCasos"));
 const Mentoria = React.lazy(() => import("./pages/Mentoria"));
@@ -70,7 +69,7 @@ const AulaPage = React.lazy(() => import("./pages/AulaPage"));
 const LaboratorioLeitura = React.lazy(() => import("./pages/LaboratorioLeitura"));
 const Metodo = React.lazy(() => import("./pages/Metodo"));
 const Portais = React.lazy(() => import("./pages/Portais"));
-const ConfirmarProfissional = React.lazy(() => import("./pages/ConfirmarProfissional"));
+
 const MinhasClientes = React.lazy(() => import("./pages/MinhasClientes"));
 const MapaOracula = React.lazy(() => import("./pages/MapaOracula"));
 const QuizPage = React.lazy(() => import("./pages/QuizPage"));
@@ -171,8 +170,6 @@ const PortalJunguiano = React.lazy(() => import("./pages/PortalJunguiano"));
 const PortalJunguianoPorta = React.lazy(() => import("./pages/PortalJunguianoPorta"));
 const MapaCasaOracula = React.lazy(() => import("./pages/MapaCasaOracula"));
 const MinhaJornada = React.lazy(() => import("./pages/MinhaJornada"));
-const ExplorarACasa = React.lazy(() => import("./pages/ExplorarACasa"));
-const Vitrine = React.lazy(() => import("./pages/FerramentasVitrine"));
 const DashboardMembro = React.lazy(() => import("./pages/DashboardMembro"));
 const RelatorioAuditoriaBotoes = React.lazy(() => import("./pages/RelatorioAuditoriaBotoes"));
 const PosCompra = React.lazy(() => import("./pages/PosCompra"));
@@ -254,17 +251,10 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading, user, isAuthReady, authError } = useAuth();
-  const location = useLocation();
-  const isAdmin = user?.portal === 'admin';
-  const isVisitor = user?.portal === 'visitante';
-  const shouldSkipOnboarding = !isAuthenticated || isAdmin || isVisitor;
-  const { onboardingCompleted, isLoading: onboardingLoading, error: onboardingError } = useOnboarding({ enabled: !shouldSkipOnboarding });
 
   if (!isAuthReady || isLoading) return <AuthLoading />;
   if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
   if (!isAuthenticated) return <>{children}</>;
-  if (!shouldSkipOnboarding && onboardingLoading) return <AuthLoading />;
-  if (!onboardingCompleted && !onboardingError && !isAdmin && !isVisitor) return <Navigate to="/onboarding" replace />;
 
   const destination = user?.portal === 'visitante' ? '/sala-da-visitante' : '/dashboard-membro';
   return <Navigate to={destination} replace />;
@@ -299,19 +289,16 @@ function AppRoutes() {
     <Routes>
       {renderLegacyRedirects()}
       {/* Public */}
-      <Route path="/" element={<Welcome />} />
+      <Route path="/" element={<SalaDaVisitante />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
 
-      <Route path="/explorar-a-casa" element={<ExplorarACasa />} />
-      <Route path="/vitrine" element={<Vitrine />} />
       <Route path="/desbloqueie" element={<DesbloqueiePage />} />
       <Route path="/oracula-formacao" element={<OraculaPage />} />
 
 
-      {/* Onboarding & Visitor */}
-      <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+      {/* Visitor Experience */}
       <Route path="/sala-da-visitante" element={<SalaDaVisitante />} />
       <Route path="/primeira-leitura" element={<PrimeiraLeituraPage />} />
       <Route path="/sala-da-visitante/primeira-leitura" element={<Navigate to="/primeira-leitura" replace />} />
@@ -320,7 +307,7 @@ function AppRoutes() {
 
 
       {/* Core navigation */}
-      <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
+      
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
       
@@ -338,7 +325,7 @@ function AppRoutes() {
       <Route path="/portal-junguiano/porta/:id" element={<ProtectedRoute minPortal="aluna_formacao"><PortalJunguianoPorta /></ProtectedRoute>} />
 
       {/* Profissional */}
-      <Route path="/confirmar-profissional" element={<ProtectedRoute><ConfirmarProfissional /></ProtectedRoute>} />
+      
       
       <Route path="/casa-tecelas" element={<ProtectedRoute minPortal="oracula"><CasaTecelaAtrio /></ProtectedRoute>} />
       <Route path="/casa-tecelas/interior" element={<ProtectedRoute minPortal="oracula"><CasaTecelaInterior /></ProtectedRoute>} />

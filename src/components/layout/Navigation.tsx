@@ -27,9 +27,9 @@ import {
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
-  { key: 'explorar', label: 'Explorar a Casa', icon: Compass, path: '/explorar-a-casa', subitems: [] },
-  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
-  { key: 'vitrine', label: 'Conheça a Casa', icon: Sparkles, path: '/vitrine', subitems: [] },
+  { key: 'visitante', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
+  { key: 'leitura', label: 'Primeira Leitura', icon: Compass, path: '/primeira-leitura', subitems: [] },
+  { key: 'clube', label: 'Caminhos de Aprofundamento', icon: BookOpen, path: '/clube', subitems: [] },
 ];
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
@@ -43,7 +43,6 @@ const assinanteMenuGroups = () => [
   { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
   { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
-  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
@@ -65,7 +64,7 @@ const alunaMenuGroups = () => [
   },
   { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
-  { key: 'vitrine', label: 'Vitrine', icon: Sparkles, path: '/vitrine', subitems: [] },
+  
 ];
 
 // ── MUNDO 2: Casa das Máquinas (Espaço Profissional) ────────────────────────

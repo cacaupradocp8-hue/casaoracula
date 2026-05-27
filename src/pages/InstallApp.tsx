@@ -67,7 +67,7 @@ const InstallApp = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="text-center">
-            <Button onClick={() => navigate("/welcome")} variant="gold" className="w-full">
+            <Button onClick={() => navigate("/dashboard-membro")} variant="gold" className="w-full">
               {getCopyByKey('btn_entrar_casa', 'Entrar na Casa ORÁCULA')}
             </Button>
           </CardContent>
@@ -154,7 +154,7 @@ const InstallApp = () => {
             <Button
               variant="ghost"
               className="w-full text-muted-foreground"
-              onClick={() => navigate("/welcome")}
+              onClick={() => navigate("/dashboard-membro")}
             >
               Continuar no navegador
             </Button>
