@@ -329,7 +329,7 @@ export function AdminClubeEditorialTab() {
     const activeEstacao = estacoes?.find(e => e.ativa);
     
     setEditingItem({
-      titulo: 'Novo Passo',
+      titulo: 'Novo Portal',
       slug: 'novo-passo',
       ordem: lastOrder + 10,
       estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
@@ -364,13 +364,13 @@ export function AdminClubeEditorialTab() {
       <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <TabsList className="bg-midnight/40 border-white/10">
           <TabsTrigger value="conteudo" className="gap-2">
-            <Layout className="w-4 h-4" /> Conteúdo Rota
+            <Layout className="w-4 h-4" /> Mapa da Travessia
           </TabsTrigger>
           <TabsTrigger value="audioteca" className="gap-2">
             <Music className="w-4 h-4" /> Audioteca
           </TabsTrigger>
           <TabsTrigger value="historico" className="gap-2">
-            <History className="w-4 h-4" /> Histórico Editorial
+            <History className="w-4 h-4" /> Memória Editorial
           </TabsTrigger>
         </TabsList>
       </div>
@@ -381,7 +381,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Layout className="w-4 h-4 text-gold" /> Estações Ativas
+              <Layout className="w-4 h-4 text-gold" /> Jornadas Ativas
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -391,7 +391,7 @@ export function AdminClubeEditorialTab() {
         <Card className="bg-midnight/20 border-white/5">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-gold" /> Itens de Rota
+              <MapIcon className="w-4 h-4 text-gold" /> Portais de Luz
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -415,7 +415,7 @@ export function AdminClubeEditorialTab() {
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input 
-            placeholder="Buscar estação ou livro..." 
+            placeholder="Procurar por travessia ou obra..." 
             className="pl-10 bg-midnight/40 border-white/10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -428,7 +428,7 @@ export function AdminClubeEditorialTab() {
           <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
             const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
             setEditingEstacao({
-              titulo: 'Nova Estação',
+              titulo: 'Nova Jornada',
               subtitulo: '',
               numero: lastNum + 1,
               publicada: false,
@@ -438,7 +438,7 @@ export function AdminClubeEditorialTab() {
             setPrevEstacao({});
             setIsEstacaoDialogOpen(true);
           }}>
-            <Plus className="w-4 h-4" /> Nova Estação
+            <Plus className="w-4 h-4" /> Nova Jornada
           </Button>
         </div>
       </div>
@@ -446,7 +446,7 @@ export function AdminClubeEditorialTab() {
       {/* Estações Section */}
       <div className="space-y-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Estações do Clube</h2>
+          <h2 className="font-display text-xl text-white/90">Círculos de Travessia</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
         </div>
         
@@ -509,10 +509,10 @@ export function AdminClubeEditorialTab() {
       {/* Itens de Rota Section */}
       <div className="space-y-4 pt-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Itens e Passos da Rota</h2>
+          <h2 className="font-display text-xl text-white/90">Santuários e Portais</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
           <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
-            <Plus className="w-3 h-3" /> Novo Item
+            <Plus className="w-3 h-3" /> Novo Portal
           </Button>
         </div>
         
@@ -520,11 +520,11 @@ export function AdminClubeEditorialTab() {
           <Table>
             <TableHeader className="bg-white/[0.02]">
               <TableRow>
-                <TableHead>Ordem</TableHead>
-                <TableHead>Título</TableHead>
-                <TableHead>Estação</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Simbólico</TableHead>
+                <TableHead>Ritmo</TableHead>
+                <TableHead>Portal</TableHead>
+                <TableHead>Jornada</TableHead>
+                <TableHead>Essência</TableHead>
+                <TableHead>Arquétipos</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
@@ -574,7 +574,7 @@ export function AdminClubeEditorialTab() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="bg-midnight border-white/10">
                         <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Editar Item
+                          <Edit3 className="w-4 h-4" /> Desvelar Portal
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
                           <Eye className="w-4 h-4" /> Pré-visualizar
@@ -607,13 +607,13 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Estação</DialogTitle>
-            <DialogDescription>Modifique os dados básicos da estação no Clube.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Configurar Travessia</DialogTitle>
+            <DialogDescription>Ajuste os fundamentos desta jornada no Clube.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título da Estação</Label>
+              <Label htmlFor="titulo">Título da Travessia</Label>
               <Input 
                 id="titulo" 
                 defaultValue={editingEstacao?.titulo} 
@@ -666,7 +666,7 @@ export function AdminClubeEditorialTab() {
                 onChange={(e) => setEditingEstacao({...editingEstacao, ativa: e.target.checked})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
-              <Label htmlFor="ativa">Estação Ativa</Label>
+              <Label htmlFor="ativa">Jornada Ativa</Label>
             </div>
             <div className="flex items-center gap-2">
               <input 
@@ -734,15 +734,15 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Passo da Rota</DialogTitle>
-            <DialogDescription>Ajuste os textos simbólicos e a configuração da jornada.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Tecedura do Portal</DialogTitle>
+            <DialogDescription>Ajuste os textos simbólicos e a cartografia da travessia.</DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
             {/* Seção Básica */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="item-titulo">Título do Passo</Label>
+                <Label htmlFor="item-titulo">Título do Portal</Label>
                 <Input 
                   id="item-titulo" 
                   defaultValue={editingItem?.titulo} 
@@ -822,21 +822,27 @@ export function AdminClubeEditorialTab() {
                 </div>
               </div>
                 <div className="space-y-2">
-                  <Label htmlFor="metadata">Metadados JSON (Audios, Perguntas, etc)</Label>
-                  <textarea 
-                    id="metadata" 
-                    className="w-full min-h-[120px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
-                    defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
-                    onChange={(e) => {
-                      try {
-                        const parsed = JSON.parse(e.target.value);
-                        setEditingItem({...editingItem, metadata: parsed});
-                      } catch (err) {
-                        // Keep as string if invalid JSON while typing
-                      }
-                    }}
-                  />
-                  <p className="text-[10px] text-muted-foreground italic">Cuidado: Formato JSON rigoroso exigido.</p>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="link" className="p-0 h-auto text-xs text-gold/60 hover:text-gold">
+                        Configurações Profundas (JSON)
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="bg-midnight border-white/10 w-[500px] p-4">
+                      <Label htmlFor="metadata" className="mb-2 block">Metadados (Áudios e Perguntas)</Label>
+                      <textarea 
+                        id="metadata" 
+                        className="w-full min-h-[200px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
+                        defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
+                        onChange={(e) => {
+                          try {
+                            const parsed = JSON.parse(e.target.value);
+                            setEditingItem({...editingItem, metadata: parsed});
+                          } catch (err) {}
+                        }}
+                      />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
             </div>
 
