@@ -329,14 +329,24 @@ export function AdminClubeEditorialTab() {
     const activeEstacao = estacoes?.find(e => e.ativa);
     
     setEditingItem({
-      titulo: 'Novo Portal',
-      slug: 'novo-passo',
+      titulo: 'Nova Estação',
+      slug: 'nova-estacao',
       ordem: lastOrder + 10,
       estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
       tipo: 'portal',
       publicado: false,
       status: 'draft',
-      metadata: { audios: [], perguntas_sugeridas: [] }
+      metadata: { 
+        audios: [], 
+        abertura_imersiva: '',
+        caso_espelho: { titulo: '', relato: '', contexto_simbolico: '' },
+        desafio_terapeuta: { pergunta_principal: '', opcoes_leitura: '' },
+        revelacao_estacao: { leitura_modelo: '', hipotese_simbolica: '', conducao_justa: '', risco_etico: '' },
+        erro_comum: '',
+        missao_campo: '',
+        pergunta_narrativa: '',
+        oraculo_estacao: { palavra: '', movimento: '', frase_fechamento: '' }
+      }
     });
     setPrevItem({});
     setIsItemDialogOpen(true);
