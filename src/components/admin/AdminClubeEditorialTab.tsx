@@ -74,6 +74,34 @@ export function AdminClubeEditorialTab() {
   const [prevItem, setPrevItem] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('conteudo');
   
+  const updateItemMetadata = (key: string, value: any) => {
+    setEditingItem((prev: any) => ({
+      ...prev,
+      metadata: {
+        ...(prev?.metadata || {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const updateItemMetadataDeep = (key: string, subkey: string, value: any) => {
+    setEditingItem((prev: any) => {
+      const currentMetadata = prev?.metadata || {};
+      const currentSubObject = currentMetadata[key] || {};
+      return {
+        ...prev,
+        metadata: {
+          ...currentMetadata,
+          [key]: {
+            ...currentSubObject,
+            [subkey]: value,
+          },
+        },
+      };
+    });
+  };
+
+  
   // History filters
   const [historyFilter, setHistoryFilter] = useState({
     user: 'all',
@@ -474,7 +502,7 @@ export function AdminClubeEditorialTab() {
             </TableHeader>
             <TableBody>
               {loadingEstacoes ? (
-                <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando estações...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando rotas do clube...</TableCell></TableRow>
               ) : filteredEstacoes?.map((e) => (
                 <TableRow key={e.id} className="hover:bg-white/[0.01] transition-colors">
                   <TableCell className="font-mono text-gold/60">{e.numero}</TableCell>
@@ -541,7 +569,7 @@ export function AdminClubeEditorialTab() {
             </TableHeader>
             <TableBody>
               {loadingItens ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8">Carregando itens da rota...</TableCell></TableRow>
+                <TableRow><TableCell colSpan={7} className="text-center py-8">Carregando estações da travessia...</TableCell></TableRow>
               ) : itensRota?.map((item) => (
                 <TableRow key={item.id} className="hover:bg-white/[0.01] transition-colors">
                   <TableCell className="font-mono text-gold/60">#{item.ordem}</TableCell>
@@ -790,7 +818,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="item-estacao">Rota Vinculada</Label>
+                  <Label htmlFor="item-estacao">Rota vinculada</Label>
                   <select 
                     id="item-estacao"
                     className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
@@ -812,7 +840,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="item-ordem">Ordem na Travessia</Label>
+                  <Label htmlFor="item-ordem">Ordem da Travessia</Label>
                   <Input 
                     id="item-ordem" 
                     type="number"
@@ -831,7 +859,7 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="porta">Porta Ativa</Label>
+                  <Label htmlFor="porta">Porta ativa</Label>
                   <Input 
                     id="porta" 
                     defaultValue={editingItem?.porta} 
@@ -840,7 +868,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="campo">Campo Simbólico</Label>
+                  <Label htmlFor="campo">Campo simbólico</Label>
                   <Input 
                     id="campo" 
                     defaultValue={editingItem?.campo} 
@@ -849,7 +877,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="torre">Torre Observada</Label>
+                  <Label htmlFor="torre">Torre observada</Label>
                   <Input 
                     id="torre" 
                     defaultValue={editingItem?.torre} 
@@ -858,7 +886,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="labirinto">Labirinto Recorrente</Label>
+                  <Label htmlFor="labirinto">Labirinto recorrente</Label>
                   <Input 
                     id="labirinto" 
                     defaultValue={editingItem?.labirinto} 
@@ -867,7 +895,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="frase_guia">Frase-Guia da Estação</Label>
+                  <Label htmlFor="frase_guia">Frase-guia</Label>
                   <Input 
                     id="frase_guia" 
                     defaultValue={editingItem?.frase_guia} 
@@ -885,15 +913,12 @@ export function AdminClubeEditorialTab() {
                 <h3 className="text-sm font-bold uppercase tracking-widest text-purple-400">3. Abertura Imersiva</h3>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="abertura">Texto de Abertura (Markdown)</Label>
+                <Label htmlFor="abertura">Abertura Imersiva (Markdown)</Label>
                 <textarea 
                   id="abertura" 
                   className="w-full min-h-[150px] rounded-md bg-white/5 border border-white/10 p-4 text-sm leading-relaxed"
                   defaultValue={editingItem?.metadata?.abertura_imersiva}
-                  onChange={(e) => setEditingItem({
-                    ...editingItem, 
-                    metadata: { ...(editingItem.metadata || {}), abertura_imersiva: e.target.value }
-                  })}
+                  onChange={(e) => updateItemMetadata('abertura_imersiva', e.target.value)}
                   placeholder="Inicie a travessia com profundidade..."
                 />
               </div>
@@ -906,41 +931,41 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Título do Áudio</Label>
+                  <Label>Título do áudio</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.audios?.[0]?.titulo} 
                     onChange={(e) => {
                       const audios = [...(editingItem.metadata?.audios || [])];
                       if (audios.length === 0) audios.push({});
                       audios[0] = { ...audios[0], titulo: e.target.value };
-                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                      updateItemMetadata('audios', audios);
                     }}
                     className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Tipo/Contexto</Label>
+                  <Label>Tipo do áudio</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.audios?.[0]?.tipo} 
                     onChange={(e) => {
                       const audios = [...(editingItem.metadata?.audios || [])];
                       if (audios.length === 0) audios.push({});
                       audios[0] = { ...audios[0], tipo: e.target.value };
-                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                      updateItemMetadata('audios', audios);
                     }}
                     placeholder="Ex: Meditação Guiada, Aula Teórica"
                     className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>URL / Caminho do Arquivo</Label>
+                  <Label>URL/caminho do áudio</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.audios?.[0]?.url} 
                     onChange={(e) => {
                       const audios = [...(editingItem.metadata?.audios || [])];
                       if (audios.length === 0) audios.push({});
                       audios[0] = { ...audios[0], url: e.target.value };
-                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                      updateItemMetadata('audios', audios);
                     }}
                     className="bg-white/5 border-white/10 font-mono text-xs"
                   />
@@ -953,7 +978,7 @@ export function AdminClubeEditorialTab() {
                       const audios = [...(editingItem.metadata?.audios || [])];
                       if (audios.length === 0) audios.push({});
                       audios[0] = { ...audios[0], duracao: e.target.value };
-                      setEditingItem({ ...editingItem, metadata: { ...(editingItem.metadata || {}), audios } });
+                      updateItemMetadata('audios', audios);
                     }}
                     placeholder="Ex: 15:00"
                     className="bg-white/5 border-white/10"
@@ -969,45 +994,27 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Título do Caso</Label>
+                  <Label>título</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.caso_espelho?.titulo} 
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), titulo: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'titulo', e.target.value)}
                     className="bg-white/5 border-white/10"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Relato do Caso</Label>
+                  <Label>relato</Label>
                   <textarea 
                     className="w-full min-h-[100px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.caso_espelho?.relato}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), relato: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'relato', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Contexto Simbólico</Label>
+                  <Label>contexto simbólico</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm italic"
                     defaultValue={editingItem?.metadata?.caso_espelho?.contexto_simbolico}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        caso_espelho: { ...(editingItem.metadata?.caso_espelho || {}), contexto_simbolico: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'contexto_simbolico', e.target.value)}
                   />
                 </div>
               </div>
@@ -1020,31 +1027,19 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Pergunta Principal</Label>
+                  <Label>pergunta principal</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.desafio_terapeuta?.pergunta_principal} 
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        desafio_terapeuta: { ...(editingItem.metadata?.desafio_terapeuta || {}), pergunta_principal: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('desafio_terapeuta', 'pergunta_principal', e.target.value)}
                     className="bg-white/5 border-white/10 text-gold"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Opções de Leitura / Caminhos</Label>
+                  <Label>opções de leitura</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.desafio_terapeuta?.opcoes_leitura}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        desafio_terapeuta: { ...(editingItem.metadata?.desafio_terapeuta || {}), opcoes_leitura: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('desafio_terapeuta', 'opcoes_leitura', e.target.value)}
                     placeholder="Descreva as possibilidades de interpretação..."
                   />
                 </div>
@@ -1058,59 +1053,35 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Leitura-modelo</Label>
+                  <Label>leitura-modelo</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.revelacao_estacao?.leitura_modelo}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), leitura_modelo: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'leitura_modelo', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Hipótese simbólica</Label>
+                  <Label>hipótese simbólica</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.revelacao_estacao?.hipotese_simbolica}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), hipotese_simbolica: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'hipotese_simbolica', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Condução justa</Label>
+                  <Label>condução justa</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.revelacao_estacao?.conducao_justa}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), conducao_justa: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'conducao_justa', e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Risco ético</Label>
+                  <Label>risco ético</Label>
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm border-rose-500/20"
                     defaultValue={editingItem?.metadata?.revelacao_estacao?.risco_etico}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        revelacao_estacao: { ...(editingItem.metadata?.revelacao_estacao || {}), risco_etico: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'risco_etico', e.target.value)}
                   />
                 </div>
               </div>
@@ -1122,15 +1093,12 @@ export function AdminClubeEditorialTab() {
                 <h3 className="text-sm font-bold uppercase tracking-widest text-red-500">8. Erro Comum</h3>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="erro">O que evitar nesta estação</Label>
+                <Label htmlFor="erro">Erro Comum</Label>
                 <textarea 
                   id="erro" 
                   className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                   defaultValue={editingItem?.metadata?.erro_comum}
-                  onChange={(e) => setEditingItem({
-                    ...editingItem, 
-                    metadata: { ...(editingItem.metadata || {}), erro_comum: e.target.value }
-                  })}
+                  onChange={(e) => updateItemMetadata('erro_comum', e.target.value)}
                   placeholder="Erros de interpretação ou condução comuns..."
                 />
               </div>
@@ -1143,7 +1111,7 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="jardim_prompt">Registro no Jardim (Prompt para a IA)</Label>
+                  <Label htmlFor="jardim_prompt">Registro no Jardim</Label>
                   <textarea 
                     id="jardim_prompt" 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
@@ -1157,21 +1125,15 @@ export function AdminClubeEditorialTab() {
                   <textarea 
                     className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
                     defaultValue={editingItem?.metadata?.missao_campo}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { ...(editingItem.metadata || {}), missao_campo: e.target.value }
-                    })}
+                    onChange={(e) => updateItemMetadata('missao_campo', e.target.value)}
                     placeholder="Exercício prático fora do app..."
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Pergunta Narrativa</Label>
+                  <Label>Pergunta narrativa</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.pergunta_narrativa}
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { ...(editingItem.metadata || {}), pergunta_narrativa: e.target.value }
-                    })}
+                    onChange={(e) => updateItemMetadata('pergunta_narrativa', e.target.value)}
                     className="bg-white/5 border-white/10 italic"
                   />
                 </div>
@@ -1185,44 +1147,26 @@ export function AdminClubeEditorialTab() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <Label>Palavra da Estação</Label>
+                  <Label>palavra da estação</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.oraculo_estacao?.palavra} 
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), palavra: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'palavra', e.target.value)}
                     className="bg-white/5 border-white/10 text-center font-bold"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Movimento</Label>
+                  <Label>movimento da estação</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.oraculo_estacao?.movimento} 
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), movimento: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'movimento', e.target.value)}
                     className="bg-white/5 border-white/10 text-center"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label>Frase de Fechamento</Label>
+                  <Label>frase de fechamento</Label>
                   <Input 
                     defaultValue={editingItem?.metadata?.oraculo_estacao?.frase_fechamento} 
-                    onChange={(e) => setEditingItem({
-                      ...editingItem, 
-                      metadata: { 
-                        ...(editingItem.metadata || {}), 
-                        oraculo_estacao: { ...(editingItem.metadata?.oraculo_estacao || {}), frase_fechamento: e.target.value } 
-                      }
-                    })}
+                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'frase_fechamento', e.target.value)}
                     className="bg-white/5 border-white/10 italic"
                   />
                 </div>
@@ -1277,6 +1221,7 @@ export function AdminClubeEditorialTab() {
               <Label htmlFor="publicado-item" className="text-sm font-medium">Publicar Estação (Visível na Rota)</Label>
             </div>
           </div>
+
 
           <DialogFooter className="border-t border-white/5 pt-4">
             <Button variant="ghost" onClick={() => setIsItemDialogOpen(false)}>Cancelar</Button>
