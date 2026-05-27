@@ -742,7 +742,7 @@ export function AdminClubeEditorialTab() {
             {/* Seção Básica */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="item-titulo">Título do Passo</Label>
+                <Label htmlFor="item-titulo">Título do Portal</Label>
                 <Input 
                   id="item-titulo" 
                   defaultValue={editingItem?.titulo} 
