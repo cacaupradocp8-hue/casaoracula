@@ -8,11 +8,11 @@ interface CasePresentationProps {
 export const CasePresentation: React.FC<CasePresentationProps> = ({ onNext }) => {
   const options = [
     { id: 'padrao-relacional', label: 'Um padrão relacional repetitivo' },
-    { id: 'crenca-central', label: 'Uma crença central de valor condicionado' },
-    { id: 'hipercontrole', label: 'Uma estratégia de hipercontrole' },
+    { id: 'crenca-central', label: 'Uma crença silenciosa sobre valor e merecimento' },
+    { id: 'hipercontrole', label: 'Uma tentativa de controlar tudo para não desmoronar' },
     { id: 'exaustao-emocional', label: 'Exaustão emocional' },
     { id: 'ferida-vinculo', label: 'Uma ferida de vínculo' },
-    { id: 'conflito-simbolico', label: 'Um conflito simbólico mais profundo' },
+    { id: 'conflito-simbolico', label: 'Algo na história que parece pedir um significado maior' },
   ];
 
   return (

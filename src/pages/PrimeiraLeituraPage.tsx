@@ -55,7 +55,7 @@ const PrimeiraLeituraPage = () => {
                   onClick={() => handleNextStep()}
                   className="text-primary font-medium flex flex-col items-center gap-2 group"
                 >
-                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Quero aprofundar minha escuta</span>
+                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Começar minha Travessia</span>
                   <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
                 </button>
 
