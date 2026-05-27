@@ -181,7 +181,7 @@ export function AdminClubeEditorialTab() {
 
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, ...updates } = payload;
+      const { id, estacao, created_at, updated_at, ...updates } = payload;
       const { error } = await supabase
         .from('clube_rota_itens')
         .update(updates)
@@ -548,6 +548,24 @@ export function AdminClubeEditorialTab() {
                   id="item-titulo" 
                   defaultValue={editingItem?.titulo} 
                   onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})}
+                  className="bg-white/5 border-white/10"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-slug">Slug (URL)</Label>
+                <Input 
+                  id="item-slug" 
+                  defaultValue={editingItem?.slug} 
+                  onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
+                  className="bg-white/5 border-white/10 font-mono text-xs"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-subtitulo">Subtítulo Simbólico</Label>
+                <Input 
+                  id="item-subtitulo" 
+                  defaultValue={editingItem?.subtitulo} 
+                  onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
                   className="bg-white/5 border-white/10"
                 />
               </div>
