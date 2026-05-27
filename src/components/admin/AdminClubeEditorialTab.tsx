@@ -666,7 +666,7 @@ export function AdminClubeEditorialTab() {
                 onChange={(e) => setEditingEstacao({...editingEstacao, ativa: e.target.checked})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
-              <Label htmlFor="ativa">Estação Ativa</Label>
+              <Label htmlFor="ativa">Jornada Ativa</Label>
             </div>
             <div className="flex items-center gap-2">
               <input 
