@@ -307,7 +307,7 @@ function AppRoutes() {
 
 
       {/* Core navigation */}
-      <Route path="/welcome" element={<ProtectedRoute><Welcome /></ProtectedRoute>} />
+      
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
       
