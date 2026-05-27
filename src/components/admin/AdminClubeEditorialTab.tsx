@@ -607,8 +607,8 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Estação</DialogTitle>
-            <DialogDescription>Modifique os dados básicos da estação no Clube.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Configurar Travessia</DialogTitle>
+            <DialogDescription>Ajuste os fundamentos desta jornada no Clube.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
