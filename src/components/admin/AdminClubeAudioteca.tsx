@@ -142,7 +142,7 @@ export function AdminClubeAudioteca() {
 
   const updateTrack = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, album, album_id, ...updates } = payload;
+      const { id, album, album_id, created_at, updated_at, ...updates } = payload;
       const { error } = await supabase
         .from('clube_audio_tracks')
         .update(updates)
