@@ -613,7 +613,7 @@ export function AdminClubeEditorialTab() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título da Estação</Label>
+              <Label htmlFor="titulo">Título da Travessia</Label>
               <Input 
                 id="titulo" 
                 defaultValue={editingEstacao?.titulo} 
