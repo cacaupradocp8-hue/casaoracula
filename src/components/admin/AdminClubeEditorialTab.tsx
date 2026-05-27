@@ -732,130 +732,76 @@ export function AdminClubeEditorialTab() {
 
       {/* Edit Item Dialog */}
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
-        <DialogContent className="bg-midnight border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-midnight border-white/10 max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Edição da Travessia</DialogTitle>
-            <DialogDescription>Ajuste os blocos editoriais e a cartografia desta estação.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Editar Estação da Travessia</DialogTitle>
+            <DialogDescription>Cartografia detalhada e blocos editoriais.</DialogDescription>
           </DialogHeader>
           
-          <div className="space-y-6 py-4">
+          <div className="space-y-8 py-4">
+            {/* Bloco 1: Identidade */}
             <div className="space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Identidade da Estação</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">1. Identidade da Estação</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="item-titulo">Título da Estação</Label>
-                <Input 
-                  id="item-titulo" 
-                  defaultValue={editingItem?.titulo} 
-                  onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})}
-                  className="bg-white/5 border-white/10"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-slug">Slug (URL)</Label>
-                <Input 
-                  id="item-slug" 
-                  defaultValue={editingItem?.slug} 
-                  onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
-                  className="bg-white/5 border-white/10 font-mono text-xs"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-subtitulo">Subtítulo</Label>
-                <Input 
-                  id="item-subtitulo" 
-                  defaultValue={editingItem?.subtitulo} 
-                  onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
-                  className="bg-white/5 border-white/10"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-ordem">Ordem na Sequência</Label>
-                <Input 
-                  id="item-ordem" 
-                  type="number"
-                  defaultValue={editingItem?.ordem} 
-                  onChange={(e) => setEditingItem({...editingItem, ordem: parseInt(e.target.value)})}
-                  className="bg-white/5 border-white/10"
-                />
+                <div className="space-y-2">
+                  <Label>Nome da Estação</Label>
+                  <Input defaultValue={editingItem?.titulo} onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})} className="bg-white/5" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Subtítulo simbólico</Label>
+                  <Input defaultValue={editingItem?.subtitulo} onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})} className="bg-white/5" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Slug (URL)</Label>
+                  <Input defaultValue={editingItem?.slug} onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})} className="bg-white/5 font-mono text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ordem</Label>
+                  <Input type="number" defaultValue={editingItem?.ordem} onChange={(e) => setEditingItem({...editingItem, ordem: parseInt(e.target.value)})} className="bg-white/5" />
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Seção Simbólica */}
-            <div className="p-4 rounded-lg bg-white/[0.02] border border-white/5 space-y-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Blocos Editoriais</h3>
+            {/* Bloco 2: Estado da Travessia */}
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">2. Estado da Travessia</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="porta">Abertura Imersiva</Label>
-                  <Input 
-                    id="porta" 
-                    defaultValue={editingItem?.porta} 
-                    onChange={(e) => setEditingItem({...editingItem, porta: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                  />
+                  <Label>Porta Ativa</Label>
+                  <Input defaultValue={editingItem?.porta} onChange={(e) => setEditingItem({...editingItem, porta: e.target.value})} className="bg-white/5" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="campo">Caso-Espelho</Label>
-                  <Input 
-                    id="campo" 
-                    defaultValue={editingItem?.campo} 
-                    onChange={(e) => setEditingItem({...editingItem, campo: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                  />
+                  <Label>Campo Simbólico</Label>
+                  <Input defaultValue={editingItem?.campo} onChange={(e) => setEditingItem({...editingItem, campo: e.target.value})} className="bg-white/5" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="torre">Desafio da Terapeuta</Label>
-                  <Input 
-                    id="torre" 
-                    defaultValue={editingItem?.torre} 
-                    onChange={(e) => setEditingItem({...editingItem, torre: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                  />
+                  <Label>Torre Observada</Label>
+                  <Input defaultValue={editingItem?.torre} onChange={(e) => setEditingItem({...editingItem, torre: e.target.value})} className="bg-white/5" />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="labirinto">Revelação da Estação</Label>
-                  <Input 
-                    id="labirinto" 
-                    defaultValue={editingItem?.labirinto} 
-                    onChange={(e) => setEditingItem({...editingItem, labirinto: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="oraculo">Oráculo da Estação</Label>
-                  <Input 
-                    id="oraculo" 
-                    defaultValue={editingItem?.frase_guia} 
-                    onChange={(e) => setEditingItem({...editingItem, frase_guia: e.target.value})}
-                    className="bg-white/5 border-white/10 text-xs"
-                    placeholder="Frase ou mensagem do oráculo..."
-                  />
+                  <Label>Labirinto Recorrente</Label>
+                  <Input defaultValue={editingItem?.labirinto} onChange={(e) => setEditingItem({...editingItem, labirinto: e.target.value})} className="bg-white/5" />
                 </div>
               </div>
-                <div className="space-y-2">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="link" className="p-0 h-auto text-xs text-gold/60 hover:text-gold">
-                        Configuração Avançada
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent className="bg-midnight border-white/10 w-[500px] p-4">
-                      <Label htmlFor="metadata" className="mb-2 block">Metadados e Áudios de Travessia</Label>
-                      <textarea 
-                        id="metadata" 
-                        className="w-full min-h-[200px] rounded-md bg-white/5 border border-white/10 p-3 text-xs font-mono"
-                        defaultValue={JSON.stringify(editingItem?.metadata, null, 2)}
-                        onChange={(e) => {
-                          try {
-                            const parsed = JSON.parse(e.target.value);
-                            setEditingItem({...editingItem, metadata: parsed});
-                          } catch (err) {}
-                        }}
-                      />
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+            </div>
+
+            {/* Bloco 3: Abertura Imersiva */}
+            <div className="space-y-2">
+              <Label>Abertura Imersiva</Label>
+              <textarea 
+                className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                defaultValue={editingItem?.metadata?.abertura_imersiva}
+                onChange={(e) => setEditingItem({...editingItem, metadata: { ...editingItem.metadata, abertura_imersiva: e.target.value }})}
+              />
+            </div>
+
+            {/* Bloco 4: Áudio de Travessia */}
+            <div className="space-y-4">
+               <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">4. Áudio de Travessia</h3>
+               <div className="grid grid-cols-1 gap-2">
+                 <Input placeholder="Título" defaultValue={editingItem?.metadata?.audios?.[0]?.titulo} onChange={(e) => setEditingItem({...editingItem, metadata: { ...editingItem.metadata, audios: [{...editingItem.metadata?.audios?.[0], titulo: e.target.value}] }})} className="bg-white/5" />
+                 <Input placeholder="URL" defaultValue={editingItem?.metadata?.audios?.[0]?.url} onChange={(e) => setEditingItem({...editingItem, metadata: { ...editingItem.metadata, audios: [{...editingItem.metadata?.audios?.[0], url: e.target.value}] }})} className="bg-white/5" />
+               </div>
             </div>
 
             {/* Prompts e Textos */}
@@ -897,15 +843,9 @@ export function AdminClubeEditorialTab() {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsItemDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => {
-              if (editingItem.id) {
-                updateItem.mutate(editingItem);
-              } else {
-                createItem.mutate(editingItem);
-              }
-            }}>
-              Salvar Estação
-            </Button>
+            <Button className="bg-gold text-midnight" onClick={() => {
+              editingItem.id ? updateItem.mutate(editingItem) : createItem.mutate(editingItem)
+            }}>Salvar Estação</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
