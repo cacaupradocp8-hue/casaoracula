@@ -780,8 +780,9 @@ export function AdminClubeEditorialTab() {
                 />
               </div>
             </div>
+          </div>
 
-            {/* Seção Simbólica */}
+          {/* Seção Simbólica */}
             <div className="p-4 rounded-lg bg-white/[0.02] border border-white/5 space-y-4">
               <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Blocos Editoriais</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
