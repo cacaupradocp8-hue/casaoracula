@@ -812,7 +812,7 @@ export function AdminClubeEditorialTab() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="labirinto">Revelação</Label>
+                  <Label htmlFor="labirinto">Revelação da Estação</Label>
                   <Input 
                     id="labirinto" 
                     defaultValue={editingItem?.labirinto} 
