@@ -147,7 +147,7 @@ export function AdminClubeEditorialTab() {
 
   const updateEstacao = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, ...updates } = payload;
+      const { id, created_at, updated_at, ...updates } = payload;
       const { error } = await supabase
         .from('clube_estacoes')
         .update(updates)
@@ -181,7 +181,7 @@ export function AdminClubeEditorialTab() {
 
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, ...updates } = payload;
+      const { id, estacao, created_at, updated_at, profiles, ...updates } = payload;
       const { error } = await supabase
         .from('clube_rota_itens')
         .update(updates)
@@ -215,7 +215,7 @@ export function AdminClubeEditorialTab() {
 
   const createItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, ...item } = payload;
+      const { id, estacao, created_at, updated_at, profiles, ...item } = payload;
       const { error } = await supabase
         .from('clube_rota_itens')
         .insert(item);
