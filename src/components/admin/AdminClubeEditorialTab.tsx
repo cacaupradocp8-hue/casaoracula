@@ -207,13 +207,22 @@ export function AdminClubeEditorialTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('clube_estacoes')
-        .delete()
+        .update({ status: 'archived', ativa: false, publicada: false })
         .eq('id', id);
       if (error) throw error;
+      
+      await createAuditLog({
+        tabela: 'clube_estacoes',
+        registro_id: id,
+        acao: 'UPDATE',
+        campo_alterado: 'status',
+        valor_anterior: 'active',
+        valor_novo: 'archived'
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
-      toast.success('Estação removida');
+      toast.success('Estação arquivada (exclusão física desabilitada)');
     }
   });
 
