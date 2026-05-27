@@ -179,9 +179,40 @@ export function AdminClubeEditorialTab() {
     }
   });
 
+  const createEstacao = useMutation({
+    mutationFn: async (payload: any) => {
+      const { id, created_at, updated_at, ...estacao } = payload;
+      const { error } = await supabase
+        .from('clube_estacoes')
+        .insert(estacao);
+      if (error) throw error;
+      
+      await createAuditLog({
+        tabela: 'clube_estacoes',
+        acao: 'INSERT',
+        valor_novo: estacao.titulo
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
+      toast.success('Nova estação criada com sucesso');
+      setIsEstacaoDialogOpen(false);
+    }
+  });
+
   const updateItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, profiles, ...updates } = payload;
+      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
+      const { 
+        id, 
+        estacao, 
+        created_at, 
+        updated_at, 
+        profiles,
+        count,
+        ...updates 
+      } = payload;
+      
       const { error } = await supabase
         .from('clube_rota_itens')
         .update(updates)
@@ -215,7 +246,17 @@ export function AdminClubeEditorialTab() {
 
   const createItem = useMutation({
     mutationFn: async (payload: any) => {
-      const { id, estacao, created_at, updated_at, profiles, ...item } = payload;
+      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
+      const { 
+        id, 
+        estacao, 
+        created_at, 
+        updated_at, 
+        profiles,
+        count,
+        ...item 
+      } = payload;
+      
       const { error } = await supabase
         .from('clube_rota_itens')
         .insert(item);
@@ -335,7 +376,19 @@ export function AdminClubeEditorialTab() {
           <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10">
             <Filter className="w-4 h-4" /> Filtros
           </Button>
-          <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90">
+          <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+            const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
+            setEditingEstacao({
+              titulo: 'Nova Estação',
+              subtitulo: '',
+              numero: lastNum + 1,
+              publicada: false,
+              ativa: false,
+              livro_titulo: ''
+            });
+            setPrevEstacao({});
+            setIsEstacaoDialogOpen(true);
+          }}>
             <Plus className="w-4 h-4" /> Nova Estação
           </Button>
         </div>
@@ -598,8 +651,17 @@ export function AdminClubeEditorialTab() {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsEstacaoDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => updateEstacao.mutate(editingEstacao)}>
-              Salvar Alterações
+            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+              if (editingEstacao.id) {
+                updateEstacao.mutate(editingEstacao);
+              } else {
+                // createEstacao - Podemos usar o mesmo updateEstacao se ele suportar insert
+                // Mas vamos ser explícitos e criar uma nova se necessário.
+                // Por agora, vamos assumir que o usuário quer que funcione.
+                createEstacao.mutate(editingEstacao);
+              }
+            }}>
+              {editingEstacao?.id ? 'Salvar Alterações' : 'Criar Estação'}
             </Button>
           </DialogFooter>
         </DialogContent>
