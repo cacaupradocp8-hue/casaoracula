@@ -74,6 +74,34 @@ export function AdminClubeEditorialTab() {
   const [prevItem, setPrevItem] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('conteudo');
   
+  const updateItemMetadata = (key: string, value: any) => {
+    setEditingItem((prev: any) => ({
+      ...prev,
+      metadata: {
+        ...(prev?.metadata || {}),
+        [key]: value,
+      },
+    }));
+  };
+
+  const updateItemMetadataDeep = (key: string, subkey: string, value: any) => {
+    setEditingItem((prev: any) => {
+      const currentMetadata = prev?.metadata || {};
+      const currentSubObject = currentMetadata[key] || {};
+      return {
+        ...prev,
+        metadata: {
+          ...currentMetadata,
+          [key]: {
+            ...currentSubObject,
+            [subkey]: value,
+          },
+        },
+      };
+    });
+  };
+
+  
   // History filters
   const [historyFilter, setHistoryFilter] = useState({
     user: 'all',
