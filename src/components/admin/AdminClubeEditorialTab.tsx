@@ -364,13 +364,13 @@ export function AdminClubeEditorialTab() {
       <div className="flex items-center justify-between border-b border-white/5 pb-4">
         <TabsList className="bg-midnight/40 border-white/10">
           <TabsTrigger value="conteudo" className="gap-2">
-            <Layout className="w-4 h-4" /> Conteúdo Rota
+            <Layout className="w-4 h-4" /> Mapa da Travessia
           </TabsTrigger>
           <TabsTrigger value="audioteca" className="gap-2">
             <Music className="w-4 h-4" /> Audioteca
           </TabsTrigger>
           <TabsTrigger value="historico" className="gap-2">
-            <History className="w-4 h-4" /> Histórico Editorial
+            <History className="w-4 h-4" /> Memória Editorial
           </TabsTrigger>
         </TabsList>
       </div>
