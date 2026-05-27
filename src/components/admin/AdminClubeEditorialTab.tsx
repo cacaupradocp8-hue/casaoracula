@@ -617,13 +617,13 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Estação</DialogTitle>
-            <DialogDescription>Ajuste os fundamentos desta estação no Clube.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Editar Rota</DialogTitle>
+            <DialogDescription>Ajuste os fundamentos desta rota no Clube.</DialogDescription>
           </DialogHeader>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="titulo">Título da Estação</Label>
+              <Label htmlFor="titulo">Título da Rota</Label>
               <Input 
                 id="titulo" 
                 defaultValue={editingEstacao?.titulo} 
@@ -676,7 +676,7 @@ export function AdminClubeEditorialTab() {
                 onChange={(e) => setEditingEstacao({...editingEstacao, ativa: e.target.checked})}
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
-              <Label htmlFor="ativa">Jornada Ativa</Label>
+              <Label htmlFor="ativa">Rota Ativa</Label>
             </div>
             <div className="flex items-center gap-2">
               <input 
@@ -734,7 +734,7 @@ export function AdminClubeEditorialTab() {
                 createEstacao.mutate(editingEstacao);
               }
             }}>
-              {editingEstacao?.id ? 'Salvar Estação' : 'Salvar e criar próxima estação'}
+              {editingEstacao?.id ? 'Salvar Rota' : 'Salvar e criar próxima rota'}
             </Button>
           </DialogFooter>
         </DialogContent>
