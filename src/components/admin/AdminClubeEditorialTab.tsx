@@ -739,8 +739,9 @@ export function AdminClubeEditorialTab() {
           </DialogHeader>
           
           <div className="space-y-6 py-4">
-            {/* Identidade da Estação */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <h3 className="text-xs font-bold uppercase tracking-widest text-gold/60">Identidade da Estação</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="item-titulo">Título da Estação</Label>
                 <Input 
