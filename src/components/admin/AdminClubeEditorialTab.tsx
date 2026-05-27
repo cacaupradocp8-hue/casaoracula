@@ -492,11 +492,11 @@ export function AdminClubeEditorialTab() {
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
                     </Button>
                     <Button variant="ghost" size="icon" onClick={() => {
-                      if (window.confirm(`Excluir a estação "${e.titulo}"? Esta ação não pode ser desfeita.`)) {
+                      if (window.confirm(`Arquivar a estação "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
                         deleteEstacao.mutate(e.id);
                       }
                     }}>
-                      <Trash2 className="w-4 h-4 text-white/20 hover:text-destructive transition-colors" />
+                      <Trash2 className="w-4 h-4 text-white/20 hover:text-amber-500 transition-colors" />
                     </Button>
                   </TableCell>
                 </TableRow>
