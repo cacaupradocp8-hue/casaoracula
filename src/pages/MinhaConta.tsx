@@ -85,12 +85,6 @@ export default function MinhaConta() {
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
 
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/onboarding">
-                <User className="w-4 h-4 mr-2" />
-                Editar Perfil
-              </Link>
-            </Button>
           </CardContent>
         </Card>
 

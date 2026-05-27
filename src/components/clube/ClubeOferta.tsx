@@ -118,10 +118,10 @@ export function ClubeOferta() {
             Ou{' '}
             <button
               type="button"
-              onClick={() => navigate('/vitrine')}
+              onClick={() => navigate('/sala-da-visitante')}
               className="text-primary/70 hover:text-primary underline underline-offset-2 transition-colors"
             >
-              explore a Vitrine
+              explore a Sala da Visitante
             </button>{' '}
             para conhecer tudo que a Casa oferece.
           </p>

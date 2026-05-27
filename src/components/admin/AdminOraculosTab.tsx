@@ -148,7 +148,7 @@ export function AdminOraculosTab() {
       lock_message_title: formData.get('lock_message_title') as string || 'Oráculo Bloqueado',
       lock_message_body: formData.get('lock_message_body') as string || null,
       upgrade_cta_text: formData.get('upgrade_cta_text') as string || 'Quero me inscrever',
-      upgrade_cta_route: formData.get('upgrade_cta_route') as string || '/welcome',
+      upgrade_cta_route: formData.get('upgrade_cta_route') as string || '/dashboard-membro',
       show_locked_teaser: formData.get('show_locked_teaser') === 'true',
       enable_journal: formData.get('enable_journal') === 'true',
       enable_professional_mode: formData.get('enable_professional_mode') === 'true',
@@ -541,7 +541,7 @@ export function AdminOraculosTab() {
                       </div>
                       <div>
                         <Label htmlFor="upgrade_cta_route">Rota do Botão</Label>
-                        <Input id="upgrade_cta_route" name="upgrade_cta_route" defaultValue={editingOracle?.upgrade_cta_route || '/welcome'} />
+                        <Input id="upgrade_cta_route" name="upgrade_cta_route" defaultValue={editingOracle?.upgrade_cta_route || '/dashboard-membro'} />
                       </div>
                       <div className="flex items-center gap-2 pt-6">
                         <Switch id="show_locked_teaser" name="show_locked_teaser" defaultChecked={editingOracle?.show_locked_teaser ?? true} value="true" />

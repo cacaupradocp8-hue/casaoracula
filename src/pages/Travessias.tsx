@@ -139,7 +139,7 @@ export default function Travessias() {
                     <Button 
                       variant="link" 
                       className="px-0 h-auto text-gold"
-                      onClick={() => navigate('/confirmar-profissional')}
+                      onClick={() => navigate('/casa-das-maquinas')}
                     >
                       Fazer confirmação profissional →
                     </Button>
