@@ -509,10 +509,10 @@ export function AdminClubeEditorialTab() {
       {/* Itens de Rota Section */}
       <div className="space-y-4 pt-4">
         <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Itens e Passos da Rota</h2>
+          <h2 className="font-display text-xl text-white/90">Santuários e Portais</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
           <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
-            <Plus className="w-3 h-3" /> Novo Item
+            <Plus className="w-3 h-3" /> Novo Portal
           </Button>
         </div>
         
