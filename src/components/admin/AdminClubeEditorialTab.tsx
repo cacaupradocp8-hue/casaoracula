@@ -520,11 +520,11 @@ export function AdminClubeEditorialTab() {
           <Table>
             <TableHeader className="bg-white/[0.02]">
               <TableRow>
-                <TableHead>Ordem</TableHead>
-                <TableHead>Título</TableHead>
-                <TableHead>Estação</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead>Simbólico</TableHead>
+                <TableHead>Ritmo</TableHead>
+                <TableHead>Portal</TableHead>
+                <TableHead>Jornada</TableHead>
+                <TableHead>Essência</TableHead>
+                <TableHead>Arquétipos</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Ações</TableHead>
               </TableRow>
