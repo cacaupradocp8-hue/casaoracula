@@ -582,12 +582,12 @@ export function AdminClubeEditorialTab() {
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
                           <Layout className="w-4 h-4" /> Ver no Clube
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => {
-                          if (window.confirm(`Excluir o item "${item.titulo}"?`)) {
+                        <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
+                          if (window.confirm(`Arquivar o item "${item.titulo}" por segurança?`)) {
                             deleteItem.mutate(item.id);
                           }
                         }}>
-                          <Trash2 className="w-4 h-4" /> Excluir Item
+                          <Trash2 className="w-4 h-4" /> Arquivar Item
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
