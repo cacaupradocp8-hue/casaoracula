@@ -329,7 +329,7 @@ export function AdminClubeEditorialTab() {
     const activeEstacao = estacoes?.find(e => e.ativa);
     
     setEditingItem({
-      titulo: 'Novo Passo',
+      titulo: 'Novo Portal',
       slug: 'novo-passo',
       ordem: lastOrder + 10,
       estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
