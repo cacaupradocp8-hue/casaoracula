@@ -67,7 +67,7 @@ export function useJourneyGuard(): JourneyState {
           && Object.keys((cidadelaRes.data.distritos_json as Record<string, unknown>) || {}).length > 0,
         );
 
-        if (!hasQuiz) {
+        if (!hasTravessia) {
           setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
         } else if (!hasTravessia) {
           setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
