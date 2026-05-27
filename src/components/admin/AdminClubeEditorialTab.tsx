@@ -734,8 +734,8 @@ export function AdminClubeEditorialTab() {
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Passo da Rota</DialogTitle>
-            <DialogDescription>Ajuste os textos simbólicos e a configuração da jornada.</DialogDescription>
+            <DialogTitle className="text-gold font-display">Tecedura do Portal</DialogTitle>
+            <DialogDescription>Ajuste os textos simbólicos e a cartografia da travessia.</DialogDescription>
           </DialogHeader>
           
           <div className="space-y-6 py-4">
