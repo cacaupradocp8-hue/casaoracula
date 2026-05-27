@@ -81,7 +81,7 @@ export function VisitorHomePage() {
               <Button
                 variant="gold"
                 size="lg"
-                onClick={() => navigate('/quiz/descubra-seu-eixo')}
+                onClick={() => navigate('/dashboard-membro')}
                 className="gap-2 px-8"
               >
                 Descobrir minha Voz
@@ -166,7 +166,7 @@ export function VisitorHomePage() {
               <Button
                 variant="gold"
                 size="lg"
-                onClick={() => navigate('/quiz/descubra-seu-eixo')}
+                onClick={() => navigate('/dashboard-membro')}
                 className="gap-2 px-8"
               >
                 Fazer o teste da Voz
