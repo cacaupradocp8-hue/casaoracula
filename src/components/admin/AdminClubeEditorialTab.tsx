@@ -21,7 +21,8 @@ import {
   User,
   ArrowUpDown,
   Calendar,
-  Music
+  Music,
+  Trash2
 } from 'lucide-react';
 import { AdminClubeAudioteca } from './AdminClubeAudioteca';
 import { 
@@ -466,9 +467,16 @@ export function AdminClubeEditorialTab() {
                   <TableCell className="text-xs text-muted-foreground">
                     {e.updated_at ? new Date(e.updated_at).toLocaleDateString() : 'N/A'}
                   </TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right flex items-center justify-end gap-1">
                     <Button variant="ghost" size="icon" onClick={() => handleEditEstacao(e)}>
                       <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
+                    </Button>
+                    <Button variant="ghost" size="icon" onClick={() => {
+                      if (window.confirm(`Excluir a estação "${e.titulo}"? Esta ação não pode ser desfeita.`)) {
+                        deleteEstacao.mutate(e.id);
+                      }
+                    }}>
+                      <Trash2 className="w-4 h-4 text-white/20 hover:text-destructive transition-colors" />
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -553,6 +561,13 @@ export function AdminClubeEditorialTab() {
                         </DropdownMenuItem>
                         <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
                           <Layout className="w-4 h-4" /> Ver no Clube
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => {
+                          if (window.confirm(`Excluir o item "${item.titulo}"?`)) {
+                            deleteItem.mutate(item.id);
+                          }
+                        }}>
+                          <Trash2 className="w-4 h-4" /> Excluir Item
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
