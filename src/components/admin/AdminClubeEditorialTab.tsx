@@ -88,6 +88,7 @@ export function AdminClubeEditorialTab() {
       const { data, error } = await supabase
         .from('clube_estacoes')
         .select('*')
+        .neq('status', 'archived')
         .order('numero', { ascending: false });
       if (error) throw error;
       return data;
@@ -103,6 +104,7 @@ export function AdminClubeEditorialTab() {
           *,
           estacao:clube_estacoes(titulo)
         `)
+        .neq('status', 'archived')
         .order('estacao_id')
         .order('ordem');
       if (error) throw error;
