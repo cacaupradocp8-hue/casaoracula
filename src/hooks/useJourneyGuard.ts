@@ -68,7 +68,7 @@ export function useJourneyGuard(): JourneyState {
         );
 
         if (!hasQuiz) {
-          setState({ currentStep: 'quiz', redirectTo: '/dashboard-membro', loading: false });
+          setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
         } else if (!hasTravessia) {
           setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
         } else if (!hasCartografia) {
