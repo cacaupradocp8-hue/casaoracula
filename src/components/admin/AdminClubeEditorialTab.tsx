@@ -305,13 +305,22 @@ export function AdminClubeEditorialTab() {
     mutationFn: async (id: string) => {
       const { error } = await supabase
         .from('clube_rota_itens')
-        .delete()
+        .update({ status: 'archived', publicado: false })
         .eq('id', id);
       if (error) throw error;
+
+      await createAuditLog({
+        tabela: 'clube_rota_itens',
+        registro_id: id,
+        acao: 'UPDATE',
+        campo_alterado: 'status',
+        valor_anterior: 'active',
+        valor_novo: 'archived'
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
-      toast.success('Item removido');
+      toast.success('Item arquivado para segurança');
     }
   });
 
