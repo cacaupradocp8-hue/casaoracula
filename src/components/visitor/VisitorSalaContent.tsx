@@ -159,20 +159,17 @@ export function VisitorSalaContent() {
             <div className="space-y-4">
               <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Primeira Leitura</p>
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
-                Comece pela Primeira Leitura
+                Agora faça a Primeira Leitura
               </h2>
               <div className="space-y-4">
-                <p className="text-foreground/70 text-sm italic font-serif">
-                  Depois de conhecer a Casa, atravesse a primeira experiência prática.
-                </p>
                 <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
-                  Você vai ler um caso-espelho, escolher o que sua escuta percebe primeiro e receber uma devolutiva breve sobre esse olhar.
+                  Leia um caso-espelho, escolha o que sua escuta percebe primeiro e receba uma devolutiva breve sobre esse olhar.
                 </p>
               </div>
               <div className="flex flex-col items-center gap-1.5 pt-2">
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é teste de personalidade</p>
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é previsão</p>
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">É uma demonstração do método da Casa</p>
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é teste de personalidade.</p>
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é previsão.</p>
+                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">É uma demonstração prática do método da Casa.</p>
               </div>
             </div>
 
@@ -183,13 +180,9 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Descobrir minha Primeira Leitura</span>
+              <span className="relative z-10">Iniciar Primeira Leitura</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
-            
-            <p className="text-[10px] text-muted-foreground/30 tracking-[0.2em] uppercase">
-              Demonstração de Método • Gratuito
-            </p>
           </div>
         </div>
       </motion.section>
