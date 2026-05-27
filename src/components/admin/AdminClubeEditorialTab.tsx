@@ -213,6 +213,45 @@ export function AdminClubeEditorialTab() {
     }
   });
 
+  const createItem = useMutation({
+    mutationFn: async (payload: any) => {
+      const { id, estacao, created_at, updated_at, ...item } = payload;
+      const { error } = await supabase
+        .from('clube_rota_itens')
+        .insert(item);
+      if (error) throw error;
+      
+      await createAuditLog({
+        tabela: 'clube_rota_itens',
+        acao: 'INSERT',
+        valor_novo: item.titulo
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
+      toast.success('Novo item criado com sucesso');
+      setIsItemDialogOpen(false);
+    }
+  });
+
+  const handleCreateItem = () => {
+    const lastOrder = itensRota?.length ? Math.max(...itensRota.map(i => i.ordem)) : 0;
+    const activeEstacao = estacoes?.find(e => e.ativa);
+    
+    setEditingItem({
+      titulo: 'Novo Passo',
+      slug: 'novo-passo',
+      ordem: lastOrder + 10,
+      estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
+      tipo: 'portal',
+      publicado: false,
+      status: 'draft',
+      metadata: { audios: [], perguntas_sugeridas: [] }
+    });
+    setPrevItem({});
+    setIsItemDialogOpen(true);
+  };
+
   const handleEditEstacao = (estacao: any) => {
     setEditingEstacao(estacao);
     setPrevEstacao({...estacao});
@@ -363,6 +402,9 @@ export function AdminClubeEditorialTab() {
         <div className="flex items-center gap-2">
           <h2 className="font-display text-xl text-white/90">Itens e Passos da Rota</h2>
           <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
+          <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
+            <Plus className="w-3 h-3" /> Novo Item
+          </Button>
         </div>
         
         <div className="rounded-xl border border-white/5 overflow-hidden">
@@ -519,6 +561,38 @@ export function AdminClubeEditorialTab() {
                 className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
               />
               <Label htmlFor="publicada">Publicada (Visível)</Label>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="item-estacao">Estação Vinculada</Label>
+                <select 
+                  id="item-estacao"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                  value={editingItem?.estacao_id}
+                  onChange={(e) => setEditingItem({...editingItem, estacao_id: e.target.value})}
+                >
+                  {estacoes?.map(e => (
+                    <option key={e.id} value={e.id}>{e.titulo} ({e.livro_titulo})</option>
+                  ))}
+                </select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="item-tipo">Tipo de Conteúdo</Label>
+                <select 
+                  id="item-tipo"
+                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
+                  value={editingItem?.tipo}
+                  onChange={(e) => setEditingItem({...editingItem, tipo: e.target.value})}
+                >
+                  <option value="portal">Portal / Texto</option>
+                  <option value="audio">Áudio / Escuta</option>
+                  <option value="laboratorio">Laboratório 80/20</option>
+                  <option value="chat_livro">Chat com o Livro</option>
+                  <option value="jardim">Jardim da Psique</option>
+                  <option value="encontro">Encontro ao Vivo</option>
+                </select>
+              </div>
             </div>
           </div>
 
@@ -677,8 +751,14 @@ export function AdminClubeEditorialTab() {
 
           <DialogFooter>
             <Button variant="ghost" onClick={() => setIsItemDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => updateItem.mutate(editingItem)}>
-              Salvar Alterações
+            <Button className="bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+              if (editingItem.id) {
+                updateItem.mutate(editingItem);
+              } else {
+                createItem.mutate(editingItem);
+              }
+            }}>
+              {editingItem?.id ? 'Salvar Alterações' : 'Criar Item'}
             </Button>
           </DialogFooter>
         </DialogContent>
