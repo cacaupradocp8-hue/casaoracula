@@ -278,14 +278,6 @@ export default function ClubeRotaPremium() {
                         <p className="font-serif italic text-xl md:text-2xl text-foreground/90 leading-relaxed whitespace-pre-wrap">
                           {jardimPrompt}
                         </p>
-                        <Button
-                          variant="gold"
-                          size="lg"
-                          className="w-full md:w-auto rounded-full px-10 h-14 font-bold text-base shadow-lg"
-                          onClick={() => navigate('/jardim-heroina')}
-                        >
-                          Registrar na Psique
-                        </Button>
                       </div>
                     </div>
                   )}
@@ -300,14 +292,6 @@ export default function ClubeRotaPremium() {
                         <p className="font-serif italic text-xl md:text-2xl text-foreground/90 leading-relaxed whitespace-pre-wrap">
                           {renderContent(ponto.metadata.jardim_oficio)}
                         </p>
-                        <Button
-                          variant="outline"
-                          size="lg"
-                          className="w-full md:w-auto rounded-full px-10 h-14 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 text-base font-bold"
-                          onClick={() => navigate('/jardim-oficio')}
-                        >
-                          Registrar no Ofício
-                        </Button>
                       </div>
                     </div>
                   )}
