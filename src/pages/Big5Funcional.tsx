@@ -27,8 +27,7 @@ import {
   ChevronRight,
   Home,
   BookOpen,
-  MessageCircle,
-  Layers,
+   MessageCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
@@ -204,24 +203,24 @@ export default function Big5Funcional() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              <Card className="border-border/40 shadow-sm">
+              <Card className="border-primary/20">
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-4">
-                    <Brain className="w-8 h-8 text-primary/60" />
+                  <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                    <Brain className="w-8 h-8 text-primary" />
                   </div>
-                  <CardTitle className="text-2xl font-display font-light tracking-tight">
+                  <CardTitle className="text-2xl font-display">
                     Big Five — Leitura Funcional
                   </CardTitle>
                   <CardDescription className="text-base mt-2">
-                    Mapeamento de funcionamento prático • 30 perguntas
+                    Modelo OCEAN • 30 perguntas • ~5 minutos
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Warning */}
-                  <div className="bg-muted/30 border border-border/50 rounded-lg p-4 text-sm text-muted-foreground text-center">
-                    <p className="leading-relaxed">
-                      “Este questionário descreve tendências de funcionamento, 
-                      não define identidade nem substitui avaliação psicológica.”
+                  <div className="bg-muted/50 border border-border rounded-lg p-4 text-sm text-muted-foreground">
+                    <p>
+                      Este questionário descreve <strong>tendências de funcionamento</strong>, 
+                      não define personalidade nem substitui avaliação psicológica.
                     </p>
                   </div>
 
@@ -310,7 +309,7 @@ export default function Big5Funcional() {
               )}
 
               {/* Question */}
-              <Card className="border-border/40 shadow-sm">
+              <Card className="border-primary/20">
                 <CardContent className="pt-6">
                   <p className="text-lg font-medium leading-relaxed text-center">
                     {perguntaAtual.texto_pergunta}
@@ -319,28 +318,24 @@ export default function Big5Funcional() {
               </Card>
 
               {/* Response options */}
-              <div className="grid gap-3">
+              <div className="grid gap-2">
                 {ESCALA.map(item => {
                   const isSelected = respostas[perguntaAtual.id] === item.valor;
                   return (
-                    <button
+                    <Button
                       key={item.valor}
+                      variant={isSelected ? "default" : "outline"}
                       className={cn(
-                        "w-full flex items-center justify-between text-left py-4 px-6 rounded-xl border transition-all duration-200",
-                        isSelected 
-                          ? "border-primary bg-primary/5 shadow-inner" 
-                          : "border-border/40 hover:border-primary/30 hover:bg-muted/50"
+                        "w-full justify-start text-left h-auto py-3 px-4",
+                        isSelected && "ring-2 ring-primary"
                       )}
                       onClick={() => handleResposta(item.valor)}
                     >
-                      <span className="text-sm font-medium">{item.label}</span>
-                      <span className={cn(
-                        "w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold",
-                        isSelected ? "bg-primary border-primary text-white" : "border-muted-foreground/30 text-muted-foreground"
-                      )}>
+                      <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium mr-3 shrink-0">
                         {item.valor}
                       </span>
-                    </button>
+                      <span className="text-sm">{item.label}</span>
+                    </Button>
                   );
                 })}
               </div>
@@ -579,15 +574,8 @@ export default function Big5Funcional() {
               )}
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button 
-                  onClick={() => navigate('/ferramenta/big5-comparativo')}
-                  className="flex-1 bg-primary hover:bg-primary/90"
-                >
-                  <Layers className="w-4 h-4 mr-2" />
-                  Ver Diálogo entre Camadas
-                </Button>
-                <Button 
+              <div className="flex gap-3">
+                <Button
                   variant="outline"
                   onClick={() => navigate('/ferramentas')}
                   className="flex-1"
@@ -597,9 +585,9 @@ export default function Big5Funcional() {
                 </Button>
                 {!isBlockedVisitor && (
                   <Button
-                    variant="ghost"
+                    variant="outline"
                     onClick={reiniciar}
-                    className="flex-1 text-muted-foreground"
+                    className="flex-1"
                   >
                     <RotateCcw className="w-4 h-4 mr-2" />
                     Refazer

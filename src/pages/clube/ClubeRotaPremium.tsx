@@ -122,16 +122,7 @@ export default function ClubeRotaPremium() {
     if (typeof content === 'string') return content;
     if (typeof content === 'object') {
       // Prioriza campos comuns de texto em objetos JSON
-      const text = content.text || content.content || content.value || content.relato || content.pergunta_principal || content.palavra || content.frase_fechamento || content.movimento || "";
-      if (text) return text;
-      
-      // Se for um array de strings (como perguntas_sugeridas)
-      if (Array.isArray(content)) {
-        return content.join(', ');
-      }
-
-      // Fallback: não renderizar o objeto bruto
-      return "";
+      return content.text || content.content || content.value || content.relato || content.pergunta_principal || content.palavra || "";
     }
     return String(content);
   };
