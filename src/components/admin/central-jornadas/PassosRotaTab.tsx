@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, Trash2, GripVertical, Loader2, Sparkles, 
   Headphones, PenTool, ClipboardList, Zap, ArrowRight,
-  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass, Rocket
+  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass, Rocket, Music, Clock
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -75,7 +75,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: string;
     conteudo_texto: string;
     proximo_passo_label: string;
-    audios: string;
+    audio_titulo: string;
+    audio_url: string;
+    audio_duracao: string;
     jardim_prompt: string;
     simulacao_texto: string;
     perguntas_sugeridas: string;
@@ -96,7 +98,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: '[]',
     conteudo_texto: '',
     proximo_passo_label: '',
-    audios: '[]',
+    audio_titulo: '',
+    audio_url: '',
+    audio_duracao: '',
     jardim_prompt: '',
     simulacao_texto: '',
     perguntas_sugeridas: '[]',
@@ -125,10 +129,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
       
       try {
         impactoJson = JSON.parse(data.impacto_cidadela || '[]');
-        audiosJson = JSON.parse(data.audios || '[]');
+        // Construir áudio a partir dos campos simples
+        if (data.audio_url) {
+          audiosJson = [{
+            titulo: data.audio_titulo || 'Áudio Principal',
+            url: data.audio_url,
+            duracao: data.audio_duracao || '',
+            tipo: 'escuta'
+          }];
+        }
         perguntasJson = JSON.parse(data.perguntas_sugeridas || '[]');
       } catch (e) {
-        throw new Error('Certifique-se que os campos JSON (Impacto, Áudios, Perguntas) são válidos.');
+        throw new Error('Erro ao processar dados. Verifique o JSON de Perguntas.');
       }
 
       const payload = {
@@ -220,7 +232,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: '[]',
       conteudo_texto: '',
       proximo_passo_label: '',
-      audios: '[]',
+      audio_titulo: '',
+      audio_url: '',
+      audio_duracao: '',
       jardim_prompt: '',
       simulacao_texto: '',
       perguntas_sugeridas: '[]',
@@ -247,7 +261,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
       impacto_cidadela: JSON.stringify(p.impacto_cidadela || [], null, 2),
       conteudo_texto: p.conteudo_inline?.texto || '',
       proximo_passo_label: p.metadata?.proximo_passo || '',
-      audios: JSON.stringify(p.metadata?.audios || [], null, 2),
+      audio_titulo: p.metadata?.audios?.[0]?.titulo || '',
+      audio_url: p.metadata?.audios?.[0]?.url || '',
+      audio_duracao: p.metadata?.audios?.[0]?.duracao || '',
       jardim_prompt: (p as any).jardim_prompt || p.metadata?.jardim_prompt || '',
       simulacao_texto: (p as any).cenario_treinamento || p.metadata?.simulacao_texto || '',
       perguntas_sugeridas: JSON.stringify(p.metadata?.perguntas_sugeridas || [], null, 2),
@@ -501,15 +517,31 @@ export function PassosRotaTab({ estacaoId }: Props) {
 
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Headphones className="w-3.5 h-3.5" /> Áudios (JSON)</label>
-                    <Textarea 
-                      value={form.audios} 
-                      onChange={(e) => setForm({ ...form, audios: e.target.value })} 
-                      placeholder='[{"titulo": "Escuta 1", "url": "...", "duracao": "10:00"}]'
-                      className="font-mono text-[10px]"
-                      rows={2}
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Headphones className="w-3.5 h-3.5" /> Título do Áudio</label>
+                    <Input 
+                      value={form.audio_titulo} 
+                      onChange={(e) => setForm({...form, audio_titulo: e.target.value})}
+                      placeholder="Áudio Principal"
                     />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Music className="w-3.5 h-3.5" /> URL do Áudio</label>
+                    <Input 
+                      value={form.audio_url} 
+                      onChange={(e) => setForm({...form, audio_url: e.target.value})}
+                      placeholder="https://..."
+                      className="font-mono text-[10px]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> Duração (opcional)</label>
+                    <Input 
+                      value={form.audio_duracao} 
+                      onChange={(e) => setForm({...form, audio_duracao: e.target.value})}
+                      placeholder="10:00"
+                    />
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Compass className="w-3.5 h-3.5" /> Prompt do Jardim</label>
                     <Textarea 

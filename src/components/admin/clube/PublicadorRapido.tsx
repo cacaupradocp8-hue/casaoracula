@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Rocket, 
   Loader2, 
@@ -36,17 +36,18 @@ interface Props {
 export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   
-  // Estado local do formulário simplificado
+  // Estado local do formulário simplificado — seguro para copiar/colar
   const [form, setForm] = useState({
     titulo: passo?.titulo || '',
     subtitulo: passo?.subtitulo || '',
     slug: passo?.slug || '',
     conteudo_texto: passo?.conteudo_inline?.texto || '',
+    audio_titulo: passo?.metadata?.audios?.[0]?.titulo || 'Áudio Principal',
+    audio_url: passo?.metadata?.audios?.[0]?.url || '',
     jardim_prompt: passo?.jardim_prompt || passo?.metadata?.jardim_prompt || '',
     cenario_treinamento: passo?.cenario_treinamento || passo?.metadata?.simulacao_texto || '',
-    audio_url: passo?.metadata?.audios?.[0]?.url || passo?.conteudo_inline?.audio_url || '',
-    perguntas: Array.isArray(passo?.metadata?.perguntas_sugeridas) ? passo.metadata.perguntas_sugeridas.join('\n') : ''
   });
 
   const slugify = (s: string) =>
@@ -55,7 +56,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
   const handlePublish = async () => {
     if (!form.titulo) {
-      toast.error("Título é obrigatório");
+      toast({ title: "Título é obrigatório", variant: "destructive" });
       return;
     }
 
@@ -65,11 +66,10 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
       
       const metadata = {
         audios: form.audio_url ? [{
-          titulo: "Áudio Principal",
+          titulo: form.audio_titulo || "Áudio Principal",
           url: form.audio_url,
           tipo: "escuta"
         }] : [],
-        perguntas_sugeridas: form.perguntas.split('\n').filter(p => p.trim()),
         jardim_prompt: form.jardim_prompt,
         simulacao_texto: form.cenario_treinamento
       };
@@ -79,7 +79,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
         titulo: form.titulo,
         subtitulo: form.subtitulo,
         slug: finalSlug,
-        tipo: passo?.tipo || 'escuta', // Default para escuta se for novo
+        tipo: passo?.tipo || 'escuta',
         tipo_passo: passo?.tipo_passo || 'escuta',
         jardim_prompt: form.jardim_prompt,
         cenario_treinamento: form.cenario_treinamento,
@@ -109,21 +109,16 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
       if (error) throw error;
 
-      toast.success("Publicado com sucesso!");
+      toast({ title: "Publicado com sucesso!" });
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
       queryClient.invalidateQueries({ queryKey: ['admin-clube-passos'] });
-      queryClient.invalidateQueries({ queryKey: ['rota-oracular'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-rota-passos', estacao.id] });
       
       onClose();
-      
-      // Abre a visão da aluna em nova aba se for uma rota válida
-      if (finalSlug) {
-        window.open(`/clube/rota/${finalSlug}`, '_blank');
-      }
 
     } catch (err: any) {
       console.error(err);
-      toast.error("Erro ao publicar: " + err.message);
+      toast({ title: "Erro ao publicar", description: err.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -212,15 +207,15 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-              <MessageSquare className="w-3 h-3" /> Perguntas Sugeridas (Uma por linha)
-            </Label>
-            <Textarea 
-              value={form.perguntas} 
-              onChange={e => setForm({...form, perguntas: e.target.value})}
-              placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"
-              className="min-h-[100px] bg-white/5 border-white/10 resize-none text-sm"
-            />
+             <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
+               <Music className="w-3 h-3" /> Título do Áudio
+             </Label>
+             <Input 
+               value={form.audio_titulo} 
+               onChange={e => setForm({...form, audio_titulo: e.target.value})}
+               placeholder="Áudio Principal"
+               className="bg-white/5 border-white/10 text-sm"
+             />
           </div>
 
           <div className="space-y-2 opacity-50">

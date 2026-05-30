@@ -26,7 +26,7 @@ export default function AdminCentralEstacao() {
   const qc = useQueryClient();
   const { estacaoId } = useParams<{ estacaoId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'album';
+  const activeTab = searchParams.get('tab') || 'publicador';
 
   const [editStationOpen, setEditStationOpen] = useState(false);
   const [quickPublishOpen, setQuickPublishOpen] = useState(false);
@@ -231,33 +231,41 @@ export default function AdminCentralEstacao() {
           </DialogContent>
         </Dialog>
 
-        {/* Tabs - Alinhadas com a nova estrutura v3 */}
-        <Tabs value={activeTab} onValueChange={onTabChange}>
-          <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
-            <TabsTrigger type="button" value="album" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <ListMusic className="w-3.5 h-3.5" />
-              Aula-Álbum (Áudios)
-            </TabsTrigger>
-            <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <ListOrdered className="w-3.5 h-3.5" />
-              Rota (Passos)
-            </TabsTrigger>
-            <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <Sparkles className="w-3.5 h-3.5" />
-              Iniciação
-            </TabsTrigger>
-            <TabsTrigger type="button" value="aplicacao" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <Layers className="w-3.5 h-3.5" />
-              Lab 80/20
-            </TabsTrigger>
-            <TabsTrigger type="button" value="encontro" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
-              <Users className="w-3.5 h-3.5" />
-              Apoio
-            </TabsTrigger>
-          </TabsList>
+         {/* Tabs - Operacional */}
+         <Tabs value={activeTab} onValueChange={onTabChange}>
+           <TabsList className="grid w-full grid-cols-5 mb-6 bg-muted/30 p-1 border border-primary/5 h-auto">
+             <TabsTrigger type="button" value="publicador" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold font-bold">
+               <Rocket className="w-3.5 h-3.5" />
+               Publicador
+             </TabsTrigger>
+             <TabsTrigger type="button" value="album" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+               <ListMusic className="w-3.5 h-3.5" />
+               Aula-Álbum
+             </TabsTrigger>
+             <TabsTrigger type="button" value="passos" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+               <ListOrdered className="w-3.5 h-3.5" />
+               Passos
+             </TabsTrigger>
+             <TabsTrigger type="button" value="entrada" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+               <Sparkles className="w-3.5 h-3.5" />
+               Abertura
+             </TabsTrigger>
+             <TabsTrigger type="button" value="aplicacao" className="gap-1.5 text-[10px] md:text-xs py-2 data-[state=active]:bg-gold/20 data-[state=active]:text-gold">
+               <Layers className="w-3.5 h-3.5" />
+               Lab
+             </TabsTrigger>
+           </TabsList>
 
-          <TabsContent value="album">
-            <AulaAlbumTab estacaoId={estacao.id} />
+           <TabsContent value="publicador">
+             <PublicadorRapido 
+               open={true}
+               onClose={() => {}}
+               estacao={estacao}
+             />
+           </TabsContent>
+
+           <TabsContent value="album">
+             <AulaAlbumTab estacaoId={estacao.id} />
           </TabsContent>
 
           <TabsContent value="passos">
