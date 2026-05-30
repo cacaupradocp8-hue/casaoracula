@@ -652,8 +652,8 @@ export default function ClubeRotaPremium() {
                     </p>
                     <h4 className="font-display text-xl md:text-2xl">Laboratório Prático</h4>
                   </div>
-                  <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic">
-                    Toda teoria é apenas semente. O fruto nasce na aplicação. Como essa dinâmica se manifesta na sua prática ou na sua autoescuta hoje?
+                  <p className="text-foreground/65 text-[15px] leading-relaxed font-serif italic whitespace-pre-wrap">
+                    {simulacaoTexto}
                   </p>
                   <Button
                     variant="outline"
@@ -684,7 +684,7 @@ export default function ClubeRotaPremium() {
                         <Flower2 className="w-5 h-5" />
                         <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Psique</span>
                       </div>
-                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed">
+                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
                         {jardimPrompt}
                       </p>
                       <Button
@@ -712,7 +712,7 @@ export default function ClubeRotaPremium() {
                         <MapPin className="w-5 h-5" />
                         <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Ofício</span>
                       </div>
-                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed">
+                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
                         {ponto.metadata.jardim_oficio}
                       </p>
                       <Button
