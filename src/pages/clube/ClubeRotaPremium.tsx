@@ -727,7 +727,7 @@ export default function ClubeRotaPremium() {
                         <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Ofício</span>
                       </div>
                       <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
-                        {ponto.metadata.jardim_oficio}
+                        {renderContent(ponto.metadata.jardim_oficio)}
                       </p>
                       <Button
                         variant="outline"
