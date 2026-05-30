@@ -318,9 +318,9 @@ export default function ClubeRotaPremium() {
           {/* Indicador de Progresso Simbólico */}
           <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
 
-          {/* ═══════════ COMECE POR AQUI (MODO GUIADO) ═══════════ */}
+          {/* ═══════════ COMO ATRAVESSAR ESTA ESTAÇÃO (MODO GUIADO) ═══════════ */}
           {isModoGuiado && (
-            <Section id="comece-por-aqui" icon={Compass} kicker="A Jornada" titulo="Comece por aqui">
+            <Section id="comece-por-aqui" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -330,15 +330,47 @@ export default function ClubeRotaPremium() {
                 <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
                 
-                <p className="text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed mb-8 relative z-10">
-                  "Prepare seu coração e seu espaço. Esta é uma jornada de profundidade. Comece ouvindo o áudio de travessia abaixo para sintonizar sua frequência com o Chamado Selvagem."
+                <p className="text-xl md:text-2xl text-white/90 font-serif italic leading-relaxed mb-12 relative z-10 max-w-3xl mx-auto">
+                  Siga a rota em camadas: comece pelo áudio, atravesse a leitura simbólica, observe o caso-espelho e registre no Jardim.
                 </p>
-                
-                <div className="flex flex-col items-center gap-4 relative z-10">
-                  <div className="flex items-center gap-2 text-gold/60">
-                    <ArrowDown className="w-5 h-5 animate-bounce" />
-                    <span className="text-[10px] uppercase tracking-widest font-bold">Inicie sua jornada pela escuta de travessia</span>
+
+                {/* Três passos visuais */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative z-10">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
+                      <Headphones className="w-5 h-5 text-gold" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">1. Ouça o áudio</span>
                   </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5 text-gold" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">2. Leia a estação</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
+                      <Flower2 className="w-5 h-5 text-gold" />
+                    </div>
+                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">3. Registre no Jardim</span>
+                  </div>
+                </div>
+                
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
+                  <Button
+                    variant="gold"
+                    className="w-full sm:w-auto px-8 h-12 rounded-full font-bold uppercase tracking-widest text-[10px]"
+                    onClick={() => document.getElementById('audio-travessia')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    <Headphones className="w-4 h-4 mr-2" /> Ouvir áudio
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="w-full sm:w-auto px-8 h-12 rounded-full border-gold/20 bg-gold/5 text-gold/80 hover:bg-gold/10 font-bold uppercase tracking-widest text-[10px]"
+                    onClick={() => document.getElementById('mapa-vivo')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    Ler estação
+                  </Button>
                 </div>
               </motion.div>
             </Section>
