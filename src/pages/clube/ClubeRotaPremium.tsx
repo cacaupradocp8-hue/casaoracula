@@ -216,7 +216,7 @@ export default function ClubeRotaPremium() {
             </header>
 
             {/* ═══════════ 2. COMECE POR AQUI ═══════════ */}
-            <Section icon={Compass} kicker="A Jornada" titulo="Comece por aqui">
+            <Section icon={Compass} kicker="O Início" titulo="Comece por aqui">
               <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
