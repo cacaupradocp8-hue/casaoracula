@@ -282,34 +282,37 @@ export default function ClubeRotaPremium() {
                 transition={{ delay: 1, duration: 1 }}
                 className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 sm:pt-10 px-4 sm:px-0"
               >
-                <Button
-                  size="lg"
-                  variant="gold"
-                  className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
-                  onClick={() => {
-                    const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
-                    const el = document.getElementById(targetId);
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  <Play className="w-4 h-4 fill-current" /> Iniciar Travessia
-                </Button>
-                {audios.length > 0 && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
-                    onClick={() => {
-                      const el = document.getElementById('audio-travessia');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
-                  </Button>
+                {!isModoGuiado && (
+                  <>
+                    <Button
+                      size="lg"
+                      variant="gold"
+                      className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
+                      onClick={() => {
+                        const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
+                        const el = document.getElementById(targetId);
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      <Play className="w-4 h-4 fill-current" /> Iniciar Travessia
+                    </Button>
+                    {audios.length > 0 && (
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                        onClick={() => {
+                          const el = document.getElementById('audio-travessia');
+                          el?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
+                      </Button>
+                    )}
+                  </>
                 )}
               </motion.div>
             </motion.div>
-          )}
 
           {/* Indicador de scroll */}
           <motion.div
