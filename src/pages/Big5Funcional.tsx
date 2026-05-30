@@ -578,8 +578,15 @@ export default function Big5Funcional() {
               )}
 
               {/* Actions */}
-              <div className="flex gap-3">
-                <Button
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button 
+                  onClick={() => navigate('/ferramenta/big5-comparativo')}
+                  className="flex-1 bg-primary hover:bg-primary/90"
+                >
+                  <Layers className="w-4 h-4 mr-2" />
+                  Ver Diálogo entre Camadas
+                </Button>
+                <Button 
                   variant="outline"
                   onClick={() => navigate('/ferramentas')}
                   className="flex-1"
@@ -589,9 +596,9 @@ export default function Big5Funcional() {
                 </Button>
                 {!isBlockedVisitor && (
                   <Button
-                    variant="outline"
+                    variant="ghost"
                     onClick={reiniciar}
-                    className="flex-1"
+                    className="flex-1 text-muted-foreground"
                   >
                     <RotateCcw className="w-4 h-4 mr-2" />
                     Refazer
