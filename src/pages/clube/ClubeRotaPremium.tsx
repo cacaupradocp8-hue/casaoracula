@@ -116,11 +116,12 @@ export default function ClubeRotaPremium() {
   const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
     Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
-  const jardimPrompt: string | null =
-    ponto.jardim_prompt || ponto.metadata?.jardim_prompt || null;
+  const jardimPrompt =
+    renderContent(ponto.jardim_prompt || ponto.metadata?.jardim_prompt);
 
-  const simulacaoTexto: string | null =
-    ponto.cenario_treinamento || ponto.metadata?.simulacao_texto || null;
+  const simulacaoTexto =
+    renderContent(ponto.cenario_treinamento || ponto.metadata?.simulacao_texto);
+
 
   const perguntasSugeridas: string[] = Array.isArray(ponto.metadata?.perguntas_sugeridas)
     ? ponto.metadata.perguntas_sugeridas.filter((p: any) => typeof p === 'string' && p.trim())
