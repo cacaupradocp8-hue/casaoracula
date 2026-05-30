@@ -135,7 +135,19 @@ export default function ClubeRotaPremium() {
     { label: 'O Campo', value: ponto.campo, icon: Layers },
     { label: 'A Torre', value: ponto.torre, icon: Layout },
     { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
-  ].filter(c => c.value && c.value.trim());
+  ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
+
+  // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
+  const renderContent = (content: any) => {
+    if (!content) return null;
+    if (typeof content === 'string') return content;
+    if (typeof content === 'object') {
+      // Prioriza campos comuns de texto em objetos JSON
+      return content.text || content.content || content.value || "";
+    }
+    return String(content);
+  };
+
 
 
   return (
