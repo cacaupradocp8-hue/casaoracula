@@ -223,16 +223,16 @@ export default function AdminClubeHub() {
 
              <div className="space-y-3 p-4 bg-background/40 rounded-lg border border-primary/10">
                <div className="text-xs uppercase tracking-widest font-bold text-gold">Passo 2</div>
-               <h3 className="font-semibold text-foreground">Editar Conteúdo</h3>
-               <p className="text-xs text-muted-foreground leading-relaxed">Na Central da Estação, use o Publicador Rápido para colar conteúdo, áudio e salvar com segurança.</p>
-               <Button 
-                 variant="outline" 
-                 className="w-full border-gold/20 hover:bg-gold/5 text-gold font-bold gap-2 mt-2 cursor-not-allowed opacity-60"
-                 disabled
-               >
-                 <Sparkles className="w-4 h-4" />
-                 Abrir via Estação
-               </Button>
+               <h3 className="font-semibold text-foreground">Editar no Editor Único</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">Use o novo Editor da Rota para colar conteúdo, áudio e salvar tudo em um único lugar, com visão direta.</p>
+                <Button 
+                  variant="outline" 
+                  className="w-full border-gold/20 hover:bg-gold/5 text-gold font-bold gap-2 mt-2"
+                  onClick={() => stats?.activeStation?.id && navigate(`/admin/clube/central/${stats.activeStation.id}`)}
+                >
+                  <Sparkles className="w-4 h-4" />
+                  Abrir Editor Único
+                </Button>
              </div>
 
              <div className="space-y-3 p-4 bg-background/40 rounded-lg border border-primary/10">
