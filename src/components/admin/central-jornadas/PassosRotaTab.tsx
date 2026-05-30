@@ -129,10 +129,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
       
       try {
         impactoJson = JSON.parse(data.impacto_cidadela || '[]');
-        audiosJson = JSON.parse(data.audios || '[]');
+        // Construir áudio a partir dos campos simples
+        if (data.audio_url) {
+          audiosJson = [{
+            titulo: data.audio_titulo || 'Áudio Principal',
+            url: data.audio_url,
+            duracao: data.audio_duracao || '',
+            tipo: 'escuta'
+          }];
+        }
         perguntasJson = JSON.parse(data.perguntas_sugeridas || '[]');
       } catch (e) {
-        throw new Error('Certifique-se que os campos JSON (Impacto, Áudios, Perguntas) são válidos.');
+        throw new Error('Erro ao processar dados. Verifique o JSON de Perguntas.');
       }
 
       const payload = {
