@@ -246,7 +246,7 @@ export default function ClubeRotaPremium() {
                   {audios.map((audio: any, i: number) => (
                     <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-sm">
                       <AudioOracular
-                        audioUrl={audio.url}
+                        audioUrl={audio.audio_url || audio.url}
                         titulo={audio.titulo || `Condução Principal`}
                         hideInsight
                       />
