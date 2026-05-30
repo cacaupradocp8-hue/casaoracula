@@ -116,11 +116,23 @@ export default function ClubeRotaPremium() {
   const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
     Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
-  const jardimPrompt: string | null =
-    ponto.jardim_prompt || ponto.metadata?.jardim_prompt || null;
+  // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
+  const renderContent = (content: any) => {
+    if (!content) return null;
+    if (typeof content === 'string') return content;
+    if (typeof content === 'object') {
+      // Prioriza campos comuns de texto em objetos JSON
+      return content.text || content.content || content.value || "";
+    }
+    return String(content);
+  };
 
-  const simulacaoTexto: string | null =
-    ponto.cenario_treinamento || ponto.metadata?.simulacao_texto || null;
+  const jardimPrompt =
+    renderContent(ponto.jardim_prompt || ponto.metadata?.jardim_prompt);
+
+  const simulacaoTexto =
+    renderContent(ponto.cenario_treinamento || ponto.metadata?.simulacao_texto);
+
 
   const perguntasSugeridas: string[] = Array.isArray(ponto.metadata?.perguntas_sugeridas)
     ? ponto.metadata.perguntas_sugeridas.filter((p: any) => typeof p === 'string' && p.trim())
@@ -135,7 +147,9 @@ export default function ClubeRotaPremium() {
     { label: 'O Campo', value: ponto.campo, icon: Layers },
     { label: 'A Torre', value: ponto.torre, icon: Layout },
     { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
-  ].filter(c => c.value && c.value.trim());
+  ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
+
+
 
 
   return (
@@ -423,7 +437,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.abertura_imersiva && (
             <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
-                {ponto.metadata.abertura_imersiva}
+                {renderContent(ponto.metadata.abertura_imersiva)}
               </div>
             </Section>
           )}
@@ -449,7 +463,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.caso_espelho && (
             <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap">
-                {ponto.metadata.caso_espelho}
+                {renderContent(ponto.metadata.caso_espelho)}
               </div>
             </Section>
           )}
@@ -458,7 +472,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.desafio_terapeuta && (
             <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap">
-                <p className="font-serif text-xl text-gold">{ponto.metadata.desafio_terapeuta}</p>
+                <p className="font-serif text-xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta)}</p>
               </div>
             </Section>
           )}
@@ -467,7 +481,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.revelacao_estacao && (
             <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                {ponto.metadata.revelacao_estacao}
+                {renderContent(ponto.metadata.revelacao_estacao)}
               </div>
             </Section>
           )}
@@ -476,7 +490,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.erro_comum && (
             <Section icon={AlertTriangle} kicker="A armadilha no caminho" titulo="Erro Comum">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic whitespace-pre-wrap">
-                {ponto.metadata.erro_comum}
+                {renderContent(ponto.metadata.erro_comum)}
               </div>
             </Section>
           )}
@@ -485,7 +499,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.pergunta_narrativa && (
             <Section icon={Lightbulb} kicker="O fio condutor" titulo="Pergunta Narrativa">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70 whitespace-pre-wrap">
-                {ponto.metadata.pergunta_narrativa}
+                {renderContent(ponto.metadata.pergunta_narrativa)}
               </div>
             </Section>
           )}
@@ -713,7 +727,7 @@ export default function ClubeRotaPremium() {
                         <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Ofício</span>
                       </div>
                       <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
-                        {ponto.metadata.jardim_oficio}
+                        {renderContent(ponto.metadata.jardim_oficio)}
                       </p>
                       <Button
                         variant="outline"
@@ -734,7 +748,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.missao_campo && (
             <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center whitespace-pre-wrap">
-                <p className="font-display text-xl text-white uppercase tracking-tight">{ponto.metadata.missao_campo}</p>
+                <p className="font-display text-xl text-white uppercase tracking-tight">{renderContent(ponto.metadata.missao_campo)}</p>
               </div>
             </Section>
           )}
@@ -743,7 +757,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8 whitespace-pre-wrap">
-                "{ponto.metadata.oraculo_estacao}"
+                "{renderContent(ponto.metadata.oraculo_estacao)}"
               </div>
             </Section>
           )}
