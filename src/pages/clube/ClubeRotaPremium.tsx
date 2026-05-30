@@ -437,7 +437,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.abertura_imersiva && (
             <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
-                {ponto.metadata.abertura_imersiva}
+                {renderContent(ponto.metadata.abertura_imersiva)}
               </div>
             </Section>
           )}
