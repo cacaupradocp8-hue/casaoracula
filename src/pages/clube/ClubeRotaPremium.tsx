@@ -1012,14 +1012,7 @@ export default function ClubeRotaPremium() {
                       <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
                         {renderContent(ponto.metadata.jardim_oficio)}
                       </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full rounded-full border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/10"
-                        onClick={() => navigate('/jardim-oficio')}
-                      >
-                        Registrar no Ofício
-                      </Button>
+                      {/* Button removed */}
                     </div>
                   </motion.div>
                 )}
