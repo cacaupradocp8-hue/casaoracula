@@ -14,10 +14,12 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, Trash2, GripVertical, Loader2, Sparkles, 
   Headphones, PenTool, ClipboardList, Zap, ArrowRight,
-  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass
+  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass,
+  Rocket
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import { PublicadorRapido } from '../clube/PublicadorRapido';
 import { ImageUpload } from '@/components/admin/ImageUpload';
 
 interface PassoRota {
@@ -59,6 +61,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
   const { toast } = useToast();
   const qc = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [quickPublishOpen, setQuickPublishOpen] = useState(false);
   const [editing, setEditing] = useState<PassoRota | null>(null);
   const [form, setForm] = useState<{
     titulo: string;
@@ -270,9 +273,18 @@ export function PassosRotaTab({ estacaoId }: Props) {
             Defina a sequência exata que a aluna percorrerá nesta estação.
           </p>
         </div>
-        <Button onClick={openCreate} size="sm" className="gap-2 bg-gold hover:bg-gold/90 text-black font-semibold">
-          <Plus className="w-4 h-4" /> Novo Passo
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            onClick={() => { setEditing(null); setQuickPublishOpen(true); }} 
+            size="sm" 
+            className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+          >
+            <Rocket className="w-4 h-4" /> Publicador Rápido
+          </Button>
+          <Button onClick={openCreate} size="sm" variant="outline" className="gap-2 border-white/10">
+            <Plus className="w-4 h-4" /> Novo (Editor Antigo)
+          </Button>
+        </div>
       </div>
 
       <div className="bg-amber-500/5 border border-amber-500/10 rounded-lg p-4 flex gap-3 items-start">
@@ -326,6 +338,15 @@ export function PassosRotaTab({ estacaoId }: Props) {
                   </div>
 
                   <div className="flex items-center gap-1 shrink-0">
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 text-emerald-500 hover:text-emerald-400"
+                      title="Editor Rápido"
+                      onClick={() => { setEditing(p); setQuickPublishOpen(true); }}
+                    >
+                      <Rocket className="w-3.5 h-3.5" />
+                    </Button>
                     <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => openEdit(p)}>
                       <Pencil className="w-3.5 h-3.5" />
                     </Button>
@@ -551,6 +572,15 @@ export function PassosRotaTab({ estacaoId }: Props) {
           </div>
         </DialogContent>
       </Dialog>
+
+      {quickPublishOpen && (
+        <PublicadorRapido
+          open={quickPublishOpen}
+          onClose={() => setQuickPublishOpen(false)}
+          estacao={{ id: estacaoId, passos_count: passos.length }}
+          passo={editing}
+        />
+      )}
     </div>
   );
 }
