@@ -218,17 +218,18 @@ export default function Big5Simbolico() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="O Mapa dos Cinco Territórios da Psique Feminina"
-          subtitle="Sua leitura simbólica"
+          title="Big Five – Leitura Oracular"
+          subtitle="A linguagem dos símbolos e das forças internas"
           onBack={() => navigate('/ferramentas')}
           backLabel="Voltar"
         >
           {/* Intro Block */}
-          <Card className="glass mb-8">
-            <CardContent className="p-6 text-center">
-              <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
-              <p className="text-lg text-muted-foreground italic">
-                "Este não é um diagnóstico. É um espelho narrativo do momento atual da sua alma."
+          <Card className="glass border-gold/20 mb-8 overflow-hidden">
+            <CardContent className="p-8 text-center relative">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gold/30" />
+              <Sparkles className="w-8 h-8 text-gold mx-auto mb-4 opacity-70" />
+              <p className="text-lg text-gold/90 font-display italic leading-relaxed">
+                “Este não é um diagnóstico. É um espelho narrativo do movimento atual da sua alma.”
               </p>
             </CardContent>
           </Card>

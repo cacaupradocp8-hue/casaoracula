@@ -203,24 +203,24 @@ export default function Big5Funcional() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
             >
-              <Card className="border-primary/20">
+              <Card className="border-border/40 shadow-sm">
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
-                    <Brain className="w-8 h-8 text-primary" />
+                  <div className="mx-auto w-16 h-16 rounded-2xl bg-primary/5 flex items-center justify-center mb-4">
+                    <Brain className="w-8 h-8 text-primary/60" />
                   </div>
-                  <CardTitle className="text-2xl font-display">
+                  <CardTitle className="text-2xl font-display font-light tracking-tight">
                     Big Five — Leitura Funcional
                   </CardTitle>
                   <CardDescription className="text-base mt-2">
-                    Modelo OCEAN • 30 perguntas • ~5 minutos
+                    Mapeamento de funcionamento prático • 30 perguntas
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   {/* Warning */}
-                  <div className="bg-muted/50 border border-border rounded-lg p-4 text-sm text-muted-foreground">
-                    <p>
-                      Este questionário descreve <strong>tendências de funcionamento</strong>, 
-                      não define personalidade nem substitui avaliação psicológica.
+                  <div className="bg-muted/30 border border-border/50 rounded-lg p-4 text-sm text-muted-foreground text-center">
+                    <p className="leading-relaxed">
+                      “Este questionário descreve tendências de funcionamento, 
+                      não define identidade nem substitui avaliação psicológica.”
                     </p>
                   </div>
 
@@ -309,7 +309,7 @@ export default function Big5Funcional() {
               )}
 
               {/* Question */}
-              <Card className="border-primary/20">
+              <Card className="border-border/40 shadow-sm">
                 <CardContent className="pt-6">
                   <p className="text-lg font-medium leading-relaxed text-center">
                     {perguntaAtual.texto_pergunta}
@@ -318,24 +318,28 @@ export default function Big5Funcional() {
               </Card>
 
               {/* Response options */}
-              <div className="grid gap-2">
+              <div className="grid gap-3">
                 {ESCALA.map(item => {
                   const isSelected = respostas[perguntaAtual.id] === item.valor;
                   return (
-                    <Button
+                    <button
                       key={item.valor}
-                      variant={isSelected ? "default" : "outline"}
                       className={cn(
-                        "w-full justify-start text-left h-auto py-3 px-4",
-                        isSelected && "ring-2 ring-primary"
+                        "w-full flex items-center justify-between text-left py-4 px-6 rounded-xl border transition-all duration-200",
+                        isSelected 
+                          ? "border-primary bg-primary/5 shadow-inner" 
+                          : "border-border/40 hover:border-primary/30 hover:bg-muted/50"
                       )}
                       onClick={() => handleResposta(item.valor)}
                     >
-                      <span className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium mr-3 shrink-0">
+                      <span className="text-sm font-medium">{item.label}</span>
+                      <span className={cn(
+                        "w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-bold",
+                        isSelected ? "bg-primary border-primary text-white" : "border-muted-foreground/30 text-muted-foreground"
+                      )}>
                         {item.valor}
                       </span>
-                      <span className="text-sm">{item.label}</span>
-                    </Button>
+                    </button>
                   );
                 })}
               </div>

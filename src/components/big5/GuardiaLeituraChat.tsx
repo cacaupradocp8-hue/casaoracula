@@ -33,7 +33,7 @@ const SUGGESTED_QUESTIONS = [
   'Posso confiar nesse mapa?',
 ];
 
-const DEFAULT_WELCOME = 'Olá! Sou a Guardiã da Leitura. Posso explicar a diferença entre a Leitura Funcional e a Leitura Oracular do Big Five. Pergunte o que quiser — sem pressa.';
+const DEFAULT_WELCOME = 'Olá! Sou a Guardiã da Leitura. Sustento este campo de observação sobre as camadas do Big Five. Pergunte o que precisar — estarei aqui para espelhar sua busca.';
 
 export function GuardiaLeituraChat({ 
   contextPage, 
@@ -112,7 +112,15 @@ export function GuardiaLeituraChat({
             agentId: agentId,
             contextType: 'big5',
             contextId: contextPage,
-            contextPrompt: `Contexto: A usuária está na página ${contextPage.replace('_', ' ')} do Big Five.`,
+            contextPrompt: `Você é a Guardiã da Leitura na Casa Orácula. Suas regras:
+1. Não aconselhar.
+2. Não interpretar.
+3. Não explicar resultados.
+4. Usar perguntas abertas e espelhos simbólicos.
+5. Sustentar o campo e ajudar a usuária a permanecer em observação.
+6. Sempre terminar com a frase exata: "Isso não pede resposta agora. Pede presença."
+
+Contexto: A usuária está na página ${contextPage.replace('_', ' ')} do sistema de leitura de personalidade Big Five.`,
           },
         },
       });
