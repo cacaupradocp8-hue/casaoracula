@@ -266,7 +266,7 @@ export default function ClubeRotaPremium() {
                   </span>
                 </h1>
 
-                {ponto.subtitulo && (
+                {ponto.subtitulo && !isModoGuiado && (
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -342,7 +342,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ COMO ATRAVESSAR ESTA ESTAÇÃO (MODO GUIADO) ═══════════ */}
           {isModoGuiado && (
-            <Section id="comece-por-aqui" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
+            <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -389,9 +389,9 @@ export default function ClubeRotaPremium() {
                   <Button
                     variant="outline"
                     className="w-full sm:w-auto px-8 h-12 rounded-full border-gold/20 bg-gold/5 text-gold/80 hover:bg-gold/10 font-bold uppercase tracking-widest text-[10px]"
-                    onClick={() => document.getElementById('mapa-vivo')?.scrollIntoView({ behavior: 'smooth' })}
+                    onClick={() => document.getElementById('jardim-estacao')?.scrollIntoView({ behavior: 'smooth' })}
                   >
-                    Ler estação
+                    <Flower2 className="w-4 h-4 mr-2" /> Registrar no Jardim
                   </Button>
                 </div>
               </motion.div>
