@@ -122,6 +122,7 @@ const PrimeiraLeituraPage = React.lazy(() => import("./pages/PrimeiraLeituraPage
 
 const Big5Simbolico = React.lazy(() => import("./pages/Big5Simbolico"));
 const Big5Funcional = React.lazy(() => import("./pages/Big5Funcional"));
+const Big5Comparativo = React.lazy(() => import("./pages/Big5Comparativo"));
 const EneagramaFeminino = React.lazy(() => import("./pages/EneagramaFeminino"));
 const JornadaHeroina = React.lazy(() => import("./pages/JornadaHeroina"));
 const TorreViva = React.lazy(() => import("./pages/TorreViva"));
@@ -399,6 +400,8 @@ function AppRoutes() {
       
       
       <Route path="/ferramenta/big5-funcional" element={<ProtectedRoute minPortal="mentorada"><Big5Funcional /></ProtectedRoute>} />
+      <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/big5-simbolico" replace />} />
+      <Route path="/ferramenta/big5-comparativo" element={<ProtectedRoute minPortal="mentorada"><Big5Comparativo /></ProtectedRoute>} />
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/ferramenta/eneagrama-feminino" element={<ProtectedRoute minPortal="mentorada"><EneagramaFeminino /></ProtectedRoute>} />
       <Route path="/ferramenta/jornada-heroina" element={<ProtectedRoute minPortal="mentorada"><JornadaHeroina /></ProtectedRoute>} />

@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { Loader2, Sparkles, ArrowRight, ArrowLeft, Moon, Sun, Check } from 'lucide-react';
+import { Loader2, Sparkles, ArrowRight, ArrowLeft, Moon, Sun, Check, Layers, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RadialVisualization } from '@/components/visualization/RadialVisualization';
 import { SymbolicElement } from '@/components/visualization/types';
@@ -218,17 +218,18 @@ export default function Big5Simbolico() {
     return (
       <AppLayout>
         <ContentPageLayout
-          title="O Mapa dos Cinco Territórios da Psique Feminina"
-          subtitle="Sua leitura simbólica"
+          title="Big Five – Leitura Oracular"
+          subtitle="A linguagem dos símbolos e das forças internas"
           onBack={() => navigate('/ferramentas')}
           backLabel="Voltar"
         >
           {/* Intro Block */}
-          <Card className="glass mb-8">
-            <CardContent className="p-6 text-center">
-              <Sparkles className="w-8 h-8 text-gold mx-auto mb-4" />
-              <p className="text-lg text-muted-foreground italic">
-                "Este não é um diagnóstico. É um espelho narrativo do momento atual da sua alma."
+          <Card className="glass border-gold/20 mb-8 overflow-hidden">
+            <CardContent className="p-8 text-center relative">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gold/30" />
+              <Sparkles className="w-8 h-8 text-gold mx-auto mb-4 opacity-70" />
+              <p className="text-lg text-gold/90 font-display italic leading-relaxed">
+                “Este não é um diagnóstico. É um espelho narrativo do movimento atual da sua alma.”
               </p>
             </CardContent>
           </Card>
@@ -326,17 +327,26 @@ export default function Big5Simbolico() {
           )}
 
           {/* CTA */}
-          <div className="mt-8 text-center">
-            <Button onClick={() => navigate('/ferramentas')} variant="outline" className="mr-4">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button onClick={() => navigate('/ferramenta/big5-comparativo')} className="w-full sm:w-auto bg-gold hover:bg-gold/80 text-background">
+              <Layers className="w-4 h-4 mr-2" />
+              Ver Diálogo entre Camadas
+            </Button>
+            <Button onClick={() => navigate('/ferramentas')} variant="outline" className="w-full sm:w-auto">
               Voltar para Ferramentas
             </Button>
-            <Button onClick={() => {
-              setShowResult(false);
-              setCurrentIndex(0);
-              setResponses({});
-              setNomeSimbolico('');
-              setReflexaoFinal('');
-            }}>
+            <Button 
+              variant="ghost"
+              className="text-muted-foreground w-full sm:w-auto"
+              onClick={() => {
+                setShowResult(false);
+                setCurrentIndex(0);
+                setResponses({});
+                setNomeSimbolico('');
+                setReflexaoFinal('');
+              }}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
               Refazer o Mapa
             </Button>
           </div>
