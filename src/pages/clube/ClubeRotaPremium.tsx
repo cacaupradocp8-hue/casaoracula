@@ -657,44 +657,83 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 6. JARDIM ═══════════ */}
-          {jardimPrompt && (
-            <Section id="jardim-da-psique" icon={Flower2} kicker="Sementeira interna" titulo="Jardim da Psique">
-              <motion.div
-                initial={{ opacity: 0, scale: 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8 md:p-12"
-              >
-                <div className="absolute -top-20 -right-20 w-60 h-60 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
-                <div className="relative space-y-8 text-center max-w-2xl mx-auto">
-                  <Flower2 className="w-8 h-8 text-gold/60 mx-auto" />
-                  <div className="space-y-6">
-                    <p className="font-serif italic text-lg md:text-2xl text-foreground/85 leading-relaxed">
-                      "O que em você pede para ser nomeado após esta travessia?"
-                    </p>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-                      {[
-                        "O que mais me tocou nesta escuta?",
-                        "Qual símbolo ficou ecoando em mim?",
-                        "O que pretendo cultivar a partir de agora?"
-                      ].map((q, i) => (
-                        <div key={i} className="p-4 rounded-xl bg-white/[0.03] border border-white/5 text-[13px] text-foreground/60 italic font-serif">
-                          {q}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <Button
-                    variant="gold"
-                    size="lg"
-                    className="h-14 px-10 rounded-full shadow-[0_10px_30px_rgba(234,179,8,0.2)] hover:shadow-[0_15px_40px_rgba(234,179,8,0.3)] transition-all gap-3 font-bold"
-                    onClick={() => navigate('/jardim-heroina')}
+          {(jardimPrompt || ponto.metadata?.jardim_oficio) && (
+            <Section id="jardim-da-psique" icon={Flower2} kicker="Sementeira" titulo={ponto.metadata?.jardim_oficio ? "Jardins da Psique e do Ofício" : "Jardim da Psique"}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Jardim da Psique */}
+                {jardimPrompt && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold/[0.06] via-midnight to-midnight border border-foreground/[0.06] p-8"
                   >
-                    <MapPin className="w-4 h-4" /> Registrar no Jardim da Psique
-                  </Button>
-                </div>
-              </motion.div>
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-2 text-gold/60">
+                        <Flower2 className="w-5 h-5" />
+                        <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Psique</span>
+                      </div>
+                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed">
+                        {jardimPrompt}
+                      </p>
+                      <Button
+                        variant="gold"
+                        size="sm"
+                        className="w-full rounded-full"
+                        onClick={() => navigate('/jardim-heroina')}
+                      >
+                        Registrar na Psique
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* Jardim do Ofício */}
+                {ponto.metadata?.jardim_oficio && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-900/10 via-midnight to-midnight border border-foreground/[0.06] p-8"
+                  >
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-2 text-emerald-500/60">
+                        <MapPin className="w-5 h-5" />
+                        <span className="text-[10px] tracking-[0.2em] uppercase font-bold">Ofício</span>
+                      </div>
+                      <p className="font-serif italic text-lg text-foreground/85 leading-relaxed">
+                        {ponto.metadata.jardim_oficio}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full rounded-full border-emerald-500/20 text-emerald-500 hover:bg-emerald-500/10"
+                        onClick={() => navigate('/jardim-oficio')}
+                      >
+                        Registrar no Ofício
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </Section>
+          )}
+
+          {/* Missão de Campo */}
+          {ponto.metadata?.missao_campo && (
+            <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center">
+                <p className="font-display text-xl text-white uppercase tracking-tight">{ponto.metadata.missao_campo}</p>
+              </div>
+            </Section>
+          )}
+
+          {/* Oráculo da Estação */}
+          {ponto.metadata?.oraculo_estacao && (
+            <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8">
+                "{ponto.metadata.oraculo_estacao}"
+              </div>
             </Section>
           )}
 
