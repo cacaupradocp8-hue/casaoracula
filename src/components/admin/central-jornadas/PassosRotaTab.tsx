@@ -75,7 +75,9 @@ export function PassosRotaTab({ estacaoId }: Props) {
     impacto_cidadela: string;
     conteudo_texto: string;
     proximo_passo_label: string;
-    audios: string;
+    audio_titulo: string;
+    audio_url: string;
+    audio_duracao: string;
     jardim_prompt: string;
     simulacao_texto: string;
     perguntas_sugeridas: string;
