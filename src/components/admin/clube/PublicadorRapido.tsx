@@ -56,7 +56,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
   const handlePublish = async () => {
     if (!form.titulo) {
-      toast.error("Título é obrigatório");
+      toast({ title: "Título é obrigatório", variant: "destructive" });
       return;
     }
 
@@ -66,11 +66,10 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
       
       const metadata = {
         audios: form.audio_url ? [{
-          titulo: "Áudio Principal",
+          titulo: form.audio_titulo || "Áudio Principal",
           url: form.audio_url,
           tipo: "escuta"
         }] : [],
-        perguntas_sugeridas: form.perguntas.split('\n').filter(p => p.trim()),
         jardim_prompt: form.jardim_prompt,
         simulacao_texto: form.cenario_treinamento
       };
@@ -80,7 +79,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
         titulo: form.titulo,
         subtitulo: form.subtitulo,
         slug: finalSlug,
-        tipo: passo?.tipo || 'escuta', // Default para escuta se for novo
+        tipo: passo?.tipo || 'escuta',
         tipo_passo: passo?.tipo_passo || 'escuta',
         jardim_prompt: form.jardim_prompt,
         cenario_treinamento: form.cenario_treinamento,
@@ -110,21 +109,16 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
       if (error) throw error;
 
-      toast.success("Publicado com sucesso!");
+      toast({ title: "Publicado com sucesso!" });
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
       queryClient.invalidateQueries({ queryKey: ['admin-clube-passos'] });
-      queryClient.invalidateQueries({ queryKey: ['rota-oracular'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-rota-passos', estacao.id] });
       
       onClose();
-      
-      // Abre a visão da aluna em nova aba se for uma rota válida
-      if (finalSlug) {
-        window.open(`/clube/rota/${finalSlug}`, '_blank');
-      }
 
     } catch (err: any) {
       console.error(err);
-      toast.error("Erro ao publicar: " + err.message);
+      toast({ title: "Erro ao publicar", description: err.message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
