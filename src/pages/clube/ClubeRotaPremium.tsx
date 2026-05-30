@@ -472,7 +472,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.desafio_terapeuta && (
             <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap">
-                <p className="font-serif text-xl text-gold">{ponto.metadata.desafio_terapeuta}</p>
+                <p className="font-serif text-xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta)}</p>
               </div>
             </Section>
           )}
