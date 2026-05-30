@@ -201,14 +201,16 @@ export default function ClubeRotaPremium() {
               <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/60 to-midnight" />
             )}
             {isModoGuiado && (
+              <div className="absolute inset-0 bg-black/50" />
+            )}
+            {isModoGuiado && (
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-midnight" />
             )}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[100px] sm:blur-[160px]" />
           </motion.div>
 
-          {!isModoGuiado && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-5 sm:space-y-6"
@@ -219,22 +221,24 @@ export default function ClubeRotaPremium() {
                 transition={{ delay: 0.5, duration: 1.2 }}
                 className="flex flex-col items-center justify-center gap-4 sm:gap-6"
               >
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
-                    <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
-                      {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-                    </span>
-                    <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                {!isModoGuiado && (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
+                      <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
+                        {estacaoAtual?.livro_titulo || 'Estação Oracular'}
+                      </span>
+                      <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                    </div>
+                    {estacaoAtual?.titulo && (
+                       <span className="text-[10px] sm:text-[12px] italic font-serif text-white/30">
+                         Travessia: {estacaoAtual.titulo}
+                       </span>
+                    )}
                   </div>
-                  {estacaoAtual?.titulo && (
-                     <span className="text-[10px] sm:text-[12px] italic font-serif text-white/30">
-                       Travessia: {estacaoAtual.titulo}
-                     </span>
-                  )}
-                </div>
+                )}
 
-                {matchedBook && (
+                {matchedBook && !isModoGuiado && (
                   <Laboratorio8020Modal
                     bookId={matchedBook.id}
                     bookTitle={matchedBook.title}
@@ -280,34 +284,37 @@ export default function ClubeRotaPremium() {
                 transition={{ delay: 1, duration: 1 }}
                 className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6 sm:pt-10 px-4 sm:px-0"
               >
-                <Button
-                  size="lg"
-                  variant="gold"
-                  className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
-                  onClick={() => {
-                    const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
-                    const el = document.getElementById(targetId);
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                >
-                  <Play className="w-4 h-4 fill-current" /> Iniciar Travessia
-                </Button>
-                {audios.length > 0 && (
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
-                    onClick={() => {
-                      const el = document.getElementById('audio-travessia');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
-                  </Button>
+                {!isModoGuiado && (
+                  <>
+                    <Button
+                      size="lg"
+                      variant="gold"
+                      className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
+                      onClick={() => {
+                        const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
+                        const el = document.getElementById(targetId);
+                        el?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      <Play className="w-4 h-4 fill-current" /> Iniciar Travessia
+                    </Button>
+                    {audios.length > 0 && (
+                      <Button
+                        size="lg"
+                        variant="outline"
+                        className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
+                        onClick={() => {
+                          const el = document.getElementById('audio-travessia');
+                          el?.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                      >
+                        <Headphones className="w-4 h-4 text-gold/80" /> Ouvir Áudio
+                      </Button>
+                    )}
+                  </>
                 )}
               </motion.div>
             </motion.div>
-          )}
 
           {/* Indicador de scroll */}
           <motion.div
