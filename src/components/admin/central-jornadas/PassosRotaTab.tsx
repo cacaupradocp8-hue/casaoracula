@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, Trash2, GripVertical, Loader2, Sparkles, 
   Headphones, PenTool, ClipboardList, Zap, ArrowRight,
-  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass
+  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass, Rocket
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
