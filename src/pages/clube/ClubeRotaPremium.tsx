@@ -105,7 +105,7 @@ export default function ClubeRotaPremium() {
   }
 
   // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
-  const audios: Array<{ titulo?: string; url?: string; tipo?: string; duracao?: string }> =
+  const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
     Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
   const jardimPrompt: string | null =
