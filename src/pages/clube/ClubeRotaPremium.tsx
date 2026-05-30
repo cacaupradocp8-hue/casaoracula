@@ -221,22 +221,24 @@ export default function ClubeRotaPremium() {
                 transition={{ delay: 0.5, duration: 1.2 }}
                 className="flex flex-col items-center justify-center gap-4 sm:gap-6"
               >
-                <div className="flex flex-col items-center gap-2">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
-                    <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
-                      {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-                    </span>
-                    <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                {!isModoGuiado && (
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-r from-transparent to-gold/40" />
+                      <span className="text-[8px] sm:text-[10px] tracking-[0.4em] sm:tracking-[0.6em] uppercase text-gold/60 font-medium">
+                        {estacaoAtual?.livro_titulo || 'Estação Oracular'}
+                      </span>
+                      <span className="h-[1px] w-8 sm:w-12 bg-gradient-to-l from-transparent to-gold/40" />
+                    </div>
+                    {estacaoAtual?.titulo && (
+                       <span className="text-[10px] sm:text-[12px] italic font-serif text-white/30">
+                         Travessia: {estacaoAtual.titulo}
+                       </span>
+                    )}
                   </div>
-                  {estacaoAtual?.titulo && (
-                     <span className="text-[10px] sm:text-[12px] italic font-serif text-white/30">
-                       Travessia: {estacaoAtual.titulo}
-                     </span>
-                  )}
-                </div>
+                )}
 
-                {matchedBook && (
+                {matchedBook && !isModoGuiado && (
                   <Laboratorio8020Modal
                     bookId={matchedBook.id}
                     bookTitle={matchedBook.title}
