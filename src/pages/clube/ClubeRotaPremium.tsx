@@ -481,7 +481,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.revelacao_estacao && (
             <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                {ponto.metadata.revelacao_estacao}
+                {renderContent(ponto.metadata.revelacao_estacao)}
               </div>
             </Section>
           )}
