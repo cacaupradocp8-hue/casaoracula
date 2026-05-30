@@ -96,16 +96,21 @@ export default function AdminClubeHub() {
   const { data: stats } = useQuery({
     queryKey: ['admin-clube-hub-premium-stats'],
     queryFn: async () => {
-      const [routes, stations, activeStation, tracks, chatPerguntas] = await Promise.all([
-        supabase.from('clube_v3_routes').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_stations').select('*').eq('status', 'published').order('display_order', { ascending: true }).limit(1).maybeSingle(),
+      const [stations, activeStation, tracks, chatPerguntas] = await Promise.all([
+        supabase.from('clube_estacoes').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_estacoes')
+          .select('*')
+          .eq('publicada', true)
+          .eq('ativa', true)
+          .order('numero', { ascending: false })
+          .limit(1)
+          .maybeSingle(),
         supabase.from('clube_v3_station_audios').select('id', { count: 'exact', head: true }),
         supabase.from('clube_v3_station_content').select('id', { count: 'exact', head: true }),
       ]);
       return {
         ciclos: stations.count || 0,
-        books: routes.count || 0,
+        books: 1, // Simplified since we group by livro_titulo now
         portais: stations.count || 0,
         chat: chatPerguntas.count || 0,
         activeStation: activeStation.data,
@@ -117,7 +122,7 @@ export default function AdminClubeHub() {
   const queryClient = useQueryClient();
   const togglePublishMutation = useMutation({
     mutationFn: async ({ id, published }: { id: string; published: boolean }) => {
-      const { error } = await supabase.from('clube_v3_stations').update({ status: published ? 'published' : 'draft' }).eq('id', id);
+      const { error } = await supabase.from('clube_estacoes').update({ publicada: published }).eq('id', id);
       if (error) throw error;
     },
     onSuccess: () => {
@@ -253,9 +258,15 @@ export default function AdminClubeHub() {
           <CardContent className="p-0 overflow-hidden">
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-48 h-48 md:h-auto relative bg-muted">
-                {(stats.activeStation as any).cover_image_url ? (
+                {(stats.activeStation as any).banner_url ? (
                   <img 
-                    src={(stats.activeStation as any).cover_image_url} 
+                    src={(stats.activeStation as any).banner_url} 
+                    alt="Capa do Livro" 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (stats.activeStation as any).livro_capa_url ? (
+                  <img 
+                    src={(stats.activeStation as any).livro_capa_url} 
                     alt="Capa do Livro" 
                     className="w-full h-full object-cover"
                   />
@@ -273,14 +284,14 @@ export default function AdminClubeHub() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <h2 className="text-2xl font-serif text-foreground leading-tight">
-                      {stats.activeStation.title}
+                      {stats.activeStation.titulo}
                     </h2>
-                    <Badge variant={stats.activeStation.status === 'active' ? "default" : "secondary"} className={cn("text-[9px] uppercase tracking-wider", stats.activeStation.status === 'active' ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "")}>
-                      {stats.activeStation.status === 'active' ? 'Publicado' : 'Rascunho'}
+                    <Badge variant={stats.activeStation.publicada ? "default" : "secondary"} className={cn("text-[9px] uppercase tracking-wider", stats.activeStation.publicada ? "bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20" : "")}>
+                      {stats.activeStation.publicada ? 'Publicado' : 'Rascunho'}
                     </Badge>
                   </div>
                   <p className="text-muted-foreground font-light italic">
-                    {stats.activeStation.title}
+                    {stats.activeStation.livro_titulo}
                   </p>
                   <div className="flex items-center gap-6 text-xs text-muted-foreground pt-2">
                     <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5" /> Atualizado recentemente</span>
@@ -291,11 +302,11 @@ export default function AdminClubeHub() {
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center space-x-3 px-4 py-2 bg-background/50 rounded-full border border-primary/10">
                     <Label htmlFor="hub-publish-toggle" className="text-xs font-semibold cursor-pointer">
-                      {stats.activeStation.status === 'active' ? "Visível no Clube" : "Oculto (Rascunho)"}
+                      {stats.activeStation.publicada ? "Visível no Clube" : "Oculto (Rascunho)"}
                     </Label>
                     <Switch 
                       id="hub-publish-toggle"
-                      checked={stats.activeStation.status === 'active'} 
+                      checked={stats.activeStation.publicada} 
                       onCheckedChange={(checked) => togglePublishMutation.mutate({ id: stats.activeStation.id, published: checked })}
                       disabled={togglePublishMutation.isPending}
                     />

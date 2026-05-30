@@ -31,10 +31,11 @@ export default function AdminCentralEstacao() {
   const [editStationOpen, setEditStationOpen] = useState(false);
   const [quickPublishOpen, setQuickPublishOpen] = useState(false);
   const [stationForm, setStationForm] = useState({
-    title: '',
-    subtitle: '',
-    description: '',
-    status: 'draft'
+    titulo: '',
+    subtitulo: '',
+    descricao: '',
+    publicada: false,
+    ativa: false
   });
 
   const onTabChange = (val: string) => {
@@ -46,11 +47,8 @@ export default function AdminCentralEstacao() {
     queryFn: async () => {
       if (!estacaoId) return null;
       const { data, error } = await supabase
-        .from('clube_v3_stations')
-        .select(`
-          *,
-          route:clube_v3_routes(*)
-        `)
+        .from('clube_estacoes')
+        .select('*')
         .eq('id', estacaoId)
         .maybeSingle();
       if (error) throw error;
@@ -67,10 +65,11 @@ export default function AdminCentralEstacao() {
   useEffect(() => {
     if (estacao) {
       setStationForm({
-        title: estacao.title || '',
-        subtitle: estacao.subtitle || '',
-        description: estacao.description || '',
-        status: estacao.status || 'draft'
+        titulo: estacao.titulo || '',
+        subtitulo: estacao.subtitulo || '',
+        descricao: estacao.descricao || '',
+        publicada: estacao.publicada || false,
+        ativa: estacao.ativa || false
       });
     }
   }, [estacao]);
@@ -78,12 +77,13 @@ export default function AdminCentralEstacao() {
   const updateStationMutation = useMutation({
     mutationFn: async (data: typeof stationForm) => {
       const { error } = await supabase
-        .from('clube_v3_stations')
+        .from('clube_estacoes')
         .update({
-          title: data.title,
-          subtitle: data.subtitle,
-          description: data.description,
-          status: data.status
+          titulo: data.titulo,
+          subtitulo: data.subtitulo,
+          descricao: data.descricao,
+          publicada: data.publicada,
+          ativa: data.ativa
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -122,8 +122,8 @@ export default function AdminCentralEstacao() {
           <div className="flex flex-col md:flex-row flex-1 min-w-0">
             {/* Book Preview */}
             <div className="w-full md:w-32 h-32 md:h-auto bg-muted group relative cursor-pointer overflow-hidden" onClick={() => setEditStationOpen(true)}>
-              {estacao.route?.cover_image_url ? (
-                <img src={estacao.route.cover_image_url} alt="Capa" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+              {estacao.banner_url || estacao.livro_capa_url ? (
+                <img src={estacao.banner_url || estacao.livro_capa_url} alt="Capa" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-[10px] text-muted-foreground p-2 text-center">
                   <ImageIcon className="w-6 h-6 mb-1 opacity-20" />
@@ -144,15 +144,15 @@ export default function AdminCentralEstacao() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 flex-wrap">
                     <h1 className="text-2xl font-serif text-foreground truncate">
-                      {estacao.title}
+                      {estacao.titulo}
                     </h1>
-                    <Badge variant={estacao.status === 'published' ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.status === 'published' ? "bg-emerald-500/10 text-emerald-500" : "")}>
-                      {estacao.status === 'published' ? 'Publicado' : 'Rascunho'}
+                    <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
+                      {estacao.publicada ? 'Publicado' : 'Rascunho'}
                     </Badge>
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 flex items-center gap-2">
                     <BookOpen className="w-3.5 h-3.5 text-gold" />
-                    {estacao.route?.title} — {estacao.subtitle}
+                    {estacao.livro_titulo} — {estacao.subtitulo}
                   </p>
                 </div>
               </div>
@@ -164,8 +164,18 @@ export default function AdminCentralEstacao() {
               <Label htmlFor="station-publish" className="text-[10px] font-bold uppercase tracking-wider cursor-pointer">Visibilidade</Label>
               <Switch 
                 id="station-publish"
-                checked={estacao.status === 'published'} 
-                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, status: v ? 'published' : 'draft'})}
+                checked={estacao.publicada} 
+                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, publicada: v})}
+                disabled={updateStationMutation.isPending}
+              />
+            </div>
+            
+            <div className="flex items-center gap-3 px-3 py-1.5 bg-muted/30 rounded-full border border-primary/5">
+              <Label htmlFor="station-active" className="text-[10px] font-bold uppercase tracking-wider cursor-pointer">Ativa</Label>
+              <Switch 
+                id="station-active"
+                checked={estacao.ativa} 
+                onCheckedChange={(v) => updateStationMutation.mutate({...stationForm, ativa: v})}
                 disabled={updateStationMutation.isPending}
               />
             </div>
@@ -196,29 +206,33 @@ export default function AdminCentralEstacao() {
         <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Editar Detalhes da Estação (v3)</DialogTitle>
+              <DialogTitle>Editar Detalhes da Estação</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label>Título da Estação</Label>
-                  <Input value={stationForm.title} onChange={e => setStationForm({...stationForm, title: e.target.value})} />
+                  <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
                 </div>
                 <div className="space-y-2">
                   <Label>Subtítulo / Temas</Label>
-                  <Input value={stationForm.subtitle} onChange={e => setStationForm({...stationForm, subtitle: e.target.value})} />
+                  <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
                 </div>
               </div>
               
               <div className="space-y-2">
                 <Label>Descrição da Estação</Label>
-                <Textarea value={stationForm.description} onChange={e => setStationForm({...stationForm, description: e.target.value})} rows={3} />
+                <Textarea value={stationForm.descricao} onChange={e => setStationForm({...stationForm, descricao: e.target.value})} rows={3} />
               </div>
 
               <div className="flex items-center gap-4 pt-2">
                 <div className="flex items-center gap-2">
-                  <Switch checked={stationForm.status === 'published'} onCheckedChange={v => setStationForm({...stationForm, status: v ? 'published' : 'draft'})} />
+                  <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
                   <Label>Publicada</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
+                  <Label>Ativa (Destaque)</Label>
                 </div>
               </div>
             </div>
