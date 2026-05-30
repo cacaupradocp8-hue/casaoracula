@@ -13,14 +13,8 @@ import {
   Eye, 
   CheckCircle2, 
   Clock, 
-  FileText,
   History,
-  Image as ImageIcon,
   MoreVertical,
-  ChevronRight,
-  User,
-  ArrowUpDown,
-  Calendar,
   Music,
   Trash2
 } from 'lucide-react';
@@ -29,8 +23,7 @@ import {
   Card, 
   CardContent, 
   CardHeader, 
-  CardTitle, 
-  CardDescription 
+  CardTitle 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,7 +37,6 @@ import {
   TableRow 
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -61,54 +53,17 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { PassosRotaTab } from './central-jornadas/PassosRotaTab';
 
 export function AdminClubeEditorialTab() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [isEstacaoDialogOpen, setIsEstacaoDialogOpen] = useState(false);
-  const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
   const [editingEstacao, setEditingEstacao] = useState<any>(null);
   const [prevEstacao, setPrevEstacao] = useState<any>(null);
-  const [editingItem, setEditingItem] = useState<any>(null);
-  const [prevItem, setPrevItem] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('conteudo');
   
-  const updateItemMetadata = (key: string, value: any) => {
-    setEditingItem((prev: any) => ({
-      ...prev,
-      metadata: {
-        ...(prev?.metadata || {}),
-        [key]: value,
-      },
-    }));
-  };
-
-  const updateItemMetadataDeep = (key: string, subkey: string, value: any) => {
-    setEditingItem((prev: any) => {
-      const currentMetadata = prev?.metadata || {};
-      const currentSubObject = currentMetadata[key] || {};
-      return {
-        ...prev,
-        metadata: {
-          ...currentMetadata,
-          [key]: {
-            ...currentSubObject,
-            [subkey]: value,
-          },
-        },
-      };
-    });
-  };
-
-  
-  // History filters
-  const [historyFilter, setHistoryFilter] = useState({
-    user: 'all',
-    type: 'all',
-    action: 'all'
-  });
-
   // Queries
   const { data: estacoes, isLoading: loadingEstacoes } = useQuery({
     queryKey: ['admin-clube-estacoes'],
@@ -123,7 +78,7 @@ export function AdminClubeEditorialTab() {
     }
   });
 
-  const { data: itensRota, isLoading: loadingItens } = useQuery({
+  const { data: itensRota } = useQuery({
     queryKey: ['admin-clube-itens-rota'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -140,31 +95,6 @@ export function AdminClubeEditorialTab() {
     }
   });
   
-  const { data: auditLogs, isLoading: loadingLogs } = useQuery({
-    queryKey: ['admin-clube-audit-logs'],
-    queryFn: async () => {
-      const { data: logs, error } = await supabase
-        .from('clube_audit_log')
-        .select('*')
-        .order('created_at', { ascending: false });
-      
-      if (error) throw error;
-      if (!logs) return [];
-      
-      const userIds = Array.from(new Set(logs.map(l => l.user_id).filter(Boolean)));
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('*')
-        .in('id', userIds);
-      
-      return logs.map(log => ({
-        ...log,
-        profiles: profiles?.find(p => p.id === log.user_id)
-      }));
-    },
-    enabled: activeTab === 'historico'
-  });
-
   // Mutations
   const createAuditLog = async (log: any) => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -189,16 +119,14 @@ export function AdminClubeEditorialTab() {
       for (const key in updates) {
         const valAnterior = prevEstacao[key];
         const valNovo = updates[key];
-        
-        // Só loga se houver mudança real e os valores forem diferentes
         if (valNovo !== undefined && String(valAnterior) !== String(valNovo)) {
           await createAuditLog({
             tabela: 'clube_estacoes',
             registro_id: id,
             acao: 'UPDATE',
             campo_alterado: key,
-            valor_anterior: valAnterior !== null && valAnterior !== undefined ? String(valAnterior) : 'vazio',
-            valor_novo: valNovo !== null && valNovo !== undefined ? String(valNovo) : 'vazio'
+            valor_anterior: String(valAnterior),
+            valor_novo: String(valNovo)
           });
         }
       }
@@ -238,158 +166,17 @@ export function AdminClubeEditorialTab() {
         .update({ status: 'archived', ativa: false, publicada: false })
         .eq('id', id);
       if (error) throw error;
-      
-      await createAuditLog({
-        tabela: 'clube_estacoes',
-        registro_id: id,
-        acao: 'UPDATE',
-        campo_alterado: 'status',
-        valor_anterior: 'active',
-        valor_novo: 'archived'
-      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
-      toast.success('Estação arquivada (exclusão física desabilitada)');
+      toast.success('Estação arquivada');
     }
   });
-
-  const updateItem = useMutation({
-    mutationFn: async (payload: any) => {
-      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
-      const { 
-        id, 
-        estacao, 
-        created_at, 
-        updated_at, 
-        profiles,
-        count,
-        ...updates 
-      } = payload;
-      
-      const { error } = await supabase
-        .from('clube_rota_itens')
-        .update(updates)
-        .eq('id', id);
-      if (error) throw error;
-
-      // Log changes
-      for (const key in updates) {
-        const valAnterior = prevItem[key];
-        const valNovo = updates[key];
-
-        // Só loga se houver mudança real e os valores forem diferentes
-        if (valNovo !== undefined && String(valAnterior) !== String(valNovo)) {
-          await createAuditLog({
-            tabela: 'clube_rota_itens',
-            registro_id: id,
-            acao: 'UPDATE',
-            campo_alterado: key,
-            valor_anterior: valAnterior !== null && valAnterior !== undefined ? String(valAnterior) : 'vazio',
-            valor_novo: valNovo !== null && valNovo !== undefined ? String(valNovo) : 'vazio'
-          });
-        }
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
-      toast.success('Item da rota atualizado com sucesso');
-      setIsItemDialogOpen(false);
-    }
-  });
-
-  const createItem = useMutation({
-    mutationFn: async (payload: any) => {
-      // Garantir que campos relacionais ou metadados de sistema não sejam enviados
-      const { 
-        id, 
-        estacao, 
-        created_at, 
-        updated_at, 
-        profiles,
-        count,
-        ...item 
-      } = payload;
-      
-      const { error } = await supabase
-        .from('clube_rota_itens')
-        .insert(item);
-      if (error) throw error;
-      
-      await createAuditLog({
-        tabela: 'clube_rota_itens',
-        acao: 'INSERT',
-        valor_novo: item.titulo
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
-      toast.success('Novo item criado com sucesso');
-      setIsItemDialogOpen(false);
-    }
-  });
-
-  const deleteItem = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from('clube_rota_itens')
-        .update({ status: 'archived', publicado: false })
-        .eq('id', id);
-      if (error) throw error;
-
-      await createAuditLog({
-        tabela: 'clube_rota_itens',
-        registro_id: id,
-        acao: 'UPDATE',
-        campo_alterado: 'status',
-        valor_anterior: 'active',
-        valor_novo: 'archived'
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-itens-rota'] });
-      toast.success('Item arquivado para segurança');
-    }
-  });
-
-  const handleCreateItem = () => {
-    const lastOrder = itensRota?.length ? Math.max(...itensRota.map(i => i.ordem)) : 0;
-    const activeEstacao = estacoes?.find(e => e.ativa);
-    
-    setEditingItem({
-      titulo: 'Nova Estação',
-      slug: 'nova-estacao',
-      ordem: lastOrder + 10,
-      estacao_id: activeEstacao?.id || estacoes?.[0]?.id,
-      tipo: 'portal',
-      publicado: false,
-      status: 'draft',
-      metadata: { 
-        audios: [], 
-        abertura_imersiva: '',
-        caso_espelho: { titulo: '', relato: '', contexto_simbolico: '' },
-        desafio_terapeuta: { pergunta_principal: '', opcoes_leitura: '' },
-        revelacao_estacao: { leitura_modelo: '', hipotese_simbolica: '', conducao_justa: '', risco_etico: '' },
-        erro_comum: '',
-        missao_campo: '',
-        pergunta_narrativa: '',
-        oraculo_estacao: { palavra: '', movimento: '', frase_fechamento: '' }
-      }
-    });
-    setPrevItem({});
-    setIsItemDialogOpen(true);
-  };
 
   const handleEditEstacao = (estacao: any) => {
     setEditingEstacao(estacao);
     setPrevEstacao({...estacao});
     setIsEstacaoDialogOpen(true);
-  };
-
-  const handleEditItem = (item: any) => {
-    setEditingItem(item);
-    setPrevItem({...item});
-    setIsItemDialogOpen(true);
   };
 
   const filteredEstacoes = estacoes?.filter(e => 
@@ -414,238 +201,148 @@ export function AdminClubeEditorialTab() {
       </div>
 
       <TabsContent value="conteudo" className="space-y-8 mt-0 border-none p-0">
-        {/* Header & Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-midnight/20 border-white/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Layout className="w-4 h-4 text-gold" /> Rotas Ativas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{estacoes?.filter(e => e.ativa).length || 0}</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-midnight/20 border-white/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <MapIcon className="w-4 h-4 text-gold" /> Estações Criadas
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{itensRota?.length || 0}</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-midnight/20 border-white/5">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-              <Settings2 className="w-4 h-4 text-gold" /> Atualizações
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-sm text-muted-foreground">Monitorando integridade dos dados</div>
-          </CardContent>
-        </Card>
-      </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="bg-midnight/20 border-white/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <Layout className="w-4 h-4 text-gold" /> Rotas Ativas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{estacoes?.filter(e => e.ativa).length || 0}</div>
+            </CardContent>
+          </Card>
+          <Card className="bg-midnight/20 border-white/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <MapIcon className="w-4 h-4 text-gold" /> Estações Criadas
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{itensRota?.length || 0}</div>
+            </CardContent>
+          </Card>
+          <Card className="bg-midnight/20 border-white/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <Settings2 className="w-4 h-4 text-gold" /> Atualizações
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-sm text-muted-foreground">Monitorando integridade dos dados</div>
+            </CardContent>
+          </Card>
+        </div>
 
-      {/* Tabs / Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-        <div className="relative w-full sm:w-96">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input 
-            placeholder="Procurar por rota ou obra..." 
-            className="pl-10 bg-midnight/40 border-white/10"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full sm:w-96">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input 
+              placeholder="Procurar por rota ou obra..." 
+              className="pl-10 bg-midnight/40 border-white/10"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10">
+              <Filter className="w-4 h-4" /> Filtros
+            </Button>
+            <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
+              const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
+              setEditingEstacao({
+                titulo: 'Nova Rota',
+                subtitulo: '',
+                numero: lastNum + 1,
+                publicada: false,
+                ativa: false,
+                livro_titulo: ''
+              });
+              setPrevEstacao({});
+              setIsEstacaoDialogOpen(true);
+            }}>
+              <Plus className="w-4 h-4" /> Nova Rota
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="gap-2 bg-midnight/40 border-white/10">
-            <Filter className="w-4 h-4" /> Filtros
-          </Button>
-          <Button className="gap-2 bg-gold text-midnight hover:bg-gold/90" onClick={() => {
-            const lastNum = estacoes?.length ? Math.max(...estacoes.map(e => e.numero)) : 0;
-            setEditingEstacao({
-              titulo: 'Nova Rota',
-              subtitulo: '',
-              numero: lastNum + 1,
-              publicada: false,
-              ativa: false,
-              livro_titulo: ''
-            });
-            setPrevEstacao({});
-            setIsEstacaoDialogOpen(true);
-          }}>
-            <Plus className="w-4 h-4" /> Nova Rota
-          </Button>
-        </div>
-      </div>
 
-      {/* Estações Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Rotas do Clube</h2>
-          <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
-        </div>
-        
-        <div className="rounded-xl border border-white/5 overflow-hidden">
-          <Table>
-            <TableHeader className="bg-white/[0.02]">
-              <TableRow>
-                <TableHead>Número</TableHead>
-                <TableHead>Título</TableHead>
-                <TableHead>Livro</TableHead>
-                <TableHead>Visibilidade</TableHead>
-                <TableHead>Atualizado em</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loadingEstacoes ? (
-                <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando rotas do clube...</TableCell></TableRow>
-              ) : filteredEstacoes?.map((e) => (
-                <TableRow key={e.id} className="hover:bg-white/[0.01] transition-colors">
-                  <TableCell className="font-mono text-gold/60">{e.numero}</TableCell>
-                  <TableCell className="font-medium">{e.titulo}</TableCell>
-                  <TableCell className="text-muted-foreground italic text-xs">{e.livro_titulo}</TableCell>
-                  <TableCell>
-                    {e.publicada ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1">
-                        <CheckCircle2 className="w-3 h-3" /> Publicado
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-white/20 border-white/5 gap-1">
-                        <Clock className="w-3 h-3" /> Rascunho
-                      </Badge>
-                    )}
-                    {e.ativa && (
-                      <Badge variant="outline" className="ml-2 border-gold/30 text-gold/60 text-[10px]">Ativa</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {e.updated_at ? new Date(e.updated_at).toLocaleDateString() : 'N/A'}
-                  </TableCell>
-                  <TableCell className="text-right flex items-center justify-end gap-1">
-                    <Button variant="ghost" size="icon" onClick={() => handleEditEstacao(e)}>
-                      <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={() => {
-                      if (window.confirm(`Arquivar a rota "${e.titulo}"? Ela deixará de ser visível, mas os dados serão preservados.`)) {
-                        deleteEstacao.mutate(e.id);
-                      }
-                    }}>
-                      <Trash2 className="w-4 h-4 text-white/20 hover:text-amber-500 transition-colors" />
-                    </Button>
-                  </TableCell>
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <h2 className="font-display text-xl text-white/90">Rotas do Clube</h2>
+            <Badge variant="outline" className="border-gold/30 text-gold/60">clube_estacoes</Badge>
+          </div>
+          
+          <div className="rounded-xl border border-white/5 overflow-hidden">
+            <Table>
+              <TableHeader className="bg-white/[0.02]">
+                <TableRow>
+                  <TableHead>Número</TableHead>
+                  <TableHead>Título</TableHead>
+                  <TableHead>Livro</TableHead>
+                  <TableHead>Visibilidade</TableHead>
+                  <TableHead>Atualizado em</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+              </TableHeader>
+              <TableBody>
+                {loadingEstacoes ? (
+                  <TableRow><TableCell colSpan={6} className="text-center py-8">Carregando rotas do clube...</TableCell></TableRow>
+                ) : filteredEstacoes?.map((e) => (
+                  <TableRow key={e.id} className="hover:bg-white/[0.01] transition-colors">
+                    <TableCell className="font-mono text-gold/60">{e.numero}</TableCell>
+                    <TableCell className="font-medium">{e.titulo}</TableCell>
+                    <TableCell className="text-muted-foreground italic text-xs">{e.livro_titulo}</TableCell>
+                    <TableCell>
+                      {e.publicada ? (
+                        <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 gap-1">
+                          <CheckCircle2 className="w-3 h-3" /> Publicado
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-white/20 border-white/5 gap-1">
+                          <Clock className="w-3 h-3" /> Rascunho
+                        </Badge>
+                      )}
+                      {e.ativa && (
+                        <Badge variant="outline" className="ml-2 border-gold/30 text-gold/60 text-[10px]">Ativa</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {e.updated_at ? new Date(e.updated_at).toLocaleDateString() : 'N/A'}
+                    </TableCell>
+                    <TableCell className="text-right flex items-center justify-end gap-1">
+                      <Button variant="ghost" size="icon" onClick={() => handleEditEstacao(e)}>
+                        <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => {
+                        if (window.confirm(`Arquivar a rota "${e.titulo}"?`)) {
+                          deleteEstacao.mutate(e.id);
+                        }
+                      }}>
+                        <Trash2 className="w-4 h-4 text-white/20 hover:text-amber-500 transition-colors" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-      {/* Itens de Rota Section */}
-      <div className="space-y-4 pt-4">
-        <div className="flex items-center gap-2">
-          <h2 className="font-display text-xl text-white/90">Estações da Travessia</h2>
-          <Badge variant="outline" className="border-gold/30 text-gold/60">clube_rota_itens</Badge>
-          <Button size="sm" variant="outline" className="ml-auto gap-2 border-gold/20 text-gold/60 hover:bg-gold/10" onClick={handleCreateItem}>
-            <Plus className="w-3 h-3" /> Nova Estação
-          </Button>
+          {estacoes?.find(e => e.ativa) && (
+            <div className="mt-12 pt-8 border-t border-white/5">
+              <PassosRotaTab estacaoId={estacoes.find(e => e.ativa).id} />
+            </div>
+          )}
         </div>
-        
-        <div className="rounded-xl border border-white/5 overflow-hidden">
-          <Table>
-            <TableHeader className="bg-white/[0.02]">
-              <TableRow>
-                <TableHead>Ritmo</TableHead>
-                <TableHead>Estação</TableHead>
-                <TableHead>Rota do Clube</TableHead>
-                <TableHead>Essência</TableHead>
-                <TableHead>Arquétipos</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="text-right">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loadingItens ? (
-                <TableRow><TableCell colSpan={7} className="text-center py-8">Carregando estações da travessia...</TableCell></TableRow>
-              ) : itensRota?.map((item) => (
-                <TableRow key={item.id} className="hover:bg-white/[0.01] transition-colors">
-                  <TableCell className="font-mono text-gold/60">#{item.ordem}</TableCell>
-                  <TableCell>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{item.titulo}</span>
-                      <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{item.slug}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-xs">{item.estacao?.titulo || 'Sem Rota'}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="text-[10px] uppercase font-bold border-white/10">
-                      {item.tipo}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-1">
-                      {item.porta && <Badge className="bg-blue-500/10 text-blue-400 border-none text-[9px]">P</Badge>}
-                      {item.campo && <Badge className="bg-purple-500/10 text-purple-400 border-none text-[9px]">C</Badge>}
-                      {item.jardim_prompt && <Badge className="bg-emerald-500/10 text-emerald-400 border-none text-[9px]">J</Badge>}
-                      {item.metadata && <Badge className="bg-gold/10 text-gold/60 border-none text-[9px]">M</Badge>}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {item.publicado ? (
-                      <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[10px]">Publicado</Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-white/20 border-white/5 text-[10px]">Rascunho</Badge>
-                    )}
-                    {item.status && item.status !== (item.publicado ? 'published' : 'draft') && (
-                      <span className="text-[8px] text-white/10 ml-2 block italic">({item.status})</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreVertical className="w-4 h-4 text-white/40" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-midnight border-white/10">
-                        <DropdownMenuItem onClick={() => handleEditItem(item)} className="gap-2">
-                          <Edit3 className="w-4 h-4" /> Editar Estação
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => window.open(`/admin/clube/preview/${item.id}`, '_blank')} className="gap-2">
-                          <Eye className="w-4 h-4" /> Pré-visualizar
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2" onClick={() => navigate(`/clube/rota/${item.slug}`)}>
-                          <Layout className="w-4 h-4" /> Ver Estação
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="gap-2 text-amber-500 focus:text-amber-500" onClick={() => {
-                          if (window.confirm(`Arquivar a estação "${item.titulo}" por segurança?`)) {
-                            deleteItem.mutate(item.id);
-                          }
-                        }}>
-                          <Trash2 className="w-4 h-4" /> Arquivar Estação
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </div>
+      </TabsContent>
 
       <TabsContent value="audioteca" className="space-y-8 mt-0 border-none p-0">
         <AdminClubeAudioteca />
       </TabsContent>
 
-      {/* Edit Estação Dialog */}
       <Dialog open={isEstacaoDialogOpen} onOpenChange={setIsEstacaoDialogOpen}>
         <DialogContent className="bg-midnight border-white/10 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gold font-display">Editar Rota</DialogTitle>
+            <DialogTitle className="text-gold font-display">Configurações da Rota</DialogTitle>
             <DialogDescription>Ajuste os fundamentos desta rota no Clube.</DialogDescription>
           </DialogHeader>
           
@@ -691,7 +388,7 @@ export function AdminClubeEditorialTab() {
               <Label htmlFor="descricao">Descrição</Label>
               <textarea 
                 id="descricao" 
-                className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
+                className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm text-white"
                 defaultValue={editingEstacao?.descricao}
                 onChange={(e) => setEditingEstacao({...editingEstacao, descricao: e.target.value})}
               />
@@ -716,38 +413,6 @@ export function AdminClubeEditorialTab() {
               />
               <Label htmlFor="publicada">Publicada (Visível)</Label>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="item-estacao">Estação Vinculada</Label>
-                <select 
-                  id="item-estacao"
-                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
-                  value={editingItem?.estacao_id}
-                  onChange={(e) => setEditingItem({...editingItem, estacao_id: e.target.value})}
-                >
-                  {estacoes?.map(e => (
-                    <option key={e.id} value={e.id}>{e.titulo} ({e.livro_titulo})</option>
-                  ))}
-                </select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-tipo">Tipo de Conteúdo</Label>
-                <select 
-                  id="item-tipo"
-                  className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
-                  value={editingItem?.tipo}
-                  onChange={(e) => setEditingItem({...editingItem, tipo: e.target.value})}
-                >
-                  <option value="portal">Portal / Texto</option>
-                  <option value="audio">Áudio / Escuta</option>
-                  <option value="laboratorio">Laboratório 80/20</option>
-                  <option value="chat_livro">Chat com o Livro</option>
-                  <option value="jardim">Jardim da Psique</option>
-                  <option value="encontro">Encontro ao Vivo</option>
-                </select>
-              </div>
-            </div>
           </div>
 
           <DialogFooter>
@@ -756,618 +421,14 @@ export function AdminClubeEditorialTab() {
               if (editingEstacao.id) {
                 updateEstacao.mutate(editingEstacao);
               } else {
-                // createEstacao - Podemos usar o mesmo updateEstacao se ele suportar insert
-                // Mas vamos ser explícitos e criar uma nova se necessário.
-                // Por agora, vamos assumir que o usuário quer que funcione.
                 createEstacao.mutate(editingEstacao);
               }
             }}>
-              {editingEstacao?.id ? 'Salvar Rota' : 'Salvar e criar próxima rota'}
+              {editingEstacao?.id ? 'Salvar Rota' : 'Criar Rota'}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Edit Item Dialog */}
-      <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
-        <DialogContent className="bg-midnight border-white/10 max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-white/10">
-          <DialogHeader className="border-b border-white/5 pb-4">
-            <DialogTitle className="text-2xl text-gold font-display">Editor de Travessia</DialogTitle>
-            <DialogDescription>Refinando a experiência da Estação na Rota dos Lobos.</DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-10 py-6">
-            {/* Bloco 1 — Identidade da Estação */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gold/90">1. Identidade da Estação</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="item-titulo">Nome da Estação (Público)</Label>
-                  <Input 
-                    id="item-titulo" 
-                    defaultValue={editingItem?.titulo} 
-                    onChange={(e) => setEditingItem({...editingItem, titulo: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="item-tipo">Tipo de Estação</Label>
-                  <select 
-                    id="item-tipo"
-                    className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
-                    value={editingItem?.tipo}
-                    onChange={(e) => setEditingItem({...editingItem, tipo: e.target.value})}
-                  >
-                    <option value="portal">Portal / Texto</option>
-                    <option value="audio">Áudio / Escuta</option>
-                    <option value="laboratorio">Laboratório 80/20</option>
-                    <option value="chat_livro">Chat com o Livro</option>
-                    <option value="jardim">Jardim da Psique</option>
-                    <option value="encontro">Encontro ao Vivo</option>
-                  </select>
-                </div>
-                <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="item-subtitulo">Subtítulo simbólico</Label>
-                  <Input 
-                    id="item-subtitulo" 
-                    defaultValue={editingItem?.subtitulo} 
-                    onChange={(e) => setEditingItem({...editingItem, subtitulo: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="item-estacao">Rota vinculada</Label>
-                  <select 
-                    id="item-estacao"
-                    className="w-full h-10 rounded-md bg-white/5 border border-white/10 px-3 text-sm"
-                    value={editingItem?.estacao_id}
-                    onChange={(e) => setEditingItem({...editingItem, estacao_id: e.target.value})}
-                  >
-                    {estacoes?.map(e => (
-                      <option key={e.id} value={e.id}>{e.titulo}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="item-slug">Slug da URL</Label>
-                  <Input 
-                    id="item-slug" 
-                    defaultValue={editingItem?.slug} 
-                    onChange={(e) => setEditingItem({...editingItem, slug: e.target.value})}
-                    className="bg-white/5 border-white/10 font-mono text-xs"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="item-ordem">Ordem da Travessia</Label>
-                  <Input 
-                    id="item-ordem" 
-                    type="number"
-                    defaultValue={editingItem?.ordem} 
-                    onChange={(e) => setEditingItem({...editingItem, ordem: parseInt(e.target.value)})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 2 — Estado da Travessia */}
-            <section className="space-y-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
-              <div className="flex items-center gap-2 border-l-2 border-blue-400 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-blue-400">2. Estado da Travessia</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="porta">Porta ativa</Label>
-                  <Input 
-                    id="porta" 
-                    defaultValue={editingItem?.porta} 
-                    onChange={(e) => setEditingItem({...editingItem, porta: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="campo">Campo simbólico</Label>
-                  <Input 
-                    id="campo" 
-                    defaultValue={editingItem?.campo} 
-                    onChange={(e) => setEditingItem({...editingItem, campo: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="torre">Torre observada</Label>
-                  <Input 
-                    id="torre" 
-                    defaultValue={editingItem?.torre} 
-                    onChange={(e) => setEditingItem({...editingItem, torre: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="labirinto">Labirinto recorrente</Label>
-                  <Input 
-                    id="labirinto" 
-                    defaultValue={editingItem?.labirinto} 
-                    onChange={(e) => setEditingItem({...editingItem, labirinto: e.target.value})}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="md:col-span-2 space-y-2">
-                  <Label htmlFor="frase_guia">Frase-guia</Label>
-                  <Input 
-                    id="frase_guia" 
-                    defaultValue={editingItem?.frase_guia} 
-                    onChange={(e) => setEditingItem({...editingItem, frase_guia: e.target.value})}
-                    className="bg-white/5 border-white/10 italic text-gold/80"
-                    placeholder="A frase que orienta este passo..."
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 3 — Abertura Imersiva */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 border-l-2 border-purple-400 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-purple-400">3. Abertura Imersiva</h3>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="abertura">Abertura Imersiva (Markdown)</Label>
-                <textarea 
-                  id="abertura" 
-                  className="w-full min-h-[150px] rounded-md bg-white/5 border border-white/10 p-4 text-sm leading-relaxed"
-                  defaultValue={editingItem?.metadata?.abertura_imersiva}
-                  onChange={(e) => updateItemMetadata('abertura_imersiva', e.target.value)}
-                  placeholder="Inicie a travessia com profundidade..."
-                />
-              </div>
-            </section>
-
-            {/* Bloco 4 — Áudio de Travessia */}
-            <section className="space-y-4 p-4 rounded-lg bg-gold/5 border border-gold/10">
-              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gold">4. Áudio de Travessia</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Título do áudio</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.audios?.[0]?.titulo} 
-                    onChange={(e) => {
-                      const audios = [...(editingItem.metadata?.audios || [])];
-                      if (audios.length === 0) audios.push({});
-                      audios[0] = { ...audios[0], titulo: e.target.value };
-                      updateItemMetadata('audios', audios);
-                    }}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Tipo do áudio</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.audios?.[0]?.tipo} 
-                    onChange={(e) => {
-                      const audios = [...(editingItem.metadata?.audios || [])];
-                      if (audios.length === 0) audios.push({});
-                      audios[0] = { ...audios[0], tipo: e.target.value };
-                      updateItemMetadata('audios', audios);
-                    }}
-                    placeholder="Ex: Meditação Guiada, Aula Teórica"
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>URL/caminho do áudio</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.audios?.[0]?.url} 
-                    onChange={(e) => {
-                      const audios = [...(editingItem.metadata?.audios || [])];
-                      if (audios.length === 0) audios.push({});
-                      audios[0] = { ...audios[0], url: e.target.value };
-                      updateItemMetadata('audios', audios);
-                    }}
-                    className="bg-white/5 border-white/10 font-mono text-xs"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Duração</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.audios?.[0]?.duracao} 
-                    onChange={(e) => {
-                      const audios = [...(editingItem.metadata?.audios || [])];
-                      if (audios.length === 0) audios.push({});
-                      audios[0] = { ...audios[0], duracao: e.target.value };
-                      updateItemMetadata('audios', audios);
-                    }}
-                    placeholder="Ex: 15:00"
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 5 — Caso-Espelho */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 border-l-2 border-emerald-400 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-400">5. Caso-Espelho</h3>
-              </div>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>título</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.caso_espelho?.titulo} 
-                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'titulo', e.target.value)}
-                    className="bg-white/5 border-white/10"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>relato</Label>
-                  <textarea 
-                    className="w-full min-h-[100px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.caso_espelho?.relato}
-                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'relato', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>contexto simbólico</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm italic"
-                    defaultValue={editingItem?.metadata?.caso_espelho?.contexto_simbolico}
-                    onChange={(e) => updateItemMetadataDeep('caso_espelho', 'contexto_simbolico', e.target.value)}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 6 — Desafio da Terapeuta */}
-            <section className="space-y-4 p-4 rounded-lg bg-white/[0.02] border border-white/5">
-              <div className="flex items-center gap-2 border-l-2 border-amber-400 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-amber-400">6. Desafio da Terapeuta</h3>
-              </div>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label>pergunta principal</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.desafio_terapeuta?.pergunta_principal} 
-                    onChange={(e) => updateItemMetadataDeep('desafio_terapeuta', 'pergunta_principal', e.target.value)}
-                    className="bg-white/5 border-white/10 text-gold"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>opções de leitura</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.desafio_terapeuta?.opcoes_leitura}
-                    onChange={(e) => updateItemMetadataDeep('desafio_terapeuta', 'opcoes_leitura', e.target.value)}
-                    placeholder="Descreva as possibilidades de interpretação..."
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 7 — Revelação da Estação */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 border-l-2 border-rose-400 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-rose-400">7. Revelação da Estação</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>leitura-modelo</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.revelacao_estacao?.leitura_modelo}
-                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'leitura_modelo', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>hipótese simbólica</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.revelacao_estacao?.hipotese_simbolica}
-                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'hipotese_simbolica', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>condução justa</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.revelacao_estacao?.conducao_justa}
-                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'conducao_justa', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>risco ético</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm border-rose-500/20"
-                    defaultValue={editingItem?.metadata?.revelacao_estacao?.risco_etico}
-                    onChange={(e) => updateItemMetadataDeep('revelacao_estacao', 'risco_etico', e.target.value)}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 8 — Erro Comum */}
-            <section className="space-y-4 p-4 rounded-lg bg-red-500/5 border border-red-500/10">
-              <div className="flex items-center gap-2 border-l-2 border-red-500 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-red-500">8. Erro Comum</h3>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="erro">Erro Comum</Label>
-                <textarea 
-                  id="erro" 
-                  className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                  defaultValue={editingItem?.metadata?.erro_comum}
-                  onChange={(e) => updateItemMetadata('erro_comum', e.target.value)}
-                  placeholder="Erros de interpretação ou condução comuns..."
-                />
-              </div>
-            </section>
-
-            {/* Bloco 9 — Jardim e Missão de Campo */}
-            <section className="space-y-4">
-              <div className="flex items-center gap-2 border-l-2 border-emerald-500 pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500">9. Jardim e Missão de Campo</h3>
-              </div>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="jardim_prompt">Registro no Jardim</Label>
-                  <textarea 
-                    id="jardim_prompt" 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.jardim_prompt}
-                    onChange={(e) => setEditingItem({...editingItem, jardim_prompt: e.target.value})}
-                    placeholder="Instrução para a reflexão no Jardim da Psique..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Missão de Campo</Label>
-                  <textarea 
-                    className="w-full min-h-[80px] rounded-md bg-white/5 border border-white/10 p-3 text-sm"
-                    defaultValue={editingItem?.metadata?.missao_campo}
-                    onChange={(e) => updateItemMetadata('missao_campo', e.target.value)}
-                    placeholder="Exercício prático fora do app..."
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Pergunta narrativa</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.pergunta_narrativa}
-                    onChange={(e) => updateItemMetadata('pergunta_narrativa', e.target.value)}
-                    className="bg-white/5 border-white/10 italic"
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 10 — Oráculo da Estação */}
-            <section className="space-y-4 p-4 rounded-lg bg-gold/5 border border-gold/20">
-              <div className="flex items-center gap-2 border-l-2 border-gold pl-3">
-                <h3 className="text-sm font-bold uppercase tracking-widest text-gold">10. Oráculo da Estação</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>palavra da estação</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.oraculo_estacao?.palavra} 
-                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'palavra', e.target.value)}
-                    className="bg-white/5 border-white/10 text-center font-bold"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>movimento da estação</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.oraculo_estacao?.movimento} 
-                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'movimento', e.target.value)}
-                    className="bg-white/5 border-white/10 text-center"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>frase de fechamento</Label>
-                  <Input 
-                    defaultValue={editingItem?.metadata?.oraculo_estacao?.frase_fechamento} 
-                    onChange={(e) => updateItemMetadataDeep('oraculo_estacao', 'frase_fechamento', e.target.value)}
-                    className="bg-white/5 border-white/10 italic"
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Bloco 11 — Configuração Avançada */}
-            <section className="pt-4 border-t border-white/10">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-between gap-2 text-xs text-white/40 hover:text-white/60">
-                    <span>11. Configuração Avançada (Metadados Brutos)</span>
-                    <Settings2 className="w-3 h-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="bg-midnight border-white/10 w-[600px] p-6" side="top">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="metadata" className="text-gold font-bold">JSON de Metadados</Label>
-                      <Badge variant="outline" className="text-[10px] opacity-50">Edição direta</Badge>
-                    </div>
-                    <textarea 
-                      id="metadata" 
-                      className="w-full min-h-[300px] rounded-md bg-black/40 border border-white/10 p-4 text-xs font-mono text-emerald-400/90 leading-relaxed scrollbar-thin scrollbar-thumb-white/10"
-                      value={JSON.stringify(editingItem?.metadata, null, 2)}
-                      onChange={(e) => {
-                        try {
-                          const parsed = JSON.parse(e.target.value);
-                          setEditingItem({...editingItem, metadata: parsed});
-                        } catch (err) {
-                          // Silently fail on invalid JSON during typing
-                        }
-                      }}
-                    />
-                    <p className="text-[10px] text-white/20 italic">
-                      Atenção: alterações manuais aqui podem sobrescrever os campos visuais acima se não houver sincronia.
-                    </p>
-                  </div>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </section>
-
-            {/* Publicação */}
-            <div className="flex items-center gap-2 pt-4 border-t border-white/5">
-              <input 
-                type="checkbox" 
-                id="publicado-item" 
-                checked={editingItem?.publicado}
-                onChange={(e) => setEditingItem({...editingItem, publicado: e.target.checked, status: e.target.checked ? 'published' : 'draft'})}
-                className="w-4 h-4 rounded border-white/20 bg-white/5 accent-gold"
-              />
-              <Label htmlFor="publicado-item" className="text-sm font-medium">Publicar Estação (Visível na Rota)</Label>
-            </div>
-          </div>
-
-
-          <DialogFooter className="border-t border-white/5 pt-4">
-            <Button variant="ghost" onClick={() => setIsItemDialogOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-midnight hover:bg-gold/90 font-bold" onClick={() => {
-              editingItem.id ? updateItem.mutate(editingItem) : createItem.mutate(editingItem)
-            }}>
-              {editingItem?.id ? 'Salvar Estação' : 'Criar Estação'}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      </TabsContent>
-
-      <TabsContent value="historico" className="space-y-6 mt-0 border-none p-0">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-midnight/20 border-white/5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                <History className="w-4 h-4 text-gold" /> Total de Ações
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{auditLogs?.length || 0}</div>
-            </CardContent>
-          </Card>
-          
-          <div className="md:col-span-3 flex flex-wrap gap-3 items-end justify-end">
-            <div className="space-y-2">
-              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Admin</Label>
-              <select 
-                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
-                onChange={(e) => setHistoryFilter({...historyFilter, user: e.target.value})}
-              >
-                <option value="all">Todos os Admins</option>
-                {Array.from(new Set(auditLogs?.map(l => l.profiles?.nome).filter(Boolean))).map(name => (
-                  <option key={name as string} value={name as string}>{name as string}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Tabela</Label>
-              <select 
-                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
-                onChange={(e) => setHistoryFilter({...historyFilter, type: e.target.value})}
-              >
-                <option value="all">Todas as Tabelas</option>
-                <option value="clube_estacoes">Estações</option>
-                <option value="clube_rota_itens">Itens de Rota</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label className="text-[10px] uppercase text-white/40 tracking-widest">Ação</Label>
-              <select 
-                className="bg-midnight/40 border border-white/10 rounded-md px-3 py-1.5 text-xs text-white"
-                onChange={(e) => setHistoryFilter({...historyFilter, action: e.target.value})}
-              >
-                <option value="all">Todas as Ações</option>
-                <option value="UPDATE">Update</option>
-                <option value="INSERT">Insert</option>
-                <option value="DELETE">Delete</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-xl border border-white/5 overflow-hidden bg-midnight/20">
-          <Table>
-            <TableHeader className="bg-white/[0.02]">
-              <TableRow>
-                <TableHead className="w-[180px]">Data / Hora</TableHead>
-                <TableHead>Admin</TableHead>
-                <TableHead>Tabela / Item</TableHead>
-                <TableHead>Alteração</TableHead>
-                <TableHead className="text-right">Ação</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loadingLogs ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-12">Carregando histórico...</TableCell></TableRow>
-              ) : auditLogs?.length === 0 ? (
-                <TableRow><TableCell colSpan={5} className="text-center py-12 text-white/20">Nenhum registro de auditoria encontrado.</TableCell></TableRow>
-              ) : auditLogs?.filter(l => {
-                const matchUser = historyFilter.user === 'all' || l.profiles?.nome === historyFilter.user;
-                const matchType = historyFilter.type === 'all' || l.tabela === historyFilter.type;
-                const matchAction = historyFilter.action === 'all' || l.acao === historyFilter.action;
-                return matchUser && matchType && matchAction;
-              }).map((log) => (
-                <TableRow key={log.id} className="hover:bg-white/[0.01] transition-colors border-white/5">
-                  <TableCell className="text-xs text-white/40 font-mono">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3 h-3" />
-                      {new Date(log.created_at).toLocaleString('pt-BR')}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20 overflow-hidden">
-                        {log.profiles?.avatar_url ? (
-                          <img src={log.profiles.avatar_url} className="w-full h-full object-cover" alt="" />
-                        ) : (
-                          <User className="w-3 h-3 text-gold/60" />
-                        )}
-                      </div>
-                      <span className="text-xs font-medium">{log.profiles?.nome || 'Admin'}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-1">
-                      <Badge variant="outline" className="text-[9px] w-fit border-white/10 opacity-60">
-                        {log.tabela}
-                      </Badge>
-                      <span className="text-[10px] text-white/40 truncate max-w-[150px]">
-                        ID: {log.registro_id}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-[300px] space-y-1">
-                      <div className="text-[10px] font-bold text-gold/60 uppercase tracking-tighter">
-                        {log.campo_alterado || 'Múltiplos campos'}
-                      </div>
-                      <div className="flex items-center gap-2 text-[10px] bg-white/[0.02] p-1.5 rounded border border-white/5">
-                        <span className="text-red-400/60 line-through truncate max-w-[100px]">{log.valor_anterior || 'n/a'}</span>
-                        <ChevronRight className="w-2 h-2 text-white/20" />
-                        <span className="text-emerald-400/80 font-medium truncate max-w-[120px]">{log.valor_novo || 'n/a'}</span>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Badge className={`
-                      text-[9px] font-bold uppercase ${
-                      log.acao === 'UPDATE' ? "bg-blue-500/10 text-blue-400 border-blue-500/20" : 
-                      log.acao === 'INSERT' ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" :
-                      "bg-red-500/10 text-red-400 border-red-500/20"
-                    }`}>
-                      {log.acao}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </TabsContent>
     </Tabs>
   );
 }

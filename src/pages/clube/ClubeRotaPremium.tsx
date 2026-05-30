@@ -462,8 +462,25 @@ export default function ClubeRotaPremium() {
           {/* Caso-Espelho */}
           {ponto.metadata?.caso_espelho && (
             <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap">
-                {renderContent(ponto.metadata.caso_espelho)}
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap space-y-4">
+                {typeof ponto.metadata.caso_espelho === 'object' ? (
+                  <>
+                    {ponto.metadata.caso_espelho.titulo && (
+                      <h4 className="text-gold font-display text-xl">{ponto.metadata.caso_espelho.titulo}</h4>
+                    )}
+                    {ponto.metadata.caso_espelho.relato && (
+                      <div className="text-foreground/80">{renderContent(ponto.metadata.caso_espelho.relato)}</div>
+                    )}
+                    {ponto.metadata.caso_espelho.contexto_simbolico && (
+                      <div className="text-foreground/60 italic border-t border-white/5 pt-4">
+                        {renderContent(ponto.metadata.caso_espelho.contexto_simbolico)}
+                      </div>
+                    )}
+                    {!ponto.metadata.caso_espelho.relato && !ponto.metadata.caso_espelho.titulo && renderContent(ponto.metadata.caso_espelho)}
+                  </>
+                ) : (
+                  renderContent(ponto.metadata.caso_espelho)
+                )}
               </div>
             </Section>
           )}
@@ -471,8 +488,25 @@ export default function ClubeRotaPremium() {
           {/* Desafio da Terapeuta */}
           {ponto.metadata?.desafio_terapeuta && (
             <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap">
-                <p className="font-serif text-xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta)}</p>
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap space-y-4">
+                {typeof ponto.metadata.desafio_terapeuta === 'object' ? (
+                  <>
+                    {ponto.metadata.desafio_terapeuta.pergunta_principal ? (
+                      <>
+                        <p className="font-serif text-2xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta.pergunta_principal)}</p>
+                        {ponto.metadata.desafio_terapeuta.opcoes_leitura && (
+                          <div className="text-foreground/70 text-base italic border-t border-gold/10 pt-4">
+                            {renderContent(ponto.metadata.desafio_terapeuta.opcoes_leitura)}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      renderContent(ponto.metadata.desafio_terapeuta)
+                    )}
+                  </>
+                ) : (
+                  <p className="font-serif text-xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta)}</p>
+                )}
               </div>
             </Section>
           )}
@@ -480,8 +514,37 @@ export default function ClubeRotaPremium() {
           {/* Revelação da Estação */}
           {ponto.metadata?.revelacao_estacao && (
             <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap">
-                {renderContent(ponto.metadata.revelacao_estacao)}
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap space-y-6">
+                {typeof ponto.metadata.revelacao_estacao === 'object' ? (
+                  <>
+                    {ponto.metadata.revelacao_estacao.leitura_modelo && (
+                      <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
+                        <span className="text-[10px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Leitura-Modelo</span>
+                        {renderContent(ponto.metadata.revelacao_estacao.leitura_modelo)}
+                      </div>
+                    )}
+                    {ponto.metadata.revelacao_estacao.hipotese_simbolica && (
+                      <div className="bg-white/[0.02] p-6 rounded-2xl border border-white/5">
+                        <span className="text-[10px] uppercase tracking-widest text-blue-400/60 font-bold block mb-2">Hipótese Simbólica</span>
+                        {renderContent(ponto.metadata.revelacao_estacao.hipotese_simbolica)}
+                      </div>
+                    )}
+                    {ponto.metadata.revelacao_estacao.conducao_justa && (
+                      <div className="bg-white/[0.02] p-6 rounded-2xl border border-white/5">
+                        <span className="text-[10px] uppercase tracking-widest text-emerald-400/60 font-bold block mb-2">Condução Justa</span>
+                        {renderContent(ponto.metadata.revelacao_estacao.conducao_justa)}
+                      </div>
+                    )}
+                    {ponto.metadata.revelacao_estacao.risco_etico && (
+                      <div className="bg-red-900/10 p-6 rounded-2xl border border-red-900/20">
+                        <span className="text-[10px] uppercase tracking-widest text-red-400/60 font-bold block mb-2">Risco Ético</span>
+                        <div className="text-red-200/60">{renderContent(ponto.metadata.revelacao_estacao.risco_etico)}</div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  renderContent(ponto.metadata.revelacao_estacao)
+                )}
               </div>
             </Section>
           )}
@@ -756,8 +819,36 @@ export default function ClubeRotaPremium() {
           {/* Oráculo da Estação */}
           {ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8 whitespace-pre-wrap">
-                "{renderContent(ponto.metadata.oraculo_estacao)}"
+              <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
+                {typeof ponto.metadata.oraculo_estacao === 'object' ? (
+                  <>
+                    <div className="space-y-2">
+                      <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
+                      <h3 className="font-display text-4xl md:text-6xl text-gold tracking-tighter">
+                        {renderContent(ponto.metadata.oraculo_estacao.palavra)}
+                      </h3>
+                    </div>
+                    {ponto.metadata.oraculo_estacao.movimento && (
+                      <div className="space-y-2">
+                        <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
+                        <p className="text-xl md:text-2xl font-serif italic text-white/80">
+                          {renderContent(ponto.metadata.oraculo_estacao.movimento)}
+                        </p>
+                      </div>
+                    )}
+                    {ponto.metadata.oraculo_estacao.frase_fechamento && (
+                      <div className="pt-8 border-t border-gold/10">
+                        <p className="text-gold/40 font-serif italic">
+                          "{renderContent(ponto.metadata.oraculo_estacao.frase_fechamento)}"
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-serif italic text-2xl text-gold/80">
+                    "{renderContent(ponto.metadata.oraculo_estacao)}"
+                  </p>
+                )}
               </div>
             </Section>
           )}
