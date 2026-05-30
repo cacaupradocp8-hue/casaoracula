@@ -400,6 +400,7 @@ function AppRoutes() {
       
       
       <Route path="/ferramenta/big5-funcional" element={<ProtectedRoute minPortal="mentorada"><Big5Funcional /></ProtectedRoute>} />
+      <Route path="/ferramenta/big5-oracular" element={<Navigate to="/ferramenta/big5-simbolico" replace />} />
       <Route path="/ferramenta/big5-comparativo" element={<ProtectedRoute minPortal="mentorada"><Big5Comparativo /></ProtectedRoute>} />
       <Route path="/ferramentas/eneagrama" element={<ProtectedRoute minPortal="mentorada"><Eneagrama /></ProtectedRoute>} />
       <Route path="/ferramenta/eneagrama-feminino" element={<ProtectedRoute minPortal="mentorada"><EneagramaFeminino /></ProtectedRoute>} />
