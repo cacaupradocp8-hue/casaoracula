@@ -517,15 +517,31 @@ export function PassosRotaTab({ estacaoId }: Props) {
 
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Headphones className="w-3.5 h-3.5" /> Áudios (JSON)</label>
-                    <Textarea 
-                      value={form.audios} 
-                      onChange={(e) => setForm({ ...form, audios: e.target.value })} 
-                      placeholder='[{"titulo": "Escuta 1", "url": "...", "duracao": "10:00"}]'
-                      className="font-mono text-[10px]"
-                      rows={2}
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Headphones className="w-3.5 h-3.5" /> Título do Áudio</label>
+                    <Input 
+                      value={form.audio_titulo} 
+                      onChange={(e) => setForm({...form, audio_titulo: e.target.value})}
+                      placeholder="Áudio Principal"
                     />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Music className="w-3.5 h-3.5" /> URL do Áudio</label>
+                    <Input 
+                      value={form.audio_url} 
+                      onChange={(e) => setForm({...form, audio_url: e.target.value})}
+                      placeholder="https://..."
+                      className="font-mono text-[10px]"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Clock className="w-3.5 h-3.5" /> Duração (opcional)</label>
+                    <Input 
+                      value={form.audio_duracao} 
+                      onChange={(e) => setForm({...form, audio_duracao: e.target.value})}
+                      placeholder="10:00"
+                    />
+                  </div>
+
                   <div className="space-y-1.5">
                     <label className="text-xs font-medium text-muted-foreground flex items-center gap-2"><Compass className="w-3.5 h-3.5" /> Prompt do Jardim</label>
                     <Textarea 
