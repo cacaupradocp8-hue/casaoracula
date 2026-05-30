@@ -191,10 +191,63 @@ export default function AdminClubeHub() {
              <Plus className="w-4 h-4" />
              Gerenciar Rotas & Estações
            </Button>
-        </div>
-      </div>
+         </div>
+       </div>
 
-      {/* Atalho Operacional: Estação Ativa */}
+       {/* ===== FLUXO OPERACIONAL — ROTA DOS LOBOS ===== */}
+       <div className="bg-gradient-to-r from-gold/5 to-gold/10 border border-gold/20 rounded-2xl p-8 shadow-lg shadow-gold/5">
+         <div className="space-y-6">
+           <div className="space-y-2">
+             <h2 className="text-2xl font-serif text-foreground">Fluxo Operacional — Publicar Rota dos Lobos</h2>
+             <p className="text-sm text-muted-foreground">Siga este caminho para colar conteúdo e áudio com segurança.</p>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+             <div className="space-y-3 p-4 bg-background/40 rounded-lg border border-primary/10">
+               <div className="text-xs uppercase tracking-widest font-bold text-gold">Passo 1</div>
+               <h3 className="font-semibold text-foreground">Escolher Rota & Estação</h3>
+               <p className="text-xs text-muted-foreground leading-relaxed">Acesse a Central de Rotas & Estações para visualizar todas as estações da jornada.</p>
+               <Button 
+                 className="w-full bg-gold hover:bg-gold/90 text-black font-bold gap-2 mt-2"
+                 onClick={() => navigate('/admin/clube/ciclos')}
+               >
+                 <BookOpen className="w-4 h-4" />
+                 Ver Rotas & Estações
+               </Button>
+             </div>
+
+             <div className="space-y-3 p-4 bg-background/40 rounded-lg border border-primary/10">
+               <div className="text-xs uppercase tracking-widest font-bold text-gold">Passo 2</div>
+               <h3 className="font-semibold text-foreground">Editar Conteúdo</h3>
+               <p className="text-xs text-muted-foreground leading-relaxed">Na Central da Estação, use o Publicador Rápido para colar conteúdo, áudio e salvar com segurança.</p>
+               <Button 
+                 variant="outline" 
+                 className="w-full border-gold/20 hover:bg-gold/5 text-gold font-bold gap-2 mt-2 cursor-not-allowed opacity-60"
+                 disabled
+               >
+                 <Sparkles className="w-4 h-4" />
+                 Abrir via Estação
+               </Button>
+             </div>
+
+             <div className="space-y-3 p-4 bg-background/40 rounded-lg border border-primary/10">
+               <div className="text-xs uppercase tracking-widest font-bold text-gold">Passo 3</div>
+               <h3 className="font-semibold text-foreground">Publicar & Ver</h3>
+               <p className="text-xs text-muted-foreground leading-relaxed">Alterne a visibilidade da estação e veja como a aluna enxergará a rota publicada.</p>
+               <Button 
+                 variant="outline"
+                 className="w-full border-emerald-500/20 hover:bg-emerald-500/5 text-emerald-500 font-bold gap-2 mt-2"
+                 onClick={() => navigate('/clube')}
+               >
+                 <Eye className="w-4 h-4" />
+                 Ver Visão da Aluna
+               </Button>
+             </div>
+           </div>
+         </div>
+       </div>
+
+       {/* Atalho Operacional: Estação Ativa */}
       {stats?.activeStation ? (
         <Card className="bg-primary/5 border-gold/30 shadow-2xl shadow-gold/5 animate-in slide-in-from-top-4 duration-1000">
           <CardContent className="p-0 overflow-hidden">
