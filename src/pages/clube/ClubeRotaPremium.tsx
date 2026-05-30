@@ -58,6 +58,11 @@ export default function ClubeRotaPremium() {
   const { data: allBooks = [] } = useAllBooks();
   
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
+  const isModoGuiado = useMemo(() => 
+    ponto?.slug === 'chamado-selvagem' || 
+    ponto?.metadata?.portal?.numero === 1
+  , [ponto]);
+  
   const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
 
   const { scrollY } = useScroll();
@@ -151,6 +156,219 @@ export default function ClubeRotaPremium() {
 
 
 
+
+  if (isModoGuiado) {
+    return (
+      <AppLayout>
+        {/* Wrapper de fundo cinematográfico */}
+        <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen pb-32">
+          {/* Gradiente atmosférico fixo de fundo */}
+          <div className="pointer-events-none fixed inset-0 z-0">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(206_60%_18%/0.6),transparent_60%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(206_70%_8%/0.9),transparent_70%)]" />
+          </div>
+
+          <div className="relative z-10 mx-auto w-full max-w-4xl px-4 pt-16 md:pt-24 space-y-24">
+            {/* ═══════════ 1. HERO SIMPLES ═══════════ */}
+            <header className="text-center space-y-6">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.2 }}
+                className="space-y-4"
+              >
+                <div className="flex items-center justify-center gap-3">
+                  <span className="h-[1px] w-8 bg-gold/30" />
+                  <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium">
+                    Estação Oracular
+                  </span>
+                  <span className="h-[1px] w-8 bg-gold/30" />
+                </div>
+                
+                <h1 className="font-display text-4xl md:text-7xl text-white tracking-tighter leading-none">
+                  {ponto.nome}
+                </h1>
+
+                {ponto.subtitulo && (
+                  <p className="font-serif italic text-xl md:text-3xl text-white/40 max-w-2xl mx-auto leading-relaxed">
+                    "{ponto.subtitulo}"
+                  </p>
+                )}
+              </motion.div>
+            </header>
+
+            {/* ═══════════ 2. COMECE POR AQUI ═══════════ */}
+            <Section icon={Compass} kicker="O Início" titulo="Comece por aqui">
+              <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="bg-white/[0.03] border border-white/10 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-sm"
+              >
+                <p className="text-lg md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                  "Você está prestes a entrar em um campo de sabedoria ancestral. Respire, localize-se e permita que a primeira voz a guie na recuperação dos seus próprios ossos."
+                </p>
+              </motion.div>
+            </Section>
+
+            {/* ═══════════ 3. ÁUDIO DE TRAVESSIA ═══════════ */}
+            {audios.length > 0 && (
+              <Section icon={Headphones} kicker="Escuta ativa" titulo="Áudio de Travessia">
+                <div className="space-y-6">
+                  {audios.map((audio: any, i: number) => (
+                    <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-sm">
+                      <AudioOracular
+                        audioUrl={audio.audio_url || audio.url}
+                        titulo={audio.titulo || `Condução Principal`}
+                        hideInsight
+                      />
+                    </div>
+                  ))}
+                </div>
+              </Section>
+            )}
+
+            {/* ═══════════ 4. ABERTURA IMERSIVA ═══════════ */}
+            {ponto.metadata?.abertura_imersiva && (
+              <Section icon={DoorOpen} kicker="O Portal" titulo="Abertura Imersiva">
+                <div className="prose prose-invert prose-lg max-w-none text-foreground/80 font-serif italic whitespace-pre-wrap leading-relaxed text-xl md:text-2xl opacity-90">
+                  {renderContent(ponto.metadata.abertura_imersiva)}
+                </div>
+              </Section>
+            )}
+
+            {/* ═══════════ 5. CASO-ESPELHO ═══════════ */}
+            {ponto.metadata?.caso_espelho && (
+              <Section icon={Eye} kicker="O reflexo" titulo="Caso-Espelho">
+                <div className="bg-white/[0.03] border-l-4 border-gold/40 p-8 md:p-10 rounded-r-[2rem] whitespace-pre-wrap space-y-6 shadow-xl backdrop-blur-sm">
+                  {typeof ponto.metadata.caso_espelho === 'object' ? (
+                    <>
+                      {ponto.metadata.caso_espelho.titulo && (
+                        <h4 className="text-gold font-display text-2xl md:text-3xl">{ponto.metadata.caso_espelho.titulo}</h4>
+                      )}
+                      {ponto.metadata.caso_espelho.relato && (
+                        <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">{renderContent(ponto.metadata.caso_espelho.relato)}</div>
+                      )}
+                      {ponto.metadata.caso_espelho.contexto_simbolico && (
+                        <div className="text-foreground/50 italic border-t border-white/5 pt-6 text-base md:text-lg">
+                          {renderContent(ponto.metadata.caso_espelho.contexto_simbolico)}
+                        </div>
+                      )}
+                      {!ponto.metadata.caso_espelho.relato && !ponto.metadata.caso_espelho.titulo && (
+                        <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">{renderContent(ponto.metadata.caso_espelho)}</div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="text-foreground/80 text-lg md:text-xl leading-relaxed">{renderContent(ponto.metadata.caso_espelho)}</div>
+                  )}
+                </div>
+              </Section>
+            )}
+
+            {/* ═══════════ 6. JARDINS ═══════════ */}
+            {(jardimPrompt || ponto.metadata?.jardim_oficio) && (
+              <Section icon={Flower2} kicker="Sementeira" titulo="Jardins da Psique e do Ofício">
+                <div className="grid grid-cols-1 gap-8">
+                  {jardimPrompt && (
+                    <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-gold/[0.08] via-midnight/40 to-midnight/60 border border-white/10 p-8 md:p-12 shadow-2xl backdrop-blur-md">
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3 text-gold">
+                          <Flower2 className="w-6 h-6" />
+                          <span className="text-[12px] tracking-[0.3em] uppercase font-bold">Jardim da Psique</span>
+                        </div>
+                        <p className="font-serif italic text-xl md:text-2xl text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                          {jardimPrompt}
+                        </p>
+                        <Button
+                          variant="gold"
+                          size="lg"
+                          className="w-full md:w-auto rounded-full px-10 h-14 font-bold text-base shadow-lg"
+                          onClick={() => navigate('/jardim-heroina')}
+                        >
+                          Registrar na Psique
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {ponto.metadata?.jardim_oficio && (
+                    <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 via-midnight/40 to-midnight/60 border border-white/10 p-8 md:p-12 shadow-2xl backdrop-blur-md">
+                      <div className="space-y-8">
+                        <div className="flex items-center gap-3 text-emerald-500">
+                          <MapPin className="w-6 h-6" />
+                          <span className="text-[12px] tracking-[0.3em] uppercase font-bold">Jardim do Ofício</span>
+                        </div>
+                        <p className="font-serif italic text-xl md:text-2xl text-foreground/90 leading-relaxed whitespace-pre-wrap">
+                          {renderContent(ponto.metadata.jardim_oficio)}
+                        </p>
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="w-full md:w-auto rounded-full px-10 h-14 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 text-base font-bold"
+                          onClick={() => navigate('/jardim-oficio')}
+                        >
+                          Registrar no Ofício
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Section>
+            )}
+
+            {/* ═══════════ 7. ORÁCULO ═══════════ */}
+            {ponto.metadata?.oraculo_estacao && (
+              <Section icon={Scroll} kicker="A Palavra Final" titulo="Oráculo da Estação">
+                <div className="max-w-3xl mx-auto text-center space-y-10 bg-gradient-to-b from-gold/15 to-transparent p-12 md:p-20 rounded-[4rem] border border-gold/10 shadow-3xl backdrop-blur-sm">
+                  {typeof ponto.metadata.oraculo_estacao === 'object' ? (
+                    <>
+                      <div className="space-y-4">
+                        <span className="text-[12px] uppercase tracking-[0.5em] text-gold/60 font-bold">A Palavra que Alinha</span>
+                        <h3 className="font-display text-5xl md:text-8xl text-gold tracking-tighter leading-none">
+                          {renderContent(ponto.metadata.oraculo_estacao.palavra)}
+                        </h3>
+                      </div>
+                      {ponto.metadata.oraculo_estacao.movimento && (
+                        <div className="space-y-4 pt-4">
+                          <span className="text-[12px] uppercase tracking-[0.5em] text-white/30 font-bold">O Movimento da Alma</span>
+                          <p className="text-2xl md:text-4xl font-serif italic text-white/80 leading-snug">
+                            {renderContent(ponto.metadata.oraculo_estacao.movimento)}
+                          </p>
+                        </div>
+                      )}
+                      {ponto.metadata.oraculo_estacao.frase_fechamento && (
+                        <div className="pt-12 border-t border-gold/10">
+                          <p className="text-gold/50 font-serif italic text-lg md:text-xl">
+                            "{renderContent(ponto.metadata.oraculo_estacao.frase_fechamento)}"
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <p className="font-serif italic text-3xl md:text-5xl text-gold/80 leading-tight">
+                      "{renderContent(ponto.metadata.oraculo_estacao)}"
+                    </p>
+                  )}
+                </div>
+              </Section>
+            )}
+
+            {/* ═══════════ 8. VOLTAR AO CLUBE ═══════════ */}
+            <footer className="flex justify-center pt-16">
+              <Button 
+                variant="ghost" 
+                size="lg" 
+                className="rounded-full px-12 h-16 border border-white/5 text-white/30 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all text-base uppercase tracking-widest font-bold"
+                onClick={() => navigate('/clube')}
+              >
+                Voltar ao Clube
+              </Button>
+            </footer>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
