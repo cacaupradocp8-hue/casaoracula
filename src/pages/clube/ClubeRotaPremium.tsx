@@ -44,7 +44,8 @@ import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgres
 import { useClubeTravessiaProgress } from '@/hooks/useClubeTravessiaProgress';
 
 
-// Last structural update: 2024-03-20 for Reading Club traversal blocks
+// Last structural update: 2024-03-20 for Reading Club traversal blocks - ETAPA 256D/E
+
 
 /**
  * ClubeRotaPremium — Página de Rota nível Netflix + Apple + Jung
