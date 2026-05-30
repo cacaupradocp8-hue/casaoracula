@@ -193,6 +193,25 @@ export default function ClubeRotaPremium() {
                     "{ponto.subtitulo}"
                   </p>
                 )}
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1, duration: 1 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8"
+                >
+                  <Button
+                    size="lg"
+                    variant="gold"
+                    className="w-full sm:w-auto h-14 px-10 rounded-full font-bold"
+                    onClick={() => {
+                      const el = document.getElementById('audio-travessia');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    <Headphones className="w-4 h-4 mr-2" /> Ouvir Áudio
+                  </Button>
+                </motion.div>
               </motion.div>
             </header>
 
