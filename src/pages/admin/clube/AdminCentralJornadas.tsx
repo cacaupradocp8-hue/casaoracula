@@ -3,58 +3,49 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, BookOpen, Loader2, Eye, Settings } from 'lucide-react';
+import { ArrowLeft, BookOpen, Loader2, Eye, Settings, MapPin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface EstacaoV3 {
   id: string;
-  title: string;
-  subtitle: string;
-  display_order: number;
-  status: string;
-  route?: {
-    title: string;
-    id: string;
-    cover_image_url: string | null;
-  };
-}
-
-interface RotaV3 {
-  id: string;
-  title: string;
+  titulo: string;
+  subtitulo: string;
+  numero: number;
+  publicada: boolean;
+  ativa: boolean;
+  livro_titulo: string;
+  livro_capa_url: string | null;
+  banner_url: string | null;
 }
 
 export default function AdminCentralJornadas() {
   const navigate = useNavigate();
   
-  const { data: rotas = [], isLoading: rotasLoading } = useQuery({
-    queryKey: ['admin-rotas-v3-list'],
+  const { data: estacoes = [], isLoading } = useQuery({
+    queryKey: ['admin-estacoes-v3-clube-estacoes'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('clube_v3_routes')
+        .from('clube_estacoes')
         .select('*')
-        .order('id', { ascending: true });
+        .order('numero', { ascending: true });
       if (error) throw error;
-      return (data || []) as RotaV3[];
+      return (data || []) as EstacaoV3[];
     },
   });
 
-  const { data: estacoes = [], isLoading: estacioesLoading } = useQuery({
-    queryKey: ['admin-estacoes-v3-com-rotas'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('clube_v3_stations')
-        .select(`
-          *,
-          route:clube_v3_routes(id, title, cover_image_url)
-        `)
-        .order('display_order', { ascending: true });
-      if (error) throw error;
-      return data as EstacaoV3[];
-    },
-  });
+  const rotasMap = estacoes.reduce((acc, estacao) => {
+    const rotaKey = estacao.livro_titulo || 'Outras Rotas';
+    if (!acc[rotaKey]) {
+      acc[rotaKey] = {
+        title: rotaKey,
+        estacoes: []
+      };
+    }
+    acc[rotaKey].estacoes.push(estacao);
+    return acc;
+  }, {} as Record<string, { title: string, estacoes: EstacaoV3[] }>);
 
-  const isLoading = rotasLoading || estacioesLoading;
+  const rotas = Object.values(rotasMap);
 
   return (
     <div className="animate-in fade-in duration-500 space-y-6">
@@ -79,7 +70,7 @@ export default function AdminCentralJornadas() {
         <div className="flex justify-center py-12">
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
         </div>
-      ) : rotas.length === 0 ? (
+      ) : estacoes.length === 0 ? (
         <Card className="border-dashed">
           <CardContent className="py-12 text-center text-muted-foreground">
             Nenhuma rota encontrada no sistema v3.
@@ -88,7 +79,7 @@ export default function AdminCentralJornadas() {
       ) : (
         <div className="space-y-12">
           {rotas.map((rota) => {
-            const rotaEstacoes = estacoes.filter(e => e.route?.id === rota.id);
+            const rotaEstacoes = rota.estacoes;
             return (
               <div key={rota.id} className="space-y-4">
                 <div className="flex items-center gap-3 pb-3 border-b border-primary/10">
@@ -109,8 +100,8 @@ export default function AdminCentralJornadas() {
                       <Card key={estacao.id} className="overflow-hidden hover:border-gold/40 hover:shadow-lg transition-all border-primary/5 bg-card/50">
                         <CardContent className="p-5 flex gap-5">
                           <div className="w-24 h-36 shrink-0 bg-muted rounded-lg overflow-hidden border border-primary/5 shadow-sm">
-                            {estacao.route?.cover_image_url ? (
-                              <img src={estacao.route.cover_image_url} alt="" className="w-full h-full object-cover" />
+                            {estacao.banner_url || estacao.livro_capa_url ? (
+                              <img src={estacao.banner_url || estacao.livro_capa_url || ''} alt="" className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
                                 <BookOpen className="w-6 h-6 text-muted-foreground/30" />
@@ -120,11 +111,12 @@ export default function AdminCentralJornadas() {
                           <div className="flex-1 min-w-0 flex flex-col justify-between">
                             <div>
                               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-widest">Estação {estacao.display_order}</span>
-                                {estacao.status === 'published' && <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] h-4">Publicada</Badge>}
-                                {estacao.status === 'draft' && <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[9px] h-4">Rascunho</Badge>}
+                                <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-widest">Estação {estacao.numero}</span>
+                                {estacao.ativa && <Badge variant="secondary" className="bg-blue-500/10 text-blue-500 border-blue-500/20 text-[9px] h-4">Ativa</Badge>}
+                                {estacao.publicada && <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 text-[9px] h-4">Publicada</Badge>}
+                                {!estacao.publicada && <Badge variant="secondary" className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[9px] h-4">Rascunho</Badge>}
                               </div>
-                              <h3 className="text-lg font-serif text-foreground truncate group-hover:text-gold transition-colors">{estacao.title}</h3>
+                              <h3 className="text-lg font-serif text-foreground truncate group-hover:text-gold transition-colors">{estacao.titulo}</h3>
                               <p className="text-xs text-muted-foreground italic truncate mt-1">
                                 {estacao.subtitle || 'Sem subtítulo'}
                               </p>
