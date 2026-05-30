@@ -991,14 +991,7 @@ export default function ClubeRotaPremium() {
                       <p className="font-serif italic text-lg text-foreground/85 leading-relaxed whitespace-pre-wrap">
                         {jardimPrompt}
                       </p>
-                      <Button
-                        variant="gold"
-                        size="sm"
-                        className="w-full rounded-full"
-                        onClick={() => navigate('/jardim-heroina')}
-                      >
-                        Registrar na Psique
-                      </Button>
+                      {/* Button removed */}
                     </div>
                   </motion.div>
                 )}
