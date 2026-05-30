@@ -463,18 +463,24 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.caso_espelho && (
             <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap space-y-4">
-                {ponto.metadata.caso_espelho.titulo && (
-                  <h4 className="text-gold font-display text-xl">{ponto.metadata.caso_espelho.titulo}</h4>
+                {typeof ponto.metadata.caso_espelho === 'object' ? (
+                  <>
+                    {ponto.metadata.caso_espelho.titulo && (
+                      <h4 className="text-gold font-display text-xl">{ponto.metadata.caso_espelho.titulo}</h4>
+                    )}
+                    {ponto.metadata.caso_espelho.relato && (
+                      <div className="text-foreground/80">{renderContent(ponto.metadata.caso_espelho.relato)}</div>
+                    )}
+                    {ponto.metadata.caso_espelho.contexto_simbolico && (
+                      <div className="text-foreground/60 italic border-t border-white/5 pt-4">
+                        {renderContent(ponto.metadata.caso_espelho.contexto_simbolico)}
+                      </div>
+                    )}
+                    {!ponto.metadata.caso_espelho.relato && !ponto.metadata.caso_espelho.titulo && renderContent(ponto.metadata.caso_espelho)}
+                  </>
+                ) : (
+                  renderContent(ponto.metadata.caso_espelho)
                 )}
-                {ponto.metadata.caso_espelho.relato && (
-                  <div className="text-foreground/80">{renderContent(ponto.metadata.caso_espelho.relato)}</div>
-                )}
-                {ponto.metadata.caso_espelho.contexto_simbolico && (
-                  <div className="text-foreground/60 italic border-t border-white/5 pt-4">
-                    {renderContent(ponto.metadata.caso_espelho.contexto_simbolico)}
-                  </div>
-                )}
-                {!ponto.metadata.caso_espelho.relato && !ponto.metadata.caso_espelho.titulo && renderContent(ponto.metadata.caso_espelho)}
               </div>
             </Section>
           )}
@@ -483,13 +489,19 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.desafio_terapeuta && (
             <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap space-y-4">
-                {ponto.metadata.desafio_terapeuta.pergunta_principal ? (
+                {typeof ponto.metadata.desafio_terapeuta === 'object' ? (
                   <>
-                    <p className="font-serif text-2xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta.pergunta_principal)}</p>
-                    {ponto.metadata.desafio_terapeuta.opcoes_leitura && (
-                      <div className="text-foreground/70 text-base italic border-t border-gold/10 pt-4">
-                        {renderContent(ponto.metadata.desafio_terapeuta.opcoes_leitura)}
-                      </div>
+                    {ponto.metadata.desafio_terapeuta.pergunta_principal ? (
+                      <>
+                        <p className="font-serif text-2xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta.pergunta_principal)}</p>
+                        {ponto.metadata.desafio_terapeuta.opcoes_leitura && (
+                          <div className="text-foreground/70 text-base italic border-t border-gold/10 pt-4">
+                            {renderContent(ponto.metadata.desafio_terapeuta.opcoes_leitura)}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      renderContent(ponto.metadata.desafio_terapeuta)
                     )}
                   </>
                 ) : (
