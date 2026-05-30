@@ -318,6 +318,32 @@ export default function ClubeRotaPremium() {
           {/* Indicador de Progresso Simbólico */}
           <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
 
+          {/* ═══════════ COMECE POR AQUI (MODO GUIADO) ═══════════ */}
+          {isModoGuiado && (
+            <Section id="comece-por-aqui" icon={Compass} kicker="A Jornada" titulo="Comece por aqui">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="bg-white/[0.03] border border-gold/20 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden group"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+                
+                <p className="text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed mb-8 relative z-10">
+                  "Prepare seu coração e seu espaço. Esta é uma jornada de profundidade. Comece ouvindo o áudio de travessia abaixo para sintonizar sua frequência com o Chamado Selvagem."
+                </p>
+                
+                <div className="flex flex-col items-center gap-4 relative z-10">
+                  <div className="flex items-center gap-2 text-gold/60">
+                    <ArrowDown className="w-5 h-5 animate-bounce" />
+                    <span className="text-[10px] uppercase tracking-widest font-bold">Inicie sua jornada pela escuta de travessia</span>
+                  </div>
+                </div>
+              </motion.div>
+            </Section>
+          )}
+
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
 
           <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo">
