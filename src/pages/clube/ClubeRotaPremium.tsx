@@ -490,7 +490,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.erro_comum && (
             <Section icon={AlertTriangle} kicker="A armadilha no caminho" titulo="Erro Comum">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic whitespace-pre-wrap">
-                {ponto.metadata.erro_comum}
+                {renderContent(ponto.metadata.erro_comum)}
               </div>
             </Section>
           )}
