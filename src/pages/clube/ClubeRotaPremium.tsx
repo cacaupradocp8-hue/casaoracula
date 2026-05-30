@@ -748,7 +748,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.missao_campo && (
             <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center whitespace-pre-wrap">
-                <p className="font-display text-xl text-white uppercase tracking-tight">{ponto.metadata.missao_campo}</p>
+                <p className="font-display text-xl text-white uppercase tracking-tight">{renderContent(ponto.metadata.missao_campo)}</p>
               </div>
             </Section>
           )}
@@ -757,7 +757,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8 whitespace-pre-wrap">
-                "{ponto.metadata.oraculo_estacao}"
+                "{renderContent(ponto.metadata.oraculo_estacao)}"
               </div>
             </Section>
           )}
