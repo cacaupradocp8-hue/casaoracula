@@ -819,8 +819,36 @@ export default function ClubeRotaPremium() {
           {/* Oráculo da Estação */}
           {ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8 whitespace-pre-wrap">
-                "{renderContent(ponto.metadata.oraculo_estacao)}"
+              <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
+                {typeof ponto.metadata.oraculo_estacao === 'object' ? (
+                  <>
+                    <div className="space-y-2">
+                      <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
+                      <h3 className="font-display text-4xl md:text-6xl text-gold tracking-tighter">
+                        {renderContent(ponto.metadata.oraculo_estacao.palavra)}
+                      </h3>
+                    </div>
+                    {ponto.metadata.oraculo_estacao.movimento && (
+                      <div className="space-y-2">
+                        <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
+                        <p className="text-xl md:text-2xl font-serif italic text-white/80">
+                          {renderContent(ponto.metadata.oraculo_estacao.movimento)}
+                        </p>
+                      </div>
+                    )}
+                    {ponto.metadata.oraculo_estacao.frase_fechamento && (
+                      <div className="pt-8 border-t border-gold/10">
+                        <p className="text-gold/40 font-serif italic">
+                          "{renderContent(ponto.metadata.oraculo_estacao.frase_fechamento)}"
+                        </p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p className="font-serif italic text-2xl text-gold/80">
+                    "{renderContent(ponto.metadata.oraculo_estacao)}"
+                  </p>
+                )}
               </div>
             </Section>
           )}

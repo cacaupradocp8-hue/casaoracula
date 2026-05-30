@@ -639,6 +639,8 @@ export function AdminClubeEditorialTab() {
 
       </div>
 
+      </TabsContent>
+
       <TabsContent value="audioteca" className="space-y-8 mt-0 border-none p-0">
         <AdminClubeAudioteca />
       </TabsContent>
