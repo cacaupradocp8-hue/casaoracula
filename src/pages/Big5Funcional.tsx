@@ -27,7 +27,8 @@ import {
   ChevronRight,
   Home,
   BookOpen,
-   MessageCircle,
+  MessageCircle,
+  Layers,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
