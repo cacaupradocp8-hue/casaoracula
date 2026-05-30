@@ -222,7 +222,7 @@ export default function AdminCentralEstacao() {
               
               <div className="space-y-2">
                 <Label>Descrição da Estação</Label>
-                <Textarea value={stationForm.description} onChange={e => setStationForm({...stationForm, description: e.target.value})} rows={3} />
+                <Textarea value={stationForm.descricao} onChange={e => setStationForm({...stationForm, descricao: e.target.value})} rows={3} />
               </div>
 
               <div className="flex items-center gap-4 pt-2">

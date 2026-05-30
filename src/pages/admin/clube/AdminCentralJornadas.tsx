@@ -78,10 +78,10 @@ export default function AdminCentralJornadas() {
         </Card>
       ) : (
         <div className="space-y-12">
-          {rotas.map((rota) => {
+          {rotas.map((rota, idx) => {
             const rotaEstacoes = rota.estacoes;
             return (
-              <div key={rota.id} className="space-y-4">
+              <div key={idx} className="space-y-4">
                 <div className="flex items-center gap-3 pb-3 border-b border-primary/10">
                   <BookOpen className="w-5 h-5 text-gold" />
                   <h3 className="text-lg font-serif text-foreground">{rota.title}</h3>
@@ -118,7 +118,7 @@ export default function AdminCentralJornadas() {
                               </div>
                               <h3 className="text-lg font-serif text-foreground truncate group-hover:text-gold transition-colors">{estacao.titulo}</h3>
                               <p className="text-xs text-muted-foreground italic truncate mt-1">
-                                {estacao.subtitle || 'Sem subtítulo'}
+                                {estacao.subtitulo || 'Sem subtítulo'}
                               </p>
                             </div>
                             
