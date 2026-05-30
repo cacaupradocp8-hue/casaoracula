@@ -266,7 +266,7 @@ export default function ClubeRotaPremium() {
                   </span>
                 </h1>
 
-                {ponto.subtitulo && (
+                {ponto.subtitulo && !isModoGuiado && (
                   <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
