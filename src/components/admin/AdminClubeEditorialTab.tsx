@@ -16,9 +16,11 @@ import {
   History,
   MoreVertical,
   Music,
-  Trash2
+  Trash2,
+  Rocket
 } from 'lucide-react';
 import { AdminClubeAudioteca } from './AdminClubeAudioteca';
+import { PublicadorRapido } from './clube/PublicadorRapido';
 import { 
   Card, 
   CardContent, 
@@ -63,6 +65,8 @@ export function AdminClubeEditorialTab() {
   const [editingEstacao, setEditingEstacao] = useState<any>(null);
   const [prevEstacao, setPrevEstacao] = useState<any>(null);
   const [activeTab, setActiveTab] = useState('conteudo');
+  const [isQuickPublishOpen, setIsQuickPublishOpen] = useState(false);
+  const [quickPublishEstacao, setQuickPublishEstacao] = useState<any>(null);
   
   // Queries
   const { data: estacoes, isLoading: loadingEstacoes } = useQuery({
@@ -310,6 +314,17 @@ export function AdminClubeEditorialTab() {
                       {e.updated_at ? new Date(e.updated_at).toLocaleDateString() : 'N/A'}
                     </TableCell>
                     <TableCell className="text-right flex items-center justify-end gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        title="Publicador Rápido"
+                        onClick={() => {
+                          setQuickPublishEstacao(e);
+                          setIsQuickPublishOpen(true);
+                        }}
+                      >
+                        <Rocket className="w-4 h-4 text-emerald-500 hover:text-emerald-400" />
+                      </Button>
                       <Button variant="ghost" size="icon" onClick={() => handleEditEstacao(e)}>
                         <Edit3 className="w-4 h-4 text-white/40 hover:text-gold transition-colors" />
                       </Button>
@@ -429,6 +444,14 @@ export function AdminClubeEditorialTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {quickPublishEstacao && (
+        <PublicadorRapido
+          open={isQuickPublishOpen}
+          onClose={() => setIsQuickPublishOpen(false)}
+          estacao={quickPublishEstacao}
+        />
+      )}
     </Tabs>
   );
 }
