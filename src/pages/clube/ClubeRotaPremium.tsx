@@ -480,7 +480,17 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
+          {/* Pergunta Narrativa */}
+          {ponto.metadata?.pergunta_narrativa && (
+            <Section icon={Lightbulb} kicker="O fio condutor" titulo="Pergunta Narrativa">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70">
+                {ponto.metadata.pergunta_narrativa}
+              </div>
+            </Section>
+          )}
+
           {/* ═══════════ 4. CONVERSE COM O LIVRO ═══════════ */}
+
           {temChatLivro && (
             <Section id="converse-com-o-livro" icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
               <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
