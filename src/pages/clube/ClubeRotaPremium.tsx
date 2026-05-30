@@ -228,7 +228,7 @@ export default function ClubeRotaPremium() {
               >
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
                 <p className="text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed mb-8">
-                  "Sua travessia começou. Respire fundo, localize sua alma no tempo presente e permita que a primeira voz a guie na recuperação dos seus próprios ossos."
+                  "Prepare seu coração e seu espaço. Esta é uma jornada de profundidade. Comece ouvindo o áudio de travessia abaixo para sintonizar sua frequência com o Chamado Selvagem."
                 </p>
                 <div className="flex flex-col items-center gap-4">
                   <div className="flex items-center gap-2 text-gold/60">
@@ -246,7 +246,7 @@ export default function ClubeRotaPremium() {
                   {audios.map((audio: any, i: number) => (
                     <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-sm">
                       <AudioOracular
-                        audioUrl={audio.url}
+                        audioUrl={audio.audio_url || audio.url}
                         titulo={audio.titulo || `Condução Principal`}
                         hideInsight
                       />
@@ -679,7 +679,7 @@ export default function ClubeRotaPremium() {
                 {audios.map((audio: any, i: number) => (
                   <div key={i} className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5">
                     <AudioOracular
-                      audioUrl={audio.url}
+                      audioUrl={audio.audio_url || audio.url}
                       titulo={audio.titulo || `Áudio ${i + 1}`}
                       hideInsight
                     />
