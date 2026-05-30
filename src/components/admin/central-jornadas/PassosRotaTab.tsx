@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { 
   Plus, Pencil, Trash2, GripVertical, Loader2, Sparkles, 
   Headphones, PenTool, ClipboardList, Zap, ArrowRight,
-  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass
+  Info, Image as ImageIcon, Map as MapIcon, BookOpen, Compass, Rocket
 } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
@@ -271,7 +271,19 @@ export function PassosRotaTab({ estacaoId }: Props) {
           </p>
         </div>
         <Button onClick={openCreate} size="sm" className="gap-2 bg-gold hover:bg-gold/90 text-black font-semibold">
-          <Plus className="w-4 h-4" /> Novo Passo
+          <Plus className="w-4 h-4" /> Novo Passo (Fluxo Completo)
+        </Button>
+      </div>
+
+      <div className="flex justify-end">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/20 gap-2"
+          onClick={() => (window as any).OpenQuickPublish && (window as any).OpenQuickPublish()}
+        >
+          <Rocket className="w-4 h-4" />
+          Usar Publicador Rápido
         </Button>
       </div>
 

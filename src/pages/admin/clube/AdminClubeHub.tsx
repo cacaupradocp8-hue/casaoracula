@@ -187,9 +187,9 @@ export default function AdminClubeHub() {
              <Settings className="w-4 h-4" />
              Configurações
            </Button>
-           <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => handleTabChange('clube-jornadas')}>
+           <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/clube/ciclos')}>
              <Plus className="w-4 h-4" />
-             Nova Estação
+             Gerenciar Rotas & Estações
            </Button>
         </div>
       </div>

@@ -54,7 +54,11 @@ export default function AdminCentralJornadas() {
           </div>
           <p className="text-sm text-muted-foreground ml-10">Gerencie a sequência temporal e as obras ativas do Clube</p>
         </div>
-        <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/clube')}>
+        <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => {
+          // Instead of navigating to hub, we should probably have a "New Station" dialog here
+          // but for now let's navigate to where one can create it
+          navigate('/admin/clube');
+        }}>
           <Plus className="w-4 h-4" />
           Nova Estação
         </Button>
