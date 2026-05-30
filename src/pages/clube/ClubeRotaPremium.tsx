@@ -116,6 +116,17 @@ export default function ClubeRotaPremium() {
   const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
     Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
+  // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
+  const renderContent = (content: any) => {
+    if (!content) return null;
+    if (typeof content === 'string') return content;
+    if (typeof content === 'object') {
+      // Prioriza campos comuns de texto em objetos JSON
+      return content.text || content.content || content.value || "";
+    }
+    return String(content);
+  };
+
   const jardimPrompt =
     renderContent(ponto.jardim_prompt || ponto.metadata?.jardim_prompt);
 
@@ -138,16 +149,6 @@ export default function ClubeRotaPremium() {
     { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
   ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
 
-  // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
-  const renderContent = (content: any) => {
-    if (!content) return null;
-    if (typeof content === 'string') return content;
-    if (typeof content === 'object') {
-      // Prioriza campos comuns de texto em objetos JSON
-      return content.text || content.content || content.value || "";
-    }
-    return String(content);
-  };
 
 
 
