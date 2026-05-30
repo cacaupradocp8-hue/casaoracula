@@ -105,8 +105,8 @@ export default function AdminClubeHub() {
           .order('numero', { ascending: false })
           .limit(1)
           .maybeSingle(),
-        supabase.from('clube_v3_station_audios').select('id', { count: 'exact', head: true }),
-        supabase.from('clube_v3_station_content').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_rota_itens').select('id', { count: 'exact', head: true }),
+        supabase.from('clube_rota_itens').select('id', { count: 'exact', head: true }).not('conteudo_inline', 'is', null),
       ]);
       return {
         ciclos: stations.count || 0,
