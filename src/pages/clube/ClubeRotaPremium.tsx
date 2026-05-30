@@ -499,7 +499,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.pergunta_narrativa && (
             <Section icon={Lightbulb} kicker="O fio condutor" titulo="Pergunta Narrativa">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70 whitespace-pre-wrap">
-                {ponto.metadata.pergunta_narrativa}
+                {renderContent(ponto.metadata.pergunta_narrativa)}
               </div>
             </Section>
           )}
