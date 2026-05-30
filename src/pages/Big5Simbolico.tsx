@@ -16,7 +16,7 @@ import { Label } from '@/components/ui/label';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
-import { Loader2, Sparkles, ArrowRight, ArrowLeft, Moon, Sun, Check } from 'lucide-react';
+import { Loader2, Sparkles, ArrowRight, ArrowLeft, Moon, Sun, Check, Layers, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { RadialVisualization } from '@/components/visualization/RadialVisualization';
 import { SymbolicElement } from '@/components/visualization/types';
