@@ -207,15 +207,15 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-              <MessageSquare className="w-3 h-3" /> Perguntas Sugeridas (Uma por linha)
-            </Label>
-            <Textarea 
-              value={form.perguntas} 
-              onChange={e => setForm({...form, perguntas: e.target.value})}
-              placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"
-              className="min-h-[100px] bg-white/5 border-white/10 resize-none text-sm"
-            />
+             <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
+               <Music className="w-3 h-3" /> Título do Áudio
+             </Label>
+             <Input 
+               value={form.audio_titulo} 
+               onChange={e => setForm({...form, audio_titulo: e.target.value})}
+               placeholder="Áudio Principal"
+               className="bg-white/5 border-white/10 text-sm"
+             />
           </div>
 
           <div className="space-y-2 opacity-50">
