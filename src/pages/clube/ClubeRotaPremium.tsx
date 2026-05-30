@@ -228,7 +228,7 @@ export default function ClubeRotaPremium() {
               >
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
                 <p className="text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed mb-8">
-                  "Sua travessia começou. Respire fundo, localize sua alma no tempo presente e permita que a primeira voz a guie na recuperação dos seus próprios ossos."
+                  "Prepare seu coração e seu espaço. Esta é uma jornada de profundidade. Comece ouvindo o áudio de travessia abaixo para sintonizar sua frequência com o Chamado Selvagem."
                 </p>
                 <div className="flex flex-col items-center gap-4">
                   <div className="flex items-center gap-2 text-gold/60">
