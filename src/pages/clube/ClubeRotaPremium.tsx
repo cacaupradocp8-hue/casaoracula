@@ -271,7 +271,8 @@ export default function ClubeRotaPremium() {
                 variant="gold"
                 className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
                 onClick={() => {
-                  const el = document.getElementById('mapa-vivo');
+                  const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
+                  const el = document.getElementById(targetId);
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
               >
@@ -283,7 +284,7 @@ export default function ClubeRotaPremium() {
                   variant="outline"
                   className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-10 text-sm sm:text-base gap-3 rounded-full border-white/10 bg-white/[0.03] backdrop-blur hover:bg-white/[0.08] transition-all"
                   onClick={() => {
-                    const el = document.getElementById('audios-da-estacao');
+                    const el = document.getElementById('audio-travessia');
                     el?.scrollIntoView({ behavior: 'smooth' });
                   }}
                 >
