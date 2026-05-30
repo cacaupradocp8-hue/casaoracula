@@ -36,17 +36,18 @@ interface Props {
 export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   
-  // Estado local do formulário simplificado
+  // Estado local do formulário simplificado — seguro para copiar/colar
   const [form, setForm] = useState({
     titulo: passo?.titulo || '',
     subtitulo: passo?.subtitulo || '',
     slug: passo?.slug || '',
     conteudo_texto: passo?.conteudo_inline?.texto || '',
+    audio_titulo: passo?.metadata?.audios?.[0]?.titulo || 'Áudio Principal',
+    audio_url: passo?.metadata?.audios?.[0]?.url || '',
     jardim_prompt: passo?.jardim_prompt || passo?.metadata?.jardim_prompt || '',
     cenario_treinamento: passo?.cenario_treinamento || passo?.metadata?.simulacao_texto || '',
-    audio_url: passo?.metadata?.audios?.[0]?.url || passo?.conteudo_inline?.audio_url || '',
-    perguntas: Array.isArray(passo?.metadata?.perguntas_sugeridas) ? passo.metadata.perguntas_sugeridas.join('\n') : ''
   });
 
   const slugify = (s: string) =>
