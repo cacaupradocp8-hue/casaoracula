@@ -5,13 +5,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { ArrowLeft, BookOpen, Pencil, ImageIcon, ListMusic, ListOrdered, Sparkles, Layers, Users, Eye, Loader2, Settings } from 'lucide-react';
+import { ArrowLeft, BookOpen, Pencil, ImageIcon, ListMusic, ListOrdered, Sparkles, Layers, Users, Eye, Loader2, Settings, Rocket } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PassosRotaTab } from '@/components/admin/central-jornadas/PassosRotaTab';
 import { AulaAlbumTab } from '@/components/admin/central-jornadas/AulaAlbumTab';
 import { EntradaTab } from '@/components/admin/central-jornadas/EntradaTab';
 import { AplicacaoTab } from '@/components/admin/central-jornadas/AplicacaoTab';
 import { EncontroTab } from '@/components/admin/central-jornadas/EncontroTab';
+import { PublicadorRapido } from '@/components/admin/clube/PublicadorRapido';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,6 +29,7 @@ export default function AdminCentralEstacao() {
   const activeTab = searchParams.get('tab') || 'album';
 
   const [editStationOpen, setEditStationOpen] = useState(false);
+  const [quickPublishOpen, setQuickPublishOpen] = useState(false);
   const [stationForm, setStationForm] = useState({
     title: '',
     subtitle: '',
@@ -56,6 +58,11 @@ export default function AdminCentralEstacao() {
     },
     enabled: !!estacaoId,
   });
+
+  useEffect(() => {
+    (window as any).OpenQuickPublish = () => setQuickPublishOpen(true);
+    return () => { delete (window as any).OpenQuickPublish; };
+  }, []);
 
   useEffect(() => {
     if (estacao) {
@@ -172,9 +179,19 @@ export default function AdminCentralEstacao() {
                 <Eye className="h-3.5 w-3.5" />
                 Ver Visão da Aluna
               </Button>
+              <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold gap-2" onClick={() => setQuickPublishOpen(true)}>
+                <Rocket className="h-3.5 w-3.5" />
+                Publicador Rápido
+              </Button>
             </div>
           </div>
         </div>
+
+        <PublicadorRapido 
+          open={quickPublishOpen}
+          onClose={() => setQuickPublishOpen(false)}
+          estacao={estacao}
+        />
 
         <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
           <DialogContent>

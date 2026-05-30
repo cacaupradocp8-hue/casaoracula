@@ -42,10 +42,11 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
     titulo: passo?.titulo || '',
     subtitulo: passo?.subtitulo || '',
     slug: passo?.slug || '',
+    conteudo_texto: passo?.conteudo_inline?.texto || '',
     jardim_prompt: passo?.jardim_prompt || passo?.metadata?.jardim_prompt || '',
     cenario_treinamento: passo?.cenario_treinamento || passo?.metadata?.simulacao_texto || '',
     audio_url: passo?.metadata?.audios?.[0]?.url || passo?.conteudo_inline?.audio_url || '',
-    perguntas: (passo?.metadata?.perguntas_sugeridas || []).join('\n')
+    perguntas: Array.isArray(passo?.metadata?.perguntas_sugeridas) ? passo.metadata.perguntas_sugeridas.join('\n') : ''
   });
 
   const slugify = (s: string) =>
@@ -84,6 +85,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
         cenario_treinamento: form.cenario_treinamento,
         publicado: true,
         ordem: passo?.ordem || 1,
+        conteudo_inline: { texto: form.conteudo_texto },
         metadata: metadata,
         updated_at: new Date().toISOString()
       };
@@ -160,6 +162,16 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
                 className="bg-white/5 border-white/10"
               />
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-widest text-gold/60">Conteúdo da Estação (Texto/Markdown)</Label>
+            <Textarea 
+              value={form.conteudo_texto} 
+              onChange={e => setForm({...form, conteudo_texto: e.target.value})}
+              placeholder="Cole aqui o conteúdo principal da estação..."
+              className="min-h-[150px] bg-white/5 border-white/10 resize-none text-sm leading-relaxed"
+            />
           </div>
 
           <div className="space-y-2">
