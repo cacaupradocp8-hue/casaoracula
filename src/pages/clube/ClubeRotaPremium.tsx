@@ -39,6 +39,7 @@ import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
+import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { AudioOracular } from '@/components/audio/AudioOracular';
 import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgress';
 import { useClubeTravessiaProgress } from '@/hooks/useClubeTravessiaProgress';
@@ -534,15 +535,13 @@ export default function ClubeRotaPremium() {
           {/* Áudios */}
           {audios.length > 0 && (
             <Section id="audio-travessia" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
-              <div className="max-w-3xl mx-auto space-y-6">
+              <div className="max-w-2xl mx-auto space-y-10 py-4">
                 {audios.map((audio: any, i: number) => (
-                  <div key={i} className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5">
-                    <AudioOracular
-                      audioUrl={audio.audio_url || audio.url}
-                      titulo={audio.titulo || `Áudio ${i + 1}`}
-                      hideInsight
-                    />
-                  </div>
+                  <AudioRitualPlayer
+                    key={i}
+                    audioUrl={audio.audio_url || audio.url}
+                    titulo={audio.titulo || `Áudio ${i + 1}`}
+                  />
                 ))}
               </div>
             </Section>
