@@ -479,7 +479,7 @@ export default function ClubeRotaPremium() {
 
           {/* Áudios */}
           {audios.length > 0 && (
-            <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
+            <Section id="audio-travessia" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
               <div className="max-w-3xl mx-auto space-y-6">
                 {audios.map((audio: any, i: number) => (
                   <div key={i} className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5">
