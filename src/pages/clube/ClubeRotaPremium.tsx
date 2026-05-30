@@ -422,7 +422,7 @@ export default function ClubeRotaPremium() {
           {/* Abertura Imersiva */}
           {ponto.metadata?.abertura_imersiva && (
             <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
                 {ponto.metadata.abertura_imersiva}
               </div>
             </Section>
@@ -448,7 +448,7 @@ export default function ClubeRotaPremium() {
           {/* Caso-Espelho */}
           {ponto.metadata?.caso_espelho && (
             <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap">
                 {ponto.metadata.caso_espelho}
               </div>
             </Section>
@@ -457,7 +457,7 @@ export default function ClubeRotaPremium() {
           {/* Desafio da Terapeuta */}
           {ponto.metadata?.desafio_terapeuta && (
             <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap">
                 <p className="font-serif text-xl text-gold">{ponto.metadata.desafio_terapeuta}</p>
               </div>
             </Section>
@@ -466,7 +466,7 @@ export default function ClubeRotaPremium() {
           {/* Revelação da Estação */}
           {ponto.metadata?.revelacao_estacao && (
             <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap">
                 {ponto.metadata.revelacao_estacao}
               </div>
             </Section>
@@ -475,7 +475,7 @@ export default function ClubeRotaPremium() {
           {/* Erro Comum da Terapeuta */}
           {ponto.metadata?.erro_comum && (
             <Section icon={AlertTriangle} kicker="A armadilha no caminho" titulo="Erro Comum">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic whitespace-pre-wrap">
                 {ponto.metadata.erro_comum}
               </div>
             </Section>
@@ -484,7 +484,7 @@ export default function ClubeRotaPremium() {
           {/* Pergunta Narrativa */}
           {ponto.metadata?.pergunta_narrativa && (
             <Section icon={Lightbulb} kicker="O fio condutor" titulo="Pergunta Narrativa">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70 whitespace-pre-wrap">
                 {ponto.metadata.pergunta_narrativa}
               </div>
             </Section>
@@ -733,7 +733,7 @@ export default function ClubeRotaPremium() {
           {/* Missão de Campo */}
           {ponto.metadata?.missao_campo && (
             <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center whitespace-pre-wrap">
                 <p className="font-display text-xl text-white uppercase tracking-tight">{ponto.metadata.missao_campo}</p>
               </div>
             </Section>
@@ -742,7 +742,7 @@ export default function ClubeRotaPremium() {
           {/* Oráculo da Estação */}
           {ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-center font-serif italic text-2xl text-gold/80 leading-relaxed py-8 whitespace-pre-wrap">
                 "{ponto.metadata.oraculo_estacao}"
               </div>
             </Section>
