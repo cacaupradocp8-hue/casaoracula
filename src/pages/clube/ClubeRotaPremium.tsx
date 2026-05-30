@@ -201,14 +201,16 @@ export default function ClubeRotaPremium() {
               <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/60 to-midnight" />
             )}
             {isModoGuiado && (
+              <div className="absolute inset-0 bg-black/50" />
+            )}
+            {isModoGuiado && (
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-midnight" />
             )}
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[140vw] h-[100vh] bg-gold/[0.04] rounded-full blur-[100px] sm:blur-[160px]" />
           </motion.div>
 
-          {!isModoGuiado && (
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-5 sm:space-y-6"
