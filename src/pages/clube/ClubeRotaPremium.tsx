@@ -463,7 +463,7 @@ export default function ClubeRotaPremium() {
           {ponto.metadata?.caso_espelho && (
             <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap">
-                {ponto.metadata.caso_espelho}
+                {renderContent(ponto.metadata.caso_espelho)}
               </div>
             </Section>
           )}
