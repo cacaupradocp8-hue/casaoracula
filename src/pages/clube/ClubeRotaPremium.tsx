@@ -58,13 +58,9 @@ export default function ClubeRotaPremium() {
   const { data: allBooks = [] } = useAllBooks();
   
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
-  const isModoGuiado = useMemo(() => {
-    const isGuiado = slug === 'chamado-selvagem' || 
-                    ponto?.slug === 'chamado-selvagem' || 
-                    ponto?.metadata?.portal?.numero === 1;
-    console.log('[DEBUG] isModoGuiado:', isGuiado, 'slug:', slug, 'ponto.slug:', ponto?.slug);
-    return isGuiado;
-  }, [ponto, slug]);
+  const isModoGuiado =
+    ponto?.slug === 'chamado-selvagem' ||
+    ponto?.metadata?.portal?.numero === 1;
   
   const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
 
