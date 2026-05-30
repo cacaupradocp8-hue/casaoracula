@@ -26,7 +26,7 @@ export default function AdminCentralEstacao() {
   const qc = useQueryClient();
   const { estacaoId } = useParams<{ estacaoId: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeTab = searchParams.get('tab') || 'album';
+  const activeTab = searchParams.get('tab') || 'publicador';
 
   const [editStationOpen, setEditStationOpen] = useState(false);
   const [quickPublishOpen, setQuickPublishOpen] = useState(false);
