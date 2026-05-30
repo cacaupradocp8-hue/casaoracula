@@ -23,13 +23,14 @@ import {
   Sparkles,
   ExternalLink,
   ChevronRight,
-  Save
+  Save,
+  PenTool
 } from 'lucide-react';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  estacao: any;
+  estacao: any; // { id: string, passos_count: number }
   passo?: any; // Se for edição
 }
 
@@ -42,10 +43,14 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
     titulo: passo?.titulo || '',
     subtitulo: passo?.subtitulo || '',
     slug: passo?.slug || '',
+    texto_principal: passo?.conteudo_inline?.texto || '',
     jardim_prompt: passo?.jardim_prompt || passo?.metadata?.jardim_prompt || '',
     cenario_treinamento: passo?.cenario_treinamento || passo?.metadata?.simulacao_texto || '',
     audio_url: passo?.metadata?.audios?.[0]?.url || passo?.conteudo_inline?.audio_url || '',
-    perguntas: (passo?.metadata?.perguntas_sugeridas || []).join('\n')
+    perguntas: (passo?.metadata?.perguntas_sugeridas || []).join('\n'),
+    // Blocos específicos da Travessia
+    caso_espelho: typeof passo?.metadata?.caso_espelho === 'string' ? passo.metadata.caso_espelho : (passo?.metadata?.caso_espelho?.relato || ''),
+    desafio_terapeuta: typeof passo?.metadata?.desafio_terapeuta === 'string' ? passo.metadata.desafio_terapeuta : (passo?.metadata?.desafio_terapeuta?.pergunta_principal || ''),
   });
 
   const slugify = (s: string) =>
@@ -63,14 +68,17 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
       const finalSlug = form.slug || slugify(form.titulo);
       
       const metadata = {
+        ...passo?.metadata,
         audios: form.audio_url ? [{
           titulo: "Áudio Principal",
           url: form.audio_url,
           tipo: "escuta"
-        }] : [],
+        }] : (passo?.metadata?.audios || []),
         perguntas_sugeridas: form.perguntas.split('\n').filter(p => p.trim()),
         jardim_prompt: form.jardim_prompt,
-        simulacao_texto: form.cenario_treinamento
+        simulacao_texto: form.cenario_treinamento,
+        caso_espelho: form.caso_espelho,
+        desafio_terapeuta: form.desafio_terapeuta
       };
 
       const payload = {
@@ -78,12 +86,16 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
         titulo: form.titulo,
         subtitulo: form.subtitulo,
         slug: finalSlug,
-        tipo: passo?.tipo || 'escuta', // Default para escuta se for novo
+        tipo: passo?.tipo || 'escuta', 
         tipo_passo: passo?.tipo_passo || 'escuta',
-        jardim_prompt: form.jardim_prompt,
-        cenario_treinamento: form.cenario_treinamento,
+        jardim_prompt: form.jardim_prompt || null,
+        cenario_treinamento: form.cenario_treinamento || null,
         publicado: true,
-        ordem: passo?.ordem || 1,
+        ordem: passo?.ordem || (estacao.passos_count || 0) + 10,
+        conteudo_inline: {
+          texto: form.texto_principal,
+          audio_url: form.audio_url || null
+        },
         metadata: metadata,
         updated_at: new Date().toISOString()
       };
@@ -98,10 +110,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
       } else {
         const { error: err } = await supabase
           .from('clube_rota_itens')
-          .insert({
-            ...payload,
-            ordem: (estacao.passos_count || 0) + 1
-          });
+          .insert(payload);
         error = err;
       }
 
@@ -109,12 +118,11 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
       toast.success("Publicado com sucesso!");
       queryClient.invalidateQueries({ queryKey: ['admin-clube-estacoes'] });
-      queryClient.invalidateQueries({ queryKey: ['admin-clube-passos'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-rota-passos', estacao.id] });
       queryClient.invalidateQueries({ queryKey: ['rota-oracular'] });
       
       onClose();
       
-      // Abre a visão da aluna em nova aba se for uma rota válida
       if (finalSlug) {
         window.open(`/clube/rota/${finalSlug}`, '_blank');
       }
@@ -129,21 +137,21 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl bg-midnight border-white/10 text-white max-h-[95vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl bg-midnight border-white/10 text-white max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-gold font-display text-xl">
-            <Rocket className="w-5 h-5" /> 
-            {passo ? 'Editor Rápido' : 'Publicador Rápido'} — {estacao.titulo}
+            <Rocket className="w-5 h-5 text-emerald-500" /> 
+            {passo ? 'Editor Rápido' : 'Publicador Rápido'}
           </DialogTitle>
           <DialogDescription className="text-white/60">
-            Fluxo simplificado para edição operacional da Rota dos Lobos.
+            Fluxo operacional: Título → Texto → Áudio → Publicar.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-6 py-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-gold/60">Título do Passo</Label>
+              <Label className="text-xs uppercase tracking-widest text-gold/60">1. Título do Passo</Label>
               <Input 
                 value={form.titulo} 
                 onChange={e => setForm({...form, titulo: e.target.value})}
@@ -152,7 +160,7 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-gold/60">Subtítulo (Frase de Impacto)</Label>
+              <Label className="text-xs uppercase tracking-widest text-gold/60">Subtítulo (Opcional)</Label>
               <Input 
                 value={form.subtitulo} 
                 onChange={e => setForm({...form, subtitulo: e.target.value})}
@@ -164,7 +172,19 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
           <div className="space-y-2">
             <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-              <Music className="w-3 h-3" /> URL do Áudio (Audioteca ou Externo)
+              <PenTool className="w-3 h-3" /> 2. Texto Principal (Markdown)
+            </Label>
+            <Textarea 
+              value={form.texto_principal} 
+              onChange={e => setForm({...form, texto_principal: e.target.value})}
+              placeholder="Cole aqui o conteúdo principal do passo..."
+              className="min-h-[150px] bg-white/5 border-white/10 resize-none text-sm"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
+              <Music className="w-3 h-3 text-emerald-400" /> 3. URL do Áudio
             </Label>
             <Input 
               value={form.audio_url} 
@@ -176,62 +196,71 @@ export function PublicadorRapido({ open, onClose, estacao, passo }: Props) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-                <Sparkles className="w-3 h-3" /> Jardim da Psique (Escrita)
+              <Label className="text-xs uppercase tracking-widest text-white/40 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Jardim (Prompt de Escrita)
               </Label>
               <Textarea 
                 value={form.jardim_prompt} 
                 onChange={e => setForm({...form, jardim_prompt: e.target.value})}
-                placeholder="Prompt para a aluna escrever hoje..."
-                className="min-h-[100px] bg-white/5 border-white/10 resize-none text-sm"
+                placeholder="Opcional..."
+                className="min-h-[80px] bg-white/5 border-white/10 resize-none text-xs"
               />
             </div>
             <div className="space-y-2">
-              <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-                <BookOpen className="w-3 h-3" /> Laboratório 80/20 (Caso/Cenário)
+              <Label className="text-xs uppercase tracking-widest text-white/40 flex items-center gap-2">
+                <BookOpen className="w-3 h-3" /> Laboratório (Cenário)
               </Label>
               <Textarea 
                 value={form.cenario_treinamento} 
                 onChange={e => setForm({...form, cenario_treinamento: e.target.value})}
-                placeholder="Caso ou cenário para aplicação prática..."
-                className="min-h-[100px] bg-white/5 border-white/10 resize-none text-sm"
+                placeholder="Opcional..."
+                className="min-h-[80px] bg-white/5 border-white/10 resize-none text-xs"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-widest text-white/40">Caso-Espelho (Texto)</Label>
+              <Textarea 
+                value={form.caso_espelho} 
+                onChange={e => setForm({...form, caso_espelho: e.target.value})}
+                className="min-h-[80px] bg-white/5 border-white/10 resize-none text-xs"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-xs uppercase tracking-widest text-white/40">Desafio Terapeuta (Texto)</Label>
+              <Textarea 
+                value={form.desafio_terapeuta} 
+                onChange={e => setForm({...form, desafio_terapeuta: e.target.value})}
+                className="min-h-[80px] bg-white/5 border-white/10 resize-none text-xs"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-xs uppercase tracking-widest text-gold/60 flex items-center gap-2">
-              <MessageSquare className="w-3 h-3" /> Perguntas Sugeridas (Uma por linha)
+            <Label className="text-xs uppercase tracking-widest text-white/40 flex items-center gap-2">
+              <MessageSquare className="w-3 h-3" /> Perguntas (Uma por linha)
             </Label>
             <Textarea 
               value={form.perguntas} 
               onChange={e => setForm({...form, perguntas: e.target.value})}
-              placeholder="Pergunta 1&#10;Pergunta 2&#10;Pergunta 3"
-              className="min-h-[100px] bg-white/5 border-white/10 resize-none text-sm"
-            />
-          </div>
-
-          <div className="space-y-2 opacity-50">
-            <Label className="text-xs uppercase tracking-widest text-white/40">Slug (URL amigável)</Label>
-            <Input 
-              value={form.slug} 
-              onChange={e => setForm({...form, slug: e.target.value})}
-              placeholder="auto-gerado-se-vazio"
-              className="bg-white/5 border-white/10 h-8 text-xs font-mono"
+              placeholder="Pergunta 1&#10;Pergunta 2"
+              className="min-h-[80px] bg-white/5 border-white/10 resize-none text-xs"
             />
           </div>
         </div>
 
         <DialogFooter className="border-t border-white/5 pt-6 gap-3">
           <Button variant="ghost" onClick={onClose} className="text-white/40 hover:text-white">
-            Cancelar
+            Descartar
           </Button>
           <Button 
             onClick={handlePublish} 
             disabled={loading}
-            className="bg-gold text-midnight hover:bg-gold/90 px-8 gap-2 font-bold"
+            className="bg-emerald-600 text-white hover:bg-emerald-700 px-8 gap-2 font-bold"
           >
-            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4" /> SALVAR E PUBLICAR</>}
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Rocket className="w-4 h-4" /> PUBLICAR AGORA</>}
           </Button>
         </DialogFooter>
       </DialogContent>
