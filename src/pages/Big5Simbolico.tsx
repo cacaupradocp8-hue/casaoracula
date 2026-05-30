@@ -327,17 +327,26 @@ export default function Big5Simbolico() {
           )}
 
           {/* CTA */}
-          <div className="mt-8 text-center">
-            <Button onClick={() => navigate('/ferramentas')} variant="outline" className="mr-4">
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button onClick={() => navigate('/ferramenta/big5-comparativo')} className="w-full sm:w-auto bg-gold hover:bg-gold/80 text-background">
+              <Layers className="w-4 h-4 mr-2" />
+              Ver Diálogo entre Camadas
+            </Button>
+            <Button onClick={() => navigate('/ferramentas')} variant="outline" className="w-full sm:w-auto">
               Voltar para Ferramentas
             </Button>
-            <Button onClick={() => {
-              setShowResult(false);
-              setCurrentIndex(0);
-              setResponses({});
-              setNomeSimbolico('');
-              setReflexaoFinal('');
-            }}>
+            <Button 
+              variant="ghost"
+              className="text-muted-foreground w-full sm:w-auto"
+              onClick={() => {
+                setShowResult(false);
+                setCurrentIndex(0);
+                setResponses({});
+                setNomeSimbolico('');
+                setReflexaoFinal('');
+              }}
+            >
+              <RefreshCw className="w-4 h-4 mr-2" />
               Refazer o Mapa
             </Button>
           </div>
