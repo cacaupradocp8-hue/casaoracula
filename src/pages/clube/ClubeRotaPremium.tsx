@@ -216,22 +216,29 @@ export default function ClubeRotaPremium() {
             </header>
 
             {/* ═══════════ 2. COMECE POR AQUI ═══════════ */}
-            <Section icon={Compass} kicker="O Início" titulo="Comece por aqui">
+            <Section icon={Compass} kicker="A Jornada" titulo="Comece por aqui">
               <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className="bg-white/[0.03] border border-white/10 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-sm"
+                className="bg-white/[0.03] border border-gold/10 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden"
               >
-                <p className="text-lg md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+                <p className="text-xl md:text-3xl text-white/90 font-serif italic leading-relaxed mb-8">
                   "Você está prestes a entrar em um campo de sabedoria ancestral. Respire, localize-se e permita que a primeira voz a guie na recuperação dos seus próprios ossos."
                 </p>
+                <div className="flex flex-col items-center gap-4">
+                  <div className="flex items-center gap-2 text-gold/60">
+                    <ArrowDown className="w-5 h-5 animate-bounce" />
+                    <span className="text-[10px] uppercase tracking-widest font-bold">Role para iniciar a escuta</span>
+                  </div>
+                </div>
               </motion.div>
             </Section>
 
             {/* ═══════════ 3. ÁUDIO DE TRAVESSIA ═══════════ */}
             {audios.length > 0 && (
-              <Section icon={Headphones} kicker="Escuta ativa" titulo="Áudio de Travessia">
+              <Section id="audio-travessia" icon={Headphones} kicker="Escuta ativa" titulo="Áudio de Travessia">
                 <div className="space-y-6">
                   {audios.map((audio: any, i: number) => (
                     <div key={i} className="rounded-3xl border border-white/10 bg-white/5 p-6 md:p-8 backdrop-blur-sm">
