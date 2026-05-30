@@ -292,7 +292,7 @@ export default function ClubeRotaPremium() {
 
             {/* ═══════════ 6. JARDINS ═══════════ */}
             {(jardimPrompt || ponto.metadata?.jardim_oficio) && (
-              <Section icon={Flower2} kicker="Sementeira" titulo="Jardins da Psique e do Ofício">
+              <Section id="jardim-estacao" icon={Flower2} kicker="Sementeira" titulo="Jardins da Psique e do Ofício">
                 <div className="grid grid-cols-1 gap-8">
                   {jardimPrompt && (
                     <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-gold/[0.08] via-midnight/40 to-midnight/60 border border-white/10 p-8 md:p-12 shadow-2xl backdrop-blur-md">
