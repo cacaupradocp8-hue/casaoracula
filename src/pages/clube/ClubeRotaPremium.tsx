@@ -105,7 +105,7 @@ export default function ClubeRotaPremium() {
   }
 
   // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
-  const audios: Array<{ titulo?: string; url?: string; tipo?: string; duracao?: string }> =
+  const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
     Array.isArray(ponto.metadata?.audios) ? ponto.metadata.audios : [];
 
   const jardimPrompt: string | null =
@@ -434,9 +434,9 @@ export default function ClubeRotaPremium() {
                         Áudio {i + 1}{audio.tipo ? ` · ${audio.tipo}` : ''}
                       </span>
                     </div>
-                    {audio.url ? (
+                    {(audio.audio_url || audio.url) ? (
                       <AudioOracular
-                        audioUrl={audio.url}
+                        audioUrl={audio.audio_url || audio.url}
                         titulo={audio.titulo || `Áudio ${i + 1}`}
                         hideInsight
                       />
