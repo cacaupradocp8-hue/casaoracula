@@ -416,55 +416,66 @@ export default function ClubeRotaPremium() {
           </Section>
 
 
-          {/* ═══════════ 3. ÁUDIOS DA ESTAÇÃO ═══════════ */}
+          {/* ═══════════ 3. BLOCOS EDITORIAIS ═══════════ */}
+          
+          {/* Abertura Imersiva */}
+          {ponto.metadata?.abertura_imersiva && (
+            <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic">
+                {ponto.metadata.abertura_imersiva}
+              </div>
+            </Section>
+          )}
+
+          {/* Áudios */}
           {audios.length > 0 && (
             <Section id="audios-da-estacao" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
-              <div className="max-w-3xl mx-auto space-y-8">
-                <div className="text-center space-y-3 mb-8">
-                  <p className="text-foreground/60 text-base md:text-lg font-serif italic leading-relaxed">
-                    "Feche os olhos e permita que a voz conduza sua imaginação. Não busque entender, busque sentir os contornos da história que se desenrola."
-                  </p>
-                  <div className="h-px w-24 bg-gold/20 mx-auto" />
-                </div>
-                <div className="space-y-6">
+              <div className="max-w-3xl mx-auto space-y-6">
                 {audios.map((audio: any, i: number) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 12 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.06 }}
-                    className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5"
-                  >
-                    <div className="mb-3 flex items-center gap-2">
-                      <span className="text-[9px] tracking-[0.3em] uppercase text-gold/60">
-                        Áudio {i + 1}{audio.tipo ? ` · ${audio.tipo}` : ''}
-                      </span>
-                    </div>
-                    {(audio.audio_url || audio.url) ? (
-                      <AudioOracular
-                        audioUrl={audio.audio_url || audio.url}
-                        titulo={audio.titulo || `Áudio ${i + 1}`}
-                        hideInsight
-                      />
-                    ) : (
-                      <p className="text-sm text-foreground/50 italic">Áudio em preparação.</p>
-                    )}
-                  </motion.div>
+                  <div key={i} className="rounded-2xl border border-foreground/[0.06] bg-foreground/[0.02] p-4 md:p-5">
+                    <AudioOracular
+                      audioUrl={audio.audio_url || audio.url}
+                      titulo={audio.titulo || `Áudio ${i + 1}`}
+                      hideInsight
+                    />
+                  </div>
                 ))}
-                </div>
-                <div className="pt-8 text-center">
-                  <Button
-                    variant="ghost"
-                    className="text-gold/60 hover:text-gold gap-2 group transition-all"
-                    onClick={() => {
-                      const el = document.getElementById('converse-com-o-livro');
-                      el?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    Próximo: Dialogar com a Obra <ArrowDown className="w-3 h-3 group-hover:translate-y-1 transition-transform" />
-                  </Button>
-                </div>
+              </div>
+            </Section>
+          )}
+
+          {/* Caso-Espelho */}
+          {ponto.metadata?.caso_espelho && (
+            <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl">
+                {ponto.metadata.caso_espelho}
+              </div>
+            </Section>
+          )}
+
+          {/* Desafio da Terapeuta */}
+          {ponto.metadata?.desafio_terapeuta && (
+            <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center">
+                <p className="font-serif text-xl text-gold">{ponto.metadata.desafio_terapeuta}</p>
+              </div>
+            </Section>
+          )}
+
+          {/* Revelação da Estação */}
+          {ponto.metadata?.revelacao_estacao && (
+            <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed">
+                {ponto.metadata.revelacao_estacao}
+              </div>
+            </Section>
+          )}
+
+          {/* Erro Comum da Terapeuta */}
+          {ponto.metadata?.erro_comum && (
+            <Section icon={AlertTriangle} kicker="A armadilha no caminho" titulo="Erro Comum">
+              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic">
+                {ponto.metadata.erro_comum}
               </div>
             </Section>
           )}
