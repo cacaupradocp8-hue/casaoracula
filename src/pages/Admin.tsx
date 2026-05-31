@@ -65,6 +65,7 @@ const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeEditorialTab').then(m => ({ default: m.AdminClubeEditorialTab })));
 const AdminCentralCasa = lazy(() => import('@/pages/admin/AdminCentralCasa'));
+const AdminRotaDosLobosRedirect = lazy(() => import('@/pages/admin/AdminRotaDosLobosRedirect'));
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
@@ -100,6 +101,7 @@ const TabLoader = () => (
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
   // CENTRAL
   'central-casa': AdminCentralCasa,
+  'central-rota-lobos': AdminRotaDosLobosRedirect,
 
   // CLUBE PREMIUM (OFICIAL)
   'clube': AdminClubeHub,
@@ -173,7 +175,7 @@ export default function Admin() {
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path === '/admin/clube/laboratorio-8020') return 'clube-laboratorio-8020';
     if (path === '/admin/clube/carrosseis-insights') return 'clube-carrosseis-insights';
-    if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/')) {
+    if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/') || path === '/admin/clube/rota-dos-lobos') {
       return 'clube-jornadas'; 
     }
     
@@ -209,8 +211,8 @@ export default function Admin() {
   let ActiveComponent = TAB_COMPONENTS[activeTab];
 
   // Override if specific sub-route
-  if (isCentralRoute) {
-    ActiveComponent = AdminCentralEstacao;
+  if (isCentralRoute || location.pathname === '/admin/clube/rota-dos-lobos') {
+    ActiveComponent = isCentralRoute ? AdminCentralEstacao : AdminRotaDosLobosRedirect;
   } else if (!ActiveComponent && isDirectClubeRoute) {
     ActiveComponent = AdminClubeHub;
   }

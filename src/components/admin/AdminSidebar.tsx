@@ -43,12 +43,11 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '✨',
     icon: Sparkles,
     items: [
-      { key: 'clube', label: 'Hub das Rotas', icon: Sparkles, route: '/admin/clube' },
-      { key: 'clube-editorial', label: 'Editorial das Rotas', icon: LayoutGrid },
+      { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
+      { key: 'clube', label: 'Hub Editorial', icon: LayoutGrid },
       { key: 'clube-jornadas', label: 'Estações & Travessias', icon: RefreshCw, route: '/admin/clube/ciclos' },
       { key: 'clube-acervo', label: 'Acervo das Rotas', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com a Obra', icon: MessageSquare, route: '/admin/clube/chat' },
-
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
     ],
   },
@@ -223,6 +222,11 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               onTabChange(item.key);
                               // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
                               if (item.key === 'central-casa') navigate('/admin', { replace: true });
+                              if (item.key === 'central-rota-lobos') {
+                                // Buscamos a estação ativa via query no componente que chama navigate, 
+                                // mas na sidebar vamos para a central de ciclos ou injetamos a lógica de redirecionamento
+                                navigate('/admin/clube/rota-dos-lobos'); 
+                              }
                               if (item.key === 'clube') navigate('/admin/clube', { replace: true });
                               if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
                               if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
