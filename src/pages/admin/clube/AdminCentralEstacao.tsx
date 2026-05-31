@@ -231,7 +231,7 @@ export default function AdminCentralEstacao() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 p-6 border-t md:border-t-0 border-primary/5 bg-muted/20">
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate('/clube')}>
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate(`/clube/travessia/${estacaoId}`)}>
             <Eye className="h-3.5 w-3.5" /> Ver como Aluna
           </Button>
           <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => setEditStationOpen(true)}>
