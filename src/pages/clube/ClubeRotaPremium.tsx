@@ -867,7 +867,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
-          {matchedBook && (
+          {!isTravessiaEstruturada && matchedBook && (
             <Section id="laboratorio-8020" icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
               <Laboratorio8020Modal
                 bookId={matchedBook.id}
