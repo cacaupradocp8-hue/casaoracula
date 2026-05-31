@@ -213,11 +213,16 @@ export default function AdminCentralEstacao() {
           </div>
 
           <div className="flex-1 p-6 flex flex-col justify-center">
-            <div className="flex items-center gap-4 mb-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={() => navigate('/admin/clube/ciclos')}>
+            <div className="flex items-start gap-4 mb-2">
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 mt-1" onClick={() => navigate('/admin/clube/ciclos')}>
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest mb-1">
+                  <span>Rotas da Casa</span>
+                  <ChevronRight className="w-2.5 h-2.5" />
+                  <span className="text-gold">Rota dos Lobos</span>
+                </div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-serif text-foreground truncate">{estacao.titulo}</h1>
                   <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
@@ -226,7 +231,7 @@ export default function AdminCentralEstacao() {
                 </div>
                 <p className="text-sm text-muted-foreground flex items-center gap-2">
                   <BookOpen className="w-3.5 h-3.5 text-gold" />
-                  {estacao.livro_titulo}
+                  Obra-base: {estacao.livro_titulo}
                 </p>
               </div>
             </div>

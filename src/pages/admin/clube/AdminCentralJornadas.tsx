@@ -54,15 +54,17 @@ export default function AdminCentralJornadas() {
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => {
               if ((window as any).Admin_SetActiveTab) {
-                (window as any).Admin_SetActiveTab('clube');
+                (window as any).Admin_SetActiveTab('central-casa');
               }
-              navigate('/admin/clube');
+              navigate('/admin');
             }}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <h2 className="text-2xl font-serif text-foreground">Rotas & Estações (v3)</h2>
+            <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
           </div>
-          <p className="text-sm text-muted-foreground ml-10">Gerencie a sequência e visibilidade de cada estação</p>
+          <p className="text-sm text-muted-foreground ml-10">
+            Estrutura de jornadas e estações da Casa Orácula
+          </p>
         </div>
       </div>
 
