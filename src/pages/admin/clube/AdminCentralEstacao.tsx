@@ -500,12 +500,21 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         confirmacao: passo.metadata?.fechamento?.confirmacao || ''
       },
       audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
-        ? passo.metadata.audios.slice(0, 4)
+        ? passo.metadata.audios.map((a: any) => ({
+            titulo: a.titulo || '',
+            tipo: a.tipo || '',
+            funcao: a.funcao || '',
+            pergunta_central: a.pergunta_central || '',
+            duracao: a.duracao || '',
+            url: a.url || '',
+            roteiro: a.roteiro || '',
+            transcricao: a.transcricao || ''
+          })).slice(0, 4)
         : [
-            { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '' },
-            { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '' },
-            { titulo: 'Essência 80/20', tipo: 'essencia', funcao: 'O núcleo simbólico', pergunta_central: '', duracao: '', url: '', roteiro: '' },
-            { titulo: 'Conto', tipo: 'conto', funcao: 'A imagem que cura', pergunta_central: '', duracao: '', url: '', roteiro: '' }
+            { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
+            { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
+            { titulo: 'Essência 80/20', tipo: 'essencia', funcao: 'O núcleo simbólico', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
+            { titulo: 'Conto', tipo: 'conto', funcao: 'A imagem que cura', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' }
           ]
     });
   }, [passo]);
