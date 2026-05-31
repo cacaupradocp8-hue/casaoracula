@@ -1094,7 +1094,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 8. PRÓXIMA ROTA ═══════════ */}
-          {proximoPonto && (() => {
+          {!isTravessiaEstruturada && proximoPonto && (() => {
             const proxLocked = proximoPonto.estado === 'locked';
             return (
               <Section id="proxima-travessia" icon={ArrowRight} kicker="Continuidade" titulo="Próximo Passo">
