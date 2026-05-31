@@ -65,6 +65,7 @@ const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeEditorialTab').then(m => ({ default: m.AdminClubeEditorialTab })));
 const AdminCentralCasa = lazy(() => import('@/pages/admin/AdminCentralCasa'));
+const AdminRotaDosLobosRedirect = lazy(() => import('@/pages/admin/AdminRotaDosLobosRedirect'));
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
