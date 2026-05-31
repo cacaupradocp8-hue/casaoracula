@@ -304,21 +304,6 @@ export function TravessiaComentarios({ travessiaId }: TravessiaComentariosProps)
         </div>
       )}
 
-      {/* CTA Conheça a Casa */}
-      <section className="text-center py-8">
-        <Button
-          size="lg"
-          variant="outline"
-          className="border-gold/30 hover:border-gold/60 hover:bg-gold/5 text-foreground"
-          onClick={() => navigate('/tour')}
-        >
-          <span className="mr-2">🜂</span>
-          Conheça a Casa Orácula
-        </Button>
-        <p className="text-sm text-muted-foreground mt-3">
-          Sem pressa. Apenas quando fizer sentido.
-        </p>
-      </section>
     </div>
   );
 }
