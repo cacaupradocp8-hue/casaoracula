@@ -741,7 +741,8 @@ export default function ClubeRotaPremium() {
 
             {/* Oráculo da Estação */}
             {ponto.metadata?.oraculo_estacao && (
-              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
+              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
+
                 <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                   <div className="space-y-2">
                     <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
