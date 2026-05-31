@@ -266,12 +266,49 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
   const save = useMutation({
     mutationFn: async () => {
       const slug = form.slug?.trim() || slugify(form.titulo);
+      const limparObj = (obj: any) => {
+        const result: any = {};
+        let hasValue = false;
+        Object.keys(obj).forEach(key => {
+          if (Array.isArray(obj[key])) {
+            const filtered = obj[key].filter(Boolean);
+            if (filtered.length > 0) {
+              result[key] = filtered;
+              hasValue = true;
+            }
+          } else if (obj[key] && typeof obj[key] === 'object') {
+            const sub = limparObj(obj[key]);
+            if (sub) {
+              result[key] = sub;
+              hasValue = true;
+            }
+          } else if (obj[key] !== undefined && obj[key] !== null && obj[key] !== '') {
+            result[key] = obj[key];
+            hasValue = true;
+          }
+        });
+        return hasValue ? result : undefined;
+      };
+
       const metadata: any = {
+        ...(passo?.metadata || {}),
         audios: form.audios,
         perguntas_sugeridas: form.perguntas_sugeridas.filter((p: string) => p.trim()),
+        cta_label: form.cta_label || undefined,
+        cta_url: form.cta_url || undefined,
+        abertura_imersiva: form.abertura_imersiva || undefined,
+        caso_simbolico: limparObj(form.caso_simbolico),
+        desafio_terapeuta: limparObj(form.desafio_terapeuta),
+        revelacao_estacao: limparObj(form.revelacao_estacao),
+        erro_comum: limparObj(form.erro_comum),
+        conducao_justa: form.conducao_justa || undefined,
+        cautela_etica: form.cautela_etica.filter(Boolean).length > 0 ? form.cautela_etica.filter(Boolean) : undefined,
+        jardim_psique: limparObj(form.jardim_psique),
+        jardim_oficio: limparObj(form.jardim_oficio),
+        missao_campo: limparObj(form.missao_campo),
+        oraculo_estacao: limparObj(form.oraculo_estacao),
+        fechamento: limparObj(form.fechamento),
       };
-      if (form.cta_label) metadata.cta_label = form.cta_label;
-      if (form.cta_url) metadata.cta_url = form.cta_url;
 
       const payload: any = {
         estacao_id: estacaoId,
