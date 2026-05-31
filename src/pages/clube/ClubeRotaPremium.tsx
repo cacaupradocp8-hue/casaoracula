@@ -767,9 +767,22 @@ export default function ClubeRotaPremium() {
                   <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
                     {ponto.metadata.fechamento.texto}
                   </p>
-                  <Button variant="gold" className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest">
-                    {ponto.metadata.fechamento.botao || "Concluir Estação"}
-                  </Button>
+                  <div className="flex flex-col items-center gap-6">
+                    <Button 
+                      variant="gold" 
+                      className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
+                      onClick={() => navigate('/clube')}
+                    >
+                      {ponto.metadata.fechamento.botao || "Concluir Estação"}
+                    </Button>
+                    
+                    <button 
+                      onClick={() => navigate('/clube')}
+                      className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
+                    >
+                      Voltar à rota
+                    </button>
+                  </div>
                 </div>
               </Section>
             )}
