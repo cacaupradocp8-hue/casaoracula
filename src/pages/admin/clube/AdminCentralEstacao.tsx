@@ -416,8 +416,83 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
   });
 
   useEffect(() => {
-    // Sync form on passo change
-    // ... same logic as above to reset state
+    setForm({
+      titulo: passo.titulo || '',
+      subtitulo: passo.subtitulo || '',
+      conteudo_texto: passo.conteudo_inline?.texto || '',
+      abertura_imersiva: renderContent(passo.metadata?.abertura_imersiva),
+      hero: {
+        titulo: passo.metadata?.hero?.titulo || '',
+        texto: passo.metadata?.hero?.texto || '',
+        cta: passo.metadata?.hero?.cta || ''
+      },
+      caso_simbolico: {
+        titulo: passo.metadata?.caso_simbolico?.titulo || '',
+        aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
+        relato: passo.metadata?.caso_simbolico?.relato || ''
+      },
+      desafio_terapeuta: {
+        pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
+        escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
+        campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+      },
+      revelacao_estacao: {
+        porta: passo.metadata?.revelacao_estacao?.porta || '',
+        campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
+        torre: passo.metadata?.revelacao_estacao?.torre || '',
+        labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
+        pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
+      },
+      erro_comum: {
+        titulo: passo.metadata?.erro_comum?.titulo || '',
+        descricao: passo.metadata?.erro_comum?.descricao || '',
+        exemplo: passo.metadata?.erro_comum?.exemplo || '',
+        explicacao: passo.metadata?.erro_comum?.explicacao || ''
+      },
+      conducao_justa: passo.metadata?.conducao_justa || '',
+      cautela_etica: Array.isArray(passo.metadata?.cautela_etica) ? passo.metadata?.cautela_etica.join('\n') : (passo.metadata?.cautela_etica || 'Não usar linguagem de diagnóstico.\nNão transformar conto em sentença.\nNão sugerir rupturas rápidas.\nNão usar caso fictício como caso real.'),
+      jardim_psique: {
+        chamada: passo.metadata?.jardim_psique?.chamada || '',
+        pergunta: passo.metadata?.jardim_psique?.pergunta || '',
+        campos: passo.metadata?.jardim_psique?.campos || '',
+        botao: passo.metadata?.jardim_psique?.botao || '',
+        confirmacao: passo.metadata?.jardim_psique?.confirmacao || ''
+      },
+      jardim_oficio: {
+        chamada: passo.metadata?.jardim_oficio?.chamada || '',
+        aviso_etico: passo.metadata?.jardim_oficio?.aviso_etico || 'Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de clientes.',
+        pergunta: passo.metadata?.jardim_oficio?.pergunta || '',
+        campos: passo.metadata?.jardim_oficio?.campos || '',
+        botao: passo.metadata?.jardim_oficio?.botao || '',
+        confirmacao: passo.metadata?.jardim_oficio?.confirmacao || ''
+      },
+      missao_campo: {
+        titulo: passo.metadata?.missao_campo?.titulo || '',
+        descricao: passo.metadata?.missao_campo?.descricao || '',
+        sinais: passo.metadata?.missao_campo?.sinais || '',
+        pergunta: passo.metadata?.missao_campo?.pergunta || '',
+        botao: passo.metadata?.missao_campo?.botao || ''
+      },
+      oraculo_estacao: {
+        palavra: passo.metadata?.oraculo_estacao?.palavra || '',
+        movimento: passo.metadata?.oraculo_estacao?.movimento || '',
+        carta_final: passo.metadata?.oraculo_estacao?.carta_final || ''
+      },
+      fechamento: {
+        texto: passo.metadata?.fechamento?.texto || '',
+        pergunta: passo.metadata?.fechamento?.pergunta || '',
+        botao: passo.metadata?.fechamento?.botao || '',
+        confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+      },
+      audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
+        ? passo.metadata.audios.slice(0, 4)
+        : [
+            { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Essência 80/20', tipo: 'essencia', funcao: 'O núcleo simbólico', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Conto', tipo: 'conto', funcao: 'A imagem que cura', pergunta_central: '', duracao: '', url: '', roteiro: '' }
+          ]
+    });
   }, [passo]);
 
   const handleSave = () => {
