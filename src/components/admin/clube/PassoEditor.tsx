@@ -184,6 +184,58 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         jardim_prompt: passo.jardim_prompt || m.jardim_prompt || '',
         cenario_treinamento: passo.cenario_treinamento || m.simulacao_texto || '',
         leitura_referencia: passo.leitura_referencia || '',
+        // Metadata - Blocos da Travessia
+        abertura_imersiva: m.abertura_imersiva || '',
+        caso_simbolico: { 
+          texto: m.caso_simbolico?.texto || '', 
+          aviso: m.caso_simbolico?.aviso || '' 
+        },
+        desafio_terapeuta: { 
+          pergunta: m.desafio_terapeuta?.pergunta || (typeof m.desafio_terapeuta === 'string' ? m.desafio_terapeuta : ''), 
+          escolhas: Array.isArray(m.desafio_terapeuta?.escolhas) ? m.desafio_terapeuta.escolhas : [] 
+        },
+        revelacao_estacao: { 
+          porta: m.revelacao_estacao?.porta || '', 
+          campo: m.revelacao_estacao?.campo || '', 
+          torre: m.revelacao_estacao?.torre || '', 
+          labirinto: m.revelacao_estacao?.labirinto || '', 
+          pergunta_narrativa: m.revelacao_estacao?.pergunta_narrativa || '' 
+        },
+        erro_comum: { 
+          titulo: m.erro_comum?.titulo || '', 
+          descricao: m.erro_comum?.descricao || '', 
+          exemplo: m.erro_comum?.exemplo || '' 
+        },
+        conducao_justa: m.conducao_justa || '',
+        cautela_etica: Array.isArray(m.cautela_etica) ? m.cautela_etica : [],
+        jardim_psique: { 
+          pergunta: m.jardim_psique?.pergunta || '', 
+          botao: m.jardim_psique?.botao || '' 
+        },
+        jardim_oficio: { 
+          pergunta: m.jardim_oficio?.pergunta || '', 
+          botao: m.jardim_oficio?.botao || '', 
+          aviso_etico: m.jardim_oficio?.aviso_etico || '' 
+        },
+        missao_campo: { 
+          titulo: m.missao_campo?.titulo || '', 
+          descricao: m.missao_campo?.descricao || '', 
+          sinais: m.missao_campo?.sinais || '', 
+          botao: m.missao_campo?.botao || '' 
+        },
+        oraculo_estacao: { 
+          palavra: m.oraculo_estacao?.palavra || (typeof m.oraculo_estacao === 'string' ? m.oraculo_estacao : ''), 
+          movimento: m.oraculo_estacao?.movimento || '', 
+          carta_final: m.oraculo_estacao?.carta_final || '', 
+          frase_fechamento: m.oraculo_estacao?.frase_fechamento || '' 
+        },
+        fechamento: { 
+          texto: m.fechamento?.texto || '', 
+          pergunta: m.fechamento?.pergunta || '', 
+          botao: m.fechamento?.botao || '', 
+          confirmacao: m.fechamento?.confirmacao || '' 
+        },
+        // Metadata - Outros
         audios: Array.isArray(m.audios) ? m.audios : [],
         perguntas_sugeridas: Array.isArray(m.perguntas_sugeridas) ? m.perguntas_sugeridas : [],
         cta_label: m.cta_label || '',
