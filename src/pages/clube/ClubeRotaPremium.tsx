@@ -65,6 +65,13 @@ export default function ClubeRotaPremium() {
   const isModoGuiado = 
     ponto?.slug === 'chamado-selvagem' || 
     ponto?.metadata?.portal?.numero === 1;
+
+  const isTravessiaEstruturada = Boolean(
+    ponto?.metadata?.caso_simbolico ||
+    ponto?.metadata?.jardim_psique ||
+    ponto?.metadata?.jardim_oficio ||
+    ponto?.metadata?.fechamento
+  );
   
   const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
 
