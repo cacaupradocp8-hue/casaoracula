@@ -998,8 +998,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* Missão de Campo */}
-          {ponto.metadata?.missao_campo && (
+          {!isTravessiaEstruturada && ponto.metadata?.missao_campo && (
             <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center whitespace-pre-wrap">
                 <p className="font-display text-xl text-white uppercase tracking-tight">{renderContent(ponto.metadata.missao_campo)}</p>
