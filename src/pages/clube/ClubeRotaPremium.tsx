@@ -356,7 +356,7 @@ export default function ClubeRotaPremium() {
 
 
           {/* ═══════════ 1.5 COMO ATRAVESSAR ESTA ESTAÇÃO (TRAVESSIA GUIADA) ═══════════ */}
-          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
+          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação" isHidden={!isTravessiaEstruturada}>
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
