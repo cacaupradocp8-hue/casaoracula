@@ -64,6 +64,7 @@ const AdminCentralJornadas = lazy(() => import('@/pages/admin/clube/AdminCentral
 const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo'));
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeEditorialTab').then(m => ({ default: m.AdminClubeEditorialTab })));
+const AdminCentralCasa = lazy(() => import('@/pages/admin/AdminCentralCasa'));
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
@@ -97,6 +98,9 @@ const TabLoader = () => (
 
 // Map tab keys to their lazy components
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
+  // CENTRAL
+  'central-casa': AdminCentralCasa,
+
   // CLUBE PREMIUM (OFICIAL)
   'clube': AdminClubeHub,
   'clube-jornadas': AdminCentralJornadas,
@@ -160,6 +164,7 @@ export default function Admin() {
     
     // Map URL paths to tabs
     const path = location.pathname;
+    if (path === '/admin') return 'central-casa';
     if (path === '/admin/clube') return 'clube';
     if (path === '/admin/clube/ciclos') return 'clube-jornadas';
     if (path === '/admin/clube/portais') return 'clube-portais';
@@ -175,7 +180,7 @@ export default function Admin() {
     if (path.startsWith('/admin/clube-livro')) return 'clube';
     if (path === '/admin/quiz') return 'quiz';
     
-    return 'clube';
+    return 'central-casa';
 
   };
 
@@ -240,14 +245,21 @@ export default function Admin() {
                   </Sheet>
                 </div>
 
-                {activeTab !== 'clube' && !isDirectClubeRoute && (
+                {activeTab === 'central-casa' && (
+                  <SectionHeader
+                    title="Central da Casa Orácula"
+                    subtitle="Gestão unificada do ecossistema oracular"
+                    icon={<Castle className="w-5 h-5 text-gold" />}
+                  />
+                )}
+                {activeTab !== 'clube' && !isDirectClubeRoute && activeTab !== 'central-casa' && (
                   <SectionHeader
                     title="Painel da Guardiã"
                     subtitle="Gerencie a Casa ORÁCULA com clareza e cuidado"
                     icon={<Settings className="w-5 h-5" />}
                   />
                 )}
-                {isDirectClubeRoute && (
+                {isDirectClubeRoute && activeTab !== 'central-casa' && (
                   <SectionHeader
                     title="Clube Editorial Oracular"
                     subtitle="Operação Premium & Gestão de Conteúdo"
