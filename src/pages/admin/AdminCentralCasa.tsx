@@ -82,9 +82,15 @@ export default function AdminCentralCasa() {
         
         {/* ROTAS DA CASA (ESTRUTURA REAL) */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="flex items-center gap-3 px-2">
-            <Compass className="w-6 h-6 text-gold" />
-            <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-3">
+              <Compass className="w-6 h-6 text-gold" />
+              <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
+            </div>
+            <Button variant="ghost" size="sm" className="text-gold hover:text-gold hover:bg-gold/10 gap-2" onClick={() => handleSetTab('central-rotas')}>
+              Ver todas as rotas
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </div>
 
           <Card className="bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 backdrop-blur-xl hover:border-gold/50 transition-all duration-500 overflow-hidden group">
