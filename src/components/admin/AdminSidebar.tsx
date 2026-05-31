@@ -45,7 +45,7 @@ export const adminNavGroups: AdminNavGroup[] = [
     items: [
       { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
       { key: 'clube', label: 'Hub Editorial', icon: LayoutGrid },
-      { key: 'clube-jornadas', label: 'Estações & Travessias', icon: RefreshCw, route: '/admin/clube/ciclos' },
+      { key: 'clube-jornadas', label: 'Estações da Travessia', icon: RefreshCw, route: '/admin/clube/ciclos' },
       { key: 'clube-acervo', label: 'Acervo das Rotas', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com a Obra', icon: MessageSquare, route: '/admin/clube/chat' },
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },

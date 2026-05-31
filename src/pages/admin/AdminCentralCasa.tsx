@@ -69,64 +69,126 @@ export default function AdminCentralCasa() {
       {/* Grid de Áreas Reorganizada */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         
-        {/* ROTA DOS LOBOS (PRIORIDADE) */}
-        <Card className="lg:col-span-2 bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 backdrop-blur-xl hover:border-gold/50 transition-all duration-500 overflow-hidden group">
-          <CardContent className="p-8 flex flex-col md:flex-row gap-8">
-            <div className="flex-1 space-y-6">
-              <div className="flex justify-between items-start">
-                <div className="p-4 rounded-2xl bg-gold/10 group-hover:scale-110 transition-transform duration-500">
-                  <Sparkles className="w-8 h-8 text-gold" />
+        {/* ROTAS DA CASA (ESTRUTURA REAL) */}
+        <div className="lg:col-span-2 space-y-6">
+          <div className="flex items-center gap-3 px-2">
+            <Compass className="w-6 h-6 text-gold" />
+            <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
+          </div>
+
+          <Card className="bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 backdrop-blur-xl hover:border-gold/50 transition-all duration-500 overflow-hidden group">
+            <CardContent className="p-8">
+              <div className="flex flex-col md:flex-row gap-8">
+                <div className="flex-1 space-y-6">
+                  <div className="flex justify-between items-start">
+                    <div className="p-4 rounded-2xl bg-gold/10 group-hover:scale-110 transition-transform duration-500">
+                      <Sparkles className="w-8 h-8 text-gold" />
+                    </div>
+                    <Badge className="bg-gold text-black font-bold px-3">JORNADA PRINCIPAL</Badge>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <h3 className="text-3xl font-serif text-foreground group-hover:text-gold transition-colors">Rota dos Lobos</h3>
+                      <div className="flex items-center gap-2 text-gold/80 font-medium text-sm">
+                        <BookOpen className="w-4 h-4" />
+                        <span>Obra-base: Mulheres que Correm com os Lobos</span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-muted-foreground leading-relaxed max-w-xl">
+                      Edite a travessia, estações, áudios e conteúdos imersivos da jornada da Natureza Instintiva.
+                    </p>
+
+                    {/* Hierarchy Display */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
+                      {[
+                        { title: 'O Chamado Selvagem', num: 'I' },
+                        { title: 'A Mulher Domesticada', num: 'II' },
+                        { title: 'Barba Azul', num: 'III' },
+                        { title: 'Vasalisa', num: 'IV' },
+                        { title: 'Mulher Esqueleto', num: 'V' },
+                        { title: 'O Retorno da Mulher Selvagem', num: 'VI' }
+                      ].map((est, idx) => (
+                        <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
+                             onClick={() => navigate('/admin/clube/ciclos')}>
+                          <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
+                            {est.num}
+                          </div>
+                          <span className="text-sm font-medium text-foreground/80 group-hover/item:text-gold transition-colors truncate">
+                            {est.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3 pt-6 border-t border-gold/10">
+                    <Button 
+                      className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
+                      onClick={() => navigate('/admin/clube/rota-dos-lobos')}
+                    >
+                      <Zap className="w-4 h-4" />
+                      Acessar Rota dos Lobos
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="border-gold/20 hover:bg-gold/5 text-gold gap-2"
+                      onClick={() => navigate('/admin/clube/ciclos')}
+                    >
+                      <Settings2 className="w-4 h-4" />
+                      Gerir Estações
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      className="text-muted-foreground hover:text-gold gap-2"
+                      onClick={() => navigate('/clube')}
+                    >
+                      <Eye className="w-4 h-4" />
+                      Ver como Aluna
+                    </Button>
+                  </div>
                 </div>
-                <Badge className="bg-gold text-black font-bold px-3">PRIORIDADE</Badge>
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-3xl font-serif text-foreground group-hover:text-gold transition-colors">Rota dos Lobos</h3>
-                <p className="text-muted-foreground leading-relaxed">
-                  Edite a travessia, estações, áudios, banners, jardins e conteúdos da obra Mulheres que Correm com os Lobos.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-3 pt-4">
-                <Button 
-                  className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
-                  onClick={() => navigate('/admin/clube/rota-dos-lobos')}
-                >
-                  <Zap className="w-4 h-4" />
-                  Editar Rota dos Lobos
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="border-gold/20 hover:bg-gold/5 text-gold gap-2"
-                  onClick={() => navigate('/admin/clube/ciclos')}
-                >
-                  <Settings2 className="w-4 h-4" />
-                  Gerir Estações
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  className="text-muted-foreground hover:text-gold gap-2"
-                  onClick={() => navigate('/clube')}
-                >
-                  <Eye className="w-4 h-4" />
-                  Ver como Aluna
-                </Button>
-              </div>
-            </div>
-            <div className="hidden md:block w-px bg-primary/10" />
-            <div className="md:w-48 space-y-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Status Operacional</h4>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Estação Ativa</span>
-                  <span className="text-gold font-medium truncate max-w-[80px]">{estacaoAtiva?.titulo || 'Nenhuma'}</span>
-                </div>
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-muted-foreground">Travessia</span>
-                  <span className="text-emerald-500 font-medium">Estruturada</span>
+                
+                <div className="hidden md:block w-px bg-primary/10" />
+                
+                <div className="md:w-48 space-y-6">
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Status Ativo</h4>
+                    <div className="p-4 rounded-2xl bg-black/20 border border-gold/10 space-y-3">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] text-muted-foreground uppercase">Estação em Foco</span>
+                        <span className="text-gold font-serif truncate">{estacaoAtiva?.titulo || 'Nenhuma'}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="text-muted-foreground">Progresso Geral</span>
+                        <span className="text-emerald-500 font-bold">100%</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Arquitetura</h4>
+                    <ul className="space-y-2 text-[11px] text-muted-foreground font-light">
+                      <li className="flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gold" />
+                        12 Portais Ativos
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gold" />
+                        6 Estações Mapeadas
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <div className="w-1 h-1 rounded-full bg-gold" />
+                        Travessia Terapêutica
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* SALA DA VISITANTE */}
         <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-blue-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
