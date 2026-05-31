@@ -27,9 +27,12 @@ export interface TravessiaStep {
 interface ClubeTravessiaProgressProps {
   steps: TravessiaStep[];
   className?: string;
+  isHidden?: boolean;
 }
 
-export function ClubeTravessiaProgress({ steps, className }: ClubeTravessiaProgressProps) {
+export function ClubeTravessiaProgress({ steps, className, isHidden = false }: ClubeTravessiaProgressProps) {
+  if (isHidden) return null;
+
   const completedCount = steps.filter(s => s.status === 'completed').length;
   const progressPercentage = steps.length > 0 ? (completedCount / steps.length) * 100 : 0;
 

@@ -649,10 +649,14 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                 <AlertTriangle className="w-4 h-4" /> Erro Comum & Ética
               </h3>
               <div className="space-y-4">
+                <Input placeholder="Título do erro comum..." value={form.erro_comum.titulo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, titulo: e.target.value}})} className="bg-background/50 text-xs" />
                 <Textarea placeholder="Descrição do erro comum..." value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="bg-background/50 text-xs" />
+                <Textarea placeholder="Exemplo de erro comum..." value={form.erro_comum.exemplo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, exemplo: e.target.value}})} className="bg-background/50 text-xs" />
+                <Textarea placeholder="Condução justa (texto ou relato)..." value={form.conducao_justa} onChange={e => setForm({...form, conducao_justa: e.target.value})} className="bg-background/50 text-xs min-h-[100px]" />
                 <Textarea placeholder="Cautelas éticas (uma por linha)" value={form.cautela_etica} onChange={e => setForm({...form, cautela_etica: e.target.value})} className="bg-background/50 text-xs min-h-[100px]" />
               </div>
             </div>
+
           </div>
 
           {/* 5. JARDINS */}

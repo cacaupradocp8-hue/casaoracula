@@ -65,6 +65,13 @@ export default function ClubeRotaPremium() {
   const isModoGuiado = 
     ponto?.slug === 'chamado-selvagem' || 
     ponto?.metadata?.portal?.numero === 1;
+
+  const isTravessiaEstruturada = Boolean(
+    ponto?.metadata?.caso_simbolico ||
+    ponto?.metadata?.jardim_psique ||
+    ponto?.metadata?.jardim_oficio ||
+    ponto?.metadata?.fechamento
+  );
   
   const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
 
@@ -298,11 +305,12 @@ export default function ClubeRotaPremium() {
                       variant="gold"
                       className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
                       onClick={() => {
-                        const targetId = isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo';
+                        const targetId = isTravessiaEstruturada ? 'como-atravessar' : (isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo');
                         const el = document.getElementById(targetId);
                         el?.scrollIntoView({ behavior: 'smooth' });
                       }}
                     >
+
                       <Play className="w-4 h-4 fill-current" /> Iniciar Travessia
                     </Button>
                     {audios.length > 0 && (
@@ -345,10 +353,11 @@ export default function ClubeRotaPremium() {
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
           {/* Indicador de Progresso Simbólico */}
-          <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
+          <ClubeTravessiaProgress steps={steps} isHidden={isTravessiaEstruturada} className="mb-8 md:mb-12" />
+
 
           {/* ═══════════ 1.5 COMO ATRAVESSAR ESTA ESTAÇÃO (TRAVESSIA GUIADA) ═══════════ */}
-          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
+          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação" isHidden={!isTravessiaEstruturada}>
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
@@ -395,7 +404,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
 
-          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo">
+          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo" isHidden={isTravessiaEstruturada}>
             <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
               <p className="text-foreground/70 text-lg md:text-xl font-serif italic leading-relaxed">
                 "Toda travessia começa com o reconhecimento do terreno. Olhe para o mapa e localize sua alma no ciclo da história que estamos prestes a desvelar."
@@ -713,7 +722,7 @@ export default function ClubeRotaPremium() {
 
             {/* Missão de Campo */}
             {ponto.metadata?.missao_campo && (
-              <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={ponto.metadata.missao_campo.titulo || "Missão de Campo"}>
+              <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={ponto.metadata.missao_campo.titulo || "Missão de Campo"} isHidden={isTravessiaEstruturada}>
                 <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
                   <p className="text-white/80 font-serif text-xl italic leading-relaxed">
                     {ponto.metadata.missao_campo.descricao}
@@ -733,7 +742,8 @@ export default function ClubeRotaPremium() {
 
             {/* Oráculo da Estação */}
             {ponto.metadata?.oraculo_estacao && (
-              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
+              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
+
                 <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                   <div className="space-y-2">
                     <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
@@ -760,16 +770,29 @@ export default function ClubeRotaPremium() {
                   <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
                     {ponto.metadata.fechamento.texto}
                   </p>
-                  <Button variant="gold" className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest">
-                    {ponto.metadata.fechamento.botao || "Concluir Estação"}
-                  </Button>
+                  <div className="flex flex-col items-center gap-6">
+                    <Button 
+                      variant="gold" 
+                      className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
+                      onClick={() => navigate('/clube')}
+                    >
+                      {ponto.metadata.fechamento.botao || "Concluir Estação"}
+                    </Button>
+                    
+                    <button 
+                      onClick={() => navigate('/clube')}
+                      className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
+                    >
+                      Voltar à rota
+                    </button>
+                  </div>
                 </div>
               </Section>
             )}
           </div>
 
 
-          {temChatLivro && (
+          {!isTravessiaEstruturada && temChatLivro && (
             <Section id="converse-com-o-livro" icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
               <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
                 <CardContent className="p-6 md:p-8">
@@ -860,7 +883,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {/* ═══════════ 4.5 LABORATÓRIO 80/20 ═══════════ */}
-          {matchedBook && (
+          {!isTravessiaEstruturada && matchedBook && (
             <Section id="laboratorio-8020" icon={FlaskConical} kicker="A essência destilada" titulo="Laboratório 80/20">
               <Laboratorio8020Modal
                 bookId={matchedBook.id}
@@ -912,8 +935,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* ═══════════ 5. TREINAMENTO ═══════════ */}
-          {simulacaoTexto && (
+          {!isTravessiaEstruturada && simulacaoTexto && (
             <Section id="treinamento-contextual" icon={Zap} kicker="Câmara de simulação" titulo="Treinamento Contextual">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -944,8 +966,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* ═══════════ 6. JARDIM ═══════════ */}
-          {(jardimPrompt || ponto.metadata?.jardim_oficio) && (
+          {!isTravessiaEstruturada && (jardimPrompt || ponto.metadata?.jardim_oficio) && (
             <Section id="jardim-estacao" icon={Flower2} kicker="Sementeira" titulo={ponto.metadata?.jardim_oficio ? "Jardins da Psique e do Ofício" : "Jardim da Psique"}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Jardim da Psique */}
@@ -993,8 +1014,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* Missão de Campo */}
-          {ponto.metadata?.missao_campo && (
+          {!isTravessiaEstruturada && ponto.metadata?.missao_campo && (
             <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo="Missão de Campo">
               <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-8 rounded-3xl text-center whitespace-pre-wrap">
                 <p className="font-display text-xl text-white uppercase tracking-tight">{renderContent(ponto.metadata.missao_campo)}</p>
@@ -1002,8 +1022,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* Oráculo da Estação */}
-          {ponto.metadata?.oraculo_estacao && (
+          {!isTravessiaEstruturada && ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
               <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                 {typeof ponto.metadata.oraculo_estacao === 'object' ? (
@@ -1039,58 +1058,59 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
-          <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 md:p-8"
-            >
-              <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
-              <div className="relative space-y-6 max-w-xl">
-                <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
-                  Próximo nível
-                </Badge>
-                <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
-                  Você percebe os padrões.
-                  <br />
-                  <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
-                    Aprenda a conduzir.
-                  </span>
-                </h3>
-                <p className="font-serif italic text-foreground/55 text-base md:text-lg">
-                  "Onde a técnica termina, o olhar começa."
-                </p>
-                <p className="text-foreground/55 text-[15px] leading-relaxed">
-                  A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
-                </p>
-                <Button
-                  size="lg"
-                  className="h-14 px-8 rounded-full bg-gold text-midnight hover:bg-gold/90 gap-2 font-semibold tracking-wide shadow-[0_0_50px_-15px_hsl(43_47%_56%/0.6)]"
-                  onClick={() => navigate('/formacao')}
-                >
-                  Conhecer a Formação Orácula <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
+          {!isTravessiaEstruturada && (
+            <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9 }}
+                className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 md:p-8"
+              >
+                <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
+                <div className="relative space-y-6 max-w-xl">
+                  <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
+                    Próximo nível
+                  </Badge>
+                  <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
+                    Você percebe os padrões.
+                    <br />
+                    <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
+                      Aprenda a conduzir.
+                    </span>
+                  </h3>
+                  <p className="font-serif italic text-foreground/55 text-base md:text-lg">
+                    "Onde a técnica termina, o olhar começa."
+                  </p>
+                  <p className="text-foreground/55 text-[15px] leading-relaxed">
+                    A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
+                  </p>
+                  <Button
+                    size="lg"
+                    className="h-14 px-8 rounded-full bg-gold text-midnight hover:bg-gold/90 gap-2 font-semibold tracking-wide shadow-[0_0_50px_-15px_hsl(43_47%_56%/0.6)]"
+                    onClick={() => navigate('/formacao')}
+                  >
+                    Conhecer a Formação Orácula <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </motion.div>
 
-            {ponto.metadata?.cta_label && ponto.metadata?.cta_url && (
-              <div className="flex justify-center mt-10">
-                <Button
-                  variant="ghost"
-                  className="text-gold/70 hover:text-gold gap-2"
-                  onClick={() => window.open(ponto.metadata.cta_url, '_blank')}
-                >
-                  <Star className="w-3 h-3" /> {ponto.metadata.cta_label}
-                </Button>
-              </div>
-            )}
-          </Section>
+              {ponto.metadata?.cta_label && ponto.metadata?.cta_url && (
+                <div className="flex justify-center mt-10">
+                  <Button
+                    variant="ghost"
+                    className="text-gold/70 hover:text-gold gap-2"
+                    onClick={() => window.open(ponto.metadata.cta_url, '_blank')}
+                  >
+                    <Star className="w-3 h-3" /> {ponto.metadata.cta_label}
+                  </Button>
+                </div>
+              )}
+            </Section>
+          )}
 
           {/* ═══════════ 8. PRÓXIMA ROTA ═══════════ */}
-          {proximoPonto && (() => {
+          {!isTravessiaEstruturada && proximoPonto && (() => {
             const proxLocked = proximoPonto.estado === 'locked';
             return (
               <Section id="proxima-travessia" icon={ArrowRight} kicker="Continuidade" titulo="Próximo Passo">
@@ -1166,13 +1186,16 @@ function Section({
   kicker,
   titulo,
   children,
+  isHidden = false,
 }: {
   id?: string;
   icon?: React.ComponentType<{ className?: string }>;
   kicker?: string;
   titulo?: string;
   children: React.ReactNode;
+  isHidden?: boolean;
 }) {
+  if (isHidden) return null;
   return (
     <section id={id} className="scroll-mt-20">
       {(kicker || titulo) && (
