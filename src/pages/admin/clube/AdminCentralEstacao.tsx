@@ -6,7 +6,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   ArrowLeft, BookOpen, Pencil, ImageIcon, Users, Eye, 
-  Loader2, Settings, Rocket, Save, Music, Sparkles, Plus, Trash2, ChevronRight
+  Loader2, Settings, Rocket, Save, Music, Sparkles, Plus, Trash2, ChevronRight,
+  MapPin, Headphones, Sword, AlertTriangle, Flower2, Scroll, Check
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -338,10 +339,80 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
     titulo: passo.titulo || '',
     subtitulo: passo.subtitulo || '',
     conteudo_texto: passo.conteudo_inline?.texto || '',
-    audio_url: passo.metadata?.audios?.[0]?.url || '',
-    audio_titulo: passo.metadata?.audios?.[0]?.titulo || 'Áudio Principal',
-    jardim_prompt: passo.jardim_prompt || passo.metadata?.jardim_prompt || '',
-    cenario_treinamento: passo.cenario_treinamento || passo.metadata?.simulacao_texto || '',
+    // Seções metadata
+    abertura_imersiva: renderContent(passo.metadata?.abertura_imersiva),
+    hero: {
+      titulo: passo.metadata?.hero?.titulo || '',
+      texto: passo.metadata?.hero?.texto || '',
+      cta: passo.metadata?.hero?.cta || ''
+    },
+    caso_simbolico: {
+      titulo: passo.metadata?.caso_simbolico?.titulo || '',
+      aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
+      relato: passo.metadata?.caso_simbolico?.relato || ''
+    },
+    desafio_terapeuta: {
+      pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
+      escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
+      campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+    },
+    revelacao_estacao: {
+      porta: passo.metadata?.revelacao_estacao?.porta || '',
+      campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
+      torre: passo.metadata?.revelacao_estacao?.torre || '',
+      labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
+      pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
+    },
+    erro_comum: {
+      titulo: passo.metadata?.erro_comum?.titulo || '',
+      descricao: passo.metadata?.erro_comum?.descricao || '',
+      exemplo: passo.metadata?.erro_comum?.exemplo || '',
+      explicacao: passo.metadata?.erro_comum?.explicacao || ''
+    },
+    conducao_justa: passo.metadata?.conducao_justa || '',
+    cautela_etica: Array.isArray(passo.metadata?.cautela_etica) ? passo.metadata?.cautela_etica.join('\n') : (passo.metadata?.cautela_etica || 'Não usar linguagem de diagnóstico.\nNão transformar conto em sentença.\nNão sugerir rupturas rápidas.\nNão usar caso fictício como caso real.'),
+    jardim_psique: {
+      chamada: passo.metadata?.jardim_psique?.chamada || '',
+      pergunta: passo.metadata?.jardim_psique?.pergunta || '',
+      campos: passo.metadata?.jardim_psique?.campos || '',
+      botao: passo.metadata?.jardim_psique?.botao || '',
+      confirmacao: passo.metadata?.jardim_psique?.confirmacao || ''
+    },
+    jardim_oficio: {
+      chamada: passo.metadata?.jardim_oficio?.chamada || '',
+      aviso_etico: passo.metadata?.jardim_oficio?.aviso_etico || 'Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de clientes.',
+      pergunta: passo.metadata?.jardim_oficio?.pergunta || '',
+      campos: passo.metadata?.jardim_oficio?.campos || '',
+      botao: passo.metadata?.jardim_oficio?.botao || '',
+      confirmacao: passo.metadata?.jardim_oficio?.confirmacao || ''
+    },
+    missao_campo: {
+      titulo: passo.metadata?.missao_campo?.titulo || '',
+      descricao: passo.metadata?.missao_campo?.descricao || '',
+      sinais: passo.metadata?.missao_campo?.sinais || '',
+      pergunta: passo.metadata?.missao_campo?.pergunta || '',
+      botao: passo.metadata?.missao_campo?.botao || ''
+    },
+    oraculo_estacao: {
+      palavra: passo.metadata?.oraculo_estacao?.palavra || '',
+      movimento: passo.metadata?.oraculo_estacao?.movimento || '',
+      carta_final: passo.metadata?.oraculo_estacao?.carta_final || ''
+    },
+    fechamento: {
+      texto: passo.metadata?.fechamento?.texto || '',
+      pergunta: passo.metadata?.fechamento?.pergunta || '',
+      botao: passo.metadata?.fechamento?.botao || '',
+      confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+    },
+    // Áudios - Agora array de 4
+    audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
+      ? passo.metadata.audios.slice(0, 4)
+      : [
+          { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+          { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+          { titulo: 'Essência 80/20', tipo: 'essencia', funcao: 'O núcleo simbólico', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+          { titulo: 'Conto', tipo: 'conto', funcao: 'A imagem que cura', pergunta_central: '', duracao: '', url: '', roteiro: '' }
+        ]
   });
 
   useEffect(() => {
@@ -349,10 +420,78 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       titulo: passo.titulo || '',
       subtitulo: passo.subtitulo || '',
       conteudo_texto: passo.conteudo_inline?.texto || '',
-      audio_url: passo.metadata?.audios?.[0]?.url || '',
-      audio_titulo: passo.metadata?.audios?.[0]?.titulo || 'Áudio Principal',
-      jardim_prompt: passo.jardim_prompt || passo.metadata?.jardim_prompt || '',
-      cenario_treinamento: passo.cenario_treinamento || passo.metadata?.simulacao_texto || '',
+      abertura_imersiva: renderContent(passo.metadata?.abertura_imersiva),
+      hero: {
+        titulo: passo.metadata?.hero?.titulo || '',
+        texto: passo.metadata?.hero?.texto || '',
+        cta: passo.metadata?.hero?.cta || ''
+      },
+      caso_simbolico: {
+        titulo: passo.metadata?.caso_simbolico?.titulo || '',
+        aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
+        relato: passo.metadata?.caso_simbolico?.relato || ''
+      },
+      desafio_terapeuta: {
+        pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
+        escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
+        campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+      },
+      revelacao_estacao: {
+        porta: passo.metadata?.revelacao_estacao?.porta || '',
+        campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
+        torre: passo.metadata?.revelacao_estacao?.torre || '',
+        labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
+        pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
+      },
+      erro_comum: {
+        titulo: passo.metadata?.erro_comum?.titulo || '',
+        descricao: passo.metadata?.erro_comum?.descricao || '',
+        exemplo: passo.metadata?.erro_comum?.exemplo || '',
+        explicacao: passo.metadata?.erro_comum?.explicacao || ''
+      },
+      conducao_justa: passo.metadata?.conducao_justa || '',
+      cautela_etica: Array.isArray(passo.metadata?.cautela_etica) ? passo.metadata?.cautela_etica.join('\n') : (passo.metadata?.cautela_etica || 'Não usar linguagem de diagnóstico.\nNão transformar conto em sentença.\nNão sugerir rupturas rápidas.\nNão usar caso fictício como caso real.'),
+      jardim_psique: {
+        chamada: passo.metadata?.jardim_psique?.chamada || '',
+        pergunta: passo.metadata?.jardim_psique?.pergunta || '',
+        campos: passo.metadata?.jardim_psique?.campos || '',
+        botao: passo.metadata?.jardim_psique?.botao || '',
+        confirmacao: passo.metadata?.jardim_psique?.confirmacao || ''
+      },
+      jardim_oficio: {
+        chamada: passo.metadata?.jardim_oficio?.chamada || '',
+        aviso_etico: passo.metadata?.jardim_oficio?.aviso_etico || 'Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de clientes.',
+        pergunta: passo.metadata?.jardim_oficio?.pergunta || '',
+        campos: passo.metadata?.jardim_oficio?.campos || '',
+        botao: passo.metadata?.jardim_oficio?.botao || '',
+        confirmacao: passo.metadata?.jardim_oficio?.confirmacao || ''
+      },
+      missao_campo: {
+        titulo: passo.metadata?.missao_campo?.titulo || '',
+        descricao: passo.metadata?.missao_campo?.descricao || '',
+        sinais: passo.metadata?.missao_campo?.sinais || '',
+        pergunta: passo.metadata?.missao_campo?.pergunta || '',
+        botao: passo.metadata?.missao_campo?.botao || ''
+      },
+      oraculo_estacao: {
+        palavra: passo.metadata?.oraculo_estacao?.palavra || '',
+        movimento: passo.metadata?.oraculo_estacao?.movimento || '',
+        carta_final: passo.metadata?.oraculo_estacao?.carta_final || ''
+      },
+      fechamento: {
+        texto: passo.metadata?.fechamento?.texto || '',
+        pergunta: passo.metadata?.fechamento?.pergunta || '',
+        botao: passo.metadata?.fechamento?.botao || '',
+        confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+      },
+      audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
+        ? passo.metadata.audios.slice(0, 4)
+        : [
+            { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Essência 80/20', tipo: 'essencia', funcao: 'O núcleo simbólico', pergunta_central: '', duracao: '', url: '', roteiro: '' },
+            { titulo: 'Conto', tipo: 'conto', funcao: 'A imagem que cura', pergunta_central: '', duracao: '', url: '', roteiro: '' }
+          ]
     });
   }, [passo]);
 
@@ -362,113 +501,208 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       titulo: form.titulo,
       subtitulo: form.subtitulo,
       conteudo_inline: { texto: form.conteudo_texto },
-      jardim_prompt: form.jardim_prompt,
-      cenario_treinamento: form.cenario_treinamento,
       metadata: {
         ...passo.metadata,
-        audios: form.audio_url ? [{
-          titulo: form.audio_titulo || 'Áudio Principal',
-          url: form.audio_url,
-          tipo: 'escuta'
-        }] : [],
-        jardim_prompt: form.jardim_prompt,
-        simulacao_texto: form.cenario_treinamento
+        abertura_imersiva: form.abertura_imersiva,
+        hero: form.hero,
+        audios: form.audios,
+        caso_simbolico: form.caso_simbolico,
+        desafio_terapeuta: form.desafio_terapeuta,
+        revelacao_estacao: form.revelacao_estacao,
+        erro_comum: form.erro_comum,
+        conducao_justa: form.conducao_justa,
+        cautela_etica: form.cautela_etica.split('\n').map(s => s.trim()).filter(Boolean),
+        jardim_psique: form.jardim_psique,
+        jardim_oficio: form.jardim_oficio,
+        missao_campo: form.missao_campo,
+        oraculo_estacao: form.oraculo_estacao,
+        fechamento: form.fechamento
       }
     };
     onSave(payload);
   };
 
+  const updateAudio = (idx: number, field: string, value: string) => {
+    const newAudios = [...form.audios];
+    newAudios[idx] = { ...newAudios[idx], [field]: value };
+    setForm({ ...form, audios: newAudios });
+  };
+
   return (
-    <Card className="border-gold/20 bg-card/50 backdrop-blur-sm overflow-hidden animate-in fade-in slide-in-from-right-4 duration-500">
-      <CardContent className="p-8 space-y-8">
-        <div className="flex items-center justify-between border-b border-primary/5 pb-6">
-          <div className="flex items-center gap-3">
-            <div className="p-3 rounded-2xl bg-gold/10">
-              <Rocket className="w-6 h-6 text-gold" />
+    <div className="space-y-8 pb-20">
+      <Card className="border-gold/20 bg-card/50 backdrop-blur-sm overflow-hidden">
+        <CardContent className="p-8 space-y-12">
+           {/* HEADER EDITOR */}
+           <div className="flex items-center justify-between border-b border-primary/5 pb-6">
+            <div className="flex items-center gap-3">
+              <div className="p-3 rounded-2xl bg-gold/10">
+                <Rocket className="w-6 h-6 text-gold" />
+              </div>
+              <div>
+                <h2 className="text-xl font-serif text-foreground">Editor Único da Rota</h2>
+                <p className="text-xs text-muted-foreground">Construção guiada da travessia simbólica.</p>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-serif text-foreground">Editor da Rota</h2>
-              <p className="text-xs text-muted-foreground">Cole o conteúdo e a URL do áudio com segurança.</p>
+            <div className="flex gap-2">
+              <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10" onClick={() => window.confirm('Deseja remover esta etapa?') && onDelete()}>
+                <Trash2 className="w-4 h-4" />
+              </Button>
+              <Button 
+                className="bg-gold hover:bg-gold/90 text-black font-bold gap-2 px-6 h-12" 
+                onClick={handleSave}
+                disabled={loading}
+              >
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                SALVAR EXPERIÊNCIA
+              </Button>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm" className="text-destructive hover:bg-destructive/10" onClick={() => window.confirm('Deseja remover esta etapa?') && onDelete()}>
-              <Trash2 className="w-4 h-4" />
-            </Button>
-            <Button 
-              className="bg-gold hover:bg-gold/90 text-black font-bold gap-2 px-6" 
-              onClick={handleSave}
-              disabled={loading}
-            >
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
-              SALVAR ETAPA
-            </Button>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label className="text-[10px] uppercase tracking-widest font-bold text-gold/60">Título da Etapa</Label>
-            <Input value={form.titulo} onChange={e => setForm({...form, titulo: e.target.value})} className="bg-background/50" />
+          {/* 1. POSICIONAMENTO & HERO */}
+          <div className="space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+              <MapPin className="w-4 h-4" /> Posicionamento & Hero
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero</Label>
+                <Input value={form.hero.titulo} onChange={e => setForm({...form, hero: {...form.hero, titulo: e.target.value}})} className="bg-background/50" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-white/40">CTA do Hero</Label>
+                <Input value={form.hero.cta} onChange={e => setForm({...form, hero: {...form.hero, cta: e.target.value}})} className="bg-background/50" />
+              </div>
+              <div className="md:col-span-2 space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-white/40">Texto de Entrada</Label>
+                <Textarea value={form.hero.texto} onChange={e => setForm({...form, hero: {...form.hero, texto: e.target.value}})} className="bg-background/50 min-h-[80px]" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] uppercase font-bold text-white/40">Abertura Imersiva (Opcional)</Label>
+              <Textarea value={form.abertura_imersiva} onChange={e => setForm({...form, abertura_imersiva: e.target.value})} className="bg-background/50 italic font-serif" placeholder="O portal de entrada..." />
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] uppercase tracking-widest font-bold text-gold/60">Subtítulo (Opcional)</Label>
-            <Input value={form.subtitulo} onChange={e => setForm({...form, subtitulo: e.target.value})} className="bg-background/50" />
-          </div>
-        </div>
 
-        <div className="space-y-2">
-          <Label className="text-[10px] uppercase tracking-widest font-bold text-gold/60">Conteúdo Principal (Markdown/Texto)</Label>
-          <Textarea 
-            value={form.conteudo_texto} 
-            onChange={e => setForm({...form, conteudo_texto: e.target.value})} 
-            className="min-h-[300px] bg-background/50 leading-relaxed text-sm"
-            placeholder="Cole aqui o conteúdo da sua jornada..."
-          />
-        </div>
+          {/* 2. ESTAÇÃO DE ESCUTA (ÁUDIOS) */}
+          <div className="space-y-6">
+            <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+              <Headphones className="w-4 h-4" /> Estação de Escuta (Áudios)
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {form.audios.map((audio, idx) => (
+                <div key={idx} className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-gold/60 uppercase tracking-widest">{audio.tipo}</span>
+                  </div>
+                  <div className="space-y-3">
+                    <Input placeholder="Título do áudio" value={audio.titulo} onChange={e => updateAudio(idx, 'titulo', e.target.value)} className="bg-background/50 text-xs" />
+                    <Input placeholder="URL (.mp3)" value={audio.url} onChange={e => updateAudio(idx, 'url', e.target.value)} className="bg-background/50 text-xs font-mono" />
+                    <div className="grid grid-cols-2 gap-2">
+                      <Input placeholder="Função" value={audio.funcao} onChange={e => updateAudio(idx, 'funcao', e.target.value)} className="bg-background/50 text-[10px]" />
+                      <Input placeholder="Duração" value={audio.duracao} onChange={e => updateAudio(idx, 'duracao', e.target.value)} className="bg-background/50 text-[10px]" />
+                    </div>
+                    <Textarea placeholder="Roteiro de gravação / Pergunta central" value={audio.roteiro || audio.pergunta_central} onChange={e => updateAudio(idx, 'roteiro', e.target.value)} className="bg-background/50 text-[10px] min-h-[80px]" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <div className="bg-muted/30 p-6 rounded-2xl border border-primary/5 space-y-4">
-          <div className="flex items-center gap-2 mb-2">
-            <Music className="w-4 h-4 text-gold" />
-            <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80">Áudio do Ritual</h3>
+          {/* 3. CASO SIMBÓLICO & DESAFIO */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Eye className="w-4 h-4" /> Caso Simbólico
+              </h3>
+              <div className="space-y-4">
+                <Input placeholder="Título do caso" value={form.caso_simbolico.titulo} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, titulo: e.target.value}})} className="bg-background/50" />
+                <Textarea placeholder="O relato..." value={form.caso_simbolico.relato} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, relato: e.target.value}})} className="bg-background/50 min-h-[200px]" />
+              </div>
+            </div>
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Sword className="w-4 h-4" /> Desafio da Terapeuta
+              </h3>
+              <div className="space-y-4">
+                <Textarea placeholder="A pergunta desafiadora..." value={form.desafio_terapeuta.pergunta} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} className="bg-background/50" />
+                <Input placeholder="Label do campo aberto" value={form.desafio_terapeuta.campo_aberto_label} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
+              </div>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-             <div className="space-y-2">
-               <Label className="text-[10px]">Título do Áudio</Label>
-               <Input value={form.audio_titulo} onChange={e => setForm({...form, audio_titulo: e.target.value})} className="bg-background/50" />
-             </div>
-             <div className="space-y-2">
-               <Label className="text-[10px]">URL do Áudio (.mp3)</Label>
-               <Input value={form.audio_url} onChange={e => setForm({...form, audio_url: e.target.value})} placeholder="https://..." className="bg-background/50 font-mono text-xs" />
-             </div>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          <div className="space-y-2">
-            <Label className="text-[10px] uppercase tracking-widest font-bold text-gold/60 flex items-center gap-2">
-              <Sparkles className="w-3 h-3" /> Jardim da Psique
-            </Label>
-            <Textarea 
-              value={form.jardim_prompt} 
-              onChange={e => setForm({...form, jardim_prompt: e.target.value})} 
-              className="bg-background/50 text-sm"
-              placeholder="Prompt de escrita para a aluna..."
-            />
+          {/* 4. REVELAÇÃO & ERRO COMUM */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Sparkles className="w-4 h-4" /> Revelação
+              </h3>
+              <div className="grid grid-cols-1 gap-2">
+                <Input placeholder="Porta" value={form.revelacao_estacao.porta} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, porta: e.target.value}})} className="bg-background/50 text-xs" />
+                <Input placeholder="Torre" value={form.revelacao_estacao.torre} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, torre: e.target.value}})} className="bg-background/50 text-xs" />
+                <Input placeholder="Labirinto" value={form.revelacao_estacao.labirinto} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, labirinto: e.target.value}})} className="bg-background/50 text-xs" />
+                <Input placeholder="Campo Psíquico" value={form.revelacao_estacao.campo_psiquico} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, campo_psiquico: e.target.value}})} className="bg-background/50 text-xs" />
+                <Textarea placeholder="Pergunta narrativa possível" value={form.revelacao_estacao.pergunta_narrativa} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, pergunta_narrativa: e.target.value}})} className="bg-background/50 text-xs" />
+              </div>
+            </div>
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4" /> Erro Comum & Ética
+              </h3>
+              <div className="space-y-4">
+                <Textarea placeholder="Descrição do erro comum..." value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="bg-background/50 text-xs" />
+                <Textarea placeholder="Cautelas éticas (uma por linha)" value={form.cautela_etica} onChange={e => setForm({...form, cautela_etica: e.target.value})} className="bg-background/50 text-xs min-h-[100px]" />
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <Label className="text-[10px] uppercase tracking-widest font-bold text-gold/60 flex items-center gap-2">
-              <BookOpen className="w-3 h-3" /> Laboratório 80/20
-            </Label>
-            <Textarea 
-              value={form.cenario_treinamento} 
-              onChange={e => setForm({...form, cenario_treinamento: e.target.value})} 
-              className="bg-background/50 text-sm"
-              placeholder="Cenário prático ou caso clínico..."
-            />
+
+          {/* 5. JARDINS */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Flower2 className="w-4 h-4" /> Jardim da Psique
+              </h3>
+              <Textarea placeholder="Pergunta principal..." value={form.jardim_psique.pergunta} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, pergunta: e.target.value}})} className="bg-background/50" />
+            </div>
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500/80 flex items-center gap-2">
+                <MapPin className="w-4 h-4" /> Jardim do Ofício
+              </h3>
+              <Textarea placeholder="Pergunta principal..." value={form.jardim_oficio.pergunta} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, pergunta: e.target.value}})} className="bg-background/50" />
+            </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* 6. ORÁCULO & FECHAMENTO */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Scroll className="w-4 h-4" /> Oráculo
+              </h3>
+              <div className="space-y-4">
+                <Input placeholder="A Palavra" value={form.oraculo_estacao.palavra} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, palavra: e.target.value}})} className="bg-background/50" />
+                <Input placeholder="O Movimento" value={form.oraculo_estacao.movimento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, movimento: e.target.value}})} className="bg-background/50" />
+              </div>
+            </div>
+            <div className="space-y-6">
+               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
+                <Check className="w-4 h-4" /> Conclusão
+              </h3>
+              <Textarea placeholder="Texto de fechamento..." value={form.fechamento.texto} onChange={e => setForm({...form, fechamento: {...form.fechamento, texto: e.target.value}})} className="bg-background/50" />
+            </div>
+          </div>
+
+        </CardContent>
+      </Card>
+    </div>
   );
 }
+
+// Helper para extrair texto de metadata
+const renderContent = (content: any) => {
+  if (!content) return "";
+  if (typeof content === 'string') return content;
+  if (typeof content === 'object') {
+    return content.text || content.content || content.value || content.relato || content.pergunta_principal || "";
+  }
+  return String(content);
+};
+

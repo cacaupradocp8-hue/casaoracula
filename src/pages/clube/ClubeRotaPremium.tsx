@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import {
@@ -121,8 +121,14 @@ export default function ClubeRotaPremium() {
   }
 
   // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
-  const audios: Array<{ titulo?: string; audio_url?: string; url?: string; tipo?: string; duracao?: string }> =
-    Array.isArray(ponto.metadata?.audios) 
+  const audios: Array<{ 
+    titulo?: string; 
+    audio_url?: string; 
+    url?: string; 
+    tipo?: string; 
+    funcao?: string;
+    duracao?: string;
+  }> = Array.isArray(ponto.metadata?.audios) 
       ? ponto.metadata.audios.map((a: any) => ({ ...a, url: a.audio_url || a.url }))
       : [];
 
@@ -341,63 +347,51 @@ export default function ClubeRotaPremium() {
           {/* Indicador de Progresso Simbólico */}
           <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
 
-          {/* ═══════════ COMO ATRAVESSAR ESTA ESTAÇÃO (MODO GUIADO) ═══════════ */}
-          {isModoGuiado && (
-            <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="bg-white/[0.03] border border-gold/20 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-                
-                <p className="text-xl md:text-2xl text-white/90 font-serif italic leading-relaxed mb-12 relative z-10 max-w-3xl mx-auto">
-                  Siga a rota em camadas: comece pelo áudio, atravesse a leitura simbólica, observe o caso-espelho e registre no Jardim.
+          {/* ═══════════ 1.5 COMO ATRAVESSAR ESTA ESTAÇÃO (TRAVESSIA GUIADA) ═══════════ */}
+          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="bg-white/[0.03] border border-gold/20 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+              
+              <div className="space-y-4 mb-12 relative z-10 max-w-3xl mx-auto">
+                <h4 className="text-xl md:text-2xl text-white font-display uppercase tracking-tight">Esta estação é atravessada em camadas.</h4>
+                <p className="text-base md:text-lg text-white/60 font-serif italic leading-relaxed">
+                  Comece pelo áudio, siga para a leitura simbólica, observe o caso da semana, responda ao desafio e registre sua travessia nos Jardins.
                 </p>
+              </div>
 
-                {/* Três passos visuais */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative z-10">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <Headphones className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">1. Ouça o áudio</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">2. Leia a estação</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <Flower2 className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">3. Registre no Jardim</span>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-                  <Button
-                    variant="gold"
-                    className="w-full sm:w-auto px-8 h-12 rounded-full font-bold uppercase tracking-widest text-[10px]"
-                    onClick={() => document.getElementById('audio-travessia')?.scrollIntoView({ behavior: 'smooth' })}
+              {/* Trilha visual de passos */}
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-12 relative z-10">
+                {[
+                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia' },
+                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao' },
+                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico' },
+                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta' },
+                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao' },
+                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique' },
+                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio' },
+                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao' }
+                ].map((step, idx) => (
+                  <motion.button
+                    key={idx}
+                    whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                    onClick={() => document.getElementById(step.id)?.scrollIntoView({ behavior: 'smooth' })}
+                    className="flex flex-col items-center gap-3 p-4 rounded-2xl border border-white/5 bg-white/[0.02] transition-all"
                   >
-                    <Headphones className="w-4 h-4 mr-2" /> Ouvir áudio
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full sm:w-auto px-8 h-12 rounded-full border-gold/20 bg-gold/5 text-gold/80 hover:bg-gold/10 font-bold uppercase tracking-widest text-[10px]"
-                    onClick={() => document.getElementById('jardim-estacao')?.scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    <Flower2 className="w-4 h-4 mr-2" /> Registrar no Jardim
-                  </Button>
-                </div>
-              </motion.div>
-            </Section>
-          )}
+                    <div className="w-10 h-10 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
+                      <step.icon className="w-4 h-4 text-gold" />
+                    </div>
+                    <span className="text-[8px] font-bold text-gold/60 uppercase tracking-[0.1em]">{idx + 1}. {step.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </Section>
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
 
@@ -523,139 +517,257 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 3. BLOCOS EDITORIAIS ═══════════ */}
           
-          {/* Abertura Imersiva */}
-          {ponto.metadata?.abertura_imersiva && (
-            <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
-                {renderContent(ponto.metadata.abertura_imersiva)}
-              </div>
-            </Section>
-          )}
+          <div id="conteudo-estacao" className="space-y-24">
+            {/* Abertura Imersiva */}
+            {ponto.metadata?.abertura_imersiva && (
+              <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
+                <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
+                  {renderContent(ponto.metadata.abertura_imersiva)}
+                </div>
+              </Section>
+            )}
 
-          {/* Áudios */}
-          {audios.length > 0 && (
-            <Section id="audio-travessia" icon={Headphones} kicker="Escutas de poder" titulo="O Chamado da Voz">
-              <div className="max-w-2xl mx-auto space-y-10 py-4">
-                {audios.map((audio: any, i: number) => (
-                  <AudioRitualPlayer
-                    key={i}
-                    audioUrl={audio.audio_url || audio.url}
-                    titulo={audio.titulo || `Áudio ${i + 1}`}
-                  />
-                ))}
-              </div>
-            </Section>
-          )}
+            {/* Áudios */}
+            {audios.length > 0 && (
+              <Section id="audio-travessia" icon={Headphones} kicker="Estação de Escuta" titulo="Antes de ler, escute.">
+                <p className="text-center text-white/40 text-sm italic mb-10 -mt-6 max-w-lg mx-auto">
+                  A travessia começa pelo corpo, pela imagem e pela voz.
+                </p>
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
+                  {audios.map((audio: any, i: number) => (
+                    <AudioRitualPlayer
+                      key={i}
+                      audioUrl={audio.url}
+                      titulo={audio.titulo}
+                      tipo={audio.tipo}
+                      funcao={audio.funcao}
+                      duracao={audio.duracao}
+                    />
+                  ))}
+                </div>
+              </Section>
+            )}
 
-          {/* Caso-Espelho */}
-          {ponto.metadata?.caso_espelho && (
-            <Section icon={Eye} kicker="O reflexo da travessia" titulo="Caso-Espelho">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-6 rounded-r-2xl whitespace-pre-wrap space-y-4">
-                {typeof ponto.metadata.caso_espelho === 'object' ? (
-                  <>
-                    {ponto.metadata.caso_espelho.titulo && (
-                      <h4 className="text-gold font-display text-xl">{ponto.metadata.caso_espelho.titulo}</h4>
-                    )}
-                    {ponto.metadata.caso_espelho.relato && (
-                      <div className="text-foreground/80">{renderContent(ponto.metadata.caso_espelho.relato)}</div>
-                    )}
-                    {ponto.metadata.caso_espelho.contexto_simbolico && (
-                      <div className="text-foreground/60 italic border-t border-white/5 pt-4">
-                        {renderContent(ponto.metadata.caso_espelho.contexto_simbolico)}
+            {/* Caso Simbólico */}
+            {(ponto.metadata?.caso_simbolico || ponto.metadata?.caso_espelho) && (
+              <Section id="caso-simbolico" icon={Eye} kicker="O reflexo da travessia" titulo={ponto.metadata?.caso_simbolico?.titulo || "Caso Simbólico"}>
+                <div className="max-w-3xl mx-auto space-y-6">
+                  {ponto.metadata?.caso_simbolico?.aviso && (
+                    <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start gap-3">
+                      <AlertTriangle className="w-5 h-5 text-gold shrink-0" />
+                      <p className="text-[11px] text-white/60 italic leading-snug">
+                        {ponto.metadata.caso_simbolico.aviso}
+                      </p>
+                    </div>
+                  )}
+                  <div className="prose prose-invert prose-lg bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap">
+                    {renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho)}
+                  </div>
+                </div>
+              </Section>
+            )}
+
+            {/* Desafio da Terapeuta */}
+            {(ponto.metadata?.desafio_terapeuta) && (
+              <Section id="desafio-terapeuta" icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
+                    <p className="font-serif text-2xl md:text-3xl text-gold leading-relaxed mb-8">
+                      {renderContent(ponto.metadata.desafio_terapeuta.pergunta || ponto.metadata.desafio_terapeuta)}
+                    </p>
+                    
+                    {Array.isArray(ponto.metadata.desafio_terapeuta.escolhas) && (
+                      <div className="flex flex-wrap justify-center gap-3">
+                        {ponto.metadata.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
+                          <Button key={idx} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+                            {choice}
+                          </Button>
+                        ))}
                       </div>
                     )}
-                    {!ponto.metadata.caso_espelho.relato && !ponto.metadata.caso_espelho.titulo && renderContent(ponto.metadata.caso_espelho)}
-                  </>
-                ) : (
-                  renderContent(ponto.metadata.caso_espelho)
-                )}
-              </div>
-            </Section>
-          )}
-
-          {/* Desafio da Terapeuta */}
-          {ponto.metadata?.desafio_terapeuta && (
-            <Section icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-8 rounded-3xl text-center whitespace-pre-wrap space-y-4">
-                {typeof ponto.metadata.desafio_terapeuta === 'object' ? (
-                  <>
-                    {ponto.metadata.desafio_terapeuta.pergunta_principal ? (
-                      <>
-                        <p className="font-serif text-2xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta.pergunta_principal)}</p>
-                        {ponto.metadata.desafio_terapeuta.opcoes_leitura && (
-                          <div className="text-foreground/70 text-base italic border-t border-gold/10 pt-4">
-                            {renderContent(ponto.metadata.desafio_terapeuta.opcoes_leitura)}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      renderContent(ponto.metadata.desafio_terapeuta)
-                    )}
-                  </>
-                ) : (
-                  <p className="font-serif text-xl text-gold">{renderContent(ponto.metadata.desafio_terapeuta)}</p>
-                )}
-              </div>
-            </Section>
-          )}
-
-          {/* Revelação da Estação */}
-          {ponto.metadata?.revelacao_estacao && (
-            <Section icon={Sparkles} kicker="O que emerge" titulo="Revelação da Estação">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 leading-relaxed whitespace-pre-wrap space-y-6">
-                {typeof ponto.metadata.revelacao_estacao === 'object' ? (
-                  <>
-                    {ponto.metadata.revelacao_estacao.leitura_modelo && (
-                      <div className="bg-white/5 p-6 rounded-2xl border border-white/10">
-                        <span className="text-[10px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Leitura-Modelo</span>
-                        {renderContent(ponto.metadata.revelacao_estacao.leitura_modelo)}
+                  </div>
+                  
+                  {/* Revelação - Aparece após o desafio */}
+                  {ponto.metadata?.revelacao_estacao && (
+                    <motion.div 
+                      id="revelacao-estacao"
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      className="bg-white/[0.02] border border-white/5 p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden"
+                    >
+                      <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                        <Sparkles className="w-32 h-32 text-gold" />
                       </div>
-                    )}
-                    {ponto.metadata.revelacao_estacao.hipotese_simbolica && (
-                      <div className="bg-white/[0.02] p-6 rounded-2xl border border-white/5">
-                        <span className="text-[10px] uppercase tracking-widest text-blue-400/60 font-bold block mb-2">Hipótese Simbólica</span>
-                        {renderContent(ponto.metadata.revelacao_estacao.hipotese_simbolica)}
+                      <h4 className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold mb-8 flex items-center gap-2">
+                        <Sparkles className="w-3.5 h-3.5" /> Revelação da Estação
+                      </h4>
+                      
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        {['porta', 'campo_psiquico', 'torre', 'labirinto'].map((key) => (
+                          ponto.metadata.revelacao_estacao[key] && (
+                            <div key={key} className="space-y-1">
+                              <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{key.replace('_', ' ')}</span>
+                              <p className="text-white/80 font-serif italic text-lg">{ponto.metadata.revelacao_estacao[key]}</p>
+                            </div>
+                          )
+                        ))}
                       </div>
-                    )}
-                    {ponto.metadata.revelacao_estacao.conducao_justa && (
-                      <div className="bg-white/[0.02] p-6 rounded-2xl border border-white/5">
-                        <span className="text-[10px] uppercase tracking-widest text-emerald-400/60 font-bold block mb-2">Condução Justa</span>
-                        {renderContent(ponto.metadata.revelacao_estacao.conducao_justa)}
+                      
+                      {ponto.metadata.revelacao_estacao.pergunta_narrativa && (
+                        <div className="mt-10 pt-8 border-t border-white/5">
+                           <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta Narrativa</span>
+                           <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{ponto.metadata.revelacao_estacao.pergunta_narrativa}"</p>
+                        </div>
+                      )}
+                    </motion.div>
+                  )}
+                </div>
+              </Section>
+            )}
+
+            {/* Erro Comum & Condução Justa */}
+            {(ponto.metadata?.erro_comum || ponto.metadata?.conducao_justa) && (
+              <Section icon={AlertTriangle} kicker="A armadilha e a mestria" titulo="Condução Clínica">
+                <div className="max-w-3xl mx-auto space-y-12">
+                  {ponto.metadata?.erro_comum && (
+                    <div className="bg-red-900/10 border border-red-900/20 p-8 rounded-2xl relative">
+                      <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-4 block">Erro Comum</span>
+                      <h5 className="text-white font-display text-lg mb-2">{ponto.metadata.erro_comum.titulo}</h5>
+                      <p className="text-white/60 text-sm leading-relaxed mb-4 italic">{ponto.metadata.erro_comum.descricao}</p>
+                      {ponto.metadata.erro_comum.exemplo && (
+                        <div className="bg-black/20 p-4 rounded-lg mb-4 text-[13px] border border-red-900/10">
+                          <span className="text-[9px] text-red-400/50 uppercase block mb-1">Exemplo de condução pobre:</span>
+                          "{ponto.metadata.erro_comum.exemplo}"
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  
+                  {ponto.metadata?.conducao_justa && (
+                    <div className="bg-emerald-900/10 border border-emerald-900/20 p-8 rounded-2xl">
+                      <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-4 block">Condução Justa</span>
+                      <div className="prose prose-invert prose-emerald text-white/70 whitespace-pre-wrap leading-relaxed">
+                        {renderContent(ponto.metadata.conducao_justa)}
                       </div>
-                    )}
-                    {ponto.metadata.revelacao_estacao.risco_etico && (
-                      <div className="bg-red-900/10 p-6 rounded-2xl border border-red-900/20">
-                        <span className="text-[10px] uppercase tracking-widest text-red-400/60 font-bold block mb-2">Risco Ético</span>
-                        <div className="text-red-200/60">{renderContent(ponto.metadata.revelacao_estacao.risco_etico)}</div>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  renderContent(ponto.metadata.revelacao_estacao)
-                )}
-              </div>
-            </Section>
-          )}
+                    </div>
+                  )}
+                  
+                  {Array.isArray(ponto.metadata?.cautela_etica) && (
+                    <div className="space-y-4">
+                       <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold text-center block">Cautela Ética</span>
+                       <div className="flex flex-wrap justify-center gap-2">
+                        {ponto.metadata.cautela_etica.map((item: string, idx: number) => (
+                          <Badge key={idx} variant="outline" className="border-red-900/20 bg-red-900/5 text-red-400/70 py-1 px-4 text-[10px]">
+                            {item}
+                          </Badge>
+                        ))}
+                       </div>
+                    </div>
+                  )}
+                </div>
+              </Section>
+            )}
 
-          {/* Erro Comum da Terapeuta */}
-          {ponto.metadata?.erro_comum && (
-            <Section icon={AlertTriangle} kicker="A armadilha no caminho" titulo="Erro Comum">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto bg-red-900/10 border border-red-900/20 p-6 rounded-2xl text-foreground/70 italic whitespace-pre-wrap">
-                {renderContent(ponto.metadata.erro_comum)}
-              </div>
-            </Section>
-          )}
+            {/* Jardins */}
+            {(ponto.metadata?.jardim_psique || ponto.metadata?.jardim_oficio) && (
+              <Section icon={Flower2} kicker="Sementeira" titulo="Os Jardins">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                  {/* Jardim da Psique */}
+                  <motion.div 
+                    id="jardim-psique"
+                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10"
+                  >
+                    <div className="flex items-center gap-3 mb-6">
+                      <Flower2 className="w-5 h-5 text-gold" />
+                      <h4 className="text-gold font-display text-xl">Jardim da Psique</h4>
+                    </div>
+                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_psique?.pergunta}</p>
+                    <Button variant="gold" className="w-full rounded-full h-12 uppercase tracking-widest text-[10px] font-bold">
+                      {ponto.metadata.jardim_psique?.botao || "Registrar Travessia"}
+                    </Button>
+                  </motion.div>
+                  
+                  {/* Jardim do Ofício */}
+                  <motion.div 
+                    id="jardim-oficio"
+                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10"
+                  >
+                    <div className="flex items-center gap-3 mb-4">
+                      <MapPin className="w-5 h-5 text-emerald-500" />
+                      <h4 className="text-emerald-500 font-display text-xl">Jardim do Ofício</h4>
+                    </div>
+                    <div className="bg-emerald-950/20 border border-emerald-900/20 p-3 rounded-lg mb-6 flex gap-3 items-start">
+                      <ShieldAlert className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                      <p className="text-[10px] text-emerald-500/60 leading-snug">
+                        {ponto.metadata.jardim_oficio?.aviso_etico || "Registre apenas padrões gerais. Não inclua dados sensíveis."}
+                      </p>
+                    </div>
+                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_oficio?.pergunta}</p>
+                    <Button variant="outline" className="w-full rounded-full h-12 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 uppercase tracking-widest text-[10px] font-bold">
+                      {ponto.metadata.jardim_oficio?.botao || "Registrar Prática"}
+                    </Button>
+                  </motion.div>
+                </div>
+              </Section>
+            )}
 
-          {/* Pergunta Narrativa */}
-          {ponto.metadata?.pergunta_narrativa && (
-            <Section icon={Lightbulb} kicker="O fio condutor" titulo="Pergunta Narrativa">
-              <div className="prose prose-invert prose-lg max-w-3xl mx-auto border-l-2 border-gold/20 pl-6 py-4 font-serif italic text-xl text-white/70 whitespace-pre-wrap">
-                {renderContent(ponto.metadata.pergunta_narrativa)}
-              </div>
-            </Section>
-          )}
+            {/* Missão de Campo */}
+            {ponto.metadata?.missao_campo && (
+              <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={ponto.metadata.missao_campo.titulo || "Missão de Campo"}>
+                <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
+                  <p className="text-white/80 font-serif text-xl italic leading-relaxed">
+                    {ponto.metadata.missao_campo.descricao}
+                  </p>
+                  {ponto.metadata.missao_campo.sinais && (
+                    <div className="py-4 border-y border-gold/10 space-y-2">
+                       <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold">Sinais a observar:</span>
+                       <p className="text-white/60 text-sm italic">{ponto.metadata.missao_campo.sinais}</p>
+                    </div>
+                  )}
+                  <Button variant="gold" className="rounded-full h-14 px-10 font-bold uppercase tracking-widest text-[11px]">
+                    {ponto.metadata.missao_campo.botao || "Iniciar Missão"}
+                  </Button>
+                </div>
+              </Section>
+            )}
 
-          {/* ═══════════ 4. CONVERSE COM O LIVRO ═══════════ */}
+            {/* Oráculo da Estação */}
+            {ponto.metadata?.oraculo_estacao && (
+              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
+                <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
+                  <div className="space-y-2">
+                    <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
+                    <h3 className="font-display text-5xl md:text-7xl text-gold tracking-tighter">
+                      {ponto.metadata.oraculo_estacao.palavra}
+                    </h3>
+                  </div>
+                  {ponto.metadata.oraculo_estacao.movimento && (
+                    <div className="space-y-2">
+                      <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
+                      <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed">
+                        {ponto.metadata.oraculo_estacao.movimento}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </Section>
+            )}
+
+            {/* Conclusão */}
+            {ponto.metadata?.fechamento && (
+              <Section id="fechamento-estacao" icon={Check} kicker="Encerramento" titulo="Travessia Concluída">
+                <div className="max-w-2xl mx-auto text-center space-y-8">
+                  <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                    {ponto.metadata.fechamento.texto}
+                  </p>
+                  <Button variant="gold" className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest">
+                    {ponto.metadata.fechamento.botao || "Concluir Estação"}
+                  </Button>
+                </div>
+              </Section>
+            )}
+          </div>
+
 
           {temChatLivro && (
             <Section id="converse-com-o-livro" icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
