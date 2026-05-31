@@ -40,7 +40,8 @@ export default function AdminCentralEstacao() {
     publicada: false,
     ativa: false,
     banner_url: '',
-    livro_capa_url: ''
+    livro_capa_url: '',
+    livro_titulo: ''
   });
 
   // 1. Fetch Estação
@@ -84,7 +85,8 @@ export default function AdminCentralEstacao() {
         publicada: estacao.publicada || false,
         ativa: estacao.ativa || false,
         banner_url: estacao.banner_url || '',
-        livro_capa_url: estacao.livro_capa_url || ''
+        livro_capa_url: estacao.livro_capa_url || '',
+        livro_titulo: estacao.livro_titulo || ''
       });
     }
   }, [estacao]);
@@ -109,7 +111,8 @@ export default function AdminCentralEstacao() {
           publicada: data.publicada,
           ativa: data.ativa,
           banner_url: data.banner_url,
-          livro_capa_url: data.livro_capa_url
+          livro_capa_url: data.livro_capa_url,
+          livro_titulo: data.livro_titulo
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -231,7 +234,19 @@ export default function AdminCentralEstacao() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 p-6 border-t md:border-t-0 border-primary/5 bg-muted/20">
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => navigate(`/clube/travessia/${estacaoId}`)}>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2" 
+            onClick={() => {
+              const firstPasso = passos[0];
+              if (firstPasso?.slug) {
+                navigate(`/clube/rota/${firstPasso.slug}`);
+              } else {
+                navigate('/clube');
+              }
+            }}
+          >
             <Eye className="h-3.5 w-3.5" /> Ver como Aluna
           </Button>
           <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => setEditStationOpen(true)}>
@@ -316,9 +331,13 @@ export default function AdminCentralEstacao() {
           <DialogHeader>
             <DialogTitle>Configurações da Estação</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
+          <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2 text-left">
             <div className="space-y-2">
-              <Label>Título</Label>
+              <Label>Obra / Livro Base</Label>
+              <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} placeholder="Ex: Mulheres que Correm com os Lobos" />
+            </div>
+            <div className="space-y-2">
+              <Label>Título da Estação</Label>
               <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
             </div>
             <div className="space-y-2">
@@ -326,11 +345,11 @@ export default function AdminCentralEstacao() {
               <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
             </div>
             <div className="space-y-2">
-              <Label>Banner URL (Fundo)</Label>
+              <Label>Banner URL (Fundo Imersivo)</Label>
               <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} placeholder="https://..." />
             </div>
             <div className="space-y-2">
-              <Label>Capa do Livro URL (Capa)</Label>
+              <Label>Capa do Livro URL (Miniatura)</Label>
               <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} placeholder="https://..." />
             </div>
             <div className="flex items-center gap-6 pt-2">
