@@ -403,7 +403,7 @@ export default function ClubeRotaPremium() {
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
 
-          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo">
+          <Section id="mapa-vivo" icon={Compass} kicker="O Olhar Interior" titulo="Abertura do Campo" isHidden={isTravessiaEstruturada}>
             <div className="max-w-4xl mx-auto text-center mb-12 space-y-4">
               <p className="text-foreground/70 text-lg md:text-xl font-serif italic leading-relaxed">
                 "Toda travessia começa com o reconhecimento do terreno. Olhe para o mapa e localize sua alma no ciclo da história que estamos prestes a desvelar."
