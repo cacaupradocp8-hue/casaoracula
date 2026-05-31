@@ -352,7 +352,8 @@ export default function ClubeRotaPremium() {
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-16 md:space-y-24 pb-16 md:pb-24 pt-8 md:pt-12">
 
           {/* Indicador de Progresso Simbólico */}
-          <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
+          <ClubeTravessiaProgress steps={steps} isHidden={isTravessiaEstruturada} className="mb-8 md:mb-12" />
+
 
           {/* ═══════════ 1.5 COMO ATRAVESSAR ESTA ESTAÇÃO (TRAVESSIA GUIADA) ═══════════ */}
           <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
