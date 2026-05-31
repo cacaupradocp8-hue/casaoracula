@@ -115,6 +115,7 @@ export default function AdminRotasCasa() {
         .insert({
           numero: 1,
           titulo: `Estação I - ${newRota.title}`,
+          subtitulo: '', // Campo obrigatório no schema
           livro_titulo: newRota.baseWork,
           descricao: newRota.description,
           ativa: true,
