@@ -4,119 +4,37 @@ import {
   Castle, Sparkles, BookOpen, Compass, DoorOpen, Flower2, 
   ImageIcon, Headphones, Users, Layout, Plus, ArrowRight,
   Eye, GraduationCap, MessageSquare, Library, Settings,
-  Zap, FlaskConical, LayoutPanelLeft, Scroll
+  Zap, FlaskConical, LayoutPanelLeft, Scroll, ExternalLink,
+  Settings2, Music, Image as ImageIconLucide, Book
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-
-interface HouseArea {
-  title: string;
-  description: string;
-  icon: any;
-  tab?: string;
-  route?: string;
-  color: string;
-  bg: string;
-  tag?: string;
-}
-
-const HOUSE_AREAS: HouseArea[] = [
-  {
-    title: 'Rota dos Lobos',
-    description: 'Jornada principal da Natureza Instintiva.',
-    icon: Sparkles,
-    route: '/admin/clube/ciclos',
-    color: 'text-gold',
-    bg: 'bg-gold/10',
-    tag: 'JORNADA'
-  },
-  {
-    title: 'Clube Editorial',
-    description: 'Gestão de obras, estações e acervo.',
-    icon: BookOpen,
-    tab: 'clube',
-    color: 'text-amber-500',
-    bg: 'bg-amber-500/10',
-    tag: 'EDITORIAL'
-  },
-  {
-    title: 'Travessias',
-    description: 'Processos terapêuticos e narrativos guiados.',
-    icon: Compass,
-    tab: 'travessias',
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-500/10',
-    tag: 'PROCESSO'
-  },
-  {
-    title: 'Sala da Visitante',
-    description: 'Conteúdos públicos e entrada da Casa.',
-    icon: Users,
-    route: '/sala-da-visitante',
-    color: 'text-blue-500',
-    bg: 'bg-blue-500/10',
-    tag: 'PUBLICO'
-  },
-  {
-    title: 'Primeira Leitura',
-    description: 'Mapeamento inicial e entrada na egrégora.',
-    icon: Scroll,
-    tab: 'leituras',
-    color: 'text-purple-500',
-    bg: 'bg-purple-500/10',
-    tag: 'ENTRADA'
-  },
-  {
-    title: 'Portais & Jardins',
-    description: 'Configuração de espaços e micro-conteúdos.',
-    icon: DoorOpen,
-    tab: 'clube-portais',
-    color: 'text-indigo-500',
-    bg: 'bg-indigo-500/10',
-    tag: 'AMBIENTE'
-  },
-  {
-    title: 'Estúdio de Áudio',
-    description: 'Gestão de trilhas, narrações e meditações.',
-    icon: Headphones,
-    tab: 'audios',
-    color: 'text-pink-500',
-    bg: 'bg-pink-500/10',
-    tag: 'SONORO'
-  },
-  {
-    title: 'Banners & Visual',
-    description: 'Identidade visual e avisos da Central.',
-    icon: ImageIcon,
-    tab: 'clube-carrosseis-insights',
-    color: 'text-cyan-500',
-    bg: 'bg-cyan-500/10',
-    tag: 'VISUAL'
-  },
-  {
-    title: 'Acervo & Biblioteca',
-    description: 'Conteúdos completos e materiais de apoio.',
-    icon: Library,
-    tab: 'clube-acervo',
-    color: 'text-orange-500',
-    bg: 'bg-orange-500/10',
-    tag: 'ACERVO'
-  }
-];
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 export default function AdminCentralCasa() {
   const navigate = useNavigate();
 
-  const handleNavigate = (area: HouseArea) => {
-    if (area.route) {
-      navigate(area.route);
-    } else if (area.tab) {
-      if ((window as any).Admin_SetActiveTab) {
-        (window as any).Admin_SetActiveTab(area.tab);
-      } else {
-        navigate(`/admin?tab=${area.tab}`);
-      }
+  const { data: estacaoAtiva } = useQuery({
+    queryKey: ['admin-central-casa-estacao-ativa'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('clube_estacoes')
+        .select('id, titulo')
+        .eq('ativa', true)
+        .order('numero', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      return data;
+    }
+  });
+
+  const handleSetTab = (tab: string) => {
+    if ((window as any).Admin_SetActiveTab) {
+      (window as any).Admin_SetActiveTab(tab);
+    } else {
+      navigate(`/admin?tab=${tab}`);
     }
   };
 
@@ -148,49 +66,245 @@ export default function AdminCentralCasa() {
         </div>
       </div>
 
-      {/* Grid de Áreas */}
+      {/* Grid de Áreas Reorganizada */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {HOUSE_AREAS.map((area, idx) => (
-          <div 
-            key={idx}
-            onClick={() => handleNavigate(area)}
-            className="group relative cursor-pointer"
-          >
-            <Card className="h-full bg-card/40 border-primary/10 backdrop-blur-xl hover:border-gold/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
-              <div className={cn("absolute top-0 right-0 w-32 h-32 -mr-8 -mt-8 rounded-full blur-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-700", area.bg)} />
-              
-              <CardContent className="p-8 flex flex-col h-full">
-                <div className="flex justify-between items-start mb-8">
-                  <div className={cn("p-4 rounded-2xl transition-transform duration-500 group-hover:scale-110", area.bg)}>
-                    <area.icon className={cn("w-7 h-7", area.color)} />
-                  </div>
-                  <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">
-                    {area.tag}
-                  </Badge>
+        
+        {/* ROTA DOS LOBOS (PRIORIDADE) */}
+        <Card className="lg:col-span-2 bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 backdrop-blur-xl hover:border-gold/50 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col md:flex-row gap-8">
+            <div className="flex-1 space-y-6">
+              <div className="flex justify-between items-start">
+                <div className="p-4 rounded-2xl bg-gold/10 group-hover:scale-110 transition-transform duration-500">
+                  <Sparkles className="w-8 h-8 text-gold" />
                 </div>
+                <Badge className="bg-gold text-black font-bold px-3">PRIORIDADE</Badge>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-3xl font-serif text-foreground group-hover:text-gold transition-colors">Rota dos Lobos</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Edite a travessia, estações, áudios, banners, jardins e conteúdos da obra Mulheres que Correm com os Lobos.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3 pt-4">
+                <Button 
+                  className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
+                  onClick={() => estacaoAtiva?.id && navigate(`/admin/clube/central/${estacaoAtiva.id}`)}
+                >
+                  <Zap className="w-4 h-4" />
+                  Editar Rota dos Lobos
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="border-gold/20 hover:bg-gold/5 text-gold gap-2"
+                  onClick={() => navigate('/admin/clube/ciclos')}
+                >
+                  <Settings2 className="w-4 h-4" />
+                  Gerir Estações
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-muted-foreground hover:text-gold gap-2"
+                  onClick={() => navigate('/clube')}
+                >
+                  <Eye className="w-4 h-4" />
+                  Ver como Aluna
+                </Button>
+              </div>
+            </div>
+            <div className="hidden md:block w-px bg-primary/10" />
+            <div className="md:w-48 space-y-4">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Status Operacional</h4>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Estação Ativa</span>
+                  <span className="text-gold font-medium truncate max-w-[80px]">{estacaoAtiva?.titulo || 'Nenhuma'}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-muted-foreground">Travessia</span>
+                  <span className="text-emerald-500 font-medium">Estruturada</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-                <div className="space-y-2 mb-8">
-                  <h3 className="text-2xl font-serif text-foreground group-hover:text-gold transition-colors">
-                    {area.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed font-light">
-                    {area.description}
-                  </p>
-                </div>
+        {/* SALA DA VISITANTE */}
+        <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-blue-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col h-full space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-blue-500/10 group-hover:scale-110 transition-transform duration-500">
+                <Users className="w-7 h-7 text-blue-500" />
+              </div>
+              <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">PÚBLICO</Badge>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif text-foreground group-hover:text-blue-500 transition-colors">Sala da Visitante</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                Conteúdos públicos e porta de entrada da Casa Orácula.
+              </p>
+            </div>
+            <div className="mt-auto flex flex-col gap-2 pt-6 border-t border-primary/5">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full gap-2 border-primary/10"
+                disabled
+              >
+                Editor específico ainda não configurado
+              </Button>
+              <Button 
+                size="sm" 
+                className="w-full gap-2 bg-blue-500 hover:bg-blue-600 text-white"
+                onClick={() => navigate('/sala-da-visitante')}
+              >
+                <Eye className="w-4 h-4" />
+                Ver como Visitante
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-                <div className="mt-auto pt-6 border-t border-primary/5 flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
-                    <Zap className="w-3 h-3 text-gold" />
-                    Gerenciar Área
-                  </div>
-                  <div className="w-8 h-8 rounded-full border border-primary/10 flex items-center justify-center group-hover:bg-gold group-hover:border-gold transition-all duration-300">
-                    <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-black transition-colors" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        ))}
+        {/* PRIMEIRA LEITURA */}
+        <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-purple-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col h-full space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-purple-500/10 group-hover:scale-110 transition-transform duration-500">
+                <Scroll className="w-7 h-7 text-purple-500" />
+              </div>
+              <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">ENTRADA</Badge>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif text-foreground group-hover:text-purple-500 transition-colors">Primeira Leitura</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                Mapeamento inicial e entrada na egrégora.
+              </p>
+            </div>
+            <div className="mt-auto flex flex-col gap-2 pt-6 border-t border-primary/5">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full gap-2 border-purple-500/20 text-purple-200"
+                onClick={() => handleSetTab('leituras')}
+              >
+                <Settings className="w-4 h-4" />
+                Editar Devolutivas
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="w-full gap-2 text-muted-foreground hover:text-purple-500"
+                onClick={() => navigate('/primeira-leitura')}
+              >
+                <Eye className="w-4 h-4" />
+                Ver como Visitante
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* BIBLIOTECA E MÍDIAS */}
+        <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-pink-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col h-full space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-pink-500/10 group-hover:scale-110 transition-transform duration-500">
+                <Headphones className="w-7 h-7 text-pink-500" />
+              </div>
+              <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">MÍDIAS</Badge>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif text-foreground group-hover:text-pink-500 transition-colors">Biblioteca & Mídias</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                Onde edito áudios, banners, capas e imagens da rota.
+              </p>
+            </div>
+            <div className="mt-auto grid grid-cols-2 gap-2 pt-6 border-t border-primary/5">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 border-primary/10 text-[10px] px-1"
+                onClick={() => handleSetTab('audios')}
+              >
+                <Music className="w-3 h-3" />
+                Gerir Áudios
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2 border-primary/10 text-[10px] px-1"
+                onClick={() => handleSetTab('clube-carrosseis-insights')}
+              >
+                <ImageIconLucide className="w-3 h-3" />
+                Gerir Banners
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="col-span-2 gap-2 border-primary/10 text-[10px]"
+                onClick={() => navigate('/admin/clube/ciclos')}
+              >
+                <Book className="w-3 h-3" />
+                Gerir Capas (Estações)
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* FORMAÇÃO E CURSOS */}
+        <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-rose-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col h-full space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-rose-500/10 group-hover:scale-110 transition-transform duration-500">
+                <GraduationCap className="w-7 h-7 text-rose-500" />
+              </div>
+              <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">ACADÊMICO</Badge>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif text-foreground group-hover:text-rose-500 transition-colors">Formação & Cursos</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                Gerencie módulos, aulas, materiais e trilhas formativas.
+              </p>
+            </div>
+            <div className="mt-auto pt-6 border-t border-primary/5 flex items-center justify-between">
+              <Button 
+                variant="ghost" 
+                className="w-full gap-2 text-muted-foreground hover:text-rose-500"
+                onClick={() => handleSetTab('cursos')}
+              >
+                Abrir Portal Acadêmico
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* TRAVESSIAS */}
+        <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-emerald-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
+          <CardContent className="p-8 flex flex-col h-full space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="p-4 rounded-2xl bg-emerald-500/10 group-hover:scale-110 transition-transform duration-500">
+                <Compass className="w-7 h-7 text-emerald-500" />
+              </div>
+              <Badge variant="secondary" className="bg-primary/5 text-muted-foreground font-mono text-[10px] px-2">PROCESSO</Badge>
+            </div>
+            <div className="space-y-2">
+              <h3 className="text-2xl font-serif text-foreground group-hover:text-emerald-500 transition-colors">Travessias</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed font-light">
+                Gestão de processos terapêuticos e narrativas guiadas.
+              </p>
+            </div>
+            <div className="mt-auto pt-6 border-t border-primary/5">
+              <Button 
+                variant="ghost" 
+                className="w-full gap-2 text-muted-foreground hover:text-emerald-500"
+                onClick={() => handleSetTab('travessias')}
+              >
+                Gerenciar Travessias
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
 
       {/* Footer / Quick Access */}
@@ -204,7 +318,7 @@ export default function AdminCentralCasa() {
             <p className="text-sm text-muted-foreground font-light">Acessos, integrações e dados globais da Casa.</p>
           </div>
         </div>
-        <Button variant="outline" className="gap-2" onClick={() => (window as any).Admin_SetActiveTab?.('settings')}>
+        <Button variant="outline" className="gap-2" onClick={() => handleSetTab('settings')}>
           Abrir Configurações
           <Settings className="w-4 h-4" />
         </Button>
