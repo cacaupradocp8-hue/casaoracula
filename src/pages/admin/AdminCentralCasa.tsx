@@ -30,6 +30,17 @@ export default function AdminCentralCasa() {
     }
   });
 
+  const { data: estacoes } = useQuery({
+    queryKey: ['admin-central-casa-estacoes'],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from('clube_estacoes')
+        .select('id, titulo, numero')
+        .order('numero', { ascending: true });
+      return data;
+    }
+  });
+
   const handleSetTab = (tab: string) => {
     if ((window as any).Admin_SetActiveTab) {
       (window as any).Admin_SetActiveTab(tab);
@@ -103,23 +114,26 @@ export default function AdminCentralCasa() {
                     {/* Hierarchy Display */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
                       {[
-                        { title: 'O Chamado Selvagem', num: 'I' },
-                        { title: 'A Mulher Domesticada', num: 'II' },
-                        { title: 'Barba Azul', num: 'III' },
-                        { title: 'Vasalisa', num: 'IV' },
-                        { title: 'Mulher Esqueleto', num: 'V' },
-                        { title: 'O Retorno da Mulher Selvagem', num: 'VI' }
-                      ].map((est, idx) => (
-                        <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
-                             onClick={() => navigate('/admin/clube/ciclos')}>
-                          <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
-                            {est.num}
+                        { title: 'O Chamado Selvagem', num: 'I', order: 1 },
+                        { title: 'A Mulher Domesticada', num: 'II', order: 2 },
+                        { title: 'Barba Azul', num: 'III', order: 3 },
+                        { title: 'Vasalisa', num: 'IV', order: 4 },
+                        { title: 'Mulher Esqueleto', num: 'V', order: 5 },
+                        { title: 'O Retorno da Mulher Selvagem', num: 'VI', order: 6 }
+                      ].map((est, idx) => {
+                        const dbEst = estacoes?.find(e => e.numero === est.order);
+                        return (
+                          <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
+                               onClick={() => dbEst ? navigate(`/admin/clube/central/${dbEst.id}`) : navigate('/admin/clube/ciclos')}>
+                            <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
+                              {est.num}
+                            </div>
+                            <span className="text-sm font-medium text-foreground/80 group-hover/item:text-gold transition-colors truncate">
+                              {est.title}
+                            </span>
                           </div>
-                          <span className="text-sm font-medium text-foreground/80 group-hover/item:text-gold transition-colors truncate">
-                            {est.title}
-                          </span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
 
