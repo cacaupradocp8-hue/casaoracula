@@ -29,6 +29,15 @@ export interface AdminNavGroup {
 
 export const adminNavGroups: AdminNavGroup[] = [
   {
+    key: 'central',
+    label: 'Central da Casa',
+    emoji: '🏰',
+    icon: Castle,
+    items: [
+      { key: 'central-casa', label: 'Início (Painel)', icon: Castle },
+    ],
+  },
+  {
     key: 'clube-premium',
     label: 'Rotas da Casa',
     emoji: '✨',
