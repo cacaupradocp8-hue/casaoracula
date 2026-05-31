@@ -663,6 +663,256 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
             </div>
           </TabsContent>
 
+          {/* TRAVESSIA — EDITOR DE BLOCOS */}
+          <TabsContent value="travessia" className="space-y-4 pt-4">
+            <p className="text-[11px] text-muted-foreground italic mb-2">
+              Configure os 12 blocos da travessia guiada consumidos pela aluna na Estação.
+            </p>
+            
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              {/* 1. Abertura */}
+              <AccordionItem value="abertura" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">1. Abertura do Campo</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto de Abertura (MD)</Label>
+                    <Textarea 
+                      value={form.abertura_imersiva} 
+                      onChange={e => setForm({...form, abertura_imersiva: e.target.value})} 
+                      placeholder="Prepare o campo interno da escuta..."
+                      className="text-xs resize-none"
+                      rows={3}
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 2. Caso Simbólico */}
+              <AccordionItem value="caso" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">2. Caso Simbólico</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Caso</Label>
+                    <Textarea 
+                      value={form.caso_simbolico.texto} 
+                      onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, texto: e.target.value}})} 
+                      placeholder="Apresentar riscos clínicos..."
+                      className="text-xs resize-none"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Aviso / Alerta</Label>
+                    <Input 
+                      value={form.caso_simbolico.aviso} 
+                      onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, aviso: e.target.value}})} 
+                      placeholder="Aviso clínico..."
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 3. Desafio */}
+              <AccordionItem value="desafio" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">3. Desafio da Terapeuta</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta do Desafio</Label>
+                    <Textarea 
+                      value={form.desafio_terapeuta.pergunta} 
+                      onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} 
+                      placeholder="Como você agiria se..."
+                      className="text-xs resize-none"
+                      rows={2}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Escolhas / Alternativas</Label>
+                    {form.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
+                      <div key={idx} className="flex gap-2">
+                        <Input 
+                          value={choice} 
+                          onChange={e => {
+                            const next = [...form.desafio_terapeuta.escolhas];
+                            next[idx] = e.target.value;
+                            setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: next}});
+                          }} 
+                          className="h-8 text-xs" 
+                        />
+                        <Button size="icon" variant="ghost" type="button" onClick={() => {
+                          const next = form.desafio_terapeuta.escolhas.filter((_: any, i: number) => i !== idx);
+                          setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: next}});
+                        }} className="h-8 w-8 shrink-0"><Trash2 className="w-3 h-3 text-destructive" /></Button>
+                      </div>
+                    ))}
+                    <Button size="sm" variant="ghost" type="button" onClick={() => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: [...form.desafio_terapeuta.escolhas, '']}})} className="h-7 text-xs gap-1">
+                      <Plus className="w-3 h-3" /> Adicionar Escolha
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 4. Revelação */}
+              <AccordionItem value="revelacao" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">4. Revelação (Mapa Vivo)</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Porta</Label><Input value={form.revelacao_estacao.porta} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, porta: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Campo</Label><Input value={form.revelacao_estacao.campo} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, campo: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Torre</Label><Input value={form.revelacao_estacao.torre} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, torre: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Labirinto</Label><Input value={form.revelacao_estacao.labirinto} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, labirinto: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta Narrativa Final</Label>
+                    <Input value={form.revelacao_estacao.pergunta_narrativa} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, pergunta_narrativa: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 5. Erro Comum */}
+              <AccordionItem value="erro" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">5. Erro Comum</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Título</Label>
+                    <Input value={form.erro_comum.titulo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, titulo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Descrição</Label>
+                    <Textarea value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Exemplo Inadequado</Label>
+                    <Input value={form.erro_comum.exemplo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, exemplo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 6. Condução & Ética */}
+              <AccordionItem value="etica" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">6. Condução & Ética</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Condução Justa (Texto)</Label>
+                    <Textarea value={form.conducao_justa} onChange={e => setForm({...form, conducao_justa: e.target.value})} className="text-xs resize-none" rows={3} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Cautela Ética (Lista)</Label>
+                    {form.cautela_etica.map((item: string, idx: number) => (
+                      <div key={idx} className="flex gap-2">
+                        <Input value={item} onChange={e => {
+                          const next = [...form.cautela_etica];
+                          next[idx] = e.target.value;
+                          setForm({...form, cautela_etica: next});
+                        }} className="h-8 text-xs" />
+                        <Button size="icon" variant="ghost" type="button" onClick={() => setForm({...form, cautela_etica: form.cautela_etica.filter((_: any, i: number) => i !== idx)})} className="h-8 w-8 shrink-0"><Trash2 className="w-3 h-3 text-destructive" /></Button>
+                      </div>
+                    ))}
+                    <Button size="sm" variant="ghost" type="button" onClick={() => setForm({...form, cautela_etica: [...form.cautela_etica, '']})} className="h-7 text-xs gap-1">
+                      <Plus className="w-3 h-3" /> Adicionar Cautela
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 7. Jardim Psique */}
+              <AccordionItem value="psique" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">7. Jardim da Psique</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta-Mãe (Escrita Íntima)</Label>
+                    <Input value={form.jardim_psique.pergunta} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.jardim_psique.botao} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, botao: e.target.value}})} className="h-8 text-xs" placeholder="Registrar Travessia" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 8. Jardim Ofício */}
+              <AccordionItem value="oficio" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">8. Jardim do Ofício</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta de Prática Profissional</Label>
+                    <Input value={form.jardim_oficio.pergunta} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Aviso Ético (Microcopy)</Label>
+                    <Input value={form.jardim_oficio.aviso_etico} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, aviso_etico: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.jardim_oficio.botao} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, botao: e.target.value}})} className="h-8 text-xs" placeholder="Registrar Prática" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 9. Missão de Campo */}
+              <AccordionItem value="missao" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">9. Missão de Campo</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Título da Missão</Label>
+                    <Input value={form.missao_campo.titulo} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, titulo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Descrição da Ação</Label>
+                    <Textarea value={form.missao_campo.descricao} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, descricao: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Sinais de Observação</Label>
+                    <Input value={form.missao_campo.sinais} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, sinais: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.missao_campo.botao} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, botao: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 10. Oráculo */}
+              <AccordionItem value="oraculo" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">10. Oráculo da Estação</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Palavra-Chave</Label><Input value={form.oraculo_estacao.palavra} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, palavra: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Carta Final (ID)</Label><Input value={form.oraculo_estacao.carta_final} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, carta_final: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Movimento Simbólico</Label>
+                    <Input value={form.oraculo_estacao.movimento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, movimento: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Frase de Fechamento</Label>
+                    <Input value={form.oraculo_estacao.frase_fechamento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, frase_fechamento: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 11. Fechamento */}
+              <AccordionItem value="fechamento" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">11. Fechamento Final</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto Final</Label>
+                    <Textarea value={form.fechamento.texto} onChange={e => setForm({...form, fechamento: {...form.fechamento, texto: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta Final</Label>
+                    <Input value={form.fechamento.pergunta} onChange={e => setForm({...form, fechamento: {...form.fechamento, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Botão</Label><Input value={form.fechamento.botao} onChange={e => setForm({...form, fechamento: {...form.fechamento, botao: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Microcopy Conclusão</Label><Input value={form.fechamento.confirmacao} onChange={e => setForm({...form, fechamento: {...form.fechamento, confirmacao: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </TabsContent>
+
           {/* REFERÊNCIA */}
           <TabsContent value="referencia" className="space-y-3 pt-4">
             <p className="text-[11px] text-muted-foreground italic">
