@@ -25,8 +25,9 @@ export default function AdminCentralJornadas() {
   const [searchParams] = useSearchParams();
   const obraFilter = searchParams.get('obra');
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { data: estacoes = [], isLoading } = useQuery({
+  const { data: estacoes = [], isLoading, refetch } = useQuery({
     queryKey: ['admin-estacoes-v3-clube-estacoes'],
     queryFn: async () => {
       const { data, error } = await supabase
