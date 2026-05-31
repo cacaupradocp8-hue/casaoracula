@@ -347,63 +347,51 @@ export default function ClubeRotaPremium() {
           {/* Indicador de Progresso Simbólico */}
           <ClubeTravessiaProgress steps={steps} className="mb-8 md:mb-12" />
 
-          {/* ═══════════ COMO ATRAVESSAR ESTA ESTAÇÃO (MODO GUIADO) ═══════════ */}
-          {isModoGuiado && (
-            <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="bg-white/[0.03] border border-gold/20 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-                
-                <p className="text-xl md:text-2xl text-white/90 font-serif italic leading-relaxed mb-12 relative z-10 max-w-3xl mx-auto">
-                  Siga a rota em camadas: comece pelo áudio, atravesse a leitura simbólica, observe o caso-espelho e registre no Jardim.
+          {/* ═══════════ 1.5 COMO ATRAVESSAR ESTA ESTAÇÃO (TRAVESSIA GUIADA) ═══════════ */}
+          <Section id="como-atravessar" icon={Compass} kicker="A Jornada" titulo="Como atravessar esta estação">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              className="bg-white/[0.03] border border-gold/20 p-8 md:p-12 rounded-[2.5rem] text-center shadow-2xl backdrop-blur-md relative overflow-hidden group"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent opacity-50" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+              
+              <div className="space-y-4 mb-12 relative z-10 max-w-3xl mx-auto">
+                <h4 className="text-xl md:text-2xl text-white font-display uppercase tracking-tight">Esta estação é atravessada em camadas.</h4>
+                <p className="text-base md:text-lg text-white/60 font-serif italic leading-relaxed">
+                  Comece pelo áudio, siga para a leitura simbólica, observe o caso da semana, responda ao desafio e registre sua travessia nos Jardins.
                 </p>
+              </div>
 
-                {/* Três passos visuais */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12 relative z-10">
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <Headphones className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">1. Ouça o áudio</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <BookOpen className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">2. Leia a estação</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
-                      <Flower2 className="w-5 h-5 text-gold" />
-                    </div>
-                    <span className="text-[10px] font-bold text-gold/60 uppercase tracking-[0.2em]">3. Registre no Jardim</span>
-                  </div>
-                </div>
-                
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
-                  <Button
-                    variant="gold"
-                    className="w-full sm:w-auto px-8 h-12 rounded-full font-bold uppercase tracking-widest text-[10px]"
-                    onClick={() => document.getElementById('audio-travessia')?.scrollIntoView({ behavior: 'smooth' })}
+              {/* Trilha visual de passos */}
+              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-12 relative z-10">
+                {[
+                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia' },
+                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao' },
+                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico' },
+                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta' },
+                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao' },
+                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique' },
+                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio' },
+                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao' }
+                ].map((step, idx) => (
+                  <motion.button
+                    key={idx}
+                    whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
+                    onClick={() => document.getElementById(step.id)?.scrollIntoView({ behavior: 'smooth' })}
+                    className="flex flex-col items-center gap-3 p-4 rounded-2xl border border-white/5 bg-white/[0.02] transition-all"
                   >
-                    <Headphones className="w-4 h-4 mr-2" /> Ouvir áudio
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full sm:w-auto px-8 h-12 rounded-full border-gold/20 bg-gold/5 text-gold/80 hover:bg-gold/10 font-bold uppercase tracking-widest text-[10px]"
-                    onClick={() => document.getElementById('jardim-estacao')?.scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    <Flower2 className="w-4 h-4 mr-2" /> Registrar no Jardim
-                  </Button>
-                </div>
-              </motion.div>
-            </Section>
-          )}
+                    <div className="w-10 h-10 rounded-full border border-gold/30 bg-gold/5 flex items-center justify-center">
+                      <step.icon className="w-4 h-4 text-gold" />
+                    </div>
+                    <span className="text-[8px] font-bold text-gold/60 uppercase tracking-[0.1em]">{idx + 1}. {step.label}</span>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          </Section>
 
           {/* ═══════════ 2. MAPA VIVO ═══════════ */}
 
