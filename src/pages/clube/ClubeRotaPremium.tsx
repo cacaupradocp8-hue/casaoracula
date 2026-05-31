@@ -1042,55 +1042,56 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* ═══════════ 7. CTA FORMAÇÃO ═══════════ */}
-          <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9 }}
-              className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 md:p-8"
-            >
-              <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
-              <div className="relative space-y-6 max-w-xl">
-                <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
-                  Próximo nível
-                </Badge>
-                <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
-                  Você percebe os padrões.
-                  <br />
-                  <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
-                    Aprenda a conduzir.
-                  </span>
-                </h3>
-                <p className="font-serif italic text-foreground/55 text-base md:text-lg">
-                  "Onde a técnica termina, o olhar começa."
-                </p>
-                <p className="text-foreground/55 text-[15px] leading-relaxed">
-                  A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
-                </p>
-                <Button
-                  size="lg"
-                  className="h-14 px-8 rounded-full bg-gold text-midnight hover:bg-gold/90 gap-2 font-semibold tracking-wide shadow-[0_0_50px_-15px_hsl(43_47%_56%/0.6)]"
-                  onClick={() => navigate('/formacao')}
-                >
-                  Conhecer a Formação Orácula <ArrowRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
+          {!isTravessiaEstruturada && (
+            <Section id="proximo-nivel" icon={Sparkles} kicker="Visão de Guardiã" titulo="Aprofundamento">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.9 }}
+                className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-gold/15 bg-[radial-gradient(ellipse_at_top_right,hsl(43_47%_56%/0.18),transparent_60%),linear-gradient(135deg,hsl(206_44%_8%),hsl(206_44%_12%))] p-6 md:p-8"
+              >
+                <Sparkles className="absolute top-6 right-6 w-16 h-16 text-gold/15" />
+                <div className="relative space-y-6 max-w-xl">
+                  <Badge className="bg-gold/15 text-gold border-gold/20 hover:bg-gold/15 font-medium tracking-[0.2em] text-[10px] uppercase">
+                    Próximo nível
+                  </Badge>
+                  <h3 className="font-display text-2xl md:text-4xl leading-[1.05]">
+                    Você percebe os padrões.
+                    <br />
+                    <span className="bg-gradient-to-r from-gold via-gold to-gold/70 bg-clip-text text-transparent">
+                      Aprenda a conduzir.
+                    </span>
+                  </h3>
+                  <p className="font-serif italic text-foreground/55 text-base md:text-lg">
+                    "Onde a técnica termina, o olhar começa."
+                  </p>
+                  <p className="text-foreground/55 text-[15px] leading-relaxed">
+                    A vivência individual é a porta de entrada. A Formação Orácula é o oceano onde você aprende a mestria da escuta clínica e da condução simbólica de outras almas.
+                  </p>
+                  <Button
+                    size="lg"
+                    className="h-14 px-8 rounded-full bg-gold text-midnight hover:bg-gold/90 gap-2 font-semibold tracking-wide shadow-[0_0_50px_-15px_hsl(43_47%_56%/0.6)]"
+                    onClick={() => navigate('/formacao')}
+                  >
+                    Conhecer a Formação Orácula <ArrowRight className="w-4 h-4" />
+                  </Button>
+                </div>
+              </motion.div>
 
-            {ponto.metadata?.cta_label && ponto.metadata?.cta_url && (
-              <div className="flex justify-center mt-10">
-                <Button
-                  variant="ghost"
-                  className="text-gold/70 hover:text-gold gap-2"
-                  onClick={() => window.open(ponto.metadata.cta_url, '_blank')}
-                >
-                  <Star className="w-3 h-3" /> {ponto.metadata.cta_label}
-                </Button>
-              </div>
-            )}
-          </Section>
+              {ponto.metadata?.cta_label && ponto.metadata?.cta_url && (
+                <div className="flex justify-center mt-10">
+                  <Button
+                    variant="ghost"
+                    className="text-gold/70 hover:text-gold gap-2"
+                    onClick={() => window.open(ponto.metadata.cta_url, '_blank')}
+                  >
+                    <Star className="w-3 h-3" /> {ponto.metadata.cta_label}
+                  </Button>
+                </div>
+              )}
+            </Section>
+          )}
 
           {/* ═══════════ 8. PRÓXIMA ROTA ═══════════ */}
           {proximoPonto && (() => {
