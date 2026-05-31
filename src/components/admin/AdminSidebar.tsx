@@ -43,12 +43,11 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '✨',
     icon: Sparkles,
     items: [
-      { key: 'clube', label: 'Hub das Rotas', icon: Sparkles, route: '/admin/clube' },
-      { key: 'clube-editorial', label: 'Editorial das Rotas', icon: LayoutGrid },
+      { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
+      { key: 'clube', label: 'Hub Editorial', icon: LayoutGrid },
       { key: 'clube-jornadas', label: 'Estações & Travessias', icon: RefreshCw, route: '/admin/clube/ciclos' },
       { key: 'clube-acervo', label: 'Acervo das Rotas', icon: Library, route: '/admin/clube/conteudos' },
       { key: 'clube-chat', label: 'Converse com a Obra', icon: MessageSquare, route: '/admin/clube/chat' },
-
       { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
     ],
   },
