@@ -360,10 +360,11 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         </DialogHeader>
 
         <Tabs defaultValue="basico" className="py-2">
-          <TabsList className="grid grid-cols-5 w-full">
+          <TabsList className="grid grid-cols-6 w-full">
             <TabsTrigger value="basico" className="text-xs">Básico</TabsTrigger>
             <TabsTrigger value="cartografia" className="text-xs">Cartografia</TabsTrigger>
             <TabsTrigger value="conteudo" className="text-xs">Conteúdo</TabsTrigger>
+            <TabsTrigger value="travessia" className="text-xs">Travessia</TabsTrigger>
             <TabsTrigger value="referencia" className="text-xs">Referência</TabsTrigger>
             <TabsTrigger value="impacto" className="text-xs">Impacto</TabsTrigger>
           </TabsList>
