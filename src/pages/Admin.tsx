@@ -211,8 +211,8 @@ export default function Admin() {
   let ActiveComponent = TAB_COMPONENTS[activeTab];
 
   // Override if specific sub-route
-  if (isCentralRoute) {
-    ActiveComponent = AdminCentralEstacao;
+  if (isCentralRoute || location.pathname === '/admin/clube/rota-dos-lobos') {
+    ActiveComponent = isCentralRoute ? AdminCentralEstacao : AdminRotaDosLobosRedirect;
   } else if (!ActiveComponent && isDirectClubeRoute) {
     ActiveComponent = AdminClubeHub;
   }
