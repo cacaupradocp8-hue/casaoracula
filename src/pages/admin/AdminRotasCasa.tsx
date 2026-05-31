@@ -292,5 +292,3 @@ export default function AdminRotasCasa() {
     </div>
   );
 }
-
-import { Settings2 } from 'lucide-react';
