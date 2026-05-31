@@ -88,7 +88,7 @@ export default function AdminCentralCasa() {
               <div className="flex flex-wrap gap-3 pt-4">
                 <Button 
                   className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
-                  onClick={() => estacaoAtiva?.id && navigate(`/admin/clube/central/${estacaoAtiva.id}`)}
+                  onClick={() => navigate('/admin/clube/rota-dos-lobos')}
                 >
                   <Zap className="w-4 h-4" />
                   Editar Rota dos Lobos
