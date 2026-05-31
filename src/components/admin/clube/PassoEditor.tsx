@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ImpactoCidadelaForm, ImpactoCidadela } from './ImpactoCidadelaForm';
 import { toast } from 'sonner';
-import { Loader2, Plus, Trash2, ExternalLink, AlertCircle, Music, RefreshCw, CheckCircle2, AlertTriangle, Link as LinkIcon } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, AlertCircle, Music, RefreshCw, CheckCircle2, AlertTriangle, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AudiotecaSelector } from './AudiotecaSelector';
 
 const TIPOS_PASSO = [
@@ -130,11 +131,24 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       torre: '',
       labirinto: '',
       frase_guia: '',
-      // Conteúdo da travessia
+      // Conteúdo da travessia (legado/base)
       jardim_prompt: '',
       cenario_treinamento: '',
       leitura_referencia: '',
-      // Metadata
+      // Metadata - Blocos da Travessia (Unificado)
+      abertura_imersiva: '',
+      caso_simbolico: { texto: '', aviso: '' },
+      desafio_terapeuta: { pergunta: '', escolhas: [] as string[] },
+      revelacao_estacao: { porta: '', campo: '', torre: '', labirinto: '', pergunta_narrativa: '' },
+      erro_comum: { titulo: '', descricao: '', exemplo: '' },
+      conducao_justa: '',
+      cautela_etica: [] as string[],
+      jardim_psique: { pergunta: '', botao: '' },
+      jardim_oficio: { pergunta: '', botao: '', aviso_etico: '' },
+      missao_campo: { titulo: '', descricao: '', sinais: '', botao: '' },
+      oraculo_estacao: { palavra: '', movimento: '', carta_final: '', frase_fechamento: '' },
+      fechamento: { texto: '', pergunta: '', botao: '', confirmacao: '' },
+      // Metadata - Outros
       audios: [] as AudioMeta[],
       perguntas_sugeridas: [] as string[],
       cta_label: '',
@@ -171,6 +185,58 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         jardim_prompt: passo.jardim_prompt || m.jardim_prompt || '',
         cenario_treinamento: passo.cenario_treinamento || m.simulacao_texto || '',
         leitura_referencia: passo.leitura_referencia || '',
+        // Metadata - Blocos da Travessia
+        abertura_imersiva: m.abertura_imersiva || '',
+        caso_simbolico: { 
+          texto: m.caso_simbolico?.texto || '', 
+          aviso: m.caso_simbolico?.aviso || '' 
+        },
+        desafio_terapeuta: { 
+          pergunta: m.desafio_terapeuta?.pergunta || (typeof m.desafio_terapeuta === 'string' ? m.desafio_terapeuta : ''), 
+          escolhas: Array.isArray(m.desafio_terapeuta?.escolhas) ? m.desafio_terapeuta.escolhas : [] 
+        },
+        revelacao_estacao: { 
+          porta: m.revelacao_estacao?.porta || '', 
+          campo: m.revelacao_estacao?.campo || '', 
+          torre: m.revelacao_estacao?.torre || '', 
+          labirinto: m.revelacao_estacao?.labirinto || '', 
+          pergunta_narrativa: m.revelacao_estacao?.pergunta_narrativa || '' 
+        },
+        erro_comum: { 
+          titulo: m.erro_comum?.titulo || '', 
+          descricao: m.erro_comum?.descricao || '', 
+          exemplo: m.erro_comum?.exemplo || '' 
+        },
+        conducao_justa: m.conducao_justa || '',
+        cautela_etica: Array.isArray(m.cautela_etica) ? m.cautela_etica : [],
+        jardim_psique: { 
+          pergunta: m.jardim_psique?.pergunta || '', 
+          botao: m.jardim_psique?.botao || '' 
+        },
+        jardim_oficio: { 
+          pergunta: m.jardim_oficio?.pergunta || '', 
+          botao: m.jardim_oficio?.botao || '', 
+          aviso_etico: m.jardim_oficio?.aviso_etico || '' 
+        },
+        missao_campo: { 
+          titulo: m.missao_campo?.titulo || '', 
+          descricao: m.missao_campo?.descricao || '', 
+          sinais: m.missao_campo?.sinais || '', 
+          botao: m.missao_campo?.botao || '' 
+        },
+        oraculo_estacao: { 
+          palavra: m.oraculo_estacao?.palavra || (typeof m.oraculo_estacao === 'string' ? m.oraculo_estacao : ''), 
+          movimento: m.oraculo_estacao?.movimento || '', 
+          carta_final: m.oraculo_estacao?.carta_final || '', 
+          frase_fechamento: m.oraculo_estacao?.frase_fechamento || '' 
+        },
+        fechamento: { 
+          texto: m.fechamento?.texto || '', 
+          pergunta: m.fechamento?.pergunta || '', 
+          botao: m.fechamento?.botao || '', 
+          confirmacao: m.fechamento?.confirmacao || '' 
+        },
+        // Metadata - Outros
         audios: Array.isArray(m.audios) ? m.audios : [],
         perguntas_sugeridas: Array.isArray(m.perguntas_sugeridas) ? m.perguntas_sugeridas : [],
         cta_label: m.cta_label || '',
@@ -200,12 +266,49 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
   const save = useMutation({
     mutationFn: async () => {
       const slug = form.slug?.trim() || slugify(form.titulo);
+      const limparObj = (obj: any) => {
+        const result: any = {};
+        let hasValue = false;
+        Object.keys(obj).forEach(key => {
+          if (Array.isArray(obj[key])) {
+            const filtered = obj[key].filter(Boolean);
+            if (filtered.length > 0) {
+              result[key] = filtered;
+              hasValue = true;
+            }
+          } else if (obj[key] && typeof obj[key] === 'object') {
+            const sub = limparObj(obj[key]);
+            if (sub) {
+              result[key] = sub;
+              hasValue = true;
+            }
+          } else if (obj[key] !== undefined && obj[key] !== null && obj[key] !== '') {
+            result[key] = obj[key];
+            hasValue = true;
+          }
+        });
+        return hasValue ? result : undefined;
+      };
+
       const metadata: any = {
+        ...(passo?.metadata || {}),
         audios: form.audios,
         perguntas_sugeridas: form.perguntas_sugeridas.filter((p: string) => p.trim()),
+        cta_label: form.cta_label || undefined,
+        cta_url: form.cta_url || undefined,
+        abertura_imersiva: form.abertura_imersiva || undefined,
+        caso_simbolico: limparObj(form.caso_simbolico),
+        desafio_terapeuta: limparObj(form.desafio_terapeuta),
+        revelacao_estacao: limparObj(form.revelacao_estacao),
+        erro_comum: limparObj(form.erro_comum),
+        conducao_justa: form.conducao_justa || undefined,
+        cautela_etica: form.cautela_etica.filter(Boolean).length > 0 ? form.cautela_etica.filter(Boolean) : undefined,
+        jardim_psique: limparObj(form.jardim_psique),
+        jardim_oficio: limparObj(form.jardim_oficio),
+        missao_campo: limparObj(form.missao_campo),
+        oraculo_estacao: limparObj(form.oraculo_estacao),
+        fechamento: limparObj(form.fechamento),
       };
-      if (form.cta_label) metadata.cta_label = form.cta_label;
-      if (form.cta_url) metadata.cta_url = form.cta_url;
 
       const payload: any = {
         estacao_id: estacaoId,
@@ -294,10 +397,11 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         </DialogHeader>
 
         <Tabs defaultValue="basico" className="py-2">
-          <TabsList className="grid grid-cols-5 w-full">
+          <TabsList className="grid grid-cols-6 w-full">
             <TabsTrigger value="basico" className="text-xs">Básico</TabsTrigger>
             <TabsTrigger value="cartografia" className="text-xs">Cartografia</TabsTrigger>
             <TabsTrigger value="conteudo" className="text-xs">Conteúdo</TabsTrigger>
+            <TabsTrigger value="travessia" className="text-xs">Travessia</TabsTrigger>
             <TabsTrigger value="referencia" className="text-xs">Referência</TabsTrigger>
             <TabsTrigger value="impacto" className="text-xs">Impacto</TabsTrigger>
           </TabsList>
@@ -557,6 +661,256 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
                 <Input value={form.cta_url} onChange={e => setForm({ ...form, cta_url: e.target.value })} placeholder="https://..." className="h-8 text-xs" />
               </div>
             </div>
+          </TabsContent>
+
+          {/* TRAVESSIA — EDITOR DE BLOCOS */}
+          <TabsContent value="travessia" className="space-y-4 pt-4">
+            <p className="text-[11px] text-muted-foreground italic mb-2">
+              Configure os 12 blocos da travessia guiada consumidos pela aluna na Estação.
+            </p>
+            
+            <Accordion type="single" collapsible className="w-full space-y-2">
+              {/* 1. Abertura */}
+              <AccordionItem value="abertura" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">1. Abertura do Campo</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto de Abertura (MD)</Label>
+                    <Textarea 
+                      value={form.abertura_imersiva} 
+                      onChange={e => setForm({...form, abertura_imersiva: e.target.value})} 
+                      placeholder="Prepare o campo interno da escuta..."
+                      className="text-xs resize-none"
+                      rows={3}
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 2. Caso Simbólico */}
+              <AccordionItem value="caso" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">2. Caso Simbólico</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Caso</Label>
+                    <Textarea 
+                      value={form.caso_simbolico.texto} 
+                      onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, texto: e.target.value}})} 
+                      placeholder="Apresentar riscos clínicos..."
+                      className="text-xs resize-none"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Aviso / Alerta</Label>
+                    <Input 
+                      value={form.caso_simbolico.aviso} 
+                      onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, aviso: e.target.value}})} 
+                      placeholder="Aviso clínico..."
+                      className="h-8 text-xs"
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 3. Desafio */}
+              <AccordionItem value="desafio" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">3. Desafio da Terapeuta</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta do Desafio</Label>
+                    <Textarea 
+                      value={form.desafio_terapeuta.pergunta} 
+                      onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} 
+                      placeholder="Como você agiria se..."
+                      className="text-xs resize-none"
+                      rows={2}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Escolhas / Alternativas</Label>
+                    {form.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
+                      <div key={idx} className="flex gap-2">
+                        <Input 
+                          value={choice} 
+                          onChange={e => {
+                            const next = [...form.desafio_terapeuta.escolhas];
+                            next[idx] = e.target.value;
+                            setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: next}});
+                          }} 
+                          className="h-8 text-xs" 
+                        />
+                        <Button size="icon" variant="ghost" type="button" onClick={() => {
+                          const next = form.desafio_terapeuta.escolhas.filter((_: any, i: number) => i !== idx);
+                          setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: next}});
+                        }} className="h-8 w-8 shrink-0"><Trash2 className="w-3 h-3 text-destructive" /></Button>
+                      </div>
+                    ))}
+                    <Button size="sm" variant="ghost" type="button" onClick={() => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, escolhas: [...form.desafio_terapeuta.escolhas, '']}})} className="h-7 text-xs gap-1">
+                      <Plus className="w-3 h-3" /> Adicionar Escolha
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 4. Revelação */}
+              <AccordionItem value="revelacao" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">4. Revelação (Mapa Vivo)</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Porta</Label><Input value={form.revelacao_estacao.porta} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, porta: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Campo</Label><Input value={form.revelacao_estacao.campo} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, campo: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Torre</Label><Input value={form.revelacao_estacao.torre} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, torre: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Labirinto</Label><Input value={form.revelacao_estacao.labirinto} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, labirinto: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta Narrativa Final</Label>
+                    <Input value={form.revelacao_estacao.pergunta_narrativa} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, pergunta_narrativa: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 5. Erro Comum */}
+              <AccordionItem value="erro" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">5. Erro Comum</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Título</Label>
+                    <Input value={form.erro_comum.titulo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, titulo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Descrição</Label>
+                    <Textarea value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Exemplo Inadequado</Label>
+                    <Input value={form.erro_comum.exemplo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, exemplo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 6. Condução & Ética */}
+              <AccordionItem value="etica" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">6. Condução & Ética</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Condução Justa (Texto)</Label>
+                    <Textarea value={form.conducao_justa} onChange={e => setForm({...form, conducao_justa: e.target.value})} className="text-xs resize-none" rows={3} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase text-muted-foreground">Cautela Ética (Lista)</Label>
+                    {form.cautela_etica.map((item: string, idx: number) => (
+                      <div key={idx} className="flex gap-2">
+                        <Input value={item} onChange={e => {
+                          const next = [...form.cautela_etica];
+                          next[idx] = e.target.value;
+                          setForm({...form, cautela_etica: next});
+                        }} className="h-8 text-xs" />
+                        <Button size="icon" variant="ghost" type="button" onClick={() => setForm({...form, cautela_etica: form.cautela_etica.filter((_: any, i: number) => i !== idx)})} className="h-8 w-8 shrink-0"><Trash2 className="w-3 h-3 text-destructive" /></Button>
+                      </div>
+                    ))}
+                    <Button size="sm" variant="ghost" type="button" onClick={() => setForm({...form, cautela_etica: [...form.cautela_etica, '']})} className="h-7 text-xs gap-1">
+                      <Plus className="w-3 h-3" /> Adicionar Cautela
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 7. Jardim Psique */}
+              <AccordionItem value="psique" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">7. Jardim da Psique</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta-Mãe (Escrita Íntima)</Label>
+                    <Input value={form.jardim_psique.pergunta} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.jardim_psique.botao} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, botao: e.target.value}})} className="h-8 text-xs" placeholder="Registrar Travessia" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 8. Jardim Ofício */}
+              <AccordionItem value="oficio" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">8. Jardim do Ofício</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta de Prática Profissional</Label>
+                    <Input value={form.jardim_oficio.pergunta} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Aviso Ético (Microcopy)</Label>
+                    <Input value={form.jardim_oficio.aviso_etico} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, aviso_etico: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.jardim_oficio.botao} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, botao: e.target.value}})} className="h-8 text-xs" placeholder="Registrar Prática" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 9. Missão de Campo */}
+              <AccordionItem value="missao" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">9. Missão de Campo</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Título da Missão</Label>
+                    <Input value={form.missao_campo.titulo} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, titulo: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Descrição da Ação</Label>
+                    <Textarea value={form.missao_campo.descricao} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, descricao: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Sinais de Observação</Label>
+                    <Input value={form.missao_campo.sinais} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, sinais: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto do Botão</Label>
+                    <Input value={form.missao_campo.botao} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, botao: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 10. Oráculo */}
+              <AccordionItem value="oraculo" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">10. Oráculo da Estação</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Palavra-Chave</Label><Input value={form.oraculo_estacao.palavra} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, palavra: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Carta Final (ID)</Label><Input value={form.oraculo_estacao.carta_final} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, carta_final: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Movimento Simbólico</Label>
+                    <Input value={form.oraculo_estacao.movimento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, movimento: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Frase de Fechamento</Label>
+                    <Input value={form.oraculo_estacao.frase_fechamento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, frase_fechamento: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 11. Fechamento */}
+              <AccordionItem value="fechamento" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">11. Fechamento Final</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="space-y-1">
+                    <Label className="text-xs">Texto Final</Label>
+                    <Textarea value={form.fechamento.texto} onChange={e => setForm({...form, fechamento: {...form.fechamento, texto: e.target.value}})} className="text-xs resize-none" rows={2} />
+                  </div>
+                  <div className="space-y-1">
+                    <Label className="text-xs">Pergunta Final</Label>
+                    <Input value={form.fechamento.pergunta} onChange={e => setForm({...form, fechamento: {...form.fechamento, pergunta: e.target.value}})} className="h-8 text-xs" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="space-y-1"><Label className="text-xs">Botão</Label><Input value={form.fechamento.botao} onChange={e => setForm({...form, fechamento: {...form.fechamento, botao: e.target.value}})} className="h-8 text-xs" /></div>
+                    <div className="space-y-1"><Label className="text-xs">Microcopy Conclusão</Label><Input value={form.fechamento.confirmacao} onChange={e => setForm({...form, fechamento: {...form.fechamento, confirmacao: e.target.value}})} className="h-8 text-xs" /></div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </TabsContent>
 
           {/* REFERÊNCIA */}
