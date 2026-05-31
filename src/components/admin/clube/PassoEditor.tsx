@@ -16,7 +16,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { ImpactoCidadelaForm, ImpactoCidadela } from './ImpactoCidadelaForm';
 import { toast } from 'sonner';
-import { Loader2, Plus, Trash2, ExternalLink, AlertCircle, Music, RefreshCw, CheckCircle2, AlertTriangle, Link as LinkIcon } from 'lucide-react';
+import { Loader2, Plus, Trash2, ExternalLink, AlertCircle, Music, RefreshCw, CheckCircle2, AlertTriangle, Link as LinkIcon, ChevronDown, ChevronUp } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { AudiotecaSelector } from './AudiotecaSelector';
 
 const TIPOS_PASSO = [
