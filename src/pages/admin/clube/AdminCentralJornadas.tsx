@@ -7,6 +7,7 @@ import { ArrowLeft, BookOpen, Loader2, Eye, Settings, Search, Filter, Plus } fro
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 interface EstacaoV3 {
   id: string;
@@ -38,6 +39,42 @@ export default function AdminCentralJornadas() {
       return (data || []) as EstacaoV3[];
     },
   });
+
+  const handleCreateEstacao = async () => {
+    if (!obraFilter) return;
+    
+    setIsSubmitting(true);
+    try {
+      const filteredByObra = estacoes.filter(e => e.livro_titulo === obraFilter);
+      const nextNumero = filteredByObra.length > 0 ? Math.max(...filteredByObra.map(e => e.numero)) + 1 : 1;
+      
+      const { data, error } = await supabase
+        .from('clube_estacoes')
+        .insert({
+          numero: nextNumero,
+          titulo: `Nova Estação ${nextNumero}`,
+          subtitulo: '',
+          livro_titulo: obraFilter,
+          ativa: false,
+          publicada: false, // Por segurança inicia como rascunho
+          ordem: nextNumero
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        toast.success("Estação criada com sucesso!");
+        navigate(`/admin/clube/central/${data.id}`);
+      }
+    } catch (error: any) {
+      console.error("Erro ao criar estação:", error);
+      toast.error("Erro ao criar estação.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const filteredEstacoes = useMemo(() => {
     return estacoes.filter(e => {
@@ -73,7 +110,7 @@ export default function AdminCentralJornadas() {
               if ((window as any).Admin_SetActiveTab) {
                 (window as any).Admin_SetActiveTab('central-rotas');
               }
-              navigate('/admin');
+              navigate('/admin/rotas-da-casa');
             }}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
@@ -96,6 +133,16 @@ export default function AdminCentralJornadas() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          {obraFilter && (
+            <Button 
+              className="h-9 gap-2 bg-gold hover:bg-gold/80 text-black font-semibold"
+              onClick={handleCreateEstacao}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+              Nova Estação
+            </Button>
+          )}
           {obraFilter && (
             <Button 
               variant="outline" 
