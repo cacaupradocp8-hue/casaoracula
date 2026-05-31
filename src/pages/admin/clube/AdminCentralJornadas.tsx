@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, BookOpen, Loader2, Eye, Settings, Search, Filter } from 'lucide-react';
+import { ArrowLeft, BookOpen, Loader2, Eye, Settings, Search, Filter, Plus } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { Input } from '@/components/ui/input';
