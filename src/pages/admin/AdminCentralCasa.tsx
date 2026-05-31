@@ -35,7 +35,7 @@ export default function AdminCentralCasa() {
     queryFn: async () => {
       const { data } = await supabase
         .from('clube_estacoes')
-        .select('id, titulo, numero')
+        .select('id, titulo, numero, livro_titulo')
         .order('numero', { ascending: true });
       return data;
     }
