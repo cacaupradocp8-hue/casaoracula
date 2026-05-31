@@ -119,27 +119,24 @@ export default function AdminCentralCasa() {
 
                     {/* Hierarchy Display */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-                      {[
-                        { title: 'O Chamado Selvagem', num: 'I', order: 1 },
-                        { title: 'A Mulher Domesticada', num: 'II', order: 2 },
-                        { title: 'Barba Azul', num: 'III', order: 3 },
-                        { title: 'Vasalisa', num: 'IV', order: 4 },
-                        { title: 'Mulher Esqueleto', num: 'V', order: 5 },
-                        { title: 'O Retorno da Mulher Selvagem', num: 'VI', order: 6 }
-                      ].map((est, idx) => {
-                        const dbEst = estacoes?.find(e => e.numero === est.order && e.livro_titulo?.includes('Mulheres que Correm'));
+                      {estacoes?.filter(e => e.livro_titulo?.includes('Mulheres que Correm')).slice(0, 6).map((est, idx) => {
                         return (
-                          <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
-                               onClick={() => dbEst ? navigate(`/admin/clube/central/${dbEst.id}`) : navigate('/admin/clube/ciclos?obra=Mulheres%20que%20Correm%20com%20os%20Lobos')}>
+                          <div key={est.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
+                               onClick={() => navigate(`/admin/clube/central/${est.id}`)}>
                             <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
-                              {est.num}
+                              {est.numero || idx + 1}
                             </div>
                             <span className="text-sm font-medium text-foreground/80 group-hover/item:text-gold transition-colors truncate">
-                              {est.title}
+                              {est.titulo}
                             </span>
                           </div>
                         );
                       })}
+                      {(!estacoes || estacoes.filter(e => e.livro_titulo?.includes('Mulheres que Correm')).length === 0) && (
+                        <div className="col-span-2 py-8 text-center border border-dashed border-primary/10 rounded-xl">
+                          <p className="text-xs text-muted-foreground">Nenhuma estação encontrada para esta rota.</p>
+                        </div>
+                      )}
                     </div>
                   </div>
 

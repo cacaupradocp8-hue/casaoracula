@@ -169,7 +169,7 @@ export default function AdminCentralEstacao() {
       ordem: nextOrdem,
       tipo: 'escuta',
       tipo_passo: 'escuta',
-      publicado: true,
+      publicado: false, // Inicia como rascunho por segurança
       conteudo_inline: { texto: '' },
       metadata: { audios: [] }
     };
@@ -219,13 +219,13 @@ export default function AdminCentralEstacao() {
               </Button>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest mb-1">
-                  <span>Rotas da Casa</span>
+                  <span className="cursor-pointer hover:text-gold" onClick={() => navigate('/admin/rotas-da-casa')}>Rotas da Casa</span>
                   <ChevronRight className="w-2.5 h-2.5" />
-                  <span className="text-gold">Rota dos Lobos</span>
+                  <span className="text-gold">{estacao.livro_titulo || 'Rota'}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-serif text-foreground truncate">{estacao.titulo}</h1>
-                  <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "")}>
+                  <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500")}>
                     {estacao.publicada ? 'Publicado' : 'Rascunho'}
                   </Badge>
                 </div>
@@ -244,9 +244,9 @@ export default function AdminCentralEstacao() {
             size="sm" 
             className="gap-2" 
             onClick={() => {
-              const firstPasso = passos[0];
-              if (firstPasso?.slug) {
-                navigate(`/clube/rota/${firstPasso.slug}`);
+              const currentPasso = selectedPasso || passos[0];
+              if (currentPasso?.slug) {
+                navigate(`/clube/rota/${currentPasso.slug}`);
               } else {
                 navigate('/clube');
               }
