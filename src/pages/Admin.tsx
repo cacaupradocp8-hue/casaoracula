@@ -101,6 +101,7 @@ const TabLoader = () => (
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
   // CENTRAL
   'central-casa': AdminCentralCasa,
+  'central-rota-lobos': AdminRotaDosLobosRedirect,
 
   // CLUBE PREMIUM (OFICIAL)
   'clube': AdminClubeHub,
