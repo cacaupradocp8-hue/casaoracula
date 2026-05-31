@@ -582,141 +582,358 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
             </div>
           </div>
 
-          {/* 1. POSICIONAMENTO & HERO */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-              <MapPin className="w-4 h-4" /> Posicionamento & Hero
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero</Label>
-                <Input value={form.hero.titulo} onChange={e => setForm({...form, hero: {...form.hero, titulo: e.target.value}})} className="bg-background/50" />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] uppercase font-bold text-white/40">CTA do Hero</Label>
-                <Input value={form.hero.cta} onChange={e => setForm({...form, hero: {...form.hero, cta: e.target.value}})} className="bg-background/50" />
-              </div>
-              <div className="md:col-span-2 space-y-2">
-                <Label className="text-[10px] uppercase font-bold text-white/40">Texto de Entrada</Label>
-                <Textarea value={form.hero.texto} onChange={e => setForm({...form, hero: {...form.hero, texto: e.target.value}})} className="bg-background/50 min-h-[80px]" />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] uppercase font-bold text-white/40">Abertura Imersiva (Opcional)</Label>
-              <Textarea value={form.abertura_imersiva} onChange={e => setForm({...form, abertura_imersiva: e.target.value})} className="bg-background/50 italic font-serif" placeholder="O portal de entrada..." />
-            </div>
-          </div>
-
-          {/* 2. ESTAÇÃO DE ESCUTA (ÁUDIOS) */}
-          <div className="space-y-6">
-            <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-              <Headphones className="w-4 h-4" /> Estação de Escuta (Áudios)
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {form.audios.map((audio, idx) => (
-                <div key={idx} className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-gold/60 uppercase tracking-widest">{audio.tipo}</span>
+          <Accordion type="multiple" className="w-full space-y-4">
+            {/* 1. Identidade e Entrada */}
+            <AccordionItem value="identidade" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">1. Identidade e Entrada</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero</Label>
+                    <Input value={form.hero.titulo} onChange={e => setForm({...form, hero: {...form.hero, titulo: e.target.value}})} className="bg-background/50" />
                   </div>
-                  <div className="space-y-3">
-                    <Input placeholder="Título do áudio" value={audio.titulo} onChange={e => updateAudio(idx, 'titulo', e.target.value)} className="bg-background/50 text-xs" />
-                    <Input placeholder="URL (.mp3)" value={audio.url} onChange={e => updateAudio(idx, 'url', e.target.value)} className="bg-background/50 text-xs font-mono" />
-                    <div className="grid grid-cols-2 gap-2">
-                      <Input placeholder="Função" value={audio.funcao} onChange={e => updateAudio(idx, 'funcao', e.target.value)} className="bg-background/50 text-[10px]" />
-                      <Input placeholder="Duração" value={audio.duracao} onChange={e => updateAudio(idx, 'duracao', e.target.value)} className="bg-background/50 text-[10px]" />
-                    </div>
-                    <Textarea placeholder="Roteiro de gravação / Pergunta central" value={audio.roteiro || audio.pergunta_central} onChange={e => updateAudio(idx, 'roteiro', e.target.value)} className="bg-background/50 text-[10px] min-h-[80px]" />
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">CTA do Hero</Label>
+                    <Input value={form.hero.cta} onChange={e => setForm({...form, hero: {...form.hero, cta: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Texto de Entrada</Label>
+                    <Textarea value={form.hero.texto} onChange={e => setForm({...form, hero: {...form.hero, texto: e.target.value}})} className="bg-background/50 min-h-[80px]" />
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Abertura Imersiva (Opcional)</Label>
+                  <Textarea value={form.abertura_imersiva} onChange={e => setForm({...form, abertura_imersiva: e.target.value})} className="bg-background/50 italic font-serif" placeholder="O portal de entrada..." />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          {/* 3. CASO SIMBÓLICO & DESAFIO */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Eye className="w-4 h-4" /> Caso Simbólico
-              </h3>
-              <div className="space-y-4">
-                <Input placeholder="Título do caso" value={form.caso_simbolico.titulo} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, titulo: e.target.value}})} className="bg-background/50" />
-                <Textarea placeholder="O relato..." value={form.caso_simbolico.relato} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, relato: e.target.value}})} className="bg-background/50 min-h-[200px]" />
-              </div>
-            </div>
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Sword className="w-4 h-4" /> Desafio da Terapeuta
-              </h3>
-              <div className="space-y-4">
-                <Textarea placeholder="A pergunta desafiadora..." value={form.desafio_terapeuta.pergunta} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} className="bg-background/50" />
-                <Input placeholder="Label do campo aberto" value={form.desafio_terapeuta.campo_aberto_label} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
-              </div>
-            </div>
-          </div>
+            {/* 2. Estação de Escuta */}
+            <AccordionItem value="escuta" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Headphones className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">2. Estação de Escuta</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {form.audios.map((audio, idx) => (
+                    <div key={idx} className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[9px] font-bold text-gold/60 uppercase tracking-widest">{audio.tipo}</span>
+                      </div>
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <Label className="text-[9px] uppercase text-white/40">Título do Áudio</Label>
+                          <Input value={audio.titulo} onChange={e => updateAudio(idx, 'titulo', e.target.value)} className="bg-background/50 text-xs" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] uppercase text-white/40">URL (.mp3)</Label>
+                          <Input value={audio.url} onChange={e => updateAudio(idx, 'url', e.target.value)} className="bg-background/50 text-xs font-mono" />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase text-white/40">Função</Label>
+                            <Input value={audio.funcao} onChange={e => updateAudio(idx, 'funcao', e.target.value)} className="bg-background/50 text-[10px]" />
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase text-white/40">Duração</Label>
+                            <Input value={audio.duracao} onChange={e => updateAudio(idx, 'duracao', e.target.value)} className="bg-background/50 text-[10px]" />
+                          </div>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] uppercase text-white/40">Pergunta Central</Label>
+                          <Input value={audio.pergunta_central} onChange={e => updateAudio(idx, 'pergunta_central', e.target.value)} className="bg-background/50 text-[10px]" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] uppercase text-white/40">Roteiro de Gravação</Label>
+                          <Textarea value={audio.roteiro} onChange={e => updateAudio(idx, 'roteiro', e.target.value)} className="bg-background/50 text-[10px] min-h-[60px]" />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-[9px] uppercase text-white/40">Transcrição Opcional</Label>
+                          <Textarea value={audio.transcricao} onChange={e => updateAudio(idx, 'transcricao', e.target.value)} className="bg-background/50 text-[10px] min-h-[60px]" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          {/* 4. REVELAÇÃO & ERRO COMUM */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Sparkles className="w-4 h-4" /> Revelação
-              </h3>
-              <div className="grid grid-cols-1 gap-2">
-                <Input placeholder="Porta" value={form.revelacao_estacao.porta} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, porta: e.target.value}})} className="bg-background/50 text-xs" />
-                <Input placeholder="Torre" value={form.revelacao_estacao.torre} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, torre: e.target.value}})} className="bg-background/50 text-xs" />
-                <Input placeholder="Labirinto" value={form.revelacao_estacao.labirinto} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, labirinto: e.target.value}})} className="bg-background/50 text-xs" />
-                <Input placeholder="Campo Psíquico" value={form.revelacao_estacao.campo_psiquico} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, campo_psiquico: e.target.value}})} className="bg-background/50 text-xs" />
-                <Textarea placeholder="Pergunta narrativa possível" value={form.revelacao_estacao.pergunta_narrativa} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, pergunta_narrativa: e.target.value}})} className="bg-background/50 text-xs" />
-              </div>
-            </div>
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4" /> Erro Comum & Ética
-              </h3>
-              <div className="space-y-4">
-                <Input placeholder="Título do erro comum..." value={form.erro_comum.titulo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, titulo: e.target.value}})} className="bg-background/50 text-xs" />
-                <Textarea placeholder="Descrição do erro comum..." value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="bg-background/50 text-xs" />
-                <Textarea placeholder="Exemplo de erro comum..." value={form.erro_comum.exemplo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, exemplo: e.target.value}})} className="bg-background/50 text-xs" />
-                <Textarea placeholder="Condução justa (texto ou relato)..." value={form.conducao_justa} onChange={e => setForm({...form, conducao_justa: e.target.value})} className="bg-background/50 text-xs min-h-[100px]" />
-                <Textarea placeholder="Cautelas éticas (uma por linha)" value={form.cautela_etica} onChange={e => setForm({...form, cautela_etica: e.target.value})} className="bg-background/50 text-xs min-h-[100px]" />
-              </div>
-            </div>
+            {/* 3. Caso Simbólico */}
+            <AccordionItem value="caso" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">3. Caso Simbólico</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título do Caso</Label>
+                  <Input placeholder="Título do caso" value={form.caso_simbolico.titulo} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, titulo: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Aviso Legal/Pedagógico</Label>
+                  <Input value={form.caso_simbolico.aviso} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, aviso: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Relato do Caso</Label>
+                  <Textarea placeholder="O relato..." value={form.caso_simbolico.relato} onChange={e => setForm({...form, caso_simbolico: {...form.caso_simbolico, relato: e.target.value}})} className="bg-background/50 min-h-[200px]" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          </div>
+            {/* 4. Desafio da Terapeuta */}
+            <AccordionItem value="desafio" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Sword className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">4. Desafio da Terapeuta</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Desafiadora</Label>
+                  <Textarea placeholder="A pergunta desafiadora..." value={form.desafio_terapeuta.pergunta} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Label do Campo de Resposta</Label>
+                  <Input placeholder="Ex: O que você vê?" value={form.desafio_terapeuta.campo_aberto_label} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          {/* 5. JARDINS */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Flower2 className="w-4 h-4" /> Jardim da Psique
-              </h3>
-              <Textarea placeholder="Pergunta principal..." value={form.jardim_psique.pergunta} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, pergunta: e.target.value}})} className="bg-background/50" />
-            </div>
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-emerald-500/80 flex items-center gap-2">
-                <MapPin className="w-4 h-4" /> Jardim do Ofício
-              </h3>
-              <Textarea placeholder="Pergunta principal..." value={form.jardim_oficio.pergunta} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, pergunta: e.target.value}})} className="bg-background/50" />
-            </div>
-          </div>
+            {/* 5. Revelação */}
+            <AccordionItem value="revelacao" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">5. Revelação</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Porta</Label>
+                    <Input value={form.revelacao_estacao.porta} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, porta: e.target.value}})} className="bg-background/50 text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Torre</Label>
+                    <Input value={form.revelacao_estacao.torre} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, torre: e.target.value}})} className="bg-background/50 text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Labirinto</Label>
+                    <Input value={form.revelacao_estacao.labirinto} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, labirinto: e.target.value}})} className="bg-background/50 text-xs" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Campo Psíquico</Label>
+                    <Input value={form.revelacao_estacao.campo_psiquico} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, campo_psiquico: e.target.value}})} className="bg-background/50 text-xs" />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Narrativa Possível</Label>
+                  <Textarea value={form.revelacao_estacao.pergunta_narrativa} onChange={e => setForm({...form, revelacao_estacao: {...form.revelacao_estacao, pergunta_narrativa: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
 
-          {/* 6. ORÁCULO & FECHAMENTO */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Scroll className="w-4 h-4" /> Oráculo
-              </h3>
-              <div className="space-y-4">
-                <Input placeholder="A Palavra" value={form.oraculo_estacao.palavra} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, palavra: e.target.value}})} className="bg-background/50" />
-                <Input placeholder="O Movimento" value={form.oraculo_estacao.movimento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, movimento: e.target.value}})} className="bg-background/50" />
-              </div>
-            </div>
-            <div className="space-y-6">
-               <h3 className="text-sm font-bold uppercase tracking-widest text-gold/80 flex items-center gap-2">
-                <Check className="w-4 h-4" /> Conclusão
-              </h3>
-              <Textarea placeholder="Texto de fechamento..." value={form.fechamento.texto} onChange={e => setForm({...form, fechamento: {...form.fechamento, texto: e.target.value}})} className="bg-background/50" />
-            </div>
-          </div>
+            {/* 6. Erro Comum */}
+            <AccordionItem value="erro" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">6. Erro Comum</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título do Erro</Label>
+                  <Input value={form.erro_comum.titulo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, titulo: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Descrição</Label>
+                  <Textarea value={form.erro_comum.descricao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, descricao: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Exemplo Prático</Label>
+                  <Textarea value={form.erro_comum.exemplo} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, exemplo: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Explicação Teórica</Label>
+                  <Textarea value={form.erro_comum.explicacao} onChange={e => setForm({...form, erro_comum: {...form.erro_comum, explicacao: e.target.value}})} className="bg-background/50 text-xs" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 7. Condução Justa */}
+            <AccordionItem value="conducao" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">7. Condução Justa</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-white/40">Texto ou Relato de Condução</Label>
+                <Textarea value={form.conducao_justa} onChange={e => setForm({...form, conducao_justa: e.target.value})} className="bg-background/50 text-xs min-h-[150px]" />
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 8. Cautela Ética */}
+            <AccordionItem value="etica" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">8. Cautela Ética</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-2">
+                <Label className="text-[10px] uppercase font-bold text-white/40">Lista de Cautelas (uma por linha)</Label>
+                <Textarea value={form.cautela_etica} onChange={e => setForm({...form, cautela_etica: e.target.value})} className="bg-background/50 text-xs min-h-[150px]" />
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 9. Jardim da Psique */}
+            <AccordionItem value="jardim-psique" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Flower2 className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">9. Jardim da Psique</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Chamada/Instrução</Label>
+                  <Input value={form.jardim_psique.chamada} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, chamada: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Principal</Label>
+                  <Textarea value={form.jardim_psique.pergunta} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, pergunta: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Texto do Botão</Label>
+                    <Input value={form.jardim_psique.botao} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, botao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Microcopy de Confirmação</Label>
+                    <Input value={form.jardim_psique.confirmacao} onChange={e => setForm({...form, jardim_psique: {...form.jardim_psique, confirmacao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 10. Jardim do Ofício */}
+            <AccordionItem value="jardim-oficio" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-emerald-500" />
+                  <span className="text-sm font-bold uppercase tracking-widest">10. Jardim do Ofício</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Aviso de Privacidade/Ético</Label>
+                  <Input value={form.jardim_oficio.aviso_etico} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, aviso_etico: e.target.value}})} className="bg-background/50 text-[10px]" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Principal</Label>
+                  <Textarea value={form.jardim_oficio.pergunta} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, pergunta: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Texto do Botão</Label>
+                    <Input value={form.jardim_oficio.botao} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, botao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Microcopy de Confirmação</Label>
+                    <Input value={form.jardim_oficio.confirmacao} onChange={e => setForm({...form, jardim_oficio: {...form.jardim_oficio, confirmacao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 11. Missão de Campo */}
+            <AccordionItem value="missao" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Rocket className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">11. Missão de Campo</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título da Missão</Label>
+                  <Input value={form.missao_campo.titulo} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, titulo: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Descrição</Label>
+                  <Textarea value={form.missao_campo.descricao} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, descricao: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Sinais de Observação</Label>
+                  <Textarea value={form.missao_campo.sinais} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, sinais: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta de Registro</Label>
+                  <Textarea value={form.missao_campo.pergunta} onChange={e => setForm({...form, missao_campo: {...form.missao_campo, pergunta: e.target.value}})} className="bg-background/50" />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 12. Oráculo e Fechamento */}
+            <AccordionItem value="oraculo" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Scroll className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">12. Oráculo e Fechamento</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">A Palavra</Label>
+                    <Input value={form.oraculo_estacao.palavra} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, palavra: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">O Movimento</Label>
+                    <Input value={form.oraculo_estacao.movimento} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, movimento: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Carta Final</Label>
+                    <Input value={form.oraculo_estacao.carta_final} onChange={e => setForm({...form, oraculo_estacao: {...form.oraculo_estacao, carta_final: e.target.value}})} className="bg-background/50" />
+                  </div>
+                </div>
+                <div className="pt-6 border-t border-white/5 space-y-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Texto Final</Label>
+                    <Textarea value={form.fechamento.texto} onChange={e => setForm({...form, fechamento: {...form.fechamento, texto: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta de Fechamento</Label>
+                    <Textarea value={form.fechamento.pergunta} onChange={e => setForm({...form, fechamento: {...form.fechamento, pergunta: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase font-bold text-white/40">Texto do Botão</Label>
+                      <Input value={form.fechamento.botao} onChange={e => setForm({...form, fechamento: {...form.fechamento, botao: e.target.value}})} className="bg-background/50" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase font-bold text-white/40">Microcopy de Conclusão</Label>
+                      <Input value={form.fechamento.confirmacao} onChange={e => setForm({...form, fechamento: {...form.fechamento, confirmacao: e.target.value}})} className="bg-background/50" />
+                    </div>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
 
         </CardContent>
       </Card>
