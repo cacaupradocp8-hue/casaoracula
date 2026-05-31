@@ -169,7 +169,7 @@ export default function AdminCentralEstacao() {
       ordem: nextOrdem,
       tipo: 'escuta',
       tipo_passo: 'escuta',
-      publicado: true,
+      publicado: false, // Inicia como rascunho por segurança
       conteudo_inline: { texto: '' },
       metadata: { audios: [] }
     };
