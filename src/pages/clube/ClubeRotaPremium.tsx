@@ -1006,8 +1006,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* Oráculo da Estação */}
-          {ponto.metadata?.oraculo_estacao && (
+          {!isTravessiaEstruturada && ponto.metadata?.oraculo_estacao && (
             <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
               <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                 {typeof ponto.metadata.oraculo_estacao === 'object' ? (
