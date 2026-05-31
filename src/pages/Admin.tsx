@@ -169,7 +169,7 @@ export default function Admin() {
     // Map URL paths to tabs
     const path = location.pathname;
     if (path === '/admin') return 'central-casa';
-    if (path === '/admin/rotas') return 'central-rotas';
+    if (path === '/admin/rotas' || path === '/admin/rotas-da-casa') return 'central-rotas';
     if (path === '/admin/clube') return 'clube';
     if (path === '/admin/clube/ciclos') return 'clube-jornadas';
     if (path === '/admin/clube/portais') return 'clube-portais';

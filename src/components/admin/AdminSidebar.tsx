@@ -223,7 +223,7 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               onTabChange(item.key);
                               // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
                               if (item.key === 'central-casa') navigate('/admin', { replace: true });
-                              if (item.key === 'central-rotas') navigate('/admin/rotas', { replace: true });
+                              if (item.key === 'central-rotas') navigate('/admin/rotas-da-casa', { replace: true });
                               if (item.key === 'central-rota-lobos') {
                                 // Buscamos a estação ativa via query no componente que chama navigate, 
                                 // mas na sidebar vamos para a central de ciclos ou injetamos a lógica de redirecionamento

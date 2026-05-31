@@ -35,7 +35,7 @@ export default function AdminCentralCasa() {
     queryFn: async () => {
       const { data } = await supabase
         .from('clube_estacoes')
-        .select('id, titulo, numero')
+        .select('id, titulo, numero, livro_titulo')
         .order('numero', { ascending: true });
       return data;
     }
@@ -127,10 +127,10 @@ export default function AdminCentralCasa() {
                         { title: 'Mulher Esqueleto', num: 'V', order: 5 },
                         { title: 'O Retorno da Mulher Selvagem', num: 'VI', order: 6 }
                       ].map((est, idx) => {
-                        const dbEst = estacoes?.find(e => e.numero === est.order);
+                        const dbEst = estacoes?.find(e => e.numero === est.order && e.livro_titulo?.includes('Mulheres que Correm'));
                         return (
                           <div key={idx} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
-                               onClick={() => dbEst ? navigate(`/admin/clube/central/${dbEst.id}`) : navigate('/admin/clube/ciclos')}>
+                               onClick={() => dbEst ? navigate(`/admin/clube/central/${dbEst.id}`) : navigate('/admin/clube/ciclos?obra=Mulheres%20que%20Correm%20com%20os%20Lobos')}>
                             <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
                               {est.num}
                             </div>
@@ -154,7 +154,7 @@ export default function AdminCentralCasa() {
                     <Button 
                       variant="outline" 
                       className="border-gold/20 hover:bg-gold/5 text-gold gap-2"
-                      onClick={() => navigate('/admin/clube/ciclos')}
+                      onClick={() => navigate('/admin/clube/ciclos?obra=Mulheres%20que%20Correm%20com%20os%20Lobos')}
                     >
                       <Settings2 className="w-4 h-4" />
                       Gerir Estações
