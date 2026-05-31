@@ -65,6 +65,7 @@ const AdminClubeAcervo = lazy(() => import('@/pages/admin/clube/AdminClubeAcervo
 const AdminCentralEstacao = lazy(() => import('@/pages/admin/clube/AdminCentralEstacao'));
 const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeEditorialTab').then(m => ({ default: m.AdminClubeEditorialTab })));
 const AdminCentralCasa = lazy(() => import('@/pages/admin/AdminCentralCasa'));
+const AdminRotasCasa = lazy(() => import('@/pages/admin/AdminRotasCasa'));
 const AdminRotaDosLobosRedirect = lazy(() => import('@/pages/admin/AdminRotaDosLobosRedirect'));
 
 
@@ -101,6 +102,7 @@ const TabLoader = () => (
 const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentType<any>>> = {
   // CENTRAL
   'central-casa': AdminCentralCasa,
+  'central-rotas': AdminRotasCasa,
   'central-rota-lobos': AdminRotaDosLobosRedirect,
 
   // CLUBE PREMIUM (OFICIAL)
@@ -167,6 +169,7 @@ export default function Admin() {
     // Map URL paths to tabs
     const path = location.pathname;
     if (path === '/admin') return 'central-casa';
+    if (path === '/admin/rotas') return 'central-rotas';
     if (path === '/admin/clube') return 'clube';
     if (path === '/admin/clube/ciclos') return 'clube-jornadas';
     if (path === '/admin/clube/portais') return 'clube-portais';
