@@ -1183,13 +1183,16 @@ function Section({
   kicker,
   titulo,
   children,
+  isHidden = false,
 }: {
   id?: string;
   icon?: React.ComponentType<{ className?: string }>;
   kicker?: string;
   titulo?: string;
   children: React.ReactNode;
+  isHidden?: boolean;
 }) {
+  if (isHidden) return null;
   return (
     <section id={id} className="scroll-mt-20">
       {(kicker || titulo) && (
