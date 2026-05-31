@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { 
   Compass, Plus, Sparkles, BookOpen, Clock, Users, 
   ArrowRight, Shield, Zap, Search, Filter, MoreVertical,
-  LayoutGrid, List as ListIcon, Star
+  LayoutGrid, List as ListIcon, Star, Settings2
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
