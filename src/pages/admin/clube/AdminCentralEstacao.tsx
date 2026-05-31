@@ -244,9 +244,9 @@ export default function AdminCentralEstacao() {
             size="sm" 
             className="gap-2" 
             onClick={() => {
-              const firstPasso = passos[0];
-              if (firstPasso?.slug) {
-                navigate(`/clube/rota/${firstPasso.slug}`);
+              const currentPasso = selectedPasso || passos[0];
+              if (currentPasso?.slug) {
+                navigate(`/clube/rota/${currentPasso.slug}`);
               } else {
                 navigate('/clube');
               }
