@@ -919,8 +919,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* ═══════════ 5. TREINAMENTO ═══════════ */}
-          {simulacaoTexto && (
+          {!isTravessiaEstruturada && simulacaoTexto && (
             <Section id="treinamento-contextual" icon={Zap} kicker="Câmara de simulação" titulo="Treinamento Contextual">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
