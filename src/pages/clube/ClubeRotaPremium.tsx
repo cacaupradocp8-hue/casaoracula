@@ -776,7 +776,7 @@ export default function ClubeRotaPremium() {
           </div>
 
 
-          {temChatLivro && (
+          {!isTravessiaEstruturada && temChatLivro && (
             <Section id="converse-com-o-livro" icon={MessageSquare} kicker="Sussurros da obra" titulo="Converse com o livro">
               <Card className="bg-gradient-to-br from-gold/[0.08] via-foreground/[0.02] to-transparent border-foreground/[0.06] overflow-hidden">
                 <CardContent className="p-6 md:p-8">
