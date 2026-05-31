@@ -32,8 +32,8 @@ const HOUSE_AREAS: HouseArea[] = [
     tag: 'JORNADA'
   },
   {
-    title: 'Clube de Leitura',
-    description: 'Gestão de obras, estações e editorial.',
+    title: 'Clube Editorial',
+    description: 'Gestão de obras, estações e acervo.',
     icon: BookOpen,
     tab: 'clube',
     color: 'text-amber-500',
@@ -53,7 +53,7 @@ const HOUSE_AREAS: HouseArea[] = [
     title: 'Sala da Visitante',
     description: 'Conteúdos públicos e entrada da Casa.',
     icon: Users,
-    route: '/',
+    route: '/sala-da-visitante',
     color: 'text-blue-500',
     bg: 'bg-blue-500/10',
     tag: 'PUBLICO'
@@ -95,13 +95,13 @@ const HOUSE_AREAS: HouseArea[] = [
     tag: 'VISUAL'
   },
   {
-    title: 'Formação & Cursos',
-    description: 'Aulas, módulos e certificação profissional.',
-    icon: GraduationCap,
-    tab: 'cursos',
-    color: 'text-rose-500',
-    bg: 'bg-rose-500/10',
-    tag: 'ACADÊMICO'
+    title: 'Acervo & Biblioteca',
+    description: 'Conteúdos completos e materiais de apoio.',
+    icon: Library,
+    tab: 'clube-acervo',
+    color: 'text-orange-500',
+    bg: 'bg-orange-500/10',
+    tag: 'ACERVO'
   }
 ];
 
