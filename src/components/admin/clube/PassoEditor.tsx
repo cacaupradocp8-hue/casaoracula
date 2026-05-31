@@ -130,11 +130,24 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       torre: '',
       labirinto: '',
       frase_guia: '',
-      // Conteúdo da travessia
+      // Conteúdo da travessia (legado/base)
       jardim_prompt: '',
       cenario_treinamento: '',
       leitura_referencia: '',
-      // Metadata
+      // Metadata - Blocos da Travessia (Unificado)
+      abertura_imersiva: '',
+      caso_simbolico: { texto: '', aviso: '' },
+      desafio_terapeuta: { pergunta: '', escolhas: [] as string[] },
+      revelacao_estacao: { porta: '', campo: '', torre: '', labirinto: '', pergunta_narrativa: '' },
+      erro_comum: { titulo: '', descricao: '', exemplo: '' },
+      conducao_justa: '',
+      cautela_etica: [] as string[],
+      jardim_psique: { pergunta: '', botao: '' },
+      jardim_oficio: { pergunta: '', botao: '', aviso_etico: '' },
+      missao_campo: { titulo: '', descricao: '', sinais: '', botao: '' },
+      oraculo_estacao: { palavra: '', movimento: '', carta_final: '', frase_fechamento: '' },
+      fechamento: { texto: '', pergunta: '', botao: '', confirmacao: '' },
+      // Metadata - Outros
       audios: [] as AudioMeta[],
       perguntas_sugeridas: [] as string[],
       cta_label: '',
