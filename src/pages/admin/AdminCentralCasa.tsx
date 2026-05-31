@@ -93,119 +93,109 @@ export default function AdminCentralCasa() {
             </Button>
           </div>
 
-          <Card className="bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 backdrop-blur-xl hover:border-gold/50 transition-all duration-500 overflow-hidden group">
-            <CardContent className="p-8">
-              <div className="flex flex-col md:flex-row gap-8">
-                <div className="flex-1 space-y-6">
-                  <div className="flex justify-between items-start">
-                    <div className="p-4 rounded-2xl bg-gold/10 group-hover:scale-110 transition-transform duration-500">
-                      <Sparkles className="w-8 h-8 text-gold" />
-                    </div>
-                    <Badge className="bg-gold text-black font-bold px-3">JORNADA PRINCIPAL</Badge>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <h3 className="text-3xl font-serif text-foreground group-hover:text-gold transition-colors">Rota dos Lobos</h3>
-                      <div className="flex items-center gap-2 text-gold/80 font-medium text-sm">
-                        <BookOpen className="w-4 h-4" />
-                        <span>Obra-base: Mulheres que Correm com os Lobos</span>
-                      </div>
-                    </div>
-                    
-                    <p className="text-muted-foreground leading-relaxed max-w-xl">
-                      Edite a travessia, estações, áudios e conteúdos imersivos da jornada da Natureza Instintiva.
+          {(() => {
+            const grupos = new Map<string, { obra: string; estacoes: any[] }>();
+            (estacoes || []).forEach((e: any) => {
+              const obra = e.livro_titulo || 'Sem Obra';
+              if (!grupos.has(obra)) grupos.set(obra, { obra, estacoes: [] });
+              grupos.get(obra)!.estacoes.push(e);
+            });
+            const rotas = Array.from(grupos.values());
+
+            if (rotas.length === 0) {
+              return (
+                <Card className="bg-card/40 border-dashed border-primary/10 backdrop-blur-xl">
+                  <CardContent className="p-8 text-center space-y-3">
+                    <Sparkles className="w-8 h-8 text-gold mx-auto" />
+                    <p className="text-sm text-muted-foreground">
+                      Nenhuma Rota mapeada. Crie uma Rota e vincule uma Obra-base para começar.
                     </p>
-
-                    {/* Hierarchy Display */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4">
-                      {estacoes?.filter(e => e.livro_titulo?.includes('Mulheres que Correm')).slice(0, 6).map((est, idx) => {
-                        return (
-                          <div key={est.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group/item cursor-pointer"
-                               onClick={() => navigate(`/admin/clube/central/${est.id}`)}>
-                            <div className="w-8 h-8 rounded-lg bg-gold/20 flex items-center justify-center text-[10px] font-bold text-gold shrink-0">
-                              {est.numero || idx + 1}
-                            </div>
-                            <span className="text-sm font-medium text-foreground/80 group-hover/item:text-gold transition-colors truncate">
-                              {est.titulo}
-                            </span>
-                          </div>
-                        );
-                      })}
-                      {(!estacoes || estacoes.filter(e => e.livro_titulo?.includes('Mulheres que Correm')).length === 0) && (
-                        <div className="col-span-2 py-8 text-center border border-dashed border-primary/10 rounded-xl">
-                          <p className="text-xs text-muted-foreground">Nenhuma estação encontrada para esta rota.</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 pt-6 border-t border-gold/10">
-                    <Button 
+                    <Button
                       className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
                       onClick={() => handleSetTab('central-rotas')}
                     >
-                      <Zap className="w-4 h-4" />
-                      Acessar Rota dos Lobos
+                      Abrir Rotas da Casa <ArrowRight className="w-4 h-4" />
                     </Button>
-                    <Button 
-                      variant="outline" 
-                      className="border-gold/20 hover:bg-gold/5 text-gold gap-2"
-                      onClick={() => navigate('/admin/clube/ciclos?obra=Mulheres%20que%20Correm%20com%20os%20Lobos')}
-                    >
-                      <Settings2 className="w-4 h-4" />
-                      Gerir Estações
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      className="text-muted-foreground hover:text-gold gap-2"
-                      onClick={() => navigate('/clube')}
-                    >
-                      <Eye className="w-4 h-4" />
-                      Ver como Aluna
-                    </Button>
-                  </div>
-                </div>
-                
-                <div className="hidden md:block w-px bg-primary/10" />
-                
-                <div className="md:w-48 space-y-6">
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Status Ativo</h4>
-                    <div className="p-4 rounded-2xl bg-black/20 border border-gold/10 space-y-3">
-                      <div className="flex flex-col gap-1">
-                        <span className="text-[10px] text-muted-foreground uppercase">Estação em Foco</span>
-                        <span className="text-gold font-serif truncate">{estacaoAtiva?.titulo || 'Nenhuma'}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-[10px]">
-                        <span className="text-muted-foreground">Progresso Geral</span>
-                        <span className="text-emerald-500 font-bold">100%</span>
-                      </div>
-                    </div>
-                  </div>
+                  </CardContent>
+                </Card>
+              );
+            }
 
-                  <div className="space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-widest font-bold text-white/40">Arquitetura</h4>
-                    <ul className="space-y-2 text-[11px] text-muted-foreground font-light">
-                      <li className="flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-gold" />
-                        12 Portais Ativos
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-gold" />
-                        6 Estações Mapeadas
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <div className="w-1 h-1 rounded-full bg-gold" />
-                        Travessia Terapêutica
-                      </li>
-                    </ul>
-                  </div>
-                </div>
+            return (
+              <div className="grid grid-cols-1 gap-4">
+                {rotas.map((g, idx) => {
+                  const principal = idx === 0;
+                  const totalEstacoes = g.estacoes.length;
+                  const publicadas = g.estacoes.filter((e: any) => e.publicada).length;
+                  return (
+                    <Card
+                      key={g.obra}
+                      className={cn(
+                        'bg-card/60 border-primary/10 backdrop-blur-xl transition-all group',
+                        principal && 'bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 hover:border-gold/50'
+                      )}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between gap-4 flex-wrap">
+                          <div className="flex items-start gap-4 min-w-0">
+                            <div className={cn(
+                              'p-3 rounded-2xl shrink-0',
+                              principal ? 'bg-gold/10 text-gold' : 'bg-primary/10 text-foreground/70'
+                            )}>
+                              <Sparkles className="w-6 h-6" />
+                            </div>
+                            <div className="space-y-1 min-w-0">
+                              <h3 className={cn(
+                                'text-xl md:text-2xl font-serif truncate',
+                                principal && 'group-hover:text-gold transition-colors'
+                              )}>
+                                {g.obra}
+                              </h3>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                <BookOpen className="w-3.5 h-3.5 text-gold/60" />
+                                <span>Obra-base: {g.obra}</span>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                {totalEstacoes} estação(ões) · {publicadas} publicada(s)
+                              </p>
+                            </div>
+                          </div>
+                          <Badge className={cn(
+                            'shrink-0',
+                            publicadas > 0 ? 'bg-gold text-black' : 'bg-muted text-muted-foreground'
+                          )}>
+                            {publicadas > 0 ? 'Ativa' : 'Rascunho'}
+                          </Badge>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 pt-5 mt-5 border-t border-primary/5">
+                          <Button
+                            size="sm"
+                            className="bg-gold hover:bg-gold/80 text-black font-bold gap-2"
+                            onClick={() => handleSetTab('central-rotas')}
+                          >
+                            <Zap className="w-4 h-4" />
+                            Gerenciar Rota
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-primary/20 gap-2"
+                            onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.obra)}`)}
+                          >
+                            <Settings2 className="w-4 h-4" />
+                            Gerir Estações
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
-            </CardContent>
-          </Card>
+            );
+          })()}
         </div>
+
 
         {/* SALA DA VISITANTE */}
         <Card className="bg-card/40 border-primary/10 backdrop-blur-xl hover:border-blue-500/40 hover:bg-card/60 transition-all duration-500 overflow-hidden group">
