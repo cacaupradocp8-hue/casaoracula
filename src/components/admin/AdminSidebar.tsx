@@ -29,6 +29,15 @@ export interface AdminNavGroup {
 
 export const adminNavGroups: AdminNavGroup[] = [
   {
+    key: 'central',
+    label: 'Central da Casa',
+    emoji: '🏰',
+    icon: Castle,
+    items: [
+      { key: 'central-casa', label: 'Início (Painel)', icon: Castle },
+    ],
+  },
+  {
     key: 'clube-premium',
     label: 'Rotas da Casa',
     emoji: '✨',
@@ -213,6 +222,7 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                             } else {
                               onTabChange(item.key);
                               // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
+                              if (item.key === 'central-casa') navigate('/admin', { replace: true });
                               if (item.key === 'clube') navigate('/admin/clube', { replace: true });
                               if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
                               if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
