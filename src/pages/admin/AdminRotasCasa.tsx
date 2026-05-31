@@ -118,7 +118,7 @@ export default function AdminRotasCasa() {
           subtitulo: '', // Campo obrigatório no schema
           livro_titulo: newRota.baseWork,
           descricao: newRota.description,
-          ativa: true,
+          ativa: false, // Começa inativa por segurança
           publicada: false, // Começa como rascunho
           ordem: 1
         });
