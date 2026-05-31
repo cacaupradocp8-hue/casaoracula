@@ -545,8 +545,11 @@ export default function ClubeRotaPremium() {
                 {audios.map((audio: any, i: number) => (
                   <AudioRitualPlayer
                     key={i}
-                    audioUrl={audio.audio_url || audio.url}
-                    titulo={audio.titulo || `Áudio ${i + 1}`}
+                    audioUrl={audio.url}
+                    titulo={audio.titulo}
+                    tipo={audio.tipo}
+                    funcao={audio.funcao}
+                    duracao={audio.duracao}
                   />
                 ))}
               </div>
