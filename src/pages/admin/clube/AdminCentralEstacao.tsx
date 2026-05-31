@@ -38,7 +38,9 @@ export default function AdminCentralEstacao() {
     subtitulo: '',
     descricao: '',
     publicada: false,
-    ativa: false
+    ativa: false,
+    banner_url: '',
+    livro_capa_url: ''
   });
 
   // 1. Fetch Estação
@@ -80,7 +82,9 @@ export default function AdminCentralEstacao() {
         subtitulo: estacao.subtitulo || '',
         descricao: estacao.descricao || '',
         publicada: estacao.publicada || false,
-        ativa: estacao.ativa || false
+        ativa: estacao.ativa || false,
+        banner_url: estacao.banner_url || '',
+        livro_capa_url: estacao.livro_capa_url || ''
       });
     }
   }, [estacao]);
@@ -103,7 +107,9 @@ export default function AdminCentralEstacao() {
           subtitulo: data.subtitulo,
           descricao: data.descricao,
           publicada: data.publicada,
-          ativa: data.ativa
+          ativa: data.ativa,
+          banner_url: data.banner_url,
+          livro_capa_url: data.livro_capa_url
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -310,7 +316,7 @@ export default function AdminCentralEstacao() {
           <DialogHeader>
             <DialogTitle>Configurações da Estação</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2">
             <div className="space-y-2">
               <Label>Título</Label>
               <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
@@ -318,6 +324,14 @@ export default function AdminCentralEstacao() {
             <div className="space-y-2">
               <Label>Subtítulo</Label>
               <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
+            </div>
+            <div className="space-y-2">
+              <Label>Banner URL (Fundo)</Label>
+              <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} placeholder="https://..." />
+            </div>
+            <div className="space-y-2">
+              <Label>Capa do Livro URL (Capa)</Label>
+              <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} placeholder="https://..." />
             </div>
             <div className="flex items-center gap-6 pt-2">
               <div className="flex items-center gap-2">
