@@ -49,7 +49,7 @@ import chamadoSelvagemHero from '@/assets/chamado-selvagem-hero.png';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular();
   const { data: allBooks = [] } = useAllBooks();
   
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
