@@ -329,9 +329,12 @@ export default function ClubeRotaPremium() {
                     questoes: ponto.metadata.ferramenta_oracular.questoes || ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
                       id: ind.id,
                       texto: ind.label,
-                      tipo_resposta: ind.tipo_resposta || 'escala_1_5'
+                      tipo_resposta: ind.tipo_resposta || (ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao')
                     })) || []
                   }} 
+                  onComplete={(respostas) => {
+                    console.log('[Camada 2] Respostas rastreamento:', respostas);
+                  }}
                 />
               </Section>
             )}
@@ -373,21 +376,6 @@ export default function ClubeRotaPremium() {
                 </Section>
               );
             })()}
-                <FerramentaOracularPlayer 
-                  data={{
-                    ...ponto.metadata.ferramenta_oracular,
-                    questoes: ponto.metadata.ferramenta_oracular.indicadores?.map((i: any) => ({
-                      id: i.id,
-                      texto: i.label,
-                      tipo_resposta: ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao'
-                    })) || []
-                  }} 
-                  onComplete={(respostas) => {
-                    console.log('[Camada 2] Respostas rastreamento:', respostas);
-                  }}
-                />
-              </Section>
-            )}
 
             {/* Jardins */}
             {(() => {
