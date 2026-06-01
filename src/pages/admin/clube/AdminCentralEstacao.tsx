@@ -58,7 +58,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: boolean;
+  camada_metodo: string;
 }
 
 interface EditorFormState {
@@ -479,7 +479,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo ?? true
+      camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo || ''
     },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -591,7 +591,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo ?? true
+        camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo || ''
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
@@ -1037,9 +1037,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
-                        <Switch 
-                          checked={form.ferramenta_oracular.camada_metodo} 
-                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v}})} 
+                        <Input 
+                          value={form.ferramenta_oracular.camada_metodo} 
+                          onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: e.target.value}})} 
+                          className="h-8 text-xs" 
+                          placeholder="Ex: Camada Oracular"
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
