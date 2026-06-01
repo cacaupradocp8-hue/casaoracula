@@ -15,6 +15,7 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
   return (
     <>
       <Route key="adm" path="/admin" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route key="adm-rotas" path="/admin/rotas" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-fc" path="/admin/ferramentas/criar" element={<ProtectedRoute minPortal="admin"><CriarFerramenta /></ProtectedRoute>} />
       
       <Route key="adm-mf" path="/admin/modulos-formativos" element={<ProtectedRoute minPortal="admin"><AdminModulosFormativos /></ProtectedRoute>} />
