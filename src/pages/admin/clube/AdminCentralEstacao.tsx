@@ -687,6 +687,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       titulo: form.titulo,
       subtitulo: form.subtitulo,
       conteudo_inline: { texto: form.conteudo_texto },
+      ferramenta_oracular: form.ferramenta_oracular,
+      conto_espelho: form.conto_espelho,
       metadata: {
         ...passo.metadata,
         abertura_imersiva: form.abertura_imersiva,
@@ -694,6 +696,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         audios: form.audios,
         caso_simbolico: form.caso_simbolico,
         desafio_terapeuta: form.desafio_terapeuta,
+        // Mantemos no metadata para compatibilidade se necessário, mas o principal agora são as colunas
         ferramenta_oracular: form.ferramenta_oracular,
         revelacao_estacao: form.revelacao_estacao,
         erro_comum: form.erro_comum,
