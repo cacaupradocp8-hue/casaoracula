@@ -740,74 +740,92 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Missão de Campo */}
-            {ponto.metadata?.missao_campo && (
-              <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={ponto.metadata.missao_campo.titulo || "Missão de Campo"} isHidden={isTravessiaEstruturada}>
-                <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
-                  <p className="text-white/80 font-serif text-xl italic leading-relaxed">
-                    {ponto.metadata.missao_campo.descricao}
-                  </p>
-                  {ponto.metadata.missao_campo.sinais && (
-                    <div className="py-4 border-y border-gold/10 space-y-2">
-                       <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold">Sinais a observar:</span>
-                       <p className="text-white/60 text-sm italic">{ponto.metadata.missao_campo.sinais}</p>
-                    </div>
-                  )}
-                  <Button variant="gold" className="rounded-full h-14 px-10 font-bold uppercase tracking-widest text-[11px]">
-                    {ponto.metadata.missao_campo.botao || "Iniciar Missão"}
-                  </Button>
-                </div>
-              </Section>
-            )}
+            {(() => {
+              const missao = ponto.metadata?.missao_campo;
+              const desc = renderContent(missao?.descricao || missao);
+              const show = Boolean(desc && desc.trim());
+              if (!show) return null;
+
+              return (
+                <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={missao?.titulo || "Missão de Campo"} isHidden={isTravessiaEstruturada}>
+                  <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
+                    <p className="text-white/80 font-serif text-xl italic leading-relaxed">
+                      {desc}
+                    </p>
+                    {missao?.sinais && (
+                      <div className="py-4 border-y border-gold/10 space-y-2">
+                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold">Sinais a observar:</span>
+                         <p className="text-white/60 text-sm italic">{missao.sinais}</p>
+                      </div>
+                    )}
+                    <Button variant="gold" className="rounded-full h-14 px-10 font-bold uppercase tracking-widest text-[11px]">
+                      {missao?.botao || "Iniciar Missão"}
+                    </Button>
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Oráculo da Estação */}
-            {ponto.metadata?.oraculo_estacao && (
-              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
-
-                <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
-                  <div className="space-y-2">
-                    <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
-                    <h3 className="font-display text-5xl md:text-7xl text-gold tracking-tighter">
-                      {ponto.metadata.oraculo_estacao.palavra}
-                    </h3>
-                  </div>
-                  {ponto.metadata.oraculo_estacao.movimento && (
-                    <div className="space-y-2">
-                      <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
-                      <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed">
-                        {ponto.metadata.oraculo_estacao.movimento}
-                      </p>
+            {(() => {
+               const oraculo = ponto.metadata?.oraculo_estacao;
+               const show = Boolean(oraculo && oraculo.palavra && oraculo.palavra.trim());
+               if (!show) return null;
+               return (
+                  <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
+                    <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
+                      <div className="space-y-2">
+                        <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
+                        <h3 className="font-display text-5xl md:text-7xl text-gold tracking-tighter">
+                          {oraculo.palavra}
+                        </h3>
+                      </div>
+                      {oraculo.movimento && (
+                        <div className="space-y-2">
+                          <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
+                          <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed">
+                            {oraculo.movimento}
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
-              </Section>
-            )}
+                  </Section>
+               );
+            })()}
 
             {/* Conclusão */}
-            {ponto.metadata?.fechamento && (
-              <Section id="fechamento-estacao" icon={Check} kicker="Encerramento" titulo="Travessia Concluída">
-                <div className="max-w-2xl mx-auto text-center space-y-8">
-                  <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
-                    {ponto.metadata.fechamento.texto}
-                  </p>
-                  <div className="flex flex-col items-center gap-6">
-                    <Button 
-                      variant="gold" 
-                      className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
-                      onClick={() => navigate('/clube')}
-                    >
-                      {ponto.metadata.fechamento.botao || "Concluir Estação"}
-                    </Button>
-                    
-                    <button 
-                      onClick={() => navigate('/clube')}
-                      className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
-                    >
-                      Voltar à rota
-                    </button>
+            {(() => {
+              const fechamento = ponto.metadata?.fechamento;
+              const texto = renderContent(fechamento?.texto || fechamento);
+              const show = Boolean(texto && texto.trim());
+              if (!show) return null;
+
+              return (
+                <Section id="fechamento-estacao" icon={Check} kicker="Encerramento" titulo="Travessia Concluída">
+                  <div className="max-w-2xl mx-auto text-center space-y-8">
+                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                      {texto}
+                    </p>
+                    <div className="flex flex-col items-center gap-6">
+                      <Button 
+                        variant="gold" 
+                        className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
+                        onClick={() => navigate('/clube')}
+                      >
+                        {fechamento?.botao || "Concluir Estação"}
+                      </Button>
+                      
+                      <button 
+                        onClick={() => navigate('/clube')}
+                        className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
+                      >
+                        Voltar à rota
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </Section>
-            )}
+                </Section>
+              );
+            })()}
           </div>
 
 
