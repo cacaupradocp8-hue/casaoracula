@@ -498,11 +498,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
         pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
       },
-      conto_espelho: {
-        titulo: (passo as any).conto_espelho?.titulo || '',
-        texto: (passo as any).conto_espelho?.texto || '',
-        moral: (passo as any).conto_espelho?.moral || ''
-      },
+    conto_espelho: {
+      titulo: passo.metadata?.conto_espelho?.titulo || '',
+      texto: passo.metadata?.conto_espelho?.texto || '',
+      moral: passo.metadata?.conto_espelho?.moral || ''
+    },
     erro_comum: {
       titulo: passo.metadata?.erro_comum?.titulo || '',
       descricao: passo.metadata?.erro_comum?.descricao || '',
