@@ -271,8 +271,8 @@ export function useRotaOracular() {
       cenario_treinamento: item.cenario_treinamento,
       leitura_referencia: item.leitura_referencia,
       image_url: item.image_url,
-      ferramenta_oracular: (item.metadata as any)?.ferramenta_oracular,
-      conto_espelho: (item.metadata as any)?.conto_espelho,
+      ferramenta_oracular: item.metadata?.ferramenta_oracular,
+      conto_espelho: item.metadata?.conto_espelho,
       
       conteudo_inline: item.conteudo_inline,
       metadata: item.metadata,
@@ -342,7 +342,7 @@ export function useRotaOracular() {
       }).length;
 
       if (totalOb > 0 && doneOb >= totalOb) {
-        console.log('[useRotaOracular] Estação 100% concluída. Registrando na Cidadela...');
+        console.log('[useRotaOracular] Estação 100% concluída. Registrando na jornada...');
         await addTravessiaToHistorico(user.id, {
           distrito: estacaoAtual.titulo,
           tipo: 'estacao_concluida',

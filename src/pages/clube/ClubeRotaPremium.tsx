@@ -218,7 +218,7 @@ export default function ClubeRotaPremium() {
                   { icon: Headphones, label: 'Escuta', id: 'audio-travessia', show: audios.length > 0 },
                   { icon: BookOpen, label: 'Leitura', id: 'conteudo-estacao', show: Boolean(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura) },
                   { icon: Eye, label: 'Caso', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
-                  { icon: Radar, label: 'Rastreio', id: 'ferramenta-oracular', show: Boolean(ponto.ferramenta_oracular) },
+                  { icon: Radar, label: 'Rastreio', id: 'ferramenta-oracular', show: Boolean(ponto.metadata?.ferramenta_oracular?.enabled) },
                   { icon: Sword, label: 'Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
                   { icon: Flower2, label: 'Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
                   { icon: MapPin, label: 'Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
@@ -319,10 +319,10 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Ferramenta Oracular (Camada 2) */}
-            {ponto.ferramenta_oracular?.enabled && (
+            {ponto.metadata?.ferramenta_oracular?.enabled && (
               <Section id="ferramenta-oracular" icon={Radar} kicker="Camada 2" titulo="Rastreamento Simbólico">
                 <FerramentaOracularPlayer 
-                  data={ponto.ferramenta_oracular} 
+                  data={ponto.metadata.ferramenta_oracular} 
                   onComplete={(respostas) => {
                     console.log('[Camada 2] Respostas rastreamento:', respostas);
                   }}
