@@ -58,6 +58,7 @@ export function renderLegacyRedirects() {
       <Route path="/admin/vitrine-cards" element={<Navigate to="/admin/clube" replace />} />
       <Route path="/admin/clube/oraculo-portais" element={<Navigate to="/admin/clube/portais" replace />} />
       <Route path="/admin/clube/oraculo-portais/:portalId" element={<Navigate to="/admin/clube/portais" replace />} />
+      <Route path="/admin/rotas-da-casa" element={<Navigate to="/admin/rotas" replace />} />
 
       {/* ─── REDIRECIONAMENTOS DE CLUBE E CONTEÚDO ─── */}
       <Route path="/biblioteca-das-travessias" element={<Navigate to="/clube/acervo" replace />} />

@@ -110,7 +110,7 @@ export default function AdminCentralJornadas() {
               if ((window as any).Admin_SetActiveTab) {
                 (window as any).Admin_SetActiveTab('central-rotas');
               }
-              navigate('/admin/rotas-da-casa');
+              navigate('/admin/rotas');
             }}>
               <ArrowLeft className="h-4 w-4" />
             </Button>

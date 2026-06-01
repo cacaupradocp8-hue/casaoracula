@@ -73,7 +73,7 @@ export default function AdminCentralCasa() {
               <Compass className="w-6 h-6 text-gold" />
               <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
             </div>
-            <Button variant="ghost" size="sm" className="text-gold hover:text-gold hover:bg-gold/10 gap-2" onClick={() => handleSetTab('central-rotas')}>
+            <Button variant="ghost" size="sm" className="text-gold hover:text-gold hover:bg-gold/10 gap-2" onClick={() => navigate('/admin/rotas')}>
               Ver todas as rotas <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
@@ -93,7 +93,7 @@ export default function AdminCentralCasa() {
             // 2) Agrupar Estações Reais
             estacoes.forEach((e: any) => {
               const obra = e.livro_titulo || 'Sem Obra';
-              if (obra.startsWith('SISTEMA_ROTAS:')) return;
+              if (obra.startsWith('ROTAS:') || obra.startsWith('SISTEMA_ROTAS:')) return;
 
               const rota = obraToRota.get(obra) || (obra.includes('Mulheres que Correm com os Lobos') ? 'Rota dos Lobos' : null);
               if (!rota) return;
@@ -144,7 +144,7 @@ export default function AdminCentralCasa() {
                           </Badge>
                         </div>
                         <div className="flex gap-2 mt-6 pt-6 border-t border-primary/5">
-                          <Button size="sm" className="bg-gold text-black font-bold gap-2" onClick={() => navigate('/admin/rotas-da-casa')}>
+                          <Button size="sm" className="bg-gold text-black font-bold gap-2" onClick={() => navigate('/admin/rotas')}>
                             <Zap className="w-4 h-4" /> Gerenciar Rota
                           </Button>
                           <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.principalObra)}`)}>

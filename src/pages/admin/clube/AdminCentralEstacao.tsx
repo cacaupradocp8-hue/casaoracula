@@ -227,7 +227,7 @@ export default function AdminCentralEstacao() {
               </Button>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest mb-1">
-                  <span className="cursor-pointer hover:text-gold" onClick={() => navigate('/admin/rotas-da-casa')}>Rotas da Casa</span>
+                  <span className="cursor-pointer hover:text-gold" onClick={() => navigate('/admin/rotas')}>Rotas da Casa</span>
                   <ChevronRight className="w-2.5 h-2.5" />
                   <span className="text-gold">{estacao.livro_titulo || 'Rota'}</span>
                 </div>
