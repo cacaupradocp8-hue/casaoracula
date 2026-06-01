@@ -13,6 +13,12 @@ import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+function getObraFromItem(item: any) {
+  const metadata = (item?.metadata || {}) as Record<string, unknown>;
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  return livro_titulo || null;
+}
+
 export default function AdminCentralCasa() {
   const navigate = useNavigate();
 
@@ -40,7 +46,7 @@ export default function AdminCentralCasa() {
         
       const { data: items } = await supabase
         .from('clube_rota_itens')
-        .select('estacao_id, rota_custom')
+        .select('estacao_id, rota_custom, tipo, metadata')
         .not('rota_custom', 'is', null);
 
       return { estacoes: estacoes || [], items: items || [] };
