@@ -249,133 +249,16 @@ export default function AdminRotasCasa() {
   const handleCriarRota = async () => {
     if (!novaRota.nome.trim()) {
       toast.error('Informe o nome da Rota.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const nome = novaRota.nome.trim();
-      
-      // 1) Estação técnica (Anchor)
-      const { data: estacao, error: errEst } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: 0,
-          titulo: `Módulo: ${nome}`,
-          subtitulo: 'Âncora',
-          livro_titulo: `ROTAS: ${nome}`,
-          descricao: novaRota.descricao.trim(),
-          ativa: false,
-          publicada: false,
-        })
-        .select()
-        .single();
-      if (errEst) throw errEst;
-
-      // 2) Item de Rota
-      const { error: errItem } = await supabase
-        .from('clube_rota_itens')
-        .insert({
-          estacao_id: estacao.id,
-          rota_custom: nome,
-          tipo: 'rota_marker',
-          titulo: 'Configuração da Rota',
-          slug: `rota-def-${slugify(nome)}`,
-          ordem: 0,
-          publicado: false
-        });
-      if (errItem) throw errItem;
-
-      setNovaRota({ nome: '', descricao: '' });
-      setOpenRotaDialog(false);
-      toast.success('Rota criada com sucesso.');
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro ao criar rota: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+  const handleCriarRota = async () => {
+    toast.error('Criação congelada.');
   };
 
   const handleAdicionarObra = async () => {
-    if (!novaObra.rotaNome || !novaObra.livro_titulo.trim()) {
-      toast.error('Informe a Rota e o Título da Obra.');
-      return;
-    }
-    
-    // Busca a estação técnica da rota para usar como estacao_id (FK obrigatória)
-    const rotaAnchor = items.find(i => i.rota_custom === novaObra.rotaNome && i.tipo === 'rota_marker');
-    if (!rotaAnchor?.estacao_id) {
-      toast.error('Erro técnico: Rota sem estação âncora.');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const tituloObra = novaObra.livro_titulo.trim();
-      
-      // AQUI: Salva APENAS em clube_rota_itens. Metadata contém a definição da Obra.
-      // NENHUMA linha é criada em clube_estacoes aqui.
-      const { error } = await supabase
-        .from('clube_rota_itens')
-        .insert({
-          estacao_id: rotaAnchor.estacao_id,
-          rota_custom: novaObra.rotaNome,
-          tipo: 'obra_marker',
-          titulo: `Obra-base: ${tituloObra}`,
-          slug: `obra-base-${slugify(novaObra.rotaNome)}-${slugify(tituloObra)}`,
-          ordem: 0,
-          publicado: false,
-          metadata: {
-            tipo: 'obra_base', // Identificador solicitado
-            livro_titulo: tituloObra,
-            livro_autor: novaObra.livro_autor.trim() || null,
-            livro_capa_url: novaObra.livro_capa_url.trim() || null,
-          }
-        });
-      if (error) throw error;
-
-      toast.success('Obra-base vinculada. Nenhuma estação real foi criada ainda.');
-      setOpenObraDialog(false);
-      setNovaObra({ rotaNome: '', livro_titulo: '', livro_autor: '', livro_capa_url: '' });
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    toast.error('Criação congelada.');
   };
 
   const handleAdicionarEstacao = async () => {
-    if (!novaEstacao.livro_titulo || !novaEstacao.titulo.trim()) {
-      toast.error('Selecione a Obra e informe o título.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const maxNum = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
-      const { error } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: maxNum + 1,
-          titulo: novaEstacao.titulo.trim(),
-          subtitulo: novaEstacao.subtitulo.trim(),
-          livro_titulo: novaEstacao.livro_titulo,
-          ativa: false,
-          publicada: false, // Inicia como rascunho
-          ordem: maxNum + 1,
-          slug: slugify(novaEstacao.titulo.trim())
-        });
-      if (error) throw error;
-
-      toast.success('Estação criada como rascunho.');
-      setOpenEstacaoDialog(false);
-      setNovaEstacao({ livro_titulo: '', titulo: '', subtitulo: '' });
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    toast.error('Criação congelada.');
   };
 
   const obrasDisponiveis = useMemo(() => {
