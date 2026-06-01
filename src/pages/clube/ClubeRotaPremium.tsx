@@ -319,7 +319,7 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Ferramenta Oracular (Camada 2) */}
-            {ponto.ferramenta_oracular && (
+            {ponto.ferramenta_oracular?.enabled && (
               <Section id="ferramenta-oracular" icon={Radar} kicker="Camada 2" titulo="Rastreamento Simbólico">
                 <FerramentaOracularPlayer 
                   data={ponto.ferramenta_oracular} 
