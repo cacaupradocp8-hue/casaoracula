@@ -2,259 +2,123 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
-  Plus, Sparkles, BookOpen, ArrowRight, Search,
+  BookOpen, Search,
   Loader2, AlertCircle, Route as RouteIcon, Layers, Compass
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
-import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-
-
-function cleanTechnicalTitle(title: string) {
-  if (!title) return '';
-  return title
-    .replace('SISTEMA_ROTAS:', '')
-    .replace('ROTAS:', '')
-    .replace('Módulo:', '')
-    .trim();
-}
-
-
 
 /**
- * AdminRotasCasa — Gerenciamento de Rotas da Casa
+ * AdminRotasCasa — Versão Read-Only e Limpa
  * 
- * Este painel está em modo de manutenção (congelado).
- * Permite apenas a navegação e edição de estações existentes na Rota dos Lobos.
+ * Foco exclusivo na exibição da Rota dos Lobos e suas obras/estações.
+ * Criação técnica removida.
  */
 
+interface EstacaoSimples {
+  id: string;
+  numero: number;
+  titulo: string;
+  publicada: boolean;
+  livro_titulo: string;
+}
 
 interface ObraResumo {
-  livro_titulo: string;
-  livro_autor: string | null;
-  estacoes: number;
-  publicadas: number;
-  livro_capa_url?: string | null;
+  titulo: string;
+  estacoes: EstacaoSimples[];
 }
 
 interface RotaAgrupada {
-  id: string;            // nome da rota (rota_custom)
+  id: string;
   nome: string;
-  descricao?: string;
   obras: ObraResumo[];
-  totalEstacoes: number;
-  algumaPublicada: boolean;
-  isMarker?: boolean;
 }
-
-function getObraFromItem(item: any) {
-  const metadata = (item?.metadata || {}) as Record<string, unknown>;
-  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
-  if (!livro_titulo) return null;
-
-  return {
-    livro_titulo,
-    livro_autor: typeof metadata.livro_autor === 'string' ? metadata.livro_autor : null,
-    livro_capa_url: typeof metadata.livro_capa_url === 'string' ? metadata.livro_capa_url : null,
-  };
-}
-
-function slugify(text: string) {
-  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-}
-
-const ROTA_LOBOS = 'Rota dos Lobos';
-const OBRA_LOBOS = 'Mulheres que Correm com os Lobos';
 
 export default function AdminRotasCasa() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const [submitting, setSubmitting] = useState(false);
-
-
-  const { data: dbData, isLoading, refetch } = useQuery({
-    queryKey: ['admin-rotas-casa-v4'],
+  const { data: dbData, isLoading } = useQuery({
+    queryKey: ['admin-rotas-casa-readonly'],
     queryFn: async () => {
-      const { data: estacoes, error: errEst } = await supabase
+      const { data: estacoes, error } = await supabase
         .from('clube_estacoes')
-        .select('id, numero, titulo, subtitulo, livro_titulo, livro_autor, ativa, publicada, updated_at, descricao')
+        .select('id, numero, titulo, livro_titulo, publicada')
         .order('numero', { ascending: true });
-      if (errEst) throw errEst;
-
-      const { data: items, error: errItems } = await supabase
-        .from('clube_rota_itens')
-        .select('estacao_id, rota_custom, tipo, titulo, metadata')
-        .not('rota_custom', 'is', null);
-      if (errItems) throw errItems;
-
-      return { estacoes: estacoes || [], items: items || [] };
+      
+      if (error) throw error;
+      return estacoes || [];
     },
   });
 
-  const { estacoes, items } = dbData || { estacoes: [], items: [] };
-
   const rotasAgrupadas: RotaAgrupada[] = useMemo(() => {
-    const map = new Map<string, RotaAgrupada>();
-    const obraToRota = new Map<string, string>();
-    const obraMetadata = new Map<string, ObraResumo>();
-    const estacaoToRota = new Map<string, string>();
+    if (!dbData) return [];
 
-    // 1) Identificar Rotas e Obras-base pelos itens técnicos
-    for (const item of items) {
-      if (!item.rota_custom) continue;
-
-      if (item.tipo === 'rota_marker') {
-        if (!map.has(item.rota_custom)) {
-          map.set(item.rota_custom, {
-            id: item.rota_custom,
-            nome: item.rota_custom,
-            obras: [],
-            totalEstacoes: 0,
-            algumaPublicada: false,
-            isMarker: true
-          });
-        }
-        // Tentamos pegar a descrição da estação técnica
-        const st = estacoes.find(e => e.id === item.estacao_id);
-        if (st && st.descricao) {
-          map.get(item.rota_custom)!.descricao = st.descricao;
-        }
-      }
-
-      if (item.tipo === 'obra_marker') {
-        const info = getObraFromItem(item);
-        if (info) {
-          obraToRota.set(info.livro_titulo, item.rota_custom);
-          obraMetadata.set(info.livro_titulo, {
-            ...info,
-            estacoes: 0,
-            publicadas: 0,
-          });
-        }
-      }
-      
-      // Mapeamento geral para qualquer item que tenha rota_custom
-      if (item.estacao_id) {
-        estacaoToRota.set(item.estacao_id, item.rota_custom);
-      }
-    }
-
-    // 2) Mapear legado e vincular Estações Reais às Obras
-    const finalObras = new Map<string, ObraResumo>(obraMetadata);
+    const estacoes = dbData as EstacaoSimples[];
     
-    for (const e of estacoes) {
-      const obraNome = e.livro_titulo || 'Sem Obra';
-      const isSystem = false;
-      const isMarker = false;
+    // Filtramos apenas as estações reais (com número > 0)
+    const estacoesReais = estacoes.filter(e => e.numero > 0);
 
-      if (isSystem || isMarker) continue;
+    // Agrupamos por obra (livro_titulo)
+    const obrasMap = new Map<string, EstacaoSimples[]>();
+    estacoesReais.forEach(e => {
+      const obra = e.livro_titulo || 'Sem Obra';
+      if (!obrasMap.has(obra)) obrasMap.set(obra, []);
+      obrasMap.get(obra)!.push(e);
+    });
 
-      // Se a obra não foi mapeada por um item obra_marker, verificamos se alguma estação dela está em uma rota
-      const rotaDaEstacao = estacaoToRota.get(e.id);
-      if (rotaDaEstacao && !obraToRota.has(obraNome)) {
-        obraToRota.set(obraNome, rotaDaEstacao);
-      }
+    const obras: ObraResumo[] = Array.from(obrasMap.entries()).map(([titulo, ests]) => ({
+      titulo,
+      estacoes: ests
+    }));
 
-      const rotaFinal = obraToRota.get(obraNome) || (obraNome.includes(OBRA_LOBOS) ? ROTA_LOBOS : null);
-      if (!rotaFinal) continue;
-
-      if (!finalObras.has(obraNome)) {
-        finalObras.set(obraNome, {
-          livro_titulo: obraNome,
-          livro_autor: e.livro_autor || null,
-          estacoes: 0,
-          publicadas: 0,
-        });
-      }
-
-      const o = finalObras.get(obraNome)!;
-      o.estacoes += 1;
-      if (e.publicada) o.publicadas += 1;
-
-      // Garantir que a rota existe no map
-      if (!map.has(rotaFinal)) {
-        map.set(rotaFinal, {
-          id: rotaFinal,
-          nome: rotaFinal,
-          obras: [],
-          totalEstacoes: 0,
-          algumaPublicada: false,
-        });
-      }
-      const r = map.get(rotaFinal)!;
-      r.isMarker = false;
-      if (!r.obras.some(ob => ob.livro_titulo === obraNome)) {
-        r.obras.push(o);
-      }
-    }
-
-    // 3) Adicionar Obras vazias que foram mapeadas mas não têm estações
-    for (const [obraNome, rotaFinal] of obraToRota) {
-      if (!map.has(rotaFinal)) {
-        map.set(rotaFinal, {
-          id: rotaFinal,
-          nome: rotaFinal,
-          obras: [],
-          totalEstacoes: 0,
-          algumaPublicada: false,
-        });
-      }
-      const r = map.get(rotaFinal)!;
-      if (!r.obras.some(ob => ob.livro_titulo === obraNome)) {
-        const o = finalObras.get(obraNome);
-        if (o) r.obras.push(o);
-      }
-    }
-
-    // Recalcular totais
-    for (const r of map.values()) {
-      r.totalEstacoes = r.obras.reduce((sum, o) => sum + o.estacoes, 0);
-      r.algumaPublicada = r.obras.some(o => o.publicadas > 0);
-    }
-
-    return Array.from(map.values());
-  }, [estacoes, items]);
+    // Para este hotfix, mostramos tudo sob "Rotas da Casa"
+    return [{
+      id: 'rotas-da-casa',
+      nome: 'Rotas da Casa',
+      obras: obras
+    }];
+  }, [dbData]);
 
   const filtered = useMemo(() => {
     const q = searchTerm.toLowerCase();
     if (!q) return rotasAgrupadas;
-    return rotasAgrupadas.filter(r =>
-      r.nome.toLowerCase().includes(q) ||
-      r.obras.some(o => o.livro_titulo.toLowerCase().includes(q))
-    );
+    
+    return rotasAgrupadas.map(rota => ({
+      ...rota,
+      obras: rota.obras.filter(o => 
+        o.titulo.toLowerCase().includes(q) || 
+        o.estacoes.some(e => e.titulo.toLowerCase().includes(q))
+      )
+    })).filter(rota => rota.obras.length > 0);
   }, [rotasAgrupadas, searchTerm]);
 
-  const obrasDisponiveis = useMemo(() => {
-    const list: ObraResumo[] = [];
-    rotasAgrupadas.forEach(r => r.obras.forEach(o => {
-      if (!list.some(x => x.livro_titulo === o.livro_titulo)) list.push(o);
-    }));
-    return list;
-  }, [rotasAgrupadas]);
-
-
-  if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-gold" /></div>;
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[400px]">
+        <Loader2 className="animate-spin text-gold w-8 h-8" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 p-4 md:p-8 animate-in fade-in duration-700">
-      {/* Header e Search (omitidos para brevidade se não mudaram, mas aqui incluímos o essencial) */}
-      <div className="flex justify-between items-end gap-4">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-serif text-foreground">Rotas da Casa</h1>
-          <p className="text-muted-foreground font-light">Gerencie as travessias e obras-base da Cidadela.</p>
+          <p className="text-muted-foreground font-light">Visualização das travessias e estações da Cidadela.</p>
         </div>
-        <div className="flex gap-2">
+        
+        <div className="flex flex-wrap gap-2">
           <div className="group relative">
             <Button variant="outline" disabled className="border-gold/30 text-gold/50 cursor-not-allowed gap-2 opacity-50">
               <RouteIcon className="w-4 h-4" /> Nova Rota
             </Button>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-              Criação de novas rotas congelada. Use a Rota dos Lobos.
+              Criação congelada.
             </div>
           </div>
           
@@ -263,7 +127,7 @@ export default function AdminRotasCasa() {
               <BookOpen className="w-4 h-4" /> Nova Obra-base
             </Button>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-              Novas obras-base congeladas nesta etapa.
+              Criação congelada.
             </div>
           </div>
 
@@ -272,7 +136,7 @@ export default function AdminRotasCasa() {
               <Layers className="w-4 h-4" /> Nova Estação
             </Button>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-              Criação de novas estações congelada.
+              Criação congelada.
             </div>
           </div>
         </div>
@@ -282,7 +146,7 @@ export default function AdminRotasCasa() {
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <Input 
           className="pl-10 bg-card/40" 
-          placeholder="Buscar..." 
+          placeholder="Buscar obra ou estação..." 
           value={searchTerm} 
           onChange={e => setSearchTerm(e.target.value)} 
         />
@@ -291,59 +155,51 @@ export default function AdminRotasCasa() {
       {filtered.length === 0 ? (
         <Card className="bg-card/20 border-dashed border-primary/10 p-20 text-center">
           <AlertCircle className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-          <p className="text-muted-foreground">Nenhuma rota encontrada.</p>
+          <p className="text-muted-foreground">Nenhuma rota ou obra encontrada.</p>
         </Card>
       ) : (
-        <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-8">
           {filtered.map(rota => (
-            <Card key={rota.id} className="bg-card/60 border-primary/10 overflow-hidden">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex justify-between items-start">
-                  <div className="flex gap-4">
-                    <div className="p-3 rounded-xl bg-gold/10 text-gold"><Compass className="w-6 h-6" /></div>
-                    <div>
-                      <h2 className="text-2xl font-serif text-foreground">{cleanTechnicalTitle(rota.nome)}</h2>
-                      <p className="text-xs text-muted-foreground mt-1">{rota.obras.length} obras · {rota.totalEstacoes} estações</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 gap-4">
-                  {rota.obras.map(obra => {
-                    const ests = (estacoes || []).filter(e => e.livro_titulo === obra.livro_titulo && e.numero > 0);
-                    return (
-                      <div key={obra.livro_titulo} className="p-4 rounded-xl border border-primary/5 bg-background/20 space-y-3">
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-3">
-                            <BookOpen className="w-4 h-4 text-emerald-400" />
-                            <span className="font-medium">{cleanTechnicalTitle(obra.livro_titulo)}</span>
-                          </div>
-                          <Button variant="ghost" size="sm" disabled className="text-xs h-8 gap-1 opacity-50 cursor-not-allowed">
-                            <Plus className="w-3 h-3" /> Estação
-                          </Button>
-                        </div>
-                        <ul className="space-y-1 pl-7">
-                          {ests.map(est => (
-                            <li key={est.id} className="text-sm text-muted-foreground flex justify-between items-center group cursor-pointer hover:text-foreground" onClick={() => navigate(`/admin/clube/central/${est.id}`)}>
-                              <span>{est.numero}. {est.titulo}</span>
-                              <Badge variant="outline" className="text-[9px] opacity-0 group-hover:opacity-100 transition-opacity">
-                                {est.publicada ? 'Publicada' : 'Rascunho'}
-                              </Badge>
-                            </li>
-                          ))}
-                          {ests.length === 0 && <li className="text-xs text-muted-foreground italic">Nenhuma estação criada.</li>}
-                        </ul>
+            <div key={rota.id} className="space-y-6">
+              <div className="flex items-center gap-3 text-gold">
+                <Compass className="w-6 h-6" />
+                <h2 className="text-2xl font-serif">{rota.nome}</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {rota.obras.map(obra => (
+                  <Card key={obra.titulo} className="bg-card/60 border-primary/10 hover:border-primary/20 transition-colors overflow-hidden">
+                    <CardContent className="p-6 space-y-4">
+                      <div className="flex items-center gap-3 border-b border-primary/5 pb-3">
+                        <BookOpen className="w-5 h-5 text-emerald-400" />
+                        <h3 className="font-serif text-xl text-foreground/90">{obra.titulo}</h3>
                       </div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+                      
+                      <div className="space-y-2">
+                        {obra.estacoes.map(est => (
+                          <div 
+                            key={est.id} 
+                            onClick={() => navigate(`/admin/clube/central/${est.id}`)}
+                            className="flex items-center justify-between p-2 rounded-lg hover:bg-primary/5 cursor-pointer group transition-all"
+                          >
+                            <div className="flex items-center gap-3 text-sm text-muted-foreground group-hover:text-foreground">
+                              <span className="w-6 text-xs font-mono text-gold/60">{String(est.numero).padStart(2, '0')}</span>
+                              <span>{est.titulo}</span>
+                            </div>
+                            <Badge variant={est.publicada ? "default" : "outline"} className="text-[9px] uppercase tracking-wider">
+                              {est.publicada ? 'Publicada' : 'Rascunho'}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
-
     </div>
-
   );
 }
