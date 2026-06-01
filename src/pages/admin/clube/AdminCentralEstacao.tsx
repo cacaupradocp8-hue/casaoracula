@@ -405,8 +405,29 @@ export default function AdminCentralEstacao() {
   );
 }
 
+interface EditorFormState {
+  titulo: string;
+  subtitulo: string;
+  conteudo_texto: string;
+  abertura_imersiva: string;
+  hero: { titulo: string; texto: string; cta: string };
+  caso_simbolico: { titulo: string; aviso: string; relato: string };
+  desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
+  ferramenta_oracular: FerramentaOracularData;
+  revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
+  erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
+  conducao_justa: string;
+  cautela_etica: string;
+  jardim_psique: { chamada: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
+  oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
+  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
+  audios: any[];
+}
+
 function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave: (p: any) => void, onDelete: () => void, loading: boolean }) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<EditorFormState>({
     titulo: passo.titulo || '',
     subtitulo: passo.subtitulo || '',
     conteudo_texto: passo.conteudo_inline?.texto || '',
