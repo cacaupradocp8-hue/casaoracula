@@ -60,7 +60,7 @@ export default function AdminCentralCasa() {
           <Button variant="outline" className="border-primary/20 hover:bg-primary/5 text-muted-foreground gap-2" onClick={() => navigate('/')}>
             <Eye className="w-4 h-4" /> Visão da Aluna
           </Button>
-          <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/clube/ciclos')}>
+          <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/rotas')}>
             <Plus className="w-4 h-4" /> Nova Estação
           </Button>
         </div>
@@ -147,7 +147,7 @@ export default function AdminCentralCasa() {
                           <Button size="sm" className="bg-gold text-black font-bold gap-2" onClick={() => navigate('/admin/rotas')}>
                             <Zap className="w-4 h-4" /> Gerenciar Rota
                           </Button>
-                          <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.principalObra)}`)}>
+                          <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate('/admin/rotas')}>
                             <Settings2 className="w-4 h-4" /> Gerir Estações
                           </Button>
 
