@@ -206,7 +206,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
             </div>
             <div>
               <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-bold block mb-1">
-                {data.kicker || "Rastreamento Simbólico"}
+                {data.kicker || "Camada do Método"}
               </span>
               <h3 className="font-display text-3xl text-white">{data.titulo}</h3>
             </div>

@@ -360,7 +360,7 @@ export default function ClubeRotaPremium() {
 
             {/* Ferramenta Oracular (Camada 2) */}
             {ponto.metadata?.ferramenta_oracular?.enabled && (
-              <Section id="ferramenta-oracular" icon={Radar} kicker={ponto.metadata?.ferramenta_oracular?.kicker || "Camada do Método"} titulo={ponto.metadata?.ferramenta_oracular?.nome_publico || "Camada do Método"}>
+              <Section id="ferramenta-oracular" icon={Radar} kicker="Camada do Método" titulo="Camada do Método">
                 <FerramentaOracularPlayer 
                   data={{
                     ...ponto.metadata.ferramenta_oracular,
