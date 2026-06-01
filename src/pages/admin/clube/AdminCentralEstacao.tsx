@@ -58,7 +58,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  atlas_ready: {
+  metodo_ready: {
     enabled: boolean;
     export_enabled: boolean;
     payload_version: string;
@@ -485,12 +485,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      atlas_ready: {
-        enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
-        export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+      metodo_ready: {
+        enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.enabled ?? true,
+        export_enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.export_enabled || false,
         payload_version: "v1",
-        destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
-        tags: passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+        destinos_futuros: passo.metadata?.ferramenta_oracular?.metodo_ready?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+        tags: passo.metadata?.ferramenta_oracular?.metodo_ready?.tags || []
       }
     },
       revelacao_estacao: {
@@ -603,12 +603,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        atlas_ready: {
-          enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
-          export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+        metodo_ready: {
+          enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.enabled ?? true,
+          export_enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.export_enabled || false,
           payload_version: "v1",
-          destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
-          tags: passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+          destinos_futuros: passo.metadata?.ferramenta_oracular?.metodo_ready?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+          tags: passo.metadata?.ferramenta_oracular?.metodo_ready?.tags || []
         }
       },
       conto_espelho: {
