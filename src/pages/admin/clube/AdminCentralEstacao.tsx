@@ -283,7 +283,7 @@ export default function AdminCentralEstacao() {
             {passos.length === 0 ? (
               <div className="p-8 text-center border-2 border-dashed border-primary/10 rounded-xl text-muted-foreground text-sm">
                 Nenhuma etapa criada.
-                <Button variant="link" className="text-gold" onClick={handleCreatePasso}>Criar agora</Button>
+                <Button variant="link" className="text-gold opacity-50 cursor-not-allowed" disabled>Criação congelada</Button>
               </div>
             ) : (
               passos.map((p, idx) => (
