@@ -128,15 +128,10 @@ export default function ClubeRotaPremium() {
   }
 
   // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
-  const audios: Array<{ 
-    titulo?: string; 
-    audio_url?: string; 
-    url?: string; 
-    tipo?: string; 
-    funcao?: string;
-    duracao?: string;
-  }> = Array.isArray(ponto.metadata?.audios) 
-      ? ponto.metadata.audios.map((a: any) => ({ ...a, url: a.audio_url || a.url }))
+  const audios = Array.isArray(ponto.metadata?.audios) 
+      ? ponto.metadata.audios
+          .map((a: any) => ({ ...a, url: a.audio_url || a.url }))
+          .filter((a: any) => a.url && typeof a.url === 'string' && a.url.startsWith('http'))
       : [];
 
   // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
@@ -331,22 +326,6 @@ export default function ClubeRotaPremium() {
               </motion.div>
             </motion.div>
 
-          {/* Indicador de scroll */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 1.5 }}
-            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10 md:hidden"
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="flex flex-col items-center gap-2 sm:gap-3 text-white/20"
-            >
-              <span className="text-[7px] sm:text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
-              <div className="w-[1px] h-8 sm:h-12 bg-gradient-to-b from-gold/40 to-transparent" />
-            </motion.div>
-          </motion.div>
         </section>
 
         {/* Conteúdo principal */}
@@ -377,15 +356,15 @@ export default function ClubeRotaPremium() {
               {/* Trilha visual de passos */}
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-12 relative z-10">
                 {[
-                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia' },
-                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao' },
-                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico' },
-                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta' },
-                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao' },
-                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique' },
-                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio' },
-                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao' }
-                ].map((step, idx) => (
+                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia', show: audios.length > 0 },
+                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao', show: Boolean(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura) },
+                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
+                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
+                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao', show: Boolean(ponto.metadata?.revelacao_estacao) },
+                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
+                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
+                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao', show: true }
+                ].filter(s => s.show).map((step, idx) => (
                   <motion.button
                     key={idx}
                     whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
@@ -528,13 +507,17 @@ export default function ClubeRotaPremium() {
           
           <div id="conteudo-estacao" className="space-y-24">
             {/* Abertura Imersiva */}
-            {ponto.metadata?.abertura_imersiva && (
-              <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
-                <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
-                  {renderContent(ponto.metadata.abertura_imersiva)}
-                </div>
-              </Section>
-            )}
+            {(() => {
+              const content = renderContent(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura);
+              if (!content || !content.trim()) return null;
+              return (
+                <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
+                  <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
+                    {content}
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Áudios */}
             {audios.length > 0 && (
@@ -558,237 +541,295 @@ export default function ClubeRotaPremium() {
             )}
 
             {/* Caso Simbólico */}
-            {(ponto.metadata?.caso_simbolico || ponto.metadata?.caso_espelho) && (
-              <Section id="caso-simbolico" icon={Eye} kicker="O reflexo da travessia" titulo={ponto.metadata?.caso_simbolico?.titulo || "Caso Simbólico"}>
-                <div className="max-w-3xl mx-auto space-y-6">
-                  {ponto.metadata?.caso_simbolico?.aviso && (
-                    <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start gap-3">
-                      <AlertTriangle className="w-5 h-5 text-gold shrink-0" />
-                      <p className="text-[11px] text-white/60 italic leading-snug">
-                        {ponto.metadata.caso_simbolico.aviso}
-                      </p>
+            {(() => {
+              const relato = renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho);
+              const show = Boolean(relato && relato.trim());
+              return (
+                <Section id="caso-simbolico" icon={Eye} kicker="O reflexo da travessia" titulo={ponto.metadata?.caso_simbolico?.titulo || "Caso Simbólico"} isHidden={!show}>
+                  <div className="max-w-3xl mx-auto space-y-6">
+                    {ponto.metadata?.caso_simbolico?.aviso && (
+                      <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-gold shrink-0" />
+                        <p className="text-[11px] text-white/60 italic leading-snug">
+                          {ponto.metadata.caso_simbolico.aviso}
+                        </p>
+                      </div>
+                    )}
+                    <div className="prose prose-invert prose-lg bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap">
+                      {relato}
                     </div>
-                  )}
-                  <div className="prose prose-invert prose-lg bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap">
-                    {renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho)}
                   </div>
-                </div>
-              </Section>
-            )}
+                </Section>
+              );
+            })()}
 
             {/* Desafio da Terapeuta */}
-            {(ponto.metadata?.desafio_terapeuta) && (
-              <Section id="desafio-terapeuta" icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
-                <div className="max-w-3xl mx-auto space-y-8">
-                  <div className="border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
-                    <p className="font-serif text-2xl md:text-3xl text-gold leading-relaxed mb-8">
-                      {renderContent(ponto.metadata.desafio_terapeuta.pergunta || ponto.metadata.desafio_terapeuta)}
-                    </p>
+            {(() => {
+              const desafio = renderContent(ponto.metadata?.desafio_terapeuta?.pergunta || ponto.metadata?.desafio_terapeuta);
+              const show = Boolean(desafio && desafio.trim());
+              return (
+                <Section id="desafio-terapeuta" icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta" isHidden={!show}>
+                  <div className="max-w-3xl mx-auto space-y-8">
+                    <div className="border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
+                      <p className="font-serif text-2xl md:text-3xl text-gold leading-relaxed mb-8">
+                        {desafio}
+                      </p>
+                      
+                      {Array.isArray(ponto.metadata?.desafio_terapeuta?.escolhas) && (
+                        <div className="flex flex-wrap justify-center gap-3">
+                          {ponto.metadata.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
+                            <Button key={idx} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+                              {choice}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Section>
+              );
+            })()}
+                  
+            {/* Revelação da Estação */}
+            {(() => {
+              const rev = ponto.metadata?.revelacao_estacao;
+              const hasContent = rev && (
+                rev.porta || rev.campo_psiquico || rev.torre || rev.labirinto || rev.pergunta_narrativa
+              );
+              if (!hasContent) return null;
+
+              return (
+                <Section id="revelacao-estacao" icon={Sparkles} kicker="A sabedoria desvelada" titulo="Revelação da Estação">
+                  <div className="bg-white/[0.02] border border-white/5 p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden max-w-3xl mx-auto">
+                    <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                      <Sparkles className="w-32 h-32 text-gold" />
+                    </div>
                     
-                    {Array.isArray(ponto.metadata.desafio_terapeuta.escolhas) && (
-                      <div className="flex flex-wrap justify-center gap-3">
-                        {ponto.metadata.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
-                          <Button key={idx} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
-                            {choice}
-                          </Button>
-                        ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                      {[
+                        { key: 'porta', label: 'A Porta', icon: DoorOpen },
+                        { key: 'campo_psiquico', label: 'Campo Psíquico', icon: Layers },
+                        { key: 'torre', label: 'A Torre', icon: Layout },
+                        { key: 'labirinto', label: 'O Labirinto', icon: ShieldAlert }
+                      ].map((item) => (
+                        rev[item.key] && (
+                          <div key={item.key} className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <item.icon className="w-3 h-3 text-gold/40" />
+                              <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{item.label}</span>
+                            </div>
+                            <p className="text-white/80 font-serif italic text-lg">{rev[item.key]}</p>
+                          </div>
+                        )
+                      ))}
+                    </div>
+                    
+                    {rev.pergunta_narrativa && (
+                      <div className="mt-10 pt-8 border-t border-white/5 relative z-10">
+                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta possível</span>
+                         <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{rev.pergunta_narrativa}"</p>
                       </div>
                     )}
                   </div>
-                  
-                  {/* Revelação - Aparece após o desafio */}
-                  {ponto.metadata?.revelacao_estacao && (
-                    <motion.div 
-                      id="revelacao-estacao"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      className="bg-white/[0.02] border border-white/5 p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
-                        <Sparkles className="w-32 h-32 text-gold" />
-                      </div>
-                      <h4 className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold mb-8 flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5" /> Revelação da Estação
-                      </h4>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {['porta', 'campo_psiquico', 'torre', 'labirinto'].map((key) => (
-                          ponto.metadata.revelacao_estacao[key] && (
-                            <div key={key} className="space-y-1">
-                              <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{key.replace('_', ' ')}</span>
-                              <p className="text-white/80 font-serif italic text-lg">{ponto.metadata.revelacao_estacao[key]}</p>
-                            </div>
-                          )
-                        ))}
-                      </div>
-                      
-                      {ponto.metadata.revelacao_estacao.pergunta_narrativa && (
-                        <div className="mt-10 pt-8 border-t border-white/5">
-                           <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta Narrativa</span>
-                           <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{ponto.metadata.revelacao_estacao.pergunta_narrativa}"</p>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </div>
-              </Section>
-            )}
+                </Section>
+              );
+            })()}
 
             {/* Erro Comum & Condução Justa */}
-            {(ponto.metadata?.erro_comum || ponto.metadata?.conducao_justa) && (
-              <Section icon={AlertTriangle} kicker="A armadilha e a mestria" titulo="Condução Clínica">
-                <div className="max-w-3xl mx-auto space-y-12">
-                  {ponto.metadata?.erro_comum && (
-                    <div className="bg-red-900/10 border border-red-900/20 p-8 rounded-2xl relative">
-                      <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-4 block">Erro Comum</span>
-                      <h5 className="text-white font-display text-lg mb-2">{ponto.metadata.erro_comum.titulo}</h5>
-                      <p className="text-white/60 text-sm leading-relaxed mb-4 italic">{ponto.metadata.erro_comum.descricao}</p>
-                      {ponto.metadata.erro_comum.exemplo && (
-                        <div className="bg-black/20 p-4 rounded-lg mb-4 text-[13px] border border-red-900/10">
-                          <span className="text-[9px] text-red-400/50 uppercase block mb-1">Exemplo de condução pobre:</span>
-                          "{ponto.metadata.erro_comum.exemplo}"
+            {(() => {
+              const erro = ponto.metadata?.erro_comum;
+              const justa = renderContent(ponto.metadata?.conducao_justa);
+              const cautelas = Array.isArray(ponto.metadata?.cautela_etica) ? ponto.metadata.cautela_etica.filter((c: any) => typeof c === 'string' && c.trim()) : [];
+              const show = Boolean((erro && (erro.titulo || erro.descricao)) || (justa && justa.trim()) || cautelas.length > 0);
+              
+              if (!show) return null;
+
+              return (
+                <Section icon={AlertTriangle} kicker="A armadilha e a mestria" titulo="Condução Clínica">
+                  <div className="max-w-3xl mx-auto space-y-12">
+                    {erro && (erro.titulo || erro.descricao) && (
+                      <div className="bg-red-900/10 border border-red-900/20 p-8 rounded-2xl relative">
+                        <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-4 block">Erro Comum</span>
+                        <h5 className="text-white font-display text-lg mb-2">{erro.titulo}</h5>
+                        <p className="text-white/60 text-sm leading-relaxed mb-4 italic">{erro.descricao}</p>
+                        {erro.exemplo && (
+                          <div className="bg-black/20 p-4 rounded-lg mb-4 text-[13px] border border-red-900/10">
+                            <span className="text-[9px] text-red-400/50 uppercase block mb-1">Exemplo de condução pobre:</span>
+                            "{erro.exemplo}"
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
+                    {justa && justa.trim() && (
+                      <div className="bg-emerald-900/10 border border-emerald-900/20 p-8 rounded-2xl">
+                        <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-4 block">Condução Justa</span>
+                        <div className="prose prose-invert prose-emerald text-white/70 whitespace-pre-wrap leading-relaxed">
+                          {justa}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {cautelas.length > 0 && (
+                      <div className="space-y-4">
+                         <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold text-center block">Cautela Ética</span>
+                         <div className="flex flex-wrap justify-center gap-2">
+                          {cautelas.map((item: string, idx: number) => (
+                            <Badge key={idx} variant="outline" className="border-red-900/20 bg-red-900/5 text-red-400/70 py-1 px-4 text-[10px]">
+                              {item}
+                            </Badge>
+                          ))}
+                         </div>
+                      </div>
+                    )}
+                  </div>
+                </Section>
+              );
+            })()}
+
+            {/* Jardins */}
+            {(() => {
+              const psique = ponto.metadata?.jardim_psique;
+              const oficio = ponto.metadata?.jardim_oficio;
+              const hasPsique = Boolean(psique && psique.pergunta && psique.pergunta.trim());
+              const hasOficio = Boolean(oficio && oficio.pergunta && oficio.pergunta.trim());
+              
+              if (!hasPsique && !hasOficio) return null;
+
+              return (
+                <Section icon={Flower2} kicker="Sementeira" titulo="Os Jardins">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    {/* Jardim da Psique */}
+                    {hasPsique && (
+                      <motion.div 
+                        id="jardim-psique"
+                        className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10"
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <Flower2 className="w-5 h-5 text-gold" />
+                          <h4 className="text-gold font-display text-xl">Jardim da Psique</h4>
+                        </div>
+                        <p className="text-white/70 font-serif italic mb-8">{psique.pergunta}</p>
+                        <Button variant="gold" className="w-full rounded-full h-12 uppercase tracking-widest text-[10px] font-bold">
+                          {psique.botao || "Registrar Travessia"}
+                        </Button>
+                      </motion.div>
+                    )}
+                    
+                    {/* Jardim do Ofício */}
+                    {hasOficio && (
+                      <motion.div 
+                        id="jardim-oficio"
+                        className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <MapPin className="w-5 h-5 text-emerald-500" />
+                          <h4 className="text-emerald-500 font-display text-xl">Jardim do Ofício</h4>
+                        </div>
+                        <div className="bg-emerald-950/20 border border-emerald-900/20 p-3 rounded-lg mb-6 flex gap-3 items-start">
+                          <ShieldAlert className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                          <p className="text-[10px] text-emerald-500/60 leading-snug">
+                            {oficio.aviso_etico || "Registre apenas padrões gerais. Não inclua dados sensíveis."}
+                          </p>
+                        </div>
+                        <p className="text-white/70 font-serif italic mb-8">{oficio.pergunta}</p>
+                        <Button variant="outline" className="w-full rounded-full h-12 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 uppercase tracking-widest text-[10px] font-bold">
+                          {oficio.botao || "Registrar Prática"}
+                        </Button>
+                      </motion.div>
+                    )}
+                  </div>
+                </Section>
+              );
+            })()}
+
+            {/* Missão de Campo */}
+            {(() => {
+              const missao = ponto.metadata?.missao_campo;
+              const desc = renderContent(missao?.descricao || missao);
+              const show = Boolean(desc && desc.trim());
+              if (!show) return null;
+
+              return (
+                <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={missao?.titulo || "Missão de Campo"} isHidden={isTravessiaEstruturada}>
+                  <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
+                    <p className="text-white/80 font-serif text-xl italic leading-relaxed">
+                      {desc}
+                    </p>
+                    {missao?.sinais && (
+                      <div className="py-4 border-y border-gold/10 space-y-2">
+                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold">Sinais a observar:</span>
+                         <p className="text-white/60 text-sm italic">{missao.sinais}</p>
+                      </div>
+                    )}
+                    <Button variant="gold" className="rounded-full h-14 px-10 font-bold uppercase tracking-widest text-[11px]">
+                      {missao?.botao || "Iniciar Missão"}
+                    </Button>
+                  </div>
+                </Section>
+              );
+            })()}
+
+            {/* Oráculo da Estação */}
+            {(() => {
+               const oraculo = ponto.metadata?.oraculo_estacao;
+               const show = Boolean(oraculo && oraculo.palavra && oraculo.palavra.trim());
+               if (!show) return null;
+               return (
+                  <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
+                    <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
+                      <div className="space-y-2">
+                        <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
+                        <h3 className="font-display text-5xl md:text-7xl text-gold tracking-tighter">
+                          {oraculo.palavra}
+                        </h3>
+                      </div>
+                      {oraculo.movimento && (
+                        <div className="space-y-2">
+                          <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
+                          <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed">
+                            {oraculo.movimento}
+                          </p>
                         </div>
                       )}
                     </div>
-                  )}
-                  
-                  {ponto.metadata?.conducao_justa && (
-                    <div className="bg-emerald-900/10 border border-emerald-900/20 p-8 rounded-2xl">
-                      <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-4 block">Condução Justa</span>
-                      <div className="prose prose-invert prose-emerald text-white/70 whitespace-pre-wrap leading-relaxed">
-                        {renderContent(ponto.metadata.conducao_justa)}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {Array.isArray(ponto.metadata?.cautela_etica) && (
-                    <div className="space-y-4">
-                       <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold text-center block">Cautela Ética</span>
-                       <div className="flex flex-wrap justify-center gap-2">
-                        {ponto.metadata.cautela_etica.map((item: string, idx: number) => (
-                          <Badge key={idx} variant="outline" className="border-red-900/20 bg-red-900/5 text-red-400/70 py-1 px-4 text-[10px]">
-                            {item}
-                          </Badge>
-                        ))}
-                       </div>
-                    </div>
-                  )}
-                </div>
-              </Section>
-            )}
-
-            {/* Jardins */}
-            {(ponto.metadata?.jardim_psique || ponto.metadata?.jardim_oficio) && (
-              <Section icon={Flower2} kicker="Sementeira" titulo="Os Jardins">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                  {/* Jardim da Psique */}
-                  <motion.div 
-                    id="jardim-psique"
-                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10"
-                  >
-                    <div className="flex items-center gap-3 mb-6">
-                      <Flower2 className="w-5 h-5 text-gold" />
-                      <h4 className="text-gold font-display text-xl">Jardim da Psique</h4>
-                    </div>
-                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_psique?.pergunta}</p>
-                    <Button variant="gold" className="w-full rounded-full h-12 uppercase tracking-widest text-[10px] font-bold">
-                      {ponto.metadata.jardim_psique?.botao || "Registrar Travessia"}
-                    </Button>
-                  </motion.div>
-                  
-                  {/* Jardim do Ofício */}
-                  <motion.div 
-                    id="jardim-oficio"
-                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <MapPin className="w-5 h-5 text-emerald-500" />
-                      <h4 className="text-emerald-500 font-display text-xl">Jardim do Ofício</h4>
-                    </div>
-                    <div className="bg-emerald-950/20 border border-emerald-900/20 p-3 rounded-lg mb-6 flex gap-3 items-start">
-                      <ShieldAlert className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-emerald-500/60 leading-snug">
-                        {ponto.metadata.jardim_oficio?.aviso_etico || "Registre apenas padrões gerais. Não inclua dados sensíveis."}
-                      </p>
-                    </div>
-                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_oficio?.pergunta}</p>
-                    <Button variant="outline" className="w-full rounded-full h-12 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 uppercase tracking-widest text-[10px] font-bold">
-                      {ponto.metadata.jardim_oficio?.botao || "Registrar Prática"}
-                    </Button>
-                  </motion.div>
-                </div>
-              </Section>
-            )}
-
-            {/* Missão de Campo */}
-            {ponto.metadata?.missao_campo && (
-              <Section icon={Crosshair} kicker="A sabedoria em movimento" titulo={ponto.metadata.missao_campo.titulo || "Missão de Campo"} isHidden={isTravessiaEstruturada}>
-                <div className="max-w-3xl mx-auto bg-gold/10 border-2 border-dashed border-gold/30 p-10 rounded-[3rem] text-center space-y-6">
-                  <p className="text-white/80 font-serif text-xl italic leading-relaxed">
-                    {ponto.metadata.missao_campo.descricao}
-                  </p>
-                  {ponto.metadata.missao_campo.sinais && (
-                    <div className="py-4 border-y border-gold/10 space-y-2">
-                       <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold">Sinais a observar:</span>
-                       <p className="text-white/60 text-sm italic">{ponto.metadata.missao_campo.sinais}</p>
-                    </div>
-                  )}
-                  <Button variant="gold" className="rounded-full h-14 px-10 font-bold uppercase tracking-widest text-[11px]">
-                    {ponto.metadata.missao_campo.botao || "Iniciar Missão"}
-                  </Button>
-                </div>
-              </Section>
-            )}
-
-            {/* Oráculo da Estação */}
-            {ponto.metadata?.oraculo_estacao && (
-              <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
-
-                <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
-                  <div className="space-y-2">
-                    <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
-                    <h3 className="font-display text-5xl md:text-7xl text-gold tracking-tighter">
-                      {ponto.metadata.oraculo_estacao.palavra}
-                    </h3>
-                  </div>
-                  {ponto.metadata.oraculo_estacao.movimento && (
-                    <div className="space-y-2">
-                      <span className="text-[10px] uppercase tracking-[0.4em] text-white/30 font-bold">O Movimento</span>
-                      <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed">
-                        {ponto.metadata.oraculo_estacao.movimento}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </Section>
-            )}
+                  </Section>
+               );
+            })()}
 
             {/* Conclusão */}
-            {ponto.metadata?.fechamento && (
-              <Section id="fechamento-estacao" icon={Check} kicker="Encerramento" titulo="Travessia Concluída">
-                <div className="max-w-2xl mx-auto text-center space-y-8">
-                  <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
-                    {ponto.metadata.fechamento.texto}
-                  </p>
-                  <div className="flex flex-col items-center gap-6">
-                    <Button 
-                      variant="gold" 
-                      className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
-                      onClick={() => navigate('/clube')}
-                    >
-                      {ponto.metadata.fechamento.botao || "Concluir Estação"}
-                    </Button>
-                    
-                    <button 
-                      onClick={() => navigate('/clube')}
-                      className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
-                    >
-                      Voltar à rota
-                    </button>
+            {(() => {
+              const fechamento = ponto.metadata?.fechamento;
+              const texto = renderContent(fechamento?.texto || fechamento);
+              const show = Boolean(texto && texto.trim());
+              if (!show) return null;
+
+              return (
+                <Section id="fechamento-estacao" icon={Check} kicker="Encerramento" titulo="Travessia Concluída">
+                  <div className="max-w-2xl mx-auto text-center space-y-8">
+                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                      {texto}
+                    </p>
+                    <div className="flex flex-col items-center gap-6">
+                      <Button 
+                        variant="gold" 
+                        className="rounded-full h-16 px-12 text-base font-bold uppercase tracking-widest"
+                        onClick={() => navigate('/clube')}
+                      >
+                        {fechamento?.botao || "Concluir Estação"}
+                      </Button>
+                      
+                      <button 
+                        onClick={() => navigate('/clube')}
+                        className="text-white/40 hover:text-gold transition-colors text-sm uppercase tracking-[0.2em] font-medium"
+                      >
+                        Voltar à rota
+                      </button>
+                    </div>
                   </div>
-                </div>
-              </Section>
-            )}
+                </Section>
+              );
+            })()}
           </div>
 
 
