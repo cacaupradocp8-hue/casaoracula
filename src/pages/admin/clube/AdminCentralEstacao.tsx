@@ -1126,7 +1126,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Rocket className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">11. Missão de Campo</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">Etapa 11. Missão de Campo</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-4">
