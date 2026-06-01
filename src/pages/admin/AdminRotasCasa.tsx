@@ -21,19 +21,6 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
-/**
- * AdminRotasCasa — Etapa 277
- * Separação estrita entre:
- *   1) Rota da Casa (agrupador simbólico)
- *   2) Obra-base (livro vinculado à rota)
- *   3) Estação (passo concreto da travessia)
- *
- * Persistência: APENAS clube_estacoes. Rotas vazias (sem obra) ficam em
- * localStorage até receberem a primeira Obra — quando se materializam como
- * grupo de estações em clube_estacoes (agrupadas por livro_titulo).
- *
- * Nada nasce publicado ou ativo.
- */
 
 /**
  * AdminRotasCasa — Etapa 278
