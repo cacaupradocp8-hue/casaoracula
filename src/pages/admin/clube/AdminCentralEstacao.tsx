@@ -1002,7 +1002,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     checked={form.ferramenta_oracular.enabled} 
                     onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, enabled: v}})} 
                   />
-                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Habilitar Camada Oracular</Label>
+                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Ativar Camada 2 na Rota</Label>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
