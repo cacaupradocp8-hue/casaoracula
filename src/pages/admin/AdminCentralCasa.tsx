@@ -13,6 +13,12 @@ import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+function getObraFromItem(item: any) {
+  const metadata = (item?.metadata || {}) as Record<string, unknown>;
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  return livro_titulo || null;
+}
+
 export default function AdminCentralCasa() {
   const navigate = useNavigate();
 
@@ -40,7 +46,7 @@ export default function AdminCentralCasa() {
         
       const { data: items } = await supabase
         .from('clube_rota_itens')
-        .select('estacao_id, rota_custom')
+        .select('estacao_id, rota_custom, tipo, metadata')
         .not('rota_custom', 'is', null);
 
       return { estacoes: estacoes || [], items: items || [] };
@@ -104,12 +110,17 @@ export default function AdminCentralCasa() {
           {(() => {
             // 1) Mapear Estação → Rota
             const estacaoToRota = new Map<string, string>();
+            const obraToRota = new Map<string, string>();
             (items || []).forEach((i: any) => {
-              if (i.rota_custom) estacaoToRota.set(i.estacao_id, i.rota_custom);
+              if (!i.rota_custom) return;
+              estacaoToRota.set(i.estacao_id, i.rota_custom);
+              if (i.tipo === 'obra_marker') {
+                const obra = getObraFromItem(i);
+                if (obra) obraToRota.set(obra, i.rota_custom);
+              }
             });
 
-            // 2) Mapear Obra → Rota
-            const obraToRota = new Map<string, string>();
+            // 2) Mapear Obra → Rota também pelo vínculo legado em estações reais
             (estacoes || []).forEach((e: any) => {
               const rota = estacaoToRota.get(e.id);
               if (rota && e.livro_titulo) obraToRota.set(e.livro_titulo, rota);
@@ -131,6 +142,13 @@ export default function AdminCentralCasa() {
               if (e.numero > 0 && e.subtitulo !== 'MARCADOR_OBRA') {
                 grupos.get(rota)!.estacoes.push(e);
               }
+            });
+
+            (items || []).forEach((i: any) => {
+              if (i.tipo !== 'obra_marker' || !i.rota_custom) return;
+              const obra = getObraFromItem(i);
+              if (!obra || grupos.has(i.rota_custom)) return;
+              grupos.set(i.rota_custom, { rota: i.rota_custom, estacoes: [], principalObra: obra });
             });
             const rotas = Array.from(grupos.values());
 

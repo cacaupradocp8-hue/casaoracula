@@ -23,9 +23,9 @@ import { toast } from 'sonner';
 
 
 /**
- * AdminRotasCasa — Etapa 278
+ * AdminRotasCasa — Rotas da Casa
  * Persistência real em clube_estacoes e clube_rota_itens.
- * Sem localStorage.
+ * Obra-base é vínculo em clube_rota_itens.metadata, nunca estação.
  */
 
 interface ObraResumo {
@@ -43,6 +43,17 @@ interface RotaAgrupada {
   totalEstacoes: number;
   algumaPublicada: boolean;
   isMarker?: boolean;
+}
+
+function getObraFromItem(item: any) {
+  const metadata = (item?.metadata || {}) as Record<string, unknown>;
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  if (!livro_titulo) return null;
+
+  return {
+    livro_titulo,
+    livro_autor: typeof metadata.livro_autor === 'string' ? metadata.livro_autor : null,
+  };
 }
 
 // Helper para converter nome de rota em slug
@@ -83,10 +94,10 @@ export default function AdminRotasCasa() {
         .order('numero', { ascending: true });
       if (errEst) throw errEst;
 
-      // Busca itens para saber a qual rota cada estação pertence (via rota_custom)
+      // Busca itens para saber rotas e obras-base vinculadas
       const { data: items, error: errItems } = await supabase
         .from('clube_rota_itens')
-        .select('estacao_id, rota_custom, tipo')
+        .select('estacao_id, rota_custom, tipo, titulo, metadata')
         .not('rota_custom', 'is', null);
       if (errItems) throw errItems;
 
@@ -100,17 +111,30 @@ export default function AdminRotasCasa() {
   const rotasAgrupadas: RotaAgrupada[] = useMemo(() => {
     const map = new Map<string, RotaAgrupada>();
 
-    // 1) Mapeamento Estação → Rota
+    // 1) Mapeamento Estação → Rota e Obra → Rota
     const estacaoToRota = new Map<string, string>();
+    const obraToRota = new Map<string, string>();
+    const obraMetadata = new Map<string, ObraResumo>();
+
     for (const item of items) {
       if (item.rota_custom) {
         estacaoToRota.set(item.estacao_id, item.rota_custom);
+
+        const obraMarker = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
+        if (obraMarker) {
+          obraToRota.set(obraMarker.livro_titulo, item.rota_custom);
+          obraMetadata.set(obraMarker.livro_titulo, {
+            livro_titulo: obraMarker.livro_titulo,
+            livro_autor: obraMarker.livro_autor,
+            estacoes: 0,
+            publicadas: 0,
+          });
+        }
       }
     }
 
-    // 2) Mapeamento Obra → Rota
+    // 2) Mapeamento legado Obra → Rota
     // Se uma obra tem pelo menos uma estação vinculada a uma rota, toda a obra pertence àquela rota.
-    const obraToRota = new Map<string, string>();
     for (const e of estacoes) {
       const rota = estacaoToRota.get(e.id);
       if (rota && e.livro_titulo) {
@@ -119,7 +143,7 @@ export default function AdminRotasCasa() {
     }
 
     // 3) Processar estações e agrupar
-    const obrasMap = new Map<string, ObraResumo>();
+    const obrasMap = new Map<string, ObraResumo>(obraMetadata);
     
     for (const e of estacoes) {
       const obra = e.livro_titulo || 'Sem Obra';
@@ -145,6 +169,8 @@ export default function AdminRotasCasa() {
         continue;
       }
 
+      if (isWorkMarker) continue;
+
       // Agrupar Obra
       if (!obrasMap.has(obra)) {
         obrasMap.set(obra, {
@@ -156,11 +182,8 @@ export default function AdminRotasCasa() {
       }
       const o = obrasMap.get(obra)!;
 
-      // Só conta como estação se NÃO for um marcador
-      if (!isWorkMarker) {
-        o.estacoes += 1;
-        if (e.publicada) o.publicadas += 1;
-      }
+      o.estacoes += 1;
+      if (e.publicada) o.publicadas += 1;
 
       // Vincular à Rota
       if (!map.has(rotaNome)) {
@@ -176,6 +199,24 @@ export default function AdminRotasCasa() {
       // Adicionamos a obra apenas uma vez à rota
       if (!r.obras.some(ob => ob.livro_titulo === obra)) {
         r.obras.push(o);
+      }
+    }
+
+    for (const [obra, resumo] of obrasMap) {
+      const rotaNome = obraToRota.get(obra);
+      if (!rotaNome) continue;
+      if (!map.has(rotaNome)) {
+        map.set(rotaNome, {
+          id: rotaNome,
+          nome: rotaNome,
+          obras: [],
+          totalEstacoes: 0,
+          algumaPublicada: false,
+        });
+      }
+      const rota = map.get(rotaNome)!;
+      if (!rota.obras.some(ob => ob.livro_titulo === obra)) {
+        rota.obras.push(resumo);
       }
     }
 
@@ -260,39 +301,47 @@ export default function AdminRotasCasa() {
       toast.error('Selecione a Rota e informe a Obra-base.');
       return;
     }
+    const tituloObra = novaObra.livro_titulo.trim();
+    const rotaAnchor = items.find((item: any) => item.rota_custom === novaObra.rotaNome && item.tipo === 'rota_marker')
+      || items.find((item: any) => item.rota_custom === novaObra.rotaNome);
+
+    if (!rotaAnchor?.estacao_id) {
+      toast.error('A Rota selecionada ainda não tem um vínculo técnico para receber Obra-base.');
+      return;
+    }
+
+    const obraJaExiste = items.some((item: any) => {
+      const obra = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
+      return item.rota_custom === novaObra.rotaNome && obra?.livro_titulo.toLowerCase() === tituloObra.toLowerCase();
+    });
+
+    if (obraJaExiste) {
+      toast.error('Esta Obra-base já está vinculada a esta Rota.');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const maxNumero = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
 
-      // 1) Criar MARCADOR da obra (Estação 0)
-      const { data: estacao, error: errEst } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: 0,
-          titulo: `Definição: ${novaObra.livro_titulo.trim()}`,
-          subtitulo: 'MARCADOR_OBRA',
-          livro_titulo: novaObra.livro_titulo.trim(),
-          livro_autor: novaObra.livro_autor.trim() || null,
-          livro_capa_url: novaObra.livro_capa_url.trim() || null,
-          ativa: false,
-          publicada: false,
-          ordem: 0,
-        })
-        .select()
-        .single();
-      if (errEst) throw errEst;
-
-      // 2) Criar marcador de vínculo com a rota em clube_rota_itens
+      // Obra-base é somente um vínculo administrativo em clube_rota_itens.metadata.
+      // Não cria linha em clube_estacoes, nem marcador numero 0, nem estação invisível.
       const { error: errItem } = await supabase
         .from('clube_rota_itens')
         .insert({
-          estacao_id: estacao.id,
+          estacao_id: rotaAnchor.estacao_id,
           rota_custom: novaObra.rotaNome,
           tipo: 'obra_marker',
-          titulo: 'Vínculo de Rota',
-          slug: `obra-${slugify(novaObra.livro_titulo)}`,
+          titulo: `Obra-base: ${tituloObra}`,
+          subtitulo: 'Vínculo administrativo de obra-base',
+          slug: `obra-${slugify(novaObra.rotaNome)}-${slugify(tituloObra)}`,
           ordem: 0,
-          publicado: false
+          publicado: false,
+          metadata: {
+            tipo: 'obra_base',
+            livro_titulo: tituloObra,
+            livro_autor: novaObra.livro_autor.trim() || null,
+            livro_capa_url: novaObra.livro_capa_url.trim() || null,
+          },
         });
       if (errItem) throw errItem;
 
