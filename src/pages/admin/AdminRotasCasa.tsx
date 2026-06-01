@@ -35,14 +35,11 @@ import { toast } from 'sonner';
  * Nada nasce publicado ou ativo.
  */
 
-const LS_KEY = 'admin:rotas-da-casa:draft-rotas';
-
-interface RotaDraft {
-  id: string;       // local id
-  nome: string;
-  descricao?: string;
-  createdAt: string;
-}
+/**
+ * AdminRotasCasa — Etapa 278
+ * Persistência real em clube_estacoes e clube_rota_itens.
+ * Sem localStorage.
+ */
 
 interface ObraResumo {
   livro_titulo: string;
@@ -52,77 +49,27 @@ interface ObraResumo {
 }
 
 interface RotaAgrupada {
-  id: string;            // rota nome
+  id: string;            // rota nome (rota_custom)
   nome: string;
-  origem: 'draft' | 'db';
   descricao?: string;
   obras: ObraResumo[];
   totalEstacoes: number;
   algumaPublicada: boolean;
+  isMarker?: boolean;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Helpers de persistência local para Rotas ainda sem Obra
-// ─────────────────────────────────────────────────────────────────────────────
-function loadDraftRotas(): RotaDraft[] {
-  try {
-    const raw = localStorage.getItem(LS_KEY);
-    if (!raw) return [];
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
-  }
+// Helper para converter nome de rota em slug
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
-function saveDraftRotas(rotas: RotaDraft[]) {
-  try {
-    localStorage.setItem(LS_KEY, JSON.stringify(rotas));
-  } catch {
-    /* noop */
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Mapeamento Obra → Rota.
-// Como não temos coluna `rota` em clube_estacoes, usamos uma convenção local:
-// quando o admin vincula uma Obra a uma Rota, registramos esse vínculo em
-// localStorage (chave separada). A grade de leitura usa esse mapa para
-// agrupar Obras por Rota. Obras sem mapeamento aparecem em "Outras Obras".
-// ─────────────────────────────────────────────────────────────────────────────
-const LS_MAP_KEY = 'admin:rotas-da-casa:obra-rota-map';
-
-function loadObraRotaMap(): Record<string, string> {
-  try {
-    const raw = localStorage.getItem(LS_MAP_KEY);
-    return raw ? JSON.parse(raw) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveObraRotaMap(map: Record<string, string>) {
-  try {
-    localStorage.setItem(LS_MAP_KEY, JSON.stringify(map));
-  } catch { /* noop */ }
-}
-
-// Convenção: a "Rota dos Lobos" sempre cobre a obra "Mulheres que Correm com os Lobos".
-function defaultRotaFor(obra: string): string {
-  const norm = obra.toLowerCase();
-  if (norm.includes('mulheres que correm com os lobos')) return 'Rota dos Lobos';
-  return '';
-}
+// Convenção para Rota dos Lobos
+const ROTA_LOBOS = 'Rota dos Lobos';
+const OBRA_LOBOS = 'Mulheres que Correm com os Lobos';
 
 export default function AdminRotasCasa() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [draftRotas, setDraftRotas] = useState<RotaDraft[]>(() => loadDraftRotas());
-  const [obraRotaMap, setObraRotaMap] = useState<Record<string, string>>(() => loadObraRotaMap());
-
-  useEffect(() => saveDraftRotas(draftRotas), [draftRotas]);
-  useEffect(() => saveObraRotaMap(obraRotaMap), [obraRotaMap]);
 
   // Dialogs
   const [openRotaDialog, setOpenRotaDialog] = useState(false);
@@ -139,39 +86,76 @@ export default function AdminRotasCasa() {
     livro_titulo: '', titulo: '', subtitulo: '',
   });
 
-  const { data: estacoes, isLoading, refetch } = useQuery({
-    queryKey: ['admin-rotas-casa-estacoes-v2'],
+  const { data: dbData, isLoading, refetch } = useQuery({
+    queryKey: ['admin-rotas-casa-db-v3'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // Busca estações
+      const { data: estacoes, error: errEst } = await supabase
         .from('clube_estacoes')
-        .select('id, numero, titulo, subtitulo, livro_titulo, livro_autor, ativa, publicada, updated_at')
+        .select('id, numero, titulo, subtitulo, livro_titulo, livro_autor, ativa, publicada, updated_at, descricao')
         .order('numero', { ascending: true });
-      if (error) throw error;
-      return data || [];
+      if (errEst) throw errEst;
+
+      // Busca itens para saber a qual rota cada estação pertence (via rota_custom)
+      const { data: items, error: errItems } = await supabase
+        .from('clube_rota_itens')
+        .select('estacao_id, rota_custom, tipo')
+        .not('rota_custom', 'is', null);
+      if (errItems) throw errItems;
+
+      return { estacoes: estacoes || [], items: items || [] };
     },
   });
+
+  const { estacoes, items } = dbData || { estacoes: [], items: [] };
 
   // Agregação Rotas → Obras → Estações
   const rotasAgrupadas: RotaAgrupada[] = useMemo(() => {
     const map = new Map<string, RotaAgrupada>();
 
-    // 1) Rotas draft (em memória local)
-    for (const d of draftRotas) {
-      map.set(d.nome, {
-        id: d.nome,
-        nome: d.nome,
-        origem: 'draft',
-        descricao: d.descricao,
-        obras: [],
-        totalEstacoes: 0,
-        algumaPublicada: false,
-      });
+    // 1) Mapeamento Estação → Rota
+    const estacaoToRota = new Map<string, string>();
+    for (const item of items) {
+      if (item.rota_custom) {
+        estacaoToRota.set(item.estacao_id, item.rota_custom);
+      }
     }
 
-    // 2) Obras agrupadas a partir das estações reais
+    // 2) Mapeamento Obra → Rota
+    // Se uma obra tem pelo menos uma estação vinculada a uma rota, toda a obra pertence àquela rota.
+    const obraToRota = new Map<string, string>();
+    for (const e of estacoes) {
+      const rota = estacaoToRota.get(e.id);
+      if (rota && e.livro_titulo) {
+        obraToRota.set(e.livro_titulo, rota);
+      }
+    }
+
+    // 3) Processar estações e agrupar
     const obrasMap = new Map<string, ObraResumo>();
-    for (const e of estacoes || []) {
+    
+    for (const e of estacoes) {
       const obra = e.livro_titulo || 'Sem Obra';
+      const rotaNome = obraToRota.get(obra) || (obra.includes(OBRA_LOBOS) ? ROTA_LOBOS : `Outras: ${obra}`);
+
+      // Se for uma estação marcadora de rota (SISTEMA_ROTAS), extraímos a descrição da rota
+      if (obra.startsWith('SISTEMA_ROTAS:')) {
+        const rName = obra.replace('SISTEMA_ROTAS:', '').trim();
+        if (!map.has(rName)) {
+          map.set(rName, {
+            id: rName,
+            nome: rName,
+            descricao: e.descricao || undefined,
+            obras: [],
+            totalEstacoes: 0,
+            algumaPublicada: false,
+            isMarker: true
+          });
+        }
+        continue;
+      }
+
+      // Agrupar Obra
       if (!obrasMap.has(obra)) {
         obrasMap.set(obra, {
           livro_titulo: obra,
@@ -183,33 +167,32 @@ export default function AdminRotasCasa() {
       const o = obrasMap.get(obra)!;
       o.estacoes += 1;
       if (e.publicada) o.publicadas += 1;
-    }
 
-    // 3) Vincular obras a rotas (mapa local + default)
-    for (const obra of obrasMap.values()) {
-      const rotaNome =
-        obraRotaMap[obra.livro_titulo] ||
-        defaultRotaFor(obra.livro_titulo) ||
-        `Rota: ${obra.livro_titulo}`;
-
+      // Vincular à Rota
       if (!map.has(rotaNome)) {
         map.set(rotaNome, {
           id: rotaNome,
           nome: rotaNome,
-          origem: 'db',
           obras: [],
           totalEstacoes: 0,
           algumaPublicada: false,
         });
       }
       const r = map.get(rotaNome)!;
-      r.obras.push(obra);
-      r.totalEstacoes += obra.estacoes;
-      r.algumaPublicada = r.algumaPublicada || obra.publicadas > 0;
+      // Adicionamos a obra apenas uma vez à rota
+      if (!r.obras.some(ob => ob.livro_titulo === obra)) {
+        r.obras.push(o);
+      }
+    }
+
+    // Recalcular totais por rota
+    for (const r of map.values()) {
+      r.totalEstacoes = r.obras.reduce((sum, o) => sum + o.estacoes, 0);
+      r.algumaPublicada = r.obras.some(o => o.publicadas > 0);
     }
 
     return Array.from(map.values());
-  }, [estacoes, draftRotas, obraRotaMap]);
+  }, [estacoes, items]);
 
   const filtered = useMemo(() => {
     const q = searchTerm.toLowerCase();
@@ -221,26 +204,61 @@ export default function AdminRotasCasa() {
   }, [rotasAgrupadas, searchTerm]);
 
   // ───── Actions ─────
-  const handleCriarRota = () => {
+  const handleCriarRota = async () => {
     if (!novaRota.nome.trim()) {
       toast.error('Informe o nome da Rota.');
       return;
     }
-    if (draftRotas.some(d => d.nome === novaRota.nome.trim()) ||
-        rotasAgrupadas.some(r => r.nome === novaRota.nome.trim())) {
+    if (rotasAgrupadas.some(r => r.nome.toLowerCase() === novaRota.nome.trim().toLowerCase())) {
       toast.error('Já existe uma Rota com esse nome.');
       return;
     }
-    const draft: RotaDraft = {
-      id: crypto.randomUUID(),
-      nome: novaRota.nome.trim(),
-      descricao: novaRota.descricao.trim() || undefined,
-      createdAt: new Date().toISOString(),
-    };
-    setDraftRotas(prev => [...prev, draft]);
-    setNovaRota({ nome: '', descricao: '' });
-    setOpenRotaDialog(false);
-    toast.success('Rota criada como rascunho. Adicione uma Obra-base para ativá-la.');
+
+    setSubmitting(true);
+    try {
+      const nome = novaRota.nome.trim();
+      const desc = novaRota.descricao.trim();
+      
+      // 1) Criar estação marcadora
+      const { data: estacao, error: errEst } = await supabase
+        .from('clube_estacoes')
+        .insert({
+          numero: 0, // Reservado para marcadores
+          titulo: `Rota: ${nome}`,
+          subtitulo: 'Marcador de Sistema',
+          livro_titulo: `SISTEMA_ROTAS: ${nome}`,
+          descricao: desc,
+          ativa: false,
+          publicada: false,
+          ordem: 0,
+        })
+        .select()
+        .single();
+      if (errEst) throw errEst;
+
+      // 2) Criar item marcador em clube_rota_itens
+      const { error: errItem } = await supabase
+        .from('clube_rota_itens')
+        .insert({
+          estacao_id: estacao.id,
+          rota_custom: nome,
+          tipo: 'rota_marker',
+          titulo: 'Definição de Rota',
+          slug: `marker-${slugify(nome)}`,
+          ordem: 0,
+          publicado: false
+        });
+      if (errItem) throw errItem;
+
+      setNovaRota({ nome: '', descricao: '' });
+      setOpenRotaDialog(false);
+      toast.success('Rota persistida com sucesso.');
+      refetch();
+    } catch (err: any) {
+      toast.error('Erro ao criar rota: ' + err.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleAdicionarObra = async () => {
@@ -250,10 +268,10 @@ export default function AdminRotasCasa() {
     }
     setSubmitting(true);
     try {
-      // Próximo número global (mantemos numeração simples; admin pode reordenar depois)
       const maxNumero = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
 
-      const { error } = await supabase
+      // 1) Criar primeira estação da obra
+      const { data: estacao, error: errEst } = await supabase
         .from('clube_estacoes')
         .insert({
           numero: maxNumero + 1,
@@ -265,17 +283,26 @@ export default function AdminRotasCasa() {
           ativa: false,
           publicada: false,
           ordem: maxNumero + 1,
+        })
+        .select()
+        .single();
+      if (errEst) throw errEst;
+
+      // 2) Criar marcador de vínculo com a rota em clube_rota_itens
+      const { error: errItem } = await supabase
+        .from('clube_rota_itens')
+        .insert({
+          estacao_id: estacao.id,
+          rota_custom: novaObra.rotaNome,
+          tipo: 'obra_marker',
+          titulo: 'Vínculo de Rota',
+          slug: `obra-${slugify(novaObra.livro_titulo)}`,
+          ordem: 0,
+          publicado: false
         });
-      if (error) throw error;
+      if (errItem) throw errItem;
 
-      // Registra vínculo Obra → Rota (localStorage)
-      setObraRotaMap(prev => ({ ...prev, [novaObra.livro_titulo.trim()]: novaObra.rotaNome }));
-
-      // Se a rota era draft, agora se materializa via DB — pode permanecer no draft
-      // (não atrapalha) ou removemos para limpar:
-      setDraftRotas(prev => prev.filter(d => d.nome !== novaObra.rotaNome));
-
-      toast.success('Obra-base vinculada à Rota. Primeira estação criada como rascunho.');
+      toast.success('Obra-base vinculada à Rota. Estação criada como rascunho.');
       setOpenObraDialog(false);
       setNovaObra({ rotaNome: '', livro_titulo: '', livro_autor: '', livro_capa_url: '' });
       refetch();
@@ -306,6 +333,10 @@ export default function AdminRotasCasa() {
           ordem: maxNumero + 1,
         });
       if (error) throw error;
+
+      // Ao adicionar uma nova estação a uma obra que já tem rota, 
+      // não precisamos de novo item marcador, pois o vínculo é por livro_titulo.
+      
       toast.success('Estação criada como rascunho.');
       setOpenEstacaoDialog(false);
       setNovaEstacao({ livro_titulo: '', titulo: '', subtitulo: '' });
@@ -415,8 +446,8 @@ export default function AdminRotasCasa() {
                         ) : (
                           <Badge variant="secondary">Rascunho</Badge>
                         )}
-                        {rota.origem === 'draft' && (
-                          <Badge variant="outline" className="border-dashed">sem obra</Badge>
+                        {rota.isMarker && (
+                          <Badge variant="outline" className="border-dashed">vazia</Badge>
                         )}
                       </div>
                       {rota.descricao && (
