@@ -38,6 +38,34 @@ function cleanTechnicalTitle(title: string) {
     .trim();
 }
 
+/**
+ * Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
+ * Interface para os dados da ferramenta oracular.
+ */
+interface FerramentaOracularData {
+  enabled: boolean;
+  tool_id: string;
+  nome_admin: string;
+  nome_publico: string;
+  simbolo: string;
+  pergunta_mae: string;
+  funcao: string;
+  indicadores: Array<{ id: string; label: string }>;
+  tipo_resultado: "intensidade" | "arquetipo" | "rastro";
+  resultados: Array<{ id: string; titulo: string; descricao: string }>;
+  registros_sugeridos: {
+    jardim_psique: string;
+    jardim_oficio: string;
+  };
+  atlas_ready: {
+    enabled: boolean;
+    export_enabled: boolean;
+    payload_version: string;
+    destinos_futuros: string[];
+    tags: string[];
+  };
+}
+
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
