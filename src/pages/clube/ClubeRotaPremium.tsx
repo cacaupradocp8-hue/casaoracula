@@ -318,17 +318,6 @@ export default function ClubeRotaPremium() {
               );
             })()}
 
-            {/* Ferramenta Oracular (Camada 2) */}
-            {ponto.metadata?.ferramenta_oracular?.enabled && (
-              <Section id="ferramenta-oracular" icon={Radar} kicker="Camada 2" titulo="Rastreamento Simbólico">
-                <FerramentaOracularPlayer 
-                  data={ponto.metadata.ferramenta_oracular} 
-                  onComplete={(respostas) => {
-                    console.log('[Camada 2] Respostas rastreamento:', respostas);
-                  }}
-                />
-              </Section>
-            )}
 
             {/* Desafio */}
             {(() => {
