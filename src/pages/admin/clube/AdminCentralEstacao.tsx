@@ -196,7 +196,7 @@ export default function AdminCentralEstacao() {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
         <p className="text-muted-foreground">Estação não encontrada.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate('/admin/clube')}>Voltar</Button>
+        <Button variant="outline" className="mt-4" onClick={() => navigate('/admin/rotas')}>Voltar</Button>
       </div>
     );
   }
@@ -256,7 +256,7 @@ export default function AdminCentralEstacao() {
               if (currentPasso?.slug) {
                 navigate(`/clube/rota/${currentPasso.slug}`);
               } else {
-                navigate('/clube');
+                navigate('/admin/rotas');
               }
             }}
           >
