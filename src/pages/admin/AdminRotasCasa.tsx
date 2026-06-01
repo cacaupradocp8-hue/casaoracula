@@ -160,7 +160,7 @@ export default function AdminRotasCasa() {
     
     for (const e of estacoes) {
       const obraNome = e.livro_titulo || 'Sem Obra';
-      const isSystem = obraNome.startsWith('SISTEMA_ROTAS:');
+      const isSystem = obraNome.startsWith('ROTAS:') || obraNome.startsWith('SISTEMA_ROTAS:');
       const isMarker = e.subtitulo === 'MARCADOR_OBRA' || e.numero === 0;
 
       if (isSystem || isMarker) continue;
@@ -254,9 +254,9 @@ export default function AdminRotasCasa() {
         .from('clube_estacoes')
         .insert({
           numero: 0,
-          titulo: `Técnico: Rota ${nome}`,
-          subtitulo: 'SISTEMA',
-          livro_titulo: `SISTEMA_ROTAS: ${nome}`,
+          titulo: `Módulo: ${nome}`,
+          subtitulo: 'Âncora',
+          livro_titulo: `ROTAS: ${nome}`,
           descricao: novaRota.descricao.trim(),
           ativa: false,
           publicada: false,
@@ -272,7 +272,7 @@ export default function AdminRotasCasa() {
           estacao_id: estacao.id,
           rota_custom: nome,
           tipo: 'rota_marker',
-          titulo: 'Definição de Rota',
+          titulo: 'Configuração da Rota',
           slug: `rota-def-${slugify(nome)}`,
           ordem: 0,
           publicado: false
