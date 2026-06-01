@@ -323,7 +323,7 @@ export default function AdminCentralEstacao() {
             {passos.length === 0 ? (
               <div className="p-8 text-center border-2 border-dashed border-primary/10 rounded-xl text-muted-foreground text-sm">
                 Nenhuma etapa criada.
-                <span className="text-gold opacity-50">Criação congelada</span>
+                <span className="text-gold opacity-50 block mt-2">Criação disponível via SQL</span>
               </div>
             ) : (
               passos.map((p, idx) => (
