@@ -30,7 +30,11 @@ function slugify(text: string) {
 
 function cleanTechnicalTitle(title: string) {
   if (!title) return '';
-  return title.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim();
+  return title
+    .replace('SISTEMA_ROTAS:', '')
+    .replace('ROTAS:', '')
+    .replace('Módulo:', '')
+    .trim();
 }
 
 
