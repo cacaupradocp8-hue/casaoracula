@@ -52,7 +52,7 @@ interface RotaAgrupada {
 
 function getObraFromItem(item: any) {
   const metadata = (item?.metadata || {}) as Record<string, unknown>;
-  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim() : '';
   if (!livro_titulo) return null;
 
   return {
