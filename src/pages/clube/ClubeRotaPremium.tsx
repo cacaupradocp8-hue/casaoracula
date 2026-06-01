@@ -427,7 +427,9 @@ export default function ClubeRotaPremium() {
               return (
                 <Section id="fechamento-estacao" icon={Check} kicker="Fim" titulo="Travessia Concluída">
                   <div className="max-w-2xl mx-auto text-center space-y-8">
-                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{texto}</p>
+                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
+                      {String(texto || '').replace('Este registro agora repousa em sua memória instintiva.', '').trim() || 'Sua travessia foi acolhida.'}
+                    </p>
                     <div className="flex flex-col items-center gap-6">
                       {ponto.estado !== 'completed' ? (
                         <Button 
