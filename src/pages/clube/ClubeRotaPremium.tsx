@@ -36,6 +36,7 @@ import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
+import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
 import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgress';
 import { useClubeTravessiaProgress } from '@/hooks/useClubeTravessiaProgress';
 import chamadoSelvagemHero from '@/assets/chamado-selvagem-hero.png';
