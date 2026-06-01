@@ -274,7 +274,7 @@ export default function AdminCentralEstacao() {
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xs uppercase tracking-widest font-bold text-gold/60">Etapas da Rota</h2>
-            <Button size="icon" variant="ghost" className="h-8 w-8 text-gold" onClick={handleCreatePasso}>
+            <Button size="icon" variant="ghost" disabled className="h-8 w-8 text-gold/50 cursor-not-allowed opacity-50">
               <Plus className="w-4 h-4" />
             </Button>
           </div>
