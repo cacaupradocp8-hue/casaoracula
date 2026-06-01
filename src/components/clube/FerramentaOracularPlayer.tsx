@@ -176,7 +176,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
             className="rounded-full h-14 px-10 border-white/10 text-white/40 hover:text-white"
             onClick={() => {
                 // Scroll back to where the user was or continue
-                document.getElementById('desafio-terapeuta')?.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('jardim-psique')?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
             Continuar Travessia
