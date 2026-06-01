@@ -326,22 +326,6 @@ export default function ClubeRotaPremium() {
               </motion.div>
             </motion.div>
 
-          {/* Indicador de scroll */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 2.5, duration: 1.5 }}
-            className="absolute bottom-8 sm:bottom-12 left-1/2 -translate-x-1/2 z-10 md:hidden"
-          >
-            <motion.div
-              animate={{ y: [0, 10, 0] }}
-              transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
-              className="flex flex-col items-center gap-2 sm:gap-3 text-white/20"
-            >
-              <span className="text-[7px] sm:text-[8px] tracking-[0.5em] uppercase font-bold">Scroll</span>
-              <div className="w-[1px] h-8 sm:h-12 bg-gradient-to-b from-gold/40 to-transparent" />
-            </motion.div>
-          </motion.div>
         </section>
 
         {/* Conteúdo principal */}
