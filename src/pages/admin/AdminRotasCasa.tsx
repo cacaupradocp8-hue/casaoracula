@@ -123,10 +123,13 @@ export default function AdminRotasCasa() {
     
     for (const e of estacoes) {
       const obra = e.livro_titulo || 'Sem Obra';
+      const isSystemMarker = obra.startsWith('SISTEMA_ROTAS:');
+      const isWorkMarker = e.subtitulo === 'MARCADOR_OBRA' || e.numero === 0;
+
       const rotaNome = obraToRota.get(obra) || (obra.includes(OBRA_LOBOS) ? ROTA_LOBOS : `Outras: ${obra}`);
 
       // Se for uma estação marcadora de rota (SISTEMA_ROTAS), extraímos a descrição da rota
-      if (obra.startsWith('SISTEMA_ROTAS:')) {
+      if (isSystemMarker) {
         const rName = obra.replace('SISTEMA_ROTAS:', '').trim();
         if (!map.has(rName)) {
           map.set(rName, {
@@ -152,8 +155,12 @@ export default function AdminRotasCasa() {
         });
       }
       const o = obrasMap.get(obra)!;
-      o.estacoes += 1;
-      if (e.publicada) o.publicadas += 1;
+
+      // Só conta como estação se NÃO for um marcador
+      if (!isWorkMarker) {
+        o.estacoes += 1;
+        if (e.publicada) o.publicadas += 1;
+      }
 
       // Vincular à Rota
       if (!map.has(rotaNome)) {
@@ -257,19 +264,19 @@ export default function AdminRotasCasa() {
     try {
       const maxNumero = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
 
-      // 1) Criar primeira estação da obra
+      // 1) Criar MARCADOR da obra (Estação 0)
       const { data: estacao, error: errEst } = await supabase
         .from('clube_estacoes')
         .insert({
-          numero: maxNumero + 1,
-          titulo: novaObra.livro_titulo.trim(),
-          subtitulo: '',
+          numero: 0,
+          titulo: `Definição: ${novaObra.livro_titulo.trim()}`,
+          subtitulo: 'MARCADOR_OBRA',
           livro_titulo: novaObra.livro_titulo.trim(),
           livro_autor: novaObra.livro_autor.trim() || null,
           livro_capa_url: novaObra.livro_capa_url.trim() || null,
           ativa: false,
           publicada: false,
-          ordem: maxNumero + 1,
+          ordem: 0,
         })
         .select()
         .single();
@@ -289,7 +296,7 @@ export default function AdminRotasCasa() {
         });
       if (errItem) throw errItem;
 
-      toast.success('Obra-base vinculada à Rota. Estação criada como rascunho.');
+      toast.success('Obra-base vinculada à Rota. Nenhuma estação real foi criada ainda.');
       setOpenObraDialog(false);
       setNovaObra({ rotaNome: '', livro_titulo: '', livro_autor: '', livro_capa_url: '' });
       refetch();
@@ -466,7 +473,11 @@ export default function AdminRotasCasa() {
                 ) : (
                   <div className="space-y-3">
                     {rota.obras.map(obra => {
-                      const estacoesDaObra = (estacoes || []).filter(e => e.livro_titulo === obra.livro_titulo);
+                      const estacoesDaObra = (estacoes || []).filter(e => 
+                        e.livro_titulo === obra.livro_titulo && 
+                        e.numero > 0 && 
+                        e.subtitulo !== 'MARCADOR_OBRA'
+                      );
                       return (
                         <div key={obra.livro_titulo} className="rounded-xl border border-primary/10 bg-background/40">
                           <div className="flex items-center justify-between p-4 border-b border-primary/5">
@@ -534,7 +545,7 @@ export default function AdminRotasCasa() {
       {/* Info */}
       <div className="p-5 rounded-xl bg-gold/5 border border-gold/10 text-sm text-muted-foreground leading-relaxed">
         <strong className="text-gold">Fluxo:</strong> crie a Rota (agrupador simbólico); depois adicione uma Obra-base
-        (que cria a 1ª estação como rascunho); depois adicione mais Estações conforme necessário. Nada nasce ativo ou publicado.
+        (que apenas define a obra e capa); depois adicione as Estações conforme necessário. Nada nasce ativo ou publicado.
       </div>
 
       {/* ─── Dialog: Nova Rota ─── */}
@@ -583,7 +594,7 @@ export default function AdminRotasCasa() {
               <BookOpen className="w-5 h-5" /> Vincular Obra-base a uma Rota
             </DialogTitle>
             <DialogDescription>
-              Cria uma estação inicial (rascunho) ancorada na obra. Nada é publicado.
+              Define o título, autor e capa da obra nesta rota. Nenhuma estação é criada agora.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
