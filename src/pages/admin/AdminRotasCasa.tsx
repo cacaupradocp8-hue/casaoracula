@@ -23,9 +23,9 @@ import { toast } from 'sonner';
 
 
 /**
- * AdminRotasCasa — Etapa 278
+ * AdminRotasCasa — Rotas da Casa
  * Persistência real em clube_estacoes e clube_rota_itens.
- * Sem localStorage.
+ * Obra-base é vínculo em clube_rota_itens.metadata, nunca estação.
  */
 
 interface ObraResumo {
@@ -43,6 +43,17 @@ interface RotaAgrupada {
   totalEstacoes: number;
   algumaPublicada: boolean;
   isMarker?: boolean;
+}
+
+function getObraFromItem(item: any) {
+  const metadata = (item?.metadata || {}) as Record<string, unknown>;
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  if (!livro_titulo) return null;
+
+  return {
+    livro_titulo,
+    livro_autor: typeof metadata.livro_autor === 'string' ? metadata.livro_autor : null,
+  };
 }
 
 // Helper para converter nome de rota em slug
@@ -83,10 +94,10 @@ export default function AdminRotasCasa() {
         .order('numero', { ascending: true });
       if (errEst) throw errEst;
 
-      // Busca itens para saber a qual rota cada estação pertence (via rota_custom)
+      // Busca itens para saber rotas e obras-base vinculadas
       const { data: items, error: errItems } = await supabase
         .from('clube_rota_itens')
-        .select('estacao_id, rota_custom, tipo')
+        .select('estacao_id, rota_custom, tipo, titulo, metadata')
         .not('rota_custom', 'is', null);
       if (errItems) throw errItems;
 
