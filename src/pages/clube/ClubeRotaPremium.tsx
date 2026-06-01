@@ -355,7 +355,7 @@ export default function ClubeRotaPremium() {
                       <div id="jardim-oficio" className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
                         <h4 className="text-emerald-500 font-display text-xl mb-4">Jardim do Ofício</h4>
                         <p className="text-white/70 font-serif italic mb-8">{oficio}</p>
-                        <Button variant="outline" className="w-full rounded-full border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10">Registrar Prática</Button>
+                        
                       </div>
                     )}
                   </div>
