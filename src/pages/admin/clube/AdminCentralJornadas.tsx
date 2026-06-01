@@ -229,8 +229,9 @@ export default function AdminCentralJornadas() {
                                 onClick={() => navigate('/clube')}
                               >
                                 <Eye className="w-3.5 h-3.5" />
-                                Ver
+                                Ver Rota
                               </Button>
+
                             </div>
                           </div>
                         </div>

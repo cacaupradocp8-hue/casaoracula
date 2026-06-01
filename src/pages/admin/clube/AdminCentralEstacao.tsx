@@ -24,6 +24,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
+function slugify(text: string) {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
+
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -162,10 +167,12 @@ export default function AdminCentralEstacao() {
 
   const handleCreatePasso = () => {
     const nextOrdem = passos.length > 0 ? Math.max(...passos.map(p => p.ordem)) + 10 : 10;
+    const timestamp = Date.now().toString().slice(-4);
     const newPasso = {
       estacao_id: estacaoId,
       titulo: 'Nova Etapa',
       subtitulo: '',
+      slug: `etapa-${timestamp}-${slugify('Nova Etapa')}`,
       ordem: nextOrdem,
       tipo: 'escuta',
       tipo_passo: 'escuta',
@@ -175,6 +182,7 @@ export default function AdminCentralEstacao() {
     };
     savePassoMutation.mutate(newPasso);
   };
+
 
   if (loadingEstacao || loadingPassos) {
     return (
