@@ -84,6 +84,7 @@ interface EditorFormState {
   missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
   oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
   fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
+  conto_espelho: { titulo: string; texto: string; moral: string };
   audios: any[];
 }
 
