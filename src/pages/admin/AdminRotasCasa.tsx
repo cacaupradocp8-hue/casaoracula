@@ -247,9 +247,6 @@ export default function AdminRotasCasa() {
   }, [rotasAgrupadas, searchTerm]);
 
   const handleCriarRota = async () => {
-    if (!novaRota.nome.trim()) {
-      toast.error('Informe o nome da Rota.');
-  const handleCriarRota = async () => {
     toast.error('Criação congelada.');
   };
 
