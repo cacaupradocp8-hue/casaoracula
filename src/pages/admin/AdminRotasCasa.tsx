@@ -9,34 +9,29 @@ import { useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
-} from '@/components/ui/select';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import {
-  Dialog, DialogContent, DialogHeader, DialogTitle,
-  DialogDescription, DialogFooter,
-} from '@/components/ui/dialog';
 import { toast } from 'sonner';
+
 
 function cleanTechnicalTitle(title: string) {
   if (!title) return '';
   return title
+    .replace('SISTEMA_ROTAS:', '')
+    .replace('ROTAS:', '')
+    .replace('Módulo:', '')
     .trim();
 }
+
 
 
 /**
  * AdminRotasCasa — Gerenciamento de Rotas da Casa
  * 
- * Regras de Persistência:
- * 1. Rota: Criada como uma estação técnica em clube_estacoes (SISTEMA_ROTAS) e um item em clube_rota_itens (rota_marker).
- * 2. Obra-base: Criada APENAS como um item em clube_rota_itens (obra_marker), vinculada à estação técnica da Rota.
- *    NUNCA cria linha em clube_estacoes para Obra-base.
- * 3. Estação: Criada em clube_estacoes vinculada ao livro_titulo da Obra-base.
+ * Este painel está em modo de manutenção (congelado).
+ * Permite apenas a navegação e edição de estações existentes na Rota dos Lobos.
  */
+
 
 interface ObraResumo {
   livro_titulo: string;
@@ -79,20 +74,8 @@ export default function AdminRotasCasa() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Dialogs
-  const [openRotaDialog, setOpenRotaDialog] = useState(false);
-  const [openObraDialog, setOpenObraDialog] = useState(false);
-  const [openEstacaoDialog, setOpenEstacaoDialog] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // Form state
-  const [novaRota, setNovaRota] = useState({ nome: '', descricao: '' });
-  const [novaObra, setNovaObra] = useState({
-    rotaNome: '', livro_titulo: '', livro_autor: '', livro_capa_url: '',
-  });
-  const [novaEstacao, setNovaEstacao] = useState({
-    livro_titulo: '', titulo: '', subtitulo: '',
-  });
 
   const { data: dbData, isLoading, refetch } = useQuery({
     queryKey: ['admin-rotas-casa-v4'],
@@ -246,18 +229,6 @@ export default function AdminRotasCasa() {
     );
   }, [rotasAgrupadas, searchTerm]);
 
-  const handleCriarRota = async () => {
-    toast.error('Criação congelada.');
-  };
-
-  const handleAdicionarObra = async () => {
-    toast.error('Criação congelada.');
-  };
-
-  const handleAdicionarEstacao = async () => {
-    toast.error('Criação congelada.');
-  };
-
   const obrasDisponiveis = useMemo(() => {
     const list: ObraResumo[] = [];
     rotasAgrupadas.forEach(r => r.obras.forEach(o => {
@@ -265,6 +236,7 @@ export default function AdminRotasCasa() {
     }));
     return list;
   }, [rotasAgrupadas]);
+
 
   if (isLoading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin text-gold" /></div>;
 
@@ -371,7 +343,7 @@ export default function AdminRotasCasa() {
         </div>
       )}
 
-      {/* Dialogs removidos da renderização ativa */}
     </div>
+
   );
 }
