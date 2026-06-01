@@ -626,7 +626,7 @@ export default function ClubeRotaPremium() {
                     
                     {rev.pergunta_narrativa && (
                       <div className="mt-10 pt-8 border-t border-white/5 relative z-10">
-                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta Narrativa</span>
+                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta possível</span>
                          <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{rev.pergunta_narrativa}"</p>
                       </div>
                     )}
