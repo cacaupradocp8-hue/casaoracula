@@ -217,6 +217,7 @@ export default function ClubeRotaPremium() {
                   { icon: Headphones, label: 'Escuta', id: 'audio-travessia', show: audios.length > 0 },
                   { icon: BookOpen, label: 'Leitura', id: 'conteudo-estacao', show: Boolean(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura) },
                   { icon: Eye, label: 'Caso', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
+                  { icon: Radar, label: 'Rastreio', id: 'ferramenta-oracular', show: Boolean(ponto.ferramenta_oracular) },
                   { icon: Sword, label: 'Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
                   { icon: Flower2, label: 'Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
                   { icon: MapPin, label: 'Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
