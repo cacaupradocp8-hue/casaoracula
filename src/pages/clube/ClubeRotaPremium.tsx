@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useTransform, AnimatePresence } from 'framer-motion';
 import {
   Play,
   ArrowRight,
@@ -74,10 +74,9 @@ export default function ClubeRotaPremium() {
   
   const { steps } = useClubeTravessiaProgress(ponto, estacaoAtual?.id);
 
-  const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const heroScale = useTransform(scrollY, [0, 400], [1, 1.08]);
-  const heroY = useTransform(scrollY, [0, 400], [0, 80]);
+  const heroOpacity = 1;
+  const heroScale = 1;
+  const heroY = 0;
 
   const proximoPonto = useMemo(
     () => (ponto ? pontos.find(p => p.ordem > ponto.ordem) : null),
@@ -299,7 +298,7 @@ export default function ClubeRotaPremium() {
                       variant="gold"
                       className="w-full sm:w-auto h-14 sm:h-16 px-8 sm:px-12 text-sm sm:text-base gap-3 rounded-full shadow-[0_20px_50px_-10px_rgba(212,175,55,0.3)] hover:shadow-[0_25px_60px_-10px_rgba(212,175,55,0.4)] transition-all duration-500"
                       onClick={() => {
-                        const targetId = isTravessiaEstruturada ? 'como-atravessar' : (isModoGuiado ? 'comece-por-aqui' : 'mapa-vivo');
+                        const targetId = isTravessiaEstruturada ? 'como-atravessar' : 'mapa-vivo';
                         const el = document.getElementById(targetId);
                         el?.scrollIntoView({ behavior: 'smooth' });
                       }}
@@ -1186,11 +1185,6 @@ export default function ClubeRotaPremium() {
                       {proximoPonto.subtitulo && !proxLocked && (
                         <p className="font-serif italic text-foreground/70 mt-3 text-sm md:text-base">
                           {proximoPonto.subtitulo}
-                        </p>
-                      )}
-                      {proxLocked && (
-                        <p className="text-foreground/35 mt-3 text-sm">
-                          Conclua esta rota para revelar a próxima travessia.
                         </p>
                       )}
                     </div>
