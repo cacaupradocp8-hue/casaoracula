@@ -28,7 +28,6 @@ import {
   AlertTriangle,
   Lightbulb,
   Crosshair,
-  BookOpen,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
