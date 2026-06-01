@@ -481,23 +481,28 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       resultados: Array.isArray((passo as any).ferramenta_oracular?.resultados) ? (passo as any).ferramenta_oracular?.resultados : (Array.isArray(passo.metadata?.ferramenta_oracular?.resultados) ? passo.metadata.ferramenta_oracular.resultados : []),
       registros_sugeridos: {
         jardim_psique: (passo as any).ferramenta_oracular?.registros_sugeridos?.jardim_psique || passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
-        jardim_oficio: (passo as any).ferramenta_oracular?.registros_sugeridos?.jardim_oficio || passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
+          jardim_oficio: (passo as any).ferramenta_oracular?.registros_sugeridos?.jardim_oficio || passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
+        },
+        atlas_ready: {
+          enabled: (passo as any).ferramenta_oracular?.atlas_ready?.enabled ?? passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
+          export_enabled: (passo as any).ferramenta_oracular?.atlas_ready?.export_enabled || passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+          payload_version: "v1",
+          destinos_futuros: (passo as any).ferramenta_oracular?.atlas_ready?.destinos_futuros || passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+          tags: (passo as any).ferramenta_oracular?.atlas_ready?.tags || passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+        }
       },
-      atlas_ready: {
-        enabled: (passo as any).ferramenta_oracular?.atlas_ready?.enabled ?? passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
-        export_enabled: (passo as any).ferramenta_oracular?.atlas_ready?.export_enabled || passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
-        payload_version: "v1",
-        destinos_futuros: (passo as any).ferramenta_oracular?.atlas_ready?.destinos_futuros || passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
-        tags: (passo as any).ferramenta_oracular?.atlas_ready?.tags || passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
-      }
-    },
-    revelacao_estacao: {
-      porta: passo.metadata?.revelacao_estacao?.porta || '',
-      campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
-      torre: passo.metadata?.revelacao_estacao?.torre || '',
-      labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
-      pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
-    },
+      revelacao_estacao: {
+        porta: passo.metadata?.revelacao_estacao?.porta || '',
+        campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
+        torre: passo.metadata?.revelacao_estacao?.torre || '',
+        labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
+        pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
+      },
+      conto_espelho: {
+        titulo: (passo as any).conto_espelho?.titulo || '',
+        texto: (passo as any).conto_espelho?.texto || '',
+        moral: (passo as any).conto_espelho?.moral || ''
+      },
     conto_espelho: {
       titulo: (passo as any).conto_espelho?.titulo || '',
       texto: (passo as any).conto_espelho?.texto || '',
