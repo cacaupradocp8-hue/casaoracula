@@ -28,7 +28,7 @@ import {
   AlertTriangle,
   Lightbulb,
   Crosshair,
-  Scroll,
+  BookOpen,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -776,7 +776,7 @@ export default function ClubeRotaPremium() {
                const show = Boolean(oraculo && oraculo.palavra && oraculo.palavra.trim());
                if (!show) return null;
                return (
-                  <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
+                  <Section icon={BookOpen} kicker="A palavra final" titulo="Oráculo da Estação" isHidden={isTravessiaEstruturada}>
                     <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                       <div className="space-y-2">
                         <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">A Palavra</span>
@@ -1064,7 +1064,7 @@ export default function ClubeRotaPremium() {
           )}
 
           {!isTravessiaEstruturada && ponto.metadata?.oraculo_estacao && (
-            <Section icon={Scroll} kicker="A palavra final" titulo="Oráculo da Estação">
+            <Section icon={BookOpen} kicker="A palavra final" titulo="Oráculo da Estação">
               <div className="max-w-3xl mx-auto text-center space-y-8 bg-gradient-to-b from-gold/10 to-transparent p-12 rounded-[3rem] border border-gold/10">
                 {typeof ponto.metadata.oraculo_estacao === 'object' ? (
                   <>
