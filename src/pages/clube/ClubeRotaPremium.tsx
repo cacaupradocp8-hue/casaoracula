@@ -388,8 +388,8 @@ export default function ClubeRotaPremium() {
                   <div className="max-w-2xl mx-auto text-center space-y-8">
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{texto}</p>
                     <div className="flex flex-col items-center gap-6">
-                      <Button variant="gold" className="rounded-full h-16 px-12 text-base font-bold uppercase" onClick={() => navigate('/clube')}>
-                        Concluir Estação
+                      <Button variant="outline" className="rounded-full h-14 px-10 text-sm uppercase tracking-wider" onClick={() => navigate('/clube')}>
+                        Voltar à rota
                       </Button>
                     </div>
                   </div>
