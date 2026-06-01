@@ -507,13 +507,17 @@ export default function ClubeRotaPremium() {
           
           <div id="conteudo-estacao" className="space-y-24">
             {/* Abertura Imersiva */}
-            {ponto.metadata?.abertura_imersiva && (
-              <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
-                <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
-                  {renderContent(ponto.metadata.abertura_imersiva)}
-                </div>
-              </Section>
-            )}
+            {(() => {
+              const content = renderContent(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura);
+              if (!content || !content.trim()) return null;
+              return (
+                <Section icon={DoorOpen} kicker="Portal de entrada" titulo="Abertura Imersiva">
+                  <div className="prose prose-invert prose-lg max-w-3xl mx-auto text-foreground/80 font-serif italic whitespace-pre-wrap">
+                    {content}
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Áudios */}
             {audios.length > 0 && (
