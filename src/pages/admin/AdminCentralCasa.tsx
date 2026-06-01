@@ -93,7 +93,7 @@ export default function AdminCentralCasa() {
             // 2) Agrupar Estações Reais
             estacoes.forEach((e: any) => {
               const obra = e.livro_titulo || 'Sem Obra';
-              if (obra.startsWith('SISTEMA_ROTAS:')) return;
+              if (obra.startsWith('ROTAS:') || obra.startsWith('SISTEMA_ROTAS:')) return;
 
               const rota = obraToRota.get(obra) || (obra.includes('Mulheres que Correm com os Lobos') ? 'Rota dos Lobos' : null);
               if (!rota) return;
