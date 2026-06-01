@@ -392,26 +392,31 @@ export default function AdminRotasCasa() {
         </div>
         <div className="flex gap-2">
           <div className="group relative">
-            <Button variant="outline" disabled className="border-gold/30 text-gold/50 cursor-not-allowed gap-2">
+            <Button variant="outline" disabled className="border-gold/30 text-gold/50 cursor-not-allowed gap-2 opacity-50">
               <RouteIcon className="w-4 h-4" /> Nova Rota
             </Button>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-              Criação de novas rotas em preparação. Use a Rota dos Lobos nesta fase.
+              Criação de novas rotas congelada. Use a Rota dos Lobos.
             </div>
           </div>
           
           <div className="group relative">
-            <Button variant="outline" disabled className="border-emerald-500/30 text-emerald-400/50 cursor-not-allowed gap-2">
+            <Button variant="outline" disabled className="border-emerald-500/30 text-emerald-400/50 cursor-not-allowed gap-2 opacity-50">
               <BookOpen className="w-4 h-4" /> Nova Obra-base
             </Button>
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-              Novas obras-base serão ativadas depois da Rota dos Lobos estar estabilizada.
+              Novas obras-base congeladas nesta etapa.
             </div>
           </div>
 
-          <Button variant="outline" onClick={() => setOpenEstacaoDialog(true)} className="gap-2">
-            <Layers className="w-4 h-4" /> Nova Estação
-          </Button>
+          <div className="group relative">
+            <Button variant="outline" disabled className="gap-2 opacity-50 cursor-not-allowed">
+              <Layers className="w-4 h-4" /> Nova Estação
+            </Button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+              Criação de novas estações congelada.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -455,10 +460,9 @@ export default function AdminRotasCasa() {
                             <BookOpen className="w-4 h-4 text-emerald-400" />
                             <span className="font-medium">{obra.livro_titulo}</span>
                           </div>
-                          <Button variant="ghost" size="sm" className="text-xs h-8 gap-1" onClick={() => {
-                            setNovaEstacao({ livro_titulo: obra.livro_titulo, titulo: '', subtitulo: '' });
-                            setOpenEstacaoDialog(true);
-                          }}><Plus className="w-3 h-3" /> Estação</Button>
+                          <Button variant="ghost" size="sm" disabled className="text-xs h-8 gap-1 opacity-50 cursor-not-allowed">
+                            <Plus className="w-3 h-3" /> Estação
+                          </Button>
                         </div>
                         <ul className="space-y-1 pl-7">
                           {ests.map(est => (

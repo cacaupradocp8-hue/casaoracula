@@ -196,7 +196,7 @@ export default function AdminCentralEstacao() {
     return (
       <div className="container mx-auto px-4 py-12 text-center">
         <p className="text-muted-foreground">Estação não encontrada.</p>
-        <Button variant="outline" className="mt-4" onClick={() => navigate('/admin/clube')}>Voltar</Button>
+        <Button variant="outline" className="mt-4" onClick={() => navigate('/admin/rotas')}>Voltar</Button>
       </div>
     );
   }
@@ -256,7 +256,7 @@ export default function AdminCentralEstacao() {
               if (currentPasso?.slug) {
                 navigate(`/clube/rota/${currentPasso.slug}`);
               } else {
-                navigate('/clube');
+                navigate('/admin/rotas');
               }
             }}
           >
@@ -274,7 +274,7 @@ export default function AdminCentralEstacao() {
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xs uppercase tracking-widest font-bold text-gold/60">Etapas da Rota</h2>
-            <Button size="icon" variant="ghost" className="h-8 w-8 text-gold" onClick={handleCreatePasso}>
+            <Button size="icon" variant="ghost" disabled className="h-8 w-8 text-gold/50 cursor-not-allowed opacity-50">
               <Plus className="w-4 h-4" />
             </Button>
           </div>
