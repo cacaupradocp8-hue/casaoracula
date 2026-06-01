@@ -1045,16 +1045,16 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Conexão Atlas</Label>
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Status Atlas</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
                         <Switch 
                           checked={form.ferramenta_oracular.atlas_ready.enabled} 
-                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular, atlas_ready: v}}})} 
                         />
-                        <Label className="text-[10px] uppercase font-bold">Atlas Ready</Label>
+                        <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">Sincronização automática de indicadores e rastro para o perfil evolutivo da aluna.</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para o perfil evolutivo da aluna nesta rota.</p>
                     </div>
                   </div>
                 </div>
