@@ -586,43 +586,50 @@ export default function ClubeRotaPremium() {
               );
             })()}
                   
-                  {/* Revelação - Aparece após o desafio */}
-                  {ponto.metadata?.revelacao_estacao && (
-                    <motion.div 
-                      id="revelacao-estacao"
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      className="bg-white/[0.02] border border-white/5 p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden"
-                    >
-                      <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
-                        <Sparkles className="w-32 h-32 text-gold" />
-                      </div>
-                      <h4 className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold mb-8 flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5" /> Revelação da Estação
-                      </h4>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        {['porta', 'campo_psiquico', 'torre', 'labirinto'].map((key) => (
-                          ponto.metadata.revelacao_estacao[key] && (
-                            <div key={key} className="space-y-1">
-                              <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{key.replace('_', ' ')}</span>
-                              <p className="text-white/80 font-serif italic text-lg">{ponto.metadata.revelacao_estacao[key]}</p>
+            {/* Revelação da Estação */}
+            {(() => {
+              const rev = ponto.metadata?.revelacao_estacao;
+              const hasContent = rev && (
+                rev.porta || rev.campo_psiquico || rev.torre || rev.labirinto || rev.pergunta_narrativa
+              );
+              if (!hasContent) return null;
+
+              return (
+                <Section id="revelacao-estacao" icon={Sparkles} kicker="A sabedoria desvelada" titulo="Revelação da Estação">
+                  <div className="bg-white/[0.02] border border-white/5 p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden max-w-3xl mx-auto">
+                    <div className="absolute top-0 right-0 p-8 opacity-[0.03]">
+                      <Sparkles className="w-32 h-32 text-gold" />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+                      {[
+                        { key: 'porta', label: 'A Porta', icon: DoorOpen },
+                        { key: 'campo_psiquico', label: 'Campo Psíquico', icon: Layers },
+                        { key: 'torre', label: 'A Torre', icon: Layout },
+                        { key: 'labirinto', label: 'O Labirinto', icon: ShieldAlert }
+                      ].map((item) => (
+                        rev[item.key] && (
+                          <div key={item.key} className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <item.icon className="w-3 h-3 text-gold/40" />
+                              <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">{item.label}</span>
                             </div>
-                          )
-                        ))}
+                            <p className="text-white/80 font-serif italic text-lg">{rev[item.key]}</p>
+                          </div>
+                        )
+                      ))}
+                    </div>
+                    
+                    {rev.pergunta_narrativa && (
+                      <div className="mt-10 pt-8 border-t border-white/5 relative z-10">
+                         <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta Narrativa</span>
+                         <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{rev.pergunta_narrativa}"</p>
                       </div>
-                      
-                      {ponto.metadata.revelacao_estacao.pergunta_narrativa && (
-                        <div className="mt-10 pt-8 border-t border-white/5">
-                           <span className="text-[9px] uppercase tracking-widest text-gold/60 font-bold block mb-2">Pergunta Narrativa</span>
-                           <p className="text-xl text-white/90 font-serif italic leading-relaxed">"{ponto.metadata.revelacao_estacao.pergunta_narrativa}"</p>
-                        </div>
-                      )}
-                    </motion.div>
-                  )}
-                </div>
-              </Section>
-            )}
+                    )}
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Erro Comum & Condução Justa */}
             {(ponto.metadata?.erro_comum || ponto.metadata?.conducao_justa) && (
