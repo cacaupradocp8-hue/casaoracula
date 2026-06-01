@@ -415,7 +415,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
       atlas_ready: {
-        enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled || true,
+        enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
         export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
         payload_version: "v1",
         destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
@@ -423,7 +423,19 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       }
     },
     revelacao_estacao: {
-...
+      porta: passo.metadata?.revelacao_estacao?.porta || '',
+      campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
+      torre: passo.metadata?.revelacao_estacao?.torre || '',
+      labirinto: passo.metadata?.revelacao_estacao?.labirinto || '',
+      pergunta_narrativa: passo.metadata?.revelacao_estacao?.pergunta_narrativa || ''
+    },
+    erro_comum: {
+      titulo: passo.metadata?.erro_comum?.titulo || '',
+      descricao: passo.metadata?.erro_comum?.descricao || '',
+      exemplo: passo.metadata?.erro_comum?.exemplo || '',
+      explicacao: passo.metadata?.erro_comum?.explicacao || ''
+    },
+    conducao_justa: passo.metadata?.conducao_justa || '',
     cautela_etica: Array.isArray(passo.metadata?.cautela_etica) ? passo.metadata?.cautela_etica.join('\n') : (passo.metadata?.cautela_etica || 'Não usar linguagem de diagnóstico.\nNão transformar conto em sentença.\nNão sugerir rupturas rápidas.\nNão usar caso fictício como caso real.'),
     jardim_psique: {
       chamada: passo.metadata?.jardim_psique?.chamada || '',
