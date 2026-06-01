@@ -143,6 +143,13 @@ export default function AdminCentralCasa() {
                 grupos.get(rota)!.estacoes.push(e);
               }
             });
+
+            (items || []).forEach((i: any) => {
+              if (i.tipo !== 'obra_marker' || !i.rota_custom) return;
+              const obra = getObraFromItem(i);
+              if (!obra || grupos.has(i.rota_custom)) return;
+              grupos.set(i.rota_custom, { rota: i.rota_custom, estacoes: [], principalObra: obra });
+            });
             const rotas = Array.from(grupos.values());
 
             if (rotas.length === 0) {
