@@ -1013,8 +1013,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <Label className="text-[10px] uppercase font-bold text-white/40">ID da Ferramenta</Label>
                     <Input placeholder="radar_silenciamento" value={form.ferramenta_oracular.tool_id} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, tool_id: e.target.value}})} className="bg-background/50" />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo Atlas</Label>
+                   <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo do Método</Label>
                     <Input placeholder="O Sino" value={form.ferramenta_oracular.simbolo} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, simbolo: e.target.value}})} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
