@@ -1056,8 +1056,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
                         <Switch 
-                          checked={form.ferramenta_oracular.atlas_ready.enabled} 
-                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
+                          checked={form.ferramenta_oracular.metodo_ready.enabled} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, metodo_ready: {...form.ferramenta_oracular.metodo_ready, enabled: v}}})} 
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
