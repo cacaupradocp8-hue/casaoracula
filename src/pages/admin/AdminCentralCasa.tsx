@@ -110,12 +110,17 @@ export default function AdminCentralCasa() {
           {(() => {
             // 1) Mapear Estação → Rota
             const estacaoToRota = new Map<string, string>();
+            const obraToRota = new Map<string, string>();
             (items || []).forEach((i: any) => {
-              if (i.rota_custom) estacaoToRota.set(i.estacao_id, i.rota_custom);
+              if (!i.rota_custom) return;
+              estacaoToRota.set(i.estacao_id, i.rota_custom);
+              if (i.tipo === 'obra_marker') {
+                const obra = getObraFromItem(i);
+                if (obra) obraToRota.set(obra, i.rota_custom);
+              }
             });
 
-            // 2) Mapear Obra → Rota
-            const obraToRota = new Map<string, string>();
+            // 2) Mapear Obra → Rota também pelo vínculo legado em estações reais
             (estacoes || []).forEach((e: any) => {
               const rota = estacaoToRota.get(e.id);
               if (rota && e.livro_titulo) obraToRota.set(e.livro_titulo, rota);
