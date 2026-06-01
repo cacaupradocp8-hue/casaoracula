@@ -779,6 +779,30 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
 
+            {/* 1.5. Conto Espelho */}
+            <AccordionItem value="conto-espelho" className="border border-gold/20 rounded-xl px-4 bg-gold/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-gold">1.5. Conto Espelho (Narrativa)</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título do Conto</Label>
+                  <Input value={form.conto_espelho.titulo} onChange={e => setForm({...form, conto_espelho: {...form.conto_espelho, titulo: e.target.value}})} className="bg-background/50" placeholder="O Nome do Conto..." />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Narrativa Iniciática</Label>
+                  <Textarea value={form.conto_espelho.texto} onChange={e => setForm({...form, conto_espelho: {...form.conto_espelho, texto: e.target.value}})} className="bg-background/50 min-h-[200px] font-serif italic" placeholder="Era uma vez..." />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">A Moral/A Chave</Label>
+                  <Input value={form.conto_espelho.moral} onChange={e => setForm({...form, conto_espelho: {...form.conto_espelho, moral: e.target.value}})} className="bg-background/50" placeholder="A chave simbólica deste conto é..." />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
             {/* 2. Estação de Escuta */}
             <AccordionItem value="escuta" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
