@@ -25,6 +25,7 @@ import {
   Eye,
   AlertTriangle,
   Crosshair,
+  Radar,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -36,6 +37,7 @@ import { cn } from '@/lib/utils';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
+import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
 import { ClubeTravessiaProgress } from '@/components/clube/ClubeTravessiaProgress';
 import { useClubeTravessiaProgress } from '@/hooks/useClubeTravessiaProgress';
 import chamadoSelvagemHero from '@/assets/chamado-selvagem-hero.png';
@@ -47,7 +49,7 @@ import chamadoSelvagemHero from '@/assets/chamado-selvagem-hero.png';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading, marcarEmAndamento } = useRotaOracular();
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular();
   const { data: allBooks = [] } = useAllBooks();
   
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
@@ -216,6 +218,7 @@ export default function ClubeRotaPremium() {
                   { icon: Headphones, label: 'Escuta', id: 'audio-travessia', show: audios.length > 0 },
                   { icon: BookOpen, label: 'Leitura', id: 'conteudo-estacao', show: Boolean(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura) },
                   { icon: Eye, label: 'Caso', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
+                  { icon: Radar, label: 'Rastreio', id: 'ferramenta-oracular', show: Boolean(ponto.ferramenta_oracular) },
                   { icon: Sword, label: 'Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
                   { icon: Flower2, label: 'Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
                   { icon: MapPin, label: 'Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
@@ -274,6 +277,23 @@ export default function ClubeRotaPremium() {
               );
             })()}
 
+            {/* Conto Espelho (Narrativa Iniciática) */}
+            {ponto.conto_espelho && (
+              <Section icon={Sparkles} kicker="O Espelho" titulo={ponto.conto_espelho.titulo || "Conto Espelho"}>
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="prose prose-invert prose-lg text-foreground/80 font-serif italic whitespace-pre-wrap leading-relaxed">
+                    {ponto.conto_espelho.texto}
+                  </div>
+                  {ponto.conto_espelho.moral && (
+                    <div className="bg-gold/5 border border-gold/10 p-6 rounded-2xl text-center">
+                      <p className="text-gold font-display text-sm uppercase tracking-widest mb-2">A Chave</p>
+                      <p className="text-white/80 font-serif italic">{ponto.conto_espelho.moral}</p>
+                    </div>
+                  )}
+                </div>
+              </Section>
+            )}
+
             {/* Áudios */}
             {audios.length > 0 && (
               <Section id="audio-travessia" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
@@ -297,6 +317,18 @@ export default function ClubeRotaPremium() {
                 </Section>
               );
             })()}
+
+            {/* Ferramenta Oracular (Camada 2) */}
+            {ponto.ferramenta_oracular && (
+              <Section id="ferramenta-oracular" icon={Radar} kicker="Camada 2" titulo="Rastreamento Simbólico">
+                <FerramentaOracularPlayer 
+                  data={ponto.ferramenta_oracular} 
+                  onComplete={(respostas) => {
+                    console.log('[Camada 2] Respostas rastreamento:', respostas);
+                  }}
+                />
+              </Section>
+            )}
 
             {/* Desafio */}
             {(() => {
@@ -388,8 +420,22 @@ export default function ClubeRotaPremium() {
                   <div className="max-w-2xl mx-auto text-center space-y-8">
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{texto}</p>
                     <div className="flex flex-col items-center gap-6">
+                      {ponto.estado !== 'completed' ? (
+                        <Button 
+                          variant="gold" 
+                          className="rounded-full h-16 px-12 text-lg font-bold shadow-glow" 
+                          onClick={() => concluirPonto.mutate(ponto.id)}
+                          disabled={concluirPonto.isPending}
+                        >
+                          {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
+                        </Button>
+                      ) : (
+                        <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5 py-2 px-4 rounded-full">
+                          Estação Concluída no Atlas
+                        </Badge>
+                      )}
                       <Button variant="outline" className="rounded-full h-14 px-10 text-sm uppercase tracking-wider" onClick={() => navigate('/clube')}>
-                        Voltar à rota
+                        Voltar ao Mapa das Rotas
                       </Button>
                     </div>
                   </div>

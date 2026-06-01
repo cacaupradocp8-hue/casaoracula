@@ -36,6 +36,8 @@ export interface PontoRota {
   cenario_treinamento?: string;
   leitura_referencia?: string;
   image_url?: string;
+  ferramenta_oracular?: any;
+  conto_espelho?: any;
   
   conteudo_inline?: any;
   metadata?: any;
@@ -269,6 +271,8 @@ export function useRotaOracular() {
       cenario_treinamento: item.cenario_treinamento,
       leitura_referencia: item.leitura_referencia,
       image_url: item.image_url,
+      ferramenta_oracular: (item as any).ferramenta_oracular,
+      conto_espelho: (item as any).conto_espelho,
       
       conteudo_inline: item.conteudo_inline,
       metadata: item.metadata,
