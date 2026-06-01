@@ -222,7 +222,7 @@ export default function AdminCentralEstacao() {
 
           <div className="flex-1 p-6 flex flex-col justify-center">
             <div className="flex items-start gap-4 mb-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 mt-1" onClick={() => navigate('/admin/clube/ciclos')}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0 mt-1" onClick={() => navigate('/admin/rotas')}>
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div className="flex-1 min-w-0">

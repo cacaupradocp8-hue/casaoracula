@@ -52,7 +52,7 @@ interface RotaAgrupada {
 
 function getObraFromItem(item: any) {
   const metadata = (item?.metadata || {}) as Record<string, unknown>;
-  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim() : '';
   if (!livro_titulo) return null;
 
   return {
@@ -355,8 +355,9 @@ export default function AdminRotasCasa() {
           subtitulo: novaEstacao.subtitulo.trim(),
           livro_titulo: novaEstacao.livro_titulo,
           ativa: false,
-          publicada: false,
+          publicada: false, // Inicia como rascunho
           ordem: maxNum + 1,
+          slug: slugify(novaEstacao.titulo.trim())
         });
       if (error) throw error;
 
@@ -387,15 +388,27 @@ export default function AdminRotasCasa() {
       <div className="flex justify-between items-end gap-4">
         <div className="space-y-2">
           <h1 className="text-4xl font-serif text-foreground">Rotas da Casa</h1>
-          <p className="text-muted-foreground font-light">Agrupamento real via banco de dados.</p>
+          <p className="text-muted-foreground font-light">Gerencie as travessias e obras-base da Cidadela.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setOpenRotaDialog(true)} className="border-gold/30 text-gold hover:bg-gold/10 gap-2">
-            <RouteIcon className="w-4 h-4" /> Nova Rota
-          </Button>
-          <Button variant="outline" onClick={() => setOpenObraDialog(true)} className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 gap-2">
-            <BookOpen className="w-4 h-4" /> Nova Obra-base
-          </Button>
+          <div className="group relative">
+            <Button variant="outline" disabled className="border-gold/30 text-gold/50 cursor-not-allowed gap-2">
+              <RouteIcon className="w-4 h-4" /> Nova Rota
+            </Button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+              Criação de novas rotas em preparação. Use a Rota dos Lobos nesta fase.
+            </div>
+          </div>
+          
+          <div className="group relative">
+            <Button variant="outline" disabled className="border-emerald-500/30 text-emerald-400/50 cursor-not-allowed gap-2">
+              <BookOpen className="w-4 h-4" /> Nova Obra-base
+            </Button>
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-[10px] rounded border opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+              Novas obras-base serão ativadas depois da Rota dos Lobos estar estabilizada.
+            </div>
+          </div>
+
           <Button variant="outline" onClick={() => setOpenEstacaoDialog(true)} className="gap-2">
             <Layers className="w-4 h-4" /> Nova Estação
           </Button>
@@ -426,14 +439,10 @@ export default function AdminRotasCasa() {
                   <div className="flex gap-4">
                     <div className="p-3 rounded-xl bg-gold/10 text-gold"><Compass className="w-6 h-6" /></div>
                     <div>
-                      <h2 className="text-2xl font-serif text-foreground">{rota.nome}</h2>
+                      <h2 className="text-2xl font-serif text-foreground">{rota.nome.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim()}</h2>
                       <p className="text-xs text-muted-foreground mt-1">{rota.obras.length} obras · {rota.totalEstacoes} estações</p>
                     </div>
                   </div>
-                  <Button variant="outline" size="sm" onClick={() => {
-                    setNovaObra(s => ({ ...s, rotaNome: rota.nome }));
-                    setOpenObraDialog(true);
-                  }}>+ Obra</Button>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4">
