@@ -160,7 +160,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
         
         <h3 className="font-display text-4xl text-white mb-6">Camada do Método</h3>
         <p className="text-white/60 font-serif italic text-xl max-w-xl mx-auto mb-12 leading-relaxed">
-          Seu rastreamento foi acolhido. Este registro agora repousa em sua memória instintiva.
+          Seu rastreamento foi acolhido.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

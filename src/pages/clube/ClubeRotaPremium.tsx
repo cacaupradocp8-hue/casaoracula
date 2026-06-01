@@ -220,7 +220,7 @@ export default function ClubeRotaPremium() {
                   { icon: Eye, label: 'Caso', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
                   { icon: Sword, label: 'Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
                   { icon: Sparkles, label: 'Revelação', id: 'revelacao-estacao', show: Boolean(ponto.metadata?.revelacao_estacao) },
-                  { icon: Radar, label: 'Rastreio', id: 'ferramenta-oracular', show: Boolean(ponto.metadata?.ferramenta_oracular?.enabled) },
+                  { icon: Radar, label: 'Método', id: 'ferramenta-oracular', show: Boolean(ponto.metadata?.ferramenta_oracular?.enabled) },
                   { icon: Flower2, label: 'Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
                   { icon: MapPin, label: 'Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
                   { icon: Check, label: 'Conclusão', id: 'fechamento-estacao', show: true }
@@ -360,7 +360,7 @@ export default function ClubeRotaPremium() {
 
             {/* Ferramenta Oracular (Camada 2) */}
             {ponto.metadata?.ferramenta_oracular?.enabled && (
-              <Section id="ferramenta-oracular" icon={Radar} kicker={ponto.metadata?.ferramenta_oracular?.kicker || "Camada 2"} titulo={ponto.metadata?.ferramenta_oracular?.nome_publico || "Rastreamento Simbólico"}>
+              <Section id="ferramenta-oracular" icon={Radar} kicker={ponto.metadata?.ferramenta_oracular?.kicker || "Camada do Método"} titulo={ponto.metadata?.ferramenta_oracular?.nome_publico || "Camada do Método"}>
                 <FerramentaOracularPlayer 
                   data={{
                     ...ponto.metadata.ferramenta_oracular,
