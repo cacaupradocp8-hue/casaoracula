@@ -885,6 +885,79 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
 
+            {/* Camada 2 — Ferramenta Oracular de Rastreamento Simbólico */}
+            <AccordionItem value="ferramenta-oracular" className="border-2 border-gold/40 rounded-xl px-4 bg-gold/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-gold">Camada 2 — Ferramenta Oracular de Rastreamento</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4 p-3 bg-background/50 rounded-lg border border-gold/20">
+                  <Switch 
+                    checked={form.ferramenta_oracular.enabled} 
+                    onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, enabled: v}})} 
+                  />
+                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Habilitar Camada Oracular</Label>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">ID da Ferramenta</Label>
+                    <Input placeholder="radar_silenciamento" value={form.ferramenta_oracular.tool_id} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, tool_id: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo Atlas</Label>
+                    <Input placeholder="O Sino" value={form.ferramenta_oracular.simbolo} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, simbolo: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Nome Público (App)</Label>
+                    <Input placeholder="Radar de Silenciamento™" value={form.ferramenta_oracular.nome_publico} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, nome_publico: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Função/Objetivo</Label>
+                    <Input placeholder="O que está tentando despertar?" value={form.ferramenta_oracular.funcao} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, funcao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta-Mãe (Pergunta Atlas)</Label>
+                  <Textarea placeholder="O que em você continua tentando chamar sua atenção?" value={form.ferramenta_oracular.pergunta_mae} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, pergunta_mae: e.target.value}})} className="bg-background/50 font-serif italic" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Registros Sugeridos</Label>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label className="text-[9px] uppercase text-white/20">Jardim da Psique</Label>
+                        <Input value={form.ferramenta_oracular.registros_sugeridos.jardim_psique} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, registros_sugeridos: {...form.ferramenta_oracular.registros_sugeridos, jardim_psique: e.target.value}}})} className="bg-background/50 text-[10px]" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-[9px] uppercase text-white/20">Jardim do Ofício</Label>
+                        <Input value={form.ferramenta_oracular.registros_sugeridos.jardim_oficio} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, registros_sugeridos: {...form.ferramenta_oracular.registros_sugeridos, jardim_oficio: e.target.value}}})} className="bg-background/50 text-[10px]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Conexão Atlas</Label>
+                    <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Switch 
+                          checked={form.ferramenta_oracular.atlas_ready.enabled} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
+                        />
+                        <Label className="text-[10px] uppercase font-bold">Atlas Ready</Label>
+                      </div>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Sincronização automática de indicadores e rastro para o perfil evolutivo da aluna.</p>
+                    </div>
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
             {/* 9. Jardim da Psique */}
             <AccordionItem value="jardim-psique" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
