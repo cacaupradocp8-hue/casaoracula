@@ -9,27 +9,12 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 
-/**
- * AdminRotasCasa — Versão Ultra-Simples e Read-Only
- * 
- * Este componente foi reescrito do zero para garantir o congelamento total.
- * Não contém handlers de criação, diálogos ou referências técnicas obsoletas.
- */
-
-interface Estacao {
-  id: string;
-  numero: number;
-  titulo: string;
-  publicada: boolean;
-  livro_titulo: string;
-}
-
 export default function AdminRotasCasa() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
 
   const { data: estacoes, isLoading } = useQuery({
-    queryKey: ['admin-rotas-casa-clean'],
+    queryKey: ['admin-rotas-casa-clean-final'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('clube_estacoes')
@@ -37,15 +22,14 @@ export default function AdminRotasCasa() {
         .order('numero', { ascending: true });
       
       if (error) throw error;
-      return (data || []) as Estacao[];
+      return (data || []);
     },
   });
 
   const filteredEstacoes = useMemo(() => {
     if (!estacoes) return [];
     
-    // Filtrar apenas estações reais (da Rota dos Lobos)
-    const base = estacoes.filter(e => 
+    const base = estacoes.filter((e: any) => 
       e.numero > 0 && 
       (e.livro_titulo?.includes('Lobos') || e.livro_titulo === 'Mulheres que Correm com os Lobos')
     );
@@ -53,7 +37,7 @@ export default function AdminRotasCasa() {
     if (!searchTerm) return base;
     
     const q = searchTerm.toLowerCase();
-    return base.filter(e => 
+    return base.filter((e: any) => 
       e.titulo.toLowerCase().includes(q) || 
       e.livro_titulo.toLowerCase().includes(q)
     );
@@ -100,7 +84,7 @@ export default function AdminRotasCasa() {
             <CardContent className="p-0">
               <div className="divide-y divide-primary/5">
                 {filteredEstacoes.length > 0 ? (
-                  filteredEstacoes.map(est => (
+                  filteredEstacoes.map((est: any) => (
                     <div 
                       key={est.id} 
                       onClick={() => navigate(`/admin/clube/central/${est.id}`)}
