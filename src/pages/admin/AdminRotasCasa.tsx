@@ -21,6 +21,11 @@ import {
 } from '@/components/ui/dialog';
 import { toast } from 'sonner';
 
+function cleanTechnicalTitle(title: string) {
+  if (!title) return '';
+  return title.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim();
+}
+
 
 /**
  * AdminRotasCasa — Gerenciamento de Rotas da Casa
@@ -444,7 +449,7 @@ export default function AdminRotasCasa() {
                   <div className="flex gap-4">
                     <div className="p-3 rounded-xl bg-gold/10 text-gold"><Compass className="w-6 h-6" /></div>
                     <div>
-                      <h2 className="text-2xl font-serif text-foreground">{rota.nome.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim()}</h2>
+                      <h2 className="text-2xl font-serif text-foreground">{cleanTechnicalTitle(rota.nome)}</h2>
                       <p className="text-xs text-muted-foreground mt-1">{rota.obras.length} obras · {rota.totalEstacoes} estações</p>
                     </div>
                   </div>
@@ -458,7 +463,7 @@ export default function AdminRotasCasa() {
                         <div className="flex justify-between items-center">
                           <div className="flex items-center gap-3">
                             <BookOpen className="w-4 h-4 text-emerald-400" />
-                            <span className="font-medium">{obra.livro_titulo}</span>
+                            <span className="font-medium">{cleanTechnicalTitle(obra.livro_titulo)}</span>
                           </div>
                           <Button variant="ghost" size="sm" disabled className="text-xs h-8 gap-1 opacity-50 cursor-not-allowed">
                             <Plus className="w-3 h-3" /> Estação
