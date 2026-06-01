@@ -348,14 +348,14 @@ export default function ClubeRotaPremium() {
                       <div id="jardim-psique" className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10">
                         <h4 className="text-gold font-display text-xl mb-4">Jardim da Psique</h4>
                         <p className="text-white/70 font-serif italic mb-8">{psique}</p>
-                        <Button variant="gold" className="w-full rounded-full">Registrar Travessia</Button>
+                        
                       </div>
                     )}
                     {oficio && (
                       <div id="jardim-oficio" className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
                         <h4 className="text-emerald-500 font-display text-xl mb-4">Jardim do Ofício</h4>
                         <p className="text-white/70 font-serif italic mb-8">{oficio}</p>
-                        <Button variant="outline" className="w-full rounded-full border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10">Registrar Prática</Button>
+                        
                       </div>
                     )}
                   </div>
@@ -388,8 +388,8 @@ export default function ClubeRotaPremium() {
                   <div className="max-w-2xl mx-auto text-center space-y-8">
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{texto}</p>
                     <div className="flex flex-col items-center gap-6">
-                      <Button variant="gold" className="rounded-full h-16 px-12 text-base font-bold uppercase" onClick={() => navigate('/clube')}>
-                        Concluir Estação
+                      <Button variant="outline" className="rounded-full h-14 px-10 text-sm uppercase tracking-wider" onClick={() => navigate('/clube')}>
+                        Voltar à rota
                       </Button>
                     </div>
                   </div>
