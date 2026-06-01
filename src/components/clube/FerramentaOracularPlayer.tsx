@@ -158,9 +158,9 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
           <Sparkles className="w-10 h-10 text-gold shadow-glow" />
         </div>
         
-        <h3 className="font-display text-4xl text-white mb-6">Camada do Método</h3>
+        <h3 className="font-display text-4xl text-white mb-6">Etapa Concluída</h3>
         <p className="text-white/60 font-serif italic text-xl max-w-xl mx-auto mb-12 leading-relaxed">
-          Seu rastreamento foi acolhido.
+          Seu registro simbólico foi acolhido.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

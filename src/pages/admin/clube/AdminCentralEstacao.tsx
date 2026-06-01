@@ -58,7 +58,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  metodo_ready: {
+  camada_metodo: {
     enabled: boolean;
     export_enabled: boolean;
     payload_version: string;
@@ -485,12 +485,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      metodo_ready: {
-        enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.enabled ?? true,
-        export_enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.export_enabled || false,
+      camada_metodo: {
+        enabled: passo.metadata?.ferramenta_oracular?.camada_metodo?.enabled ?? true,
+        export_enabled: passo.metadata?.ferramenta_oracular?.camada_metodo?.export_enabled || false,
         payload_version: "v1",
-        destinos_futuros: passo.metadata?.ferramenta_oracular?.metodo_ready?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
-        tags: passo.metadata?.ferramenta_oracular?.metodo_ready?.tags || []
+        destinos_futuros: passo.metadata?.ferramenta_oracular?.camada_metodo?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+        tags: passo.metadata?.ferramenta_oracular?.camada_metodo?.tags || []
       }
     },
       revelacao_estacao: {
@@ -603,12 +603,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        metodo_ready: {
-          enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.enabled ?? true,
-          export_enabled: passo.metadata?.ferramenta_oracular?.metodo_ready?.export_enabled || false,
+        camada_metodo: {
+          enabled: passo.metadata?.ferramenta_oracular?.camada_metodo?.enabled ?? true,
+          export_enabled: passo.metadata?.ferramenta_oracular?.camada_metodo?.export_enabled || false,
           payload_version: "v1",
-          destinos_futuros: passo.metadata?.ferramenta_oracular?.metodo_ready?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
-          tags: passo.metadata?.ferramenta_oracular?.metodo_ready?.tags || []
+          destinos_futuros: passo.metadata?.ferramenta_oracular?.camada_metodo?.destinos_futuros || ["metodo", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+          tags: passo.metadata?.ferramenta_oracular?.camada_metodo?.tags || []
         }
       },
       conto_espelho: {
@@ -1056,8 +1056,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
                         <Switch 
-                          checked={form.ferramenta_oracular.metodo_ready.enabled} 
-                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, metodo_ready: {...form.ferramenta_oracular.metodo_ready, enabled: v}}})} 
+                          checked={form.ferramenta_oracular.camada_metodo.enabled} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: {...form.ferramenta_oracular.camada_metodo, enabled: v}}})} 
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
