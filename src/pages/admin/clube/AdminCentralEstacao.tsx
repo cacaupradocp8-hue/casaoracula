@@ -47,10 +47,11 @@ interface FerramentaOracularData {
   tool_id: string;
   nome_admin: string;
   nome_publico: string;
+  kicker: string;
   simbolo: string;
   pergunta_mae: string;
   funcao: string;
-  indicadores: Array<{ id: string; label: string }>;
+  indicadores: Array<{ id: string; label: string; tipo_resposta?: string }>;
   tipo_resultado: "intensidade" | "arquetipo" | "rastro";
   resultados: Array<{ id: string; titulo: string; descricao: string }>;
   registros_sugeridos: {
@@ -473,6 +474,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
       nome_admin: passo.metadata?.ferramenta_oracular?.nome_admin || '',
       nome_publico: passo.metadata?.ferramenta_oracular?.nome_publico || '',
+      kicker: passo.metadata?.ferramenta_oracular?.kicker || 'Instrumento',
       simbolo: passo.metadata?.ferramenta_oracular?.simbolo || '',
       pergunta_mae: passo.metadata?.ferramenta_oracular?.pergunta_mae || '',
       funcao: passo.metadata?.ferramenta_oracular?.funcao || '',
@@ -590,6 +592,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
         nome_admin: passo.metadata?.ferramenta_oracular?.nome_admin || '',
         nome_publico: passo.metadata?.ferramenta_oracular?.nome_publico || '',
+        kicker: passo.metadata?.ferramenta_oracular?.kicker || 'Instrumento',
         simbolo: passo.metadata?.ferramenta_oracular?.simbolo || '',
         pergunta_mae: passo.metadata?.ferramenta_oracular?.pergunta_mae || '',
         funcao: passo.metadata?.ferramenta_oracular?.funcao || '',
@@ -1015,6 +1018,10 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <Input placeholder="O Sino" value={form.ferramenta_oracular.simbolo} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, simbolo: e.target.value}})} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Kicker Público (Ex: Instrumento II)</Label>
+                    <Input placeholder="Instrumento I" value={form.ferramenta_oracular.kicker} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, kicker: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
                     <Label className="text-[10px] uppercase font-bold text-white/40">Nome Público (App)</Label>
                     <Input placeholder="Radar de Silenciamento™" value={form.ferramenta_oracular.nome_publico} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, nome_publico: e.target.value}})} className="bg-background/50" />
                   </div>
@@ -1054,7 +1061,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para o perfil evolutivo da aluna nesta rota.</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a memória instintiva da aluna nesta rota.</p>
                     </div>
                   </div>
                 </div>
