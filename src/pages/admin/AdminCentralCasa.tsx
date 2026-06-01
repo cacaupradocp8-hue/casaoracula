@@ -73,7 +73,7 @@ export default function AdminCentralCasa() {
               <Compass className="w-6 h-6 text-gold" />
               <h2 className="text-2xl font-serif text-foreground">Rotas da Casa</h2>
             </div>
-            <Button variant="ghost" size="sm" className="text-gold hover:text-gold hover:bg-gold/10 gap-2" onClick={() => handleSetTab('central-rotas')}>
+            <Button variant="ghost" size="sm" className="text-gold hover:text-gold hover:bg-gold/10 gap-2" onClick={() => navigate('/admin/rotas')}>
               Ver todas as rotas <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
