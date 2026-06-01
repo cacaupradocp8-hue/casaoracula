@@ -511,6 +511,30 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
         campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
       },
+      // Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
+      ferramenta_oracular: {
+        enabled: passo.metadata?.ferramenta_oracular?.enabled || false,
+        tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
+        nome_admin: passo.metadata?.ferramenta_oracular?.nome_admin || '',
+        nome_publico: passo.metadata?.ferramenta_oracular?.nome_publico || '',
+        simbolo: passo.metadata?.ferramenta_oracular?.simbolo || '',
+        pergunta_mae: passo.metadata?.ferramenta_oracular?.pergunta_mae || '',
+        funcao: passo.metadata?.ferramenta_oracular?.funcao || '',
+        indicadores: Array.isArray(passo.metadata?.ferramenta_oracular?.indicadores) ? passo.metadata?.ferramenta_oracular?.indicadores : [],
+        tipo_resultado: passo.metadata?.ferramenta_oracular?.tipo_resultado || 'intensidade',
+        resultados: Array.isArray(passo.metadata?.ferramenta_oracular?.resultados) ? passo.metadata?.ferramenta_oracular?.resultados : [],
+        registros_sugeridos: {
+          jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
+          jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
+        },
+        atlas_ready: {
+          enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
+          export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+          payload_version: "v1",
+          destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+          tags: passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+        }
+      },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
         campo_psiquico: passo.metadata?.revelacao_estacao?.campo_psiquico || '',
