@@ -422,13 +422,19 @@ export default function ClubeRotaPremium() {
 
             {/* Conclusão */}
             {(() => {
-              const texto = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
-              if (!texto) return null;
+              let textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento) || "";
+              const textoLimpo = String(textoRaw)
+                .replace(/Este registro agora repousa em sua memória instintiva\./g, '')
+                .replace(/Estação Concluída no Atlas/g, 'Estação Concluída')
+                .replace(/Instrumento Integrado/g, 'Camada do Método')
+                .trim();
+
+              if (!textoRaw) return null;
               return (
                 <Section id="fechamento-estacao" icon={Check} kicker="Fim" titulo="Travessia Concluída">
                   <div className="max-w-2xl mx-auto text-center space-y-8">
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">
-                      {String(texto || '').replace('Este registro agora repousa em sua memória instintiva.', '').trim() || 'Sua travessia foi acolhida.'}
+                      {textoLimpo || 'Sua travessia foi acolhida.'}
                     </p>
                     <div className="flex flex-col items-center gap-6">
                       {ponto.estado !== 'completed' ? (
