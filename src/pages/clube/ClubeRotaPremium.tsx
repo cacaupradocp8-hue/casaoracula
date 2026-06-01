@@ -348,7 +348,7 @@ export default function ClubeRotaPremium() {
                       <div id="jardim-psique" className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10">
                         <h4 className="text-gold font-display text-xl mb-4">Jardim da Psique</h4>
                         <p className="text-white/70 font-serif italic mb-8">{psique}</p>
-                        <Button variant="gold" className="w-full rounded-full">Registrar Travessia</Button>
+                        
                       </div>
                     )}
                     {oficio && (
