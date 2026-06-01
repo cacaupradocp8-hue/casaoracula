@@ -451,7 +451,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
     titulo: passo.titulo || '',
     subtitulo: passo.subtitulo || '',
     conteudo_texto: passo.conteudo_inline?.texto || '',
-    // Seções metadata
     abertura_imersiva: renderContent(passo.metadata?.abertura_imersiva),
     hero: {
       titulo: passo.metadata?.hero?.titulo || '',
@@ -468,7 +467,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
       campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
     },
-    // Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
     ferramenta_oracular: {
       enabled: passo.metadata?.ferramenta_oracular?.enabled || false,
       tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
@@ -540,7 +538,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       botao: passo.metadata?.fechamento?.botao || '',
       confirmacao: passo.metadata?.fechamento?.confirmacao || ''
     },
-    // Áudios - Agora array de 4
     audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
       ? passo.metadata.audios.map((a: any) => ({
           titulo: a.titulo || '',
