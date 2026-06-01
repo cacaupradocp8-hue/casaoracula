@@ -1154,7 +1154,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Scroll className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">12. Oráculo e Fechamento</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">Etapa 12. Oráculo e Fechamento</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-6">
