@@ -316,14 +316,14 @@ export default function AdminCentralEstacao() {
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xs uppercase tracking-widest font-bold text-gold/60">Etapas da Rota</h2>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/40 font-bold">Modo Read-Only</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/40 font-bold">Modo Operacional</div>
           </div>
           
           <div className="space-y-2">
             {passos.length === 0 ? (
               <div className="p-8 text-center border-2 border-dashed border-primary/10 rounded-xl text-muted-foreground text-sm">
                 Nenhuma etapa criada.
-                <span className="text-gold opacity-50">Criação congelada</span>
+                <span className="text-gold opacity-50 block mt-2">Criação disponível via SQL</span>
               </div>
             ) : (
               passos.map((p, idx) => (
@@ -1002,7 +1002,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     checked={form.ferramenta_oracular.enabled} 
                     onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, enabled: v}})} 
                   />
-                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Habilitar Camada Oracular</Label>
+                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Ativar Camada 2 na Rota</Label>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1045,16 +1045,16 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Conexão Atlas</Label>
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Status Atlas</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
                         <Switch 
                           checked={form.ferramenta_oracular.atlas_ready.enabled} 
                           onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
                         />
-                        <Label className="text-[10px] uppercase font-bold">Atlas Ready</Label>
+                        <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">Sincronização automática de indicadores e rastro para o perfil evolutivo da aluna.</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para o perfil evolutivo da aluna nesta rota.</p>
                     </div>
                   </div>
                 </div>
@@ -1126,7 +1126,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Rocket className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">11. Missão de Campo</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">Etapa 11. Missão de Campo</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-4">
@@ -1154,7 +1154,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Scroll className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">12. Oráculo e Fechamento</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">Etapa 12. Oráculo e Fechamento</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-6">
