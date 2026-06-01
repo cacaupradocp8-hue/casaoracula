@@ -301,26 +301,27 @@ export default function AdminRotasCasa() {
       toast.error('Selecione a Rota e informe a Obra-base.');
       return;
     }
+    const tituloObra = novaObra.livro_titulo.trim();
+    const rotaAnchor = items.find((item: any) => item.rota_custom === novaObra.rotaNome && item.tipo === 'rota_marker')
+      || items.find((item: any) => item.rota_custom === novaObra.rotaNome);
+
+    if (!rotaAnchor?.estacao_id) {
+      toast.error('A Rota selecionada ainda não tem um vínculo técnico para receber Obra-base.');
+      return;
+    }
+
+    const obraJaExiste = items.some((item: any) => {
+      const obra = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
+      return item.rota_custom === novaObra.rotaNome && obra?.livro_titulo.toLowerCase() === tituloObra.toLowerCase();
+    });
+
+    if (obraJaExiste) {
+      toast.error('Esta Obra-base já está vinculada a esta Rota.');
+      return;
+    }
+
     setSubmitting(true);
     try {
-      const tituloObra = novaObra.livro_titulo.trim();
-      const rotaAnchor = items.find((item: any) => item.rota_custom === novaObra.rotaNome && item.tipo === 'rota_marker')
-        || items.find((item: any) => item.rota_custom === novaObra.rotaNome);
-
-      if (!rotaAnchor?.estacao_id) {
-        toast.error('A Rota selecionada ainda não tem um vínculo técnico para receber Obra-base.');
-        return;
-      }
-
-      const obraJaExiste = items.some((item: any) => {
-        const obra = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
-        return item.rota_custom === novaObra.rotaNome && obra?.livro_titulo.toLowerCase() === tituloObra.toLowerCase();
-      });
-
-      if (obraJaExiste) {
-        toast.error('Esta Obra-base já está vinculada a esta Rota.');
-        return;
-      }
 
       // Obra-base é somente um vínculo administrativo em clube_rota_itens.metadata.
       // Não cria linha em clube_estacoes, nem marcador numero 0, nem estação invisível.
