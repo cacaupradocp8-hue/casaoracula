@@ -320,25 +320,6 @@ export default function ClubeRotaPremium() {
             })()}
 
 
-            {/* Ferramenta Oracular (Camada 2) */}
-            {ponto.metadata?.ferramenta_oracular?.enabled && (
-              <Section id="ferramenta-oracular" icon={Radar} kicker={ponto.metadata?.ferramenta_oracular?.kicker || "Camada 2"} titulo={ponto.metadata?.ferramenta_oracular?.nome_publico || "Rastreamento Simbólico"}>
-                <FerramentaOracularPlayer 
-                  data={{
-                    ...ponto.metadata.ferramenta_oracular,
-                    questoes: ponto.metadata.ferramenta_oracular.questoes || ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
-                      id: ind.id,
-                      texto: ind.label,
-                      tipo_resposta: ind.tipo_resposta || (ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao')
-                    })) || []
-                  }} 
-                  onComplete={(respostas) => {
-                    console.log('[Camada 2] Respostas rastreamento:', respostas);
-                  }}
-                />
-              </Section>
-            )}
-
             {/* Desafio */}
             {(() => {
               const desafio = renderContent(ponto.metadata?.desafio_terapeuta?.pergunta || ponto.metadata?.desafio_terapeuta);
@@ -376,6 +357,25 @@ export default function ClubeRotaPremium() {
                 </Section>
               );
             })()}
+
+            {/* Ferramenta Oracular (Camada 2) */}
+            {ponto.metadata?.ferramenta_oracular?.enabled && (
+              <Section id="ferramenta-oracular" icon={Radar} kicker={ponto.metadata?.ferramenta_oracular?.kicker || "Camada 2"} titulo={ponto.metadata?.ferramenta_oracular?.nome_publico || "Rastreamento Simbólico"}>
+                <FerramentaOracularPlayer 
+                  data={{
+                    ...ponto.metadata.ferramenta_oracular,
+                    questoes: ponto.metadata.ferramenta_oracular.questoes || ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
+                      id: ind.id,
+                      texto: ind.label,
+                      tipo_resposta: ind.tipo_resposta || (ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao')
+                    })) || []
+                  }} 
+                  onComplete={(respostas) => {
+                    console.log('[Camada 2] Respostas rastreamento:', respostas);
+                  }}
+                />
+              </Section>
+            )}
 
             {/* Jardins */}
             {(() => {
