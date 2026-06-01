@@ -356,15 +356,15 @@ export default function ClubeRotaPremium() {
               {/* Trilha visual de passos */}
               <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-12 relative z-10">
                 {[
-                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia' },
-                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao' },
-                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico' },
-                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta' },
-                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao' },
-                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique' },
-                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio' },
-                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao' }
-                ].map((step, idx) => (
+                  { icon: Headphones, label: 'Ouça o áudio', id: 'audio-travessia', show: audios.length > 0 },
+                  { icon: BookOpen, label: 'Leia a estação', id: 'conteudo-estacao', show: Boolean(ponto.metadata?.abertura_imersiva || ponto.metadata?.abertura) },
+                  { icon: Eye, label: 'Caso simbólico', id: 'caso-simbolico', show: Boolean(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho) },
+                  { icon: Sword, label: 'O Desafio', id: 'desafio-terapeuta', show: Boolean(ponto.metadata?.desafio_terapeuta) },
+                  { icon: Sparkles, label: 'A Revelação', id: 'revelacao-estacao', show: Boolean(ponto.metadata?.revelacao_estacao) },
+                  { icon: Flower2, label: 'Jardim da Psique', id: 'jardim-psique', show: Boolean(ponto.metadata?.jardim_psique) },
+                  { icon: MapPin, label: 'Jardim do Ofício', id: 'jardim-oficio', show: Boolean(ponto.metadata?.jardim_oficio) },
+                  { icon: Check, label: 'Conclusão', id: 'fechamento-estacao', show: true }
+                ].filter(s => s.show).map((step, idx) => (
                   <motion.button
                     key={idx}
                     whileHover={{ scale: 1.05, backgroundColor: 'rgba(212, 175, 55, 0.1)' }}
