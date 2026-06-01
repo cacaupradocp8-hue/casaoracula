@@ -1013,8 +1013,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <Label className="text-[10px] uppercase font-bold text-white/40">ID da Ferramenta</Label>
                     <Input placeholder="radar_silenciamento" value={form.ferramenta_oracular.tool_id} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, tool_id: e.target.value}})} className="bg-background/50" />
                   </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo Atlas</Label>
+                   <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo do Método</Label>
                     <Input placeholder="O Sino" value={form.ferramenta_oracular.simbolo} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, simbolo: e.target.value}})} className="bg-background/50" />
                   </div>
                   <div className="space-y-2">
@@ -1032,7 +1032,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta-Mãe (Pergunta Atlas)</Label>
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta-Mãe (Pergunta do Método)</Label>
                   <Textarea placeholder="O que em você continua tentando chamar sua atenção?" value={form.ferramenta_oracular.pergunta_mae} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, pergunta_mae: e.target.value}})} className="bg-background/50 font-serif italic" />
                 </div>
 
@@ -1052,7 +1052,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   </div>
 
                   <div className="space-y-3">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Status Atlas</Label>
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
                         <Switch 
@@ -1061,7 +1061,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a memória instintiva da aluna nesta rota.</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a jornada simbólica da aluna nesta rota.</p>
                     </div>
                   </div>
                 </div>
