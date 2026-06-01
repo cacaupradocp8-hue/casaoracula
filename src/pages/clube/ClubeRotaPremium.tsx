@@ -128,15 +128,10 @@ export default function ClubeRotaPremium() {
   }
 
   // ─── Conteúdo 100% DB-driven (sem fallbacks mock) ───
-  const audios: Array<{ 
-    titulo?: string; 
-    audio_url?: string; 
-    url?: string; 
-    tipo?: string; 
-    funcao?: string;
-    duracao?: string;
-  }> = Array.isArray(ponto.metadata?.audios) 
-      ? ponto.metadata.audios.map((a: any) => ({ ...a, url: a.audio_url || a.url }))
+  const audios = Array.isArray(ponto.metadata?.audios) 
+      ? ponto.metadata.audios
+          .map((a: any) => ({ ...a, url: a.audio_url || a.url }))
+          .filter((a: any) => a.url && typeof a.url === 'string' && a.url.startsWith('http'))
       : [];
 
   // Helper para renderizar conteúdo que pode vir como string ou objeto do metadata
