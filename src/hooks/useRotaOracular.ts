@@ -271,8 +271,8 @@ export function useRotaOracular() {
       cenario_treinamento: item.cenario_treinamento,
       leitura_referencia: item.leitura_referencia,
       image_url: item.image_url,
-      ferramenta_oracular: (item as any).ferramenta_oracular,
-      conto_espelho: (item as any).conto_espelho,
+      ferramenta_oracular: item.metadata?.ferramenta_oracular,
+      conto_espelho: item.metadata?.conto_espelho,
       
       conteudo_inline: item.conteudo_inline,
       metadata: item.metadata,
