@@ -342,7 +342,7 @@ export function useRotaOracular() {
       }).length;
 
       if (totalOb > 0 && doneOb >= totalOb) {
-        console.log('[useRotaOracular] Estação 100% concluída. Registrando na Cidadela...');
+        console.log('[useRotaOracular] Estação 100% concluída. Registrando na jornada...');
         await addTravessiaToHistorico(user.id, {
           distrito: estacaoAtual.titulo,
           tipo: 'estacao_concluida',

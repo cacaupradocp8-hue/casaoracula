@@ -23,11 +23,11 @@ interface Question {
   id: string;
   texto: string;
   tipo_resposta: 'sim_nao' | 'escala_1_5' | 'texto';
-  simbolo_atlas?: string;
 }
 
 interface FerramentaData {
-  tipo: 'radar' | 'escala' | 'mapa' | 'trilha' | 'inventario';
+  enabled: boolean;
+  tool_id: string;
   titulo: string;
   kicker?: string;
   questoes: Question[];
@@ -36,17 +36,8 @@ interface FerramentaData {
 }
 
 interface FerramentaOracularPlayerProps {
-  data: FerramentaOracularPlayerPropsData;
+  data: FerramentaData;
   onComplete?: (respostas: any) => void;
-}
-
-interface FerramentaOracularPlayerPropsData {
-  tipo: string;
-  titulo: string;
-  kicker?: string;
-  questoes: any[];
-  tipo_resultado: string;
-  resultados?: any[];
 }
 
 export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracularPlayerProps) {
