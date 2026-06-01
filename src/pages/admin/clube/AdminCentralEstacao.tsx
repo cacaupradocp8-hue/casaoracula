@@ -1050,7 +1050,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                       <div className="flex items-center gap-2">
                         <Switch 
                           checked={form.ferramenta_oracular.atlas_ready.enabled} 
-                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular, atlas_ready: v}}})} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
                         />
                         <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
                       </div>
