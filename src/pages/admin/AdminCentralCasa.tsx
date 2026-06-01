@@ -116,14 +116,16 @@ export default function AdminCentralCasa() {
             });
 
             // 3) Agrupar por Rota (agora real, baseada em rota_custom)
-            const grupos = new Map<string, { rota: string; estacoes: any[] }>();
+            const grupos = new Map<string, { rota: string; estacoes: any[]; principalObra: string }>();
             (estacoes || []).forEach((e: any) => {
               const obra = e.livro_titulo || 'Sem Obra';
               if (obra.startsWith('SISTEMA_ROTAS:')) return; // Pular marcadores
 
               const rota = obraToRota.get(obra) || (obra.includes('Mulheres que Correm com os Lobos') ? 'Rota dos Lobos' : `Outras: ${obra}`);
               
-              if (!grupos.has(rota)) grupos.set(rota, { rota, estacoes: [] });
+              if (!grupos.has(rota)) {
+                grupos.set(rota, { rota, estacoes: [], principalObra: obra });
+              }
               grupos.get(rota)!.estacoes.push(e);
             });
             const rotas = Array.from(grupos.values());
@@ -207,7 +209,7 @@ export default function AdminCentralCasa() {
                             size="sm"
                             variant="outline"
                             className="border-primary/20 gap-2"
-                            onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.obra)}`)}
+                            onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.principalObra)}`)}
                           >
                             <Settings2 className="w-4 h-4" />
                             Gerir Estações
