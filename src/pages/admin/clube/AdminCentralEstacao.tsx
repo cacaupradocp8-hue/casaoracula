@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  ArrowLeft, BookOpen, Pencil, ImageIcon, Users, Eye, 
-  Loader2, Settings, Rocket, Save, Music, Sparkles, Plus, Trash2, ChevronRight,
-  MapPin, Headphones, Sword, AlertTriangle, Flower2, Scroll, Check
+  BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle,
+  ArrowLeft, Pencil, ImageIcon, Users, Eye, Settings, Rocket, Save, 
+  Music, Sparkles, Plus, Trash2, Headphones, Sword, AlertTriangle, 
+  Flower2, Scroll, Check, MapPin
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
