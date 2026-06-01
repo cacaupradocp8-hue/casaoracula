@@ -36,6 +36,8 @@ export interface PontoRota {
   cenario_treinamento?: string;
   leitura_referencia?: string;
   image_url?: string;
+  ferramenta_oracular?: any;
+  conto_espelho?: any;
   
   conteudo_inline?: any;
   metadata?: any;
