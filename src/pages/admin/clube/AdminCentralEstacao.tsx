@@ -616,6 +616,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         audios: form.audios,
         caso_simbolico: form.caso_simbolico,
         desafio_terapeuta: form.desafio_terapeuta,
+        ferramenta_oracular: form.ferramenta_oracular,
         revelacao_estacao: form.revelacao_estacao,
         erro_comum: form.erro_comum,
         conducao_justa: form.conducao_justa,
