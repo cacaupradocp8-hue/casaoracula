@@ -30,16 +30,24 @@ export default function AdminCentralCasa() {
     }
   });
 
-  const { data: estacoes } = useQuery({
-    queryKey: ['admin-central-casa-estacoes'],
+  const { data: dbData } = useQuery({
+    queryKey: ['admin-central-casa-db-v2'],
     queryFn: async () => {
-      const { data } = await supabase
+      const { data: estacoes } = await supabase
         .from('clube_estacoes')
-        .select('id, titulo, numero, livro_titulo')
+        .select('id, titulo, numero, livro_titulo, publicada')
         .order('numero', { ascending: true });
-      return data;
+        
+      const { data: items } = await supabase
+        .from('clube_rota_itens')
+        .select('estacao_id, rota_custom')
+        .not('rota_custom', 'is', null);
+
+      return { estacoes: estacoes || [], items: items || [] };
     }
   });
+
+  const { estacoes, items } = dbData || { estacoes: [], items: [] };
 
   const handleSetTab = (tab: string) => {
     if ((window as any).Admin_SetActiveTab) {
@@ -94,11 +102,31 @@ export default function AdminCentralCasa() {
           </div>
 
           {(() => {
-            const grupos = new Map<string, { obra: string; estacoes: any[] }>();
+            // 1) Mapear Estação → Rota
+            const estacaoToRota = new Map<string, string>();
+            (items || []).forEach((i: any) => {
+              if (i.rota_custom) estacaoToRota.set(i.estacao_id, i.rota_custom);
+            });
+
+            // 2) Mapear Obra → Rota
+            const obraToRota = new Map<string, string>();
+            (estacoes || []).forEach((e: any) => {
+              const rota = estacaoToRota.get(e.id);
+              if (rota && e.livro_titulo) obraToRota.set(e.livro_titulo, rota);
+            });
+
+            // 3) Agrupar por Rota (agora real, baseada em rota_custom)
+            const grupos = new Map<string, { rota: string; estacoes: any[]; principalObra: string }>();
             (estacoes || []).forEach((e: any) => {
               const obra = e.livro_titulo || 'Sem Obra';
-              if (!grupos.has(obra)) grupos.set(obra, { obra, estacoes: [] });
-              grupos.get(obra)!.estacoes.push(e);
+              if (obra.startsWith('SISTEMA_ROTAS:')) return; // Pular marcadores
+
+              const rota = obraToRota.get(obra) || (obra.includes('Mulheres que Correm com os Lobos') ? 'Rota dos Lobos' : `Outras: ${obra}`);
+              
+              if (!grupos.has(rota)) {
+                grupos.set(rota, { rota, estacoes: [], principalObra: obra });
+              }
+              grupos.get(rota)!.estacoes.push(e);
             });
             const rotas = Array.from(grupos.values());
 
@@ -129,7 +157,7 @@ export default function AdminCentralCasa() {
                   const publicadas = g.estacoes.filter((e: any) => e.publicada).length;
                   return (
                     <Card
-                      key={g.obra}
+                      key={g.rota}
                       className={cn(
                         'bg-card/60 border-primary/10 backdrop-blur-xl transition-all group',
                         principal && 'bg-gradient-to-br from-gold/5 via-card/40 to-card/40 border-gold/30 hover:border-gold/50'
@@ -149,11 +177,11 @@ export default function AdminCentralCasa() {
                                 'text-xl md:text-2xl font-serif truncate',
                                 principal && 'group-hover:text-gold transition-colors'
                               )}>
-                                {g.obra}
+                                {g.rota}
                               </h3>
                               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <BookOpen className="w-3.5 h-3.5 text-gold/60" />
-                                <span>Obra-base: {g.obra}</span>
+                                <span>Itens da Rota: {g.rota}</span>
                               </div>
                               <p className="text-xs text-muted-foreground">
                                 {totalEstacoes} estação(ões) · {publicadas} publicada(s)
@@ -181,7 +209,7 @@ export default function AdminCentralCasa() {
                             size="sm"
                             variant="outline"
                             className="border-primary/20 gap-2"
-                            onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.obra)}`)}
+                            onClick={() => navigate(`/admin/clube/ciclos?obra=${encodeURIComponent(g.principalObra)}`)}
                           >
                             <Settings2 className="w-4 h-4" />
                             Gerir Estações
