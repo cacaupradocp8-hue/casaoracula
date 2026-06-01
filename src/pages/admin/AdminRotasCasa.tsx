@@ -24,9 +24,6 @@ import { toast } from 'sonner';
 function cleanTechnicalTitle(title: string) {
   if (!title) return '';
   return title
-    .replace('SISTEMA_ROTAS:', '')
-    .replace('ROTAS:', '')
-    .replace('Módulo:', '')
     .trim();
 }
 
@@ -61,7 +58,7 @@ interface RotaAgrupada {
 
 function getObraFromItem(item: any) {
   const metadata = (item?.metadata || {}) as Record<string, unknown>;
-  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim() : '';
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
   if (!livro_titulo) return null;
 
   return {
@@ -169,8 +166,8 @@ export default function AdminRotasCasa() {
     
     for (const e of estacoes) {
       const obraNome = e.livro_titulo || 'Sem Obra';
-      const isSystem = obraNome.startsWith('ROTAS:') || obraNome.startsWith('SISTEMA_ROTAS:');
-      const isMarker = e.subtitulo === 'MARCADOR_OBRA' || e.numero === 0;
+      const isSystem = false;
+      const isMarker = false;
 
       if (isSystem || isMarker) continue;
 
@@ -250,135 +247,15 @@ export default function AdminRotasCasa() {
   }, [rotasAgrupadas, searchTerm]);
 
   const handleCriarRota = async () => {
-    if (!novaRota.nome.trim()) {
-      toast.error('Informe o nome da Rota.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const nome = novaRota.nome.trim();
-      
-      // 1) Estação técnica (Anchor)
-      const { data: estacao, error: errEst } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: 0,
-          titulo: `Módulo: ${nome}`,
-          subtitulo: 'Âncora',
-          livro_titulo: `ROTAS: ${nome}`,
-          descricao: novaRota.descricao.trim(),
-          ativa: false,
-          publicada: false,
-        })
-        .select()
-        .single();
-      if (errEst) throw errEst;
-
-      // 2) Item de Rota
-      const { error: errItem } = await supabase
-        .from('clube_rota_itens')
-        .insert({
-          estacao_id: estacao.id,
-          rota_custom: nome,
-          tipo: 'rota_marker',
-          titulo: 'Configuração da Rota',
-          slug: `rota-def-${slugify(nome)}`,
-          ordem: 0,
-          publicado: false
-        });
-      if (errItem) throw errItem;
-
-      setNovaRota({ nome: '', descricao: '' });
-      setOpenRotaDialog(false);
-      toast.success('Rota criada com sucesso.');
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro ao criar rota: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    toast.error('Criação congelada.');
   };
 
   const handleAdicionarObra = async () => {
-    if (!novaObra.rotaNome || !novaObra.livro_titulo.trim()) {
-      toast.error('Informe a Rota e o Título da Obra.');
-      return;
-    }
-    
-    // Busca a estação técnica da rota para usar como estacao_id (FK obrigatória)
-    const rotaAnchor = items.find(i => i.rota_custom === novaObra.rotaNome && i.tipo === 'rota_marker');
-    if (!rotaAnchor?.estacao_id) {
-      toast.error('Erro técnico: Rota sem estação âncora.');
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const tituloObra = novaObra.livro_titulo.trim();
-      
-      // AQUI: Salva APENAS em clube_rota_itens. Metadata contém a definição da Obra.
-      // NENHUMA linha é criada em clube_estacoes aqui.
-      const { error } = await supabase
-        .from('clube_rota_itens')
-        .insert({
-          estacao_id: rotaAnchor.estacao_id,
-          rota_custom: novaObra.rotaNome,
-          tipo: 'obra_marker',
-          titulo: `Obra-base: ${tituloObra}`,
-          slug: `obra-base-${slugify(novaObra.rotaNome)}-${slugify(tituloObra)}`,
-          ordem: 0,
-          publicado: false,
-          metadata: {
-            tipo: 'obra_base', // Identificador solicitado
-            livro_titulo: tituloObra,
-            livro_autor: novaObra.livro_autor.trim() || null,
-            livro_capa_url: novaObra.livro_capa_url.trim() || null,
-          }
-        });
-      if (error) throw error;
-
-      toast.success('Obra-base vinculada. Nenhuma estação real foi criada ainda.');
-      setOpenObraDialog(false);
-      setNovaObra({ rotaNome: '', livro_titulo: '', livro_autor: '', livro_capa_url: '' });
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    toast.error('Criação congelada.');
   };
 
   const handleAdicionarEstacao = async () => {
-    if (!novaEstacao.livro_titulo || !novaEstacao.titulo.trim()) {
-      toast.error('Selecione a Obra e informe o título.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const maxNum = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
-      const { error } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: maxNum + 1,
-          titulo: novaEstacao.titulo.trim(),
-          subtitulo: novaEstacao.subtitulo.trim(),
-          livro_titulo: novaEstacao.livro_titulo,
-          ativa: false,
-          publicada: false, // Inicia como rascunho
-          ordem: maxNum + 1,
-          slug: slugify(novaEstacao.titulo.trim())
-        });
-      if (error) throw error;
-
-      toast.success('Estação criada como rascunho.');
-      setOpenEstacaoDialog(false);
-      setNovaEstacao({ livro_titulo: '', titulo: '', subtitulo: '' });
-      refetch();
-    } catch (err: any) {
-      toast.error('Erro: ' + err.message);
-    } finally {
-      setSubmitting(false);
-    }
+    toast.error('Criação congelada.');
   };
 
   const obrasDisponiveis = useMemo(() => {
@@ -494,61 +371,7 @@ export default function AdminRotasCasa() {
         </div>
       )}
 
-      {/* Dialogs: Nova Rota, Nova Obra, Nova Estação */}
-      {/* (Estes mantêm a estrutura básica, focando na chamada correta das handles) */}
-      <Dialog open={openRotaDialog} onOpenChange={setOpenRotaDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader><DialogTitle>Nova Rota</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-2">
-            <Input placeholder="Nome da Rota" value={novaRota.nome} onChange={e => setNovaRota({...novaRota, nome: e.target.value})} />
-            <Textarea placeholder="Descrição" value={novaRota.descricao} onChange={e => setNovaRota({...novaRota, descricao: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenRotaDialog(false)}>Cancelar</Button>
-            <Button className="bg-gold text-black font-bold" onClick={handleCriarRota} disabled={submitting}>Criar Rota</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={openObraDialog} onOpenChange={setOpenObraDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader>
-            <DialogTitle>Vincular Obra-base</DialogTitle>
-            <DialogDescription>Apenas vínculo simbólico. Nenhuma estação será criada.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <Select value={novaObra.rotaNome} onValueChange={v => setNovaObra({...novaObra, rotaNome: v})}>
-              <SelectTrigger><SelectValue placeholder="Selecione a Rota" /></SelectTrigger>
-              <SelectContent>{rotasAgrupadas.map(r => <SelectItem key={r.nome} value={r.nome}>{r.nome}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Título da Obra" value={novaObra.livro_titulo} onChange={e => setNovaObra({...novaObra, livro_titulo: e.target.value})} />
-            <Input placeholder="Autor (opcional)" value={novaObra.livro_autor} onChange={e => setNovaObra({...novaObra, livro_autor: e.target.value})} />
-            <Input placeholder="Capa URL (opcional)" value={novaObra.livro_capa_url} onChange={e => setNovaObra({...novaObra, livro_capa_url: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenObraDialog(false)}>Cancelar</Button>
-            <Button className="bg-emerald-500 text-black font-bold" onClick={handleAdicionarObra} disabled={submitting}>Vincular Obra</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={openEstacaoDialog} onOpenChange={setOpenEstacaoDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader><DialogTitle>Nova Estação</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-2">
-            <Select value={novaEstacao.livro_titulo} onValueChange={v => setNovaEstacao({...novaEstacao, livro_titulo: v})}>
-              <SelectTrigger><SelectValue placeholder="Selecione a Obra" /></SelectTrigger>
-              <SelectContent>{obrasDisponiveis.map(o => <SelectItem key={o.livro_titulo} value={o.livro_titulo}>{o.livro_titulo}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Título da Estação" value={novaEstacao.titulo} onChange={e => setNovaEstacao({...novaEstacao, titulo: e.target.value})} />
-            <Input placeholder="Subtítulo" value={novaEstacao.subtitulo} onChange={e => setNovaEstacao({...novaEstacao, subtitulo: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenEstacaoDialog(false)}>Cancelar</Button>
-            <Button className="bg-gold text-black font-bold" onClick={handleAdicionarEstacao} disabled={submitting}>Criar Estação</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Dialogs removidos da renderização ativa */}
     </div>
   );
 }
