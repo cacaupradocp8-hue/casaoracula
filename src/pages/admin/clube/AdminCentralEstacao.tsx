@@ -5,9 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
-  ArrowLeft, BookOpen, Pencil, ImageIcon, Users, Eye, 
-  Loader2, Settings, Rocket, Save, Music, Sparkles, Plus, Trash2, ChevronRight,
-  MapPin, Headphones, Sword, AlertTriangle, Flower2, Scroll, Check
+  BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle,
+  ArrowLeft, Pencil, ImageIcon, Users, Eye, Settings, Rocket, Save, 
+  Music, Sparkles, Plus, Trash2, Headphones, Sword, AlertTriangle, 
+  Flower2, Scroll, Check, MapPin
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -37,6 +38,54 @@ function cleanTechnicalTitle(title: string) {
     .trim();
 }
 
+/**
+ * Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
+ * Interface para os dados da ferramenta oracular.
+ */
+interface FerramentaOracularData {
+  enabled: boolean;
+  tool_id: string;
+  nome_admin: string;
+  nome_publico: string;
+  simbolo: string;
+  pergunta_mae: string;
+  funcao: string;
+  indicadores: Array<{ id: string; label: string }>;
+  tipo_resultado: "intensidade" | "arquetipo" | "rastro";
+  resultados: Array<{ id: string; titulo: string; descricao: string }>;
+  registros_sugeridos: {
+    jardim_psique: string;
+    jardim_oficio: string;
+  };
+  atlas_ready: {
+    enabled: boolean;
+    export_enabled: boolean;
+    payload_version: string;
+    destinos_futuros: string[];
+    tags: string[];
+  };
+}
+
+interface EditorFormState {
+  titulo: string;
+  subtitulo: string;
+  conteudo_texto: string;
+  abertura_imersiva: string;
+  hero: { titulo: string; texto: string; cta: string };
+  caso_simbolico: { titulo: string; aviso: string; relato: string };
+  desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
+  ferramenta_oracular: FerramentaOracularData;
+  revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
+  erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
+  conducao_justa: string;
+  cautela_etica: string;
+  jardim_psique: { chamada: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
+  oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
+  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
+  audios: any[];
+}
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
@@ -376,12 +425,32 @@ export default function AdminCentralEstacao() {
   );
 }
 
+interface EditorFormState {
+  titulo: string;
+  subtitulo: string;
+  conteudo_texto: string;
+  abertura_imersiva: string;
+  hero: { titulo: string; texto: string; cta: string };
+  caso_simbolico: { titulo: string; aviso: string; relato: string };
+  desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
+  ferramenta_oracular: FerramentaOracularData;
+  revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
+  erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
+  conducao_justa: string;
+  cautela_etica: string;
+  jardim_psique: { chamada: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
+  missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
+  oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
+  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
+  audios: any[];
+}
+
 function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave: (p: any) => void, onDelete: () => void, loading: boolean }) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<EditorFormState>({
     titulo: passo.titulo || '',
     subtitulo: passo.subtitulo || '',
     conteudo_texto: passo.conteudo_inline?.texto || '',
-    // Seções metadata
     abertura_imersiva: renderContent(passo.metadata?.abertura_imersiva),
     hero: {
       titulo: passo.metadata?.hero?.titulo || '',
@@ -397,6 +466,29 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
       escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
       campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+    },
+    ferramenta_oracular: {
+      enabled: passo.metadata?.ferramenta_oracular?.enabled || false,
+      tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
+      nome_admin: passo.metadata?.ferramenta_oracular?.nome_admin || '',
+      nome_publico: passo.metadata?.ferramenta_oracular?.nome_publico || '',
+      simbolo: passo.metadata?.ferramenta_oracular?.simbolo || '',
+      pergunta_mae: passo.metadata?.ferramenta_oracular?.pergunta_mae || '',
+      funcao: passo.metadata?.ferramenta_oracular?.funcao || '',
+      indicadores: Array.isArray(passo.metadata?.ferramenta_oracular?.indicadores) ? passo.metadata?.ferramenta_oracular?.indicadores : [],
+      tipo_resultado: passo.metadata?.ferramenta_oracular?.tipo_resultado || 'intensidade',
+      resultados: Array.isArray(passo.metadata?.ferramenta_oracular?.resultados) ? passo.metadata?.ferramenta_oracular?.resultados : [],
+      registros_sugeridos: {
+        jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
+        jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
+      },
+      atlas_ready: {
+        enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
+        export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+        payload_version: "v1",
+        destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+        tags: passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+      }
     },
     revelacao_estacao: {
       porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -446,7 +538,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       botao: passo.metadata?.fechamento?.botao || '',
       confirmacao: passo.metadata?.fechamento?.confirmacao || ''
     },
-    // Áudios - Agora array de 4
     audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
       ? passo.metadata.audios.map((a: any) => ({
           titulo: a.titulo || '',
@@ -486,6 +577,30 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
         escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
         campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+      },
+      // Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
+      ferramenta_oracular: {
+        enabled: passo.metadata?.ferramenta_oracular?.enabled || false,
+        tool_id: passo.metadata?.ferramenta_oracular?.tool_id || '',
+        nome_admin: passo.metadata?.ferramenta_oracular?.nome_admin || '',
+        nome_publico: passo.metadata?.ferramenta_oracular?.nome_publico || '',
+        simbolo: passo.metadata?.ferramenta_oracular?.simbolo || '',
+        pergunta_mae: passo.metadata?.ferramenta_oracular?.pergunta_mae || '',
+        funcao: passo.metadata?.ferramenta_oracular?.funcao || '',
+        indicadores: Array.isArray(passo.metadata?.ferramenta_oracular?.indicadores) ? passo.metadata?.ferramenta_oracular?.indicadores : [],
+        tipo_resultado: passo.metadata?.ferramenta_oracular?.tipo_resultado || 'intensidade',
+        resultados: Array.isArray(passo.metadata?.ferramenta_oracular?.resultados) ? passo.metadata?.ferramenta_oracular?.resultados : [],
+        registros_sugeridos: {
+          jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
+          jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
+        },
+        atlas_ready: {
+          enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.enabled ?? true,
+          export_enabled: passo.metadata?.ferramenta_oracular?.atlas_ready?.export_enabled || false,
+          payload_version: "v1",
+          destinos_futuros: passo.metadata?.ferramenta_oracular?.atlas_ready?.destinos_futuros || ["atlas", "jardim_psique", "jardim_oficio", "casa_das_maquinas"],
+          tags: passo.metadata?.ferramenta_oracular?.atlas_ready?.tags || []
+        }
       },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -568,6 +683,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         audios: form.audios,
         caso_simbolico: form.caso_simbolico,
         desafio_terapeuta: form.desafio_terapeuta,
+        ferramenta_oracular: form.ferramenta_oracular,
         revelacao_estacao: form.revelacao_estacao,
         erro_comum: form.erro_comum,
         conducao_justa: form.conducao_justa,
@@ -833,6 +949,79 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionContent className="pt-4 pb-6 space-y-2">
                 <Label className="text-[10px] uppercase font-bold text-white/40">Lista de Cautelas (uma por linha)</Label>
                 <Textarea value={form.cautela_etica} onChange={e => setForm({...form, cautela_etica: e.target.value})} className="bg-background/50 text-xs min-h-[150px]" />
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Camada 2 — Ferramenta Oracular de Rastreamento Simbólico */}
+            <AccordionItem value="ferramenta-oracular" className="border-2 border-gold/40 rounded-xl px-4 bg-gold/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-gold">Camada 2 — Ferramenta Oracular de Rastreamento</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4 p-3 bg-background/50 rounded-lg border border-gold/20">
+                  <Switch 
+                    checked={form.ferramenta_oracular.enabled} 
+                    onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, enabled: v}})} 
+                  />
+                  <Label className="text-xs font-bold uppercase tracking-widest cursor-pointer">Habilitar Camada Oracular</Label>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">ID da Ferramenta</Label>
+                    <Input placeholder="radar_silenciamento" value={form.ferramenta_oracular.tool_id} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, tool_id: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Símbolo Atlas</Label>
+                    <Input placeholder="O Sino" value={form.ferramenta_oracular.simbolo} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, simbolo: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Nome Público (App)</Label>
+                    <Input placeholder="Radar de Silenciamento™" value={form.ferramenta_oracular.nome_publico} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, nome_publico: e.target.value}})} className="bg-background/50" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Função/Objetivo</Label>
+                    <Input placeholder="O que está tentando despertar?" value={form.ferramenta_oracular.funcao} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, funcao: e.target.value}})} className="bg-background/50" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta-Mãe (Pergunta Atlas)</Label>
+                  <Textarea placeholder="O que em você continua tentando chamar sua atenção?" value={form.ferramenta_oracular.pergunta_mae} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, pergunta_mae: e.target.value}})} className="bg-background/50 font-serif italic" />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Registros Sugeridos</Label>
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label className="text-[9px] uppercase text-white/20">Jardim da Psique</Label>
+                        <Input value={form.ferramenta_oracular.registros_sugeridos.jardim_psique} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, registros_sugeridos: {...form.ferramenta_oracular.registros_sugeridos, jardim_psique: e.target.value}}})} className="bg-background/50 text-[10px]" />
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-[9px] uppercase text-white/20">Jardim do Ofício</Label>
+                        <Input value={form.ferramenta_oracular.registros_sugeridos.jardim_oficio} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, registros_sugeridos: {...form.ferramenta_oracular.registros_sugeridos, jardim_oficio: e.target.value}}})} className="bg-background/50 text-[10px]" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Conexão Atlas</Label>
+                    <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
+                      <div className="flex items-center gap-2">
+                        <Switch 
+                          checked={form.ferramenta_oracular.atlas_ready.enabled} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, atlas_ready: {...form.ferramenta_oracular.atlas_ready, enabled: v}}})} 
+                        />
+                        <Label className="text-[10px] uppercase font-bold">Atlas Ready</Label>
+                      </div>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Sincronização automática de indicadores e rastro para o perfil evolutivo da aluna.</p>
+                    </div>
+                  </div>
+                </div>
               </AccordionContent>
             </AccordionItem>
 
