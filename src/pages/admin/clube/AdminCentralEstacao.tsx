@@ -174,23 +174,6 @@ export default function AdminCentralEstacao() {
     }
   });
 
-  const handleCreatePasso = () => {
-    const nextOrdem = passos.length > 0 ? Math.max(...passos.map(p => p.ordem)) + 10 : 10;
-    const timestamp = Date.now().toString().slice(-4);
-    const newPasso = {
-      estacao_id: estacaoId,
-      titulo: 'Nova Etapa',
-      subtitulo: '',
-      slug: `etapa-${timestamp}-${slugify('Nova Etapa')}`,
-      ordem: nextOrdem,
-      tipo: 'escuta',
-      tipo_passo: 'escuta',
-      publicado: false, // Inicia como rascunho por segurança
-      conteudo_inline: { texto: '' },
-      metadata: { audios: [] }
-    };
-    savePassoMutation.mutate(newPasso);
-  };
 
 
   if (loadingEstacao || loadingPassos) {
@@ -292,7 +275,7 @@ export default function AdminCentralEstacao() {
             {passos.length === 0 ? (
               <div className="p-8 text-center border-2 border-dashed border-primary/10 rounded-xl text-muted-foreground text-sm">
                 Nenhuma etapa criada.
-                <Button variant="link" className="text-gold opacity-50 cursor-not-allowed" disabled>Criação congelada</Button>
+                <span className="text-gold opacity-50">Criação congelada</span>
               </div>
             ) : (
               passos.map((p, idx) => (
