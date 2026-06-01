@@ -303,37 +303,44 @@ export default function AdminRotasCasa() {
     }
     setSubmitting(true);
     try {
-      const maxNumero = (estacoes || []).reduce((m, e) => Math.max(m, e.numero || 0), 0);
+      const tituloObra = novaObra.livro_titulo.trim();
+      const rotaAnchor = items.find((item: any) => item.rota_custom === novaObra.rotaNome && item.tipo === 'rota_marker')
+        || items.find((item: any) => item.rota_custom === novaObra.rotaNome);
 
-      // 1) Criar MARCADOR da obra (Estação 0)
-      const { data: estacao, error: errEst } = await supabase
-        .from('clube_estacoes')
-        .insert({
-          numero: 0,
-          titulo: `Definição: ${novaObra.livro_titulo.trim()}`,
-          subtitulo: 'MARCADOR_OBRA',
-          livro_titulo: novaObra.livro_titulo.trim(),
-          livro_autor: novaObra.livro_autor.trim() || null,
-          livro_capa_url: novaObra.livro_capa_url.trim() || null,
-          ativa: false,
-          publicada: false,
-          ordem: 0,
-        })
-        .select()
-        .single();
-      if (errEst) throw errEst;
+      if (!rotaAnchor?.estacao_id) {
+        toast.error('A Rota selecionada ainda não tem um vínculo técnico para receber Obra-base.');
+        return;
+      }
 
-      // 2) Criar marcador de vínculo com a rota em clube_rota_itens
+      const obraJaExiste = items.some((item: any) => {
+        const obra = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
+        return item.rota_custom === novaObra.rotaNome && obra?.livro_titulo.toLowerCase() === tituloObra.toLowerCase();
+      });
+
+      if (obraJaExiste) {
+        toast.error('Esta Obra-base já está vinculada a esta Rota.');
+        return;
+      }
+
+      // Obra-base é somente um vínculo administrativo em clube_rota_itens.metadata.
+      // Não cria linha em clube_estacoes, nem marcador numero 0, nem estação invisível.
       const { error: errItem } = await supabase
         .from('clube_rota_itens')
         .insert({
-          estacao_id: estacao.id,
+          estacao_id: rotaAnchor.estacao_id,
           rota_custom: novaObra.rotaNome,
           tipo: 'obra_marker',
-          titulo: 'Vínculo de Rota',
-          slug: `obra-${slugify(novaObra.livro_titulo)}`,
+          titulo: `Obra-base: ${tituloObra}`,
+          subtitulo: 'Vínculo administrativo de obra-base',
+          slug: `obra-${slugify(novaObra.rotaNome)}-${slugify(tituloObra)}`,
           ordem: 0,
-          publicado: false
+          publicado: false,
+          metadata: {
+            tipo: 'obra_base',
+            livro_titulo: tituloObra,
+            livro_autor: novaObra.livro_autor.trim() || null,
+            livro_capa_url: novaObra.livro_capa_url.trim() || null,
+          },
         });
       if (errItem) throw errItem;
 
