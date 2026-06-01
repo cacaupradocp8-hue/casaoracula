@@ -277,6 +277,23 @@ export default function ClubeRotaPremium() {
               );
             })()}
 
+            {/* Conto Espelho (Narrativa Iniciática) */}
+            {ponto.conto_espelho && (
+              <Section icon={Sparkles} kicker="O Espelho" titulo={ponto.conto_espelho.titulo || "Conto Espelho"}>
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="prose prose-invert prose-lg text-foreground/80 font-serif italic whitespace-pre-wrap leading-relaxed">
+                    {ponto.conto_espelho.texto}
+                  </div>
+                  {ponto.conto_espelho.moral && (
+                    <div className="bg-gold/5 border border-gold/10 p-6 rounded-2xl text-center">
+                      <p className="text-gold font-display text-sm uppercase tracking-widest mb-2">A Chave</p>
+                      <p className="text-white/80 font-serif italic">{ponto.conto_espelho.moral}</p>
+                    </div>
+                  )}
+                </div>
+              </Section>
+            )}
+
             {/* Áudios */}
             {audios.length > 0 && (
               <Section id="audio-travessia" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
