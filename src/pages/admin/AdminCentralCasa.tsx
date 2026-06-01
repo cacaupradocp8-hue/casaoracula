@@ -119,14 +119,18 @@ export default function AdminCentralCasa() {
             const grupos = new Map<string, { rota: string; estacoes: any[]; principalObra: string }>();
             (estacoes || []).forEach((e: any) => {
               const obra = e.livro_titulo || 'Sem Obra';
-              if (obra.startsWith('SISTEMA_ROTAS:')) return; // Pular marcadores
+              if (obra.startsWith('SISTEMA_ROTAS:')) return; // Pular marcadores de sistema
 
               const rota = obraToRota.get(obra) || (obra.includes('Mulheres que Correm com os Lobos') ? 'Rota dos Lobos' : `Outras: ${obra}`);
               
               if (!grupos.has(rota)) {
                 grupos.set(rota, { rota, estacoes: [], principalObra: obra });
               }
-              grupos.get(rota)!.estacoes.push(e);
+              
+              // Só adiciona ao grupo se for uma estação real (não marcador de obra)
+              if (e.numero > 0 && e.subtitulo !== 'MARCADOR_OBRA') {
+                grupos.get(rota)!.estacoes.push(e);
+              }
             });
             const rotas = Array.from(grupos.values());
 
