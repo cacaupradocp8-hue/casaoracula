@@ -632,47 +632,56 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Erro Comum & Condução Justa */}
-            {(ponto.metadata?.erro_comum || ponto.metadata?.conducao_justa) && (
-              <Section icon={AlertTriangle} kicker="A armadilha e a mestria" titulo="Condução Clínica">
-                <div className="max-w-3xl mx-auto space-y-12">
-                  {ponto.metadata?.erro_comum && (
-                    <div className="bg-red-900/10 border border-red-900/20 p-8 rounded-2xl relative">
-                      <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-4 block">Erro Comum</span>
-                      <h5 className="text-white font-display text-lg mb-2">{ponto.metadata.erro_comum.titulo}</h5>
-                      <p className="text-white/60 text-sm leading-relaxed mb-4 italic">{ponto.metadata.erro_comum.descricao}</p>
-                      {ponto.metadata.erro_comum.exemplo && (
-                        <div className="bg-black/20 p-4 rounded-lg mb-4 text-[13px] border border-red-900/10">
-                          <span className="text-[9px] text-red-400/50 uppercase block mb-1">Exemplo de condução pobre:</span>
-                          "{ponto.metadata.erro_comum.exemplo}"
-                        </div>
-                      )}
-                    </div>
-                  )}
-                  
-                  {ponto.metadata?.conducao_justa && (
-                    <div className="bg-emerald-900/10 border border-emerald-900/20 p-8 rounded-2xl">
-                      <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-4 block">Condução Justa</span>
-                      <div className="prose prose-invert prose-emerald text-white/70 whitespace-pre-wrap leading-relaxed">
-                        {renderContent(ponto.metadata.conducao_justa)}
+            {(() => {
+              const erro = ponto.metadata?.erro_comum;
+              const justa = renderContent(ponto.metadata?.conducao_justa);
+              const cautelas = Array.isArray(ponto.metadata?.cautela_etica) ? ponto.metadata.cautela_etica.filter((c: any) => typeof c === 'string' && c.trim()) : [];
+              const show = Boolean((erro && (erro.titulo || erro.descricao)) || (justa && justa.trim()) || cautelas.length > 0);
+              
+              if (!show) return null;
+
+              return (
+                <Section icon={AlertTriangle} kicker="A armadilha e a mestria" titulo="Condução Clínica">
+                  <div className="max-w-3xl mx-auto space-y-12">
+                    {erro && (erro.titulo || erro.descricao) && (
+                      <div className="bg-red-900/10 border border-red-900/20 p-8 rounded-2xl relative">
+                        <span className="text-[10px] uppercase tracking-widest text-red-400 font-bold mb-4 block">Erro Comum</span>
+                        <h5 className="text-white font-display text-lg mb-2">{erro.titulo}</h5>
+                        <p className="text-white/60 text-sm leading-relaxed mb-4 italic">{erro.descricao}</p>
+                        {erro.exemplo && (
+                          <div className="bg-black/20 p-4 rounded-lg mb-4 text-[13px] border border-red-900/10">
+                            <span className="text-[9px] text-red-400/50 uppercase block mb-1">Exemplo de condução pobre:</span>
+                            "{erro.exemplo}"
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  )}
-                  
-                  {Array.isArray(ponto.metadata?.cautela_etica) && (
-                    <div className="space-y-4">
-                       <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold text-center block">Cautela Ética</span>
-                       <div className="flex flex-wrap justify-center gap-2">
-                        {ponto.metadata.cautela_etica.map((item: string, idx: number) => (
-                          <Badge key={idx} variant="outline" className="border-red-900/20 bg-red-900/5 text-red-400/70 py-1 px-4 text-[10px]">
-                            {item}
-                          </Badge>
-                        ))}
-                       </div>
-                    </div>
-                  )}
-                </div>
-              </Section>
-            )}
+                    )}
+                    
+                    {justa && justa.trim() && (
+                      <div className="bg-emerald-900/10 border border-emerald-900/20 p-8 rounded-2xl">
+                        <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold mb-4 block">Condução Justa</span>
+                        <div className="prose prose-invert prose-emerald text-white/70 whitespace-pre-wrap leading-relaxed">
+                          {justa}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {cautelas.length > 0 && (
+                      <div className="space-y-4">
+                         <span className="text-[10px] uppercase tracking-widest text-white/30 font-bold text-center block">Cautela Ética</span>
+                         <div className="flex flex-wrap justify-center gap-2">
+                          {cautelas.map((item: string, idx: number) => (
+                            <Badge key={idx} variant="outline" className="border-red-900/20 bg-red-900/5 text-red-400/70 py-1 px-4 text-[10px]">
+                              {item}
+                            </Badge>
+                          ))}
+                         </div>
+                      </div>
+                    )}
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Jardins */}
             {(ponto.metadata?.jardim_psique || ponto.metadata?.jardim_oficio) && (
