@@ -560,24 +560,31 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Desafio da Terapeuta */}
-            {(ponto.metadata?.desafio_terapeuta) && (
-              <Section id="desafio-terapeuta" icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta">
-                <div className="max-w-3xl mx-auto space-y-8">
-                  <div className="border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
-                    <p className="font-serif text-2xl md:text-3xl text-gold leading-relaxed mb-8">
-                      {renderContent(ponto.metadata.desafio_terapeuta.pergunta || ponto.metadata.desafio_terapeuta)}
-                    </p>
-                    
-                    {Array.isArray(ponto.metadata.desafio_terapeuta.escolhas) && (
-                      <div className="flex flex-wrap justify-center gap-3">
-                        {ponto.metadata.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
-                          <Button key={idx} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
-                            {choice}
-                          </Button>
-                        ))}
-                      </div>
-                    )}
+            {(() => {
+              const desafio = renderContent(ponto.metadata?.desafio_terapeuta?.pergunta || ponto.metadata?.desafio_terapeuta);
+              const show = Boolean(desafio && desafio.trim());
+              return (
+                <Section id="desafio-terapeuta" icon={Sword} kicker="O chamado à ação" titulo="Desafio da Terapeuta" isHidden={!show}>
+                  <div className="max-w-3xl mx-auto space-y-8">
+                    <div className="border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
+                      <p className="font-serif text-2xl md:text-3xl text-gold leading-relaxed mb-8">
+                        {desafio}
+                      </p>
+                      
+                      {Array.isArray(ponto.metadata?.desafio_terapeuta?.escolhas) && (
+                        <div className="flex flex-wrap justify-center gap-3">
+                          {ponto.metadata.desafio_terapeuta.escolhas.map((choice: string, idx: number) => (
+                            <Button key={idx} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+                              {choice}
+                            </Button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   </div>
+                </Section>
+              );
+            })()}
                   
                   {/* Revelação - Aparece após o desafio */}
                   {ponto.metadata?.revelacao_estacao && (
