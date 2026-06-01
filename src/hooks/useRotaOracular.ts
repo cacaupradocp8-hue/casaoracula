@@ -345,7 +345,7 @@ export function useRotaOracular() {
           completado_em: new Date().toISOString(),
           contexto: `rota_estacao_${estacaoAtual.id}`,
           metadata: {
-            origem: "rotas-da-casa",
+            origem: "rotas",
             estacao_id: estacaoAtual.id,
             estacao_numero: estacaoAtual.numero,
             titulo_visual: estacaoAtual.titulo

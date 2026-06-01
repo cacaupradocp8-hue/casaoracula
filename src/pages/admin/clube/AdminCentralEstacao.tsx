@@ -28,6 +28,11 @@ function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 }
 
+function cleanTechnicalTitle(title: string) {
+  if (!title) return '';
+  return title.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim();
+}
+
 
 export default function AdminCentralEstacao() {
   const navigate = useNavigate();
@@ -229,7 +234,7 @@ export default function AdminCentralEstacao() {
                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest mb-1">
                   <span className="cursor-pointer hover:text-gold" onClick={() => navigate('/admin/rotas')}>Rotas da Casa</span>
                   <ChevronRight className="w-2.5 h-2.5" />
-                  <span className="text-gold">{estacao.livro_titulo || 'Rota'}</span>
+                  <span className="text-gold">{cleanTechnicalTitle(estacao.livro_titulo || 'Rota')}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
                   <h1 className="text-2xl font-serif text-foreground truncate">{estacao.titulo}</h1>
@@ -239,7 +244,7 @@ export default function AdminCentralEstacao() {
                 </div>
                 <p className="text-sm text-muted-foreground flex items-center gap-2">
                   <BookOpen className="w-3.5 h-3.5 text-gold" />
-                  Obra-base: {estacao.livro_titulo}
+                  Obra-base: {cleanTechnicalTitle(estacao.livro_titulo)}
                 </p>
               </div>
             </div>
