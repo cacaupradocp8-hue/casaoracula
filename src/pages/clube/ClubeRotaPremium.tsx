@@ -440,7 +440,7 @@ export default function ClubeRotaPremium() {
                         </Button>
                       ) : (
                         <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5 py-2 px-4 rounded-full">
-                          Estação Concluída no Atlas
+                          Estação Concluída
                         </Badge>
                       )}
                       <Button variant="outline" className="rounded-full h-14 px-10 text-sm uppercase tracking-wider" onClick={() => navigate('/clube')}>
