@@ -264,7 +264,7 @@ export default function ClubeRotasCatalogo() {
                     title="Jardim da Psique"
                     description="Diário simbólico para registrar sonhos, oráculos e impressões da jornada."
                     icon={<Leaf className="w-5 h-5" />}
-                    onClick={() => navigate('/jardim-psique')}
+                    onClick={() => navigate('/jardim-da-psique')}
                   />
                   <RecursoCard 
                     title="Abertura do Campo"
