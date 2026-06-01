@@ -111,17 +111,30 @@ export default function AdminRotasCasa() {
   const rotasAgrupadas: RotaAgrupada[] = useMemo(() => {
     const map = new Map<string, RotaAgrupada>();
 
-    // 1) Mapeamento Estação → Rota
+    // 1) Mapeamento Estação → Rota e Obra → Rota
     const estacaoToRota = new Map<string, string>();
+    const obraToRota = new Map<string, string>();
+    const obraMetadata = new Map<string, ObraResumo>();
+
     for (const item of items) {
       if (item.rota_custom) {
         estacaoToRota.set(item.estacao_id, item.rota_custom);
+
+        const obraMarker = item.tipo === 'obra_marker' ? getObraFromItem(item) : null;
+        if (obraMarker) {
+          obraToRota.set(obraMarker.livro_titulo, item.rota_custom);
+          obraMetadata.set(obraMarker.livro_titulo, {
+            livro_titulo: obraMarker.livro_titulo,
+            livro_autor: obraMarker.livro_autor,
+            estacoes: 0,
+            publicadas: 0,
+          });
+        }
       }
     }
 
-    // 2) Mapeamento Obra → Rota
+    // 2) Mapeamento legado Obra → Rota
     // Se uma obra tem pelo menos uma estação vinculada a uma rota, toda a obra pertence àquela rota.
-    const obraToRota = new Map<string, string>();
     for (const e of estacoes) {
       const rota = estacaoToRota.get(e.id);
       if (rota && e.livro_titulo) {
@@ -130,7 +143,7 @@ export default function AdminRotasCasa() {
     }
 
     // 3) Processar estações e agrupar
-    const obrasMap = new Map<string, ObraResumo>();
+    const obrasMap = new Map<string, ObraResumo>(obraMetadata);
     
     for (const e of estacoes) {
       const obra = e.livro_titulo || 'Sem Obra';
@@ -156,6 +169,8 @@ export default function AdminRotasCasa() {
         continue;
       }
 
+      if (isWorkMarker) continue;
+
       // Agrupar Obra
       if (!obrasMap.has(obra)) {
         obrasMap.set(obra, {
@@ -167,11 +182,8 @@ export default function AdminRotasCasa() {
       }
       const o = obrasMap.get(obra)!;
 
-      // Só conta como estação se NÃO for um marcador
-      if (!isWorkMarker) {
-        o.estacoes += 1;
-        if (e.publicada) o.publicadas += 1;
-      }
+      o.estacoes += 1;
+      if (e.publicada) o.publicadas += 1;
 
       // Vincular à Rota
       if (!map.has(rotaNome)) {
@@ -187,6 +199,24 @@ export default function AdminRotasCasa() {
       // Adicionamos a obra apenas uma vez à rota
       if (!r.obras.some(ob => ob.livro_titulo === obra)) {
         r.obras.push(o);
+      }
+    }
+
+    for (const [obra, resumo] of obrasMap) {
+      const rotaNome = obraToRota.get(obra);
+      if (!rotaNome) continue;
+      if (!map.has(rotaNome)) {
+        map.set(rotaNome, {
+          id: rotaNome,
+          nome: rotaNome,
+          obras: [],
+          totalEstacoes: 0,
+          algumaPublicada: false,
+        });
+      }
+      const rota = map.get(rotaNome)!;
+      if (!rota.obras.some(ob => ob.livro_titulo === obra)) {
+        rota.obras.push(resumo);
       }
     }
 
