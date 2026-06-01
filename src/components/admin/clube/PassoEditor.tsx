@@ -139,6 +139,14 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       abertura_imersiva: '',
       caso_simbolico: { texto: '', aviso: '' },
       desafio_terapeuta: { pergunta: '', escolhas: [] as string[] },
+      ferramenta_oracular: {
+        enabled: false,
+        kicker: 'Camada do Método',
+        titulo: '',
+        questoes: [] as any[],
+        tipo_resultado: 'rastro',
+        camada_metodo: { enabled: true }
+      },
       revelacao_estacao: { porta: '', campo: '', torre: '', labirinto: '', pergunta_narrativa: '' },
       erro_comum: { titulo: '', descricao: '', exemplo: '' },
       conducao_justa: '',
@@ -236,6 +244,14 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
           botao: m.fechamento?.botao || '', 
           confirmacao: m.fechamento?.confirmacao || '' 
         },
+        ferramenta_oracular: {
+          enabled: m.ferramenta_oracular?.enabled || false,
+          kicker: m.ferramenta_oracular?.kicker || 'Camada do Método',
+          titulo: m.ferramenta_oracular?.titulo || '',
+          questoes: m.ferramenta_oracular?.questoes || [],
+          tipo_resultado: m.ferramenta_oracular?.tipo_resultado || 'rastro',
+          camada_metodo: m.ferramenta_oracular?.camada_metodo || { enabled: true }
+        },
         // Metadata - Outros
         audios: Array.isArray(m.audios) ? m.audios : [],
         perguntas_sugeridas: Array.isArray(m.perguntas_sugeridas) ? m.perguntas_sugeridas : [],
@@ -308,6 +324,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         missao_campo: limparObj(form.missao_campo),
         oraculo_estacao: limparObj(form.oraculo_estacao),
         fechamento: limparObj(form.fechamento),
+        ferramenta_oracular: limparObj(form.ferramenta_oracular),
       };
 
       const payload: any = {
@@ -850,7 +867,42 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
                 </AccordionContent>
               </AccordionItem>
 
-              {/* 9. Missão de Campo */}
+              {/* 9. Camada do Método */}
+              <AccordionItem value="ferramenta" className="border rounded-md px-3 bg-white/[0.01]">
+                <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">9. Camada do Método (Rastreamento)</AccordionTrigger>
+                <AccordionContent className="space-y-3 pb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Switch 
+                      checked={form.ferramenta_oracular.enabled} 
+                      onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, enabled: v}})} 
+                    />
+                    <Label className="text-xs">Ativar Ferramenta nesta Etapa</Label>
+                  </div>
+                  
+                  {form.ferramenta_oracular.enabled && (
+                    <div className="space-y-3 pt-2 border-t border-white/5">
+                      <div className="space-y-1">
+                        <Label className="text-xs">Título da Camada</Label>
+                        <Input 
+                          value={form.ferramenta_oracular.titulo} 
+                          onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, titulo: e.target.value}})} 
+                          className="h-8 text-xs" 
+                          placeholder="Ex: Rastreamento do Campo"
+                        />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Switch 
+                          checked={form.ferramenta_oracular.camada_metodo.enabled} 
+                          onCheckedChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: {...form.ferramenta_oracular.camada_metodo, enabled: v}}})} 
+                        />
+                        <Label className="text-xs">Garantir sincronia com o Método</Label>
+                      </div>
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* 10. Missão de Campo */}
               <AccordionItem value="missao" className="border rounded-md px-3 bg-white/[0.01]">
                 <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">9. Missão de Campo</AccordionTrigger>
                 <AccordionContent className="space-y-3 pb-4">
@@ -873,7 +925,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
                 </AccordionContent>
               </AccordionItem>
 
-              {/* 10. Oráculo */}
+              {/* 11. Oráculo */}
               <AccordionItem value="oraculo" className="border rounded-md px-3 bg-white/[0.01]">
                 <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">10. Oráculo da Estação</AccordionTrigger>
                 <AccordionContent className="space-y-3 pb-4">
@@ -892,7 +944,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
                 </AccordionContent>
               </AccordionItem>
 
-              {/* 11. Fechamento */}
+              {/* 12. Fechamento */}
               <AccordionItem value="fechamento" className="border rounded-md px-3 bg-white/[0.01]">
                 <AccordionTrigger className="text-sm font-medium py-3 hover:no-underline">11. Fechamento Final</AccordionTrigger>
                 <AccordionContent className="space-y-3 pb-4">
