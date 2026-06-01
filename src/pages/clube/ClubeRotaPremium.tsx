@@ -537,23 +537,27 @@ export default function ClubeRotaPremium() {
             )}
 
             {/* Caso Simbólico */}
-            {(ponto.metadata?.caso_simbolico || ponto.metadata?.caso_espelho) && (
-              <Section id="caso-simbolico" icon={Eye} kicker="O reflexo da travessia" titulo={ponto.metadata?.caso_simbolico?.titulo || "Caso Simbólico"}>
-                <div className="max-w-3xl mx-auto space-y-6">
-                  {ponto.metadata?.caso_simbolico?.aviso && (
-                    <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start gap-3">
-                      <AlertTriangle className="w-5 h-5 text-gold shrink-0" />
-                      <p className="text-[11px] text-white/60 italic leading-snug">
-                        {ponto.metadata.caso_simbolico.aviso}
-                      </p>
+            {(() => {
+              const relato = renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho);
+              const show = Boolean(relato && relato.trim());
+              return (
+                <Section id="caso-simbolico" icon={Eye} kicker="O reflexo da travessia" titulo={ponto.metadata?.caso_simbolico?.titulo || "Caso Simbólico"} isHidden={!show}>
+                  <div className="max-w-3xl mx-auto space-y-6">
+                    {ponto.metadata?.caso_simbolico?.aviso && (
+                      <div className="bg-white/5 border border-white/10 p-4 rounded-xl flex items-start gap-3">
+                        <AlertTriangle className="w-5 h-5 text-gold shrink-0" />
+                        <p className="text-[11px] text-white/60 italic leading-snug">
+                          {ponto.metadata.caso_simbolico.aviso}
+                        </p>
+                      </div>
+                    )}
+                    <div className="prose prose-invert prose-lg bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap">
+                      {relato}
                     </div>
-                  )}
-                  <div className="prose prose-invert prose-lg bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap">
-                    {renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho)}
                   </div>
-                </div>
-              </Section>
-            )}
+                </Section>
+              );
+            })()}
 
             {/* Desafio da Terapeuta */}
             {(ponto.metadata?.desafio_terapeuta) && (
