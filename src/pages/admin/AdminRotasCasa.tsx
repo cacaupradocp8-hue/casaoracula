@@ -24,9 +24,6 @@ import { toast } from 'sonner';
 function cleanTechnicalTitle(title: string) {
   if (!title) return '';
   return title
-    .replace('SISTEMA_ROTAS:', '')
-    .replace('ROTAS:', '')
-    .replace('Módulo:', '')
     .trim();
 }
 
@@ -61,7 +58,7 @@ interface RotaAgrupada {
 
 function getObraFromItem(item: any) {
   const metadata = (item?.metadata || {}) as Record<string, unknown>;
-  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.replace('SISTEMA_ROTAS:', '').replace('ROTAS:', '').trim() : '';
+  const livro_titulo = typeof metadata.livro_titulo === 'string' ? metadata.livro_titulo.trim() : '';
   if (!livro_titulo) return null;
 
   return {
@@ -169,8 +166,8 @@ export default function AdminRotasCasa() {
     
     for (const e of estacoes) {
       const obraNome = e.livro_titulo || 'Sem Obra';
-      const isSystem = obraNome.startsWith('ROTAS:') || obraNome.startsWith('SISTEMA_ROTAS:');
-      const isMarker = e.subtitulo === 'MARCADOR_OBRA' || e.numero === 0;
+      const isSystem = false;
+      const isMarker = false;
 
       if (isSystem || isMarker) continue;
 
@@ -494,61 +491,7 @@ export default function AdminRotasCasa() {
         </div>
       )}
 
-      {/* Dialogs: Nova Rota, Nova Obra, Nova Estação */}
-      {/* (Estes mantêm a estrutura básica, focando na chamada correta das handles) */}
-      <Dialog open={openRotaDialog} onOpenChange={setOpenRotaDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader><DialogTitle>Nova Rota</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-2">
-            <Input placeholder="Nome da Rota" value={novaRota.nome} onChange={e => setNovaRota({...novaRota, nome: e.target.value})} />
-            <Textarea placeholder="Descrição" value={novaRota.descricao} onChange={e => setNovaRota({...novaRota, descricao: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenRotaDialog(false)}>Cancelar</Button>
-            <Button className="bg-gold text-black font-bold" onClick={handleCriarRota} disabled={submitting}>Criar Rota</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={openObraDialog} onOpenChange={setOpenObraDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader>
-            <DialogTitle>Vincular Obra-base</DialogTitle>
-            <DialogDescription>Apenas vínculo simbólico. Nenhuma estação será criada.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <Select value={novaObra.rotaNome} onValueChange={v => setNovaObra({...novaObra, rotaNome: v})}>
-              <SelectTrigger><SelectValue placeholder="Selecione a Rota" /></SelectTrigger>
-              <SelectContent>{rotasAgrupadas.map(r => <SelectItem key={r.nome} value={r.nome}>{r.nome}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Título da Obra" value={novaObra.livro_titulo} onChange={e => setNovaObra({...novaObra, livro_titulo: e.target.value})} />
-            <Input placeholder="Autor (opcional)" value={novaObra.livro_autor} onChange={e => setNovaObra({...novaObra, livro_autor: e.target.value})} />
-            <Input placeholder="Capa URL (opcional)" value={novaObra.livro_capa_url} onChange={e => setNovaObra({...novaObra, livro_capa_url: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenObraDialog(false)}>Cancelar</Button>
-            <Button className="bg-emerald-500 text-black font-bold" onClick={handleAdicionarObra} disabled={submitting}>Vincular Obra</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <Dialog open={openEstacaoDialog} onOpenChange={setOpenEstacaoDialog}>
-        <DialogContent className="bg-card">
-          <DialogHeader><DialogTitle>Nova Estação</DialogTitle></DialogHeader>
-          <div className="space-y-4 py-2">
-            <Select value={novaEstacao.livro_titulo} onValueChange={v => setNovaEstacao({...novaEstacao, livro_titulo: v})}>
-              <SelectTrigger><SelectValue placeholder="Selecione a Obra" /></SelectTrigger>
-              <SelectContent>{obrasDisponiveis.map(o => <SelectItem key={o.livro_titulo} value={o.livro_titulo}>{o.livro_titulo}</SelectItem>)}</SelectContent>
-            </Select>
-            <Input placeholder="Título da Estação" value={novaEstacao.titulo} onChange={e => setNovaEstacao({...novaEstacao, titulo: e.target.value})} />
-            <Input placeholder="Subtítulo" value={novaEstacao.subtitulo} onChange={e => setNovaEstacao({...novaEstacao, subtitulo: e.target.value})} />
-          </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setOpenEstacaoDialog(false)}>Cancelar</Button>
-            <Button className="bg-gold text-black font-bold" onClick={handleAdicionarEstacao} disabled={submitting}>Criar Estação</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Dialogs removidos da renderização ativa */}
     </div>
   );
 }
