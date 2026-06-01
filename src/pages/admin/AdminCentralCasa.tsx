@@ -60,8 +60,8 @@ export default function AdminCentralCasa() {
           <Button variant="outline" className="border-primary/20 hover:bg-primary/5 text-muted-foreground gap-2" onClick={() => navigate('/')}>
             <Eye className="w-4 h-4" /> Visão da Aluna
           </Button>
-          <Button className="bg-gold hover:bg-gold/80 text-black font-semibold gap-2" onClick={() => navigate('/admin/rotas')}>
-            <Plus className="w-4 h-4" /> Nova Estação
+          <Button variant="outline" className="border-gold/30 text-gold/60 gap-2 cursor-not-allowed opacity-50" disabled>
+            <Compass className="w-4 h-4" /> Criação Congelada
           </Button>
         </div>
       </div>
