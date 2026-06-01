@@ -420,8 +420,22 @@ export default function ClubeRotaPremium() {
                   <div className="max-w-2xl mx-auto text-center space-y-8">
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{texto}</p>
                     <div className="flex flex-col items-center gap-6">
+                      {ponto.estado !== 'completed' ? (
+                        <Button 
+                          variant="gold" 
+                          className="rounded-full h-16 px-12 text-lg font-bold shadow-glow" 
+                          onClick={() => concluirPonto.mutate(ponto.id)}
+                          disabled={concluirPonto.isPending}
+                        >
+                          {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
+                        </Button>
+                      ) : (
+                        <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5 py-2 px-4 rounded-full">
+                          Estação Concluída no Atlas
+                        </Badge>
+                      )}
                       <Button variant="outline" className="rounded-full h-14 px-10 text-sm uppercase tracking-wider" onClick={() => navigate('/clube')}>
-                        Voltar à rota
+                        Voltar ao Mapa das Rotas
                       </Button>
                     </div>
                   </div>
