@@ -316,7 +316,7 @@ export default function AdminCentralEstacao() {
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-xs uppercase tracking-widest font-bold text-gold/60">Etapas da Rota</h2>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/40 font-bold">Modo Read-Only</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/40 font-bold">Modo Operacional</div>
           </div>
           
           <div className="space-y-2">
