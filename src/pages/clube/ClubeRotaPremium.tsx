@@ -684,47 +684,60 @@ export default function ClubeRotaPremium() {
             })()}
 
             {/* Jardins */}
-            {(ponto.metadata?.jardim_psique || ponto.metadata?.jardim_oficio) && (
-              <Section icon={Flower2} kicker="Sementeira" titulo="Os Jardins">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-                  {/* Jardim da Psique */}
-                  <motion.div 
-                    id="jardim-psique"
-                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10"
-                  >
-                    <div className="flex items-center gap-3 mb-6">
-                      <Flower2 className="w-5 h-5 text-gold" />
-                      <h4 className="text-gold font-display text-xl">Jardim da Psique</h4>
-                    </div>
-                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_psique?.pergunta}</p>
-                    <Button variant="gold" className="w-full rounded-full h-12 uppercase tracking-widest text-[10px] font-bold">
-                      {ponto.metadata.jardim_psique?.botao || "Registrar Travessia"}
-                    </Button>
-                  </motion.div>
-                  
-                  {/* Jardim do Ofício */}
-                  <motion.div 
-                    id="jardim-oficio"
-                    className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10"
-                  >
-                    <div className="flex items-center gap-3 mb-4">
-                      <MapPin className="w-5 h-5 text-emerald-500" />
-                      <h4 className="text-emerald-500 font-display text-xl">Jardim do Ofício</h4>
-                    </div>
-                    <div className="bg-emerald-950/20 border border-emerald-900/20 p-3 rounded-lg mb-6 flex gap-3 items-start">
-                      <ShieldAlert className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                      <p className="text-[10px] text-emerald-500/60 leading-snug">
-                        {ponto.metadata.jardim_oficio?.aviso_etico || "Registre apenas padrões gerais. Não inclua dados sensíveis."}
-                      </p>
-                    </div>
-                    <p className="text-white/70 font-serif italic mb-8">{ponto.metadata.jardim_oficio?.pergunta}</p>
-                    <Button variant="outline" className="w-full rounded-full h-12 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 uppercase tracking-widest text-[10px] font-bold">
-                      {ponto.metadata.jardim_oficio?.botao || "Registrar Prática"}
-                    </Button>
-                  </motion.div>
-                </div>
-              </Section>
-            )}
+            {(() => {
+              const psique = ponto.metadata?.jardim_psique;
+              const oficio = ponto.metadata?.jardim_oficio;
+              const hasPsique = Boolean(psique && psique.pergunta && psique.pergunta.trim());
+              const hasOficio = Boolean(oficio && oficio.pergunta && oficio.pergunta.trim());
+              
+              if (!hasPsique && !hasOficio) return null;
+
+              return (
+                <Section icon={Flower2} kicker="Sementeira" titulo="Os Jardins">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                    {/* Jardim da Psique */}
+                    {hasPsique && (
+                      <motion.div 
+                        id="jardim-psique"
+                        className="p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10"
+                      >
+                        <div className="flex items-center gap-3 mb-6">
+                          <Flower2 className="w-5 h-5 text-gold" />
+                          <h4 className="text-gold font-display text-xl">Jardim da Psique</h4>
+                        </div>
+                        <p className="text-white/70 font-serif italic mb-8">{psique.pergunta}</p>
+                        <Button variant="gold" className="w-full rounded-full h-12 uppercase tracking-widest text-[10px] font-bold">
+                          {psique.botao || "Registrar Travessia"}
+                        </Button>
+                      </motion.div>
+                    )}
+                    
+                    {/* Jardim do Ofício */}
+                    {hasOficio && (
+                      <motion.div 
+                        id="jardim-oficio"
+                        className="p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10"
+                      >
+                        <div className="flex items-center gap-3 mb-4">
+                          <MapPin className="w-5 h-5 text-emerald-500" />
+                          <h4 className="text-emerald-500 font-display text-xl">Jardim do Ofício</h4>
+                        </div>
+                        <div className="bg-emerald-950/20 border border-emerald-900/20 p-3 rounded-lg mb-6 flex gap-3 items-start">
+                          <ShieldAlert className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                          <p className="text-[10px] text-emerald-500/60 leading-snug">
+                            {oficio.aviso_etico || "Registre apenas padrões gerais. Não inclua dados sensíveis."}
+                          </p>
+                        </div>
+                        <p className="text-white/70 font-serif italic mb-8">{oficio.pergunta}</p>
+                        <Button variant="outline" className="w-full rounded-full h-12 border-emerald-500/30 text-emerald-500 hover:bg-emerald-500/10 uppercase tracking-widest text-[10px] font-bold">
+                          {oficio.botao || "Registrar Prática"}
+                        </Button>
+                      </motion.div>
+                    )}
+                  </div>
+                </Section>
+              );
+            })()}
 
             {/* Missão de Campo */}
             {ponto.metadata?.missao_campo && (
