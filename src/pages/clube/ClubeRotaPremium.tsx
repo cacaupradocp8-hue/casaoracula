@@ -357,6 +357,25 @@ export default function ClubeRotaPremium() {
               );
             })()}
 
+            {/* Ferramenta Oracular (Camada 2) */}
+            {ponto.metadata?.ferramenta_oracular?.enabled && (
+              <Section id="ferramenta-oracular" icon={Radar} kicker="Camada 2" titulo="Rastreamento Simbólico">
+                <FerramentaOracularPlayer 
+                  data={{
+                    ...ponto.metadata.ferramenta_oracular,
+                    questoes: ponto.metadata.ferramenta_oracular.indicadores?.map((i: any) => ({
+                      id: i.id,
+                      texto: i.label,
+                      tipo_resposta: ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao'
+                    })) || []
+                  }} 
+                  onComplete={(respostas) => {
+                    console.log('[Camada 2] Respostas rastreamento:', respostas);
+                  }}
+                />
+              </Section>
+            )}
+
             {/* Jardins */}
             {(() => {
               const psique = ponto.metadata?.jardim_psique?.pergunta;
