@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: 'cartografia_metodo' | 'rastro_simbolico' | 'mapa_vivo' | 'essencia_8020' | 'oraculo_estacao' | '';
+  camada_metodo: 'sentido_jornada' | 'essencia_80_20' | 'raiz_psiquica' | 'aplicacao_profissional' | 'autoeficacia' | 'registro_etico' | '';
 }
 
 interface EditorFormState {
@@ -1052,11 +1052,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                             <SelectValue placeholder="Selecione o valor simbólico" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="cartografia_metodo">Cartografia do Método</SelectItem>
-                            <SelectItem value="rastro_simbolico">Rastro Simbólico</SelectItem>
-                            <SelectItem value="mapa_vivo">Mapa Vivo</SelectItem>
-                            <SelectItem value="essencia_8020">Essência 80/20</SelectItem>
-                            <SelectItem value="oraculo_estacao">Oráculo da Estação</SelectItem>
+                            <SelectItem value="sentido_jornada">Sentido da Jornada</SelectItem>
+                            <SelectItem value="essencia_80_20">Essência 80/20</SelectItem>
+                            <SelectItem value="raiz_psiquica">Raiz Psíquica</SelectItem>
+                            <SelectItem value="aplicacao_profissional">Aplicação Profissional</SelectItem>
+                            <SelectItem value="autoeficacia">Prática de Autoeficácia</SelectItem>
+                            <SelectItem value="registro_etico">Registro Ético</SelectItem>
                           </SelectContent>
                         </Select>
                         <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
