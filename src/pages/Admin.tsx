@@ -81,6 +81,7 @@ const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePa
 const AdminFounderDashboardTab = lazy(() => import('@/domains/painel-mestre').then(m => ({ default: m.FounderDashboard })));
 const AdminRocktyMonitorTab = lazy(() => import('@/components/admin/AdminRocktyMonitorTab').then(m => ({ default: m.AdminRocktyMonitorTab })));
 const AdminDocumentosTab = lazy(() => import('@/components/admin/AdminDocumentosTab').then(m => ({ default: m.AdminDocumentosTab })));
+const AdminConducaoFeedbackTab = lazy(() => import('@/components/admin/AdminConducaoFeedbackTab').then(m => ({ default: m.AdminConducaoFeedbackTab })));
 
 
 
@@ -144,6 +145,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'founder': AdminFounderDashboardTab,
   'comunicacao': AdminComunicacaoTab,
   'narroterapia': AdminNarroterapiaTab,
+  'conducao-feedback': AdminConducaoFeedbackTab,
   'grupos': AdminGruposTab,
   
   // SISTEMA
