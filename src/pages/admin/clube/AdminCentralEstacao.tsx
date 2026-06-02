@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: 'camada_1' | 'camada_2' | 'camada_3' | 'camada_4' | 'camada_5' | '';
+  camada_metodo: 'cartografia' | 'rastro' | 'mapa' | 'essencia' | 'oraculo' | '';
 }
 
 interface EditorFormState {
