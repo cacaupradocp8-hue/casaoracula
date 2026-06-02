@@ -104,7 +104,6 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'casa-oracula', label: 'Painel Mestre', icon: Flame },
       { key: 'founder', label: 'Founder Analytics', icon: TrendingUp },
       { key: 'comunicacao', label: 'Comunicação', icon: MessageSquare },
-      { key: 'conducao-feedback', label: 'Validação Clínica', icon: ClipboardList },
       { key: 'narroterapia', label: 'Narroterapia', icon: BookOpen },
       { key: 'grupos', label: 'Grupos & Tribos', icon: Users },
     ],
