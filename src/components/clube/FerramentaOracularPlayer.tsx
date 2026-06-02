@@ -160,7 +160,8 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
         
         <h3 className="font-display text-4xl text-white mb-6">Rastro registrado</h3>
         <p className="text-white/60 font-serif italic text-xl max-w-xl mx-auto mb-12 leading-relaxed">
-          Seu rastro foi acolhido. A estação começou a formar mapa.
+          Seu rastro foi acolhido. <br />
+          A estação começou a formar mapa.
         </p>
         
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">

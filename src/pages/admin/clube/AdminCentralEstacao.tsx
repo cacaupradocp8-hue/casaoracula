@@ -1048,17 +1048,18 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                           value={form.ferramenta_oracular.camada_metodo} 
                           onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v}})}
                         >
-                          <SelectTrigger className="h-8 text-xs bg-background/50">
-                            <SelectValue placeholder="Selecione a Camada" />
+                          <SelectTrigger className="h-10 bg-background/50 border-gold/30">
+                            <SelectValue placeholder="Selecione o valor simbólico" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="cartografia">Cartografia do Método</SelectItem>
                             <SelectItem value="rastro">Rastro Simbólico</SelectItem>
                             <SelectItem value="mapa">Mapa Vivo</SelectItem>
                             <SelectItem value="essencia">Essência 80/20</SelectItem>
+                            <SelectItem value="oraculo">Oráculo da Estação</SelectItem>
                           </SelectContent>
                         </Select>
-                        <Label className="text-[10px] uppercase font-bold">Ativo para Estação</Label>
+                        <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
                       </div>
                       <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a jornada simbólica da aluna nesta rota.</p>
                     </div>
