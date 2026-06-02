@@ -34,13 +34,12 @@ export interface PerfilEstruturalOracula {
 // Objetivo: Compreender onde a pessoa está habitando agora (estado atual).
 
 export interface CartografiaPsiquicaOracula {
-  /** "Em que distrito da sua cidade você está habitando agora?" */
+  /** "Em que distrito da sua cidade você está habitando agora?" ou "Em que distrito esta cliente parece estar habitando agora?" */
   pergunta_ancora_estado: string;
   
   /** Distritos com alta carga de energia no momento atual (Cidadela Viva) */
   distritos_vivos: string[];
 
-  
   /** Distritos que estão sem energia ou evitados no momento */
   distritos_negligenciados: string[] | null;
   
@@ -52,6 +51,19 @@ export interface CartografiaPsiquicaOracula {
   
   /** A ferramenta da Cidadela para iniciar o trabalho agora */
   ferramenta_inicial_sugerida: string | null;
+
+  /** Metadados de Contexto Clínico (D0) */
+  contexto: {
+    subject_type: 'terapeuta' | 'cliente';
+    subject_id: string; // UUID da aluna ou da cliente
+    origem_leitura: 'auto' | 'terapeuta'; // Quem realizou a leitura/marcação
+  };
+
+  /** Detalhamento de frequência por território (0 a 1) */
+  frequencia_distritos?: Record<string, number>;
+  
+  data_ultima_leitura: string;
+  confianca_leitura: number;
 }
 
 // Re-exporting legacy names for backward compatibility during transition
