@@ -45,6 +45,38 @@ function cleanTechnicalTitle(title: string) {
     .trim();
 }
 
+type CamadaMetodo =
+  | "chamado"
+  | "ferida"
+  | "rastreamento_simbolico"
+  | "conto_espelho"
+  | "integracao"
+  | "retorno";
+
+const CAMADA_METODO_OPTIONS: { value: CamadaMetodo; label: string }[] = [
+  { value: "chamado", label: "Chamado" },
+  { value: "ferida", label: "Ferida" },
+  { value: "rastreamento_simbolico", label: "Rastreamento simbólico" },
+  { value: "conto_espelho", label: "Conto-espelho" },
+  { value: "integracao", label: "Integração" },
+  { value: "retorno", label: "Retorno" },
+];
+
+function normalizeCamadaMetodo(value: unknown): CamadaMetodo {
+  const validValues = CAMADA_METODO_OPTIONS.map(option => option.value);
+  
+  // Se for o formato legado { enabled: boolean }, retornamos o padrão
+  if (typeof value === 'object' && value !== null && 'enabled' in value) {
+    return "rastreamento_simbolico";
+  }
+
+  if (typeof value === "string" && validValues.includes(value as CamadaMetodo)) {
+    return value as CamadaMetodo;
+  }
+  return "rastreamento_simbolico";
+}
+
+
 /**
  * Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
  * Interface para os dados da ferramenta oracular.
@@ -65,7 +97,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: { enabled: boolean };
+  camada_metodo: CamadaMetodo;
 }
 
 interface EditorFormState {
@@ -486,9 +518,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      camada_metodo: (typeof passo.metadata?.ferramenta_oracular?.camada_metodo === 'object' && passo.metadata?.ferramenta_oracular?.camada_metodo !== null) 
-        ? passo.metadata.ferramenta_oracular.camada_metodo 
-        : { enabled: true }
+      camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
     },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -600,9 +630,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: (typeof passo.metadata?.ferramenta_oracular?.camada_metodo === 'object' && passo.metadata?.ferramenta_oracular?.camada_metodo !== null) 
-          ? passo.metadata.ferramenta_oracular.camada_metodo 
-          : { enabled: true }
+        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
@@ -1047,18 +1075,29 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   <div className="space-y-3">
                     <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Switch 
-                          checked={form.ferramenta_oracular.camada_metodo.enabled} 
-                          onCheckedChange={v => setForm({
+                      <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-gold">Eixo Simbólico do Método</Label>
+                        <Select 
+                          value={form.ferramenta_oracular.camada_metodo} 
+                          onValueChange={(v: CamadaMetodo) => setForm({
                             ...form, 
                             ferramenta_oracular: {
                               ...form.ferramenta_oracular, 
-                              camada_metodo: { enabled: v }
+                              camada_metodo: v
                             }
-                          })} 
-                        />
-                        <Label className="text-[10px] uppercase font-bold text-gold whitespace-nowrap">Garantir sincronia com o Método</Label>
+                          })}
+                        >
+                          <SelectTrigger className="bg-background/50 text-[10px] h-10 border-primary/10">
+                            <SelectValue placeholder="Selecione o eixo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {CAMADA_METODO_OPTIONS.map(option => (
+                              <SelectItem key={option.value} value={option.value} className="text-[10px]">
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <p className="text-[9px] text-muted-foreground leading-relaxed">Sinaliza que os resultados desta ferramenta devem ser integrados ao rastro simbólico da jornada.</p>
                     </div>
