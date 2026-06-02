@@ -8511,6 +8511,54 @@ export type Database = {
           },
         ]
       }
+      conducao_clinica_feedback: {
+        Row: {
+          client_id: string
+          created_at: string
+          id: string
+          metadata: Json | null
+          observacao: string | null
+          territorios: string[] | null
+          therapist_id: string
+          utilidade: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          observacao?: string | null
+          territorios?: string[] | null
+          therapist_id: string
+          utilidade: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          observacao?: string | null
+          territorios?: string[] | null
+          therapist_id?: string
+          utilidade?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conducao_clinica_feedback_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conducao_clinica_feedback_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clientes_admin_safe"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       confirmacao_profissional: {
         Row: {
           aceita_codigo_etico: boolean
