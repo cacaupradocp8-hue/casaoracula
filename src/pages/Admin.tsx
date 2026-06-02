@@ -145,6 +145,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'founder': AdminFounderDashboardTab,
   'comunicacao': AdminComunicacaoTab,
   'narroterapia': AdminNarroterapiaTab,
+  'conducao-feedback': AdminConducaoFeedbackTab,
   'grupos': AdminGruposTab,
   
   // SISTEMA
