@@ -37,8 +37,9 @@ export interface CartografiaPsiquicaOracula {
   /** "Em que distrito da sua cidade você está habitando agora?" */
   pergunta_ancora_estado: string;
   
-  /** Distritos com alta carga de energia no momento atual */
-  distritos_ativos_agora: string[];
+  /** Distritos com alta carga de energia no momento atual (Cidadela Viva) */
+  distritos_vivos: string[];
+
   
   /** Distritos que estão sem energia ou evitados no momento */
   distritos_negligenciados: string[] | null;
