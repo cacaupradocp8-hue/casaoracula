@@ -98,6 +98,20 @@ interface FerramentaOracularData {
     jardim_oficio: string;
   };
   camada_metodo: CamadaMetodo;
+  observacoes: string;
+}
+
+// Estrutura mínima reutilizável por estação — sem conteúdo, apenas modelo.
+interface MapaSimbolicoData {
+  titulo: string;
+  descricao: string;
+  imagem_url: string;
+}
+
+interface DesafioEscutaData {
+  pergunta: string;
+  escolhas: string[];
+  campo_aberto_label: string;
 }
 
 interface EditorFormState {
