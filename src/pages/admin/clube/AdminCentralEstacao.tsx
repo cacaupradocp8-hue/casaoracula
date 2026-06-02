@@ -630,9 +630,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: (typeof passo.metadata?.ferramenta_oracular?.camada_metodo === 'object' && passo.metadata?.ferramenta_oracular?.camada_metodo !== null) 
-          ? passo.metadata.ferramenta_oracular.camada_metodo 
-          : { enabled: true }
+        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
