@@ -11,51 +11,41 @@ A CidadELA deixa de ser apenas um "dashboard de perfil" e passa a ser uma **Anam
 ### Contexto 1: Autoaplicação (A Terapeuta como Sujeito)
 *   **Finalidade**: Onboarding na Casa, recomendação de ferramentas de estudo, atualização da "Cidadela da Aluna".
 *   **Pergunta Chave**: "Em que distrito da **sua** cidade você está habitando agora?"
-*   **Visão**: O espelho da própria prática e estado emocional.
+*   **Uso Principal**: Orientação de rotas e recomendação de ferramentas para a própria aluna.
 
 ### Contexto 2: Anamnese Simbólica (A Cliente como Sujeito)
-*   **Finalidade**: Organização da narrativa da cliente, hipótese diagnóstica simbólica, planejamento de sessões.
+*   **Finalidade**: Organização da narrativa da cliente, hipótese simbólica de estado, planejamento de sessões.
 *   **Pergunta Chave**: "Em que distrito **esta cliente** parece estar habitando agora?"
-*   **Visão**: Painel de acompanhamento na Casa das Máquinas.
+*   **Uso Principal**: Painel da terapeuta na Casa das Máquinas e orientação de condução clínica.
 
 ## 3. Contrato de Dados (Campos Adicionais)
 
-Para suportar o contexto clínico, o contrato de `estado_atual` (definido no Projeto D) deve incluir:
+O contrato de `CartografiaPsiquicaOracula` (em `src/lib/cartografia/contratos.ts`) foi atualizado para suportar metadados de contexto:
 
 ```typescript
-interface CartografiaPsiquica {
-  // ... campos do Projeto D
-  contexto: {
-    subject_type: 'terapeuta' | 'cliente';
-    subject_id: string; // UUID da aluna ou da cliente
-    origem_leitura: 'auto' | 'terapeuta'; // Quem fez a marcação
-  };
-  clinica: {
-    hipotese_narrativa: string; // Texto livre da terapeuta
-    proximos_passos: string[]; // Sugestões de condução
-    ponto_de_tensao: string; // Onde a cliente está "travada"
-  };
-}
+contexto: {
+  subject_type: 'terapeuta' | 'cliente';
+  subject_id: string; // user_id ou client_id
+  origem_leitura: 'auto' | 'terapeuta';
+};
 ```
 
 ## 4. Relação com a Casa das Máquinas e Rotas
 
-*   **Casa das Máquinas**: A Cartografia é o "cérebro" da ficha da cliente. Ao marcar um distrito como `vivo` na sessão, a Casa das Máquinas filtra automaticamente quais ferramentas e rotas são prioridade para aquela cliente.
-*   **Rotas da Casa**: As rotas deixam de ser sequências fixas e passam a ser "prescrições geográficas". Se a cliente está no Labirinto, a rota sugerida é a que leva à Forja ou à Praça da Integração.
+*   **Casa das Máquinas**: A Cartografia é o núcleo da ficha da cliente. Ao identificar um distrito como `vivo`, a Casa das Máquinas sugere automaticamente Portas, Torres, Labirintos e próximos passos de condução.
+*   **Rotas da Casa**: As rotas deixam de ser sequências fixas e tornam-se "direcionadores geográficos" baseados no estado atual da cliente.
 
 ## 5. Ética e Linguagem (Cuidados Fundamentais)
 
-A Cartografia da Cliente **não é um diagnóstico médico/psiquiátrico**. É uma ferramenta de **Escuta Simbólica**.
+A leitura da cliente **não é um diagnóstico**. É uma ferramenta de **Escuta e Organização Narrativa**.
 
-| Termo Evitado (Risco) | Termo Aprovado (Seguro) |
+| Termo Crítico (Evitar) | Termo Simbólico (Aprovado) |
 | :--- | :--- |
 | Diagnóstico | Hipótese Simbólica |
 | Sintoma | Frequência no Distrito |
 | Doença/Transtorno | Território de Sombra |
 | Tratamento | Travessia / Condução |
-| Cura | Integração do Território |
-
-**Regra de Ouro**: A leitura da terapeuta sobre a cliente é uma *interpretação narrativa* para apoiar a condução, não uma verdade absoluta sobre o sujeito.
+| Cura | Integração / Próximo Passo |
 
 ---
 **Classificação: CARTOGRAFIA_CLINICA_ALINHADA**
