@@ -8,7 +8,7 @@ import {
   BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle,
   ArrowLeft, Pencil, ImageIcon, Users, Eye, Settings, Rocket, Save, 
   Music, Sparkles, Plus, Trash2, Headphones, Sword, AlertTriangle, 
-  Flower2, Scroll, Check, MapPin
+  Flower2, Scroll, Check, MapPin, Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
