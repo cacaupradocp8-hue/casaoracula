@@ -134,12 +134,17 @@ export default function ClubeRotaPremium() {
             <div className="space-y-4">
               <h1 className="font-display font-light leading-tight tracking-tighter text-4xl md:text-6xl lg:text-7xl">
                 <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent">
-                  {ponto.nome}
+                  {ponto.metadata?.hero?.titulo || ponto.nome}
                 </span>
               </h1>
-              {ponto.subtitulo && (
+              {(ponto.metadata?.hero?.subtitulo || ponto.subtitulo) && (
                 <p className="font-serif italic text-lg md:text-2xl text-white/40 max-w-2xl mx-auto">
-                  "{ponto.subtitulo}"
+                  "{ponto.metadata?.hero?.subtitulo || ponto.subtitulo}"
+                </p>
+              )}
+              {ponto.metadata?.hero?.texto && (
+                <p className="font-serif text-white/60 text-lg md:text-xl max-w-3xl mx-auto mt-4 leading-relaxed">
+                  {ponto.metadata.hero.texto}
                 </p>
               )}
             </div>
