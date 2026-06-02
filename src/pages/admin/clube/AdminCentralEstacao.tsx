@@ -120,8 +120,10 @@ interface EditorFormState {
   conteudo_texto: string;
   abertura_imersiva: string;
   hero: { titulo: string; texto: string; cta: string };
+  mapa_simbolico: MapaSimbolicoData;
   caso_simbolico: { titulo: string; aviso: string; relato: string };
   desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
+  desafio_escuta: DesafioEscutaData;
   ferramenta_oracular: FerramentaOracularData;
   revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
   erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
