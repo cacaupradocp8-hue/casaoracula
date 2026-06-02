@@ -55,4 +55,9 @@ export interface CartografiaPsiquicaOracula {
 }
 
 // Re-exporting legacy names for backward compatibility during transition
+/** @deprecated Usar PerfilEstruturalOracula.distritos_naturais */
+export type LegacyDistritosAcesos = string[];
+/** @deprecated Usar CartografiaPsiquicaOracula.distritos_vivos */
+export type LegacyDistritosAtivos = string[];
+
 export type { NivelDistrito as LegacyNivelDistrito, NivelAtencao as LegacyNivelAtencao };
