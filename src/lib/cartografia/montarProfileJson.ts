@@ -326,7 +326,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     // Nova Arquitetura: Camada 2 (Cartografia Psíquica Orácula™) - Somente Contrato
     estado_atual: {
       pergunta_ancora_estado: "Em que distrito da sua cidade você está habitando agora?",
-      distritos_vivos: [],
+      distritos_ativos_agora: [],
       distritos_negligenciados: null,
       movimento_dominante: null,
       travessia_sugerida: null,

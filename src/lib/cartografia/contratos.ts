@@ -37,9 +37,9 @@ export interface CartografiaPsiquicaOracula {
   /** "Em que distrito da sua cidade você está habitando agora?" */
   pergunta_ancora_estado: string;
   
-  /** Distritos com alta carga de energia no momento atual (Cidadela Viva) */
-  distritos_vivos: string[];
-
+  /** Distritos com alta carga de energia no momento atual */
+  distritos_ativos_agora: string[];
+  
   /** Distritos que estão sem energia ou evitados no momento */
   distritos_negligenciados: string[] | null;
   
@@ -51,26 +51,7 @@ export interface CartografiaPsiquicaOracula {
   
   /** A ferramenta da Cidadela para iniciar o trabalho agora */
   ferramenta_inicial_sugerida: string | null;
-
-  /** Metadados de Contexto Clínico (D0) - Opcionais para compatibilidade */
-  contexto?: {
-    subject_type: 'terapeuta' | 'cliente';
-    subject_id: string;
-    origem_leitura: 'auto' | 'terapeuta';
-  };
-
-  /** Detalhamento de frequência por território (0 a 1) */
-  frequencia_distritos?: Record<string, number>;
-  
-  data_ultima_leitura?: string;
-  confianca_leitura?: number;
 }
 
-
 // Re-exporting legacy names for backward compatibility during transition
-/** @deprecated Usar PerfilEstruturalOracula.distritos_naturais */
-export type LegacyDistritosAcesos = string[];
-/** @deprecated Usar CartografiaPsiquicaOracula.distritos_vivos */
-export type LegacyDistritosAtivos = string[];
-
 export type { NivelDistrito as LegacyNivelDistrito, NivelAtencao as LegacyNivelAtencao };

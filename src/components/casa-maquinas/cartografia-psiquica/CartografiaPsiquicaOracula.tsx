@@ -217,9 +217,14 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         updated_at: new Date().toISOString(),
       } as any, { onConflict: 'client_id' });
 
-      // NO PERSISTENCE in big5_oracular_registros for client contexts to avoid polluting therapist's history
-      // The results are already stored in cartografia_psiquica.metadata_json.medias_big5 for the client.
-
+      // Save Big5 oracular registro for the client
+      await supabase.from('big5_oracular_registros').insert({
+        user_id: user.id,
+        respostas_json: respostas,
+        medias_json: medias,
+        fator_predominante: big5Result.predominante?.chave || null,
+        fator_fragilizado: big5Result.fragilizado?.chave || null,
+      });
 
       // Generate AI deep reading
       try {
