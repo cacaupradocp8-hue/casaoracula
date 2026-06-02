@@ -434,6 +434,13 @@ export default function AdminCentralEstacao() {
       </div>
 
       {/* Edit Station Dialog */}
+      <ImportadorEstacao
+        open={importerOpen}
+        onOpenChange={setImporterOpen}
+        estacao={estacao}
+        passo={selectedPasso || passos[0] || null}
+      />
+
       <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
         <DialogContent>
           <DialogHeader>
