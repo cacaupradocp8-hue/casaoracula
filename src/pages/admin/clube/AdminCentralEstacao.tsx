@@ -1046,17 +1046,17 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                       <div className="flex items-center gap-2">
                         <Select 
                           value={form.ferramenta_oracular.camada_metodo} 
-                          onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v}})}
+                          onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v as any}})}
                         >
                           <SelectTrigger className="h-10 bg-background/50 border-gold/30">
-                            <SelectValue placeholder="Selecione o valor simbólico" />
+                            <SelectValue placeholder="Selecione a Camada do Método" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="cartografia">Cartografia do Método</SelectItem>
-                            <SelectItem value="rastro">Rastro Simbólico</SelectItem>
-                            <SelectItem value="mapa">Mapa Vivo</SelectItem>
-                            <SelectItem value="essencia">Essência 80/20</SelectItem>
-                            <SelectItem value="oraculo">Oráculo da Estação</SelectItem>
+                            <SelectItem value="camada_1">Camada I: Cartografia do Método</SelectItem>
+                            <SelectItem value="camada_2">Camada II: Rastro Simbólico</SelectItem>
+                            <SelectItem value="camada_3">Camada III: Mapa Vivo</SelectItem>
+                            <SelectItem value="camada_4">Camada IV: Essência 80/20</SelectItem>
+                            <SelectItem value="camada_5">Camada V: Oráculo da Estação</SelectItem>
                           </SelectContent>
                         </Select>
                         <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
