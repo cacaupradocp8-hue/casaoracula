@@ -45,6 +45,38 @@ function cleanTechnicalTitle(title: string) {
     .trim();
 }
 
+type CamadaMetodo =
+  | "chamado"
+  | "ferida"
+  | "rastreamento_simbolico"
+  | "conto_espelho"
+  | "integracao"
+  | "retorno";
+
+const CAMADA_METODO_OPTIONS: { value: CamadaMetodo; label: string }[] = [
+  { value: "chamado", label: "Chamado" },
+  { value: "ferida", label: "Ferida" },
+  { value: "rastreamento_simbolico", label: "Rastreamento simbólico" },
+  { value: "conto_espelho", label: "Conto-espelho" },
+  { value: "integracao", label: "Integração" },
+  { value: "retorno", label: "Retorno" },
+];
+
+function normalizeCamadaMetodo(value: unknown): CamadaMetodo {
+  const validValues = CAMADA_METODO_OPTIONS.map(option => option.value);
+  
+  // Se for o formato legado { enabled: boolean }, retornamos o padrão
+  if (typeof value === 'object' && value !== null && 'enabled' in value) {
+    return "rastreamento_simbolico";
+  }
+
+  if (typeof value === "string" && validValues.includes(value as CamadaMetodo)) {
+    return value as CamadaMetodo;
+  }
+  return "rastreamento_simbolico";
+}
+
+
 /**
  * Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
  * Interface para os dados da ferramenta oracular.
