@@ -154,7 +154,7 @@ export function useRotaOracular() {
     enabled: !!estacaoAtual?.id,
   });
 
-  // 3. Itens da Rota (Nova Fonte de Verdade)
+  // 3. Itens da Rota (Nova Fonte de Verdade) — filtra slugs legados `old-*`
   const { data: itensRota } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
@@ -166,7 +166,8 @@ export function useRotaOracular() {
         .eq('publicado', true)
         .order('ordem');
       if (error) throw error;
-      return data || [];
+      // Oculta itens legados (registros fantasma `old-portal-*`)
+      return (data || []).filter((i: any) => !i?.slug?.startsWith('old-'));
     },
     enabled: !!estacaoAtual?.id,
   });
