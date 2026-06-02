@@ -97,7 +97,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: { enabled: boolean };
+  camada_metodo: CamadaMetodo;
 }
 
 interface EditorFormState {
