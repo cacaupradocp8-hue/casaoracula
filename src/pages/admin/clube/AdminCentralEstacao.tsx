@@ -146,6 +146,7 @@ export default function AdminCentralEstacao() {
   const { estacaoId } = useParams<{ estacaoId: string }>();
 
   const [editStationOpen, setEditStationOpen] = useState(false);
+  const [importerOpen, setImporterOpen] = useState(false);
   const [selectedPassoId, setSelectedPassoId] = useState<string | null>(null);
   
   const [stationForm, setStationForm] = useState({
