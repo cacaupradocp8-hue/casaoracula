@@ -841,6 +841,30 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
 
+            {/* 1.2. Mapa Simbólico — bloco estrutural reutilizável por estação */}
+            <AccordionItem value="mapa-simbolico" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">1.2. Mapa Simbólico</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título</Label>
+                  <Input value={form.mapa_simbolico.titulo} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, titulo: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Descrição</Label>
+                  <Textarea value={form.mapa_simbolico.descricao} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, descricao: e.target.value}})} className="bg-background/50 min-h-[100px]" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Imagem URL</Label>
+                  <Input value={form.mapa_simbolico.imagem_url} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, imagem_url: e.target.value}})} className="bg-background/50" placeholder="https://..." />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
             {/* 1.5. Conto Espelho */}
             <AccordionItem value="conto-espelho" className="border border-gold/20 rounded-xl px-4 bg-gold/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
