@@ -151,8 +151,8 @@ function mapToMetadata(blocks: ParsedBlocks, baseMeta: any, mode: 'replace' | 'm
   const splitList = (v?: string) => (v || '').split(/\n|\||;/).map(s => s.trim()).filter(Boolean);
 
   const setBlock = (key: string, partial: any, label: string) => {
-    const prev = meta[key] || {};
-    meta[key] = mode === 'replace' ? { ...prev, ...partial } : { ...prev, ...partial };
+    const prev = (typeof meta[key] === 'object' && meta[key] !== null) ? meta[key] : {};
+    meta[key] = mode === 'replace' ? { ...partial } : { ...prev, ...partial };
     report.push(`${label} atualizado`);
   };
 
