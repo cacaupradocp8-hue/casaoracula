@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: 'concepcao' | 'cartografia' | 'rastro' | 'mapa' | 'revelacao' | 'integracao' | '';
+  camada_metodo: string;
 }
 
 interface EditorFormState {
@@ -1044,23 +1044,13 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
                       <div className="flex items-center gap-2">
-                        <Select 
-                          value={form.ferramenta_oracular.camada_metodo} 
-                          onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v as any}})}
-                        >
-                          <SelectTrigger className="h-10 bg-background/50 border-gold/30">
-                            <SelectValue placeholder="Selecione o valor simbólico" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="concepcao">Concepção</SelectItem>
-                            <SelectItem value="cartografia">Cartografia</SelectItem>
-                            <SelectItem value="rastro">Rastro</SelectItem>
-                            <SelectItem value="mapa">Mapa</SelectItem>
-                            <SelectItem value="revelacao">Revelação</SelectItem>
-                            <SelectItem value="integracao">Integração</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
+                        <Input
+                          value={form.ferramenta_oracular.camada_metodo}
+                          onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: e.target.value}})}
+                          placeholder="Valor simbólico (texto livre)"
+                          className="h-10 bg-background/50 border-gold/30"
+                        />
+                        <Label className="text-[10px] uppercase font-bold text-gold whitespace-nowrap">Valor Simbólico</Label>
                       </div>
                       <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a jornada simbólica da aluna nesta rota.</p>
                     </div>
