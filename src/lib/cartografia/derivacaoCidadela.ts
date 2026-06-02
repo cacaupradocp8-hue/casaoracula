@@ -1,6 +1,7 @@
 /**
- * Motor de Derivação Automática da CidaDELA
- * Gera TODA a configuração da CidaDELA a partir das médias dos 5 eixos.
+ * Motor de Derivação Automática do PERFIL ESTRUTURAL ORÁCULA™
+ * Gera a configuração base da CidaDELA a partir das médias estáveis (Big Five).
+ * Pergunta Âncora: "Como esta pessoa costuma habitar o mundo?"
  * Zero escolha subjetiva — 100% determinístico.
  */
 

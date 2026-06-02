@@ -1,14 +1,17 @@
 /**
  * montarProfileJson.ts
  * 
- * orquestrador central: monta o JSON estruturado final da Leitura Estrutural.
+ * orquestrador central: monta o JSON estruturado do PERFIL ESTRUTURAL ORÁCULA™.
  * Combina leituraComportamental + derivacaoCidadela em uma única estrutura persistível.
+ * 
+ * Pergunta Âncora: "Como esta pessoa costuma habitar o mundo?"
  * 
  * ZERO escolhas subjetivas. 100% determinístico.
  */
 
 import { calcularLeitura, normalizarMedias, type ContextoLeitura, type LeituraComportamental, type MediasFatores } from './leituraComportamental';
 import { derivarCidadela, type CidadelaDerivada } from './derivacaoCidadela';
+import type { PerfilEstruturalOracula, CartografiaPsiquicaOracula } from './contratos';
 
 // ─── Tipos do JSON final ───
 
@@ -76,6 +79,7 @@ export interface ProfileJsonCidadela {
   porta_inicial: string;
   torre_dominante: string;
   clima_cidade: string;
+  /** @deprecated usar distritos_naturais do PerfilEstruturalOracula */
   distritos_acesos: string[];
   indice_equilibrio: number;
 }
@@ -85,7 +89,13 @@ export interface ProfileJsonFinal {
   derivacao: ProfileJsonDerivacao;
   leitura_conducao: ProfileJsonLeituraConducao;
   leitura_simbolica: ProfileJsonLeituraSimbolica;
+  /** @deprecated usar perfil_estrutural */
   cidadela: ProfileJsonCidadela;
+  
+  // Nova Arquitetura de Camadas
+  perfil_estrutural: PerfilEstruturalOracula;
+  estado_atual: CartografiaPsiquicaOracula;
+
   oracula_inicial: string;
   intensidade_oracular: string;
   recomendacoes?: {
@@ -302,6 +312,25 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
       clima_cidade: cidadela.clima_cidade,
       distritos_acesos: cidadela.distritos_acesos,
       indice_equilibrio: cidadela.indice_equilibrio,
+    },
+
+    // Nova Arquitetura: Camada 1 (Perfil Estrutural Orácula™)
+    perfil_estrutural: {
+      pergunta_ancora_estrutural: "Como esta pessoa costuma habitar o mundo?",
+      clima_estrutural: cidadela.clima_cidade,
+      distritos_naturais: cidadela.distritos_acesos,
+      torre_dominante: cidadela.torre_dominante,
+      indice_equilibrio: cidadela.indice_equilibrio,
+    },
+
+    // Nova Arquitetura: Camada 2 (Cartografia Psíquica Orácula™) - Somente Contrato
+    estado_atual: {
+      pergunta_ancora_estado: "Em que distrito da sua cidade você está habitando agora?",
+      distritos_ativos_agora: [],
+      distritos_negligenciados: null,
+      movimento_dominante: null,
+      travessia_sugerida: null,
+      ferramenta_inicial_sugerida: null,
     },
 
     // Derivados do mesmo motor — sem lógica paralela
