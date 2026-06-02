@@ -1167,6 +1167,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                     </div>
                   </div>
                 </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Observações</Label>
+                  <Textarea value={form.ferramenta_oracular.observacoes} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, observacoes: e.target.value}})} className="bg-background/50 min-h-[80px]" />
+                </div>
               </AccordionContent>
             </AccordionItem>
 
