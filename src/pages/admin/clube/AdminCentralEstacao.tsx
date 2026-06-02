@@ -1075,18 +1075,29 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   <div className="space-y-3">
                     <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Switch 
-                          checked={form.ferramenta_oracular.camada_metodo.enabled} 
-                          onCheckedChange={v => setForm({
+                      <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-gold">Eixo Simbólico do Método</Label>
+                        <Select 
+                          value={form.ferramenta_oracular.camada_metodo} 
+                          onValueChange={(v: CamadaMetodo) => setForm({
                             ...form, 
                             ferramenta_oracular: {
                               ...form.ferramenta_oracular, 
-                              camada_metodo: { enabled: v }
+                              camada_metodo: v
                             }
-                          })} 
-                        />
-                        <Label className="text-[10px] uppercase font-bold text-gold whitespace-nowrap">Garantir sincronia com o Método</Label>
+                          })}
+                        >
+                          <SelectTrigger className="bg-background/50 text-[10px] h-10 border-primary/10">
+                            <SelectValue placeholder="Selecione o eixo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {CAMADA_METODO_OPTIONS.map(option => (
+                              <SelectItem key={option.value} value={option.value} className="text-[10px]">
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <p className="text-[9px] text-muted-foreground leading-relaxed">Sinaliza que os resultados desta ferramenta devem ser integrados ao rastro simbólico da jornada.</p>
                     </div>
