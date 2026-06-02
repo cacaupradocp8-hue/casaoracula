@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: 'essencia' | 'raiz_psiquica' | 'traducao_profissional' | 'atravessamento' | 'integracao_oracular' | 'registro' | '';
+  camada_metodo: 'concepcao' | 'cartografia' | 'rastro' | 'mapa' | 'revelacao' | 'integracao' | '';
 }
 
 interface EditorFormState {
@@ -1052,12 +1052,12 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                             <SelectValue placeholder="Selecione o valor simbólico" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="essencia">Essência</SelectItem>
-                            <SelectItem value="raiz_psiquica">Raiz Psíquica</SelectItem>
-                            <SelectItem value="traducao_profissional">Tradução Profissional</SelectItem>
-                            <SelectItem value="atravessamento">Atravessamento</SelectItem>
-                            <SelectItem value="integracao_oracular">Integração Oracular</SelectItem>
-                            <SelectItem value="registro">Registro</SelectItem>
+                            <SelectItem value="concepcao">Concepção</SelectItem>
+                            <SelectItem value="cartografia">Cartografia</SelectItem>
+                            <SelectItem value="rastro">Rastro</SelectItem>
+                            <SelectItem value="mapa">Mapa</SelectItem>
+                            <SelectItem value="revelacao">Revelação</SelectItem>
+                            <SelectItem value="integracao">Integração</SelectItem>
                           </SelectContent>
                         </Select>
                         <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
