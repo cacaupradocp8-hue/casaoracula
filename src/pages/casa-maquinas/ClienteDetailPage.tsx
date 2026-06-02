@@ -32,7 +32,8 @@ import { ClienteAtividadeJardim } from '@/components/casa-maquinas/ClienteAtivid
 import { ClienteJourneyHeader } from '@/components/casa-maquinas/ClienteJourneyHeader';
 import { ClienteJourneyTimeline } from '@/components/casa-maquinas/ClienteJourneyTimeline';
 import { Button } from '@/components/ui/button';
-import { Loader2, LayoutDashboard, History, Map, Sparkles, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Loader2, LayoutDashboard, History, Map, Sparkles, Zap, Maximize2 } from 'lucide-react';
 
 export default function ClienteDetailPage() {
   const { clienteId } = useParams<{ clienteId: string }>();
