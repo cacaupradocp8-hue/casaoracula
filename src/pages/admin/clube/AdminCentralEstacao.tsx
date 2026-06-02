@@ -98,6 +98,20 @@ interface FerramentaOracularData {
     jardim_oficio: string;
   };
   camada_metodo: CamadaMetodo;
+  observacoes: string;
+}
+
+// Estrutura mínima reutilizável por estação — sem conteúdo, apenas modelo.
+interface MapaSimbolicoData {
+  titulo: string;
+  descricao: string;
+  imagem_url: string;
+}
+
+interface DesafioEscutaData {
+  pergunta: string;
+  escolhas: string[];
+  campo_aberto_label: string;
 }
 
 interface EditorFormState {
@@ -106,8 +120,10 @@ interface EditorFormState {
   conteudo_texto: string;
   abertura_imersiva: string;
   hero: { titulo: string; texto: string; cta: string };
+  mapa_simbolico: MapaSimbolicoData;
   caso_simbolico: { titulo: string; aviso: string; relato: string };
   desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
+  desafio_escuta: DesafioEscutaData;
   ferramenta_oracular: FerramentaOracularData;
   revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
   erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
@@ -492,6 +508,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       texto: passo.metadata?.hero?.texto || '',
       cta: passo.metadata?.hero?.cta || ''
     },
+    mapa_simbolico: {
+      titulo: passo.metadata?.mapa_simbolico?.titulo || '',
+      descricao: passo.metadata?.mapa_simbolico?.descricao || '',
+      imagem_url: passo.metadata?.mapa_simbolico?.imagem_url || ''
+    },
     caso_simbolico: {
       titulo: passo.metadata?.caso_simbolico?.titulo || '',
       aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
@@ -501,6 +522,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
       escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
       campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+    },
+    desafio_escuta: {
+      pergunta: passo.metadata?.desafio_escuta?.pergunta || passo.metadata?.desafio_terapeuta?.pergunta || '',
+      escolhas: Array.isArray(passo.metadata?.desafio_escuta?.escolhas) ? passo.metadata.desafio_escuta.escolhas : (Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata.desafio_terapeuta.escolhas : []),
+      campo_aberto_label: passo.metadata?.desafio_escuta?.campo_aberto_label || passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
     },
     ferramenta_oracular: {
       enabled: passo.metadata?.ferramenta_oracular?.enabled || false,
@@ -518,7 +544,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
+      camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo),
+      observacoes: passo.metadata?.ferramenta_oracular?.observacoes || ''
     },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -603,6 +630,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         texto: passo.metadata?.hero?.texto || '',
         cta: passo.metadata?.hero?.cta || ''
       },
+      mapa_simbolico: {
+        titulo: passo.metadata?.mapa_simbolico?.titulo || '',
+        descricao: passo.metadata?.mapa_simbolico?.descricao || '',
+        imagem_url: passo.metadata?.mapa_simbolico?.imagem_url || ''
+      },
       caso_simbolico: {
         titulo: passo.metadata?.caso_simbolico?.titulo || '',
         aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
@@ -612,6 +644,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
         escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
         campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+      },
+      desafio_escuta: {
+        pergunta: passo.metadata?.desafio_escuta?.pergunta || passo.metadata?.desafio_terapeuta?.pergunta || '',
+        escolhas: Array.isArray(passo.metadata?.desafio_escuta?.escolhas) ? passo.metadata.desafio_escuta.escolhas : (Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata.desafio_terapeuta.escolhas : []),
+        campo_aberto_label: passo.metadata?.desafio_escuta?.campo_aberto_label || passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
       },
       // Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
       ferramenta_oracular: {
@@ -630,7 +667,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
+        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo),
+        observacoes: passo.metadata?.ferramenta_oracular?.observacoes || ''
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
@@ -715,9 +753,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         ...passo.metadata,
         abertura_imersiva: form.abertura_imersiva,
         hero: form.hero,
+        mapa_simbolico: form.mapa_simbolico,
         audios: form.audios,
         caso_simbolico: form.caso_simbolico,
         desafio_terapeuta: form.desafio_terapeuta,
+        desafio_escuta: form.desafio_escuta,
         ferramenta_oracular: form.ferramenta_oracular,
         conto_espelho: form.conto_espelho,
         revelacao_estacao: form.revelacao_estacao,
@@ -797,6 +837,30 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                 <div className="space-y-2">
                   <Label className="text-[10px] uppercase font-bold text-white/40">Abertura Imersiva (Opcional)</Label>
                   <Textarea value={form.abertura_imersiva} onChange={e => setForm({...form, abertura_imersiva: e.target.value})} className="bg-background/50 italic font-serif" placeholder="O portal de entrada..." />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* 1.2. Mapa Simbólico — bloco estrutural reutilizável por estação */}
+            <AccordionItem value="mapa-simbolico" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Compass className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest">1.2. Mapa Simbólico</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Título</Label>
+                  <Input value={form.mapa_simbolico.titulo} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, titulo: e.target.value}})} className="bg-background/50" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Descrição</Label>
+                  <Textarea value={form.mapa_simbolico.descricao} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, descricao: e.target.value}})} className="bg-background/50 min-h-[100px]" />
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Imagem URL</Label>
+                  <Input value={form.mapa_simbolico.imagem_url} onChange={e => setForm({...form, mapa_simbolico: {...form.mapa_simbolico, imagem_url: e.target.value}})} className="bg-background/50" placeholder="https://..." />
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -902,22 +966,22 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
 
-            {/* 4. Desafio da Terapeuta */}
-            <AccordionItem value="desafio" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+            {/* 4. Desafio da Escuta */}
+            <AccordionItem value="desafio-escuta" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Sword className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">4. Desafio da Terapeuta</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">4. Desafio da Escuta</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Desafiadora</Label>
-                  <Textarea placeholder="A pergunta desafiadora..." value={form.desafio_terapeuta.pergunta} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} className="bg-background/50" />
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta</Label>
+                  <Textarea value={form.desafio_escuta.pergunta} onChange={e => setForm({...form, desafio_escuta: {...form.desafio_escuta, pergunta: e.target.value}})} className="bg-background/50" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] uppercase font-bold text-white/40">Label do Campo de Resposta</Label>
-                  <Input placeholder="Ex: O que você vê?" value={form.desafio_terapeuta.campo_aberto_label} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
+                  <Input value={form.desafio_escuta.campo_aberto_label} onChange={e => setForm({...form, desafio_escuta: {...form.desafio_escuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
                 </div>
               </AccordionContent>
             </AccordionItem>
@@ -1102,6 +1166,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                       <p className="text-[9px] text-muted-foreground leading-relaxed">Sinaliza que os resultados desta ferramenta devem ser integrados ao rastro simbólico da jornada.</p>
                     </div>
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Observações</Label>
+                  <Textarea value={form.ferramenta_oracular.observacoes} onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, observacoes: e.target.value}})} className="bg-background/50 min-h-[80px]" />
                 </div>
               </AccordionContent>
             </AccordionItem>
