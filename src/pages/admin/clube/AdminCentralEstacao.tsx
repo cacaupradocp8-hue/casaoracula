@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: string;
+  camada_metodo: 'cartografia' | 'rastro' | 'mapa' | 'essencia' | 'oraculo' | '';
 }
 
 interface EditorFormState {
@@ -1046,7 +1046,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                       <div className="flex items-center gap-2">
                         <Select 
                           value={form.ferramenta_oracular.camada_metodo} 
-                          onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v}})}
+                          onValueChange={v => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: v as any}})}
                         >
                           <SelectTrigger className="h-10 bg-background/50 border-gold/30">
                             <SelectValue placeholder="Selecione o valor simbólico" />
