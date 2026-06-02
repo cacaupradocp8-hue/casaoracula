@@ -356,6 +356,9 @@ export default function AdminCentralEstacao() {
           >
             <Eye className="h-3.5 w-3.5" /> Ver como Aluna
           </Button>
+          <Button size="sm" variant="outline" className="gap-2" onClick={() => setImporterOpen(true)} disabled={!selectedPasso && passos.length === 0}>
+            <Upload className="h-3.5 w-3.5" /> Importar Conteúdo
+          </Button>
           <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => setEditStationOpen(true)}>
             <Settings className="h-3.5 w-3.5" /> Estação
           </Button>
