@@ -21,6 +21,7 @@ import { CartografiaComplexos } from '@/components/casa-maquinas/cartografia-com
 import { ConselhoPartesInternas } from '@/components/casa-maquinas/conselho-partes/ConselhoPartesInternas';
 import { RitualIntegracao } from '@/components/casa-maquinas/ritual-integracao/RitualIntegracao';
 import { CartografiaPsiquicaOracula } from '@/components/casa-maquinas/cartografia-psiquica/CartografiaPsiquicaOracula';
+import { CondutaSimbolica } from '@/components/casa-maquinas/cartografia-psiquica/CondutaSimbolica';
 import { RelatorioJornadaPage } from '@/components/casa-maquinas/relatorio-jornada/RelatorioJornadaPage';
 import { BussolaCartografa } from '@/components/casa-maquinas/bussola-cartografa/BussolaCartografa';
 import { CartografiaClinicaPanel } from '@/components/cabine/CartografiaClinicaPanel';
