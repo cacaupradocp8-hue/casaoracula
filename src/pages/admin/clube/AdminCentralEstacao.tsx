@@ -966,22 +966,22 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
 
-            {/* 4. Desafio da Terapeuta */}
-            <AccordionItem value="desafio" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
+            {/* 4. Desafio da Escuta */}
+            <AccordionItem value="desafio-escuta" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-2">
                   <Sword className="w-4 h-4 text-gold" />
-                  <span className="text-sm font-bold uppercase tracking-widest">4. Desafio da Terapeuta</span>
+                  <span className="text-sm font-bold uppercase tracking-widest">4. Desafio da Escuta</span>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6 space-y-4">
                 <div className="space-y-2">
-                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta Desafiadora</Label>
-                  <Textarea placeholder="A pergunta desafiadora..." value={form.desafio_terapeuta.pergunta} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, pergunta: e.target.value}})} className="bg-background/50" />
+                  <Label className="text-[10px] uppercase font-bold text-white/40">Pergunta</Label>
+                  <Textarea value={form.desafio_escuta.pergunta} onChange={e => setForm({...form, desafio_escuta: {...form.desafio_escuta, pergunta: e.target.value}})} className="bg-background/50" />
                 </div>
                 <div className="space-y-2">
                   <Label className="text-[10px] uppercase font-bold text-white/40">Label do Campo de Resposta</Label>
-                  <Input placeholder="Ex: O que você vê?" value={form.desafio_terapeuta.campo_aberto_label} onChange={e => setForm({...form, desafio_terapeuta: {...form.desafio_terapeuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
+                  <Input value={form.desafio_escuta.campo_aberto_label} onChange={e => setForm({...form, desafio_escuta: {...form.desafio_escuta, campo_aberto_label: e.target.value}})} className="bg-background/50" />
                 </div>
               </AccordionContent>
             </AccordionItem>
