@@ -630,6 +630,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         texto: passo.metadata?.hero?.texto || '',
         cta: passo.metadata?.hero?.cta || ''
       },
+      mapa_simbolico: {
+        titulo: passo.metadata?.mapa_simbolico?.titulo || '',
+        descricao: passo.metadata?.mapa_simbolico?.descricao || '',
+        imagem_url: passo.metadata?.mapa_simbolico?.imagem_url || ''
+      },
       caso_simbolico: {
         titulo: passo.metadata?.caso_simbolico?.titulo || '',
         aviso: passo.metadata?.caso_simbolico?.aviso || 'Caso fictício e pedagógico. Não representa diagnóstico, nem substitui avaliação profissional.',
@@ -639,6 +644,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         pergunta: passo.metadata?.desafio_terapeuta?.pergunta || '',
         escolhas: Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata?.desafio_terapeuta?.escolhas : ['Porta', 'Torre', 'Labirinto', 'Campo psíquico', 'Pergunta possível'],
         campo_aberto_label: passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
+      },
+      desafio_escuta: {
+        pergunta: passo.metadata?.desafio_escuta?.pergunta || passo.metadata?.desafio_terapeuta?.pergunta || '',
+        escolhas: Array.isArray(passo.metadata?.desafio_escuta?.escolhas) ? passo.metadata.desafio_escuta.escolhas : (Array.isArray(passo.metadata?.desafio_terapeuta?.escolhas) ? passo.metadata.desafio_terapeuta.escolhas : []),
+        campo_aberto_label: passo.metadata?.desafio_escuta?.campo_aberto_label || passo.metadata?.desafio_terapeuta?.campo_aberto_label || ''
       },
       // Camada 2 — Ferramenta Oracular de Rastreamento Simbólico
       ferramenta_oracular: {
@@ -657,7 +667,8 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo)
+        camada_metodo: normalizeCamadaMetodo(passo.metadata?.ferramenta_oracular?.camada_metodo),
+        observacoes: passo.metadata?.ferramenta_oracular?.observacoes || ''
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
