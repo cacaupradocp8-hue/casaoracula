@@ -166,7 +166,17 @@ export default function ClubeRotaPremium() {
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 pb-24 pt-12">
 
           {/* 2. MAPA SIMBÓLICO */}
-          <Section id="mapa-simbolico" icon={Compass} kicker="O Olhar Interior" titulo="Mapa Simbólico">
+          <Section 
+            id="mapa-simbolico" 
+            icon={Compass} 
+            kicker="O Olhar Interior" 
+            titulo={ponto.metadata?.mapa_simbolico?.titulo || "Mapa Simbólico"}
+          >
+            {ponto.metadata?.mapa_simbolico?.descricao && (
+              <p className="text-white/60 font-serif italic text-lg max-w-3xl mb-12 border-l-2 border-gold/30 pl-6">
+                {ponto.metadata.mapa_simbolico.descricao}
+              </p>
+            )}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
               <div className="lg:col-span-5 grid gap-4">
                 {cartografia.map((item, i) => (
