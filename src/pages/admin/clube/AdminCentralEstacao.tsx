@@ -8,7 +8,7 @@ import {
   BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle,
   ArrowLeft, Pencil, ImageIcon, Users, Eye, Settings, Rocket, Save, 
   Music, Sparkles, Plus, Trash2, Headphones, Sword, AlertTriangle, 
-  Flower2, Scroll, Check, MapPin
+  Flower2, Scroll, Check, MapPin, Upload
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import ImportadorEstacao from "@/components/admin/clube/ImportadorEstacao";
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -145,6 +146,7 @@ export default function AdminCentralEstacao() {
   const { estacaoId } = useParams<{ estacaoId: string }>();
 
   const [editStationOpen, setEditStationOpen] = useState(false);
+  const [importerOpen, setImporterOpen] = useState(false);
   const [selectedPassoId, setSelectedPassoId] = useState<string | null>(null);
   
   const [stationForm, setStationForm] = useState({
@@ -354,6 +356,9 @@ export default function AdminCentralEstacao() {
           >
             <Eye className="h-3.5 w-3.5" /> Ver como Aluna
           </Button>
+          <Button size="sm" variant="outline" className="gap-2" onClick={() => setImporterOpen(true)} disabled={!selectedPasso && passos.length === 0}>
+            <Upload className="h-3.5 w-3.5" /> Importar Conteúdo
+          </Button>
           <Button size="sm" className="bg-gold hover:bg-gold/90 text-black font-bold gap-2" onClick={() => setEditStationOpen(true)}>
             <Settings className="h-3.5 w-3.5" /> Estação
           </Button>
@@ -429,6 +434,13 @@ export default function AdminCentralEstacao() {
       </div>
 
       {/* Edit Station Dialog */}
+      <ImportadorEstacao
+        open={importerOpen}
+        onOpenChange={setImporterOpen}
+        estacao={estacao}
+        passo={selectedPasso || passos[0] || null}
+      />
+
       <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
         <DialogContent>
           <DialogHeader>
