@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: string;
+  camada_metodo: { enabled: boolean };
 }
 
 interface EditorFormState {
@@ -486,7 +486,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
         jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
       },
-      camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo || ''
+      camada_metodo: (typeof passo.metadata?.ferramenta_oracular?.camada_metodo === 'object' && passo.metadata?.ferramenta_oracular?.camada_metodo !== null) 
+        ? passo.metadata.ferramenta_oracular.camada_metodo 
+        : { enabled: true }
     },
       revelacao_estacao: {
         porta: passo.metadata?.revelacao_estacao?.porta || '',
@@ -598,7 +600,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           jardim_psique: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_psique || '',
           jardim_oficio: passo.metadata?.ferramenta_oracular?.registros_sugeridos?.jardim_oficio || ''
         },
-        camada_metodo: passo.metadata?.ferramenta_oracular?.camada_metodo || ''
+        camada_metodo: (typeof passo.metadata?.ferramenta_oracular?.camada_metodo === 'object' && passo.metadata?.ferramenta_oracular?.camada_metodo !== null) 
+          ? passo.metadata.ferramenta_oracular.camada_metodo 
+          : { enabled: true }
       },
       conto_espelho: {
         titulo: passo.metadata?.conto_espelho?.titulo || '',
@@ -1043,16 +1047,20 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                   <div className="space-y-3">
                     <Label className="text-[10px] uppercase font-bold text-white/40">Status do Método</Label>
                     <div className="p-4 bg-background/50 rounded-xl border border-primary/5 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Input
-                          value={form.ferramenta_oracular.camada_metodo}
-                          onChange={e => setForm({...form, ferramenta_oracular: {...form.ferramenta_oracular, camada_metodo: e.target.value}})}
-                          placeholder="Valor simbólico (texto livre)"
-                          className="h-10 bg-background/50 border-gold/30"
+                      <div className="flex items-center gap-3">
+                        <Switch 
+                          checked={form.ferramenta_oracular.camada_metodo.enabled} 
+                          onCheckedChange={v => setForm({
+                            ...form, 
+                            ferramenta_oracular: {
+                              ...form.ferramenta_oracular, 
+                              camada_metodo: { enabled: v }
+                            }
+                          })} 
                         />
-                        <Label className="text-[10px] uppercase font-bold text-gold whitespace-nowrap">Valor Simbólico</Label>
+                        <Label className="text-[10px] uppercase font-bold text-gold whitespace-nowrap">Garantir sincronia com o Método</Label>
                       </div>
-                      <p className="text-[9px] text-muted-foreground leading-relaxed">Garante que o rastro seja capturado para a jornada simbólica da aluna nesta rota.</p>
+                      <p className="text-[9px] text-muted-foreground leading-relaxed">Sinaliza que os resultados desta ferramenta devem ser integrados ao rastro simbólico da jornada.</p>
                     </div>
                   </div>
                 </div>
