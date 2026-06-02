@@ -198,9 +198,11 @@ export default function ClienteDetailPage() {
           </div>
         </TabsContent>
 
-        <TabsContent value="cidadela" className="animate-in fade-in duration-500">
+        <TabsContent value="cidadela" className="animate-in fade-in duration-500 space-y-6">
           <MapaVivoCidadela clienteId={clienteId!} />
+          <CondutaSimbolica clienteId={clienteId!} />
         </TabsContent>
+
 
         <TabsContent value="historico" className="animate-in fade-in duration-500">
           <ClienteHistorico clienteId={clienteId!} />
