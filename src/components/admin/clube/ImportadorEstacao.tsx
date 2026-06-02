@@ -151,23 +151,25 @@ function mapToMetadata(blocks: ParsedBlocks, baseMeta: any, mode: 'replace' | 'm
   const splitList = (v?: string) => (v || '').split(/\n|\||;/).map(s => s.trim()).filter(Boolean);
 
   const setBlock = (key: string, partial: any, label: string) => {
-    const prev = meta[key] || {};
-    meta[key] = mode === 'replace' ? { ...prev, ...partial } : { ...prev, ...partial };
+    const prev = (typeof meta[key] === 'object' && meta[key] !== null) ? meta[key] : {};
+    meta[key] = mode === 'replace' ? { ...partial } : { ...prev, ...partial };
     report.push(`${label} atualizado`);
   };
 
   if (blocks.hero) {
+    const prev = meta.hero || {};
     setBlock('hero', {
-      titulo: blocks.hero.titulo ?? meta.hero?.titulo ?? '',
-      texto: blocks.hero.texto ?? meta.hero?.texto ?? '',
-      cta: blocks.hero.cta ?? meta.hero?.cta ?? '',
+      titulo: blocks.hero.titulo ?? (mode === 'merge' ? prev.titulo : ''),
+      texto: blocks.hero.texto ?? (mode === 'merge' ? prev.texto : ''),
+      cta: blocks.hero.cta ?? (mode === 'merge' ? prev.cta : ''),
     }, 'Hero');
   }
   if (blocks.mapa_simbolico) {
+    const prev = meta.mapa_simbolico || {};
     setBlock('mapa_simbolico', {
-      titulo: blocks.mapa_simbolico.titulo ?? meta.mapa_simbolico?.titulo ?? '',
-      descricao: blocks.mapa_simbolico.descricao ?? meta.mapa_simbolico?.descricao ?? '',
-      imagem_url: blocks.mapa_simbolico.imagem_url ?? meta.mapa_simbolico?.imagem_url ?? '',
+      titulo: blocks.mapa_simbolico.titulo ?? (mode === 'merge' ? prev.titulo : ''),
+      descricao: blocks.mapa_simbolico.descricao ?? (mode === 'merge' ? prev.descricao : ''),
+      imagem_url: blocks.mapa_simbolico.imagem_url ?? (mode === 'merge' ? prev.imagem_url : ''),
     }, 'Mapa Simbólico');
   }
   if (blocks.__audios && blocks.__audios.length > 0) {
