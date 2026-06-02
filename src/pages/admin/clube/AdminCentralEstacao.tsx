@@ -65,7 +65,7 @@ interface FerramentaOracularData {
     jardim_psique: string;
     jardim_oficio: string;
   };
-  camada_metodo: 'camada_1' | 'camada_2' | 'camada_3' | 'camada_4' | 'camada_5' | '';
+  camada_metodo: 'cartografia_metodo' | 'rastro_simbolico' | 'mapa_vivo' | 'essencia_8020' | 'oraculo_estacao' | '';
 }
 
 interface EditorFormState {
@@ -1052,11 +1052,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                             <SelectValue placeholder="Selecione o valor simbólico" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="camada_1">Camada I: Cartografia do Método</SelectItem>
-                            <SelectItem value="camada_2">Camada II: Rastro Simbólico</SelectItem>
-                            <SelectItem value="camada_3">Camada III: Mapa Vivo</SelectItem>
-                            <SelectItem value="camada_4">Camada IV: Essência 80/20</SelectItem>
-                            <SelectItem value="camada_5">Camada V: Oráculo da Estação</SelectItem>
+                            <SelectItem value="cartografia_metodo">Cartografia do Método</SelectItem>
+                            <SelectItem value="rastro_simbolico">Rastro Simbólico</SelectItem>
+                            <SelectItem value="mapa_vivo">Mapa Vivo</SelectItem>
+                            <SelectItem value="essencia_8020">Essência 80/20</SelectItem>
+                            <SelectItem value="oraculo_estacao">Oráculo da Estação</SelectItem>
                           </SelectContent>
                         </Select>
                         <Label className="text-[10px] uppercase font-bold text-gold">Valor Simbólico</Label>
