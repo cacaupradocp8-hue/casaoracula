@@ -13,14 +13,14 @@ export default function Onboarding() {
 
       // Se já completou ou se já tem um arquétipo, vai direto pro dashboard
       if (onboardingCompleted || entryArchetype) {
-        navigate('/dashboard-membro', { replace: true });
+        navigate('/clube', { replace: true });
         return;
       }
 
       // Caso contrário, completa o onboarding automaticamente e vai pro dashboard
       // Neutralizando o fluxo legado conforme solicitado
       await completeOnboarding();
-      navigate('/dashboard-membro', { replace: true });
+      navigate('/clube', { replace: true });
     };
 
     handleNeutralizeOnboarding();

@@ -257,14 +257,14 @@ function PublicRoute({ children }: { children: React.ReactNode }) {
   if (authError) return <AppRouteError title="Erro na autenticação" message={authError} />;
   if (!isAuthenticated) return <>{children}</>;
 
-  const destination = user?.portal === 'visitante' ? '/sala-da-visitante' : '/dashboard-membro';
+  const destination = user?.portal === 'visitante' ? '/sala-da-visitante' : '/clube';
   return <Navigate to={destination} replace />;
 }
 
 function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; allowed: PortalType[] }) {
   const { effectivePortal } = useEffectivePortal();
   if (!allowed.includes(effectivePortal)) {
-    return <Navigate to="/dashboard-membro" replace />;
+    return <Navigate to="/clube" replace />;
   }
   return <>{children}</>;
 }
