@@ -311,7 +311,7 @@ export function useBussolaOracular(): BussolaData {
     const distritosAtivos = ativosEntries.map(([k, v]) => buildDistrito(k, v));
     const distritoTensao = tensaoEntry ? buildDistrito(tensaoEntry[0], tensaoEntry[1]) : null;
     const nivelIntegracao = calcNivelIntegracao(distritos);
-    const corHex = carto?.metadata_json?.cor_hex || '#C9A24A';
+    const corHex = carto?.metadata_json?.cor_hex || '#A8B2BD';
 
     // LEITURA SIMBÓLICA — simbólica e pedagógica
     const leituraSimbolica = temCartografia
