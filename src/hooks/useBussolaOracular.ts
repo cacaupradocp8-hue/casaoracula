@@ -271,8 +271,9 @@ export function useBussolaOracular(): BussolaData {
         setRaw({
           archetype: profileRes.data?.entry_archetype || null,
           symbol: profileRes.data?.entry_symbol || null,
-          distritos: mapaRes?.data?.distritos_json || {},
-          carto: cartoRes?.data?.[0] || null,
+          distritos: (mapaRes?.data as any)?.distritos_json || {},
+          carto: (cartoRes?.data as any[])?.[0] || null,
+
           ciclo: estacao,
           book,
           jardimCount: (jardimRes as any)?.count || 0,
