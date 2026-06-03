@@ -55,6 +55,20 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Ownership check: ensure the authenticated therapist owns this client
+    const { data: ownerCheck, error: ownerErr } = await supabase
+      .from("clientes")
+      .select("id")
+      .eq("id", client_id)
+      .eq("terapeuta_id", user.id)
+      .maybeSingle();
+    if (ownerErr || !ownerCheck) {
+      return new Response(JSON.stringify({ error: "Acesso negado" }), {
+        status: 403,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     // 1. Gather client state
     const [cityStateRes, archStateRes, toolsRes, flowsRes, toolDistrictsRes, rulesRes] = await Promise.all([
       supabase.from("client_city_state").select("*").eq("client_id", client_id).maybeSingle(),
