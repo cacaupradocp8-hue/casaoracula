@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -103,12 +104,32 @@ function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): s
 
 export function useRotaOracular() {
   const { user } = useAuth();
+  const { slug: routeSlug } = useParams<{ slug: string }>();
 
-  // 1. Estação ativa
+  // 1. Estação ativa (Prioriza a que contém o item do slug da URL se disponível)
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
-    queryKey: ['rota-estacao-ativa'],
+    queryKey: ['rota-estacao-ativa', routeSlug],
     queryFn: async () => {
       try {
+        // Se temos um slug na URL, buscamos qual estação ele pertence primeiro
+        if (routeSlug) {
+          const { data: itemData } = await supabase
+            .from('clube_rota_itens')
+            .select('estacao_id')
+            .eq('slug', routeSlug)
+            .maybeSingle();
+          
+          if (itemData?.estacao_id) {
+            const { data: estData } = await supabase
+              .from('clube_estacoes')
+              .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
+              .eq('id', itemData.estacao_id)
+              .maybeSingle();
+            if (estData) return estData as Estacao;
+          }
+        }
+
+        // Fallback para a estação ativa padrão
         const { data, error } = await supabase
           .from('clube_estacoes')
           .select('id, titulo, subtitulo, descricao, banner_url, numero, livro_titulo, livro_autor, livro_capa_url, livro_imagem_banner_url, essencia_nucleo, essencia_tensao, essencia_transformacao, ativa')
