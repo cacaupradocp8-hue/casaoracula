@@ -252,6 +252,7 @@ export function useBussolaOracular(): BussolaData {
           supabase.from('profiles').select('entry_archetype, entry_symbol').eq('id', user.id).single(),
           supabase.from('auto_mapeamento').select('distritos_json').eq('user_id', user.id).maybeSingle(),
           supabase.from('cartografia_psiquica').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1),
+
           supabase.from('clube_estacoes').select('id, livro_titulo, livro_autor, livro_capa_url').eq('ativa', true).eq('publicada', true).maybeSingle(),
           supabase.from('jardim_psique_registros').select('id', { count: 'exact' }).eq('user_id', user.id).limit(1),
         ]);
