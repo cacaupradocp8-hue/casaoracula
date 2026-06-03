@@ -135,7 +135,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
                 else toast.error("Por favor, registre sua percepção.");
               }}
             >
-              Confirmar Formulação Simbólica
+              Confirmar rastro
             </Button>
           </div>
         );
@@ -207,7 +207,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
             </div>
             <div>
               <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-bold block mb-1">
-                {data.kicker || "Campo de Escuta"}
+                {data.kicker || "Sua percepção"}
               </span>
               <h3 className="font-display text-3xl text-white">{data.titulo}</h3>
             </div>
