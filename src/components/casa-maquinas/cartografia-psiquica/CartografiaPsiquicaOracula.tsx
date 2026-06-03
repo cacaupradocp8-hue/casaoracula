@@ -198,7 +198,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
               origem: 'cartografia',
               porta_inicial: profileJson.cidadela.porta_inicial,
               torre_dominante: profileJson.cidadela.torre_dominante,
-              clima_cidadela: profileJson.cidadela.clima_cidadela,
+              clima_cidade: profileJson.cidadela.clima_cidade,
               distritos_acesos: profileJson.cidadela.distritos_acesos,
             },
             ultimo_update: new Date().toISOString(),

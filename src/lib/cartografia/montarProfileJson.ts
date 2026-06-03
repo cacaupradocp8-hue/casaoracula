@@ -78,7 +78,8 @@ export interface ProfileJsonLeituraSimbolica {
 export interface ProfileJsonCidadela {
   porta_inicial: string;
   torre_dominante: string;
-  clima_cidadela: string;
+  clima_cidade: string;
+
   /** @deprecated usar distritos_naturais do PerfilEstruturalOracula */
   distritos_acesos: string[];
   indice_equilibrio: number;
@@ -309,7 +310,8 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     cidadela: {
       porta_inicial: cidadela.porta_inicial,
       torre_dominante: cidadela.torre_dominante,
-      clima_cidadela: cidadela.clima_cidadela,
+      clima_cidade: cidadela.clima_cidadela,
+
       distritos_acesos: cidadela.distritos_acesos,
       indice_equilibrio: cidadela.indice_equilibrio,
     },
