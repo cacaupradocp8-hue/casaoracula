@@ -111,7 +111,7 @@ export default function DashboardMembro() {
                 onClick={() => navigate('/clube/rotas')}
                 className="text-xs text-muted-foreground/40 hover:text-gold/60 underline underline-offset-4 transition-colors"
               >
-                Conhecer Rotas da Casa
+                Explorar Rotas da Casa
               </button>
             </div>
           </div>

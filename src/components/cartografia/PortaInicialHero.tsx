@@ -84,7 +84,7 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
         <h3 className="text-sm uppercase tracking-[0.2em] text-gold/60">Porta Inicial</h3>
         <h2 className="text-3xl font-display text-gold">{symbolicName}</h2>
         <p className="text-muted-foreground/80 max-w-md mx-auto pt-2">
-          Esta CidadELA pede para começar por aqui. Um convite para sua primeira travessia.
+          Sua CidadELA convida para começar por aqui. O primeiro portal para sua jornada atual.
         </p>
       </div>
 
@@ -100,12 +100,11 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
           Atravessar
           {!isLoading && <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />}
         </Button>
-
         <button 
-          onClick={() => navigate('/clube')}
+          onClick={() => navigate('/clube/rotas')}
           className="text-xs text-muted-foreground/50 hover:text-gold/60 underline underline-offset-4 transition-colors"
         >
-          Conhecer Rotas da Casa
+          Explorar as Rotas da Casa
         </button>
       </div>
     </motion.div>
