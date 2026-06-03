@@ -182,33 +182,33 @@ const OBSERVACAO_ETICA: Record<NivelAtencao, string> = {
 
 const RECOMENDACOES_POR_TENSAO: Record<string, { rotas: string[]; praticas: string[]; proximo_passo: string }> = {
   'controle vs colapso': {
-    rotas: ['Rota do Aterramento', 'Rota da Contenção'],
+    rotas: ['rota-do-aterramento', 'rota-da-contencao'],
     praticas: ['Escrita matinal de descarga', 'Pausa de 5 minutos com foco no corpo'],
     proximo_passo: 'Agendar uma sessão de acolhimento nas Rotas da Casa para organizar as bordas.'
   },
   'estrutura vs expressão': {
-    rotas: ['Rota da Voz Autêntica', 'Rota da Criatividade'],
+    rotas: ['rota-da-voz-autentica', 'rota-da-criatividade'],
     praticas: ['Gravação de áudio-diário sem julgamento', 'Expressão livre com cores ou formas'],
     proximo_passo: 'Explorar as Rotas da Casa como um espaço seguro para soltar a voz.'
   },
   'pertencimento vs autonomia': {
-    rotas: ['Rota da Diferenciação', 'Rota do Espelho'],
+    rotas: ['rota-da-diferenciacao', 'rota-do-espelho'],
     praticas: ['Definir um limite pequeno por dia', 'Momento de solitude intencional'],
     proximo_passo: 'Levar suas questões de vínculo para as Rotas da Casa.'
   },
   'expansão vs segurança': {
-    rotas: ['Rota do Movimento', 'Rota da Coragem'],
+    rotas: ['rota-do-movimento', 'rota-da-coragem'],
     praticas: ['Mapeamento de recursos seguros', 'Pequenos passos fora da zona de conforto'],
     proximo_passo: 'Nas Rotas da Casa, podemos fortalecer a base para sua expansão.'
   },
   'expressão vs aceitação': {
-    rotas: ['Rota da Autenticidade', 'Rota das Máscaras'],
+    rotas: ['rota-da-autenticidade', 'rota-das-mascaras'],
     praticas: ['Prática de espelho: dizer sua verdade em voz alta', 'Identificar lealdades invisíveis'],
     proximo_passo: 'Trabalhar o medo da rejeição nas Rotas da Casa.'
   },
   'segurança vs movimento': {
-    rotas: ['Rota da Fluidez', 'Rota da Iniciativa'],
-    praticas: ['Movimento corporal livre', 'Visualização de novos horizontes'],
+    rotas: ['rota-da-fluidez', 'rota-da-iniciativa'],
+    praticas: ['Movimento corporal livre', 'Visualização de novos horizons'],
     proximo_passo: 'Dar o primeiro passo acompanhada nas Rotas da Casa.'
   }
 };
