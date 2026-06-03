@@ -15,7 +15,7 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
-import { CidadelaRevelacaoContainer } from "@/components/cidadela/CidadelaRevelacaoContainer";
+import { CidadelaRotasView } from "@/components/cidadela/CidadelaRotasView";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
@@ -72,9 +72,9 @@ export default function DashboardMembro() {
           )}
         </AnimatePresence>
 
-        {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA */}
+        {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA (VERSÃO ROTAS) */}
         {bussola.temCartografia ? (
-          <CidadelaRevelacaoContainer bussola={bussola} />
+          <CidadelaRotasView bussola={bussola} />
         ) : (
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8 max-w-2xl mx-auto">
             <motion.div

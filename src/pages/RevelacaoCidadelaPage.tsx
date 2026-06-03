@@ -1,42 +1,74 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import MapaVivoCidadelaV2 from '@/components/cidadela/MapaVivoCidadelaV2';
+import { useBussolaOracular } from '@/hooks/useBussolaOracular';
+import { CidadelaRotasView } from '@/components/cidadela/CidadelaRotasView';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Moon } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { AppLayout } from '@/components/layout/AppLayout';
+import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 
 export default function RevelacaoCidadelaPage() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const bussola = useBussolaOracular();
+
+  if (bussola.loading) {
+    return (
+      <AppLayout>
+        <div className="min-h-[70vh] flex items-center justify-center">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center">
+            <div className="w-14 h-14 mx-auto mb-3 rounded-full border border-primary/15 flex items-center justify-center">
+              <Moon className="w-7 h-7 text-primary/25 animate-pulse" />
+            </div>
+            <p className="text-muted-foreground/40 text-xs font-display italic">
+              Revelando seu mapa...
+            </p>
+          </motion.div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-background">
-      <MapaVivoCidadelaV2
-        selfMode
-        overrideId={user?.id}
-        standalone
-      />
+    <AppLayout>
+      <ResponsiveContainer size="wide" className="py-6 md:py-8 pb-24">
+        {bussola.temCartografia ? (
+          <CidadelaRotasView bussola={bussola} />
+        ) : (
+          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8 max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-4"
+            >
+              <h1 className="text-3xl md:text-4xl font-display text-foreground">
+                Sua CidadELA ainda não foi revelada
+              </h1>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                Antes de atravessar a Casa, revele o mapa simbólico do modo como você habita este momento.
+              </p>
+            </motion.div>
 
-      {/* CTA → Dashboard Member */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.6 }}
-        className="max-w-md mx-auto px-4 pb-20 text-center space-y-4"
-      >
-        <Button
-          variant="gold"
-          size="lg"
-          onClick={() => navigate('/clube', { replace: true })}
-          className="gap-2 px-10 h-14 shadow-premium-glow"
-        >
-          Entrar na sua CidaDELA
-          <ArrowRight className="w-4 h-4" />
-        </Button>
-        <p className="text-[10px] uppercase tracking-widest text-muted-foreground/40 leading-relaxed">
-          Seu Perfil Estrutural estará sempre disponível no seu painel.
-        </p>
-      </motion.div>
-    </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+                className="gap-2 px-12 h-16 text-lg shadow-premium-glow"
+              >
+                Revelar minha CidadELA
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
+          </div>
+        )}
+      </ResponsiveContainer>
+    </AppLayout>
   );
 }
+

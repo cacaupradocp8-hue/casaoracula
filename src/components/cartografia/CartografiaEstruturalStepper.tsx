@@ -9,7 +9,8 @@ import {
   Brain, Heart, ShieldCheck, ArrowRight, ArrowLeft,
   Check, Loader2, Compass, DoorOpen
 } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
+import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCartografiaEstrutural';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
@@ -46,6 +47,9 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
 };
 
 export function CartografiaEstruturalStepper() {
+
+  const navigate = useNavigate();
+  const { data: estacoes } = useTodasRotas();
 
   const { 
     step, setStep, respostas, updateResposta, 
@@ -103,7 +107,21 @@ export function CartografiaEstruturalStepper() {
   if (step === 'resultado' && result) {
     const { cidadela, leitura, profileJson } = result;
     const portaNome = cidadela.porta_inicial_nome;
-    const portaSlug = result.profileJson.recomendacoes?.rotas?.[0];
+    const rawSlug = result.profileJson.recomendacoes?.rotas?.[0];
+    const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
+
+    const handleAtravessar = () => {
+      if (!portaSlug) {
+        navigate('/clube');
+        return;
+      }
+      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
+      if (exists) {
+        navigate(`/clube/rota/${portaSlug}`);
+      } else {
+        navigate('/clube');
+      }
+    };
 
     return (
       <motion.div 
@@ -218,7 +236,7 @@ export function CartografiaEstruturalStepper() {
                     <Button 
                       variant="gold" 
                       size="lg" 
-                      onClick={() => window.location.href = portaSlug ? `/clube/rota/${portaSlug}` : '/clube'}
+                      onClick={handleAtravessar}
                       className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
                     >
                       Atravessar
@@ -266,7 +284,7 @@ export function CartografiaEstruturalStepper() {
         <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
           <Button 
             variant="ghost" 
-            onClick={() => window.location.href = '/clube'} 
+            onClick={() => navigate('/clube')} 
             className="text-muted-foreground/50 hover:text-gold hover:bg-transparent text-xs uppercase tracking-widest"
           >
             Retornar ao Painel
