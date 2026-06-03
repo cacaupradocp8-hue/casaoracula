@@ -100,7 +100,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
             style={{ background: `${corHex}15`, border: `2px solid ${corHex}40` }}>
             <MapPin className="w-7 h-7" style={{ color: corHex }} />
           </div>
-          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 2</p>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Mapa Vivo</p>
           <h2 className="font-display text-2xl font-bold text-foreground">Sua CidadELA Interior</h2>
         </motion.div>
       )}
@@ -146,7 +146,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
           <Card className="border-primary/20 bg-primary/5 mx-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-primary/80">
-                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Distrito Central: {data.distrito_dominante}
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Território Central: {data.distrito_dominante}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -161,7 +161,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.4)}>
           <Card className="border-border/10 bg-card/40 mx-4">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground/70">Leitura Simbólica Integrada</CardTitle>
+              <CardTitle className="text-sm text-muted-foreground/70">A Revelação</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
@@ -175,7 +175,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.5)}>
           <Card className="border-amber-500/15 bg-amber-500/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-amber-500/70">Tensão Simbólica</CardTitle>
+              <CardTitle className="text-xs text-amber-500/70">Ponto de Tensão</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.tensao_simbolica}</p>
@@ -192,7 +192,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.55)}>
           <Card className="border-accent/15 bg-accent/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-accent-foreground/70">Território de Crescimento</CardTitle>
+              <CardTitle className="text-xs text-accent-foreground/70">Território de Travessia</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.territorio_crescimento_descricao}</p>
