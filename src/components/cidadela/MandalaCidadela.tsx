@@ -676,11 +676,23 @@ export function MandalaCidadela({
         )}
 
         {/* Territory illustration */}
-        <g transform={`translate(${pos.x}, ${pos.y}) scale(${isHovered ? artScale * 1.06 : artScale})`}
+        <motion.g
+          animate={state === 'ativo' ? {
+            scale: [1, 1.05, 1],
+            opacity: [0.85, 1, 0.85]
+          } : {}}
+          transition={state === 'ativo' ? {
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut"
+          } : {}}
+          transform={`translate(${pos.x}, ${pos.y}) scale(${isHovered ? artScale * 1.06 : artScale})`}
           opacity={ringOpacityMult}
-          style={{ transition: 'transform 0.35s ease', transformOrigin: '0 0' }}>
+          style={{ transition: 'transform 0.35s ease', transformOrigin: '0 0' }}
+        >
           {TERRITORY_ART[d.numero]?.(st)}
-        </g>
+        </motion.g>
+
 
         {/* Active pulse ring */}
         {state === 'ativo' && !isCenter && (
