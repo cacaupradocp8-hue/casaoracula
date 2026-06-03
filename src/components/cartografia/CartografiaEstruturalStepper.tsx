@@ -111,8 +111,10 @@ export function CartografiaEstruturalStepper() {
         animate={{ opacity: 1 }} 
         className="w-full max-w-4xl mx-auto space-y-16 pb-32"
       >
+
         {/* 1. TÍTULO PRINCIPAL */}
         <header className="text-center space-y-4 pt-12">
+
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -274,19 +276,6 @@ export function CartografiaEstruturalStepper() {
     );
   }
 
-
-        <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
-          <Button 
-            variant="ghost" 
-            onClick={() => window.location.href = '/dashboard-membro'} 
-            className="text-muted-foreground/50 hover:text-gold hover:bg-transparent text-xs uppercase tracking-widest"
-          >
-            Retornar ao Painel
-          </Button>
-        </div>
-      </motion.div>
-    );
-  }
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
