@@ -120,7 +120,13 @@ interface EditorFormState {
   subtitulo: string;
   conteudo_texto: string;
   abertura_imersiva: string;
-  hero: { titulo: string; texto: string; cta: string };
+  hero: { 
+    titulo: string; 
+    texto: string; 
+    cta: string;
+    imagem_desktop?: string;
+    imagem_mobile?: string;
+  };
   mapa_simbolico: MapaSimbolicoData;
   caso_simbolico: { titulo: string; aviso: string; relato: string };
   desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
@@ -134,7 +140,21 @@ interface EditorFormState {
   jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
   missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
   oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
-  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
+  fechamento: { 
+    texto: string; 
+    pergunta: string; 
+    botao: string; 
+    confirmacao: string;
+    imagem_fechamento?: string;
+  };
+  escuta: {
+    imagem_escuta?: string;
+  };
+  carrossel: {
+    imagens: string[];
+    legendas: string[];
+  };
+  frases_travessia: string[];
   conto_espelho: { titulo: string; texto: string; moral: string };
   audios: any[];
 }
@@ -488,26 +508,6 @@ export default function AdminCentralEstacao() {
   );
 }
 
-interface EditorFormState {
-  titulo: string;
-  subtitulo: string;
-  conteudo_texto: string;
-  abertura_imersiva: string;
-  hero: { titulo: string; texto: string; cta: string };
-  caso_simbolico: { titulo: string; aviso: string; relato: string };
-  desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
-  ferramenta_oracular: FerramentaOracularData;
-  revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
-  erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
-  conducao_justa: string;
-  cautela_etica: string;
-  jardim_psique: { chamada: string; pergunta: string; campos: any; botao: string; confirmacao: string };
-  jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
-  missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
-  oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
-  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
-  audios: any[];
-}
 
 function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave: (p: any) => void, onDelete: () => void, loading: boolean }) {
   const [form, setForm] = useState<EditorFormState>({
@@ -518,7 +518,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
     hero: {
       titulo: passo.metadata?.hero?.titulo || '',
       texto: passo.metadata?.hero?.texto || '',
-      cta: passo.metadata?.hero?.cta || ''
+      cta: passo.metadata?.hero?.cta || '',
+      imagem_desktop: passo.metadata?.hero?.imagem_desktop || '',
+      imagem_mobile: passo.metadata?.hero?.imagem_mobile || ''
     },
     mapa_simbolico: {
       titulo: passo.metadata?.mapa_simbolico?.titulo || '',
@@ -610,8 +612,17 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       texto: passo.metadata?.fechamento?.texto || '',
       pergunta: passo.metadata?.fechamento?.pergunta || '',
       botao: passo.metadata?.fechamento?.botao || '',
-      confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+      confirmacao: passo.metadata?.fechamento?.confirmacao || '',
+      imagem_fechamento: passo.metadata?.fechamento?.imagem_fechamento || ''
     },
+    escuta: {
+      imagem_escuta: passo.metadata?.escuta?.imagem_escuta || ''
+    },
+    carrossel: {
+      imagens: Array.isArray(passo.metadata?.carrossel?.imagens) ? passo.metadata.carrossel.imagens : [],
+      legendas: Array.isArray(passo.metadata?.carrossel?.legendas) ? passo.metadata.carrossel.legendas : []
+    },
+    frases_travessia: Array.isArray(passo.metadata?.frases_travessia) ? passo.metadata.frases_travessia : [],
     audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
       ? passo.metadata.audios.map((a: any) => ({
           titulo: a.titulo || '',
@@ -640,7 +651,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       hero: {
         titulo: passo.metadata?.hero?.titulo || '',
         texto: passo.metadata?.hero?.texto || '',
-        cta: passo.metadata?.hero?.cta || ''
+        cta: passo.metadata?.hero?.cta || '',
+        imagem_desktop: passo.metadata?.hero?.imagem_desktop || '',
+        imagem_mobile: passo.metadata?.hero?.imagem_mobile || ''
       },
       mapa_simbolico: {
         titulo: passo.metadata?.mapa_simbolico?.titulo || '',
@@ -733,8 +746,17 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         texto: passo.metadata?.fechamento?.texto || '',
         pergunta: passo.metadata?.fechamento?.pergunta || '',
         botao: passo.metadata?.fechamento?.botao || '',
-        confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+        confirmacao: passo.metadata?.fechamento?.confirmacao || '',
+        imagem_fechamento: passo.metadata?.fechamento?.imagem_fechamento || ''
       },
+      escuta: {
+        imagem_escuta: passo.metadata?.escuta?.imagem_escuta || ''
+      },
+      carrossel: {
+        imagens: Array.isArray(passo.metadata?.carrossel?.imagens) ? passo.metadata.carrossel.imagens : [],
+        legendas: Array.isArray(passo.metadata?.carrossel?.legendas) ? passo.metadata.carrossel.legendas : []
+      },
+      frases_travessia: Array.isArray(passo.metadata?.frases_travessia) ? passo.metadata.frases_travessia : [],
       audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
         ? passo.metadata.audios.map((a: any) => ({
             titulo: a.titulo || '',
@@ -767,6 +789,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
         hero: form.hero,
         mapa_simbolico: form.mapa_simbolico,
         audios: form.audios,
+        escuta: form.escuta,
+        carrossel: form.carrossel,
+        frases_travessia: form.frases_travessia,
         caso_simbolico: form.caso_simbolico,
         desafio_terapeuta: form.desafio_terapeuta,
         desafio_escuta: form.desafio_escuta,
@@ -823,6 +848,106 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           </div>
 
           <Accordion type="multiple" className="w-full space-y-4">
+            {/* 0. Imersão e Visuais Premium */}
+            <AccordionItem value="visuais" className="border border-gold/40 rounded-xl px-4 bg-gold/5 overflow-hidden">
+              <AccordionTrigger className="hover:no-underline">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-gold" />
+                  <span className="text-sm font-bold uppercase tracking-widest text-gold">0. Imersão e Visuais Premium</span>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-4 pb-6 space-y-8">
+                {/* Hero Images */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase font-bold text-gold/60 border-b border-gold/10 pb-2">Hero (Entrada)</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase font-bold text-white/40">Imagem Desktop URL</Label>
+                      <Input value={form.hero.imagem_desktop} onChange={e => setForm({...form, hero: {...form.hero, imagem_desktop: e.target.value}})} className="bg-background/50" placeholder="https://..." />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase font-bold text-white/40">Imagem Mobile URL</Label>
+                      <Input value={form.hero.imagem_mobile} onChange={e => setForm({...form, hero: {...form.hero, imagem_mobile: e.target.value}})} className="bg-background/50" placeholder="https://..." />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Escuta Premium */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase font-bold text-gold/60 border-b border-gold/10 pb-2">Escuta (Áudio Premium)</h4>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Imagem de Fundo Escuta URL</Label>
+                    <Input value={form.escuta.imagem_escuta} onChange={e => setForm({...form, escuta: {...form.escuta, imagem_escuta: e.target.value}})} className="bg-background/50" placeholder="https://..." />
+                    <p className="text-[10px] text-muted-foreground italic">Esta imagem será o fundo e o "disco" da experiência de escuta premium.</p>
+                  </div>
+                </div>
+
+                {/* Carrossel Simbólico */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase font-bold text-gold/60 border-b border-gold/10 pb-2">Carrossel de Imagens</h4>
+                  {[0, 1, 2].map(i => (
+                    <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 bg-white/5 rounded-lg">
+                      <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-white/30">Imagem {i+1} URL</Label>
+                        <Input 
+                          value={form.carrossel.imagens[i] || ''} 
+                          onChange={e => {
+                            const imgs = [...form.carrossel.imagens];
+                            imgs[i] = e.target.value;
+                            setForm({...form, carrossel: {...form.carrossel, imagens: imgs}});
+                          }} 
+                          className="bg-background/50 h-8 text-xs" 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-white/30">Legenda {i+1}</Label>
+                        <Input 
+                          value={form.carrossel.legendas[i] || ''} 
+                          onChange={e => {
+                            const legs = [...form.carrossel.legendas];
+                            legs[i] = e.target.value;
+                            setForm({...form, carrossel: {...form.carrossel, legendas: legs}});
+                          }} 
+                          className="bg-background/50 h-8 text-xs" 
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Frases de Travessia */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase font-bold text-gold/60 border-b border-gold/10 pb-2">Frases de Travessia (Respiros)</h4>
+                  <div className="grid grid-cols-1 gap-4">
+                    {[0, 1, 2].map(i => (
+                      <div key={i} className="space-y-2">
+                        <Label className="text-[10px] uppercase font-bold text-white/40">Frase {i+1}</Label>
+                        <Input 
+                          value={form.frases_travessia[i] || ''} 
+                          onChange={e => {
+                            const frases = [...form.frases_travessia];
+                            frases[i] = e.target.value;
+                            setForm({...form, frases_travessia: frases});
+                          }} 
+                          className="bg-background/50 italic font-serif" 
+                          placeholder="Uma frase curta de impacto..."
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Fechamento */}
+                <div className="space-y-4">
+                  <h4 className="text-[10px] uppercase font-bold text-gold/60 border-b border-gold/10 pb-2">Fechamento (Conclusão)</h4>
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Imagem de Fechamento URL</Label>
+                    <Input value={form.fechamento.imagem_fechamento} onChange={e => setForm({...form, fechamento: {...form.fechamento, imagem_fechamento: e.target.value}})} className="bg-background/50" placeholder="https://..." />
+                  </div>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
             {/* 1. Identidade e Entrada */}
             <AccordionItem value="identidade" className="border border-primary/10 rounded-xl px-4 bg-white/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">

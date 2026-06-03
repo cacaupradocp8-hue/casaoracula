@@ -17,6 +17,7 @@ import {
   Eye,
   Radar,
   Target,
+  Image as ImageIcon
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,9 @@ import { Badge } from '@/components/ui/badge';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { FraseTravessia } from '@/components/clube/FraseTravessia';
+import { SymbolicCarouselBlock } from '@/components/clube-livro/blocks/SymbolicCarouselBlock';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
 import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
 
@@ -106,14 +110,25 @@ export default function ClubeRotaPremium() {
         </div>
 
         {/* 1. HERO */}
-        <section className="relative min-h-[70vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
+        <section className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
           <div className="absolute inset-0 pointer-events-none">
-            {ponto.image_url ? (
+            {ponto.metadata?.hero?.imagem_desktop ? (
+              <picture>
+                {ponto.metadata.hero.imagem_mobile && (
+                  <source media="(max-width: 768px)" srcSet={ponto.metadata.hero.imagem_mobile} />
+                )}
+                <img 
+                  src={ponto.metadata.hero.imagem_desktop} 
+                  alt="" 
+                  className="w-full h-full object-cover opacity-40 mix-blend-luminosity" 
+                />
+              </picture>
+            ) : ponto.image_url ? (
               <img src={ponto.image_url} alt="" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
             ) : estacaoAtual?.banner_url ? (
               <img src={estacaoAtual.banner_url} alt="" className="w-full h-full object-cover opacity-20" />
             ) : null}
-            <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/60 to-midnight" />
+            <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/40 to-midnight" />
           </div>
 
           <motion.div
@@ -164,7 +179,12 @@ export default function ClubeRotaPremium() {
         </section>
 
         {/* CONTENT */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 pb-24 pt-12">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-32 pb-40 pt-12">
+          
+          {/* FRASE TRAVESSIA 1 */}
+          {ponto.metadata?.frases_travessia?.[0] && (
+            <FraseTravessia texto={ponto.metadata.frases_travessia[0]} />
+          )}
 
           {/* 2. MAPA SIMBÓLICO (Cartografia da Estação) */}
           <Section id="mapa-simbolico" icon={Compass} kicker="Cartografia" titulo="Mapa Simbólico">
@@ -188,8 +208,23 @@ export default function ClubeRotaPremium() {
               ))}
             </div>
           </Section>
+          
+          {/* CARROSSEL 1 */}
+          {ponto.metadata?.carrossel?.imagens?.length > 0 && (
+            <SymbolicCarouselBlock 
+              title="Visão Simbólica"
+              icon={<ImageIcon className="w-4 h-4" />}
+              slides={ponto.metadata.carrossel.imagens.map((img: string, idx: number) => ({
+                image_url: img,
+                legenda: ponto.metadata.carrossel.legendas?.[idx] || ''
+              }))}
+            />
+          )}
 
-          {/* 3. TERRITÓRIOS DA CIDADELA (Se existir impacto) */}
+          {/* FRASE TRAVESSIA 2 */}
+          {ponto.metadata?.frases_travessia?.[1] && (
+            <FraseTravessia texto={ponto.metadata.frases_travessia[1]} />
+          )}
           {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
             <Section id="territorios-cidadela" icon={Layers} kicker="Expansão" titulo="Territórios da CidadELA">
               <CidadelaAtivadaBloco 
@@ -201,19 +236,39 @@ export default function ClubeRotaPremium() {
           {/* 4. ÁUDIOS */}
           {audios.length > 0 && (
             <Section id="audios" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
-              <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                {audios.map((audio: any, i: number) => (
-                  <AudioRitualPlayer
-                    key={i}
-                    audioUrl={audio.url}
-                    titulo={audio.titulo}
-                    tipo={audio.tipo}
-                    funcao={audio.funcao}
-                    duracao={audio.duracao}
-                  />
-                ))}
+              <div className="space-y-24">
+                {/* Primeiro áudio — Experiência Premium */}
+                <EscutaPremium 
+                  audioUrl={audios[0].url}
+                  titulo={audios[0].titulo}
+                  tipo={audios[0].tipo}
+                  funcao={audios[0].funcao}
+                  duracao={audios[0].duracao}
+                  imagemEscuta={ponto.metadata?.escuta?.imagem_escuta}
+                />
+
+                {/* Demais áudios — Player Padrão */}
+                {audios.length > 1 && (
+                  <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {audios.slice(1).map((audio: any, i: number) => (
+                      <AudioRitualPlayer
+                        key={i + 1}
+                        audioUrl={audio.url}
+                        titulo={audio.titulo}
+                        tipo={audio.tipo}
+                        funcao={audio.funcao}
+                        duracao={audio.duracao}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </Section>
+          )}
+
+          {/* FRASE TRAVESSIA 3 */}
+          {ponto.metadata?.frases_travessia?.[2] && (
+            <FraseTravessia texto={ponto.metadata.frases_travessia[2]} />
           )}
 
           {/* 4. CASO SIMBÓLICO */}
@@ -342,6 +397,11 @@ export default function ClubeRotaPremium() {
             const textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
             return (
               <Section id="fechamento" icon={Check} kicker="Fim" titulo="Travessia Concluída">
+                {ponto.metadata?.fechamento?.imagem_fechamento && (
+                  <div className="max-w-4xl mx-auto mb-12 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
+                    <img src={ponto.metadata.fechamento.imagem_fechamento} alt="" className="w-full h-64 md:h-96 object-cover opacity-60 mix-blend-luminosity hover:opacity-100 transition-opacity duration-1000" />
+                  </div>
+                )}
                 <div className="max-w-2xl mx-auto text-center space-y-8">
                   {textoRaw && (
                     <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{textoRaw}</p>
