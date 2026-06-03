@@ -22,13 +22,23 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
       return;
     }
 
-    // Check if the recommended route actually exists and is available
-    const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
+    // Normalização básica do slug para evitar caminhos quebrados
+    const cleanSlug = portaSlug.replace(/^\/+/, '').split('?')[0];
+
+    // Se o slug já contiver 'rota/', removemos para reconstruir
+    const normalizedSlug = cleanSlug.startsWith('clube/rota/') 
+      ? cleanSlug.replace('clube/rota/', '')
+      : cleanSlug.startsWith('rota/') 
+        ? cleanSlug.replace('rota/', '')
+        : cleanSlug;
+
+    // Check if the recommended route actually exists in our stations list
+    const exists = estacoes?.some(e => e.primeiro_slug === normalizedSlug && e.status !== 'locked');
     
     if (exists) {
-      navigate(`/clube/rota/${portaSlug}`);
+      navigate(`/clube/rota/${normalizedSlug}`);
     } else {
-      console.warn(`[PortaInicial] Rota ${portaSlug} não disponível ou bloqueada. Redirecionando para /clube.`);
+      console.warn(`[PortaInicial] Rota ${normalizedSlug} não disponível ou bloqueada. Redirecionando para /clube.`);
       navigate('/clube');
     }
   };
