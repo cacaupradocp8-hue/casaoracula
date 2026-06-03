@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
   { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
-  { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube' },
+  { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube/rotas' },
   { key: 'ferramentas', icon: Wrench, label: 'Práticas', path: '/ferramentas' },
   { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
   { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
@@ -31,7 +31,7 @@ export function BottomNavPreview() {
       <div className="flex justify-center w-full px-4">
         <div className={cn(
           "relative h-[68px] w-full max-w-[460px] backdrop-blur-2xl rounded-2xl border shadow-[0_12px_40px_rgba(0,0,0,0.5)] pointer-events-auto",
-        location.pathname === '/clube' 
+        location.pathname.startsWith('/clube/rotas') 
           ? "bg-blue-950/40 border-blue-400/20" 
           : "bg-card/95 border-border/40"
       )}>

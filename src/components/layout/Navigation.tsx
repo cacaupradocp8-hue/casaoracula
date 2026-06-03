@@ -36,7 +36,7 @@ const visitanteMenuGroups = () => [
 const assinanteMenuGroups = () => [
   { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'cidadela', label: 'Cidadela', icon: Map, path: '/cidadela', subitems: [] },
-  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube/rotas', subitems: [] },
 
 
   { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
@@ -51,7 +51,7 @@ const alunaMenuGroups = () => [
   { key: 'cidadela', label: 'Cidadela', icon: Map, path: '/cidadela', subitems: [] },
   { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
 
-  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube', subitems: [] },
+  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube/rotas', subitems: [] },
   { 
     key: 'treinamento', 
     label: 'Treinamento', 
