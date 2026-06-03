@@ -55,8 +55,19 @@ const anim = (delay: number) => ({
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida, hideTechnical }: Props) {
   // A mandala sempre aparece se houver dados básicos, mesmo sem descrições completas
   const hasContent = !!(data.distrito_dominante || data.distritos_ativos?.length > 0 || data.distritos_tensao?.length > 0);
-
-  if (!hasContent) return null;
+  
+  // Se não houver dados, mostramos um estado de revelação
+  if (!hasContent) {
+    return (
+      <div className="text-center p-12 space-y-4">
+        <div className="w-16 h-16 mx-auto rounded-full bg-gold/5 flex items-center justify-center animate-pulse border border-gold/10">
+          <MapPin className="w-8 h-8 text-gold/30" />
+        </div>
+        <h2 className="font-display text-xl text-foreground/60">Sua CidadELA</h2>
+        <p className="text-sm text-muted-foreground italic">Seus territórios ainda estão em revelação.</p>
+      </div>
+    );
+  }
   // Build district states for the SVG map
   const svgDistrictStates = useMemo(() => {
     const states: Record<string, DistrictDisplayState> = {};

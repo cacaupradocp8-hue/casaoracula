@@ -9,7 +9,7 @@ export default function CheckoutSucesso() {
   useEffect(() => {
     // Redirect to dashboard with welcome mode after a brief moment
     const timer = setTimeout(() => {
-      navigate('/dashboard-membro?boas-vindas=true', { replace: true });
+      navigate('/clube?boas-vindas=true', { replace: true });
     }, 1500);
     return () => clearTimeout(timer);
   }, [navigate]);

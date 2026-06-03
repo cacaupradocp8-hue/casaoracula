@@ -65,7 +65,7 @@ export default function PosCompra() {
         if (pollRef.current) clearInterval(pollRef.current);
 
         setTimeout(() => {
-          navigate('/dashboard-membro?boas-vindas=true', { replace: true });
+          navigate('/clube?boas-vindas=true', { replace: true });
         }, 2000);
         return;
       }
@@ -189,7 +189,7 @@ export default function PosCompra() {
                     setState('active');
                     setMessage('Acesso confirmado! Redirecionando…');
                     refreshUserPortal?.();
-                    setTimeout(() => navigate('/dashboard-membro?boas-vindas=true', { replace: true }), 2000);
+                    setTimeout(() => navigate('/clube?boas-vindas=true', { replace: true }), 2000);
                   } else if (result?.status === 'pending') {
                     setState('pending');
                     setMessage('Seu pagamento está sendo processado.');

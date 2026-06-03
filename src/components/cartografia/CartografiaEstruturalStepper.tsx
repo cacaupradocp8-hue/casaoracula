@@ -13,9 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCartografiaEstrutural';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
-import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
-import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LimiarCidadela } from './LimiarCidadela';
 import { RevelacaoLoader } from './RevelacaoLoader';
@@ -24,7 +22,7 @@ import { PortaInicialHero } from './PortaInicialHero';
 const STEPS: { id: CartografiaStepId; title: string; icon: any; anchor?: string }[] = [
   { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert, anchor: 'Presença' },
   { id: 'historia', title: 'História', icon: History, anchor: 'Memória' },
-  { id: 'objetivas', title: 'Perfil', icon: User, anchor: 'Eixo' },
+  { id: 'objetivas', title: 'Modo de Habitar', icon: User, anchor: 'Centro de Atenção' },
   { id: 'crencas', title: 'Crenças', icon: Brain, anchor: 'Narrativa' },
   { id: 'recursos', title: 'Recursos', icon: Heart, anchor: 'Vitalidade' },
   { id: 'seguranca', title: 'Segurança', icon: ShieldCheck, anchor: 'Pacto' },
@@ -78,7 +76,7 @@ export function CartografiaEstruturalStepper() {
 
     if (step === 'intro') setStep('sintoma');
     else if (step === 'sintoma') triggerTransition(() => setStep('historia'), 'Memória');
-    else if (step === 'historia') triggerTransition(() => setStep('objetivas'), 'Eixo');
+    else if (step === 'historia') triggerTransition(() => setStep('objetivas'), 'Centro de Atenção');
     else if (step === 'objetivas') triggerTransition(() => setStep('crencas'), 'Narrativa');
     else if (step === 'crencas') triggerTransition(() => setStep('recursos'), 'Vitalidade');
     else if (step === 'recursos') triggerTransition(() => setStep('seguranca'), 'Pacto');
@@ -385,7 +383,7 @@ export function CartografiaEstruturalStepper() {
         {step === 'objetivas' && (
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
-              <h2 className="text-2xl font-display text-foreground">Perfil Estrutural Orácula™</h2>
+              <h2 className="text-2xl font-display text-foreground">Modo de Habitar</h2>
               <p className="text-sm text-muted-foreground">O núcleo da sua forma de habitar o mundo.</p>
             </header>
             
