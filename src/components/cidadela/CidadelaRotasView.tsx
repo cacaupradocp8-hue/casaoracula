@@ -39,7 +39,7 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         >
           <Compass className="w-8 h-8 text-gold/80" />
         </motion.div>
-        <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA Interior</h1>
+        <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
         <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto italic">
           O mapa do modo como você habita a Casa Orácula agora.
         </p>
