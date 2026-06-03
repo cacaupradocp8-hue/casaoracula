@@ -535,7 +535,9 @@ function roadPath(from: { x: number; y: number }, to: { x: number; y: number }):
 export function MandalaCidadela({
   districts, districtStates = [], collectiveData = [], mode, selectedId,
   pathPoints = [], onDistrictClick, className, showConnections = false,
+  hideTechnicalLabels = false,
 }: Props) {
+
   const isMobile = useIsMobile();
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 800, h: 800 });
