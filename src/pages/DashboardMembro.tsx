@@ -13,11 +13,11 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
-import { HomeOnboardingBlocks } from "@/components/home/HomeOnboardingBlocks";
-import { ProximoPasso } from "@/components/dashboard/ProximoPasso";
+import { CidadelaRevelacaoContainer } from "@/components/cidadela/CidadelaRevelacaoContainer";
 import { motion, AnimatePresence } from "framer-motion";
 import { Moon } from "lucide-react";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
+
 
 export default function DashboardMembro() {
   const navigate = useNavigate();
@@ -71,41 +71,45 @@ export default function DashboardMembro() {
           )}
         </AnimatePresence>
 
-        {/* 1. Bússola — full width */}
-        <BussolaAtual
-          leituraSimbolica={bussola.leituraSimbolica}
-          distritoDominante={bussola.distritoDominante}
-          distritoTensao={bussola.distritoTensao}
-          nivelIntegracao={bussola.nivelIntegracao}
-          temCartografia={bussola.temCartografia}
-          welcomeName={bussola.welcomeName}
-        />
-
-        {/* Layout adaptativo: stack em mobile, 2 colunas em xl+ */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.2fr_1fr] gap-8 xl:gap-16 mt-10">
-          <div className="space-y-6 lg:space-y-8 min-w-0">
-            <HomeOnboardingBlocks />
-            <ProximaAcao
-              principal={bussola.acaoPrincipal}
-              secundarias={bussola.acoesSecundarias}
-            />
-            <ProximoPasso />
-            <JornadaRecomendada leitura={bussola.leitura} />
-            <PraticasRelevantes praticas={bussola.praticasSugeridas} />
-          </div>
-          <div className="space-y-6 min-w-0">
-            <MiniMapaCidadela
-              temCartografia={bussola.temCartografia}
+        {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA */}
+        {bussola.temCartografia ? (
+          <CidadelaRevelacaoContainer bussola={bussola} />
+        ) : (
+          <>
+            <BussolaAtual
+              leituraSimbolica={bussola.leituraSimbolica}
               distritoDominante={bussola.distritoDominante}
-              distritosAtivos={bussola.distritosAtivos}
               distritoTensao={bussola.distritoTensao}
-              corHex={bussola.corHex}
-              distritosRaw={bussola.distritosRaw}
+              nivelIntegracao={bussola.nivelIntegracao}
+              temCartografia={bussola.temCartografia}
+              welcomeName={bussola.welcomeName}
             />
-            <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
-            <AlertaOracular alertas={bussola.alertas} />
-          </div>
-        </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.2fr_1fr] gap-8 xl:gap-16 mt-10">
+              <div className="space-y-6 lg:space-y-8 min-w-0">
+                <ProximaAcao
+                  principal={bussola.acaoPrincipal}
+                  secundarias={bussola.acoesSecundarias}
+                />
+                <JornadaRecomendada leitura={bussola.leitura} />
+                <PraticasRelevantes praticas={bussola.praticasSugeridas} />
+              </div>
+              <div className="space-y-6 min-w-0">
+                <MiniMapaCidadela
+                  temCartografia={bussola.temCartografia}
+                  distritoDominante={bussola.distritoDominante}
+                  distritosAtivos={bussola.distritosAtivos}
+                  distritoTensao={bussola.distritoTensao}
+                  corHex={bussola.corHex}
+                  distritosRaw={bussola.distritosRaw}
+                />
+                <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
+                <AlertaOracular alertas={bussola.alertas} />
+              </div>
+            </div>
+          </>
+        )}
+
       </ResponsiveContainer>
     </AppLayout>
   );
