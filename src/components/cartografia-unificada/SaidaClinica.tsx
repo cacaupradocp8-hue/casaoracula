@@ -179,11 +179,12 @@ export function SaidaClinica({ leitura, cidadela, profileJson }: Props) {
         </motion.div>
       </div>
 
-      {/* CidaDELA derivada — sem cor, sem símbolo */}
+      {/* CidadELA derivada — sem cor, sem símbolo */}
       <motion.div {...anim(0.5)}>
         <Card className="border-border/15 bg-card/40">
           <CardHeader className="pb-2">
-            <CardTitle className="text-xs text-foreground/70">🏰 CidaDELA Derivada</CardTitle>
+            <CardTitle className="text-xs text-foreground/70">🏰 CidadELA Derivada</CardTitle>
+
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="grid grid-cols-2 gap-3">

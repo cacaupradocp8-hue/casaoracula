@@ -53,7 +53,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, sho
         <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
           <Sparkles className="w-7 h-7 text-primary/60" />
         </div>
-        <h2 className="font-display text-2xl font-bold text-foreground">CidaDELA Interior</h2>
+        <h2 className="font-display text-2xl font-bold text-foreground">Sua CidadELA</h2>
         <p className="text-xs text-muted-foreground italic">Um mapa do seu campo interior neste momento</p>
       </motion.div>
 
@@ -120,14 +120,16 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, sho
         </Card>
       </motion.div>
 
-      {/* CidaDELA visual */}
+      {/* CidadELA visual */}
       <motion.div {...anim(0.55)}>
         <Card className="border-border/15 bg-card/40">
           <CardContent className="p-5 text-center space-y-3">
-            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider">Sua CidaDELA Interior</p>
+            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-wider">Sua CidadELA Interior</p>
+
             <div className="text-center">
               <p className="text-xs font-medium text-foreground">{cidadela.torre_dominante}</p>
               <p className="text-[10px] text-muted-foreground">{cidadela.clima_cidade}</p>
+
             </div>
             <div className="flex items-center justify-center gap-2 text-center">
               <div className="relative w-10 h-10">
