@@ -7,8 +7,9 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Map, Sparkles, ShieldAlert, History, User, 
   Brain, Heart, ShieldCheck, ArrowRight, ArrowLeft,
-  Check, Loader2, Compass
+  Check, Loader2, Compass, DoorOpen
 } from 'lucide-react';
+
 import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCartografiaEstrutural';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
@@ -28,7 +29,24 @@ const STEPS: { id: CartografiaStepId; title: string; icon: any; anchor?: string 
   { id: 'seguranca', title: 'Segurança', icon: ShieldCheck, anchor: 'Pacto' },
 ];
 
+const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
+  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪' },
+  torres: { nome: 'Torres', icon: '🏛️' },
+  portas: { nome: 'Portas', icon: '🔑' },
+  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿' },
+  bosque_arquetipos: { nome: 'Bosque dos Arquétipos', icon: '🌿' },
+  praca_abalo: { nome: 'Praça do Abalo', icon: '⚡' },
+  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙' },
+  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞' },
+  forja: { nome: 'Forja', icon: '🔥' },
+  conselho_interior: { nome: 'Conselho Interior', icon: '👁️' },
+  labirinto: { nome: 'Labirinto', icon: '🌀' },
+  praca_integracao: { nome: 'Praça da Integração', icon: '☀️' },
+  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
+};
+
 export function CartografiaEstruturalStepper() {
+
   const { 
     step, setStep, respostas, updateResposta, 
     updateObjetiva, perguntas, finalizar, loading, result,
@@ -83,89 +101,166 @@ export function CartografiaEstruturalStepper() {
   }
 
   if (step === 'resultado' && result) {
+    const { cidadela, leitura, profileJson } = result;
+    const portaNome = cidadela.porta_inicial_nome;
+    const portaSlug = result.profileJson.recomendacoes?.rotas?.[0];
+
     return (
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
         className="w-full max-w-4xl mx-auto space-y-16 pb-32"
       >
+
+        {/* 1. TÍTULO PRINCIPAL */}
         <header className="text-center space-y-4 pt-12">
+
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20"
+            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20 shadow-premium-glow"
           >
             <Compass className="w-10 h-10 text-gold/80" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">CidaDELA Interior</h1>
-          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">Perfil Estrutural Orácula™</p>
+          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA foi revelada</h1>
+          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa se revela a quem caminha.</p>
         </header>
 
-        <section className="space-y-20">
-          {/* 1. Frase Semente */}
-          <div className="max-w-2xl mx-auto px-6">
-             <SaidaSimbolica saida={result.leitura.saida_cliente} showOnlySeed />
-          </div>
-
-          {/* 2. Mandala Viva */}
-          <div className="space-y-6">
-            <div className="text-center space-y-2 mb-8">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Seu Mapa Vivo</h3>
+        <section className="space-y-24">
+          {/* 2. MANDALA CENTRAL (PRIORIDADE MÁXIMA) */}
+          <div className="space-y-6 relative">
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
+              <div className="w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] animate-pulse" />
             </div>
+            
             <CamadaCidadela 
-              data={result.cidadela} 
-              cor={result.cidadela.cor_derivada} 
-              corHex={result.cidadela.cor_hex}
-              atmosfera={result.cidadela.atmosfera_derivada}
-              simbolo={result.cidadela.simbolo_derivado}
-              simboloIcon={result.cidadela.simbolo_derivado_icon}
-              territorios={result.cidadela.distritos_acesos}
-              pontoPartida={result.cidadela.porta_inicial}
+              data={cidadela} 
+              cor={cidadela.cor_derivada} 
+              corHex={cidadela.cor_hex}
+              atmosfera={cidadela.atmosfera_derivada}
+              simbolo={cidadela.simbolo_derivado}
+              simboloIcon={cidadela.simbolo_derivado_icon}
+              territorios={cidadela.distritos_acesos}
+              pontoPartida={cidadela.porta_inicial}
               hideTechnical
             />
           </div>
 
-          {/* 3. Torre e Clima em Card Único */}
+          {/* 3. TERRITÓRIOS VIVOS */}
+          <div className="max-w-3xl mx-auto px-6 space-y-10">
+            <div className="text-center space-y-2">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Territórios que estão sustentando sua travessia</h3>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {cidadela.distritos_acesos?.map((distritoKey: string) => {
+                // Simplificando a chave para buscar metadados
+                const meta = DISTRITOS_META[distritoKey] || { nome: distritoKey.replace(/_/g, ' '), icon: '📍' };
+                return (
+                  <motion.div 
+                    key={distritoKey}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4"
+                  >
+                    <span className="text-2xl mt-1">{meta.icon}</span>
+                    <div className="space-y-1">
+                      <h4 className="text-lg font-display text-gold/90">{meta.nome}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed italic">
+                        {distritoKey === 'torres' ? 'Você está organizando energia, limites e posicionamento.' :
+                         distritoKey === 'labirinto' ? 'Você está atravessando perguntas que ainda não possuem resposta.' :
+                         distritoKey === 'portao_chegada' ? 'Você está diante do novo, pronta para o primeiro passo.' :
+                         'Este território se acende em resposta ao seu momento atual.'}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 4. PORTA INICIAL (CARD DE DESTAQUE) */}
           <div className="max-w-3xl mx-auto px-4">
-            <Card className="glass border-gold/10 bg-gold/[0.02] overflow-hidden">
-              <CardContent className="p-10 space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div className="text-center space-y-2 mb-8">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua Porta Inicial</h3>
+            </div>
+            
+            <Card className="glass border-gold/20 bg-gold/[0.03] overflow-hidden relative shadow-premium-glow">
+              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                <DoorOpen className="w-24 h-24 text-gold" />
+              </div>
+              <CardContent className="p-10 space-y-8 relative z-10">
+                <div className="flex flex-col items-center text-center space-y-6">
+                  <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center border border-gold/30">
+                    <DoorOpen className="w-8 h-8 text-gold" />
+                  </div>
+                  
                   <div className="space-y-3">
-                    <span className="text-[10px] uppercase tracking-widest text-gold/50">Estratégia Central</span>
-                    <h3 className="text-2xl font-display text-gold">{result.cidadela.torre_dominante || 'Torre Interna'}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      Sua torre dominante representa o modo como você organiza sua energia e responde aos desafios do mundo.
+                    <h2 className="text-3xl font-display text-gold">{portaNome}</h2>
+                    <p className="text-lg text-foreground/90 leading-relaxed italic max-w-xl mx-auto">
+                      "O mistério não precisa de tradução, precisa de abrigo."
                     </p>
                   </div>
-                  <div className="space-y-3">
-                    <span className="text-[10px] uppercase tracking-widest text-gold/50">Atmosfera da Cidade</span>
-                    <h3 className="text-2xl font-display text-gold">{result.cidadela.atmosfera_derivada || 'Clima em Harmonia'}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      O clima estrutural indica a tonalidade emocional predominante na sua paisagem interior neste momento.
-                    </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left pt-6 border-t border-gold/10 w-full">
+                    <div className="space-y-2">
+                      <h4 className="text-xs uppercase tracking-widest text-gold/50">O que significa</h4>
+                      <p className="text-sm text-muted-foreground">O acesso ao inconsciente profundo e à imaginação não-vigiada. Onde a alma fala em imagens enquanto a mente descansa.</p>
+                    </div>
+                    <div className="space-y-2">
+                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Primeiro gesto sugerido</h4>
+                      <p className="text-sm text-muted-foreground">Registrar um fragmento de imagem de um sonho recente (mesmo que pareça bobo).</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-8 w-full">
+                    <Button 
+                      variant="gold" 
+                      size="lg" 
+                      onClick={() => window.location.href = portaSlug ? `/clube/rota/${portaSlug}` : '/clube'}
+                      className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
+                    >
+                      Atravessar
+                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* 4. Distritos Naturais como Constelação */}
-          <div className="max-w-2xl mx-auto text-center space-y-8 px-6">
-            <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Territórios de Natureza</h3>
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
-              {result.cidadela.distritos_naturais?.map((distrito: string) => (
-                <span key={distrito} className="text-xl font-display text-foreground/80 hover:text-gold transition-colors cursor-default">
-                  {distrito}
-                </span>
-              ))}
-            </div>
+          {/* 5. TORRE DOMINANTE (SECUNDÁRIA) */}
+          <div className="max-w-2xl mx-auto px-6">
+             <div className="text-center space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua forma de organizar a CidadELA</h3>
+                  <h4 className="text-2xl font-display text-gold/80">{cidadela.torre_dominante}</h4>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  Esta torre representa o alicerce estável de onde você observa o mundo e organiza sua energia vital.
+                </p>
+             </div>
           </div>
 
-          {/* 5. Porta Inicial Hero */}
-          <PortaInicialHero 
-            portaNome={result.cidadela.porta_inicial} 
-            portaSlug={result.profileJson.recomendacoes?.rotas?.[0]} 
-          />
+          {/* 6. ATMOSFERA DA CIDADELA (NARRATIVA) */}
+          <div className="max-w-2xl mx-auto px-6 text-center">
+            <Card className="border-gold/5 bg-transparent shadow-none">
+              <CardContent className="space-y-6">
+                <div className="w-12 h-px bg-gold/20 mx-auto" />
+                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Atmosfera da CidadELA</h3>
+                <div className="space-y-4">
+                  <p className="text-lg text-foreground/80 font-display italic leading-relaxed">
+                    Sua CidadELA atravessa um período de {cidadela.clima_cidadela.toLowerCase()}.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
+                    Há um movimento de {cidadela.atmosfera_derivada.join(', ').toLowerCase()}. Nem tudo está claro. Mas algo já começou a mudar.
+                  </p>
+                </div>
+                <div className="w-12 h-px bg-gold/20 mx-auto" />
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
@@ -180,9 +275,9 @@ export function CartografiaEstruturalStepper() {
       </motion.div>
     );
   }
-
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
+
       <AnimatePresence>
         {isTransitioning && (
           <motion.div 
@@ -203,6 +298,7 @@ export function CartografiaEstruturalStepper() {
       </AnimatePresence>
 
       {(step as string) !== 'intro' && (step as string) !== 'resultado' && (step as string) !== 'gerando' && (
+
         <div className="flex flex-col space-y-6 pt-4">
           <div className="flex items-center justify-between px-2">
             <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold/40">

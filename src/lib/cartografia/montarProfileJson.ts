@@ -79,6 +79,7 @@ export interface ProfileJsonCidadela {
   porta_inicial: string;
   torre_dominante: string;
   clima_cidade: string;
+
   /** @deprecated usar distritos_naturais do PerfilEstruturalOracula */
   distritos_acesos: string[];
   indice_equilibrio: number;
@@ -261,7 +262,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
       porta_inicial: cidadela.porta_inicial,
       porta_inicial_nome: cidadela.porta_inicial_nome,
       torre_dominante: cidadela.torre_dominante,
-      clima_cidadela: cidadela.clima_cidade,
+      clima_cidadela: cidadela.clima_cidadela,
       tensao_central: leitura.profile.tensao_central,
       direcao_conducao: leitura.profile.estilo_conducao,
       atencao_seguranca: atencao,
@@ -294,7 +295,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
       ritmo_texto: TEXTOS_RITMO[leitura.profile.ritmo_ideal] || TEXTOS_RITMO.medio,
       porta_inicial_texto: cidadela.porta_inicial_nome,
       torre_dominante_texto: cidadela.torre_dominante,
-      clima_texto: cidadela.clima_cidade,
+      clima_texto: cidadela.clima_cidadela,
       observacao_etica: OBSERVACAO_ETICA[atencao],
     },
 
@@ -309,7 +310,8 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     cidadela: {
       porta_inicial: cidadela.porta_inicial,
       torre_dominante: cidadela.torre_dominante,
-      clima_cidade: cidadela.clima_cidade,
+      clima_cidade: cidadela.clima_cidadela,
+
       distritos_acesos: cidadela.distritos_acesos,
       indice_equilibrio: cidadela.indice_equilibrio,
     },
@@ -317,7 +319,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     // Nova Arquitetura: Camada 1 (Perfil Estrutural Orácula™)
     perfil_estrutural: {
       pergunta_ancora_estrutural: "Como esta pessoa costuma habitar o mundo?",
-      clima_estrutural: cidadela.clima_cidade,
+      clima_estrutural: cidadela.clima_cidadela,
       distritos_naturais: cidadela.distritos_acesos,
       torre_dominante: cidadela.torre_dominante,
       indice_equilibrio: cidadela.indice_equilibrio,

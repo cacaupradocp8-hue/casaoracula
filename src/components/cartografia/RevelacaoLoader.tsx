@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const FRASES = [
   "Silenciando os ruídos externos...",
   "Observando as tensões da paisagem...",
-  "Revelando sua CidaDELA Interior..."
+  "Revelando sua CidadELA Interior..."
 ];
 
 export const RevelacaoLoader: React.FC = () => {

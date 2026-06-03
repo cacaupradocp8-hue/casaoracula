@@ -101,7 +101,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
             <MapPin className="w-7 h-7" style={{ color: corHex }} />
           </div>
           <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 2</p>
-          <h2 className="font-display text-2xl font-bold text-foreground">Sua CidaDELA Interior</h2>
+          <h2 className="font-display text-2xl font-bold text-foreground">Sua CidadELA Interior</h2>
         </motion.div>
       )}
 
