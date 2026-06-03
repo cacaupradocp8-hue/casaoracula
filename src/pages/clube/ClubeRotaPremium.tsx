@@ -166,19 +166,39 @@ export default function ClubeRotaPremium() {
         {/* CONTENT */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 pb-24 pt-12">
 
-          {/* 2. TERRITÓRIOS ATIVADOS */}
-          <section id="mapa-simbolico" className="scroll-mt-24">
-            <CidadelaAtivadaBloco 
-              porta={ponto.porta}
-              campo={ponto.campo}
-              torre={ponto.torre}
-              labirinto={ponto.labirinto}
-              estacaoTitulo={estacaoAtual?.titulo}
-              territoriosAtivados={ponto.impacto_cidadela?.map((i: any) => i.distrito)}
-            />
-          </section>
+          {/* 2. MAPA SIMBÓLICO (Cartografia da Estação) */}
+          <Section id="mapa-simbolico" icon={Compass} kicker="Cartografia" titulo="Mapa Simbólico">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {cartografia.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center gap-4"
+                >
+                  <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center shrink-0 border border-gold/10">
+                    <item.icon className="w-4 h-4 text-gold/60" />
+                  </div>
+                  <div>
+                    <p className="text-[8px] tracking-[0.3em] uppercase text-white/30 font-bold">{item.label}</p>
+                    <p className="font-display text-sm text-white/90">{item.value}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </Section>
 
-          {/* 3. ÁUDIOS */}
+          {/* 3. TERRITÓRIOS DA CIDADELA (Se existir impacto) */}
+          {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
+            <Section id="territorios-cidadela" icon={Layers} kicker="Expansão" titulo="Territórios da CidadELA">
+              <CidadelaAtivadaBloco 
+                territoriosAtivados={ponto.impacto_cidadela.map((i: any) => i.distrito || i.id || i)}
+              />
+            </Section>
+          )}
+
+          {/* 4. ÁUDIOS */}
           {audios.length > 0 && (
             <Section id="audios" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
               <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -265,7 +285,7 @@ export default function ClubeRotaPremium() {
                     [],
                 }}
                 onComplete={(respostas) => {
-                  console.log('[Camada 2] Respostas rastreamento:', respostas);
+                  // Rastreamento silencioso (Camada 2)
                 }}
               />
             </Section>
