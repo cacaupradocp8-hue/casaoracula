@@ -107,7 +107,21 @@ export function CartografiaEstruturalStepper() {
   if (step === 'resultado' && result) {
     const { cidadela, leitura, profileJson } = result;
     const portaNome = cidadela.porta_inicial_nome;
-    const portaSlug = result.profileJson.recomendacoes?.rotas?.[0];
+    const rawSlug = result.profileJson.recomendacoes?.rotas?.[0];
+    const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
+
+    const handleAtravessar = () => {
+      if (!portaSlug) {
+        navigate('/clube');
+        return;
+      }
+      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
+      if (exists) {
+        navigate(`/clube/rota/${portaSlug}`);
+      } else {
+        navigate('/clube');
+      }
+    };
 
     return (
       <motion.div 
