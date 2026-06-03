@@ -508,26 +508,6 @@ export default function AdminCentralEstacao() {
   );
 }
 
-interface EditorFormState {
-  titulo: string;
-  subtitulo: string;
-  conteudo_texto: string;
-  abertura_imersiva: string;
-  hero: { titulo: string; texto: string; cta: string };
-  caso_simbolico: { titulo: string; aviso: string; relato: string };
-  desafio_terapeuta: { pergunta: string; escolhas: string[]; campo_aberto_label: string };
-  ferramenta_oracular: FerramentaOracularData;
-  revelacao_estacao: { porta: string; campo_psiquico: string; torre: string; labirinto: string; pergunta_narrativa: string };
-  erro_comum: { titulo: string; descricao: string; exemplo: string; explicacao: string };
-  conducao_justa: string;
-  cautela_etica: string;
-  jardim_psique: { chamada: string; pergunta: string; campos: any; botao: string; confirmacao: string };
-  jardim_oficio: { chamada: string; aviso_etico: string; pergunta: string; campos: any; botao: string; confirmacao: string };
-  missao_campo: { titulo: string; descricao: string; sinais: string; pergunta: string; botao: string };
-  oraculo_estacao: { palavra: string; movimento: string; carta_final: string };
-  fechamento: { texto: string; pergunta: string; botao: string; confirmacao: string };
-  audios: any[];
-}
 
 function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave: (p: any) => void, onDelete: () => void, loading: boolean }) {
   const [form, setForm] = useState<EditorFormState>({
@@ -538,7 +518,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
     hero: {
       titulo: passo.metadata?.hero?.titulo || '',
       texto: passo.metadata?.hero?.texto || '',
-      cta: passo.metadata?.hero?.cta || ''
+      cta: passo.metadata?.hero?.cta || '',
+      imagem_desktop: passo.metadata?.hero?.imagem_desktop || '',
+      imagem_mobile: passo.metadata?.hero?.imagem_mobile || ''
     },
     mapa_simbolico: {
       titulo: passo.metadata?.mapa_simbolico?.titulo || '',
@@ -630,8 +612,17 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
       texto: passo.metadata?.fechamento?.texto || '',
       pergunta: passo.metadata?.fechamento?.pergunta || '',
       botao: passo.metadata?.fechamento?.botao || '',
-      confirmacao: passo.metadata?.fechamento?.confirmacao || ''
+      confirmacao: passo.metadata?.fechamento?.confirmacao || '',
+      imagem_fechamento: passo.metadata?.fechamento?.imagem_fechamento || ''
     },
+    escuta: {
+      imagem_escuta: passo.metadata?.escuta?.imagem_escuta || ''
+    },
+    carrossel: {
+      imagens: Array.isArray(passo.metadata?.carrossel?.imagens) ? passo.metadata.carrossel.imagens : [],
+      legendas: Array.isArray(passo.metadata?.carrossel?.legendas) ? passo.metadata.carrossel.legendas : []
+    },
+    frases_travessia: Array.isArray(passo.metadata?.frases_travessia) ? passo.metadata.frases_travessia : [],
     audios: Array.isArray(passo.metadata?.audios) && passo.metadata.audios.length > 0
       ? passo.metadata.audios.map((a: any) => ({
           titulo: a.titulo || '',
