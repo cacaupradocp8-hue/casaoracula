@@ -1,18 +1,37 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, DoorOpen } from 'lucide-react';
+import { ArrowRight, DoorOpen, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useTodasRotas } from '@/hooks/useTodasRotas';
 
 interface PortaInicialHeroProps {
   portaNome?: string;
-  portaSlug?: string;
+  portaSlug?: string; // This is the recommended route slug (e.g., 'rota-do-aterramento')
 }
 
 export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, portaSlug }) => {
   const navigate = useNavigate();
+  const { data: estacoes, isLoading } = useTodasRotas();
 
   if (!portaNome) return null;
+
+  const handleNavigate = () => {
+    if (!portaSlug) {
+      navigate('/clube');
+      return;
+    }
+
+    // Check if the recommended route actually exists and is available
+    const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
+    
+    if (exists) {
+      navigate(`/clube/rota/${portaSlug}`);
+    } else {
+      console.warn(`[PortaInicial] Rota ${portaSlug} não disponível ou bloqueada. Redirecionando para /clube.`);
+      navigate('/clube');
+    }
+  };
 
   return (
     <motion.div 
@@ -37,11 +56,13 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
         <Button 
           variant="gold" 
           size="lg" 
-          onClick={() => navigate(portaSlug || '/clube')}
+          onClick={handleNavigate}
+          disabled={isLoading}
           className="group px-12 h-14 text-base shadow-premium-glow"
         >
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
           Atravessar
-          <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+          {!isLoading && <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />}
         </Button>
 
         <button 
