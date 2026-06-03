@@ -17,7 +17,10 @@ interface Props {
   eventCounts?: Record<string, number>;
   /** Force the circular SVG mandala even on mobile */
   forceCircular?: boolean;
+  /** Hide technical labels like "0/12" or "District #X" */
+  hideTechnicalLabels?: boolean;
 }
+
 
 const DISTRICT_NUMBER_BY_NAME: Record<string, number> = {
   'portao da chegada': 1,
@@ -66,7 +69,9 @@ export default function CidadelaMapSVG({
   archetypeDistricts: _archetypeDistricts = {},
   eventCounts: _eventCounts = {},
   forceCircular = false,
+  hideTechnicalLabels = false,
 }: Props) {
+
   const isMobile = useIsMobile();
   const useCircular = forceCircular || !isMobile;
   const [selectedDistrict, setSelectedDistrict] = useState<MandalaDistrict | null>(null);
@@ -135,7 +140,9 @@ export default function CidadelaMapSVG({
           onDistrictClick={handleDistrictClick}
           className="w-full"
           showConnections
+          hideTechnicalLabels={hideTechnicalLabels}
         />
+
       ) : (
         <MandalaMobile
           districts={districts}

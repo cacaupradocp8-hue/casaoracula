@@ -41,7 +41,9 @@ interface Props {
   onDistrictClick?: (district: MandalaDistrict) => void;
   className?: string;
   showConnections?: boolean;
+  hideTechnicalLabels?: boolean;
 }
+
 
 const CX = 400, CY = 400;
 
