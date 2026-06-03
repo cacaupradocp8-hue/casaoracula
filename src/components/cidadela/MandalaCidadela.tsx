@@ -1,5 +1,7 @@
 import { useMemo, useState, useRef, useCallback } from 'react';
+import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+
 
 // ============================================
 // CIDADELA INTERIOR — MANDALA SAGRADA v5
@@ -41,7 +43,9 @@ interface Props {
   onDistrictClick?: (district: MandalaDistrict) => void;
   className?: string;
   showConnections?: boolean;
+  hideTechnicalLabels?: boolean;
 }
+
 
 const CX = 400, CY = 400;
 
@@ -531,7 +535,9 @@ function roadPath(from: { x: number; y: number }, to: { x: number; y: number }):
 export function MandalaCidadela({
   districts, districtStates = [], collectiveData = [], mode, selectedId,
   pathPoints = [], onDistrictClick, className, showConnections = false,
+  hideTechnicalLabels = false,
 }: Props) {
+
   const isMobile = useIsMobile();
   const svgRef = useRef<SVGSVGElement>(null);
   const [viewBox, setViewBox] = useState({ x: 0, y: 0, w: 800, h: 800 });
@@ -601,7 +607,7 @@ export function MandalaCidadela({
     }).filter(Boolean) as { path: string; lit: boolean; integrated: boolean; key: string }[];
   }, [allDistricts, districtStates]);
 
-  const renderDistrict = (d: MandalaDistrict) => {
+  const renderDistrict = (d: MandalaDistrict, hideTechnicalLabels?: boolean) => {
     const pos = DISTRICT_POSITIONS[d.numero];
     if (!pos) return null;
     const state = getState(d.id);
@@ -674,11 +680,23 @@ export function MandalaCidadela({
         )}
 
         {/* Territory illustration */}
-        <g transform={`translate(${pos.x}, ${pos.y}) scale(${isHovered ? artScale * 1.06 : artScale})`}
+        <motion.g
+          animate={state === 'ativo' ? {
+            scale: [1, 1.05, 1],
+            opacity: [0.85, 1, 0.85]
+          } : {}}
+          transition={state === 'ativo' ? {
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut"
+          } : {}}
+          transform={`translate(${pos.x}, ${pos.y}) scale(${isHovered ? artScale * 1.06 : artScale})`}
           opacity={ringOpacityMult}
-          style={{ transition: 'transform 0.35s ease', transformOrigin: '0 0' }}>
+          style={{ transition: 'transform 0.35s ease', transformOrigin: '0 0' }}
+        >
           {TERRITORY_ART[d.numero]?.(st)}
-        </g>
+        </motion.g>
+
 
         {/* Active pulse ring */}
         {state === 'ativo' && !isCenter && (
@@ -697,16 +715,19 @@ export function MandalaCidadela({
           </g>
         )}
 
-        {/* Name label */}
-        <text x={pos.x} y={pos.y + labelOffset}
-          textAnchor="middle" dominantBaseline="central"
-          fill={isHovered ? '#F5E6B8' : st.text}
-          fontSize={isCenter ? 15 : ring === 'inner' ? 11.5 : 10}
-          fontWeight={isCenter ? '700' : '600'}
-          opacity={ringOpacityMult}
-          style={{ fontFamily: "'Playfair Display', serif", letterSpacing: isCenter ? '0.06em' : '0.03em', transition: 'fill 0.3s' }}>
-          {displayName}
-        </text>
+        {/* Name label — only if not hidden */}
+        {!hideTechnicalLabels && (
+          <text x={pos.x} y={pos.y + labelOffset}
+            textAnchor="middle" dominantBaseline="central"
+            fill={isHovered ? '#F5E6B8' : st.text}
+            fontSize={isCenter ? 15 : ring === 'inner' ? 11.5 : 10}
+            fontWeight={isCenter ? '700' : '600'}
+            opacity={ringOpacityMult}
+            style={{ fontFamily: "'Playfair Display', serif", letterSpacing: isCenter ? '0.06em' : '0.03em', transition: 'fill 0.3s' }}>
+            {displayName}
+          </text>
+        )}
+
 
         {/* Session count */}
         {mode === 'clinico' && sessCount > 0 && !isCenter && (
@@ -799,9 +820,10 @@ export function MandalaCidadela({
         {/* Roads removed */}
 
         {/* Render: outer first (back), then inner, then center (front) */}
-        {outerDistricts.map(d => renderDistrict(d))}
-        {innerDistricts.map(d => renderDistrict(d))}
-        {centerDistrict && renderDistrict(centerDistrict)}
+        {outerDistricts.map(d => renderDistrict(d, hideTechnicalLabels))}
+        {innerDistricts.map(d => renderDistrict(d, hideTechnicalLabels))}
+        {centerDistrict && renderDistrict(centerDistrict, hideTechnicalLabels)}
+
 
         {/* Compass */}
         <CompassRose />

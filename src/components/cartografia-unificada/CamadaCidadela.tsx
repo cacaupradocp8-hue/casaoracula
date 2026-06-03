@@ -26,7 +26,10 @@ interface Props {
   simboloIcon: string;
   territorios: string[];
   pontoPartida: string;
+  /** Hide technical labels/headers */
+  hideTechnical?: boolean;
 }
+
 
 const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
   portao_chegada: { nome: 'Portão da Chegada', icon: '🚪' },
@@ -49,7 +52,7 @@ const anim = (delay: number) => ({
   transition: { duration: 0.5, delay },
 });
 
-export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida }: Props) {
+export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida, hideTechnical }: Props) {
   // Implementação de guard real contra placeholders
   const hasValidContent = (val?: string) => {
     if (!val) return false;
@@ -91,14 +94,17 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
 
   return (
     <div className="space-y-6 w-full max-w-2xl mx-auto overflow-hidden">
-      <motion.div {...anim(0)} className="text-center space-y-3">
-        <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center"
-          style={{ background: `${corHex}15`, border: `2px solid ${corHex}40` }}>
-          <MapPin className="w-7 h-7" style={{ color: corHex }} />
-        </div>
-        <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 2</p>
-        <h2 className="font-display text-2xl font-bold text-foreground">Sua CidaDELA Interior</h2>
-      </motion.div>
+      {!hideTechnical && (
+        <motion.div {...anim(0)} className="text-center space-y-3">
+          <div className="w-14 h-14 mx-auto rounded-full flex items-center justify-center"
+            style={{ background: `${corHex}15`, border: `2px solid ${corHex}40` }}>
+            <MapPin className="w-7 h-7" style={{ color: corHex }} />
+          </div>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-muted-foreground/50">Camada 2</p>
+          <h2 className="font-display text-2xl font-bold text-foreground">Sua CidaDELA Interior</h2>
+        </motion.div>
+      )}
+
 
       {/* Cor e atmosfera */}
       <motion.div {...anim(0.1)} className="flex items-center justify-center gap-3 flex-wrap px-4">
@@ -129,7 +135,9 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
           districtStates={svgDistrictStates}
           activeDistrict={data.distrito_dominante}
           maxWidth={520}
+          hideTechnicalLabels={hideTechnical}
         />
+
       </motion.div>
 
       {/* Distrito Dominante */}

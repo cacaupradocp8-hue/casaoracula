@@ -9,6 +9,7 @@ const STATE_LABELS: Record<string, { label: string; color: string }> = {
   integrado: { label: 'Integrado', color: '#b8a4d8' },
 };
 
+
 // Map district numbers to symbolic tools
 const DISTRICT_TOOLS: Record<number, string[]> = {
   1: ['CidaDELA Interior', 'Ritual de Entrada'],

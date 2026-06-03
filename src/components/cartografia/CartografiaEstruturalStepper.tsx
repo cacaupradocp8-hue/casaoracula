@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Map, Sparkles, ShieldAlert, History, User, 
   Brain, Heart, ShieldCheck, ArrowRight, ArrowLeft,
-  Check, Loader2
+  Check, Loader2, Compass
 } from 'lucide-react';
 import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCartografiaEstrutural';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
@@ -15,37 +15,18 @@ import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/Camada
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
 import { CamadaDirecaoClinica } from '@/components/cartografia-unificada/CamadaDirecaoClinica';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { LimiarCidadela } from './LimiarCidadela';
+import { RevelacaoLoader } from './RevelacaoLoader';
+import { PortaInicialHero } from './PortaInicialHero';
 
-const STEPS: { id: CartografiaStepId; title: string; icon: any }[] = [
-  { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert },
-  { id: 'historia', title: 'História', icon: History },
-  { id: 'objetivas', title: 'Núcleo Estruturado', icon: User },
-  { id: 'crencas', title: 'Crenças', icon: Brain },
-  { id: 'recursos', title: 'Recursos', icon: Heart },
-  { id: 'seguranca', title: 'Segurança', icon: ShieldCheck },
+const STEPS: { id: CartografiaStepId; title: string; icon: any; anchor?: string }[] = [
+  { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert, anchor: 'Presença' },
+  { id: 'historia', title: 'História', icon: History, anchor: 'Memória' },
+  { id: 'objetivas', title: 'Perfil', icon: User, anchor: 'Eixo' },
+  { id: 'crencas', title: 'Crenças', icon: Brain, anchor: 'Narrativa' },
+  { id: 'recursos', title: 'Recursos', icon: Heart, anchor: 'Vitalidade' },
+  { id: 'seguranca', title: 'Segurança', icon: ShieldCheck, anchor: 'Pacto' },
 ];
-
-function TerritorioCard({ title, content, icon: Icon }: { title: string, content: string, icon: any }) {
-  const isPlaceholder = !content || content === '""' || content.toLowerCase().includes('aprofundando') || content.toLowerCase().includes('contextualização') || content.toLowerCase().includes('identificando') || content.toLowerCase().includes('mapeando');
-  
-  if (!content || content === '""') return null;
-
-  return (
-    <Card className="glass border-gold/10 hover:border-gold/30 transition-all duration-300">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-display flex items-center gap-2 text-gold/80">
-          <Icon className="w-4 h-4" />
-          {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className={`text-xs leading-relaxed ${isPlaceholder ? 'italic text-muted-foreground/60' : 'text-muted-foreground'}`}>
-          {isPlaceholder ? "Este território será aprofundado em uma próxima travessia." : content}
-        </p>
-      </CardContent>
-    </Card>
-  );
-}
 
 export function CartografiaEstruturalStepper() {
   const { 
@@ -54,17 +35,32 @@ export function CartografiaEstruturalStepper() {
     saveStatus, hasDraft, retomarRascunho
   } = useCartografiaEstrutural();
 
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [transitionAnchor, setTransitionAnchor] = useState('');
+
   const currentStepIndex = STEPS.findIndex(s => s.id === step);
   const progress = step === 'intro' ? 0 : step === 'resultado' ? 100 : ((currentStepIndex + 1) / STEPS.length) * 100;
 
+  const triggerTransition = (nextStep: () => void, anchor: string) => {
+    setTransitionAnchor(anchor);
+    setIsTransitioning(true);
+    setTimeout(() => {
+      nextStep();
+      setTimeout(() => setIsTransitioning(false), 400);
+    }, 800);
+  };
+
   const next = () => {
+    const currentStepObj = STEPS.find(s => s.id === step);
+    const nextAnchor = currentStepObj?.anchor || 'Avançando';
+
     if (step === 'intro') setStep('sintoma');
-    else if (step === 'sintoma') setStep('historia');
-    else if (step === 'historia') setStep('objetivas');
-    else if (step === 'objetivas') setStep('crencas');
-    else if (step === 'crencas') setStep('recursos');
-    else if (step === 'recursos') setStep('seguranca');
-    else if (step === 'seguranca') finalizar();
+    else if (step === 'sintoma') triggerTransition(() => setStep('historia'), 'Memória');
+    else if (step === 'historia') triggerTransition(() => setStep('objetivas'), 'Eixo');
+    else if (step === 'objetivas') triggerTransition(() => setStep('crencas'), 'Narrativa');
+    else if (step === 'crencas') triggerTransition(() => setStep('recursos'), 'Vitalidade');
+    else if (step === 'recursos') triggerTransition(() => setStep('seguranca'), 'Pacto');
+    else if (step === 'seguranca') triggerTransition(() => finalizar(), 'Revelação');
   };
 
   const back = () => {
@@ -83,17 +79,7 @@ export function CartografiaEstruturalStepper() {
   };
 
   if (step === 'gerando') {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center space-y-6">
-        <Loader2 className="w-12 h-12 animate-spin text-gold" />
-        <div className="space-y-2">
-          <h2 className="text-2xl font-display text-gold">Desenhando seu Mapa Vivo...</h2>
-          <p className="text-muted-foreground max-w-xs mx-auto">
-            A cartógrafa está integrando seus territórios e derivando sua CidaDELA Interior.
-          </p>
-        </div>
-      </div>
-    );
+    return <RevelacaoLoader />;
   }
 
   if (step === 'resultado' && result) {
@@ -101,31 +87,31 @@ export function CartografiaEstruturalStepper() {
       <motion.div 
         initial={{ opacity: 0 }} 
         animate={{ opacity: 1 }} 
-        className="w-full max-w-4xl mx-auto space-y-12 pb-20"
+        className="w-full max-w-4xl mx-auto space-y-16 pb-32"
       >
-        <div className="text-center space-y-4">
-          <div className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-gold border-gold/30 mx-auto">Mapa Vivo revelado</div>
-          <h1 className="text-4xl font-display text-foreground">Mapa Vivo: CidaDELA Interior</h1>
-          <p className="text-sm font-display text-gold/80 italic">Um retrato simbólico-estrutural do seu momento atual</p>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-xs">
-            Esta cartografia é uma ferramenta de auto-observação e suporte à sua jornada.
-          </p>
-        </div>
+        <header className="text-center space-y-4 pt-12">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20"
+          >
+            <Compass className="w-10 h-10 text-gold/80" />
+          </motion.div>
+          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">CidaDELA Interior</h1>
+          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">Perfil Estrutural Orácula™</p>
+        </header>
 
-        <SaidaSimbolica saida={result.leitura.saida_cliente} cidadela={result.cidadela} profileJson={result.profileJson} />
-        
-        <Tabs defaultValue="leitura" className="w-full">
-          <TabsList className="grid w-full grid-cols-3 glass border-gold/20 mb-8">
-            <TabsTrigger value="leitura" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">Leitura Estrutural</TabsTrigger>
-            <TabsTrigger value="cidadela" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">CidaDELA Interior</TabsTrigger>
-            <TabsTrigger value="conducao" className="data-[state=active]:bg-gold data-[state=active]:text-gold-foreground">Leitura de Condução</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="leitura" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <CamadaLeituraPsiquica data={result.leitura.profile} medias={result.leitura.medias_calculadas} />
-          </TabsContent>
-          
-          <TabsContent value="cidadela" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <section className="space-y-20">
+          {/* 1. Frase Semente */}
+          <div className="max-w-2xl mx-auto px-6">
+             <SaidaSimbolica saida={result.leitura.saida_cliente} showOnlySeed />
+          </div>
+
+          {/* 2. Mandala Viva */}
+          <div className="space-y-6">
+            <div className="text-center space-y-2 mb-8">
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Seu Mapa Vivo</h3>
+            </div>
             <CamadaCidadela 
               data={result.cidadela} 
               cor={result.cidadela.cor_derivada} 
@@ -135,165 +121,60 @@ export function CartografiaEstruturalStepper() {
               simboloIcon={result.cidadela.simbolo_derivado_icon}
               territorios={result.cidadela.distritos_acesos}
               pontoPartida={result.cidadela.porta_inicial}
+              hideTechnical
             />
-          </TabsContent>
+          </div>
 
-          <TabsContent value="conducao" className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {result.profileJson.leitura_conducao ? (
-              <CamadaDirecaoClinica 
-                data={{
-                  abordagem: result.profileJson.leitura_conducao.tensao_central_texto,
-                  orientacao: result.profileJson.leitura_conducao.direcao_texto,
-                  sugestoes: result.profileJson.recomendacoes?.praticas,
-                  ferramentas_indicadas: result.profileJson.recomendacoes?.rotas
-                }} 
-                modo="cliente" 
-              />
-            ) : (
-              <div className="text-center py-20 glass border-gold/10 rounded-xl">
-                <p className="text-muted-foreground italic">A leitura de condução ainda não foi gerada.</p>
-              </div>
-            )}
-          </TabsContent>
-        </Tabs>
+          {/* 3. Torre e Clima em Card Único */}
+          <div className="max-w-3xl mx-auto px-4">
+            <Card className="glass border-gold/10 bg-gold/[0.02] overflow-hidden">
+              <CardContent className="p-10 space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div className="space-y-3">
+                    <span className="text-[10px] uppercase tracking-widest text-gold/50">Estratégia Central</span>
+                    <h3 className="text-2xl font-display text-gold">{result.cidadela.torre_dominante || 'Torre Interna'}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Sua torre dominante representa o modo como você organiza sua energia e responde aos desafios do mundo.
+                    </p>
+                  </div>
+                  <div className="space-y-3">
+                    <span className="text-[10px] uppercase tracking-widest text-gold/50">Atmosfera da Cidade</span>
+                    <h3 className="text-2xl font-display text-gold">{result.cidadela.atmosfera_derivada || 'Clima em Harmonia'}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      O clima estrutural indica a tonalidade emocional predominante na sua paisagem interior neste momento.
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Bloco 3 — Territórios da CidaDELA */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <TerritorioCard 
-            title="Sintoma" 
-            content={result.profileJson.derivacao.territorios.sintoma} 
-            icon={ShieldAlert}
-          />
-          <TerritorioCard 
-            title="História" 
-            content={result.profileJson.derivacao.territorios.historia_vida} 
-            icon={History}
-          />
-          <TerritorioCard 
-            title="Traços" 
-            content={result.profileJson.derivacao.territorios.tracos} 
-            icon={User}
-          />
-          <TerritorioCard 
-            title="Crenças" 
-            content={result.profileJson.derivacao.territorios.crencas} 
-            icon={Brain}
-          />
-          <TerritorioCard 
-            title="Recursos" 
-            content={result.profileJson.derivacao.territorios.recursos} 
-            icon={Heart}
-          />
-          <TerritorioCard 
-            title="Atenção e Segurança" 
-            content={result.profileJson.derivacao.territorios.atencao_seguranca} 
-            icon={ShieldCheck}
-          />
-        </div>
-
-        <Card className="glass border-gold/20">
-          <CardHeader>
-            <CardTitle className="text-lg font-display flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-gold" />
-              Nível de Atenção e Segurança
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm leading-relaxed text-muted-foreground">
-              {result.profileJson.derivacao.territorios.atencao_seguranca || 'Nível de segurança estabilizado para a travessia.'}
-            </p>
-            <div className="mt-4 p-4 rounded-lg bg-gold/5 border border-gold/10 text-xs text-muted-foreground italic">
-              Nota: Esta cartografia é uma ferramenta de auto-observação e suporte. 
-              Em caso de crise ou sofrimento intenso, procure sempre apoio profissional ou serviços de emergência.
+          {/* 4. Distritos Naturais como Constelação */}
+          <div className="max-w-2xl mx-auto text-center space-y-8 px-6">
+            <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Territórios de Natureza</h3>
+            <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+              {result.cidadela.distritos_naturais?.map((distrito: string) => (
+                <span key={distrito} className="text-xl font-display text-foreground/80 hover:text-gold transition-colors cursor-default">
+                  {distrito}
+                </span>
+              ))}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <Card className="glass border-gold/20 overflow-hidden">
-          <CardHeader className="bg-gold/5">
-            <CardTitle className="text-lg font-display flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-gold" />
-              Próximo Passo: Sua Travessia Guiada
-            </CardTitle>
-            <CardDescription>
-              Com base no seu Mapa Vivo, sugerimos este caminho para continuar habitando sua CidaDELA.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6 pt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium flex items-center gap-2">
-                  <Map className="w-4 h-4 text-gold" />
-                  Rotas Recomendadas
-                </h4>
-                <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.rotas && result.profileJson.recomendacoes.rotas.length > 0 ? (
-                    result.profileJson.recomendacoes.rotas
-                      .filter((r: string) => r && r !== '""' && r.length > 2)
-                      .map((rota: string) => (
-                        <li key={rota} className="text-xs text-muted-foreground flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-gold/40" />
-                          {rota}
-                        </li>
-                      ))
-                  ) : (
-                    <li className="text-xs text-muted-foreground italic">Identificando rotas ideais...</li>
-                  )}
-                  {result.profileJson.recomendacoes?.rotas?.filter((r: string) => r && r !== '""' && r.length > 2).length === 0 && (
-                     <li className="text-xs text-muted-foreground italic">Identificando rotas ideais...</li>
-                  )}
-                </ul>
-              </div>
-              <div className="space-y-3">
-                <h4 className="text-sm font-medium flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-gold" />
-                  Práticas Iniciais
-                </h4>
-                <ul className="space-y-2">
-                  {result.profileJson.recomendacoes?.praticas && result.profileJson.recomendacoes.praticas.length > 0 ? (
-                    result.profileJson.recomendacoes.praticas
-                      .filter((p: string) => p && p !== '""' && p.length > 2)
-                      .map((pratica: string) => (
-                        <li key={pratica} className="text-xs text-muted-foreground flex items-center gap-2">
-                          <div className="w-1 h-1 rounded-full bg-gold/40" />
-                          {pratica}
-                        </li>
-                      ))
-                  ) : (
-                    <li className="text-xs text-muted-foreground italic">Mapeando práticas de sustentação...</li>
-                  )}
-                  {result.profileJson.recomendacoes?.praticas?.filter((p: string) => p && p !== '""' && p.length > 2).length === 0 && (
-                    <li className="text-xs text-muted-foreground italic">Mapeando práticas de sustentação...</li>
-                  )}
-                </ul>
-              </div>
-            </div>
+          {/* 5. Porta Inicial Hero */}
+          <PortaInicialHero 
+            portaNome={result.cidadela.porta_inicial} 
+            portaSlug={result.profileJson.recomendacoes?.rotas?.[0]} 
+          />
+        </section>
 
-            <div className="p-4 rounded-lg bg-gold/5 border border-gold/10 space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium text-gold">
-                <Sparkles className="w-4 h-4" />
-                Rotas da Casa Orácula
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                {result.profileJson.recomendacoes?.proximo_passo && result.profileJson.recomendacoes.proximo_passo !== '""' 
-                  ? result.profileJson.recomendacoes.proximo_passo 
-                  : "Continue habitando sua CidaDELA através das Rotas da Casa Orácula."}
-              </p>
-              <Button 
-                variant="gold" 
-                size="sm" 
-                className="w-full text-[10px] uppercase tracking-wider"
-                onClick={() => window.location.href = '/clube'}
-              >
-                Entrar nas Rotas da Casa Orácula
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        <div className="flex flex-col items-center gap-4 pt-8">
-          <Button onClick={() => window.location.href = '/dashboard-membro'} variant="outline" className="px-8 border-gold/30 text-gold hover:bg-gold/5">
-            Voltar ao Painel
+        <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
+          <Button 
+            variant="ghost" 
+            onClick={() => window.location.href = '/dashboard-membro'} 
+            className="text-muted-foreground/50 hover:text-gold hover:bg-transparent text-xs uppercase tracking-widest"
+          >
+            Retornar ao Painel
           </Button>
         </div>
       </motion.div>
@@ -302,62 +183,51 @@ export function CartografiaEstruturalStepper() {
 
   return (
     <div className="w-full max-w-2xl mx-auto space-y-8">
+      <AnimatePresence>
+        {isTransitioning && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-background pointer-events-none"
+          >
+            <motion.p 
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="text-gold font-display text-xl tracking-[0.2em] uppercase"
+            >
+              {transitionAnchor}
+            </motion.p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {(step as string) !== 'intro' && (step as string) !== 'resultado' && (step as string) !== 'gerando' && (
-        <div className="flex flex-col space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-muted-foreground/60">
-              {saveStatus === 'saving' && <><Loader2 className="w-3 h-3 animate-spin" /> Salvando...</>}
-              {saveStatus === 'saved' && <><Check className="w-3 h-3 text-green-500" /> Progresso salvo</>}
-              {saveStatus === 'error' && <><ShieldAlert className="w-3 h-3 text-red-500" /> Erro ao salvar</>}
-              {saveStatus === 'idle' && <>Você pode continuar depois</>}
+        <div className="flex flex-col space-y-6 pt-4">
+          <div className="flex items-center justify-between px-2">
+            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gold/40">
+              {saveStatus === 'saving' && "Sincronizando..."}
+              {saveStatus === 'saved' && "CidadELA Salva"}
+              {saveStatus === 'idle' && "Caminhando"}
             </div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground/60">
-              {Math.round(progress)}%
+            <div className="text-[10px] uppercase tracking-widest text-gold/40">
+              {currentStepIndex + 1} / {STEPS.length}
             </div>
           </div>
-          <Progress value={progress} className="h-1 bg-gold/10" />
+          <div className="h-[2px] w-full bg-gold/5 overflow-hidden rounded-full">
+            <motion.div 
+              className="h-full bg-gold/30"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 1 }}
+            />
+          </div>
         </div>
       )}
 
       <AnimatePresence mode="wait">
         {step === 'intro' && (
-          <motion.div key="intro" {...slideVariants} className="text-center space-y-8 py-10">
-            <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Map className="w-10 h-10 text-gold" />
-            </div>
-            <div className="space-y-4">
-              <h1 className="text-4xl font-display text-foreground">CidaDELA Interior</h1>
-              <p className="text-muted-foreground leading-relaxed max-w-md mx-auto italic">
-                Leitura Estrutural Orácula™
-              </p>
-              <p className="text-muted-foreground leading-relaxed max-w-md mx-auto">
-                Uma jornada de auto-observação guiada para organizar seu momento atual e habitar o que é seu.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 gap-4 text-left max-w-sm mx-auto">
-              <InfoItem icon={ShieldCheck} text="Experiência segura e reflexiva" />
-              <InfoItem icon={Sparkles} text="Mapeamento de 6 territórios reflexivos" />
-              <InfoItem icon={History} text="Você pode pausar e continuar depois" />
-            </div>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button onClick={next} variant="gold" size="lg" className="px-10 h-14 text-lg w-full sm:w-auto">
-                Começar a travessia
-              </Button>
-              {hasDraft && (
-                <Button 
-                  onClick={retomarRascunho} 
-                  variant="outline" 
-                  size="lg" 
-                  className="px-10 h-14 text-lg border-gold/30 text-gold hover:bg-gold/5 w-full sm:w-auto"
-                >
-                  Continuar de onde parei
-                </Button>
-              )}
-            </div>
-            <p className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">
-              Uso exclusivo para assinantes Casa Orácula
-            </p>
-          </motion.div>
+          <LimiarCidadela key="intro" onEnter={next} />
         )}
 
         {step === 'sintoma' && (
@@ -397,47 +267,45 @@ export function CartografiaEstruturalStepper() {
         {step === 'objetivas' && (
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
-              <h2 className="text-2xl font-display text-foreground">Núcleo Estruturado</h2>
-              <p className="text-sm text-muted-foreground">Responda com honestidade para mapear seu modo de funcionamento atual.</p>
+              <h2 className="text-2xl font-display text-foreground">Perfil Estrutural Orácula™</h2>
+              <p className="text-sm text-muted-foreground">O núcleo da sua forma de habitar o mundo.</p>
             </header>
             
-            <div className="space-y-8">
-              {perguntas.map((p) => (
-                <Card key={p.id} className="glass border-gold/10 overflow-hidden">
-                  <CardContent className="pt-6 space-y-4">
-                    <p className="text-sm font-medium leading-relaxed">{p.texto_pergunta}</p>
-                    <div className="flex justify-between items-center gap-2">
-                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Discordo</span>
-                      <div className="flex-1 flex justify-between px-4">
-                        {[1, 2, 3, 4, 5].map((val) => (
-                          <button
-                            key={val}
-                            onClick={() => updateObjetiva(p.id, val)}
-                            className={`w-10 h-10 rounded-full border transition-all flex items-center justify-center text-xs ${
-                              respostas.objetivas[p.id] === val
-                                ? 'bg-gold border-gold text-gold-foreground shadow-lg shadow-gold/20'
-                                : 'border-border/40 hover:border-gold/30 text-muted-foreground'
-                            }`}
-                          >
-                            {val}
-                          </button>
-                        ))}
-                      </div>
-                      <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Concordo</span>
+            <Card className="glass border-gold/10">
+              <CardContent className="pt-6 space-y-8">
+                {perguntas.map((p, i) => (
+                  <div key={p.id} className="space-y-4">
+                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{(p as any).texto_pergunta || p.id}</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {[1, 2, 3, 4, 5].map((val) => (
+                        <button
+                          key={val}
+                          onClick={() => updateObjetiva(p.id, val)}
+                          className={`h-10 rounded-md border text-sm transition-all ${
+                            respostas.objetivas[p.id] === val 
+                              ? 'bg-gold border-gold text-gold-foreground shadow-premium-glow' 
+                              : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                          }`}
+                        >
+                          {val}
+                        </button>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
 
-            <div className="flex justify-between pt-8">
-              <Button variant="ghost" onClick={back}><ArrowLeft className="w-4 h-4 mr-2" /> Voltar</Button>
+            <div className="flex justify-between pt-4">
+              <Button variant="ghost" onClick={back} className="text-muted-foreground hover:text-gold hover:bg-transparent">
+                <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+              </Button>
               <Button 
                 onClick={next} 
                 variant="gold" 
                 disabled={Object.keys(respostas.objetivas).length < perguntas.length}
               >
-                Próximo <ArrowRight className="w-4 h-4 ml-2" />
+                Prosseguir <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>
@@ -447,11 +315,11 @@ export function CartografiaEstruturalStepper() {
           <QuestionStep 
             key="crencas"
             title="Território das Crenças"
-            description="Identifique narrativas internas, valores e lealdades invisíveis."
+            description="Identifique as narrativas que governam suas decisões e percepções."
             questions={[
-              "Que frase interna parece governar suas escolhas?",
-              "O que você acredita que precisa provar?",
-              "Que medo aparece quando você pensa em mudar?"
+              "Que verdades absolutas você carrega sobre a vida?",
+              "Que voz interna mais te limita ou te impulsiona?",
+              "Quais são os 'não ditos' que ainda comandam suas ações?"
             ]}
             value={respostas.crencas}
             onChange={v => updateResposta('crencas', v)}
@@ -464,11 +332,11 @@ export function CartografiaEstruturalStepper() {
           <QuestionStep 
             key="recursos"
             title="Território dos Recursos"
-            description="Mapeie suas forças, práticas e saberes disponíveis."
+            description="Mapeie suas forças, práticas de sustentação e saberes acumulados."
             questions={[
-              "O que em você continua vivo, mesmo nos períodos difíceis?",
-              "Quem ou o que sustenta você quando tudo aperta?",
-              "Que práticas ajudam você a voltar para si?"
+              "O que te devolve o eixo quando você se perde?",
+              "Quais são suas ferramentas naturais de enfrentamento?",
+              "Em que você reconhece sua maior vitalidade?"
             ]}
             value={respostas.recursos}
             onChange={v => updateResposta('recursos', v)}
@@ -481,17 +349,17 @@ export function CartografiaEstruturalStepper() {
           <QuestionStep 
             key="seguranca"
             title="Nível de Atenção e Segurança"
-            description="Sinalize sinais de sobrecarga e necessidade de apoio."
+            description="Estabeleça um pacto de cuidado para sua jornada de travessia."
             questions={[
-              "Há algo neste momento que parece grande demais para atravessar sozinha?",
-              "Existem sinais de exaustão ou perda de suporte?",
-              "Que tipo de apoio seria importante agora?"
+              "Como você avalia sua capacidade atual de sustentar este processo?",
+              "Quais são seus limites inegociáveis neste momento?",
+              "Que tipo de suporte você sente que mais precisa agora?"
             ]}
             value={respostas.seguranca}
             onChange={v => updateResposta('seguranca', v)}
             onNext={next}
             onBack={back}
-            cta="Revelar meu Mapa Vivo"
+            cta="Finalizar e Revelar"
           />
         )}
       </AnimatePresence>
@@ -507,16 +375,16 @@ function QuestionStep({ title, description, questions, value, onChange, onNext, 
         <p className="text-sm text-muted-foreground">{description}</p>
       </header>
       
-      <Card className="glass border-gold/10">
+      <Card className="glass border-gold/10 bg-card/20">
         <CardContent className="pt-6 space-y-6">
           <div className="space-y-3">
             {questions.map((q: string, i: number) => (
-              <p key={i} className="text-sm text-foreground/80 leading-relaxed italic">• {q}</p>
+              <p key={i} className="text-sm text-foreground/70 leading-relaxed italic">• {q}</p>
             ))}
           </div>
           <Textarea 
             placeholder="Escreva livremente sobre este território..."
-            className="min-h-[200px] bg-background/50 focus-visible:ring-gold/30"
+            className="min-h-[200px] bg-background/30 border-gold/10 focus-visible:ring-gold/20 resize-none text-sm"
             value={value}
             onChange={e => onChange(e.target.value)}
           />
@@ -524,30 +392,13 @@ function QuestionStep({ title, description, questions, value, onChange, onNext, 
       </Card>
 
       <div className="flex justify-between pt-4">
-        <Button variant="ghost" onClick={onBack}><ArrowLeft className="w-4 h-4 mr-2" /> Voltar</Button>
+        <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-gold hover:bg-transparent">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+        </Button>
         <Button onClick={onNext} variant="gold" disabled={!value || value.length < 5}>
           {cta} <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </motion.div>
-  );
-}
-
-function InfoItem({ icon: Icon, text }: any) {
-  return (
-    <div className="flex items-center gap-3 text-sm text-muted-foreground">
-      <div className="w-8 h-8 rounded-full bg-gold/5 flex items-center justify-center shrink-0">
-        <Icon className="w-4 h-4 text-gold" />
-      </div>
-      <span>{text}</span>
-    </div>
-  );
-}
-
-function Badge({ children, variant, className }: any) {
-  return (
-    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
-      {children}
-    </span>
   );
 }
