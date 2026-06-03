@@ -170,7 +170,7 @@ export default function ClubeRotaPremium() {
             id="mapa-simbolico" 
             icon={Compass} 
             kicker="O Olhar Interior" 
-            titulo={ponto.metadata?.mapa_simbolico?.titulo || "Mapa Simbólico"}
+            titulo={ponto.metadata?.mapa_simbolico?.titulo || "Territórios ativados nesta travessia"}
           >
             {ponto.metadata?.mapa_simbolico?.descricao && (
               <p className="text-white/60 font-serif italic text-lg max-w-3xl mb-12 border-l-2 border-gold/30 pl-6">
@@ -261,7 +261,7 @@ export default function ClubeRotaPremium() {
                   ].map(item => rev[item.key] && (
                     <div key={item.key} className="space-y-1">
                       <div className="flex items-center gap-2 text-white/30 uppercase text-[9px] font-bold">
-                        <item.icon className="w-3 h-3 text-gold/40" /> {item.label}
+                        <item.icon className="w-3 h-3 text-gold/40" /> {item.label === 'Campo' ? 'Campo de Leitura' : item.label}
                       </div>
                       <p className="text-white/80 font-serif italic text-lg">{rev[item.key]}</p>
                     </div>
@@ -309,6 +309,10 @@ export default function ClubeRotaPremium() {
             <Section id="jardim-oficio" icon={Flower2} kicker="Sementeira" titulo="Jardim do Ofício">
               <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
+                <div className="mt-6 pt-4 border-t border-emerald-500/10">
+                   <p className="text-[10px] text-emerald-500/50 uppercase tracking-widest font-bold mb-1">Aviso Ético</p>
+                   <p className="text-[10px] text-white/30 italic">Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de mulheres acompanhadas.</p>
+                </div>
               </div>
             </Section>
           )}

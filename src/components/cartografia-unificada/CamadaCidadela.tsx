@@ -31,19 +31,20 @@ interface Props {
 }
 
 
-const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
-  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪' },
-  torres: { nome: 'Torres', icon: '🏛️' },
-  portas: { nome: 'Portas', icon: '🔑' },
-  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿' },
-  praca_abalo: { nome: 'Praça do Abalo', icon: '⚡' },
-  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙' },
-  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞' },
-  forja: { nome: 'Forja', icon: '🔥' },
-  conselho_interior: { nome: 'Conselho Interior', icon: '👁️' },
-  labirinto: { nome: 'Labirinto', icon: '🌀' },
-  praca_integracao: { nome: 'Praça da Integração', icon: '☀️' },
-  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
+const DISTRITOS_META: Record<string, { nome: string; icon: string; microcopy?: string }> = {
+  coracao_cidadela: { nome: 'Coração da CidadELA', icon: '❤', microcopy: 'Onde você descansa para poder agir.' },
+  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪', microcopy: 'Atravesse com consciência.' },
+  torres: { nome: 'Torres', icon: '🏛️', microcopy: 'Vigie as fronteiras da sua alma.' },
+  portas: { nome: 'Portas', icon: '🔑', microcopy: 'Qual porta você escolhe abrir hoje?' },
+  bosque_arquetipos: { nome: 'Bosque dos Arquétipos', icon: '🌿', microcopy: 'As antigas vozes ainda falam em nós.' },
+  praca_abismo: { nome: 'Praça do Abismo', icon: '⚡', microcopy: 'No escuro, a visão se aguça.' },
+  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙', microcopy: 'A noite tem olhos que veem o invisível.' },
+  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞', microcopy: 'Quem você vê quando olha para o outro?' },
+  forja: { nome: 'A Forja', icon: '🔥', microcopy: 'O fogo que refina, não consome.' },
+  conselho_interior: { nome: 'Conselho Interior', icon: '👁️', microcopy: 'Ouça todas as vozes antes de decidir.' },
+  labirinto: { nome: 'Labirinto', icon: '🌀', microcopy: 'Não há atalhos para o centro.' },
+  jardim_heroina: { nome: 'Jardim da Heroína', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
+  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', microcopy: 'Você não é mais quem entrou.' },
 };
 
 const anim = (delay: number) => ({
