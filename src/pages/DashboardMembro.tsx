@@ -15,7 +15,7 @@ import {
   AlertaOracular,
 } from "@/components/bussola-home";
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
-import { CidadelaRevelacaoContainer } from "@/components/cidadela/CidadelaRevelacaoContainer";
+import { CidadelaRotasView } from "@/components/cidadela/CidadelaRotasView";
 import { motion, AnimatePresence } from "framer-motion";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
