@@ -135,7 +135,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
                 else toast.error("Por favor, registre sua percepção.");
               }}
             >
-              Confirmar Registro Simbólico
+              Confirmar Formulação Simbólica
             </Button>
           </div>
         );

@@ -141,7 +141,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       desafio_terapeuta: { pergunta: '', escolhas: [] as string[] },
       ferramenta_oracular: {
         enabled: false,
-        kicker: 'Camada do Método',
+        kicker: 'Campo de Escuta',
         titulo: '',
         questoes: [] as any[],
         tipo_resultado: 'rastro',
@@ -246,7 +246,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         },
         ferramenta_oracular: {
           enabled: m.ferramenta_oracular?.enabled || false,
-          kicker: m.ferramenta_oracular?.kicker || 'Camada do Método',
+          kicker: m.ferramenta_oracular?.kicker || 'Campo de Escuta',
           titulo: m.ferramenta_oracular?.titulo || '',
           questoes: m.ferramenta_oracular?.questoes || [],
           tipo_resultado: m.ferramenta_oracular?.tipo_resultado || 'rastro',
