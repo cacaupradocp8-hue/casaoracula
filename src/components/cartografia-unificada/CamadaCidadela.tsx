@@ -53,24 +53,8 @@ const anim = (delay: number) => ({
 });
 
 export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida, hideTechnical }: Props) {
-  // Implementação de guard real contra placeholders
-  const hasValidContent = (val?: string) => {
-    if (!val) return false;
-    const clean = val.toLowerCase();
-    return clean !== '""' && 
-           clean !== 'undefined' && 
-           clean !== 'null' && 
-           clean.length > 2 &&
-           !clean.includes('não explorado') &&
-           !clean.includes('identificando') &&
-           !clean.includes('mapeando');
-  };
-
-  const hasContent = hasValidContent(data.distrito_dominante) || 
-                    hasValidContent(data.leitura_integrada) || 
-                    hasValidContent(data.tensao_simbolica) || 
-                    hasValidContent(data.territorio_crescimento_descricao) || 
-                    hasValidContent(data.direcao_travessia);
+  // A mandala sempre aparece se houver dados básicos, mesmo sem descrições completas
+  const hasContent = !!(data.distrito_dominante || data.distritos_ativos?.length > 0 || data.distritos_tensao?.length > 0);
 
   if (!hasContent) return null;
   // Build district states for the SVG map
