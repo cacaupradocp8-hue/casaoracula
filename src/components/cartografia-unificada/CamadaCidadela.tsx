@@ -80,7 +80,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       else if (ativoSet.has(key)) states[key] = 'ativo';
     });
     if (data.distrito_dominante) {
-      const domKey = data.distrito_dominante.toLowerCase();
+      const domKey = (data.distrito_dominante || data.distritos_ativos?.[0] || '').toLowerCase();
       if (!states[domKey] || states[domKey] === 'nao_explorado') {
         states[domKey] = 'ativo';
       }
@@ -119,7 +119,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       <motion.div {...anim(0.2)}>
         <CidadelaMapSVG
           districtStates={svgDistrictStates}
-          activeDistrict={data.distrito_dominante}
+          activeDistrict={data.distrito_dominante || data.distritos_ativos?.[0]}
           maxWidth={520}
           hideTechnicalLabels={hideTechnical}
         />
@@ -132,7 +132,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
           <Card className="border-primary/20 bg-primary/5 mx-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-primary/80">
-                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} O que se acendeu: {data.distrito_dominante}
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Território ativo: {data.distrito_dominante}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -147,7 +147,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.4)}>
           <Card className="border-border/10 bg-card/40 mx-4">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground/70">O que sua CidadELA mostra</CardTitle>
+              <CardTitle className="text-sm text-muted-foreground/70">Formulação simbólica</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
@@ -161,7 +161,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.5)}>
           <Card className="border-amber-500/15 bg-amber-500/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-amber-500/70">O que pede cuidado</CardTitle>
+              <CardTitle className="text-xs text-amber-500/70">Cautela de condução</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.tensao_simbolica}</p>
@@ -178,7 +178,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.55)}>
           <Card className="border-accent/15 bg-accent/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-accent-foreground/70">Para onde sua CidadELA chama</CardTitle>
+              <CardTitle className="text-xs text-accent-foreground/70">Rastro de crescimento</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.territorio_crescimento_descricao}</p>
