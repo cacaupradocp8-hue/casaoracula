@@ -275,7 +275,7 @@ export function CartografiaEstruturalStepper() {
               <CardContent className="pt-6 space-y-8">
                 {perguntas.map((p, i) => (
                   <div key={p.id} className="space-y-4">
-                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{p.texto}</p>
+                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{(p as any).texto_pergunta || p.id}</p>
                     <div className="grid grid-cols-5 gap-2">
                       {[1, 2, 3, 4, 5].map((val) => (
                         <button

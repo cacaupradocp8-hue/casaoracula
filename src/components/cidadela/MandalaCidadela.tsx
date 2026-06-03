@@ -605,7 +605,7 @@ export function MandalaCidadela({
     }).filter(Boolean) as { path: string; lit: boolean; integrated: boolean; key: string }[];
   }, [allDistricts, districtStates]);
 
-  const renderDistrict = (d: MandalaDistrict) => {
+  const renderDistrict = (d: MandalaDistrict, hideTechnicalLabels?: boolean) => {
     const pos = DISTRICT_POSITIONS[d.numero];
     if (!pos) return null;
     const state = getState(d.id);
@@ -818,9 +818,10 @@ export function MandalaCidadela({
         {/* Roads removed */}
 
         {/* Render: outer first (back), then inner, then center (front) */}
-        {outerDistricts.map(d => renderDistrict(d))}
-        {innerDistricts.map(d => renderDistrict(d))}
-        {centerDistrict && renderDistrict(centerDistrict)}
+        {outerDistricts.map(d => renderDistrict(d, hideTechnicalLabels))}
+        {innerDistricts.map(d => renderDistrict(d, hideTechnicalLabels))}
+        {centerDistrict && renderDistrict(centerDistrict, hideTechnicalLabels)}
+
 
         {/* Compass */}
         <CompassRose />

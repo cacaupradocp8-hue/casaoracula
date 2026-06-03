@@ -36,7 +36,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, sho
       <motion.div {...anim(0.2)} className="text-center space-y-4">
         <p className="text-[10px] text-gold/40 uppercase tracking-[0.3em]">Frase-Semente</p>
         <p className="text-2xl md:text-3xl italic text-foreground/90 font-display leading-relaxed max-w-xl mx-auto">
-          "{fraseSemente || simbolica?.frase_semente || saida.frase_semente || 'O mapa se revela a quem caminha.'}"
+          "{fraseSemente || simbolica?.frase_semente || (saida as any).frase_semente || 'O mapa se revela a quem caminha.'}"
         </p>
       </motion.div>
     );
