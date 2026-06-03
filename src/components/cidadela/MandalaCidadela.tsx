@@ -1,6 +1,7 @@
 import { useMemo, useState, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 
 // ============================================
@@ -131,13 +132,13 @@ const STATE_STYLES = {
   },
   ativo: {
     fill: 'rgba(201,162,74,0.22)',
-    stroke: 'rgba(212,175,55,0.85)',
+    stroke: 'rgba(212,175,55,0.95)',
     icon: '#D4AF37',
     text: '#F5E6B8',
-    glow: 'rgba(201,162,74,0.30)',
-    building: 'rgba(201,162,74,0.20)',
-    wall: 'rgba(212,175,55,0.70)',
-    accent: '#C9A24A',
+    glow: 'rgba(201,162,74,0.40)',
+    building: 'rgba(201,162,74,0.30)',
+    wall: 'rgba(212,175,55,0.85)',
+    accent: '#D4AF37',
   },
   integrado: {
     fill: 'rgba(74,178,107,0.22)',
@@ -640,8 +641,9 @@ export function MandalaCidadela({
         {/* Territory base — visible ground */}
         <circle cx={pos.x} cy={pos.y} r={baseR}
           fill={st.fill}
-          stroke={st.stroke} strokeWidth={isCenter ? 1.5 : ring === 'inner' ? 1 : 0.7}
-          opacity={(isHovered ? 1 : 0.8) * ringOpacityMult}
+          stroke={st.stroke} strokeWidth={isCenter ? 2.5 : ring === 'inner' ? 1.5 : 1}
+          opacity={(isHovered ? 1 : 0.9) * ringOpacityMult}
+          className={cn(state === 'ativo' && "drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]")}
           style={{ transition: 'all 0.3s ease' }} />
 
         {/* Hover highlight */}

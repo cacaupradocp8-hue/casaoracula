@@ -31,19 +31,20 @@ interface Props {
 }
 
 
-const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
-  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪' },
-  torres: { nome: 'Torres', icon: '🏛️' },
-  portas: { nome: 'Portas', icon: '🔑' },
-  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿' },
-  praca_abalo: { nome: 'Praça do Abalo', icon: '⚡' },
-  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙' },
-  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞' },
-  forja: { nome: 'Forja', icon: '🔥' },
-  conselho_interior: { nome: 'Conselho Interior', icon: '👁️' },
-  labirinto: { nome: 'Labirinto', icon: '🌀' },
-  praca_integracao: { nome: 'Praça da Integração', icon: '☀️' },
-  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
+const DISTRITOS_META: Record<string, { nome: string; icon: string; microcopy?: string }> = {
+  coracao_cidadela: { nome: 'Coração da CidadELA', icon: '❤', microcopy: 'Onde você descansa para poder agir.' },
+  portao_chegada: { nome: 'Portão da Chegada', icon: '🚪', microcopy: 'Atravesse com consciência.' },
+  torres: { nome: 'Torres', icon: '🏛️', microcopy: 'Vigie as fronteiras da sua alma.' },
+  portas: { nome: 'Portas', icon: '🔑', microcopy: 'Qual porta você escolhe abrir hoje?' },
+  bosque_arquetipos: { nome: 'Bosque dos Arquétipos', icon: '🌿', microcopy: 'As antigas vozes ainda falam em nós.' },
+  praca_abismo: { nome: 'Praça do Abismo', icon: '⚡', microcopy: 'No escuro, a visão se aguça.' },
+  casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙', microcopy: 'A noite tem olhos que veem o invisível.' },
+  espelho_vinculos: { nome: 'Espelho dos Vínculos', icon: '🪞', microcopy: 'Quem você vê quando olha para o outro?' },
+  forja: { nome: 'A Forja', icon: '🔥', microcopy: 'O fogo que refina, não consome.' },
+  conselho_interior: { nome: 'Conselho Interior', icon: '👁️', microcopy: 'Ouça todas as vozes antes de decidir.' },
+  labirinto: { nome: 'Labirinto', icon: '🌀', microcopy: 'Não há atalhos para o centro.' },
+  jardim_heroina: { nome: 'Jardim da Heroína', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
+  portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', microcopy: 'Você não é mais quem entrou.' },
 };
 
 const anim = (delay: number) => ({
@@ -79,7 +80,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       else if (ativoSet.has(key)) states[key] = 'ativo';
     });
     if (data.distrito_dominante) {
-      const domKey = data.distrito_dominante.toLowerCase();
+      const domKey = (data.distrito_dominante || data.distritos_ativos?.[0] || '').toLowerCase();
       if (!states[domKey] || states[domKey] === 'nao_explorado') {
         states[domKey] = 'ativo';
       }
@@ -118,7 +119,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
       <motion.div {...anim(0.2)}>
         <CidadelaMapSVG
           districtStates={svgDistrictStates}
-          activeDistrict={data.distrito_dominante}
+          activeDistrict={data.distrito_dominante || data.distritos_ativos?.[0]}
           maxWidth={520}
           hideTechnicalLabels={hideTechnical}
         />
@@ -131,7 +132,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
           <Card className="border-primary/20 bg-primary/5 mx-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-primary/80">
-                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} O que se acendeu: {data.distrito_dominante}
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Território ativo: {data.distrito_dominante}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -146,7 +147,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.4)}>
           <Card className="border-border/10 bg-card/40 mx-4">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground/70">O que sua CidadELA mostra</CardTitle>
+              <CardTitle className="text-sm text-muted-foreground/70">Formulação simbólica</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
@@ -160,7 +161,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.5)}>
           <Card className="border-amber-500/15 bg-amber-500/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-amber-500/70">O que pede cuidado</CardTitle>
+              <CardTitle className="text-xs text-amber-500/70">Cautela de condução</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.tensao_simbolica}</p>
@@ -177,7 +178,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.55)}>
           <Card className="border-accent/15 bg-accent/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-accent-foreground/70">Para onde sua CidadELA chama</CardTitle>
+              <CardTitle className="text-xs text-accent-foreground/70">Rastro de crescimento</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.territorio_crescimento_descricao}</p>

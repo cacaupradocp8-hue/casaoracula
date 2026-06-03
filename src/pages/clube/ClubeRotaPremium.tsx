@@ -25,6 +25,7 @@ import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { cn } from '@/lib/utils';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
+import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
 
 /**
  * ClubeRotaPremium — Travessia oficial (Etapa 2.6)
@@ -165,42 +166,17 @@ export default function ClubeRotaPremium() {
         {/* CONTENT */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 pb-24 pt-12">
 
-          {/* 2. MAPA SIMBÓLICO */}
-          <Section 
-            id="mapa-simbolico" 
-            icon={Compass} 
-            kicker="O Olhar Interior" 
-            titulo={ponto.metadata?.mapa_simbolico?.titulo || "Mapa Simbólico"}
-          >
-            {ponto.metadata?.mapa_simbolico?.descricao && (
-              <p className="text-white/60 font-serif italic text-lg max-w-3xl mb-12 border-l-2 border-gold/30 pl-6">
-                {ponto.metadata.mapa_simbolico.descricao}
-              </p>
-            )}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-5 grid gap-4">
-                {cartografia.map((item, i) => (
-                  <div key={i} className="flex items-center gap-4 p-5 rounded-2xl border border-white/5 bg-white/[0.02]">
-                    <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center shrink-0">
-                      <item.icon className="w-4 h-4 text-gold/60" />
-                    </div>
-                    <div>
-                      <p className="text-[8px] tracking-[0.3em] uppercase text-white/30 font-bold">{item.label}</p>
-                      <p className="font-display text-lg text-white/90">{item.value}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="lg:col-span-7 pl-6 border-l border-gold/10">
-                {pontos.map((item) => (
-                  <div key={item.id} className={cn('flex items-center gap-4 py-3', item.id === ponto.id ? 'text-white' : 'text-white/30')}>
-                    <div className={cn('w-2 h-2 rounded-full', item.id === ponto.id ? 'bg-gold shadow-glow' : 'bg-white/10')} />
-                    <span className="text-sm font-display">{item.nome}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </Section>
+          {/* 2. TERRITÓRIOS ATIVADOS */}
+          <section id="mapa-simbolico" className="scroll-mt-24">
+            <CidadelaAtivadaBloco 
+              porta={ponto.porta}
+              campo={ponto.campo}
+              torre={ponto.torre}
+              labirinto={ponto.labirinto}
+              estacaoTitulo={estacaoAtual?.titulo}
+              territoriosAtivados={ponto.impacto_cidadela?.map((i: any) => i.distrito)}
+            />
+          </section>
 
           {/* 3. ÁUDIOS */}
           {audios.length > 0 && (
@@ -261,7 +237,7 @@ export default function ClubeRotaPremium() {
                   ].map(item => rev[item.key] && (
                     <div key={item.key} className="space-y-1">
                       <div className="flex items-center gap-2 text-white/30 uppercase text-[9px] font-bold">
-                        <item.icon className="w-3 h-3 text-gold/40" /> {item.label}
+                        <item.icon className="w-3 h-3 text-gold/40" /> {item.label === 'Campo' ? 'Campo de Leitura' : item.label}
                       </div>
                       <p className="text-white/80 font-serif italic text-lg">{rev[item.key]}</p>
                     </div>
@@ -273,7 +249,7 @@ export default function ClubeRotaPremium() {
 
           {/* 7. FERRAMENTA ORACULAR */}
           {ponto.metadata?.ferramenta_oracular?.enabled && (
-            <Section id="ferramenta-oracular" icon={Radar} kicker="Camada do Método" titulo="Ferramenta Oracular">
+            <Section id="ferramenta-oracular" icon={Radar} kicker="Campo de Escuta" titulo="Ferramenta Oracular">
               <FerramentaOracularPlayer
                 data={{
                   ...ponto.metadata.ferramenta_oracular,
@@ -309,6 +285,10 @@ export default function ClubeRotaPremium() {
             <Section id="jardim-oficio" icon={Flower2} kicker="Sementeira" titulo="Jardim do Ofício">
               <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
+                <div className="mt-6 pt-4 border-t border-emerald-500/10">
+                   <p className="text-[10px] text-emerald-500/50 uppercase tracking-widest font-bold mb-1">Aviso Ético</p>
+                   <p className="text-[10px] text-white/30 italic">Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de mulheres acompanhadas.</p>
+                </div>
               </div>
             </Section>
           )}

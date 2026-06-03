@@ -141,7 +141,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       desafio_terapeuta: { pergunta: '', escolhas: [] as string[] },
       ferramenta_oracular: {
         enabled: false,
-        kicker: 'Camada do Método',
+        kicker: 'Campo de Escuta',
         titulo: '',
         questoes: [] as any[],
         tipo_resultado: 'rastro',
@@ -152,7 +152,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       conducao_justa: '',
       cautela_etica: [] as string[],
       jardim_psique: { pergunta: '', botao: '' },
-      jardim_oficio: { pergunta: '', botao: '', aviso_etico: '' },
+      jardim_oficio: { pergunta: '', botao: '', aviso_etico: 'Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de mulheres acompanhadas.' },
       missao_campo: { titulo: '', descricao: '', sinais: '', botao: '' },
       oraculo_estacao: { palavra: '', movimento: '', carta_final: '', frase_fechamento: '' },
       fechamento: { texto: '', pergunta: '', botao: '', confirmacao: '' },
@@ -246,7 +246,7 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         },
         ferramenta_oracular: {
           enabled: m.ferramenta_oracular?.enabled || false,
-          kicker: m.ferramenta_oracular?.kicker || 'Camada do Método',
+          kicker: m.ferramenta_oracular?.kicker || 'Campo de Escuta',
           titulo: m.ferramenta_oracular?.titulo || '',
           questoes: m.ferramenta_oracular?.questoes || [],
           tipo_resultado: m.ferramenta_oracular?.tipo_resultado || 'rastro',

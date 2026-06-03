@@ -12,8 +12,10 @@ export interface ImpactoCidadela {
 }
 
 const DISTRITOS = [
-  'Torres', 'Portas', 'Praças', 'Labirinto',
-  'Jardim', 'Templo', 'Muralhas', 'Catacumbas',
+  'Coração da CidadELA', 'Portão da Chegada', 'Torres', 'A Forja',
+  'Portas', 'Espelho dos Vínculos', 'Casa dos Sonhos', 'Jardim da Heroína',
+  'Bosque dos Arquétipos', 'Conselho Interior', 'Praça do Abismo', 'Labirinto',
+  'Portal de Renascimento'
 ];
 
 interface Props {

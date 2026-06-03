@@ -31,7 +31,7 @@ interface FerramentaData {
   titulo: string;
   kicker?: string;
   questoes: Question[];
-  tipo_resultado: 'intensidade' | 'arquetipo' | 'rastro';
+  tipo_resultado: 'intensidade' | 'arquetipo' | 'rastro' | 'formulacao_simbolica';
   resultados?: any[];
 }
 
@@ -135,7 +135,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
                 else toast.error("Por favor, registre sua percepção.");
               }}
             >
-              Confirmar Registro Simbólico
+              Confirmar Formulação Simbólica
             </Button>
           </div>
         );
@@ -207,7 +207,7 @@ export function FerramentaOracularPlayer({ data, onComplete }: FerramentaOracula
             </div>
             <div>
               <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-bold block mb-1">
-                {data.kicker || "Camada do Método"}
+                {data.kicker || "Campo de Escuta"}
               </span>
               <h3 className="font-display text-3xl text-white">{data.titulo}</h3>
             </div>
