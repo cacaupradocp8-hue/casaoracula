@@ -1,8 +1,9 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle
+  BookOpen, Loader2, Compass, ChevronRight, Search, AlertCircle, Eye
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -69,9 +70,16 @@ export default function AdminRotasCasa() {
       </div>
 
       <section className="space-y-8">
-        <div className="flex items-center gap-3 text-gold">
-          <Compass className="w-6 h-6" />
-          <h2 className="text-2xl font-serif">Rota dos Lobos</h2>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 text-gold">
+            <Compass className="w-6 h-6" />
+            <h2 className="text-2xl font-serif">Rota dos Lobos</h2>
+          </div>
+          <div className="flex gap-2">
+            <Button size="sm" variant="outline" className="text-xs h-8 border-gold/30 text-gold" onClick={() => navigate('/clube/rotas/rota-dos-lobos')}>
+              <Eye className="w-3.5 h-3.5 mr-1" /> Portal da Rota
+            </Button>
+          </div>
         </div>
 
         <div className="ml-4 md:ml-8 space-y-6">
