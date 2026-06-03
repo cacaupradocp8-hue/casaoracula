@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useBussolaOracular } from "@/hooks/useBussolaOracular";
 import { useJourneyGuard } from "@/hooks/useJourneyGuard";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Moon } from "lucide-react";
 import {
   BussolaAtual,
   ProximaAcao,
@@ -15,7 +17,6 @@ import {
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
 import { CidadelaRevelacaoContainer } from "@/components/cidadela/CidadelaRevelacaoContainer";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon } from "lucide-react";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 
@@ -75,39 +76,45 @@ export default function DashboardMembro() {
         {bussola.temCartografia ? (
           <CidadelaRevelacaoContainer bussola={bussola} />
         ) : (
-          <>
-            <BussolaAtual
-              leituraSimbolica={bussola.leituraSimbolica}
-              distritoDominante={bussola.distritoDominante}
-              distritoTensao={bussola.distritoTensao}
-              nivelIntegracao={bussola.nivelIntegracao}
-              temCartografia={bussola.temCartografia}
-              welcomeName={bussola.welcomeName}
-            />
+          <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8 max-w-2xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="space-y-4"
+            >
+              <h1 className="text-3xl md:text-4xl font-display text-foreground">
+                Sua CidadELA ainda não foi revelada
+              </h1>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                Antes de atravessar a Casa, revele o mapa simbólico do modo como você habita este momento.
+              </p>
+            </motion.div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[1.2fr_1fr] gap-8 xl:gap-16 mt-10">
-              <div className="space-y-6 lg:space-y-8 min-w-0">
-                <ProximaAcao
-                  principal={bussola.acaoPrincipal}
-                  secundarias={bussola.acoesSecundarias}
-                />
-                <JornadaRecomendada leitura={bussola.leitura} />
-                <PraticasRelevantes praticas={bussola.praticasSugeridas} />
-              </div>
-              <div className="space-y-6 min-w-0">
-                <MiniMapaCidadela
-                  temCartografia={bussola.temCartografia}
-                  distritoDominante={bussola.distritoDominante}
-                  distritosAtivos={bussola.distritosAtivos}
-                  distritoTensao={bussola.distritoTensao}
-                  corHex={bussola.corHex}
-                  distritosRaw={bussola.distritosRaw}
-                />
-                <SuaVozResumo voz={bussola.voz} welcomeName={bussola.welcomeName} />
-                <AlertaOracular alertas={bussola.alertas} />
-              </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Button
+                variant="gold"
+                size="lg"
+                onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+                className="gap-2 px-12 h-16 text-lg shadow-premium-glow"
+              >
+                Revelar minha CidadELA
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </motion.div>
+
+            <div className="pt-12">
+              <button 
+                onClick={() => navigate('/clube/rotas')}
+                className="text-xs text-muted-foreground/40 hover:text-gold/60 underline underline-offset-4 transition-colors"
+              >
+                Conhecer Rotas da Casa
+              </button>
             </div>
-          </>
+          </div>
         )}
 
       </ResponsiveContainer>

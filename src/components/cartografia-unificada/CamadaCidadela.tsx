@@ -116,18 +116,8 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         ))}
       </motion.div>
 
-      {/* Nível de integração */}
-      {data.nivel_integracao && (
-        <motion.div {...anim(0.15)} className="flex justify-center">
-          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-            data.nivel_integracao === 'alto' ? 'bg-accent/15 text-accent-foreground' :
-            data.nivel_integracao === 'medio' ? 'bg-amber-500/15 text-amber-600' :
-            'bg-destructive/10 text-destructive'
-          }`}>
-            Integração: {data.nivel_integracao}
-          </div>
-        </motion.div>
-      )}
+      {/* Nível de integração removido da área principal conforme pedido */}
+
 
       {/* SVG Map — mesmo visual da Casa das Máquinas */}
       <motion.div {...anim(0.2)}>
@@ -146,7 +136,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
           <Card className="border-primary/20 bg-primary/5 mx-4">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm text-primary/80">
-                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} Território Central: {data.distrito_dominante}
+                {DISTRITOS_META[data.distrito_dominante]?.icon || '🏛️'} O que se acendeu: {data.distrito_dominante}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -161,7 +151,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.4)}>
           <Card className="border-border/10 bg-card/40 mx-4">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-muted-foreground/70">A Revelação</CardTitle>
+              <CardTitle className="text-sm text-muted-foreground/70">O que sua CidadELA mostra</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-sm text-foreground/80 leading-relaxed italic break-words">{data.leitura_integrada}</p>
@@ -175,7 +165,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.5)}>
           <Card className="border-amber-500/15 bg-amber-500/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-amber-500/70">Ponto de Tensão</CardTitle>
+              <CardTitle className="text-xs text-amber-500/70">O que pede cuidado</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.tensao_simbolica}</p>
@@ -192,7 +182,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.55)}>
           <Card className="border-accent/15 bg-accent/5 h-full">
             <CardHeader className="pb-2">
-              <CardTitle className="text-xs text-accent-foreground/70">Território de Travessia</CardTitle>
+              <CardTitle className="text-xs text-accent-foreground/70">Para onde sua CidadELA chama</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-xs text-foreground/70 leading-relaxed break-words">{data.territorio_crescimento_descricao}</p>
@@ -207,7 +197,7 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
         <motion.div {...anim(0.6)}>
           <Card className="border-primary/10 mx-4">
             <CardContent className="p-5 text-center">
-              <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Direção da travessia</p>
+              <p className="text-[10px] tracking-wider uppercase text-muted-foreground/40 mb-2">Primeiro gesto de travessia</p>
               <p className="text-sm text-foreground/80 italic leading-relaxed break-words">{data.direcao_travessia}</p>
             </CardContent>
           </Card>
