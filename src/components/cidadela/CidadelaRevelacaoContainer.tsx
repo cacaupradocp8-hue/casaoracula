@@ -25,8 +25,9 @@ export function CidadelaRevelacaoContainer({ bussola }: CidadelaRevelacaoContain
     leitura_integrada: bussola.leituraSimbolica || '',
     tensao_simbolica: bussola.alertas[0]?.mensagem || '',
     direcao_travessia: bussola.acaoPrincipal.texto || '',
-    nivel_integracao: bussola.nivelIntegracao
+    nivel_integracao: bussola.nivelIntegracao === 'inicio' ? 'baixo' : bussola.nivelIntegracao === 'travessia' ? 'medio' : 'alto'
   };
+
 
   return (
     <div className="space-y-16 pb-20">
