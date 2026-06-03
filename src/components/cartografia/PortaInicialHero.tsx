@@ -33,6 +33,31 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
     }
   };
 
+  const getSymbolicName = (nameOrSlug?: string) => {
+    if (!nameOrSlug) return "";
+    const clean = nameOrSlug.toLowerCase();
+    
+    // Mapeamento de slugs/termos genéricos para nomes simbólicos completos
+    if (clean.includes('chegada') || clean.includes('portao')) return "Portão da Chegada";
+    if (clean.includes('torres')) return "Torres";
+    if (clean.includes('conselho')) return "Conselho Interior";
+    if (clean.includes('vinculos') || clean.includes('espelho')) return "Espelho dos Vínculos";
+    if (clean.includes('arquetipos') || clean.includes('bosque') || clean.includes('jardim')) return "Bosque dos Arquétipos";
+    if (clean.includes('forja')) return "Forja";
+    if (clean.includes('integracao') || clean.includes('praca_integracao')) return "Praça da Integração";
+    if (clean.includes('abalo') || clean.includes('praca_abalo')) return "Praça do Abalo";
+    if (clean.includes('labirinto')) return "Labirinto";
+    if (clean.includes('sonhos') || clean.includes('casa_sonhos')) return "Casa dos Sonhos";
+    if (clean.includes('renascimento') || clean.includes('portal')) return "Portal de Renascimento";
+    
+    // Se for 'portas' ou 'porta_do_possivel' ou algo genérico, tenta derivar do slug ou mantém o nome passado se for válido
+    if (clean === 'portas' || clean === 'porta_do_possivel') return "Portão da Chegada"; // Fallback seguro
+    
+    return portaNome;
+  };
+
+  const symbolicName = getSymbolicName(portaNome || portaSlug);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 30 }}
@@ -47,7 +72,7 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
 
       <div className="space-y-2">
         <h3 className="text-sm uppercase tracking-[0.2em] text-gold/60">Porta Inicial</h3>
-        <h2 className="text-3xl font-display text-gold">{portaNome}</h2>
+        <h2 className="text-3xl font-display text-gold">{symbolicName}</h2>
         <p className="text-muted-foreground/80 max-w-md mx-auto pt-2">
           Esta CidadELA pede para começar por aqui. Um convite para sua primeira travessia.
         </p>
@@ -70,7 +95,7 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
           onClick={() => navigate('/clube')}
           className="text-xs text-muted-foreground/50 hover:text-gold/60 underline underline-offset-4 transition-colors"
         >
-          Conhecer todas as rotas
+          Conhecer Rotas da Casa
         </button>
       </div>
     </motion.div>
