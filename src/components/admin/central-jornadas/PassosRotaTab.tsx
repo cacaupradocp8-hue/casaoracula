@@ -496,7 +496,7 @@ export function PassosRotaTab({ estacaoId }: Props) {
                         <Input value={form.porta} onChange={e => setForm({...form, porta: e.target.value})} placeholder="Iniciação" />
                       </div>
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Campo</label>
+                        <label className="text-[10px] font-bold uppercase text-muted-foreground">Campo de Leitura</label>
                         <Input value={form.campo} onChange={e => setForm({...form, campo: e.target.value})} placeholder="Selvagem" />
                       </div>
                     </div>
