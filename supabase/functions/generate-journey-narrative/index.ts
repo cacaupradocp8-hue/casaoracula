@@ -19,10 +19,42 @@ serve(async (req) => {
     if (!OPENAI_API_KEY) throw new Error("OPENAI_API_KEY not configured");
     if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase config missing");
 
+    // Auth guard
+    const authHeader = req.headers.get("Authorization") ?? "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: authData, error: authErr } = await userClient.auth.getUser();
+    if (authErr || !authData?.user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const therapist_id = authData.user.id;
+
     const { client_id, narrative_type = "relatorio" } = await req.json() as { client_id: string; narrative_type?: NarrativeType };
     if (!client_id) throw new Error("client_id is required");
 
     const sb = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+    // Ownership check
+    const { data: owner } = await sb
+      .from("clientes")
+      .select("id")
+      .eq("id", client_id)
+      .eq("terapeuta_id", therapist_id)
+      .maybeSingle();
+    if (!owner) {
+      return new Response(JSON.stringify({ error: "Forbidden" }), {
+        status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     // Gather comprehensive journey data
     const [clienteRes, journeysRes, patternsRes, sessionsRes, cidadelaRes, towersRes, cartoRes, snapshotsRes] = await Promise.all([
