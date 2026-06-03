@@ -713,16 +713,19 @@ export function MandalaCidadela({
           </g>
         )}
 
-        {/* Name label */}
-        <text x={pos.x} y={pos.y + labelOffset}
-          textAnchor="middle" dominantBaseline="central"
-          fill={isHovered ? '#F5E6B8' : st.text}
-          fontSize={isCenter ? 15 : ring === 'inner' ? 11.5 : 10}
-          fontWeight={isCenter ? '700' : '600'}
-          opacity={ringOpacityMult}
-          style={{ fontFamily: "'Playfair Display', serif", letterSpacing: isCenter ? '0.06em' : '0.03em', transition: 'fill 0.3s' }}>
-          {displayName}
-        </text>
+        {/* Name label — only if not hidden */}
+        {!hideTechnicalLabels && (
+          <text x={pos.x} y={pos.y + labelOffset}
+            textAnchor="middle" dominantBaseline="central"
+            fill={isHovered ? '#F5E6B8' : st.text}
+            fontSize={isCenter ? 15 : ring === 'inner' ? 11.5 : 10}
+            fontWeight={isCenter ? '700' : '600'}
+            opacity={ringOpacityMult}
+            style={{ fontFamily: "'Playfair Display', serif", letterSpacing: isCenter ? '0.06em' : '0.03em', transition: 'fill 0.3s' }}>
+            {displayName}
+          </text>
+        )}
+
 
         {/* Session count */}
         {mode === 'clinico' && sessCount > 0 && !isCenter && (
