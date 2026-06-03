@@ -273,11 +273,11 @@ export function useBussolaOracular(): BussolaData {
           symbol: profileRes.data?.entry_symbol || null,
           distritos: (mapaRes?.data as any)?.distritos_json || {},
           carto: (cartoRes?.data as any[])?.[0] || null,
-
           ciclo: estacao,
           book,
           jardimCount: (jardimRes as any)?.count || 0,
         });
+
       } catch (err) {
         console.error('Bússola load error:', err);
       } finally {
