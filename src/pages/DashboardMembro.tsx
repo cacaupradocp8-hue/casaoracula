@@ -3,6 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { useBussolaOracular } from "@/hooks/useBussolaOracular";
 import { useJourneyGuard } from "@/hooks/useJourneyGuard";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Moon } from "lucide-react";
 import {
   BussolaAtual,
   ProximaAcao,
@@ -15,7 +17,6 @@ import {
 import { BoasVindasBanner } from "@/components/bussola-home/BoasVindasBanner";
 import { CidadelaRevelacaoContainer } from "@/components/cidadela/CidadelaRevelacaoContainer";
 import { motion, AnimatePresence } from "framer-motion";
-import { Moon } from "lucide-react";
 import { ResponsiveContainer } from "@/components/ui/ResponsiveContainer";
 
 
