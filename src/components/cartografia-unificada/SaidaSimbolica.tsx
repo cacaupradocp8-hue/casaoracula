@@ -13,11 +13,14 @@ import type { ProfileJsonFinal } from '@/lib/cartografia/montarProfileJson';
 
 interface Props {
   saida: SaidaCliente;
-  cidadela: CidadelaDerivada;
+  cidadela?: CidadelaDerivada;
   profileJson?: ProfileJsonFinal;
   /** Optional AI-generated frase-semente */
   fraseSemente?: string;
+  /** Show only the seed phrase */
+  showOnlySeed?: boolean;
 }
+
 
 const anim = (delay: number) => ({
   initial: { opacity: 0, y: 16 },
@@ -25,11 +28,24 @@ const anim = (delay: number) => ({
   transition: { duration: 0.6, delay },
 });
 
-export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente }: Props) {
+export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, showOnlySeed }: Props) {
   const simbolica = profileJson?.leitura_simbolica;
 
+  if (showOnlySeed) {
+    return (
+      <motion.div {...anim(0.2)} className="text-center space-y-4">
+        <p className="text-[10px] text-gold/40 uppercase tracking-[0.3em]">Frase-Semente</p>
+        <p className="text-2xl md:text-3xl italic text-foreground/90 font-display leading-relaxed max-w-xl mx-auto">
+          "{fraseSemente || simbolica?.frase_semente || saida.frase_semente || 'O mapa se revela a quem caminha.'}"
+        </p>
+      </motion.div>
+    );
+  }
+
+  if (!cidadela) return null;
+
   return (
-    <div className="space-y-6 w-full max-w-lg mx-auto overflow-hidden">
+
       {/* Header */}
       <motion.div {...anim(0)} className="text-center space-y-3">
         <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center border-2 border-primary/20">
