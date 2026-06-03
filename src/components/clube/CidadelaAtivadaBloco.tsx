@@ -12,12 +12,11 @@ export function CidadelaAtivadaBloco({ territoriosAtivados }: Props) {
   if (!territoriosAtivados || territoriosAtivados.length === 0) return null;
 
   // Resolve territórios oficiais para evitar dados inventados
-  const territorios = territoriosAtivados.map(idOrName => {
-    const found = CIDADELA_TERRITORIOS.find(
+  const territorios = territoriosAtivados
+    .map(idOrName => CIDADELA_TERRITORIOS.find(
       t => t.id === idOrName || t.nome.toLowerCase() === idOrName.toLowerCase()
-    );
-    return found || { id: idOrName, nome: idOrName, descricao_curta: 'Território da CidadELA' };
-  });
+    ))
+    .filter((t): t is typeof CIDADELA_TERRITORIOS[number] => !!t);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
