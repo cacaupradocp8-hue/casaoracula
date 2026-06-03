@@ -236,7 +236,7 @@ export function CartografiaEstruturalStepper() {
                     <Button 
                       variant="gold" 
                       size="lg" 
-                      onClick={() => window.location.href = portaSlug ? `/clube/rota/${portaSlug}` : '/clube'}
+                      onClick={handleAtravessar}
                       className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
                     >
                       Atravessar
