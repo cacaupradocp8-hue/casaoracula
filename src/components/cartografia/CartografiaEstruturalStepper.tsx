@@ -251,7 +251,7 @@ export function CartografiaEstruturalStepper() {
                 <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Atmosfera da CidadELA</h3>
                 <div className="space-y-4">
                   <p className="text-lg text-foreground/80 font-display italic leading-relaxed">
-                    Sua CidadELA atravessa um período de {cidadela.clima_cidade.toLowerCase()}.
+                    Sua CidadELA atravessa um período de {cidadela.clima_cidadela.toLowerCase()}.
                   </p>
                   <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
                     Há um movimento de {cidadela.atmosfera_derivada.join(', ').toLowerCase()}. Nem tudo está claro. Mas algo já começou a mudar.

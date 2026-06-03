@@ -128,7 +128,7 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, sho
 
             <div className="text-center">
               <p className="text-xs font-medium text-foreground">{cidadela.torre_dominante}</p>
-              <p className="text-[10px] text-muted-foreground">{cidadela.clima_cidade}</p>
+              <p className="text-[10px] text-muted-foreground">{cidadela.clima_cidadela}</p>
 
             </div>
             <div className="flex items-center justify-center gap-2 text-center">

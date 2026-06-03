@@ -116,6 +116,7 @@ export function CartografiaClinicaPanel({ clienteId }: Props) {
           <div>
             <span className="text-muted-foreground/50 block">Clima</span>
             <span className="text-foreground/70">{derivacao.clima_cidadela}</span>
+
           </div>
         </div>
       </div>

@@ -1,6 +1,7 @@
 /**
  * Motor de Derivação Automática do PERFIL ESTRUTURAL ORÁCULA™
- * Gera a configuração base da CidaDELA a partir das médias estáveis (Big Five).
+ * Gera a configuração base da CidadELA a partir das médias estáveis (Big Five).
+
  * Pergunta Âncora: "Como esta pessoa costuma habitar o mundo?"
  * Zero escolha subjetiva — 100% determinístico.
  */
@@ -13,7 +14,7 @@ export interface CidadelaDerivada {
   porta_inicial: string;
   porta_inicial_nome: string;
   torre_dominante: string;
-  clima_cidade: string;
+  clima_cidadela: string;
   distritos_acesos: string[];
   cor_derivada: string;
   cor_hex: string;
@@ -182,7 +183,7 @@ export function derivarCidadela(
     porta_inicial: porta.key,
     porta_inicial_nome: porta.nome,
     torre_dominante: derivarTorreDominante(medias),
-    clima_cidade: derivarClima(tensaoCentral, medias.porta_do_abalo),
+    clima_cidadela: derivarClima(tensaoCentral, medias.porta_do_abalo),
     distritos_acesos: derivarDistritosAcesos(medias),
     cor_derivada: cor.nome,
     cor_hex: cor.hex,

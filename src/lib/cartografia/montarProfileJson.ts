@@ -309,7 +309,7 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     cidadela: {
       porta_inicial: cidadela.porta_inicial,
       torre_dominante: cidadela.torre_dominante,
-      clima_cidade: cidadela.clima_cidade,
+      clima_cidadela: cidadela.clima_cidadela,
       distritos_acesos: cidadela.distritos_acesos,
       indice_equilibrio: cidadela.indice_equilibrio,
     },

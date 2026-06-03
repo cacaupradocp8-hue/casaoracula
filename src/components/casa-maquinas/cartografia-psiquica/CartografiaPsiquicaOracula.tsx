@@ -121,7 +121,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
         por_que_simbolo: null,
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
-        resumo_narrativo: `Eixo dominante: ${cidadela.porta_inicial_nome}. Torre: ${cidadela.torre_dominante}. Clima: ${cidadela.clima_cidade}.`,
+        resumo_narrativo: `Eixo dominante: ${cidadela.porta_inicial_nome}. Torre: ${cidadela.torre_dominante}. Clima: ${cidadela.clima_cidadela}.`,
         sugestao_proximo_passo: `Trabalhar a ${cidadela.porta_inicial_nome} com ritmo ${leitura.profile.ritmo_ideal}`,
         metadata_json: { 
           medias_big5: medias, 
@@ -198,7 +198,7 @@ export function CartografiaPsiquicaOracula({ clienteId }: Props) {
               origem: 'cartografia',
               porta_inicial: profileJson.cidadela.porta_inicial,
               torre_dominante: profileJson.cidadela.torre_dominante,
-              clima_cidade: profileJson.cidadela.clima_cidade,
+              clima_cidadela: profileJson.cidadela.clima_cidadela,
               distritos_acesos: profileJson.cidadela.distritos_acesos,
             },
             ultimo_update: new Date().toISOString(),
