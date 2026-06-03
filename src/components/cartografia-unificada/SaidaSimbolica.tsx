@@ -45,6 +45,8 @@ export function SaidaSimbolica({ saida, cidadela, profileJson, fraseSemente, sho
   if (!cidadela) return null;
 
   return (
+    <div className="space-y-6 w-full max-w-lg mx-auto overflow-hidden">
+
 
       {/* Header */}
       <motion.div {...anim(0)} className="text-center space-y-3">
