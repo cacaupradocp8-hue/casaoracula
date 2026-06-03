@@ -266,7 +266,7 @@ export function CartografiaEstruturalStepper() {
         <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
           <Button 
             variant="ghost" 
-            onClick={() => window.location.href = '/dashboard-membro'} 
+            onClick={() => window.location.href = '/clube'} 
             className="text-muted-foreground/50 hover:text-gold hover:bg-transparent text-xs uppercase tracking-widest"
           >
             Retornar ao Painel

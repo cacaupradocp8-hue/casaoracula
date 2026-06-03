@@ -27,7 +27,7 @@ export default function RevelacaoCidadelaPage() {
         <Button
           variant="gold"
           size="lg"
-          onClick={() => navigate('/dashboard-membro', { replace: true })}
+          onClick={() => navigate('/clube', { replace: true })}
           className="gap-2 px-10 h-14 shadow-premium-glow"
         >
           Entrar na sua CidaDELA
