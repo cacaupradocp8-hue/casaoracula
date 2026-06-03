@@ -102,9 +102,10 @@ function resolveRota(tipo: string, refId: string | null, rotaCustom?: string): s
   }
 }
 
-export function useRotaOracular() {
+export function useRotaOracular(explicitSlug?: string) {
   const { user } = useAuth();
-  const { slug: routeSlug } = useParams<{ slug: string }>();
+  const { slug: paramsSlug } = useParams<{ slug: string }>();
+  const routeSlug = explicitSlug || paramsSlug;
 
   // 1. Estação ativa (Prioriza a que contém o item do slug da URL se disponível)
   const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({

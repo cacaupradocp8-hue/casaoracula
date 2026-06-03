@@ -33,13 +33,13 @@ import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
 
 /**
  * ClubeRotaPremium — Travessia oficial (Etapa 2.6)
- * Ordem oficial: Hero → Mapa Simbólico → Áudios → Caso → Desafio →
+ * Ordem oficial: Hero → Mapa Simbólico → Territórios da CidadELA → Áudios → Caso → Desafio →
  * Revelação → Ferramenta → Jardim Psique → Jardim Ofício → Missão → Fechamento.
  */
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular();
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular(slug);
 
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
 
