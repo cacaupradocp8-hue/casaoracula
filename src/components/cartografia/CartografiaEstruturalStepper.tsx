@@ -9,7 +9,8 @@ import {
   Brain, Heart, ShieldCheck, ArrowRight, ArrowLeft,
   Check, Loader2, Compass, DoorOpen
 } from 'lucide-react';
-
+import { useNavigate } from 'react-router-dom';
+import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { useCartografiaEstrutural, type CartografiaStepId } from '@/hooks/useCartografiaEstrutural';
 import { SaidaSimbolica } from '@/components/cartografia-unificada/SaidaSimbolica';
 import { CamadaLeituraPsiquica } from '@/components/cartografia-unificada/CamadaLeituraPsiquica';
