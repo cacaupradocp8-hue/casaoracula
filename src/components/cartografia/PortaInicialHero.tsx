@@ -38,8 +38,9 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="w-full max-w-2xl mx-auto mt-20 p-8 rounded-3xl border border-gold/20 bg-gold/5 text-center space-y-6"
+      className="w-full max-w-2xl mx-auto p-8 rounded-3xl border border-gold/20 bg-gold/5 text-center space-y-6"
     >
+
       <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
         <DoorOpen className="w-8 h-8 text-gold" />
       </div>
