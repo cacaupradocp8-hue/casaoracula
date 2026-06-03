@@ -48,6 +48,9 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
 
 export function CartografiaEstruturalStepper() {
 
+  const navigate = useNavigate();
+  const { data: estacoes } = useTodasRotas();
+
   const { 
     step, setStep, respostas, updateResposta, 
     updateObjetiva, perguntas, finalizar, loading, result,
