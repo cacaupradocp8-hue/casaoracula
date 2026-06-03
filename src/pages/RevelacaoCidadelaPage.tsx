@@ -17,24 +17,24 @@ export default function RevelacaoCidadelaPage() {
         standalone
       />
 
-      {/* CTA → Dashboard */}
+      {/* CTA → Dashboard Member */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1, duration: 0.6 }}
-        className="max-w-md mx-auto px-4 pb-16 text-center space-y-3"
+        className="max-w-md mx-auto px-4 pb-20 text-center space-y-4"
       >
         <Button
           variant="gold"
           size="lg"
-          onClick={() => navigate('/clube', { replace: true })}
-          className="gap-2 px-8"
+          onClick={() => navigate('/dashboard-membro', { replace: true })}
+          className="gap-2 px-10 h-14 shadow-premium-glow"
         >
-          Entrar nas Rotas da Casa Orácula
+          Entrar na sua CidaDELA
           <ArrowRight className="w-4 h-4" />
         </Button>
-        <p className="text-xs text-muted-foreground/50">
-          Seu mapa estará sempre disponível no seu painel.
+        <p className="text-[10px] uppercase tracking-widest text-muted-foreground/40 leading-relaxed">
+          Seu Perfil Estrutural estará sempre disponível no seu painel.
         </p>
       </motion.div>
     </div>
