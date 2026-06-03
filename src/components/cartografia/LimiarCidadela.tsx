@@ -36,7 +36,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
           transition={{ delay: 0.8, duration: 1.2 }}
           className="text-2xl md:text-3xl font-display text-gold leading-relaxed"
         >
-          Como você costuma habitar o mundo?
+          Como você habita o seu mundo hoje?
         </motion.h1>
 
         <motion.div
@@ -50,7 +50,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
             onClick={onEnter}
             className="px-12 py-6 text-lg tracking-widest uppercase shadow-premium-glow"
           >
-            Atravessar o limiar
+            Entrar na CidadELA
           </Button>
         </motion.div>
       </div>

@@ -140,8 +140,8 @@ export function CartografiaEstruturalStepper() {
           >
             <Compass className="w-10 h-10 text-gold/80" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA foi revelada</h1>
-          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa se revela a quem caminha.</p>
+          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
+          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
         </header>
 
         <section className="space-y-24">
@@ -167,12 +167,11 @@ export function CartografiaEstruturalStepper() {
           {/* 3. TERRITÓRIOS VIVOS */}
           <div className="max-w-3xl mx-auto px-6 space-y-10">
             <div className="text-center space-y-2">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Territórios que estão sustentando sua travessia</h3>
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">O que se acendeu na sua CidadELA</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {cidadela.distritos_acesos?.map((distritoKey: string) => {
-                // Simplificando a chave para buscar metadados
                 const meta = DISTRITOS_META[distritoKey] || { nome: distritoKey.replace(/_/g, ' '), icon: '📍' };
                 return (
                   <motion.div 
@@ -180,15 +179,20 @@ export function CartografiaEstruturalStepper() {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4"
+                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4 transition-all hover:bg-gold/[0.04]"
                   >
                     <span className="text-2xl mt-1">{meta.icon}</span>
                     <div className="space-y-1">
                       <h4 className="text-lg font-display text-gold/90">{meta.nome}</h4>
                       <p className="text-sm text-muted-foreground leading-relaxed italic">
-                        {distritoKey === 'torres' ? 'Você está organizando energia, limites e posicionamento.' :
-                         distritoKey === 'labirinto' ? 'Você está atravessando perguntas que ainda não possuem resposta.' :
-                         distritoKey === 'portao_chegada' ? 'Você está diante do novo, pronta para o primeiro passo.' :
+                        {distritoKey === 'torres' ? 'Estrutura, limites e o modo como você organiza sua energia vital.' :
+                         distritoKey === 'labirinto' ? 'Onde você atravessa as perguntas que ainda não possuem resposta.' :
+                         distritoKey === 'portao_chegada' ? 'O início de tudo, onde a coragem do primeiro passo reside.' :
+                         distritoKey === 'conselho_interior' ? 'Onde suas vozes internas buscam harmonia e direção.' :
+                         distritoKey === 'espelho_vinculos' ? 'O que suas relações revelam sobre seu próprio interior.' :
+                         distritoKey === 'casa_sonhos' ? 'Onde o inconsciente fala através de imagens e silêncios.' :
+                         distritoKey === 'forja' ? 'O calor da transformação e a alquimia do próprio ser.' :
+                         distritoKey === 'portal_renascimento' ? 'O limiar entre o que precisa terminar e o que começa.' :
                          'Este território se acende em resposta ao seu momento atual.'}
                       </p>
                     </div>
@@ -217,18 +221,18 @@ export function CartografiaEstruturalStepper() {
                   <div className="space-y-3">
                     <h2 className="text-3xl font-display text-gold">{portaNome}</h2>
                     <p className="text-lg text-foreground/90 leading-relaxed italic max-w-xl mx-auto">
-                      "O mistério não precisa de tradução, precisa de abrigo."
+                      "O mapa não é o território, mas o modo como escolhemos habitá-lo."
                     </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left pt-6 border-t border-gold/10 w-full">
                     <div className="space-y-2">
-                      <h4 className="text-xs uppercase tracking-widest text-gold/50">O que significa</h4>
-                      <p className="text-sm text-muted-foreground">O acesso ao inconsciente profundo e à imaginação não-vigiada. Onde a alma fala em imagens enquanto a mente descansa.</p>
+                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Por onde começar</h4>
+                      <p className="text-sm text-muted-foreground">O território que mais pede sua presença e consciência neste exato momento.</p>
                     </div>
                     <div className="space-y-2">
-                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Primeiro gesto sugerido</h4>
-                      <p className="text-sm text-muted-foreground">Registrar um fragmento de imagem de um sonho recente (mesmo que pareça bobo).</p>
+                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Primeiro gesto</h4>
+                      <p className="text-sm text-muted-foreground">Observar como este tema se manifesta em sua rotina hoje, sem tentar mudar nada.</p>
                     </div>
                   </div>
 
@@ -252,7 +256,7 @@ export function CartografiaEstruturalStepper() {
           <div className="max-w-2xl mx-auto px-6">
              <div className="text-center space-y-6">
                 <div className="space-y-2">
-                  <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua forma de organizar a CidadELA</h3>
+                  <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua forma de sustentar o agora</h3>
                   <h4 className="text-2xl font-display text-gold/80">{cidadela.torre_dominante}</h4>
                 </div>
                 <p className="text-sm text-muted-foreground leading-relaxed">
