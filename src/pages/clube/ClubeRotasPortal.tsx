@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon } from 'lucide-react';
+import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon, Headphones } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
@@ -11,12 +11,21 @@ import { MiniMapaCidadela } from '@/components/bussola-home';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+import { useAppSettings } from '@/hooks/useAppSettings';
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 export default function ClubeRotasPortal() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const bussola = useBussolaOracular();
   const { effectivePortal } = useEffectivePortal();
+  const { getSetting } = useAppSettings();
+
+  const audioUrl = getSetting('portal_rotas_welcome_audio_url');
+  const audioTitle = getSetting('portal_rotas_welcome_audio_title', 'A Voz da Casa');
+  const audioSubtitle = getSetting('portal_rotas_welcome_audio_subtitle', 'Antes de escolher uma rota, escute a chegada.');
+  const audioDescription = getSetting('portal_rotas_welcome_audio_description', 'Esta escuta foi criada para desacelerar sua entrada e abrir o primeiro silêncio da travessia.');
+  const audioImage = getSetting('portal_rotas_welcome_audio_image');
 
   const isTerapeuta = effectivePortal === 'oracula' || effectivePortal === 'admin';
   const hasCidadela = bussola.temCartografia;
@@ -112,6 +121,64 @@ export default function ClubeRotasPortal() {
               </div>
             </ResponsiveContainer>
           </section>
+
+          {/* ÁUDIO DE BOAS-VINDAS - A VOZ DA CASA */}
+          {audioUrl && (
+            <section className="relative py-24 border-t border-white/5 bg-black/40 overflow-hidden">
+              <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="absolute top-0 left-1/4 w-96 h-96 bg-gold/20 blur-[120px] rounded-full animate-pulse" />
+                <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gold/10 blur-[120px] rounded-full animate-pulse delay-1000" />
+              </div>
+
+              <ResponsiveContainer size="wide">
+                <div className="max-w-4xl mx-auto space-y-16">
+                  {/* Header do Áudio */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center space-y-6"
+                  >
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="flex items-center gap-3 text-gold/60">
+                        <span className="h-px w-8 bg-gold/40" />
+                        <span className="text-[10px] tracking-[0.4em] uppercase font-bold">A Voz da Casa</span>
+                        <span className="h-px w-8 bg-gold/40" />
+                      </div>
+                      <h2 className="text-4xl md:text-6xl font-serif text-white tracking-tight">
+                        {audioTitle}
+                      </h2>
+                      <p className="text-gold/80 font-serif italic text-xl md:text-2xl max-w-2xl mx-auto leading-relaxed">
+                        {audioSubtitle}
+                      </p>
+                    </div>
+
+                    <div className="max-w-xl mx-auto">
+                      <p className="text-white/40 font-light text-lg leading-relaxed">
+                        {audioDescription}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Player Imersivo */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
+                  >
+                    <EscutaPremium 
+                      audioUrl={audioUrl}
+                      titulo={audioTitle}
+                      imagemEscuta={audioImage}
+                      tipo="Boas-vindas"
+                      className="bg-transparent border border-white/5 shadow-2xl"
+                    />
+                  </motion.div>
+                </div>
+              </ResponsiveContainer>
+            </section>
+          )}
 
           {/* 2. BLOCO CIDADELA */}
           <section className="px-6 py-32 border-t border-white/5 bg-black/20">
