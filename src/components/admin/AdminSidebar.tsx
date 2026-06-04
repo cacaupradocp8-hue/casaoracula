@@ -134,8 +134,11 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(() => {
-    // Auto-expand the group containing the active tab
-    const initial: Record<string, boolean> = {};
+    // Auto-expand the group containing the active tab AND the most important groups
+    const initial: Record<string, boolean> = {
+      'central': true,
+      'clube-premium': true,
+    };
     for (const group of adminNavGroups) {
       if (group.items.some(item => item.key === activeTab)) {
         initial[group.key] = true;
