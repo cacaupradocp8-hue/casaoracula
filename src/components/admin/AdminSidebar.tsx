@@ -184,7 +184,15 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                   onClick={() => {
                     if (collapsed) return;
                     toggleGroup(group.key);
-                    if (onItemClick) onItemClick();
+                    // If not expanded, navigate to first item
+                    if (!expandedGroups[group.key] && group.items.length > 0) {
+                      const firstItem = group.items[0];
+                      if (firstItem.route) {
+                        navigate(firstItem.route);
+                      } else {
+                        navigate(`/admin?tab=${firstItem.key}`, { replace: true });
+                      }
+                    }
                   }}
                   className={cn(
                     'w-full flex items-center gap-2 px-2 py-2 rounded-lg text-sm font-medium transition-colors',
@@ -220,8 +228,8 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                             if (item.route) {
                               navigate(item.route);
                             } else {
-                              onTabChange(item.key);
-                              // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
+                              // We rely on the URL synchronization in Admin.tsx
+                              // to update the activeTab state, which is more reliable
                               if (item.key === 'central-casa') navigate('/admin', { replace: true });
                               else if (item.key === 'central-rotas') navigate('/admin/rotas', { replace: true });
                               else if (item.key === 'central-rota-lobos') navigate('/admin/clube/rota-dos-lobos', { replace: true });
@@ -230,11 +238,9 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               else if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
                               else if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos', { replace: true });
                               else if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento', { replace: true });
-                              else if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
                               else if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
                               else if (item.key === 'quiz') navigate('/admin/quiz', { replace: true });
                               else {
-                                // For all other tabs, ensure we are on the base /admin path so the tab logic works
                                 navigate(`/admin?tab=${item.key}`, { replace: true });
                               }
                             }
