@@ -5621,32 +5621,74 @@ export type Database = {
       }
       clube_v3_routes: {
         Row: {
+          audio_welcome_image: string | null
+          audio_welcome_title: string | null
+          audio_welcome_url: string | null
+          banner_desktop_url: string | null
+          banner_mobile_url: string | null
+          carta_assinatura: string | null
+          carta_imagem_url: string | null
+          carta_texto: string | null
+          carta_titulo: string | null
           cover_image_url: string | null
           created_at: string
           description: string | null
           display_order: number | null
+          fechamento_imagem_url: string | null
           id: string
+          metadata: Json | null
+          slug: string | null
+          station_filter: string | null
           status: string | null
+          sussurros: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          audio_welcome_image?: string | null
+          audio_welcome_title?: string | null
+          audio_welcome_url?: string | null
+          banner_desktop_url?: string | null
+          banner_mobile_url?: string | null
+          carta_assinatura?: string | null
+          carta_imagem_url?: string | null
+          carta_texto?: string | null
+          carta_titulo?: string | null
           cover_image_url?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          fechamento_imagem_url?: string | null
           id?: string
+          metadata?: Json | null
+          slug?: string | null
+          station_filter?: string | null
           status?: string | null
+          sussurros?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          audio_welcome_image?: string | null
+          audio_welcome_title?: string | null
+          audio_welcome_url?: string | null
+          banner_desktop_url?: string | null
+          banner_mobile_url?: string | null
+          carta_assinatura?: string | null
+          carta_imagem_url?: string | null
+          carta_texto?: string | null
+          carta_titulo?: string | null
           cover_image_url?: string | null
           created_at?: string
           description?: string | null
           display_order?: number | null
+          fechamento_imagem_url?: string | null
           id?: string
+          metadata?: Json | null
+          slug?: string | null
+          station_filter?: string | null
           status?: string | null
+          sussurros?: string[] | null
           title?: string
           updated_at?: string
         }
