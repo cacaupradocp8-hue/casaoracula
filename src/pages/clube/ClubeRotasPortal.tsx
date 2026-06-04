@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon, Headphones, Loader2 } from 'lucide-react';
+import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon, Headphones } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,6 @@ import { Badge } from '@/components/ui/badge';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
-import { useRotasV3 } from '@/hooks/useRotasV3';
 
 export default function ClubeRotasPortal() {
   const navigate = useNavigate();
@@ -21,13 +20,6 @@ export default function ClubeRotasPortal() {
   const bussola = useBussolaOracular();
   const { effectivePortal } = useEffectivePortal();
   const { getSetting } = useAppSettings();
-  const { data: rotas, isLoading: loadingRotas } = useRotasV3();
-
-  const heroDesktop = getSetting('portal_rotas_hero_desktop_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
-  const heroMobile = getSetting('portal_rotas_hero_mobile_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
-  const bgUrl = getSetting('portal_rotas_bg_url', 'https://grainy-gradients.vercel.app/noise.svg');
-  const cidadelaImg = getSetting('portal_rotas_cidadela_img_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
-  const syntheiaImg = getSetting('portal_rotas_syntheia_img_url', 'https://images.unsplash.com/photo-1478720568477-151d9b14728c?auto=format&fit=crop&q=80');
 
   const audioUrl = getSetting('portal_rotas_welcome_audio_url');
   const audioTitle = getSetting('portal_rotas_welcome_audio_title', 'A Voz da Casa');
@@ -38,17 +30,15 @@ export default function ClubeRotasPortal() {
   const isTerapeuta = effectivePortal === 'oracula' || effectivePortal === 'admin';
   const hasCidadela = bussola.temCartografia;
 
-
   return (
     <AppLayout>
       <div className="relative bg-background text-white selection:bg-gold/20 min-h-screen overflow-x-hidden">
         {/* Cinematic Background */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#020D24] via-[#010816] to-[#010610]" />
-          <div className="absolute inset-0 opacity-[0.05] mix-blend-soft-light" style={{ backgroundImage: `url('${bgUrl}')` }} />
+          <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-soft-light" />
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,hsl(var(--gold)/0.05),transparent_60%)]" />
         </div>
-
 
         <main className="relative z-10 pb-32">
           {/* 1. HERO - CHEGADA À CASA */}
@@ -114,17 +104,17 @@ export default function ClubeRotasPortal() {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 2, delay: 0.5 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1.5, delay: 0.3 }}
                   className="hidden lg:flex justify-center relative"
                 >
                   <div className="absolute inset-0 bg-gold/5 blur-[120px] rounded-full animate-pulse" />
-                  <div className="relative z-10 w-full max-w-md aspect-square opacity-20 grayscale transition-all duration-1000 pointer-events-none">
+                  <div className="relative z-10 w-full max-w-md aspect-square opacity-40 grayscale hover:grayscale-0 transition-all duration-1000">
                     <img 
-                      src={heroDesktop} 
-                      alt="Portal de Entrada" 
-                      className="w-full h-full object-cover rounded-full mix-blend-screen opacity-60"
+                      src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80" 
+                      alt="Mandala Simbólica" 
+                      className="w-full h-full object-cover rounded-full border border-gold/10 p-4"
                     />
                   </div>
                 </motion.div>
@@ -349,86 +339,140 @@ export default function ClubeRotasPortal() {
             </ResponsiveContainer>
           </section>
 
-          {/* 4. LISTAGEM AUTOMÁTICA DE ROTAS */}
-          <section className="px-6 py-32 border-t border-white/5 bg-black/10">
-            <ResponsiveContainer size="wide">
-              <div className="space-y-16">
-                <div className="text-center space-y-4">
-                  <div className="flex items-center justify-center gap-3 text-gold/60">
-                    <span className="h-px w-8 bg-gold/40" />
-                    <span className="text-[10px] tracking-[0.4em] uppercase font-bold">Escolha seu caminho</span>
-                    <span className="h-px w-8 bg-gold/40" />
+          {/* 4. SECÇÃO DAS ROTAS */}
+          <section className="px-6 py-40">
+            <ResponsiveContainer size="wide" className="space-y-24">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center max-w-6xl mx-auto">
+                <div className="lg:col-span-5 space-y-8">
+                  <div className="space-y-6">
+                    <h2 className="text-5xl md:text-7xl font-serif text-white leading-[1.1]">Travessias da <span className="text-gold italic">Casa</span></h2>
+                    <div className="space-y-6 text-xl text-white/60 leading-relaxed font-light italic border-l border-gold/20 pl-8 py-2">
+                      <p>Não escolha pela curiosidade. <br />Escolha pelo chamado.</p>
+                      <p className="text-lg opacity-70">As rotas não foram criadas para ensinar conceitos. Foram criadas para acompanhar momentos da vida que pedem transformação.</p>
+                    </div>
                   </div>
-                  <h2 className="text-5xl md:text-6xl font-serif text-white tracking-tight">Rotas de Travessia</h2>
                 </div>
+                <div className="lg:col-span-7 flex justify-end">
+                   <div className="h-px w-32 bg-gradient-to-l from-gold/30 to-transparent hidden lg:block" />
+                </div>
+              </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-                  {loadingRotas ? (
-                    <div className="col-span-full flex justify-center py-20">
-                      <Loader2 className="w-12 h-12 text-gold animate-spin" />
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 max-w-6xl mx-auto items-stretch">
+                {/* 5. CARD DA ROTA DOS LOBOS */}
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="lg:col-span-7 group relative"
+                >
+                  <Card className="bg-[#020D24] border-white/5 overflow-hidden h-full hover:border-gold/30 transition-all duration-700 shadow-3xl rounded-[3.5rem] flex flex-col">
+                    <div className="relative h-[300px] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-1000">
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#020D24] via-transparent to-transparent z-10" />
+                      <img 
+                        src="https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80" 
+                        alt="Rota dos Lobos" 
+                        className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[2s]" 
+                      />
+                      <div className="absolute top-8 left-8 z-20">
+                         <Badge className="bg-gold/20 text-gold border-gold/20 px-4 py-1.5 rounded-full text-[10px] tracking-[0.2em] uppercase font-bold">Travessia Principal</Badge>
+                      </div>
                     </div>
-                  ) : rotas?.length ? (
-                    rotas.map((rota) => (
-                      <motion.div
-                        key={rota.id}
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="group relative h-[700px] rounded-[4rem] overflow-hidden border border-white/5 hover:border-gold/20 transition-all duration-1000 cursor-pointer shadow-3xl flex flex-col"
-                        onClick={() => navigate(`/clube/rotas/${rota.slug}`)}
-                      >
-                        {/* Banner Image */}
-                        <div className="absolute inset-0 z-0 overflow-hidden">
-                          <img 
-                            src={rota.banner_desktop_url || "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80"} 
-                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-1000 group-hover:scale-105" 
-                            alt={rota.title} 
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-[#010816]/60 to-transparent" />
+                    
+                    <CardContent className="relative z-20 p-12 flex-grow flex flex-col justify-between space-y-12">
+                      <div className="space-y-8">
+                        <div className="space-y-3">
+                          <h4 className="text-5xl md:text-6xl font-serif text-white group-hover:text-gold transition-colors duration-500">Rota dos Lobos</h4>
+                          <p className="text-gold/60 font-serif italic text-2xl">O retorno da mulher que sabe.</p>
                         </div>
-
-                        {/* Content */}
-                        <div className="absolute inset-0 z-10 p-16 flex flex-col justify-end gap-10">
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                          <div className="space-y-6 text-white/70 leading-relaxed text-lg font-light">
+                            <p className="italic font-serif opacity-80 border-l border-gold/20 pl-4">Inspirada na obra Mulheres que Correm com os Lobos.</p>
+                            <p>Uma travessia para reconhecer onde sua voz foi silenciada e como voltar a confiar no conhecimento que já vive dentro de você.</p>
+                          </div>
+                          
                           <div className="space-y-6">
-                            <div className="flex items-center gap-3">
-                               <span className="h-px w-6 bg-gold/40" />
-                               <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-bold">Travessia Ativa</span>
+                            <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Territórios de Investigação</p>
+                            <div className="flex flex-wrap gap-2">
+                              {['Rastreamento simbólico', 'Contos-Espelho', 'Rituais'].map(t => (
+                                <span key={t} className="text-[10px] uppercase tracking-wider text-white/50 border border-white/5 bg-white/[0.03] px-4 py-1.5 rounded-full">{t}</span>
+                              ))}
                             </div>
-                            <h3 className="text-5xl md:text-6xl font-serif text-white group-hover:text-gold transition-colors duration-700 leading-tight">
-                              {rota.title}
-                            </h3>
-                            <p className="text-xl text-white/40 font-serif italic leading-relaxed line-clamp-3 group-hover:text-white/60 transition-colors">
-                              {rota.description}
-                            </p>
-                          </div>
-
-                          <div className="pt-8 border-t border-white/5">
-                            <Button variant="ghost" className="w-full rounded-full h-16 text-xs font-bold uppercase tracking-[0.3em] border border-white/10 group-hover:border-gold/40 group-hover:bg-gold/5 transition-all text-white/60 group-hover:text-gold">
-                              Entrar na Rota
-                              <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-2" />
-                            </Button>
                           </div>
                         </div>
-                      </motion.div>
-                    ))
-                  ) : (
-                    <div className="col-span-full text-center py-20 opacity-30 italic font-serif text-2xl">
-                      Nenhuma rota disponível no momento.
+                      </div>
+                      
+                      <div className="pt-10 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-8">
+                        <p className="text-white/50 font-serif italic text-lg max-w-sm text-center sm:text-left">Quando a mulher volta a escutar a própria natureza, a travessia muda.</p>
+                        <Button 
+                          variant="gold" 
+                          size="xl"
+                          className="rounded-full px-12 h-16 font-bold shadow-glow-gold hover:scale-105 transition-transform"
+                          onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                        >
+                          Iniciar Travessia
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+
+                {/* 6. SECÇÃO “NOVAS ROTAS” */}
+                <motion.div
+                  initial={{ opacity: 0, y: 40 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  className="lg:col-span-5 flex flex-col h-full"
+                >
+                  <div className="p-12 md:p-16 rounded-[3.5rem] border border-white/5 bg-white/[0.01] flex flex-col justify-between h-full space-y-16 hover:border-white/10 transition-colors">
+                    <div className="space-y-12">
+                      <div className="w-20 h-20 bg-gold/5 rounded-3xl flex items-center justify-center border border-gold/10">
+                        <BookOpen className="w-10 h-10 text-gold/40" />
+                      </div>
+                      <div className="space-y-8">
+                        <h4 className="text-4xl font-serif text-white">O Acervo Vivo da Casa</h4>
+                        <div className="space-y-6 text-white/50 italic leading-relaxed text-xl font-light max-w-sm">
+                          <p>Algumas rotas já abriram seus portões. Outras ainda estão sendo tecidas.</p>
+                          <p className="text-gold/40">Na Casa Orácula, cada travessia amadurece antes de ser compartilhada.</p>
+                          <p>Há caminhos que não podem ser apressados.</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-6 pt-4">
+                        <div className="flex items-center gap-4">
+                          <p className="text-[11px] uppercase tracking-[0.3em] text-white/30 font-bold">Próximas aberturas</p>
+                          <div className="h-px flex-grow bg-white/5" />
+                        </div>
+                        <ul className="grid grid-cols-1 gap-4">
+                          {['Rota dos Sonhos', 'Rota da Sombra', 'Rota da Voz', 'Rota das Linhagens'].map(r => (
+                            <li key={r} className="flex items-center gap-4 text-white/40 text-lg group/item hover:text-white/70 transition-colors cursor-default">
+                              <span className="w-1.5 h-1.5 rounded-full bg-gold/30 group-hover/item:bg-gold/60 transition-colors" />
+                              <span className="font-light">{r}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                  )}
-                </div>
+
+                    <div className="pt-10">
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-between h-16 px-10 rounded-full bg-white/[0.03] hover:bg-white/[0.06] text-white/40 hover:text-white transition-all border border-white/5"
+                        onClick={() => navigate('/clube/acervo')}
+                      >
+                        <span className="text-lg font-light tracking-wide">Explorar Acervo</span>
+                        <ArrowRight className="w-6 h-6 opacity-40 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </ResponsiveContainer>
           </section>
         </main>
-
-        <footer className="py-20 border-t border-white/5 text-center opacity-30">
-          <p className="text-[10px] uppercase tracking-[0.5em] text-white">Casa Orácula © 2026</p>
-        </footer>
       </div>
     </AppLayout>
   );
 }
-
 
 
