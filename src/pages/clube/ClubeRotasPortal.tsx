@@ -244,7 +244,7 @@ export default function ClubeRotasPortal() {
                       transition={{ duration: 1, delay: 0.5 }}
                       className="text-3xl md:text-5xl font-serif text-white/90 leading-tight italic max-w-3xl"
                     >
-                      "Só porque você se acostumou, não significa que pertence."
+                      "{getSetting('portal_rotas_syntheia_quote', 'Só porque você se acostumou, não significa que pertence.')}"
                     </motion.p>
                   </div>
                 </motion.div>
