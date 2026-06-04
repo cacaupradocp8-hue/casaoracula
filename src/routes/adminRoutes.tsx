@@ -30,7 +30,8 @@ export function renderAdminRoutes(ProtectedRoute: PR) {
       <Route key="adm-cl-portais" path="/admin/clube/portais" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-conteudos" path="/admin/clube/conteudos" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-treinamento" path="/admin/clube/treinamento" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
-     <Route key="adm-cl-chat" path="/admin/clube/chat" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route key="adm-cl-chat" path="/admin/clube/chat" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
+      <Route key="adm-cl-lobos" path="/admin/clube/rota-dos-lobos" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-lab8020" path="/admin/clube/laboratorio-8020" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-ci" path="/admin/clube/carrosseis-insights" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
       <Route key="adm-cl-central" path="/admin/clube/central/:estacaoId" element={<ProtectedRoute minPortal="admin"><Admin /></ProtectedRoute>} />
