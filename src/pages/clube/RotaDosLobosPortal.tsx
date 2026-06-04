@@ -136,21 +136,19 @@ export default function RotaDosLobosPortal() {
                 <div className="h-px w-20 bg-gold/30 mx-auto" />
               </div>
               
-              <div className="grid grid-cols-1 gap-8">
-                {rotaData.sussurros.slice(0, 5).map((sussurro, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, x: idx % 2 === 0 ? -20 : 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.2 }}
-                    className={`flex items-center gap-6 ${idx % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                  >
-                    <div className="text-xl md:text-3xl font-serif italic text-white/80 max-w-xl text-center px-8 py-6 rounded-3xl bg-white/[0.02] border border-white/5 hover:border-gold/20 transition-colors">
-                      "{sussurro}"
-                    </div>
-                  </motion.div>
-                ))}
+              <div className="flex justify-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1 }}
+                  className="relative group"
+                >
+                  <div className="absolute inset-0 bg-gold/5 blur-3xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                  <div className="relative text-2xl md:text-4xl font-serif italic text-white/90 max-w-2xl text-center px-12 py-12 rounded-[3rem] bg-white/[0.02] border border-white/5 hover:border-gold/20 transition-all duration-700 shadow-2xl">
+                    "{rotaData.sussurros[Math.floor(Math.random() * rotaData.sussurros.length)]}"
+                  </div>
+                </motion.div>
               </div>
             </ResponsiveContainer>
           </section>
