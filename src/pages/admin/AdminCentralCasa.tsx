@@ -150,8 +150,8 @@ export default function AdminCentralCasa() {
                           <Button size="sm" variant="outline" className="border-gold/30 text-gold font-bold gap-2" onClick={() => navigate('/clube/rotas/rota-dos-lobos')}>
                             <Eye className="w-4 h-4" /> Portal Lobos
                           </Button>
-                          <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate('/admin/rotas')}>
-                            <Settings2 className="w-4 h-4" /> Estações
+                          <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate('/admin?tab=settings')}>
+                            <Settings2 className="w-4 h-4" /> Configs Editorial
                           </Button>
                         </div>
                       </CardContent>
