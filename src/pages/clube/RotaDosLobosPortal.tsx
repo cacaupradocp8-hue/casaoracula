@@ -5,9 +5,10 @@ import { Compass, ArrowRight, TreePine, Eye, Ghost, Star, Sparkles, Loader2 } fr
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
-import { useRotaV3 } from '@/hooks/useRotasV3';
+import { useRotasV3 } from '@/hooks/useRotasV3';
 import { CartaNarrativa } from '@/components/clube/CartaNarrativa';
 
 export default function RotaDosLobosPortal() {
@@ -60,7 +61,7 @@ export default function RotaDosLobosPortal() {
           <div className="absolute inset-0 -z-10 overflow-hidden">
              <img 
               src={rotaData.banner_desktop_url || "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80"} 
-              className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 transition-all duration-1000" 
+              className="w-full h-full object-cover grayscale opacity-30 transition-all duration-1000" 
               alt={rotaData.title} 
              />
              <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-[#010816]/40 to-transparent" />
