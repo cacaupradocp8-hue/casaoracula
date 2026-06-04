@@ -310,7 +310,7 @@ export default function ClubeRotasPortal() {
                             className="rounded-full px-16 h-20 text-xl font-bold shadow-glow-gold hover:scale-105 transition-all duration-500"
                             onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
                           >
-                            Iniciar Travessia
+                            Entrar na Rota
                           </Button>
                         </div>
                       </CardContent>

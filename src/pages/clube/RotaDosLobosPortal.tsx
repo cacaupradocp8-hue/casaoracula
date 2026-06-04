@@ -141,7 +141,7 @@ export default function RotaDosLobosPortal() {
               className="rounded-full px-16 h-16 text-base font-bold uppercase tracking-[0.2em] shadow-premium-glow" 
               onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
             >
-              Entrar na Clareira do Chamado
+              Entrar na Clareira
               <ArrowRight className="ml-3 w-5 h-5" />
             </Button>
           </ResponsiveContainer>
