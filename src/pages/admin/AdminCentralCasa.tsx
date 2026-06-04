@@ -144,11 +144,11 @@ export default function AdminCentralCasa() {
                           </Badge>
                         </div>
                         <div className="flex flex-wrap gap-2 mt-6 pt-6 border-t border-primary/5">
-                          <Button size="sm" className="bg-gold text-black font-bold gap-2" onClick={() => navigate('/clube/rotas')}>
-                            <Eye className="w-4 h-4" /> Portal Geral
+                          <Button size="sm" className="bg-gold text-black font-bold gap-2" onClick={() => navigate('/admin/clube')}>
+                            <Eye className="w-4 h-4" /> Gestão Hub
                           </Button>
-                          <Button size="sm" variant="outline" className="border-gold/30 text-gold font-bold gap-2" onClick={() => navigate('/clube/rotas/rota-dos-lobos')}>
-                            <Eye className="w-4 h-4" /> Portal Lobos
+                          <Button size="sm" variant="outline" className="border-gold/30 text-gold font-bold gap-2" onClick={() => navigate('/admin/clube/rota-dos-lobos')}>
+                            <Eye className="w-4 h-4" /> Gestão Lobos
                           </Button>
                           <Button size="sm" variant="outline" className="border-primary/20 gap-2" onClick={() => navigate('/admin?tab=settings')}>
                             <Settings2 className="w-4 h-4" /> Configs Editorial
