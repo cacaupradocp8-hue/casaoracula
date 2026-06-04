@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { 
   Plus, Trash2, Save, LayoutPanelLeft, Sparkles, 
-  ChevronUp, ChevronDown, ImageIcon, Filter, CheckCircle, Clock
+  ChevronUp, ChevronDown, ImageIcon, Filter, CheckCircle, Clock, Settings, Music
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useAppSettingsAdmin } from '@/hooks/useAppSettings';
 
 export default function AdminCarrosseisInsights() {
   const queryClient = useQueryClient();
@@ -165,6 +166,10 @@ export default function AdminCarrosseisInsights() {
             <Sparkles className="w-4 h-4" />
             Insights do Portal
           </TabsTrigger>
+          <TabsTrigger value="portal-settings" className="data-[state=active]:bg-gold data-[state=active]:text-black gap-2">
+            <Settings className="w-4 h-4" />
+            Configurações do Portal
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent value="slides" className="space-y-6">
@@ -218,6 +223,10 @@ export default function AdminCarrosseisInsights() {
               />
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="portal-settings">
+          <PortalSettingsTab />
         </TabsContent>
       </Tabs>
     </div>
