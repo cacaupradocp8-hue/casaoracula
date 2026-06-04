@@ -10,7 +10,7 @@ import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
-export default function RotaDosLobosPortal() {
+export default function RotaDosLobos() {
   const navigate = useNavigate();
   const bussola = useBussolaOracular();
   const { data: estacoes } = useTodasRotas();
