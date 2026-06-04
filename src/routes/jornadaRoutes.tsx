@@ -4,7 +4,7 @@ import { Route, Navigate } from "react-router-dom";
 // Lazy-loaded pages (Importing same components used in App.tsx)
 const ClubeRotasCatalogo = React.lazy(() => import("@/pages/clube/ClubeRotasCatalogo"));
 const ClubeRotasPortal = React.lazy(() => import("@/pages/clube/ClubeRotasPortal"));
-const RotaDosLobosPortal = React.lazy(() => import("@/pages/clube/RotaDosLobos"));
+const RotaDosLobos = React.lazy(() => import("@/pages/clube/RotaDosLobos"));
 const ClubeRotaPremium = React.lazy(() => import("@/pages/clube/ClubeRotaPremium"));
 const ClubeAcervo = React.lazy(() => import("@/pages/clube/ClubeAcervo"));
 const Travessias = React.lazy(() => import("@/pages/Travessias"));
@@ -35,7 +35,7 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       {/* Clube & Rotas */}
       <Route path="/clube" element={<ProtectedRoute minPortal="assinante"><Navigate to="/clube/rotas" replace /></ProtectedRoute>} />
       <Route path="/clube/rotas" element={<ProtectedRoute minPortal="assinante"><ClubeRotasPortal /></ProtectedRoute>} />
-      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="assinante"><RotaDosLobosPortal /></ProtectedRoute>} />
+      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="assinante"><RotaDosLobos /></ProtectedRoute>} />
       <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
       <Route path="/clube/acervo" element={<ProtectedRoute minPortal="assinante"><ClubeAcervo /></ProtectedRoute>} />
       
