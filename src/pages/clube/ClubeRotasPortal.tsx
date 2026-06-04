@@ -363,7 +363,7 @@ export default function ClubeRotasPortal() {
                   <h2 className="text-5xl md:text-6xl font-serif text-white tracking-tight">Rotas de Travessia</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
                   {loadingRotas ? (
                     <div className="col-span-full flex justify-center py-20">
                       <Loader2 className="w-12 h-12 text-gold animate-spin" />
@@ -372,40 +372,41 @@ export default function ClubeRotasPortal() {
                     rotas.map((rota) => (
                       <motion.div
                         key={rota.id}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="group relative h-[600px] rounded-[3.5rem] overflow-hidden border border-white/10 hover:border-gold/30 transition-all duration-700 cursor-pointer shadow-2xl flex flex-col"
+                        className="group relative h-[700px] rounded-[4rem] overflow-hidden border border-white/5 hover:border-gold/20 transition-all duration-1000 cursor-pointer shadow-3xl flex flex-col"
                         onClick={() => navigate(`/clube/rotas/${rota.slug}`)}
                       >
                         {/* Banner Image */}
                         <div className="absolute inset-0 z-0 overflow-hidden">
                           <img 
-                            src={rota.banner_desktop_url || "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80"} 
-                            className="w-full h-full object-cover grayscale opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000 group-hover:scale-110" 
+                            src={rota.banner_desktop_url || "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80"} 
+                            className="w-full h-full object-cover grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-50 transition-all duration-1000 group-hover:scale-105" 
                             alt={rota.title} 
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-[#010816]/60 to-transparent" />
                         </div>
 
                         {/* Content */}
-                        <div className="absolute inset-0 z-10 p-12 flex flex-col justify-end gap-8">
-                          <div className="space-y-4">
-                            <Badge variant="outline" className="bg-gold/10 border-gold/20 text-gold text-[10px] px-4 py-1.5 rounded-full uppercase tracking-[0.2em] font-bold">
-                              Travessia Ativa
-                            </Badge>
-                            <h3 className="text-4xl md:text-5xl font-serif text-white group-hover:text-gold transition-colors duration-500">
+                        <div className="absolute inset-0 z-10 p-16 flex flex-col justify-end gap-10">
+                          <div className="space-y-6">
+                            <div className="flex items-center gap-3">
+                               <span className="h-px w-6 bg-gold/40" />
+                               <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-bold">Travessia Ativa</span>
+                            </div>
+                            <h3 className="text-5xl md:text-6xl font-serif text-white group-hover:text-gold transition-colors duration-700 leading-tight">
                               {rota.title}
                             </h3>
-                            <p className="text-lg text-white/50 font-serif italic leading-relaxed line-clamp-3">
+                            <p className="text-xl text-white/40 font-serif italic leading-relaxed line-clamp-3 group-hover:text-white/60 transition-colors">
                               {rota.description}
                             </p>
                           </div>
 
-                          <div className="pt-6 border-t border-white/5">
-                            <Button variant="gold" className="w-full rounded-full h-14 text-sm font-bold uppercase tracking-widest group-hover:shadow-glow-gold transition-all">
+                          <div className="pt-8 border-t border-white/5">
+                            <Button variant="ghost" className="w-full rounded-full h-16 text-xs font-bold uppercase tracking-[0.3em] border border-white/10 group-hover:border-gold/40 group-hover:bg-gold/5 transition-all text-white/60 group-hover:text-gold">
                               Entrar na Rota
-                              <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                              <ArrowRight className="ml-3 w-4 h-4 transition-transform group-hover:translate-x-2" />
                             </Button>
                           </div>
                         </div>
