@@ -31,87 +31,81 @@
 
 @layer base {
   :root {
-    /* Casa ORÁCULA - Nova Paleta */
-    /* Fundo principal: #0E1A24 */
-    --background: 206 44% 10%;
-    /* Off-white legível: ~#F0F0F0 */
-    --foreground: 210 10% 94%;
+    /* Casa ORÁCULA - Paleta Identidade */
+    /* Fundo principal: Um azul profundo e fechado, quase preto, evocando o mistério */
+    --background: 220 40% 6%;
+    /* Off-white legível, com leve toque de seda */
+    --foreground: 210 20% 96%;
 
-    /* Fundo cards: #142634 */
-    --card: 206 43% 14%;
-    --card-foreground: 210 10% 90%;
+    /* Fundo cards: Ligeiramente mais claro que o fundo principal para criar profundidade */
+    --card: 220 35% 10%;
+    --card-foreground: 210 15% 92%;
 
-    --popover: 206 43% 14%;
-    --popover-foreground: 210 10% 90%;
+    --popover: 220 35% 10%;
+    --popover-foreground: 210 15% 92%;
 
-    /* Dourado principal: #C9A45C */
-    --primary: 42 49% 58%;
-    --primary-foreground: 206 44% 10%;
+    /* Dourado Orácula: Rico, envelhecido e com brilho acetinado */
+    --primary: 43 55% 52%;
+    --primary-foreground: 220 40% 6%;
 
-    /* Fundo secundário */
-    --secondary: 206 35% 18%;
-    --secondary-foreground: 210 10% 90%;
+    /* Tons de suporte para hierarquia visual */
+    --secondary: 220 30% 12%;
+    --secondary-foreground: 210 15% 85%;
 
-    --muted: 206 30% 20%;
-    /* Texto secundário: #D0D0D0 para leitura confortável */
-    --muted-foreground: 0 0% 82%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 215 15% 70%;
 
-    /* Acento simbólico: #6F85A6 */
-    --accent: 216 25% 54%;
-    --accent-foreground: 210 10% 90%;
+    /* Azul Místico de Acento: Profundo e sereno */
+    --accent: 210 25% 25%;
+    --accent-foreground: 210 15% 92%;
 
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 210 10% 90%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 210 15% 98%;
 
-    --border: 206 30% 22%;
-    --input: 206 35% 18%;
-    /* Dourado principal para ring */
-    --ring: 42 49% 58%;
+    --border: 220 25% 14%;
+    --input: 220 25% 14%;
+    --ring: 43 55% 52%;
 
-    --radius: 0.75rem;
+    --radius: 1.25rem;
 
-    /* Custom Colors */
-    /* Dourado principal: #C9A45C */
-    --gold: 42 49% 58%;
-    /* Dourado suave: #E2C98B */
-    --gold-light: 42 55% 72%;
-    --gold-dark: 42 55% 45%;
+    /* Custom Identidade */
+    --gold: 43 55% 52%;
+    --gold-light: 44 60% 70%;
+    --gold-dark: 42 60% 40%;
     
-    /* Roxo místico: #6b4ba1 */
-    --mystic: 264 37% 46%;
-    --mystic-light: 264 37% 58%;
-    --mystic-dark: 264 37% 34%;
+    --mystic: 260 40% 35%;
+    --mystic-light: 260 45% 45%;
+    --mystic-dark: 260 40% 25%;
     
-    /* Fundo principal: #0E1A24 */
-    --midnight: 206 44% 10%;
-    --midnight-light: 206 43% 14%;
+    --midnight: 220 40% 6%;
+    --midnight-light: 220 35% 10%;
 
-    /* Gradients */
-    --gradient-gold: linear-gradient(135deg, hsl(42 49% 58%), hsl(42 55% 45%));
-    --gradient-gold-mystic: linear-gradient(135deg, hsl(42 49% 58%), hsl(264 37% 46%));
-    --gradient-midnight: linear-gradient(180deg, hsl(206 43% 14%), hsl(206 44% 8%));
-    --gradient-mystical: linear-gradient(135deg, hsl(216 25% 35%), hsl(206 44% 10%));
-    --gradient-hero: radial-gradient(ellipse at top, hsl(206 43% 18%), hsl(206 44% 10%));
+    /* Gradients Identidade */
+    --gradient-gold: linear-gradient(135deg, hsl(43 55% 62%), hsl(43 55% 42%));
+    --gradient-gold-mystic: linear-gradient(135deg, hsl(43 55% 52%), hsl(260 40% 35%));
+    --gradient-midnight: linear-gradient(180deg, hsl(220 40% 8%), hsl(220 45% 5%));
+    --gradient-mystical: linear-gradient(135deg, hsl(220 30% 15%), hsl(220 45% 6%));
+    --gradient-hero: radial-gradient(ellipse at top, hsl(220 35% 12%), hsl(220 45% 6%));
 
-    /* Shadows */
-    --shadow-gold: 0 4px 30px -5px hsl(42 49% 58% / 0.25);
-    --shadow-soft: 0 8px 32px -8px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 60px -10px hsl(42 49% 58% / 0.3);
-    --shadow-mystic: 0 4px 30px -5px hsl(264 37% 46% / 0.25);
+    /* Shadows Premium */
+    --shadow-gold: 0 10px 40px -10px hsl(43 55% 52% / 0.3);
+    --shadow-soft: 0 12px 48px -12px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 0 50px -5px hsl(43 55% 52% / 0.25);
+    --shadow-mystic: 0 10px 40px -10px hsl(260 40% 35% / 0.3);
 
     /* Typography */
     --font-display: 'Cormorant Garamond', serif;
     --font-body: 'Inter', sans-serif;
 
-    /* Sidebar */
-    --sidebar-background: 206 43% 12%;
-    --sidebar-foreground: 210 10% 90%;
-    --sidebar-primary: 42 49% 58%;
-    --sidebar-primary-foreground: 206 44% 10%;
-    --sidebar-accent: 206 35% 18%;
-    --sidebar-accent-foreground: 210 10% 90%;
-    --sidebar-border: 206 30% 22%;
-    --sidebar-ring: 42 49% 58%;
+    /* Sidebar Branding */
+    --sidebar-background: 220 40% 8%;
+    --sidebar-foreground: 210 15% 85%;
+    --sidebar-primary: 43 55% 52%;
+    --sidebar-primary-foreground: 220 40% 6%;
+    --sidebar-accent: 220 30% 12%;
+    --sidebar-accent-foreground: 210 15% 92%;
+    --sidebar-border: 220 25% 14%;
+    --sidebar-ring: 43 55% 52%;
   }
 
   .dark {
