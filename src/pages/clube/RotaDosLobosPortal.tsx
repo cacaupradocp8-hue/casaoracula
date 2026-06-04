@@ -220,7 +220,7 @@ export default function RotaDosLobosPortal() {
 
         {/* 4. O QUE ESTA ROTA DESPERTA */}
         <section className="relative z-10 py-32 px-6">
-           <ResponsiveContainer size="medium">
+           <ResponsiveContainer size="wide">
               <motion.div {...fadeIn} className="space-y-16">
                  <div className="space-y-4">
                     <h3 className="text-xs uppercase tracking-[0.3em] text-white/30 font-bold">Iniciação</h3>
@@ -407,7 +407,7 @@ export default function RotaDosLobosPortal() {
 
         {/* 7. COMO A TRAVESSIA FUNCIONA */}
         <section className="relative z-10 py-32 bg-gold/[0.02]">
-           <ResponsiveContainer size="medium" className="px-6">
+           <ResponsiveContainer size="wide" className="px-6">
               <div className="grid grid-cols-1 md:grid-cols-12 gap-16 items-start">
                  <div className="md:col-span-5 space-y-6">
                     <h3 className="text-xs uppercase tracking-[0.3em] text-gold/60 font-bold">O Método</h3>
@@ -432,7 +432,7 @@ export default function RotaDosLobosPortal() {
 
         {/* 8. O QUE MUDA */}
         <section className="relative z-10 py-32 px-6">
-           <ResponsiveContainer size="medium">
+           <ResponsiveContainer size="wide">
               <motion.div {...fadeIn} className="space-y-16">
                  <div className="space-y-4 text-center">
                     <h3 className="text-xs uppercase tracking-[0.3em] text-white/30 font-bold">A Transformação</h3>
