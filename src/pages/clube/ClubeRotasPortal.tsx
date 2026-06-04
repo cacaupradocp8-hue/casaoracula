@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon, Headphones } from 'lucide-react';
+import { Compass, ArrowRight, BookOpen, MessageSquare, Map as MapIcon, Headphones, Loader2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { useRotasV3 } from '@/hooks/useRotasV3';
 
 export default function ClubeRotasPortal() {
   const navigate = useNavigate();
@@ -20,6 +21,13 @@ export default function ClubeRotasPortal() {
   const bussola = useBussolaOracular();
   const { effectivePortal } = useEffectivePortal();
   const { getSetting } = useAppSettings();
+  const { data: rotas, isLoading: loadingRotas } = useRotasV3();
+
+  const heroDesktop = getSetting('portal_rotas_hero_desktop_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
+  const heroMobile = getSetting('portal_rotas_hero_mobile_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
+  const bgUrl = getSetting('portal_rotas_bg_url', 'https://grainy-gradients.vercel.app/noise.svg');
+  const cidadelaImg = getSetting('portal_rotas_cidadela_img_url', 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80');
+  const syntheiaImg = getSetting('portal_rotas_syntheia_img_url', 'https://images.unsplash.com/photo-1478720568477-151d9b14728c?auto=format&fit=crop&q=80');
 
   const audioUrl = getSetting('portal_rotas_welcome_audio_url');
   const audioTitle = getSetting('portal_rotas_welcome_audio_title', 'A Voz da Casa');
@@ -30,15 +38,17 @@ export default function ClubeRotasPortal() {
   const isTerapeuta = effectivePortal === 'oracula' || effectivePortal === 'admin';
   const hasCidadela = bussola.temCartografia;
 
+
   return (
     <AppLayout>
       <div className="relative bg-background text-white selection:bg-gold/20 min-h-screen overflow-x-hidden">
         {/* Cinematic Background */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#020D24] via-[#010816] to-[#010610]" />
-          <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-soft-light" />
+          <div className="absolute inset-0 opacity-[0.05] mix-blend-soft-light" style={{ backgroundImage: `url('${bgUrl}')` }} />
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,hsl(var(--gold)/0.05),transparent_60%)]" />
         </div>
+
 
         <main className="relative z-10 pb-32">
           {/* 1. HERO - CHEGADA À CASA */}
@@ -112,11 +122,12 @@ export default function ClubeRotasPortal() {
                   <div className="absolute inset-0 bg-gold/5 blur-[120px] rounded-full animate-pulse" />
                   <div className="relative z-10 w-full max-w-md aspect-square opacity-40 grayscale hover:grayscale-0 transition-all duration-1000">
                     <img 
-                      src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80" 
+                      src={heroDesktop} 
                       alt="Mandala Simbólica" 
                       className="w-full h-full object-cover rounded-full border border-gold/10 p-4"
                     />
                   </div>
+
                 </motion.div>
               </div>
             </ResponsiveContainer>
