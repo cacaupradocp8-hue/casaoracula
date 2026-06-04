@@ -62,11 +62,11 @@ export default function ClubeRotasPortal() {
                     </motion.div>
                     
                     <h1 className="text-6xl md:text-9xl font-serif leading-[1.1] tracking-tight">
-                      Casa <span className="text-gold italic">Orácula</span>
+                      {getSetting('portal_rotas_hero_title_line1', 'Casa')} <span className="text-gold italic">{getSetting('portal_rotas_hero_title_line2', 'Orácula')}</span>
                     </h1>
                     
                     <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                      "Toda travessia começa quando algo dentro pede passagem."
+                      "{getSetting('portal_rotas_hero_quote', 'Toda travessia começa quando algo dentro pede passagem.')}"
                     </p>
                   </div>
 
@@ -104,8 +104,8 @@ export default function ClubeRotasPortal() {
               >
                 <div className="space-y-4">
                   <p className="text-3xl md:text-4xl font-serif text-white/90 leading-relaxed italic">
-                    "A Casa não oferece respostas. <br />
-                    <span className="text-gold/80">Oferece mapas.</span>"
+                    "{getSetting('portal_rotas_editorial_quote_line1', 'A Casa não oferece respostas.')}" <br />
+                    <span className="text-gold/80">"{getSetting('portal_rotas_editorial_quote_line2', 'Oferece mapas.')}"</span>
                   </p>
                 </div>
               </motion.div>
@@ -294,12 +294,12 @@ export default function ClubeRotasPortal() {
                         <div className="space-y-8">
                           <div className="space-y-4">
                             <Badge className="bg-gold/10 text-gold border-gold/20 px-4 py-1.5 rounded-full text-[10px] tracking-[0.3em] uppercase font-bold">Travessia Ativa</Badge>
-                            <h4 className="text-5xl md:text-7xl font-serif text-white group-hover:text-gold transition-colors duration-700">Rota dos Lobos</h4>
-                            <p className="text-gold/60 font-serif italic text-2xl">O retorno da mulher que sabe.</p>
+                            <h4 className="text-5xl md:text-7xl font-serif text-white group-hover:text-gold transition-colors duration-700">{getSetting('card_lobos_title', 'Rota dos Lobos')}</h4>
+                            <p className="text-gold/60 font-serif italic text-2xl">{getSetting('card_lobos_subtitle', 'O retorno da mulher que sabe.')}</p>
                           </div>
                           
                           <p className="text-white/70 leading-relaxed text-xl font-light italic opacity-80 border-l-2 border-gold/20 pl-8 py-2">
-                            Uma travessia para reconhecer onde sua voz foi silenciada e como voltar a confiar no conhecimento que já vive dentro de você.
+                            {getSetting('card_lobos_description', 'Uma travessia para reconhecer onde sua voz foi silenciada e como voltar a confiar no conhecimento que já vive dentro de você.')}
                           </p>
                         </div>
                         

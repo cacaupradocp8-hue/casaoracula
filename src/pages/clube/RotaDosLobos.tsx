@@ -16,9 +16,9 @@ export default function RotaDosLobos() {
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
 
-  const audioUrl = "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1771607764088.mp3";
-  const audioTitle = "A Voz da Floresta";
-  const audioImage = "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80";
+  const audioUrl = getSetting('rota_dos_lobos_audio_url', "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1771607764088.mp3");
+  const audioTitle = getSetting('rota_dos_lobos_audio_title', "A Voz da Floresta");
+  const audioImage = getSetting('rota_dos_lobos_audio_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80");
 
   const lobosEstacoesRaw = [
     { numero: 1, nome: 'Clareira do Chamado', frase: 'A vida que ainda chama por baixo do funcionamento.', icon: <TreePine className="w-5 h-5" />, slug: 'clareira-do-chamado' },
@@ -43,12 +43,17 @@ export default function RotaDosLobos() {
         {/* 1. HERO - CINEMATOGRÁFICO */}
         <section className="relative min-h-[80vh] flex flex-col justify-center pt-20 pb-12 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
-             <img src="https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80" className="w-full h-full object-cover grayscale opacity-20" alt="Floresta" />
+             <img src={getSetting('rota_dos_lobos_hero_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80")} className="w-full h-full object-cover grayscale opacity-20" alt="Floresta" />
              <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent" />
           </div>
           <ResponsiveContainer size="wide" className="px-6">
-            <h1 className="text-6xl md:text-9xl font-serif tracking-tighter leading-[0.9]">Rota dos<br/><span className="text-gold italic">Lobos</span></h1>
-            <h2 className="text-xl md:text-2xl text-gold/80 font-serif border-l-2 border-gold/30 pl-6 py-2 mt-8">Jornada de Recuperação da Natureza Instintiva</h2>
+            <h1 className="text-6xl md:text-9xl font-serif tracking-tighter leading-[0.9]">
+              {getSetting('rota_dos_lobos_title_line1', 'Rota dos')}<br/>
+              <span className="text-gold italic">{getSetting('rota_dos_lobos_title_line2', 'Lobos')}</span>
+            </h1>
+            <h2 className="text-xl md:text-2xl text-gold/80 font-serif border-l-2 border-gold/30 pl-6 py-2 mt-8">
+              {getSetting('rota_dos_lobos_subtitle', 'Jornada de Recuperação da Natureza Instintiva')}
+            </h2>
           </ResponsiveContainer>
         </section>
 
@@ -64,8 +69,8 @@ export default function RotaDosLobos() {
         {/* 3. CARTA DE ENTRADA */}
         <section className="py-32 px-6">
           <ResponsiveContainer size="narrow" className="space-y-8">
-            <motion.h3 {...fadeIn} className="text-3xl font-serif">Antes de entrar na floresta</motion.h3>
-            <motion.p {...fadeIn} className="text-lg text-white/70 leading-relaxed">Você está prestes a atravessar uma floresta simbólica. Não é uma jornada de curso. É um retorno ao que foi silenciado em você. Deixe a pressa na entrada.</motion.p>
+            <motion.h3 {...fadeIn} className="text-3xl font-serif">{getSetting('rota_dos_lobos_carta_titulo', 'Antes de entrar na floresta')}</motion.h3>
+            <motion.p {...fadeIn} className="text-lg text-white/70 leading-relaxed">{getSetting('rota_dos_lobos_carta_texto', 'Você está prestes a atravessar uma floresta simbólica. Não é uma jornada de curso. É um retorno ao que foi silenciado em você. Deixe a pressa na entrada.')}</motion.p>
           </ResponsiveContainer>
         </section>
 
@@ -73,7 +78,7 @@ export default function RotaDosLobos() {
         <section className="py-24 bg-black/20 border-y border-white/5 text-center px-6">
           <ResponsiveContainer size="narrow" className="space-y-6">
             <h3 className="text-xs uppercase tracking-[0.3em] text-gold font-bold">Syntheia Sussurra</h3>
-            <p className="text-2xl font-serif italic text-white/80">"O instinto raramente grita. Primeiro ele sussurra."</p>
+            <p className="text-2xl font-serif italic text-white/80">"{getSetting('rota_dos_lobos_syntheia_quote', 'O instinto raramente grita. Primeiro ele sussurra.')}"</p>
           </ResponsiveContainer>
         </section>
 
