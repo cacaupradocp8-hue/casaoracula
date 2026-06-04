@@ -17,6 +17,7 @@ export interface RotaV3 {
   carta_imagem_url: string | null;
   fechamento_imagem_url: string | null;
   sussurros: string[];
+  station_filter: string | null;
   status: string;
   display_order: number;
   metadata: any;
