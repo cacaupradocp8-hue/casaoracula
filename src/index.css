@@ -187,6 +187,7 @@
   p, li, span, label, td {
     line-height: 1.75;
     @apply text-foreground/90;
+    text-wrap: pretty;
   }
 
   /* Prevent images/media from breaking responsive layout */
