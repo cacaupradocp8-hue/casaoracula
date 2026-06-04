@@ -27,9 +27,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         </BootSafeBoundary>
       </div>
 
-      <main className="relative flex-grow z-10 pt-16 lg:pt-18 xl:pt-20 pb-28 lg:pb-12 min-w-0">
+      <main className="relative flex-grow z-10 pt-[var(--header-height)] pb-28 lg:pb-12 min-w-0">
         <ResponsiveContainer>
-          <div className="pt-2 md:pt-4">
+          <div className="pt-6 md:pt-10">
             <BootSafeBoundary label="AccessExpirationBanner" compact>
               <AccessExpirationBanner />
             </BootSafeBoundary>

@@ -36,9 +36,10 @@ export default {
         body: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'premium': '0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.1)',
-        'premium-glow': '0 0 40px -10px hsl(var(--gold) / 0.2)',
+        'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05)',
+        'premium-glow': '0 0 40px -10px hsl(var(--gold) / 0.3)',
         'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+        'button-glow': '0 0 20px -5px hsl(var(--gold) / 0.4)',
       },
       colors: {
         border: "hsl(var(--border))",
