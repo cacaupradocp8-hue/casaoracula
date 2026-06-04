@@ -109,26 +109,26 @@
   }
 
   .dark {
-    /* Same as root - this is a dark-first theme */
-    --background: 206 44% 10%;
-    --foreground: 210 10% 94%;
-    --card: 206 43% 14%;
-    --card-foreground: 210 10% 94%;
-    --popover: 206 43% 14%;
-    --popover-foreground: 210 10% 90%;
-    --primary: 42 49% 58%;
-    --primary-foreground: 206 44% 10%;
-    --secondary: 206 35% 18%;
-    --secondary-foreground: 210 10% 90%;
-    --muted: 206 30% 20%;
-    --muted-foreground: 0 0% 82%;
-    --accent: 216 25% 54%;
-    --accent-foreground: 210 10% 90%;
-    --destructive: 0 62% 45%;
-    --destructive-foreground: 210 10% 90%;
-    --border: 206 30% 22%;
-    --input: 206 35% 18%;
-    --ring: 42 49% 58%;
+    /* Identidade dark por padrão */
+    --background: 220 40% 6%;
+    --foreground: 210 20% 96%;
+    --card: 220 35% 10%;
+    --card-foreground: 210 15% 92%;
+    --popover: 220 35% 10%;
+    --popover-foreground: 210 15% 92%;
+    --primary: 43 55% 52%;
+    --primary-foreground: 220 40% 6%;
+    --secondary: 220 30% 12%;
+    --secondary-foreground: 210 15% 85%;
+    --muted: 220 25% 15%;
+    --muted-foreground: 215 15% 70%;
+    --accent: 210 25% 25%;
+    --accent-foreground: 210 15% 92%;
+    --destructive: 0 60% 40%;
+    --destructive-foreground: 210 15% 98%;
+    --border: 220 25% 14%;
+    --input: 220 25% 14%;
+    --ring: 43 55% 52%;
   }
 }
 
