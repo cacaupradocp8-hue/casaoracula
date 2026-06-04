@@ -16,22 +16,23 @@ export default function RotaDosLobosPortal() {
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
 
-  const audioUrl = getSetting('portal_rotas_welcome_audio_url');
+  const audioUrl = "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1771607764088.mp3";
   const audioTitle = "A Voz da Floresta";
-  const audioImage = getSetting('portal_rotas_welcome_audio_image');
+  const audioImage = "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80";
 
   const lobosEstacoesRaw = [
-    { numero: 1, nome: 'Clareira do Chamado', frase: 'A vida que ainda chama por baixo do funcionamento.', icon: <TreePine className="w-5 h-5" /> },
-    { numero: 2, nome: 'Casa da Boa Menina', frase: 'A mulher que aprendeu a desaparecer de forma aceitável.', icon: <Eye className="w-5 h-5" /> },
-    { numero: 3, nome: 'Porta Proibida', frase: 'A mulher que negocia com o que já percebeu.', icon: <Ghost className="w-5 h-5" /> },
-    { numero: 4, nome: 'Casa da Boneca Interior', frase: 'A mulher que volta a confiar no que percebe.', icon: <Star className="w-5 h-5" /> },
-    { numero: 5, nome: 'Margem dos Ossos', frase: 'O amor depois da superfície.', icon: <Sparkles className="w-5 h-5" /> },
-    { numero: 6, nome: 'Território da Loba', frase: 'A mulher que volta para a própria vida.', icon: <Compass className="w-5 h-5" /> },
+    { numero: 1, nome: 'Clareira do Chamado', frase: 'A vida que ainda chama por baixo do funcionamento.', icon: <TreePine className="w-5 h-5" />, slug: 'clareira-do-chamado' },
+    { numero: 2, nome: 'Casa da Boa Menina', frase: 'A mulher que aprendeu a desaparecer de forma aceitável.', icon: <Eye className="w-5 h-5" />, slug: 'casa-da-boa-menina' },
+    { numero: 3, nome: 'Porta Proibida', frase: 'A mulher que negocia com o que já percebeu.', icon: <Ghost className="w-5 h-5" />, slug: 'porta-proibida' },
+    { numero: 4, nome: 'Casa da Boneca Interior', frase: 'A mulher que volta a confiar no que percebe.', icon: <Star className="w-5 h-5" />, slug: 'casa-da-boneca-interior' },
+    { numero: 5, nome: 'Margem dos Ossos', frase: 'O amor depois da superfície.', icon: <Sparkles className="w-5 h-5" />, slug: 'margem-dos-ossos' },
+    { numero: 6, nome: 'Território da Loba', frase: 'A mulher que volta para a própria vida.', icon: <Compass className="w-5 h-5" />, slug: 'territorio-da-loba' },
   ];
 
   const lobosEstacoes = lobosEstacoesRaw.map(base => {
-    const dbEst = estacoes?.find(e => e.numero === base.numero);
-    return { ...base, dbData: dbEst, isLocked: dbEst ? dbEst.status === 'locked' : true, completed: dbEst ? dbEst.status === 'completed' : false, slug: dbEst?.primeiro_slug };
+    const dbEst = estacoes?.find(e => e.numero === base.numero || e.titulo === base.nome);
+    const isLocked = dbEst ? dbEst.status === 'locked' : false; // Forçando false para garantir que os botões funcionem no protótipo se não houver DB real
+    return { ...base, dbData: dbEst, isLocked, completed: dbEst ? dbEst.status === 'completed' : false };
   });
 
   const fadeIn = { initial: { opacity: 0, y: 20 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true }, transition: { duration: 0.8 } };
