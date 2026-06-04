@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
-import { useRotasV3 } from '@/hooks/useRotasV3';
+import { useRotasV3, useRotaV3 } from '@/hooks/useRotasV3';
 import { CartaNarrativa } from '@/components/clube/CartaNarrativa';
 
 export default function RotaDosLobosPortal() {
