@@ -419,3 +419,111 @@ function InsightEditorCard({ insight, onSave, onDelete }: { insight: any, onSave
     </Card>
   );
 }
+
+function PortalSettingsTab() {
+  const { settings, updateSetting, isLoading } = useAppSettingsAdmin();
+  const [formData, setFormData] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    if (settings.length > 0) {
+      const data: Record<string, string> = {};
+      settings.forEach(s => {
+        data[s.key] = s.value;
+      });
+      setFormData(data);
+    }
+  }, [settings]);
+
+  const handleSave = async () => {
+    const keysToSave = [
+      'portal_rotas_welcome_audio_title',
+      'portal_rotas_welcome_audio_subtitle',
+      'portal_rotas_welcome_audio_description',
+      'portal_rotas_welcome_audio_url',
+      'portal_rotas_welcome_audio_image'
+    ];
+
+    for (const key of keysToSave) {
+      if (formData[key] !== undefined) {
+        await updateSetting(key, formData[key]);
+      }
+    }
+    toast.success("Configurações do portal salvas");
+  };
+
+  if (isLoading) return <div className="py-12 text-center text-white/20">Carregando configurações...</div>;
+
+  return (
+    <div className="max-w-4xl space-y-8">
+      <Card className="bg-white/5 border-white/10">
+        <CardHeader>
+          <div className="flex items-center gap-3 mb-2">
+            <Music className="w-5 h-5 text-gold" />
+            <CardTitle>Áudio de Boas-Vindas</CardTitle>
+          </div>
+          <CardDescription>Configurações da escuta imersiva que aparece no Portal das Rotas.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-xs text-white/40 uppercase tracking-widest font-bold">Título do Bloco</label>
+              <Input 
+                value={formData['portal_rotas_welcome_audio_title'] || ''} 
+                onChange={e => setFormData({...formData, portal_rotas_welcome_audio_title: e.target.value})}
+                placeholder="Ex: A Voz da Casa"
+                className="bg-white/5 border-white/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-white/40 uppercase tracking-widest font-bold">Subtítulo</label>
+              <Input 
+                value={formData['portal_rotas_welcome_audio_subtitle'] || ''} 
+                onChange={e => setFormData({...formData, portal_rotas_welcome_audio_subtitle: e.target.value})}
+                placeholder="Ex: Antes de escolher uma rota, escute a chegada."
+                className="bg-white/5 border-white/10"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs text-white/40 uppercase tracking-widest font-bold">Descrição Poética</label>
+            <Textarea 
+              value={formData['portal_rotas_welcome_audio_description'] || ''} 
+              onChange={e => setFormData({...formData, portal_rotas_welcome_audio_description: e.target.value})}
+              placeholder="Ex: Esta escuta foi criada para desacelerar sua entrada..."
+              className="bg-white/5 border-white/10 min-h-[80px]"
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <label className="text-xs text-white/40 uppercase tracking-widest font-bold">URL do Áudio (.mp3)</label>
+              <Input 
+                value={formData['portal_rotas_welcome_audio_url'] || ''} 
+                onChange={e => setFormData({...formData, portal_rotas_welcome_audio_url: e.target.value})}
+                placeholder="https://sua-url-do-audio.mp3"
+                className="bg-white/5 border-white/10"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs text-white/40 uppercase tracking-widest font-bold">URL da Imagem de Fundo</label>
+              <Input 
+                value={formData['portal_rotas_welcome_audio_image'] || ''} 
+                onChange={e => setFormData({...formData, portal_rotas_welcome_audio_image: e.target.value})}
+                placeholder="https://sua-imagem.jpg"
+                className="bg-white/5 border-white/10"
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-4 border-t border-white/5">
+            <Button onClick={handleSave} className="bg-gold hover:bg-gold/80 text-black font-bold gap-2">
+              <Save className="w-4 h-4" />
+              Salvar Configurações
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
