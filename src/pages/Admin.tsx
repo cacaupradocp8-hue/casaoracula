@@ -67,6 +67,7 @@ const AdminClubeEditorialTab = lazy(() => import('@/components/admin/AdminClubeE
 const AdminCentralCasa = lazy(() => import('@/pages/admin/AdminCentralCasa'));
 const AdminRotasCasa = lazy(() => import('@/pages/admin/AdminRotasCasa'));
 const AdminRotaDosLobosRedirect = lazy(() => import('@/pages/admin/AdminRotaDosLobosRedirect'));
+const AdminTreinamentoTab = lazy(() => import('@/components/admin/treinamento/AdminCamaraSussurro').then(m => ({ default: m.AdminCamaraSussurro })));
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
@@ -111,6 +112,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-acervo': AdminClubeAcervo,
   'clube-chat': AdminClubeHub,
   'clube-carrosseis-insights': AdminCarrosseisInsights,
+  'clube-treinamento': AdminTreinamentoTab,
   'clube-editorial': AdminClubeEditorialTab,
 
   

@@ -76,8 +76,8 @@ export default function AdminRotasCasa() {
             <h2 className="text-2xl font-serif">Rota dos Lobos</h2>
           </div>
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" className="text-xs h-8 border-gold/30 text-gold" onClick={() => navigate('/clube/rotas/rota-dos-lobos')}>
-              <Eye className="w-3.5 h-3.5 mr-1" /> Portal da Rota
+            <Button size="sm" variant="outline" className="text-xs h-8 border-gold/30 text-gold" onClick={() => navigate('/admin/clube/rota-dos-lobos')}>
+              <Eye className="w-3.5 h-3.5 mr-1" /> Gerenciar Rota
             </Button>
           </div>
         </div>
