@@ -114,20 +114,19 @@ export default function ClubeRotasPortal() {
                 </motion.div>
 
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.5, delay: 0.3 }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 2, delay: 0.5 }}
                   className="hidden lg:flex justify-center relative"
                 >
                   <div className="absolute inset-0 bg-gold/5 blur-[120px] rounded-full animate-pulse" />
-                  <div className="relative z-10 w-full max-w-md aspect-square opacity-40 grayscale hover:grayscale-0 transition-all duration-1000">
+                  <div className="relative z-10 w-full max-w-md aspect-square opacity-20 grayscale transition-all duration-1000 pointer-events-none">
                     <img 
                       src={heroDesktop} 
-                      alt="Mandala Simbólica" 
-                      className="w-full h-full object-cover rounded-full border border-gold/10 p-4"
+                      alt="Portal de Entrada" 
+                      className="w-full h-full object-cover rounded-full mix-blend-screen opacity-60"
                     />
                   </div>
-
                 </motion.div>
               </div>
             </ResponsiveContainer>
