@@ -223,20 +223,20 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               onTabChange(item.key);
                               // Sync URL for clube sub-tabs to avoid 404/blank screen on direct paths
                               if (item.key === 'central-casa') navigate('/admin', { replace: true });
-                              if (item.key === 'central-rotas') navigate('/admin/rotas', { replace: true });
-                              if (item.key === 'central-rota-lobos') {
-                                // Buscamos a estação ativa via query no componente que chama navigate, 
-                                // mas na sidebar vamos para a central de ciclos ou injetamos a lógica de redirecionamento
-                                navigate('/admin/clube/rota-dos-lobos'); 
+                              else if (item.key === 'central-rotas') navigate('/admin/rotas', { replace: true });
+                              else if (item.key === 'central-rota-lobos') navigate('/admin/clube/rota-dos-lobos', { replace: true });
+                              else if (item.key === 'clube') navigate('/admin/clube', { replace: true });
+                              else if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
+                              else if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
+                              else if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos', { replace: true });
+                              else if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento', { replace: true });
+                              else if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
+                              else if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
+                              else if (item.key === 'quiz') navigate('/admin/quiz', { replace: true });
+                              else {
+                                // For all other tabs, ensure we are on the base /admin path so the tab logic works
+                                navigate(`/admin?tab=${item.key}`, { replace: true });
                               }
-                              if (item.key === 'clube') navigate('/admin/clube', { replace: true });
-                              if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
-                              if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
-                              if (item.key === 'clube-acervo') navigate('/admin/clube/conteudos', { replace: true });
-                              if (item.key === 'clube-treinamento') navigate('/admin/clube/treinamento', { replace: true });
-                              if (item.key === 'clube-premium-editor') navigate('/admin/clube?tab=clube-premium-editor', { replace: true });
-                              if (item.key === 'clube-chat') navigate('/admin/clube/chat', { replace: true });
-                              if (item.key === 'quiz') navigate('/admin/quiz', { replace: true });
                             }
 
                             if (onItemClick) onItemClick();
