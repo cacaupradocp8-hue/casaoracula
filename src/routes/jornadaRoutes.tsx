@@ -4,7 +4,7 @@ import { Route, Navigate } from "react-router-dom";
 // Lazy-loaded pages (Importing same components used in App.tsx)
 const ClubeRotasCatalogo = React.lazy(() => import("@/pages/clube/ClubeRotasCatalogo"));
 const ClubeRotasPortal = React.lazy(() => import("@/pages/clube/ClubeRotasPortal"));
-const RotaDosLobosPortal = React.lazy(() => import("@/pages/clube/RotaDosLobosPortal"));
+const RotaDosLobosPortal = React.lazy(() => import("@/pages/clube/RotaDosLobos"));
 const ClubeRotaPremium = React.lazy(() => import("@/pages/clube/ClubeRotaPremium"));
 const ClubeAcervo = React.lazy(() => import("@/pages/clube/ClubeAcervo"));
 const Travessias = React.lazy(() => import("@/pages/Travessias"));
