@@ -23,12 +23,12 @@ export default function ClubeRotasPortal() {
 
   return (
     <AppLayout>
-      <div className="relative bg-[#010816] text-white selection:bg-gold/20 min-h-screen overflow-x-hidden">
+      <div className="relative bg-background text-white selection:bg-gold/20 min-h-screen overflow-x-hidden">
         {/* Cinematic Background */}
         <div className="fixed inset-0 pointer-events-none z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#020D24] via-[#010816] to-[#010610]" />
           <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-soft-light" />
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,hsl(206_70%_25%/0.15),transparent_60%)]" />
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,hsl(var(--gold)/0.05),transparent_60%)]" />
         </div>
 
         <main className="relative z-10 pb-32">

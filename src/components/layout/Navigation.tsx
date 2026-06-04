@@ -180,8 +180,8 @@ export function Navigation() {
           ? "bg-[#000814]/80 border-blue-900/20 backdrop-blur-3xl" 
           : "border-white/5 bg-background/60 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.5)]"
       )}>
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="flex items-center justify-between gap-2 h-16 lg:h-20">
+        <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
+          <div className="flex items-center justify-between gap-4 h-16 lg:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2 shrink-0">
               <Logo variant="horizontal" className={cn("transition-all h-8 lg:h-10", location.pathname === '/clube' ? "brightness-125" : "")} />
             </Link>
