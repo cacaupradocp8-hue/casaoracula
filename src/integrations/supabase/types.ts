@@ -5638,6 +5638,7 @@ export type Database = {
           id: string
           metadata: Json | null
           slug: string | null
+          station_filter: string | null
           status: string | null
           sussurros: string[] | null
           title: string
@@ -5661,6 +5662,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           slug?: string | null
+          station_filter?: string | null
           status?: string | null
           sussurros?: string[] | null
           title: string
@@ -5684,6 +5686,7 @@ export type Database = {
           id?: string
           metadata?: Json | null
           slug?: string | null
+          station_filter?: string | null
           status?: string | null
           sussurros?: string[] | null
           title?: string
