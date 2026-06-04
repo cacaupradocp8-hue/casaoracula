@@ -53,7 +53,7 @@ export default function ClubeRotasPortal() {
                       <span className="text-gold italic">Casa Orácula</span>
                     </h1>
                     
-                    <div className="space-y-4 text-xl md:text-2xl text-white/80 font-serif italic leading-relaxed border-l-2 border-gold/20 pl-6 py-2">
+                    <div className="space-y-4 text-xl md:text-2xl text-white/80 font-serif italic leading-relaxed border-l-2 border-gold/20 pl-6 py-2 max-w-xl">
                       <p>Toda mulher chega carregando perguntas.</p>
                       <p>Algumas chegam buscando respostas.</p>
                       <p>Outras chegam porque algo dentro delas começou a chamar.</p>
@@ -236,7 +236,7 @@ export default function ClubeRotasPortal() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-                    <div className="space-y-6 text-xl text-white/60 leading-relaxed font-light">
+                    <div className="max-w-xl space-y-4 text-lg text-white/60 leading-relaxed font-light">
                       <p>Outros como repetições. Outros como perguntas que insistem em permanecer.</p>
                       <p className="text-white/40 italic text-lg">Atlas observa os rastros da travessia e ajuda a tornar visíveis os territórios que estão pedindo atenção agora.</p>
                     </div>
@@ -364,7 +364,7 @@ export default function ClubeRotasPortal() {
                       </div>
                       <div className="space-y-8">
                         <h4 className="text-4xl font-serif text-white">O Acervo Vivo da Casa</h4>
-                        <div className="space-y-6 text-white/50 italic leading-relaxed text-xl font-light">
+                        <div className="space-y-6 text-white/50 italic leading-relaxed text-xl font-light max-w-sm">
                           <p>Algumas rotas já abriram seus portões. Outras ainda estão sendo tecidas.</p>
                           <p className="text-gold/40">Na Casa Orácula, cada travessia amadurece antes de ser compartilhada.</p>
                           <p>Há caminhos que não podem ser apressados.</p>
