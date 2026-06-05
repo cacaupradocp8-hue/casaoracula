@@ -191,6 +191,27 @@ export function AdminClubeAudioteca() {
     }
   };
 
+  const handleDownload = async (track: any) => {
+    try {
+      const response = await fetch(track.audio_url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${track.titulo}.${track.audio_url.split('.').pop()}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast.success('Download iniciado');
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast.error('Erro ao baixar arquivo');
+    }
+  };
+
   const filteredTracks = tracks?.filter(t => {
     const matchesSearch = t.titulo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          t.album?.titulo?.toLowerCase().includes(searchTerm.toLowerCase());
