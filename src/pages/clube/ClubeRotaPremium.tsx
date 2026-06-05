@@ -28,6 +28,7 @@ import { MiniMandalaTerritorios } from '@/components/clube/MiniMandalaTerritorio
 import { EstacaoHero } from '@/components/clube/EstacaoHero';
 import { AtivoAgoraBloco } from '@/components/clube/AtivoAgoraBloco';
 import { EstacaoCaminhoTrail } from '@/components/clube/EstacaoCaminhoTrail';
+import { JardimInput } from '@/components/clube/JardimInput';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ClubeRotaPremium() {
@@ -248,8 +249,14 @@ export default function ClubeRotaPremium() {
           {/* 10. JARDIM DA PSIQUE */}
           {psiquePergunta && (
             <Section id="jardim-psique" icon={Flower2} kicker="Semeadura Psíquica" titulo="Jardim da Psique">
-              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10">
+              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10 space-y-6">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{psiquePergunta}</p>
+                <JardimInput 
+                  type="psique" 
+                  pergunta={psiquePergunta} 
+                  pontoId={ponto.id} 
+                  sourceTitle={ponto.nome}
+                />
               </div>
             </Section>
           )}
@@ -257,8 +264,14 @@ export default function ClubeRotaPremium() {
           {/* 11. JARDIM DO OFÍCIO */}
           {oficioPergunta && (
             <Section id="jardim-oficio" icon={Flower2} kicker="Semeadura do Ofício" titulo="Jardim do Ofício">
-              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
+              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10 space-y-6">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
+                <JardimInput 
+                  type="oficio" 
+                  pergunta={oficioPergunta} 
+                  pontoId={ponto.id} 
+                  sourceTitle={ponto.nome}
+                />
                 <div className="mt-6 pt-4 border-t border-emerald-500/10">
                    <p className="text-[10px] text-emerald-500/50 uppercase tracking-widest font-bold mb-1">Aviso Ético</p>
                    <p className="text-[10px] text-white/30 italic">Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de mulheres acompanhadas.</p>
