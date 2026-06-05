@@ -43,13 +43,8 @@ export const adminNavGroups: AdminNavGroup[] = [
     emoji: '✨',
     icon: Sparkles,
     items: [
-      { key: 'central-rotas', label: 'Gestão das Rotas', icon: Compass },
+      { key: 'central-rotas', label: 'Rotas da Casa', icon: Compass },
       { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
-      { key: 'clube', label: 'Hub Editorial', icon: LayoutGrid },
-      { key: 'clube-jornadas', label: 'Estações da Travessia', icon: RefreshCw, route: '/admin/clube/ciclos' },
-      { key: 'clube-acervo', label: 'Acervo das Rotas', icon: Library, route: '/admin/clube/conteudos' },
-      { key: 'clube-chat', label: 'Converse com a Obra', icon: MessageSquare, route: '/admin/clube/chat' },
-      { key: 'clube-treinamento', label: 'Sala de Treinamento', icon: GraduationCap, route: '/admin/clube/treinamento' },
     ],
   },
   {
@@ -235,7 +230,7 @@ export function AdminSidebar({ activeTab, onTabChange, onItemClick }: AdminSideb
                               // to update the activeTab state, which is more reliable
                               if (item.key === 'central-casa') navigate('/admin', { replace: true });
                               else if (item.key === 'central-rotas') navigate('/admin/rotas', { replace: true });
-                              else if (item.key === 'central-rota-lobos') navigate('/admin/clube/rota-dos-lobos', { replace: true });
+                              else if (item.key === 'central-rota-lobos') navigate('/admin/rotas?obra=Mulheres que Correm com os Lobos', { replace: true });
                               else if (item.key === 'clube') navigate('/admin/clube', { replace: true });
                               else if (item.key === 'clube-jornadas') navigate('/admin/clube/ciclos', { replace: true });
                               else if (item.key === 'clube-portais') navigate('/admin/clube/portais', { replace: true });
