@@ -113,6 +113,7 @@ export function AudioUpload({
         .from('audios')
         .upload(fileName, file, {
           cacheControl: '3600',
+          contentType: file.type,
           upsert: false,
         });
 
