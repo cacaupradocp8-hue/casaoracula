@@ -829,7 +829,13 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </div>
               <div>
                 <h2 className="text-xl font-serif text-foreground">Editor Único da Rota</h2>
-                <p className="text-xs text-muted-foreground">Construção guiada da travessia simbólica.</p>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs text-muted-foreground">Construção guiada da travessia simbólica.</p>
+                  <p className="text-[10px] font-bold text-amber-500 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Para inserir conteúdo completo, prefira usar o botão Importar. A edição manual serve para ajustes pontuais.
+                  </p>
+                </div>
               </div>
             </div>
             <div className="flex gap-2">
