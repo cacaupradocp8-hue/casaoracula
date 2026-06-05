@@ -376,17 +376,22 @@ export function AdminAudiosTab() {
                   )}
                   {filePath && !uploading && (
                     <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm text-green-500 truncate mr-2">
-                        ✓ {filePath.split('/').pop()}
-                      </p>
+                      <div className="flex flex-col gap-1 flex-1 min-w-0">
+                        <p className="text-sm text-green-500 truncate font-medium">
+                          ✓ Arquivo Pronto
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate opacity-70">
+                          {filePath.split('/').pop()}
+                        </p>
+                      </div>
                       <Button 
-                        variant="outline" 
+                        variant="secondary" 
                         size="sm" 
-                        className="h-7 gap-1 text-[10px]"
+                        className="h-8 gap-2 bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20 shadow-sm"
                         onClick={() => handleDownload({ file_path: filePath, titulo: titulo || 'audio' } as any)}
                       >
-                        <Download className="w-3 h-3" />
-                        Baixar
+                        <Download className="w-4 h-4" />
+                        TESTAR DOWNLOAD
                       </Button>
                     </div>
                   )}
@@ -544,9 +549,9 @@ export function AdminAudiosTab() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleDownload(audio)}
-                          title="Baixar arquivo"
+                          title="Download do Arquivo Original"
                         >
-                          <Download className="w-4 h-4" />
+                          <Download className="w-4 h-4 text-primary" />
                         </Button>
                         <Button
                           variant="ghost"
