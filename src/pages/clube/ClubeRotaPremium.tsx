@@ -24,7 +24,7 @@ import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { FraseTravessia } from '@/components/clube/FraseTravessia';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
-import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
+import { MiniMandalaTerritorios } from '@/components/clube/MiniMandalaTerritorios';
 import { EstacaoHero } from '@/components/clube/EstacaoHero';
 import { AtivoAgoraBloco } from '@/components/clube/AtivoAgoraBloco';
 import { EstacaoCaminhoTrail } from '@/components/clube/EstacaoCaminhoTrail';
