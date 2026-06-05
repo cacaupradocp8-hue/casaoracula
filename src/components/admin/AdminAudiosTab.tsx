@@ -40,7 +40,8 @@ import {
   Pause,
   Eye,
   EyeOff,
-  Copy
+  Copy,
+  Download
 } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 
