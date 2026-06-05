@@ -346,7 +346,7 @@ export default function AdminCentralEstacao() {
                   <span className="text-gold">{cleanTechnicalTitle(estacao.livro_titulo || 'Rota')}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="text-2xl font-serif text-foreground truncate">{estacao.titulo}</h1>
+                  <h1 className="text-2xl font-serif text-foreground truncate" title="Título da Estação: aparece na lista das estações">{estacao.titulo}</h1>
                   <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500")}>
                     {estacao.publicada ? 'Publicado' : 'Rascunho'}
                   </Badge>
