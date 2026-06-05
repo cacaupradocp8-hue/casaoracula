@@ -375,9 +375,20 @@ export function AdminAudiosTab() {
                     </div>
                   )}
                   {filePath && !uploading && (
-                    <p className="text-sm text-green-500 mt-2">
-                      ✓ Arquivo carregado: {filePath.split('/').pop()}
-                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm text-green-500 truncate mr-2">
+                        ✓ {filePath.split('/').pop()}
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-7 gap-1 text-[10px]"
+                        onClick={() => handleDownload({ file_path: filePath, titulo: titulo || 'audio' } as any)}
+                      >
+                        <Download className="w-3 h-3" />
+                        Baixar
+                      </Button>
+                    </div>
                   )}
                 </div>
 
