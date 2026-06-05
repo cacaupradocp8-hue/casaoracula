@@ -454,6 +454,9 @@ export function AdminClubeAudioteca() {
                             }} className="gap-2">
                               <Edit3 className="w-4 h-4" /> Editar Dados
                             </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDownload(track)} className="gap-2">
+                              <Download className="w-4 h-4" /> Baixar Áudio
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => window.open(track.audio_url, '_blank')} className="gap-2">
                               <ExternalLink className="w-4 h-4" /> Ver Arquivo
                             </DropdownMenuItem>
