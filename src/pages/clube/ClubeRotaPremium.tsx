@@ -28,6 +28,7 @@ import { MiniMandalaTerritorios } from '@/components/clube/MiniMandalaTerritorio
 import { EstacaoHero } from '@/components/clube/EstacaoHero';
 import { AtivoAgoraBloco } from '@/components/clube/AtivoAgoraBloco';
 import { EstacaoCaminhoTrail } from '@/components/clube/EstacaoCaminhoTrail';
+import { JardimInput } from '@/components/clube/JardimInput';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ClubeRotaPremium() {
