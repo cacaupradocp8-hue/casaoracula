@@ -977,8 +977,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionContent className="pt-4 pb-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero</Label>
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero (Interno)</Label>
                     <Input value={form.hero.titulo} onChange={e => setForm({...form, hero: {...form.hero, titulo: e.target.value}})} className="bg-background/50" />
+                    <p className="text-[9px] text-gold/60 italic">Aparece no topo da página interna da estação.</p>
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase font-bold text-white/40">CTA do Hero</Label>
