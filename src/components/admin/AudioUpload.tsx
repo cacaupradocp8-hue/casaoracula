@@ -205,6 +205,16 @@ export function AudioUpload({
               type="button"
               variant="ghost"
               size="icon"
+              className="shrink-0 h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
+              onClick={handleDownload}
+              title="Baixar áudio"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
               className="shrink-0 h-8 w-8 text-destructive hover:text-destructive"
               onClick={handleRemove}
             >
