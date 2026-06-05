@@ -91,12 +91,31 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
         payload.tipo_registro = 'estacao_rota';
         payload.ferramenta_chave = pontoId;
         payload.ferramenta_nome = sourceTitle;
+        payload.data_aplicacao = new Date().toISOString();
       } else {
         payload.reflexao_profissional = text;
         payload.contexto_origem = `ponto:${pontoId}`;
       }
 
-      const { error } = await supabase.from(tableName).insert(payload);
+      let error;
+      if (recordId) {
+        const { error: updateError } = await (supabase as any)
+          .from(tableName)
+          .update(payload)
+          .eq('id', recordId);
+        error = updateError;
+      } else {
+        const { data, error: insertError } = await (supabase as any)
+          .from(tableName)
+          .insert(payload)
+          .select('id')
+          .single();
+        
+        if (!insertError && data) {
+          setRecordId(data.id);
+        }
+        error = insertError;
+      }
 
       if (error) throw error;
 
