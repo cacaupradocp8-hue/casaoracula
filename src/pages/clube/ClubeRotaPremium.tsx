@@ -249,8 +249,14 @@ export default function ClubeRotaPremium() {
           {/* 10. JARDIM DA PSIQUE */}
           {psiquePergunta && (
             <Section id="jardim-psique" icon={Flower2} kicker="Semeadura Psíquica" titulo="Jardim da Psique">
-              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10">
+              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10 space-y-6">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{psiquePergunta}</p>
+                <JardimInput 
+                  type="psique" 
+                  pergunta={psiquePergunta} 
+                  pontoId={ponto.id} 
+                  sourceTitle={ponto.nome}
+                />
               </div>
             </Section>
           )}
