@@ -549,9 +549,9 @@ export function AdminAudiosTab() {
                           size="icon"
                           className="h-8 w-8"
                           onClick={() => handleDownload(audio)}
-                          title="Baixar arquivo"
+                          title="Download do Arquivo Original"
                         >
-                          <Download className="w-4 h-4" />
+                          <Download className="w-4 h-4 text-primary" />
                         </Button>
                         <Button
                           variant="ghost"
