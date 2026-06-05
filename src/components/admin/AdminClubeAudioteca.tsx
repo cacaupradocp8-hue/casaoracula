@@ -16,6 +16,7 @@ import {
   Clock,
   ExternalLink,
   ChevronRight,
+  Download,
   Plus,
   ArrowUpDown,
   Tag,
@@ -187,6 +188,27 @@ export function AdminClubeAudioteca() {
         audioRef.current.play();
         setPlayingId(track.id);
       }
+    }
+  };
+
+  const handleDownload = async (track: any) => {
+    try {
+      const response = await fetch(track.audio_url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${track.titulo}.${track.audio_url.split('.').pop()}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast.success('Download iniciado');
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast.error('Erro ao baixar arquivo');
     }
   };
 
@@ -431,6 +453,9 @@ export function AdminClubeAudioteca() {
                               setIsEditDialogOpen(true);
                             }} className="gap-2">
                               <Edit3 className="w-4 h-4" /> Editar Dados
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDownload(track)} className="gap-2">
+                              <Download className="w-4 h-4" /> Baixar Áudio
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => window.open(track.audio_url, '_blank')} className="gap-2">
                               <ExternalLink className="w-4 h-4" /> Ver Arquivo

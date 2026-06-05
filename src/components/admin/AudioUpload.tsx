@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Loader2, Upload, X, Link as LinkIcon, Music, Library } from 'lucide-react';
+import { Loader2, Upload, X, Link as LinkIcon, Music, Library, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
@@ -113,6 +113,7 @@ export function AudioUpload({
         .from('audios')
         .upload(fileName, file, {
           cacheControl: '3600',
+          contentType: file.type,
           upsert: false,
         });
 
@@ -133,6 +134,28 @@ export function AudioUpload({
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
+    }
+  };
+
+  const handleDownload = async () => {
+    if (!value) return;
+    try {
+      const response = await fetch(value);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = value.split('/').pop() || 'audio.mp3';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast.success('Download iniciado');
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast.error('Erro ao baixar arquivo');
     }
   };
 
@@ -178,6 +201,16 @@ export function AudioUpload({
               <source src={value} />
               Seu navegador não suporta áudio.
             </audio>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="shrink-0 h-8 w-8 text-primary hover:text-primary hover:bg-primary/10"
+              onClick={handleDownload}
+              title="Baixar áudio"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
             <Button
               type="button"
               variant="ghost"

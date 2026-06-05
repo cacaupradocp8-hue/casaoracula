@@ -40,7 +40,8 @@ import {
   Pause,
   Eye,
   EyeOff,
-  Copy
+  Copy,
+  Download
 } from 'lucide-react';
 import { ImageUpload } from './ImageUpload';
 
@@ -153,7 +154,10 @@ export function AdminAudiosTab() {
 
     const { error } = await supabase.storage
       .from('audios')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false
+      });
 
     if (error) {
       toast({ title: 'Erro no upload', description: error.message, variant: 'destructive' });
@@ -271,6 +275,28 @@ export function AdminAudiosTab() {
     toast({ title: 'URL copiada!' });
   };
 
+  const handleDownload = async (audio: AudioAsset) => {
+    try {
+      const url = getAudioUrl(audio.file_path);
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${audio.titulo}.${audio.file_path.split('.').pop()}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast({ title: 'Download iniciado' });
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast({ title: 'Erro ao baixar arquivo', variant: 'destructive' });
+    }
+  };
+
   const formatDuration = (seconds: number | null) => {
     if (!seconds) return '--:--';
     const mins = Math.floor(seconds / 60);
@@ -349,9 +375,20 @@ export function AdminAudiosTab() {
                     </div>
                   )}
                   {filePath && !uploading && (
-                    <p className="text-sm text-green-500 mt-2">
-                      ✓ Arquivo carregado: {filePath.split('/').pop()}
-                    </p>
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-sm text-green-500 truncate mr-2">
+                        ✓ {filePath.split('/').pop()}
+                      </p>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="h-7 gap-1 text-[10px]"
+                        onClick={() => handleDownload({ file_path: filePath, titulo: titulo || 'audio' } as any)}
+                      >
+                        <Download className="w-3 h-3" />
+                        Baixar
+                      </Button>
+                    </div>
                   )}
                 </div>
 
@@ -502,6 +539,15 @@ export function AdminAudiosTab() {
                     </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
+                          onClick={() => handleDownload(audio)}
+                          title="Baixar arquivo"
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
                         <Button
                           variant="ghost"
                           size="icon"
