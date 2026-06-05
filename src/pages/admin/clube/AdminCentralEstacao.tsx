@@ -854,6 +854,18 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           </div>
 
           <Accordion type="multiple" className="w-full space-y-4">
+            {/* Campo Conteúdo Texto - Ajuste 1 */}
+            <div className="space-y-2 mb-6 p-4 border border-gold/20 rounded-xl bg-gold/5">
+              <Label className="text-[10px] uppercase font-bold text-gold">Texto base da estação</Label>
+              <Textarea 
+                value={form.conteudo_texto} 
+                onChange={e => setForm({...form, conteudo_texto: e.target.value})} 
+                className="bg-background/50 min-h-[120px] font-serif" 
+                placeholder="Insira o texto base que servirá de alicerce para esta estação..."
+              />
+              <p className="text-[10px] text-muted-foreground italic">Este é o conteúdo bruto da estação, geralmente preenchido via importador.</p>
+            </div>
+
             {/* 0. Imersão e Visuais Premium */}
             <AccordionItem value="visuais" className="border border-gold/40 rounded-xl px-4 bg-gold/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
