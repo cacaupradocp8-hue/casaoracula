@@ -385,13 +385,13 @@ export function AdminAudiosTab() {
                         </p>
                       </div>
                       <Button 
-                        variant="outline" 
+                        variant="secondary" 
                         size="sm" 
-                        className="h-7 gap-1 text-[10px]"
+                        className="h-8 gap-2 bg-green-500/10 text-green-600 hover:bg-green-500/20 border-green-500/20 shadow-sm"
                         onClick={() => handleDownload({ file_path: filePath, titulo: titulo || 'audio' } as any)}
                       >
-                        <Download className="w-3 h-3" />
-                        Baixar
+                        <Download className="w-4 h-4" />
+                        TESTAR DOWNLOAD
                       </Button>
                     </div>
                   )}
