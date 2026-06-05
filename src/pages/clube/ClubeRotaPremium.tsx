@@ -55,20 +55,28 @@ export default function ClubeRotaPremium() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-midnight flex items-center justify-center">
-        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}>
-          <Compass className="w-12 h-12 text-gold/40" />
-        </motion.div>
-      </div>
+      <AppLayout>
+        <div className="bg-midnight min-h-screen pt-24 px-6 space-y-12">
+          <Skeleton className="h-[60vh] w-full rounded-[2.5rem] bg-white/5" />
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+          </div>
+        </div>
+      </AppLayout>
     );
   }
 
   if (!ponto) {
     return (
       <AppLayout>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-midnight">
           <h2 className="font-display text-2xl text-foreground mb-4">Rota não encontrada</h2>
-          <Button onClick={() => navigate('/clube')} variant="outline">Voltar às Rotas</Button>
+          <Button onClick={() => navigate('/clube')} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+            Voltar às Rotas
+          </Button>
         </div>
       </AppLayout>
     );
