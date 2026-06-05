@@ -2,11 +2,9 @@ import React, { useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  Play,
   Compass,
   Headphones,
   Flower2,
-  MapPin,
   DoorOpen,
   Layers,
   Layout,
@@ -17,25 +15,21 @@ import {
   Eye,
   Radar,
   Target,
-  Image as ImageIcon
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
-import { cn } from '@/lib/utils';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { FraseTravessia } from '@/components/clube/FraseTravessia';
-import { SymbolicCarouselBlock } from '@/components/clube-livro/blocks/SymbolicCarouselBlock';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
-import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
+import { MiniMandalaTerritorios } from '@/components/clube/MiniMandalaTerritorios';
+import { EstacaoHero } from '@/components/clube/EstacaoHero';
+import { AtivoAgoraBloco } from '@/components/clube/AtivoAgoraBloco';
+import { EstacaoCaminhoTrail } from '@/components/clube/EstacaoCaminhoTrail';
+import { Skeleton } from '@/components/ui/skeleton';
 
-/**
- * ClubeRotaPremium — Travessia oficial (Etapa 2.6)
- * Ordem oficial: Hero → Mapa Simbólico → Territórios da CidadELA → Áudios → Caso → Desafio →
- * Revelação → Ferramenta → Jardim Psique → Jardim Ofício → Missão → Fechamento.
- */
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -51,20 +45,28 @@ export default function ClubeRotaPremium() {
 
   if (isLoading) {
     return (
-      <div className="fixed inset-0 bg-midnight flex items-center justify-center">
-        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 6, ease: 'linear' }}>
-          <Compass className="w-12 h-12 text-gold/40" />
-        </motion.div>
-      </div>
+      <AppLayout>
+        <div className="bg-midnight min-h-screen pt-24 px-6 space-y-12">
+          <Skeleton className="h-[60vh] w-full rounded-[2.5rem] bg-white/5" />
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+            <Skeleton className="h-32 bg-white/5 rounded-2xl" />
+          </div>
+        </div>
+      </AppLayout>
     );
   }
 
   if (!ponto) {
     return (
       <AppLayout>
-        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+        <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-midnight">
           <h2 className="font-display text-2xl text-foreground mb-4">Rota não encontrada</h2>
-          <Button onClick={() => navigate('/clube')} variant="outline">Voltar às Rotas</Button>
+          <Button onClick={() => navigate('/clube')} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+            Voltar às Rotas
+          </Button>
         </div>
       </AppLayout>
     );
@@ -85,14 +87,6 @@ export default function ClubeRotaPremium() {
     return String(content);
   };
 
-  const cartografia = [
-    { label: 'Onde você está', value: estacaoAtual?.titulo, icon: MapPin },
-    { label: 'A Porta', value: ponto.porta, icon: DoorOpen },
-    { label: 'O Campo', value: ponto.campo, icon: Layers },
-    { label: 'A Torre', value: ponto.torre, icon: Layout },
-    { label: 'O Labirinto', value: ponto.labirinto, icon: ShieldAlert },
-  ].filter(c => c.value && typeof c.value === 'string' && c.value.trim());
-
   const psiquePergunta = ponto.metadata?.jardim_psique?.pergunta;
   const oficioPergunta = ponto.metadata?.jardim_oficio?.pergunta;
   const missaoCampo = ponto.metadata?.missao_campo;
@@ -103,141 +97,52 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       <div className="relative bg-midnight text-foreground overflow-x-hidden min-h-screen">
-        {/* Background */}
+        {/* Background Atmosphere */}
         <div className="pointer-events-none fixed inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(206_60%_18%/0.6),transparent_60%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,hsl(206_70%_8%/0.9),transparent_70%)]" />
         </div>
 
         {/* 1. HERO */}
-        <section className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            {ponto.metadata?.hero?.imagem_desktop ? (
-              <picture>
-                {ponto.metadata.hero.imagem_mobile && (
-                  <source media="(max-width: 768px)" srcSet={ponto.metadata.hero.imagem_mobile} />
-                )}
-                <img 
-                  src={ponto.metadata.hero.imagem_desktop} 
-                  alt="" 
-                  className="w-full h-full object-cover opacity-40 mix-blend-luminosity" 
-                />
-              </picture>
-            ) : ponto.image_url ? (
-              <img src={ponto.image_url} alt="" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
-            ) : estacaoAtual?.banner_url ? (
-              <img src={estacaoAtual.banner_url} alt="" className="w-full h-full object-cover opacity-20" />
-            ) : null}
-            <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/40 to-midnight" />
-          </div>
+        <EstacaoHero 
+          estacaoNumero={estacaoAtual?.numero || 1}
+          titulo={ponto.metadata?.hero?.titulo || ponto.nome}
+          subtitulo={ponto.metadata?.hero?.subtitulo || ponto.subtitulo || ''}
+          backgroundImage={ponto.metadata?.hero?.imagem_desktop || estacaoAtual?.banner_url}
+        />
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5 }}
-            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6"
-          >
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-3">
-                <span className="h-[1px] w-8 bg-gradient-to-r from-transparent to-gold/40" />
-                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium">
-                  {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-                </span>
-                <span className="h-[1px] w-8 bg-gradient-to-l from-transparent to-gold/40" />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <h1 className="font-display font-light leading-tight tracking-tighter text-4xl md:text-6xl lg:text-7xl">
-                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent">
-                  {ponto.metadata?.hero?.titulo || ponto.nome}
-                </span>
-              </h1>
-              {(ponto.metadata?.hero?.subtitulo || ponto.subtitulo) && (
-                <p className="font-serif italic text-lg md:text-2xl text-white/40 max-w-2xl mx-auto">
-                  "{ponto.metadata?.hero?.subtitulo || ponto.subtitulo}"
-                </p>
-              )}
-              {ponto.metadata?.hero?.texto && (
-                <p className="font-serif text-white/60 text-lg md:text-xl max-w-3xl mx-auto mt-4 leading-relaxed">
-                  {ponto.metadata.hero.texto}
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10">
-              <Button
-                size="lg"
-                variant="gold"
-                className="rounded-full px-12 h-16 shadow-glow"
-                onClick={() => document.getElementById('mapa-simbolico')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <Play className="w-4 h-4 fill-current mr-2" /> Iniciar Travessia
-              </Button>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* CONTENT */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-32 pb-40 pt-12">
+        {/* CONTENT CONTAINER */}
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-40 pb-40 pt-12">
           
-          {/* FRASE TRAVESSIA 1 */}
-          {ponto.metadata?.frases_travessia?.[0] && (
-            <FraseTravessia texto={ponto.metadata.frases_travessia[0]} />
-          )}
+          {/* 2. O QUE ESTÁ ATIVO AGORA */}
+          <section id="ativo-agora" className="space-y-12">
+            <h2 className="text-xl md:text-3xl font-display text-white text-center">O que está ativo agora</h2>
+            <AtivoAgoraBloco />
+          </section>
 
-          {/* 2. MAPA SIMBÓLICO (Cartografia da Estação) */}
-          <Section id="mapa-simbolico" icon={Compass} kicker="Cartografia" titulo="Mapa Simbólico">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-              {cartografia.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  className="bg-white/[0.02] border border-white/5 p-4 rounded-2xl flex items-center gap-4"
-                >
-                  <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center shrink-0 border border-gold/10">
-                    <item.icon className="w-4 h-4 text-gold/60" />
-                  </div>
-                  <div>
-                    <p className="text-[8px] tracking-[0.3em] uppercase text-white/30 font-bold">{item.label}</p>
-                    <p className="font-display text-sm text-white/90">{item.value}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </Section>
-          
-          {/* CARROSSEL 1 */}
-          {ponto.metadata?.carrossel?.imagens?.length > 0 && (
-            <SymbolicCarouselBlock 
-              title="Visão Simbólica"
-              icon={<ImageIcon className="w-4 h-4" />}
-              slides={ponto.metadata.carrossel.imagens.map((img: string, idx: number) => ({
-                image_url: img,
-                legenda: ponto.metadata.carrossel.legendas?.[idx] || ''
-              }))}
-            />
-          )}
-
-          {/* FRASE TRAVESSIA 2 */}
-          {ponto.metadata?.frases_travessia?.[1] && (
-            <FraseTravessia texto={ponto.metadata.frases_travessia[1]} />
-          )}
+          {/* 3. TERRITÓRIOS ATIVADOS */}
           {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
-            <Section id="territorios-cidadela" icon={Layers} kicker="Expansão" titulo="Territórios da CidadELA">
-              <CidadelaAtivadaBloco 
+            <Section id="territorios-cidadela" kicker="Expansão da CidadELA" titulo="Territórios ativados">
+              <MiniMandalaTerritorios 
                 territoriosAtivados={ponto.impacto_cidadela.map((i: any) => i.distrito || i.id || i)}
               />
             </Section>
           )}
 
-          {/* 4. ÁUDIOS */}
+          {/* 4. CAMINHO DA ESTAÇÃO */}
+          <Section kicker="Travessia" titulo="Caminho da Estação">
+            <EstacaoCaminhoTrail />
+          </Section>
+
+          {/* FRASE TRAVESSIA 1 (Opcional, mantida se houver no metadado) */}
+          {ponto.metadata?.frases_travessia?.[0] && (
+            <FraseTravessia texto={ponto.metadata.frases_travessia[0]} />
+          )}
+
+          {/* 5. ÁUDIOS */}
           {audios.length > 0 && (
             <Section id="audios" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
               <div className="space-y-24">
-                {/* Primeiro áudio — Experiência Premium */}
                 <EscutaPremium 
                   audioUrl={audios[0].url}
                   titulo={audios[0].titulo}
@@ -247,7 +152,6 @@ export default function ClubeRotaPremium() {
                   imagemEscuta={ponto.metadata?.escuta?.imagem_escuta}
                 />
 
-                {/* Demais áudios — Player Padrão */}
                 {audios.length > 1 && (
                   <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
                     {audios.slice(1).map((audio: any, i: number) => (
@@ -266,17 +170,12 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* FRASE TRAVESSIA 3 */}
-          {ponto.metadata?.frases_travessia?.[2] && (
-            <FraseTravessia texto={ponto.metadata.frases_travessia[2]} />
-          )}
-
-          {/* 4. CASO SIMBÓLICO */}
+          {/* 6. CASO SIMBÓLICO */}
           {(() => {
             const relato = renderContent(ponto.metadata?.caso_simbolico?.relato || ponto.metadata?.caso_espelho);
             if (!relato) return null;
             return (
-              <Section id="caso-simbolico" icon={Eye} kicker="Reflexo" titulo={ponto.metadata?.caso_simbolico?.titulo || 'Caso Simbólico'}>
+              <Section id="caso-simbolico" icon={Eye} kicker="Visão do Espelho" titulo={ponto.metadata?.caso_simbolico?.titulo || 'Caso Simbólico'}>
                 <div className="max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap font-serif text-lg leading-relaxed italic text-white/80">
                   {relato}
                 </div>
@@ -284,12 +183,12 @@ export default function ClubeRotaPremium() {
             );
           })()}
 
-          {/* 5. DESAFIO DE ESCUTA */}
+          {/* 7. DESAFIO DE ESCUTA */}
           {(() => {
             const desafio = renderContent(ponto.metadata?.desafio_terapeuta?.pergunta || ponto.metadata?.desafio_terapeuta);
             if (!desafio) return null;
             return (
-              <Section id="desafio-escuta" icon={Sword} kicker="Ação" titulo="Desafio de Escuta">
+              <Section id="desafio-escuta" icon={Sword} kicker="O Chamado do Agora" titulo="Desafio de Escuta">
                 <div className="max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
                   <p className="font-serif text-2xl text-gold leading-relaxed">{desafio}</p>
                 </div>
@@ -297,12 +196,12 @@ export default function ClubeRotaPremium() {
             );
           })()}
 
-          {/* 6. REVELAÇÃO */}
+          {/* 8. REVELAÇÃO */}
           {(() => {
             const rev = ponto.metadata?.revelacao_estacao;
             if (!rev || (!rev.porta && !rev.campo_psiquico && !rev.torre && !rev.labirinto)) return null;
             return (
-              <Section id="revelacao" icon={Sparkles} kicker="Sabedoria" titulo="Revelação da Estação">
+              <Section id="revelacao" icon={Sparkles} kicker="Gnose da Estação" titulo="Revelação da Estação">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto p-10 bg-white/[0.02] border border-white/5 rounded-[2.5rem]">
                   {[
                     { key: 'porta', label: 'A Porta', icon: DoorOpen },
@@ -322,12 +221,14 @@ export default function ClubeRotaPremium() {
             );
           })()}
 
-          {/* 7. FERRAMENTA ORACULAR */}
+          {/* 9. FERRAMENTA ORACULAR */}
           {ponto.metadata?.ferramenta_oracular?.enabled && (
-            <Section id="ferramenta-oracular" icon={Radar} kicker="Campo de Escuta" titulo="Ferramenta Oracular">
+            <Section id="ferramenta-oracular" icon={Radar} kicker="Campo de Escuta" titulo="Mapa do Instinto Soterrado">
               <FerramentaOracularPlayer
                 data={{
                   ...ponto.metadata.ferramenta_oracular,
+                  titulo: "Mapa do Instinto Soterrado",
+                  kicker: "Campo de Escuta",
                   questoes:
                     ponto.metadata.ferramenta_oracular.questoes ||
                     ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
@@ -339,25 +240,23 @@ export default function ClubeRotaPremium() {
                     })) ||
                     [],
                 }}
-                onComplete={(respostas) => {
-                  // Rastreamento silencioso (Camada 2)
-                }}
+                onComplete={() => {}}
               />
             </Section>
           )}
 
-          {/* 8. JARDIM DA PSIQUE */}
+          {/* 10. JARDIM DA PSIQUE */}
           {psiquePergunta && (
-            <Section id="jardim-psique" icon={Flower2} kicker="Sementeira" titulo="Jardim da Psique">
+            <Section id="jardim-psique" icon={Flower2} kicker="Semeadura Psíquica" titulo="Jardim da Psique">
               <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{psiquePergunta}</p>
               </div>
             </Section>
           )}
 
-          {/* 9. JARDIM DO OFÍCIO */}
+          {/* 11. JARDIM DO OFÍCIO */}
           {oficioPergunta && (
-            <Section id="jardim-oficio" icon={Flower2} kicker="Sementeira" titulo="Jardim do Ofício">
+            <Section id="jardim-oficio" icon={Flower2} kicker="Semeadura do Ofício" titulo="Jardim do Ofício">
               <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10">
                 <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
                 <div className="mt-6 pt-4 border-t border-emerald-500/10">
@@ -368,7 +267,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* 10. MISSÃO DE CAMPO */}
+          {/* 12. MISSÃO DE CAMPO */}
           {temMissao && (
             <Section id="missao-campo" icon={Target} kicker="Travessia Encarnada" titulo={missaoCampo.titulo || 'Missão de Campo'}>
               <div className="max-w-3xl mx-auto space-y-6 p-10 rounded-[2.5rem] border border-gold/15 bg-white/[0.02]">
@@ -392,11 +291,11 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* 11. FECHAMENTO */}
+          {/* 13. FECHAMENTO */}
           {(() => {
             const textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
             return (
-              <Section id="fechamento" icon={Check} kicker="Fim" titulo="Travessia Concluída">
+              <Section id="fechamento" icon={Check} kicker="O Portal Se Fecha" titulo="Travessia Concluída">
                 {ponto.metadata?.fechamento?.imagem_fechamento && (
                   <div className="max-w-4xl mx-auto mb-12 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
                     <img src={ponto.metadata.fechamento.imagem_fechamento} alt="" className="w-full h-64 md:h-96 object-cover opacity-60 mix-blend-luminosity hover:opacity-100 transition-opacity duration-1000" />
@@ -410,7 +309,7 @@ export default function ClubeRotaPremium() {
                     {ponto.estado !== 'completed' ? (
                       <Button
                         variant="gold"
-                        className="rounded-full h-16 px-12 text-lg font-bold shadow-glow"
+                        className="rounded-full h-16 px-12 text-lg font-bold shadow-glow text-midnight"
                         onClick={() => concluirPonto.mutate(ponto.id)}
                         disabled={concluirPonto.isPending}
                       >
@@ -423,7 +322,7 @@ export default function ClubeRotaPremium() {
                     )}
                     <Button
                       variant="outline"
-                      className="rounded-full h-14 px-10 text-sm uppercase tracking-wider"
+                      className="rounded-full h-14 px-10 text-sm uppercase tracking-wider border-white/10 text-white/60 hover:text-white"
                       onClick={() => navigate('/clube')}
                     >
                       Voltar ao Mapa das Rotas
@@ -443,13 +342,13 @@ function Section({ id, icon: Icon, kicker, titulo, children }: any) {
   return (
     <section id={id} className="scroll-mt-24 space-y-8">
       {(kicker || titulo) && (
-        <div className="space-y-2">
+        <div className="space-y-3 text-center md:text-left">
           {kicker && (
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-gold/60">
+            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">
               {Icon && <Icon className="w-3 h-3" />} {kicker}
             </div>
           )}
-          {titulo && <h2 className="text-2xl md:text-4xl font-display text-white">{titulo}</h2>}
+          {titulo && <h2 className="text-2xl md:text-5xl font-display text-white tracking-tight leading-tight">{titulo}</h2>}
         </div>
       )}
       {children}

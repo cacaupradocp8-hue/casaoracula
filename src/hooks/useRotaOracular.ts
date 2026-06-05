@@ -108,7 +108,7 @@ export function useRotaOracular(explicitSlug?: string) {
   const routeSlug = explicitSlug || paramsSlug;
 
   // 1. Estação ativa (Prioriza a que contém o item do slug da URL se disponível)
-  const { data: estacaoAtual, isLoading: loadingEstacao } = useQuery({
+  const { data: estacaoAtual, isLoading: loadingEstacao, isError: errorEstacao } = useQuery({
     queryKey: ['rota-estacao-ativa', routeSlug],
     queryFn: async () => {
       try {
@@ -177,7 +177,7 @@ export function useRotaOracular(explicitSlug?: string) {
   });
 
   // 3. Itens da Rota (Nova Fonte de Verdade) — filtra slugs legados `old-*`
-  const { data: itensRota } = useQuery({
+  const { data: itensRota, isLoading: loadingItens } = useQuery({
     queryKey: ['rota-itens', estacaoAtual?.id],
     queryFn: async () => {
       if (!estacaoAtual?.id) return [];
@@ -422,6 +422,7 @@ export function useRotaOracular(explicitSlug?: string) {
     concluirPonto,
     marcarEmAndamento,
     estacaoIncompleta,
-    isLoading: loadingEstacao,
+    isLoading: loadingEstacao || (loadingItens && !!estacaoAtual?.id),
+    errorEstacao,
   };
 }
