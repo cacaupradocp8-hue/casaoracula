@@ -34,7 +34,7 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      let query = supabase
+      let query = (supabase as any)
         .from(tableName)
         .select('*')
         .eq('user_id', user.id);
