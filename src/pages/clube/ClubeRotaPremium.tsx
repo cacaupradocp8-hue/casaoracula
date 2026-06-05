@@ -122,73 +122,35 @@ export default function ClubeRotaPremium() {
         </div>
 
         {/* 1. HERO */}
-        <section className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
-          <div className="absolute inset-0 pointer-events-none">
-            {ponto.metadata?.hero?.imagem_desktop ? (
-              <picture>
-                {ponto.metadata.hero.imagem_mobile && (
-                  <source media="(max-width: 768px)" srcSet={ponto.metadata.hero.imagem_mobile} />
-                )}
-                <img 
-                  src={ponto.metadata.hero.imagem_desktop} 
-                  alt="" 
-                  className="w-full h-full object-cover opacity-40 mix-blend-luminosity" 
-                />
-              </picture>
-            ) : ponto.image_url ? (
-              <img src={ponto.image_url} alt="" className="w-full h-full object-cover opacity-30 mix-blend-luminosity" />
-            ) : estacaoAtual?.banner_url ? (
-              <img src={estacaoAtual.banner_url} alt="" className="w-full h-full object-cover opacity-20" />
-            ) : null}
-            <div className="absolute inset-0 bg-gradient-to-b from-midnight/20 via-midnight/40 to-midnight" />
-          </div>
+        <EstacaoHero 
+          estacaoNumero={estacaoAtual?.numero || 1}
+          titulo={ponto.metadata?.hero?.titulo || ponto.nome}
+          subtitulo={ponto.metadata?.hero?.subtitulo || ponto.subtitulo || ''}
+          backgroundImage={ponto.metadata?.hero?.imagem_desktop || estacaoAtual?.banner_url}
+        />
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5 }}
-            className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-6"
-          >
-            <div className="flex flex-col items-center gap-2">
-              <div className="flex items-center gap-3">
-                <span className="h-[1px] w-8 bg-gradient-to-r from-transparent to-gold/40" />
-                <span className="text-[10px] tracking-[0.4em] uppercase text-gold/60 font-medium">
-                  {estacaoAtual?.livro_titulo || 'Estação Oracular'}
-                </span>
-                <span className="h-[1px] w-8 bg-gradient-to-l from-transparent to-gold/40" />
-              </div>
-            </div>
+        {/* CONTENT */}
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-32 pb-40 pt-12">
+          
+          {/* 2. O QUE ESTÁ ATIVO AGORA */}
+          <section id="ativo-agora" className="space-y-8">
+            <h2 className="text-xl md:text-2xl font-display text-white text-center">O que está ativo agora</h2>
+            <AtivoAgoraBloco />
+          </section>
 
-            <div className="space-y-4">
-              <h1 className="font-display font-light leading-tight tracking-tighter text-4xl md:text-6xl lg:text-7xl">
-                <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent">
-                  {ponto.metadata?.hero?.titulo || ponto.nome}
-                </span>
-              </h1>
-              {(ponto.metadata?.hero?.subtitulo || ponto.subtitulo) && (
-                <p className="font-serif italic text-lg md:text-2xl text-white/40 max-w-2xl mx-auto">
-                  "{ponto.metadata?.hero?.subtitulo || ponto.subtitulo}"
-                </p>
-              )}
-              {ponto.metadata?.hero?.texto && (
-                <p className="font-serif text-white/60 text-lg md:text-xl max-w-3xl mx-auto mt-4 leading-relaxed">
-                  {ponto.metadata.hero.texto}
-                </p>
-              )}
-            </div>
+          {/* 3. TERRITÓRIOS ATIVADOS */}
+          {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
+            <Section id="territorios-cidadela" kicker="Expansão da CidadELA" titulo="Territórios ativados">
+              <CidadelaAtivadaBloco 
+                territoriosAtivados={ponto.impacto_cidadela.map((i: any) => i.distrito || i.id || i)}
+              />
+            </Section>
+          )}
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-10">
-              <Button
-                size="lg"
-                variant="gold"
-                className="rounded-full px-12 h-16 shadow-glow"
-                onClick={() => document.getElementById('mapa-simbolico')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <Play className="w-4 h-4 fill-current mr-2" /> Iniciar Travessia
-              </Button>
-            </div>
-          </motion.div>
-        </section>
+          {/* 4. CAMINHO DA ESTAÇÃO */}
+          <Section kicker="Travessia" titulo="Caminho da Estação">
+            <EstacaoCaminhoTrail />
+          </Section>
 
         {/* CONTENT */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-32 pb-40 pt-12">
