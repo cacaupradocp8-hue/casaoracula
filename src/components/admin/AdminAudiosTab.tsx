@@ -154,7 +154,10 @@ export function AdminAudiosTab() {
 
     const { error } = await supabase.storage
       .from('audios')
-      .upload(filePath, file);
+      .upload(filePath, file, {
+        contentType: file.type,
+        upsert: false
+      });
 
     if (error) {
       toast({ title: 'Erro no upload', description: error.message, variant: 'destructive' });
