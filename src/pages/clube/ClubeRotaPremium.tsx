@@ -227,7 +227,8 @@ export default function ClubeRotaPremium() {
               <FerramentaOracularPlayer
                 data={{
                   ...ponto.metadata.ferramenta_oracular,
-                  label: "Mapa do Instinto Soterrado",
+                  titulo: "Mapa do Instinto Soterrado",
+                  kicker: "Campo de Escuta",
                   questoes:
                     ponto.metadata.ferramenta_oracular.questoes ||
                     ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
