@@ -19,6 +19,7 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [recordId, setRecordId] = useState<string | null>(null);
 
   const tableName = type === 'psique' ? 'jardim_psique_registros' : 'jardim_do_oficio';
 
@@ -27,27 +28,39 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
   }, [type, pontoId]);
 
   const fetchLatest = async () => {
+    if (!pontoId) return;
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Usando any para evitar erros de tipos excessivamente profundos do Supabase PostgREST
-      const { data, error } = await supabase
+      let query = (supabase as any)
         .from(tableName)
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', user.id);
+
+      if (type === 'psique') {
+        query = query.eq('ferramenta_chave', pontoId);
+      } else {
+        query = query.eq('contexto_origem', `ponto:${pontoId}`);
+      }
+
+      const { data, error } = await query
         .order('created_at', { ascending: false })
         .limit(1) as { data: any[] | null, error: any };
 
       if (!error && data && data.length > 0) {
         const entry = data[0];
-        // Filtro adicional manual caso queira restringir ao pontoId (melhor via query, mas Typescript pode reclamar se for complexo)
-        // Aqui apenas pegamos o mais recente geral ou do contexto se possível
         const value = type === 'psique' ? entry.reflexao_pessoal : entry.reflexao_profissional;
         if (value) {
           setText(value);
+          setRecordId(entry.id);
           setLastSaved(new Date(entry.updated_at || entry.created_at));
         }
+      } else {
+        setText('');
+        setRecordId(null);
+        setLastSaved(null);
       }
     } catch (err) {
       console.error('Erro ao buscar último registro:', err);
@@ -78,12 +91,31 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
         payload.tipo_registro = 'estacao_rota';
         payload.ferramenta_chave = pontoId;
         payload.ferramenta_nome = sourceTitle;
+        payload.data_aplicacao = new Date().toISOString();
       } else {
         payload.reflexao_profissional = text;
         payload.contexto_origem = `ponto:${pontoId}`;
       }
 
-      const { error } = await supabase.from(tableName).insert(payload);
+      let error;
+      if (recordId) {
+        const { error: updateError } = await (supabase as any)
+          .from(tableName)
+          .update(payload)
+          .eq('id', recordId);
+        error = updateError;
+      } else {
+        const { data, error: insertError } = await (supabase as any)
+          .from(tableName)
+          .insert(payload)
+          .select('id')
+          .single();
+        
+        if (!insertError && data) {
+          setRecordId(data.id);
+        }
+        error = insertError;
+      }
 
       if (error) throw error;
 
