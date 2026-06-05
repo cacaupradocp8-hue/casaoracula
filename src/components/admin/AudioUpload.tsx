@@ -137,6 +137,28 @@ export function AudioUpload({
     }
   };
 
+  const handleDownload = async () => {
+    if (!value) return;
+    try {
+      const response = await fetch(value);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = value.split('/').pop() || 'audio.mp3';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast.success('Download iniciado');
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast.error('Erro ao baixar arquivo');
+    }
+  };
+
   const handleUrlSubmit = () => {
     if (urlInput.trim()) {
       onChange(urlInput.trim());
