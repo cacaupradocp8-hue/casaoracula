@@ -275,6 +275,28 @@ export function AdminAudiosTab() {
     toast({ title: 'URL copiada!' });
   };
 
+  const handleDownload = async (audio: AudioAsset) => {
+    try {
+      const url = getAudioUrl(audio.file_path);
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `${audio.titulo}.${audio.file_path.split('.').pop()}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      
+      toast({ title: 'Download iniciado' });
+    } catch (error) {
+      console.error('Erro ao baixar arquivo:', error);
+      toast({ title: 'Erro ao baixar arquivo', variant: 'destructive' });
+    }
+  };
+
   const formatDuration = (seconds: number | null) => {
     if (!seconds) return '--:--';
     const mins = Math.floor(seconds / 60);
