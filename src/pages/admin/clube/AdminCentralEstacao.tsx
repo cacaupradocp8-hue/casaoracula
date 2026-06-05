@@ -346,7 +346,7 @@ export default function AdminCentralEstacao() {
                   <span className="text-gold">{cleanTechnicalTitle(estacao.livro_titulo || 'Rota')}</span>
                 </div>
                 <div className="flex items-center gap-3 flex-wrap">
-                  <h1 className="text-2xl font-serif text-foreground truncate">{estacao.titulo}</h1>
+                  <h1 className="text-2xl font-serif text-foreground truncate" title="Título da Estação: aparece na lista das estações">{estacao.titulo}</h1>
                   <Badge variant={estacao.publicada ? 'default' : 'secondary'} className={cn("text-[9px] uppercase tracking-widest", estacao.publicada ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500")}>
                     {estacao.publicada ? 'Publicado' : 'Rascunho'}
                   </Badge>
@@ -829,7 +829,13 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </div>
               <div>
                 <h2 className="text-xl font-serif text-foreground">Editor Único da Rota</h2>
-                <p className="text-xs text-muted-foreground">Construção guiada da travessia simbólica.</p>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs text-muted-foreground">Construção guiada da travessia simbólica.</p>
+                  <p className="text-[10px] font-bold text-amber-500 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    Para inserir conteúdo completo, prefira usar o botão Importar. A edição manual serve para ajustes pontuais.
+                  </p>
+                </div>
               </div>
             </div>
             <div className="flex gap-2">
@@ -848,6 +854,18 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           </div>
 
           <Accordion type="multiple" className="w-full space-y-4">
+            {/* Campo Conteúdo Texto - Ajuste 1 */}
+            <div className="space-y-2 mb-6 p-4 border border-gold/20 rounded-xl bg-gold/5">
+              <Label className="text-[10px] uppercase font-bold text-gold">Texto base da estação</Label>
+              <Textarea 
+                value={form.conteudo_texto} 
+                onChange={e => setForm({...form, conteudo_texto: e.target.value})} 
+                className="bg-background/50 min-h-[120px] font-serif" 
+                placeholder="Insira o texto base que servirá de alicerce para esta estação..."
+              />
+              <p className="text-[10px] text-muted-foreground italic">Este é o conteúdo bruto da estação, geralmente preenchido via importador.</p>
+            </div>
+
             {/* 0. Imersão e Visuais Premium */}
             <AccordionItem value="visuais" className="border border-gold/40 rounded-xl px-4 bg-gold/5 overflow-hidden">
               <AccordionTrigger className="hover:no-underline">
@@ -959,8 +977,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               <AccordionContent className="pt-4 pb-6 space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero</Label>
+                    <Label className="text-[10px] uppercase font-bold text-white/40">Título do Hero (Interno)</Label>
                     <Input value={form.hero.titulo} onChange={e => setForm({...form, hero: {...form.hero, titulo: e.target.value}})} className="bg-background/50" />
+                    <p className="text-[9px] text-gold/60 italic">Aparece no topo da página interna da estação.</p>
                   </div>
                   <div className="space-y-2">
                     <Label className="text-[10px] uppercase font-bold text-white/40">CTA do Hero</Label>
