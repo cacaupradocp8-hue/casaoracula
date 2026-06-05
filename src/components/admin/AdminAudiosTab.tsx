@@ -543,6 +543,15 @@ export function AdminAudiosTab() {
                           variant="ghost"
                           size="icon"
                           className="h-8 w-8"
+                          onClick={() => handleDownload(audio)}
+                          title="Baixar arquivo"
+                        >
+                          <Download className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8"
                           onClick={() => handleCopyUrl(audio)}
                           title="Copiar URL"
                         >
