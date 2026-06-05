@@ -123,7 +123,7 @@ export default function ClubeRotaPremium() {
           {/* 3. TERRITÓRIOS ATIVADOS */}
           {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
             <Section id="territorios-cidadela" kicker="Expansão da CidadELA" titulo="Territórios ativados">
-              <CidadelaAtivadaBloco 
+              <MiniMandalaTerritorios 
                 territoriosAtivados={ponto.impacto_cidadela.map((i: any) => i.distrito || i.id || i)}
               />
             </Section>
