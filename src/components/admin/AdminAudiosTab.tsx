@@ -376,9 +376,14 @@ export function AdminAudiosTab() {
                   )}
                   {filePath && !uploading && (
                     <div className="flex items-center justify-between mt-2">
-                      <p className="text-sm text-green-500 truncate mr-2">
-                        ✓ {filePath.split('/').pop()}
-                      </p>
+                      <div className="flex flex-col gap-1 flex-1 min-w-0">
+                        <p className="text-sm text-green-500 truncate font-medium">
+                          ✓ Arquivo Pronto
+                        </p>
+                        <p className="text-[10px] text-muted-foreground truncate opacity-70">
+                          {filePath.split('/').pop()}
+                        </p>
+                      </div>
                       <Button 
                         variant="outline" 
                         size="sm" 
