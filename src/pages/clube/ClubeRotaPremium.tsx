@@ -30,6 +30,10 @@ import { FraseTravessia } from '@/components/clube/FraseTravessia';
 import { SymbolicCarouselBlock } from '@/components/clube-livro/blocks/SymbolicCarouselBlock';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
 import { CidadelaAtivadaBloco } from '@/components/clube/CidadelaAtivadaBloco';
+import { EstacaoHero } from '@/components/clube/EstacaoHero';
+import { AtivoAgoraBloco } from '@/components/clube/AtivoAgoraBloco';
+import { EstacaoCaminhoTrail } from '@/components/clube/EstacaoCaminhoTrail';
+import { Skeleton } from '@/components/ui/skeleton';
 
 /**
  * ClubeRotaPremium — Travessia oficial (Etapa 2.6)
