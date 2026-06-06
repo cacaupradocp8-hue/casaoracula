@@ -120,22 +120,25 @@ export function CartografiaEstruturalStepper() {
       >
 
         {/* 1. TÍTULO PRINCIPAL */}
-        <header className="text-center space-y-4 pt-12">
+        <header className="text-center space-y-6 pt-12">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20 shadow-premium-glow"
+            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-2 border border-gold/20 shadow-premium-glow"
           >
             <Compass className="w-10 h-10 text-gold/80" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
-          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
-          <div className="max-w-xl mx-auto pt-4">
-            <p className="text-muted-foreground italic text-sm">
+          <div className="space-y-2">
+            <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
+            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+          </div>
+          <div className="max-w-2xl mx-auto pt-6 px-4">
+            <p className="text-foreground/80 italic text-base leading-relaxed">
               “Sua CidadELA revelou onde sua energia está habitando agora. Este não é um diagnóstico. É uma cartografia do momento. A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.”
             </p>
           </div>
         </header>
+
 
         <section className="space-y-24">
           {/* 2. MANDALA CENTRAL (PRIORIDADE MÁXIMA) */}
@@ -229,21 +232,27 @@ export function CartografiaEstruturalStepper() {
                     </div>
                   </div>
 
-                  <div className="pt-8 w-full">
+                  <div className="pt-8 w-full space-y-4">
                     <Button 
                       variant="gold" 
                       size="lg" 
                       onClick={handleAtravessar}
-                      className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
+                      className="group px-12 h-16 text-lg shadow-premium-glow w-full sm:w-auto"
                     >
-                      Atravessar
-                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                      Seguir para a Rota dos Lobos
+                      <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                     </Button>
+                    <div className="pt-2">
+                      <p className="text-xs text-muted-foreground/60 max-w-md mx-auto italic">
+                        A primeira travessia recomendada para fundadoras é a Rota dos Lobos. Nela, você começará a reconhecer onde sua voz foi silenciada e onde seu instinto tenta retornar.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
+
 
           {/* 5. TORRE DOMINANTE (SECUNDÁRIA) */}
           <div className="max-w-2xl mx-auto px-6">

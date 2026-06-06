@@ -150,7 +150,7 @@ export function useCartografiaEstrutural() {
     setLoading(true);
 
     try {
-      // 1. Calcular médias a partir das 30 perguntas objetivas
+      // 1. Calcular médias a partir das perguntas objetivas (que agora pontuam territórios diretamente)
       const big5Medias = calcularMedias(respostas.objetivas);
       
       // 2. Montar Profile JSON Integrado (Territórios + Big Five)
@@ -185,7 +185,7 @@ export function useCartografiaEstrutural() {
             crencas: respostas.crencas,
             seguranca: respostas.seguranca
           },
-          versao: '2.0-estrutural'
+          versao: '3.0-clube-estrutural'
         },
       } as any).select('id').single();
 
@@ -201,10 +201,11 @@ export function useCartografiaEstrutural() {
 
       // 5. Atualizar Auto Mapeamento (Cidadela)
       const DISTRITOS_ALL = [
-        'portao_chegada', 'torres', 'portas', 'jardim_arquetipos', 'praca_abalo',
-        'casa_sonhos', 'espelho_vinculos', 'forja', 'conselho_interior',
-        'labirinto', 'praca_integracao', 'portal_renascimento',
+        'portao_chegada', 'torres', 'portas', 'labirinto', 'conselho_interior',
+        'bosque_arquetipos', 'casa_matriz', 'casa_sonhos', 'espelho_vinculos',
+        'praca_abalo', 'forja', 'portal_renascimento', 'coracao_cidadela'
       ];
+      
       const distritosJson: Record<string, any> = {};
       DISTRITOS_ALL.forEach(d => {
         distritosJson[d] = {
@@ -216,7 +217,7 @@ export function useCartografiaEstrutural() {
       await supabase.from('auto_mapeamento').upsert({
         user_id: user.id,
         distritos_json: distritosJson,
-        anotacoes: `Cartografia Estrutural | Cor: ${cidadela.cor_derivada} | Nível Atenção: ${profileJson.derivacao.atencao_seguranca}`,
+        anotacoes: `Leitura Estrutural Orácula™ | Cor: ${cidadela.cor_derivada} | Ponto Inicial: ${cidadela.porta_inicial_nome}`,
       } as any, { onConflict: 'user_id' });
 
       // 6. Marcar rascunho como concluído
@@ -228,7 +229,8 @@ export function useCartografiaEstrutural() {
       setResult({ profileJson, leitura, cidadela });
       setStep('resultado');
       toast.success('Sua CidaDELA Interior foi revelada ✨');
-      navigate('/clube/rotas/lobos', { state: { transitionText: 'A primeira travessia recomendada para fundadoras é a Rota dos Lobos. Nela, você começará a reconhecer onde sua voz foi silenciada, onde sua adaptação virou sobrevivência e onde seu instinto tenta retornar.' } });
+      // A navegação agora é feita pelo componente de resultado via CTA
+
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');
