@@ -172,7 +172,8 @@ export function useCartografiaEstrutural() {
           versao: '3.0-clube-estrutural',
           territorio_dominante: cidadela.territorio_dominante,
           territorio_tensao: cidadela.territorio_tensao,
-          territorio_adormecido: cidadela.territorio_adormecido
+          territorio_adormecido: cidadela.territorio_adormecido,
+          tipo_leitura: 'Leitura Estrutural Orácula™'
         },
       } as any).select('id').single();
 
