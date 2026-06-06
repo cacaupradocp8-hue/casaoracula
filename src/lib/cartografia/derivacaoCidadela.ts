@@ -16,6 +16,8 @@ export interface CidadelaDerivada {
   torre_dominante: string;
   clima_cidadela: string;
   distritos_acesos: string[];
+  distritos_tensao: string[];
+  distritos_adormecidos: string[];
   cor_derivada: string;
   cor_hex: string;
   atmosfera_derivada: string[];
@@ -29,8 +31,8 @@ export interface CidadelaDerivada {
 const EIXO_DISTRITOS: Record<keyof MediasFatores, string[]> = {
   porta_do_possivel: ['portao_chegada', 'portal_renascimento'],
   torre_interna: ['torres', 'conselho_interior'],
-  campo_do_outro: ['espelho_vinculos', 'jardim_arquetipos'],
-  voz_no_mundo: ['forja', 'praca_integracao'],
+  campo_do_outro: ['espelho_vinculos', 'bosque_arquetipos'],
+  voz_no_mundo: ['forja', 'coracao_cidadela'],
   porta_do_abalo: ['praca_abalo', 'labirinto', 'casa_sonhos'],
 };
 
@@ -172,19 +174,31 @@ export function derivarCidadela(
 ): CidadelaDerivada {
   const medias = normalizarMedias(rawMedias);
 
-  // Porta inicial = eixo com maior média
   const entries = Object.entries(medias) as [keyof MediasFatores, number][];
-  const [eixoDominante] = entries.sort((a, b) => b[1] - a[1])[0];
+  const sortedEntries = [...entries].sort((a, b) => b[1] - a[1]);
+  const [eixoDominante] = sortedEntries[0];
+  const [eixoMenor] = sortedEntries[sortedEntries.length - 1];
+  
   const porta = EIXO_PORTA[eixoDominante];
   const cor = EIXO_COR[eixoDominante];
   const simbolo = EIXO_SIMBOLO[eixoDominante];
+
+  const distritosAcesos = derivarDistritosAcesos(medias);
+  const distritosAdormecidos = EIXO_DISTRITOS[eixoMenor];
+  
+  // Tensão baseada na tensão central da leitura comportamental
+  const distritosTensao = tensaoCentral.includes('abalo') || tensaoCentral.includes('colapso') 
+    ? EIXO_DISTRITOS['porta_do_abalo'] 
+    : [EIXO_DISTRITOS['torre_interna'][0]];
 
   return {
     porta_inicial: porta.key,
     porta_inicial_nome: porta.nome,
     torre_dominante: derivarTorreDominante(medias),
     clima_cidadela: derivarClima(tensaoCentral, medias.porta_do_abalo),
-    distritos_acesos: derivarDistritosAcesos(medias),
+    distritos_acesos: distritosAcesos,
+    distritos_tensao: distritosTensao,
+    distritos_adormecidos: distritosAdormecidos,
     cor_derivada: cor.nome,
     cor_hex: cor.hex,
     atmosfera_derivada: derivarAtmosfera(medias),
