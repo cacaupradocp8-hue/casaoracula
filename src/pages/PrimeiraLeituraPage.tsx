@@ -10,6 +10,7 @@ import { PathSelector } from '@/components/primeira-leitura/PathSelector';
 type Step = 'intro' | 'case' | 'result' | 'paths';
 
 const PrimeiraLeituraPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>('intro');
   const [selectedEscuta, setSelectedEscuta] = useState<string | null>(null);
 
