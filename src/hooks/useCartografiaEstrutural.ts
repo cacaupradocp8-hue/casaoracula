@@ -137,10 +137,10 @@ export function useCartografiaEstrutural() {
     setRespostas(prev => ({ ...prev, [key]: value }));
   };
 
-  const updateObjetiva = (perguntaId: string, value: number) => {
+  const updateObjetiva = (perguntaId: string, territorioKey: string) => {
     setRespostas(prev => ({
       ...prev,
-      objetivas: { ...prev.objetivas, [perguntaId]: value }
+      objetivas: { ...prev.objetivas, [perguntaId]: territorioKey as any }
     }));
   };
 
