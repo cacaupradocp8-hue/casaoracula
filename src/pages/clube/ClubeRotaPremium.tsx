@@ -15,6 +15,8 @@ import {
   Eye,
   Radar,
   Target,
+  Loader2,
+  CheckCircle2,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
