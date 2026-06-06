@@ -428,8 +428,6 @@ export function CartografiaEstruturalStepper() {
                     ))}
                   </div>
                 </div>
-              </CardContent>
-            </Card>
 
                 {/* Pergunta 4 */}
                 <div className="space-y-6">
