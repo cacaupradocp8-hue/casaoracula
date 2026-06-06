@@ -41,93 +41,123 @@ export function EscutaPremium({
 
 
   return (
-    <div className={cn("relative w-full max-w-5xl mx-auto py-20 px-6 overflow-hidden rounded-[3rem]", className)}>
+    <div className={cn("relative w-full max-w-6xl mx-auto py-24 md:py-32 px-6 overflow-hidden rounded-[4rem] shadow-3xl", className)}>
       {/* Background with Blur & Image */}
       <div className="absolute inset-0 z-0">
         {imagemEscuta ? (
-          <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-20 mix-blend-luminosity scale-110" />
+          <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-10 mix-blend-luminosity scale-110 blur-xl" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-b from-midnight via-midnight/90 to-midnight" />
+          <div className="w-full h-full bg-gradient-to-b from-zinc-950 via-midnight to-black" />
         )}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent to-midnight/80" />
-        <div className="absolute inset-0 backdrop-blur-[2px]" />
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-midnight/50 to-midnight" />
+        <div className="absolute inset-0 backdrop-blur-[4px]" />
       </div>
 
       <audio ref={audioRef} src={resolvedUrl} preload="metadata" />
 
-      <div className="relative z-10 flex flex-col items-center text-center space-y-12">
-        {/* Header imersivo */}
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Left Side: Text Info */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="space-y-4"
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="space-y-10 text-center lg:text-left"
         >
-          <div className="flex flex-col items-center gap-2">
-            <div className="p-3 rounded-full bg-gold/5 border border-gold/10 text-gold mb-2">
-              <Headphones className="w-5 h-5" />
+          <div className="space-y-4">
+            <div className="flex flex-col lg:items-start items-center gap-2">
+              <div className="p-4 rounded-2xl bg-gold/10 border border-gold/20 text-gold mb-4 shadow-inner">
+                <Headphones className="w-6 h-6" />
+              </div>
+              <span className="text-[11px] uppercase tracking-[0.5em] text-gold/60 font-bold">{tipo || 'Escuta Ritual'}</span>
             </div>
-            <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">{tipo || 'Escuta Ritual'}</span>
+            <h2 className="font-display text-4xl md:text-6xl lg:text-7xl text-white tracking-tighter leading-none">
+              {titulo}
+            </h2>
+            {funcao && <p className="font-serif italic text-white/60 text-xl md:text-2xl leading-relaxed">{funcao}</p>}
           </div>
-          <h2 className="font-display text-3xl md:text-5xl lg:text-6xl text-white tracking-tighter max-w-3xl mx-auto">
-            {titulo}
-          </h2>
-          {funcao && <p className="font-serif italic text-white/40 text-lg max-w-xl mx-auto leading-relaxed">{funcao}</p>}
-        </motion.div>
 
-        {/* Arte Central */}
-        <div className="relative group cursor-pointer" onClick={togglePlay}>
-          <motion.div
-            animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
-            transition={isPlaying ? { duration: 20, repeat: Infinity, ease: "linear" } : { duration: 0.8 }}
-            className={cn(
-              "w-64 h-64 md:w-80 md:h-80 rounded-full p-2 border border-white/10 relative",
-              "bg-gradient-to-br from-zinc-900 via-black to-zinc-900 shadow-2xl",
-              isPlaying && "shadow-[0_0_80px_rgba(196,165,74,0.1)]"
-            )}
-          >
-            {/* Vinil Texture Effect */}
-            <div className="absolute inset-0 rounded-full border border-white/5 opacity-50" style={{ 
-              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)' 
-            }} />
-            
-            <div className="w-full h-full rounded-full overflow-hidden relative">
-               {imagemEscuta ? (
-                  <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-60" />
-               ) : (
-                 <div className="w-full h-full bg-gold/5" />
-               )}
-               <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
-            </div>
-
-            {/* Centro */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-midnight/90 border border-gold/30 flex items-center justify-center shadow-inner">
-                <div className="w-3 h-3 rounded-full bg-gold/40" />
+          {/* Desktop Controls (Progress only) */}
+          <div className="hidden lg:block w-full max-w-md space-y-6">
+            <div className="space-y-4">
+              <Slider
+                value={[progress]}
+                max={duration || 100}
+                step={0.1}
+                onValueChange={handleSeek}
+                className="py-4"
+              />
+              <div className="flex justify-between text-[12px] font-mono tracking-widest text-white/30 uppercase tabular-nums font-bold">
+                <span>{formatAudioTime(progress)}</span>
+                <div className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold/40 animate-pulse" />
+                  <span>{duracao || (duration > 0 ? formatAudioTime(duration) : '--:--')}</span>
+                </div>
               </div>
             </div>
-          </motion.div>
-
-          {/* Botão flutuante Play/Pause */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-            <motion.button 
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              className="w-20 h-20 rounded-full bg-gold/90 text-black flex items-center justify-center shadow-[0_0_30px_rgba(196,165,74,0.4)] backdrop-blur-md"
-            >
-              {isLoading ? (
-                <Loader2 className="w-8 h-8 animate-spin" />
-              ) : isPlaying ? (
-                <Pause className="w-8 h-8 fill-current" />
-              ) : (
-                <Play className="w-8 h-8 fill-current ml-1" />
-              )}
-            </motion.button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Controles de Progresso */}
-        <div className="w-full max-w-xl space-y-6">
-          <div className="space-y-2">
+        {/* Right Side: Central Art & Big Play Button */}
+        <div className="flex flex-col items-center justify-center space-y-12">
+          <div className="relative group cursor-pointer" onClick={togglePlay}>
+            {/* Visualizer Aura (Simulated) */}
+            <motion.div 
+              animate={isPlaying ? { scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] } : { scale: 1, opacity: 0 }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="absolute -inset-10 bg-gold/20 rounded-full blur-[60px] z-0"
+            />
+
+            <motion.div
+              animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
+              transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
+              className={cn(
+                "w-72 h-72 md:w-[450px] md:h-[450px] rounded-full p-3 border-2 border-white/10 relative z-10",
+                "bg-gradient-to-br from-zinc-900 via-black to-zinc-900 shadow-3xl overflow-hidden",
+                isPlaying && "border-gold/30"
+              )}
+            >
+              {/* Vinil Texture Effect */}
+              <div className="absolute inset-0 rounded-full border border-white/5 opacity-40 pointer-events-none" style={{ 
+                backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 6px)' 
+              }} />
+              
+              <div className="w-full h-full rounded-full overflow-hidden relative">
+                {imagemEscuta ? (
+                    <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-1000" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-gold/10 to-transparent" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/70" />
+              </div>
+
+              {/* Centro do Disco */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-midnight/95 border border-gold/30 flex items-center justify-center shadow-inner">
+                  <div className="w-4 h-4 rounded-full bg-gold/60" />
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Float Play Button */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+              <motion.button 
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gold text-midnight flex items-center justify-center shadow-[0_0_50px_rgba(196,165,74,0.6)]"
+              >
+                {isLoading ? (
+                  <Loader2 className="w-10 h-10 md:w-14 md:h-14 animate-spin" />
+                ) : isPlaying ? (
+                  <Pause className="w-10 h-10 md:w-14 md:h-14 fill-current" />
+                ) : (
+                  <Play className="w-10 h-10 md:w-14 md:h-14 fill-current ml-2" />
+                )}
+              </motion.button>
+            </div>
+          </div>
+
+          {/* Mobile Only Controls */}
+          <div className="lg:hidden w-full max-w-sm space-y-4">
             <Slider
               value={[progress]}
               max={duration || 100}
@@ -135,12 +165,9 @@ export function EscutaPremium({
               onValueChange={handleSeek}
               className="py-4"
             />
-            <div className="flex justify-between text-[11px] font-mono tracking-widest text-white/40 uppercase tabular-nums">
+            <div className="flex justify-between text-[10px] font-mono tracking-widest text-white/40 uppercase font-bold">
               <span>{formatAudioTime(progress)}</span>
-              <div className="flex items-center gap-2">
-                <span className="w-1 h-1 rounded-full bg-gold/30" />
-                <span>{duracao || (duration > 0 ? formatAudioTime(duration) : '--:--')}</span>
-              </div>
+              <span>{duracao || (duration > 0 ? formatAudioTime(duration) : '--:--')}</span>
             </div>
           </div>
         </div>

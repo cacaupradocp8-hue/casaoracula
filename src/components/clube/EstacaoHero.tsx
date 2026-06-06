@@ -8,9 +8,10 @@ interface EstacaoHeroProps {
   titulo: string;
   subtitulo: string;
   backgroundImage?: string;
+  estacaoNome?: string;
 }
 
-export function EstacaoHero({ estacaoNumero, titulo, subtitulo, backgroundImage }: EstacaoHeroProps) {
+export function EstacaoHero({ estacaoNumero, titulo, subtitulo, backgroundImage, estacaoNome }: EstacaoHeroProps) {
   return (
     <section className="relative min-h-[85vh] flex items-center justify-center px-4 sm:px-6 z-10 overflow-hidden">
       {/* Background with Dark Forest Atmosphere */}
@@ -31,19 +32,21 @@ export function EstacaoHero({ estacaoNumero, titulo, subtitulo, backgroundImage 
         className="relative z-10 text-center w-full max-w-4xl mx-auto space-y-8"
       >
         {/* Breadcrumb */}
-        <nav className="flex items-center justify-center gap-2 text-[10px] tracking-[0.2em] uppercase text-white/40 mb-4">
-          <span>Clube da Casa</span>
-          <ChevronRight className="w-3 h-3" />
-          <span>Rota dos Lobos</span>
-          <ChevronRight className="w-3 h-3" />
-          <span className="text-gold/60">Clareira do Chamado</span>
+        <nav className="flex items-center justify-center gap-2 text-[10px] tracking-[0.3em] uppercase text-white/40 mb-6 font-bold">
+          <span className="hover:text-gold/60 transition-colors cursor-default">Clube da Casa</span>
+          <ChevronRight className="w-2.5 h-2.5 opacity-40" />
+          <span className="hover:text-gold/60 transition-colors cursor-default">{estacaoNome || 'Rota dos Lobos'}</span>
+          <ChevronRight className="w-2.5 h-2.5 opacity-40" />
+          <span className="text-gold/80">{titulo}</span>
         </nav>
 
         {/* Seal */}
-        <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-gold/20 bg-gold/5 backdrop-blur-sm">
-          <span className="text-[10px] tracking-[0.3em] uppercase text-gold/80 font-bold">
+        <div className="inline-flex items-center gap-4 px-6 py-2 rounded-full border border-gold/30 bg-gold/5 backdrop-blur-md shadow-[0_0_20px_rgba(196,165,74,0.1)] mb-4">
+          <div className="w-2 h-2 rounded-full bg-gold/60 animate-pulse" />
+          <span className="text-[10px] tracking-[0.4em] uppercase text-gold/90 font-bold">
             Estação {estacaoNumero} de 6
           </span>
+          <div className="w-2 h-2 rounded-full bg-gold/60 animate-pulse" />
         </div>
 
         {/* Titles */}

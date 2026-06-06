@@ -15,6 +15,8 @@ import {
   Eye,
   Radar,
   Target,
+  Loader2,
+  CheckCircle2,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
@@ -110,10 +112,11 @@ export default function ClubeRotaPremium() {
           titulo={ponto.metadata?.hero?.titulo || ponto.nome}
           subtitulo={ponto.metadata?.hero?.subtitulo || ponto.subtitulo || ''}
           backgroundImage={ponto.metadata?.hero?.imagem_desktop || estacaoAtual?.banner_url}
+          estacaoNome={estacaoAtual?.titulo || 'Rota dos Lobos'}
         />
 
         {/* CONTENT CONTAINER */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-40 pb-40 pt-12">
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 md:space-y-48 pb-40 pt-12">
           
           {/* 2. O QUE ESTÁ ATIVO AGORA */}
           <section id="ativo-agora" className="space-y-12">
@@ -177,8 +180,14 @@ export default function ClubeRotaPremium() {
             if (!relato) return null;
             return (
               <Section id="caso-simbolico" icon={Eye} kicker="Visão do Espelho" titulo={ponto.metadata?.caso_simbolico?.titulo || 'Caso Simbólico'}>
-                <div className="max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap font-serif text-lg leading-relaxed italic text-white/80">
-                  {relato}
+                <div className="relative max-w-4xl mx-auto group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 via-white/5 to-gold/20 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-1000" />
+                  <div className="relative bg-white/[0.02] border border-white/10 p-12 md:p-16 rounded-[2rem] backdrop-blur-xl shadow-2xl overflow-hidden">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-gold/40" />
+                    <div className="font-serif text-xl md:text-2xl leading-relaxed italic text-white/90 whitespace-pre-wrap selection:bg-gold/30">
+                      {relato}
+                    </div>
+                  </div>
                 </div>
               </Section>
             );
@@ -190,8 +199,13 @@ export default function ClubeRotaPremium() {
             if (!desafio) return null;
             return (
               <Section id="desafio-escuta" icon={Sword} kicker="O Chamado do Agora" titulo="Desafio de Escuta">
-                <div className="max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
-                  <p className="font-serif text-2xl text-gold leading-relaxed">{desafio}</p>
+                <div className="max-w-4xl mx-auto">
+                   <div className="relative p-12 md:p-20 rounded-[3rem] border border-gold/20 bg-gradient-to-br from-gold/10 via-midnight to-black text-center overflow-hidden shadow-2xl">
+                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(196,165,74,0.1),transparent_70%)]" />
+                     <p className="relative font-serif text-2xl md:text-4xl text-gold leading-tight tracking-tight italic">
+                       {desafio}
+                     </p>
+                   </div>
                 </div>
               </Section>
             );
@@ -283,23 +297,34 @@ export default function ClubeRotaPremium() {
           {/* 12. MISSÃO DE CAMPO */}
           {temMissao && (
             <Section id="missao-campo" icon={Target} kicker="Travessia Encarnada" titulo={missaoCampo.titulo || 'Missão de Campo'}>
-              <div className="max-w-3xl mx-auto space-y-6 p-10 rounded-[2.5rem] border border-gold/15 bg-white/[0.02]">
-                {missaoCampo.descricao && (
-                  <p className="text-white/80 font-serif italic text-lg leading-relaxed whitespace-pre-wrap">
-                    {missaoCampo.descricao}
-                  </p>
-                )}
-                {missaoCampo.sinais && (
-                  <div className="border-l-2 border-gold/30 pl-5">
-                    <p className="text-[10px] uppercase tracking-[0.3em] text-gold/60 font-bold mb-2">Sinais a observar</p>
-                    <p className="text-white/70 font-serif whitespace-pre-wrap">{missaoCampo.sinais}</p>
-                  </div>
-                )}
-                {missaoCampo.pergunta && (
-                  <div className="bg-gold/5 border border-gold/15 p-6 rounded-2xl">
-                    <p className="text-gold font-serif italic text-lg text-center">{missaoCampo.pergunta}</p>
-                  </div>
-                )}
+              <div className="max-w-4xl mx-auto space-y-8 relative group">
+                {/* Decorative border glow */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-gold/10 to-transparent rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-100 transition duration-1000" />
+                
+                <div className="relative space-y-10 p-12 md:p-16 rounded-[2.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-md overflow-hidden">
+                  {missaoCampo.descricao && (
+                    <p className="text-white/90 font-serif italic text-2xl leading-relaxed whitespace-pre-wrap">
+                      {missaoCampo.descricao}
+                    </p>
+                  )}
+                  
+                  {missaoCampo.sinais && (
+                    <div className="relative border-l-2 border-gold/30 pl-8 py-2">
+                      <p className="text-[11px] uppercase tracking-[0.4em] text-gold/60 font-bold mb-4">Sinais a observar</p>
+                      <p className="text-white/70 font-serif text-lg leading-relaxed whitespace-pre-wrap italic">
+                        {missaoCampo.sinais}
+                      </p>
+                    </div>
+                  )}
+                  
+                  {missaoCampo.pergunta && (
+                    <div className="bg-gold/5 border border-gold/20 p-8 md:p-12 rounded-[2rem] shadow-inner">
+                      <p className="text-gold font-serif italic text-2xl md:text-3xl text-center leading-tight">
+                        {missaoCampo.pergunta}
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
             </Section>
           )}
@@ -309,37 +334,60 @@ export default function ClubeRotaPremium() {
             const textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
             return (
               <Section id="fechamento" icon={Check} kicker="O Portal Se Fecha" titulo="Travessia Concluída">
-                {ponto.metadata?.fechamento?.imagem_fechamento && (
-                  <div className="max-w-4xl mx-auto mb-12 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
-                    <img src={ponto.metadata.fechamento.imagem_fechamento} alt="" className="w-full h-64 md:h-96 object-cover opacity-60 mix-blend-luminosity hover:opacity-100 transition-opacity duration-1000" />
-                  </div>
-                )}
-                <div className="max-w-2xl mx-auto text-center space-y-8">
-                  {textoRaw && (
-                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{textoRaw}</p>
-                  )}
-                  <div className="flex flex-col items-center gap-6">
-                    {ponto.estado !== 'completed' ? (
-                      <Button
-                        variant="gold"
-                        className="rounded-full h-16 px-12 text-lg font-bold shadow-glow text-midnight"
-                        onClick={() => concluirPonto.mutate(ponto.id)}
-                        disabled={concluirPonto.isPending}
-                      >
-                        {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
-                      </Button>
-                    ) : (
-                      <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5 py-2 px-4 rounded-full">
-                        Estação Concluída
-                      </Badge>
-                    )}
-                    <Button
-                      variant="outline"
-                      className="rounded-full h-14 px-10 text-sm uppercase tracking-wider border-white/10 text-white/60 hover:text-white"
-                      onClick={() => navigate('/clube')}
+                <div className="max-w-5xl mx-auto space-y-16">
+                  {ponto.metadata?.fechamento?.imagem_fechamento && (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 1.5 }}
+                      className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-3xl group"
                     >
-                      Voltar ao Mapa das Rotas
-                    </Button>
+                      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent z-10" />
+                      <img 
+                        src={ponto.metadata.fechamento.imagem_fechamento} 
+                        alt="" 
+                        className="w-full h-[400px] md:h-[600px] object-cover opacity-60 mix-blend-luminosity group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" 
+                      />
+                    </motion.div>
+                  )}
+                  
+                  <div className="max-w-3xl mx-auto text-center space-y-12">
+                    {textoRaw && (
+                      <p className="text-2xl md:text-4xl text-white/80 font-display italic leading-snug tracking-tight">
+                        {textoRaw}
+                      </p>
+                    )}
+                    
+                    <div className="flex flex-col items-center gap-8">
+                      {ponto.estado !== 'completed' ? (
+                        <Button
+                          variant="gold"
+                          className="rounded-full h-20 px-16 text-xl font-bold shadow-glow text-midnight hover:scale-105 transition-transform"
+                          onClick={() => concluirPonto.mutate(ponto.id)}
+                          disabled={concluirPonto.isPending}
+                        >
+                          {concluirPonto.isPending ? (
+                            <Loader2 className="w-6 h-6 animate-spin mr-3" />
+                          ) : (
+                            <Check className="w-6 h-6 mr-3" />
+                          )}
+                          {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
+                        </Button>
+                      ) : (
+                        <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold bg-gold/5 shadow-[0_0_30px_rgba(196,165,74,0.1)]">
+                          <CheckCircle2 className="w-6 h-6" />
+                          <span className="font-bold uppercase tracking-[0.2em] text-sm">Estação Concluída</span>
+                        </div>
+                      )}
+                      
+                      <Button
+                        variant="ghost"
+                        className="rounded-full h-14 px-10 text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white hover:bg-white/5 transition-all"
+                        onClick={() => navigate('/clube')}
+                      >
+                        Voltar ao Mapa das Rotas
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Section>
@@ -353,18 +401,35 @@ export default function ClubeRotaPremium() {
 
 function Section({ id, icon: Icon, kicker, titulo, children }: any) {
   return (
-    <section id={id} className="scroll-mt-24 space-y-8">
+    <motion.section 
+      id={id} 
+      className="scroll-mt-32 space-y-12"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 1, ease: [0.21, 1.02, 0.47, 0.98] }}
+    >
       {(kicker || titulo) && (
-        <div className="space-y-3 text-center md:text-left">
+        <div className="space-y-6 text-center">
           {kicker && (
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">
-              {Icon && <Icon className="w-3 h-3" />} {kicker}
+            <div className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.5em] text-gold/60 font-bold">
+              <span className="w-8 h-[1px] bg-gold/20" />
+              <div className="flex items-center gap-2">
+                {Icon && <Icon className="w-3.5 h-3.5 text-gold/40" />} {kicker}
+              </div>
+              <span className="w-8 h-[1px] bg-gold/20" />
             </div>
           )}
-          {titulo && <h2 className="text-2xl md:text-5xl font-display text-white tracking-tight leading-tight">{titulo}</h2>}
+          {titulo && (
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display text-white tracking-tight leading-tight max-w-4xl mx-auto px-4">
+              {titulo}
+            </h2>
+          )}
         </div>
       )}
-      {children}
-    </section>
+      <div className="relative">
+        {children}
+      </div>
+    </motion.section>
   );
 }

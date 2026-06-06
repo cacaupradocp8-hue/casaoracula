@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { Loader2, Save, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface JardimInputProps {
   type: 'psique' | 'oficio';
@@ -130,37 +132,49 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
   };
 
   return (
-    <div className="space-y-4">
-      <Textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Registre aqui sua percepção simbólica..."
-        className="bg-midnight/40 border-white/10 min-h-[120px] text-white/90 placeholder:text-white/20 focus:border-gold/30 transition-all rounded-xl"
-      />
+    <div className="space-y-6 w-full group">
+      <div className="relative">
+        {/* Focus Glow */}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-gold/30 to-emerald-500/30 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-1000" />
+        
+        <Textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Registre aqui sua percepção simbólica..."
+          className="relative bg-midnight/60 border-white/5 min-h-[160px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 transition-all rounded-2xl p-6 leading-relaxed text-lg font-serif italic"
+        />
+      </div>
       
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-6 px-2">
+        <div className="flex flex-wrap items-center gap-4">
           <Button
             onClick={handleSave}
             disabled={isLoading}
             variant={type === 'psique' ? 'gold' : 'outline'}
-            className={`rounded-full px-6 transition-all group ${
-              type === 'oficio' ? 'border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10' : 'text-midnight font-bold'
-            }`}
+            className={cn(
+              "rounded-full px-10 h-14 transition-all duration-500 group shadow-lg",
+              type === 'oficio' ? "border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10 hover:border-emerald-500/60" : "text-midnight font-bold hover:shadow-gold/20"
+            )}
           >
             {isLoading ? (
-              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+              <Loader2 className="w-5 h-5 animate-spin mr-3" />
             ) : (
-              <Save className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
+              <Save className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" />
             )}
             Guardar no Jardim {type === 'psique' ? 'da Psique' : 'do Ofício'}
           </Button>
           
           {lastSaved && (
-            <div className="flex items-center gap-1.5 text-[10px] text-white/30 uppercase tracking-widest animate-in fade-in slide-in-from-left-2">
-              <CheckCircle2 className="w-3 h-3 text-green-500/60" />
-              <span>Salvo em {format(lastSaved, "dd/MM 'às' HH:mm", { locale: ptBR })}</span>
-            </div>
+            <motion.div 
+              initial={{ opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex items-center gap-2.5 text-[11px] text-white/40 uppercase tracking-[0.2em] font-medium"
+            >
+              <div className="w-6 h-6 rounded-full bg-green-500/10 flex items-center justify-center">
+                <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+              </div>
+              <span>Plantado em {format(lastSaved, "dd/MM 'às' HH:mm", { locale: ptBR })}</span>
+            </motion.div>
           )}
         </div>
       </div>
