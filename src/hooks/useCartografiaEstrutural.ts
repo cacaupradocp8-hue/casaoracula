@@ -226,6 +226,7 @@ export function useCartografiaEstrutural() {
       setResult({ profileJson, leitura, cidadela });
       setStep('resultado');
       toast.success('Sua CidaDELA Interior foi revelada ✨');
+      navigate('/clube/rotas/lobos', { state: { transitionText: 'A primeira travessia recomendada para fundadoras é a Rota dos Lobos. Nela, você começará a reconhecer onde sua voz foi silenciada, onde sua adaptação virou sobrevivência e onde seu instinto tenta retornar.' } });
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');
