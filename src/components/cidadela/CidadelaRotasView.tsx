@@ -39,17 +39,13 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         >
           <Compass className="w-10 h-10 text-gold/80" />
         </motion.div>
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-7xl font-display text-foreground tracking-tight">
-            Leitura Estrutural Orácula™ <br/>
-            <span className="text-gold italic">CidadELA Interior</span>
+        <div className=\"space-y-4\">
+          <h1 className=\"text-4xl md:text-7xl font-display text-foreground tracking-tight\">
+            Sua <span className=\"text-gold italic\">CidadELA Interior</span>
           </h1>
-          <div className="space-y-6 pt-4">
-            <p className="text-lg md:text-2xl text-muted-foreground leading-relaxed italic">
-              A CidadELA não define quem você é. Ela mostra onde sua energia está habitando agora.
-            </p>
-            <p className="text-base text-muted-foreground/60 max-w-lg mx-auto leading-relaxed">
-              Este mapa não é diagnóstico. É uma leitura simbólica do momento. Ao observar, escolha o movimento que mais se aproxima do que acontece em você.
+          <div className=\"max-w-xl mx-auto pt-4\">
+            <p className=\"text-lg md:text-2xl text-muted-foreground leading-relaxed italic\">
+              {bussola.leituraSimbolica || \"Um mapa simbólico do seu momento atual.\"}
             </p>
           </div>
         </div>
@@ -76,13 +72,9 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
 
       {/* 3. PORTA INICIAL - TRANSIÇÃO NARRATIVA */}
       <section className="px-4 space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-6">
-          <p className="text-2xl md:text-3xl font-serif text-white/80 italic leading-relaxed">
-            Sua CidadELA revelou onde sua energia está habitando agora. A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.
-          </p>
-          <div className="h-px w-24 bg-gold/30 mx-auto" />
-          <p className="text-lg text-gold/60 font-serif italic">
-            A primeira travessia recomendada para fundadoras é a Rota dos Lobos.
+        <div className=\"text-center max-w-2xl mx-auto space-y-6\">
+          <p className=\"text-2xl md:text-3xl font-serif text-white/80 italic leading-relaxed\">
+            Sua travessia recomendada: <span className=\"text-gold\">Rota dos Lobos</span>.
           </p>
         </div>
         

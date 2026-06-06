@@ -41,71 +41,57 @@ export default function RotaDosLobos() {
     <AppLayout>
       <div className="relative bg-[#010816] text-white min-h-screen overflow-x-hidden font-sans">
         {/* 1. HERO - CINEMATOGRÁFICO */}
-        <section className="relative min-h-[80vh] flex flex-col justify-center pt-20 pb-12 z-10">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-             <img src={getSetting('rota_dos_lobos_hero_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80")} className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity" alt="Floresta" />
-             <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent" />
+        <section className=\"relative min-h-[60vh] flex flex-col justify-center pt-20 pb-12 z-10\">
+          <div className=\"absolute inset-0 -z-10 overflow-hidden\">
+             <img src={getSetting('rota_dos_lobos_hero_image', \"https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80\")} className=\"w-full h-full object-cover grayscale opacity-30 mix-blend-luminosity\" alt=\"Floresta\" />
+             <div className=\"absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent\" />
           </div>
-          <ResponsiveContainer size="wide" className="px-6">
-            <h1 className="text-6xl md:text-9xl font-serif tracking-tighter leading-[0.9]">
-              {getSetting('rota_dos_lobos_title_line1', 'Rota dos')}<br/>
-              <span className="text-gold italic">{getSetting('rota_dos_lobos_title_line2', 'Lobos')}</span>
-            </h1>
-            <h2 className="text-xl md:text-2xl text-gold/80 font-serif border-l-2 border-gold/30 pl-6 py-2 mt-8">
-              {getSetting('rota_dos_lobos_subtitle', 'Jornada de Recuperação da Natureza Instintiva')}
-            </h2>
-          </ResponsiveContainer>
-        </section>
-
-        {/* 1.5 CONTEXTUAL BANNER - PÓS CIDADELA */}
-        <section className="py-12 bg-gold/5 border-y border-gold/10 px-6">
-          <ResponsiveContainer size="wide">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="flex flex-col md:flex-row items-center justify-between gap-8"
+          <ResponsiveContainer size=\"wide\" className=\"px-6 text-center\">
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className=\"text-6xl md:text-8xl font-serif tracking-tighter leading-tight\"
             >
-              <div className="space-y-2">
-                <h4 className="text-sm uppercase tracking-[0.2em] text-gold font-bold">Você chegou pela sua CidadELA</h4>
-                <p className="text-white/70 italic font-serif text-lg md:text-xl max-w-3xl">
-                  Sua cartografia apontou esta travessia como próximo passo. A Rota dos Lobos é a primeira floresta da Casa: um caminho para reconhecer silenciamentos e retorno à própria escuta.
-                </p>
-              </div>
+              Rota dos <span className=\"text-gold italic\">Lobos</span>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className=\"text-xl md:text-2xl text-gold/60 font-serif italic mt-6\"
+            >
+              \"Onde a voz silenciada volta a encontrar o corpo.\"
+            </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className=\"mt-12\"
+            >
               <Button 
-                variant="gold" 
-                size="lg"
-                className="rounded-full px-8 h-14 whitespace-nowrap"
+                variant=\"gold\" 
+                size=\"xl\"
+                className=\"rounded-full px-12 h-16 shadow-premium-glow\"
                 onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
               >
-                Iniciar Travessia
+                Iniciar Estação 1
+                <ArrowRight className=\"ml-3 w-5 h-5\" />
               </Button>
             </motion.div>
           </ResponsiveContainer>
         </section>
 
-        {/* 2. ÁUDIO DE ENTRADA */}
-        {audioUrl && (
-          <section className="py-24 bg-black/40 border-y border-white/5">
-            <ResponsiveContainer size="wide">
-              <EscutaPremium audioUrl={audioUrl} titulo={audioTitle} imagemEscuta={audioImage} tipo="Entrada" className="bg-transparent" />
-            </ResponsiveContainer>
-          </section>
-        )}
-
-        {/* 3. CARTA DE ENTRADA */}
-        <section className="py-32 px-6">
-          <ResponsiveContainer size="narrow" className="space-y-8">
-            <motion.h3 {...fadeIn} className="text-3xl font-serif">{getSetting('rota_dos_lobos_carta_titulo', 'Antes de entrar na floresta')}</motion.h3>
-            <motion.p {...fadeIn} className="text-lg text-white/70 leading-relaxed">{getSetting('rota_dos_lobos_carta_texto', 'Você está prestes a atravessar uma floresta simbólica. Não é uma jornada de curso. É um retorno ao que foi silenciado em você. Deixe a pressa na entrada.')}</motion.p>
-          </ResponsiveContainer>
-        </section>
-
-        {/* 4. SYNTHEIA SUSSURRA */}
-        <section className="py-24 bg-black/20 border-y border-white/5 text-center px-6">
-          <ResponsiveContainer size="narrow" className="space-y-6">
-            <h3 className="text-xs uppercase tracking-[0.3em] text-gold font-bold">Syntheia Sussurra</h3>
-            <p className="text-2xl font-serif italic text-white/80">"{getSetting('rota_dos_lobos_syntheia_quote', 'O instinto raramente grita. Primeiro ele sussurra.')}"</p>
+        {/* 2. ÁUDIO E CARTA CONSOLIDADOS */}
+        <section className=\"py-20 px-6 border-y border-white/5 bg-black/20\">
+          <ResponsiveContainer size=\"narrow\" className=\"text-center space-y-12\">
+            <p className=\"text-lg text-white/50 leading-relaxed italic font-serif\">
+              \"Este é um retorno ao que foi silenciado em você. Deixe a pressa na entrada.\"
+            </p>
+            {audioUrl && (
+              <div className=\"max-w-md mx-auto\">
+                <EscutaPremium audioUrl={audioUrl} titulo=\"A Voz da Floresta\" tipo=\"Entrada\" className=\"bg-transparent border-none p-0\" />
+              </div>
+            )}
           </ResponsiveContainer>
         </section>
 
