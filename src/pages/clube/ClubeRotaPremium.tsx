@@ -111,9 +111,12 @@ export default function ClubeRotaPremium() {
           estacaoNumero={estacaoAtual?.numero || 1}
           titulo={ponto.metadata?.hero?.titulo || ponto.nome}
           subtitulo={ponto.metadata?.hero?.subtitulo || ponto.subtitulo || ''}
+          descricao={ponto.metadata?.hero?.texto || ponto.descricao}
+          citacao={ponto.metadata?.revelacao_estacao?.porta}
           backgroundImage={ponto.metadata?.hero?.imagem_desktop || estacaoAtual?.banner_url}
           estacaoNome={estacaoAtual?.titulo || 'Rota dos Lobos'}
         />
+
 
         {/* CONTENT CONTAINER */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 md:space-y-48 pb-40 pt-12">
