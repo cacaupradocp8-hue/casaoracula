@@ -146,33 +146,52 @@ export default function ClubeRotaPremium() {
             <FraseTravessia texto={ponto.metadata.frases_travessia[0]} />
           )}
 
-          {/* 5. ÁUDIOS */}
+          {/* 5. ÁUDIOS - ESTAÇÃO DE ESCUTA */}
           {audios.length > 0 && (
-            <Section id="audios" icon={Headphones} kicker="Escuta" titulo="Áudios da Estação">
+            <Section id="audios" icon={Headphones} kicker="Escuta Ritual" titulo="Estação de Escuta">
               <div className="space-y-24">
+                {/* Áudio Principal em Destaque */}
                 <EscutaPremium 
                   audioUrl={audios[0].url}
                   titulo={audios[0].titulo}
-                  tipo={audios[0].tipo}
+                  tipo={audios[0].tipo || 'Áudio Principal'}
                   funcao={audios[0].funcao}
                   duracao={audios[0].duracao}
                   imagemEscuta={ponto.metadata?.escuta?.imagem_escuta}
                 />
 
-                {audios.length > 1 && (
-                  <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {audios.slice(1).map((audio: any, i: number) => (
+                {/* Lista Completa de Áudios da Estação */}
+                <div className="max-w-4xl mx-auto space-y-12">
+                  <div className="flex items-center gap-4 mb-8">
+                    <div className="h-px flex-1 bg-white/10" />
+                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold">Acervo da Estação</span>
+                    <div className="h-px flex-1 bg-white/10" />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {audios.map((audio: any, i: number) => (
                       <AudioRitualPlayer
-                        key={i + 1}
+                        key={i}
                         audioUrl={audio.url}
                         titulo={audio.titulo}
-                        tipo={audio.tipo}
+                        tipo={audio.tipo || (i === 0 ? 'Abertura' : 'Aprofundamento')}
                         funcao={audio.funcao}
                         duracao={audio.duracao}
                       />
                     ))}
+                    
+                    {/* Placeholder para o 80-20 que será integrado via metadados */}
+                    {ponto.metadata?.has_80_20 && (
+                      <AudioRitualPlayer
+                        audioUrl={ponto.metadata?.audio_80_20_url}
+                        titulo="O Princípio 80-20 na Escuta"
+                        tipo="Conceito Estrutural"
+                        funcao="A essência do que realmente importa"
+                        duracao="12:00"
+                      />
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </Section>
           )}
