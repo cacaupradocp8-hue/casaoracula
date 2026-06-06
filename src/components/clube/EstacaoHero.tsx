@@ -14,6 +14,8 @@ interface EstacaoHeroProps {
   citacao?: string;
 }
 
+import { cn } from '@/lib/utils';
+
 export function EstacaoHero({ 
   estacaoNumero, 
   titulo, 
@@ -28,18 +30,18 @@ export function EstacaoHero({
   const parentName = estacaoNome === titulo ? 'Rota dos Lobos' : (estacaoNome || 'Rota dos Lobos');
 
   return (
-    <section className="relative min-h-screen flex items-center px-4 sm:px-6 md:px-12 lg:px-24 z-10 overflow-hidden pt-20">
+    <section className="relative min-h-[90vh] flex items-center px-4 sm:px-6 md:px-12 lg:px-24 z-10 overflow-hidden pt-20">
       {/* Background with Dark Forest Atmosphere */}
       <div className="absolute inset-0 pointer-events-none">
         <img 
           src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
           alt="" 
-          className="w-full h-full object-cover opacity-70 transition-opacity duration-700" 
+          className="w-full h-full object-cover opacity-40 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
         />
         {/* Cinematic Vignette and Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-midnight via-midnight/80 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-midnight/40" />
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#010816] via-[#010816]/95 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/80" />
+        <div className="absolute inset-0 bg-[#010816]/30" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-12">
@@ -69,10 +71,13 @@ export function EstacaoHero({
               {kicker}
             </motion.span>
             
-            <h1 className="font-display font-light leading-[0.9] tracking-tighter text-6xl md:text-8xl lg:text-9xl">
-              <span className="bg-gradient-to-b from-white via-white/90 to-white/40 bg-clip-text text-transparent inline-block pb-4">
+            <h1 className="font-display font-light leading-[0.85] tracking-tighter text-6xl md:text-8xl lg:text-9xl">
+              <span className="bg-gradient-to-b from-white via-white to-white/30 bg-clip-text text-transparent inline-block pb-4">
                 {titulo.split(' ').map((word, i) => (
-                  <span key={i} className="block first:font-serif first:italic first:font-light">
+                  <span key={i} className={cn(
+                    "block",
+                    i === 0 ? "font-serif italic font-light" : "font-sans font-black uppercase tracking-tighter"
+                  )}>
                     {word}
                   </span>
                 ))}
@@ -109,11 +114,17 @@ export function EstacaoHero({
               <PawPrint className="w-4 h-4 mr-2 group-hover:animate-bounce" /> Iniciar Travessia
             </Button>
             
-            <div className="flex items-center gap-3 px-6 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md">
-              <div className="w-1.5 h-1.5 rounded-full bg-gold/60 animate-pulse" />
-              <span className="text-[10px] tracking-[0.4em] uppercase text-white/40 font-bold">
-                Estação {estacaoNumero} de 6
-              </span>
+            <div className="flex items-center gap-4 px-8 py-4 rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-xl shadow-premium-glow relative group/estacao">
+              <div className="absolute -inset-0.5 bg-gold/20 rounded-2xl blur opacity-0 group-hover/estacao:opacity-100 transition duration-500" />
+              <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_12px_rgba(212,175,55,1)] animate-pulse relative z-10" />
+              <div className="flex flex-col relative z-10">
+                <span className="text-[10px] tracking-[0.3em] uppercase text-gold font-black leading-none mb-1">
+                  Estação Ativa
+                </span>
+                <span className="text-xl font-serif italic text-white/90 leading-none">
+                  {estacaoNumero} <span className="text-white/30 text-sm not-italic ml-1">de 6</span>
+                </span>
+              </div>
             </div>
           </div>
         </motion.div>
