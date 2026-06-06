@@ -1,27 +1,36 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { useBig5Oracular } from './useBig5Oracular';
 import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { toast } from 'sonner';
 
-export type CartografiaStepId = 'intro' | 'objetivas' | 'gerando' | 'resultado';
+export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'objetivas' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
 
 export interface CartografiaRespostas {
-  // Objetivas (Perguntas situacionais de escolha forçada)
-  objetivas: Record<string, string>;
+  // Objetivas (30 perguntas baseadas nos 5 eixos)
+  objetivas: Record<string, number>;
+  // Qualitativo (6 Territórios)
+  sintoma: string;
+  historia: string;
+  crencas: string;
+  recursos: string;
+  seguranca: string;
 }
 
 export function useCartografiaEstrutural() {
   const { user } = useAuth();
-  const navigate = useNavigate();
   const { fatores, perguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
     objetivas: {},
+    sintoma: '',
+    historia: '',
+    crencas: '',
+    recursos: '',
+    seguranca: '',
   });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -126,10 +135,10 @@ export function useCartografiaEstrutural() {
     setRespostas(prev => ({ ...prev, [key]: value }));
   };
 
-  const updateObjetiva = (perguntaId: string, territorioKey: string) => {
+  const updateObjetiva = (perguntaId: string, value: number) => {
     setRespostas(prev => ({
       ...prev,
-      objetivas: { ...prev.objetivas, [perguntaId]: territorioKey }
+      objetivas: { ...prev.objetivas, [perguntaId]: value }
     }));
   };
 
@@ -139,18 +148,18 @@ export function useCartografiaEstrutural() {
     setLoading(true);
 
     try {
-      // 1. Calcular médias a partir das perguntas objetivas (que agora pontuam territórios diretamente)
-      const big5Medias = calcularMedias(respostas.objetivas as any);
+      // 1. Calcular médias a partir das 30 perguntas objetivas
+      const big5Medias = calcularMedias(respostas.objetivas);
       
       // 2. Montar Profile JSON Integrado (Territórios + Big Five)
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
         rawMedias: big5Medias.medias, 
         territorios: {
-          sintoma: 'Mapeamento via escolha forçada',
-          historia_vida: 'Mapeamento via escolha forçada',
-          crencas: 'Mapeamento via escolha forçada',
-          recursos: 'Mapeamento via escolha forçada',
-          seguranca: 'Mapeamento via escolha forçada'
+          sintoma: respostas.sintoma,
+          historia_vida: respostas.historia,
+          crencas: respostas.crencas,
+          recursos: respostas.recursos,
+          seguranca: respostas.seguranca
         },
         contexto: 'clube' 
       });
@@ -161,19 +170,20 @@ export function useCartografiaEstrutural() {
         cor_predominante: cidadela.cor_derivada,
         atmosfera: cidadela.atmosfera_derivada,
         territorios_principais: cidadela.distritos_acesos,
-        recursos_internos: 'Recursos mapeados via territórios',
-        conflitos_tensoes: 'Conflitos mapeados via territórios',
+        recursos_internos: respostas.recursos,
+        conflitos_tensoes: respostas.sintoma,
         simbolo_pessoal: cidadela.simbolo_derivado,
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
         metadata_json: { 
           medias_big5: big5Medias.medias,
-          respostas_objetivas: respostas.objetivas,
-          versao: '3.0-clube-estrutural',
-          territorio_dominante: cidadela.territorio_dominante,
-          territorio_tensao: cidadela.territorio_tensao,
-          territorio_adormecido: cidadela.territorio_adormecido,
-          tipo_leitura: 'Leitura Estrutural Orácula™'
+          respostas_qualitativas: {
+            sintoma: respostas.sintoma,
+            historia: respostas.historia,
+            crencas: respostas.crencas,
+            seguranca: respostas.seguranca
+          },
+          versao: '2.0-estrutural'
         },
       } as any).select('id').single();
 
@@ -189,11 +199,10 @@ export function useCartografiaEstrutural() {
 
       // 5. Atualizar Auto Mapeamento (Cidadela)
       const DISTRITOS_ALL = [
-        'portao_chegada', 'torres', 'portas', 'labirinto', 'conselho_interior',
-        'bosque_arquetipos', 'casa_matriz', 'casa_sonhos', 'espelho_vinculos',
-        'praca_abalo', 'forja', 'portal_renascimento', 'coracao_cidadela'
+        'portao_chegada', 'torres', 'portas', 'jardim_arquetipos', 'praca_abalo',
+        'casa_sonhos', 'espelho_vinculos', 'forja', 'conselho_interior',
+        'labirinto', 'praca_integracao', 'portal_renascimento',
       ];
-      
       const distritosJson: Record<string, any> = {};
       DISTRITOS_ALL.forEach(d => {
         distritosJson[d] = {
@@ -205,7 +214,7 @@ export function useCartografiaEstrutural() {
       await supabase.from('auto_mapeamento').upsert({
         user_id: user.id,
         distritos_json: distritosJson,
-        anotacoes: `Leitura Estrutural Orácula™ | Cor: ${cidadela.cor_derivada} | Ponto Inicial: ${cidadela.porta_inicial_nome}`,
+        anotacoes: `Cartografia Estrutural | Cor: ${cidadela.cor_derivada} | Nível Atenção: ${profileJson.derivacao.atencao_seguranca}`,
       } as any, { onConflict: 'user_id' });
 
       // 6. Marcar rascunho como concluído
@@ -217,12 +226,10 @@ export function useCartografiaEstrutural() {
       setResult({ profileJson, leitura, cidadela });
       setStep('resultado');
       toast.success('Sua CidaDELA Interior foi revelada ✨');
-      // A navegação agora é feita pelo componente de resultado via CTA
-
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');
-      setStep('objetivas');
+      setStep('seguranca');
     } finally {
       setLoading(false);
     }

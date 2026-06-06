@@ -58,8 +58,8 @@ export function useJourneyGuard(): JourneyState {
             .maybeSingle(),
         ]);
 
-        const hasQuiz = true; // Neutralizing as requested
-        const hasTravessia = true; // Neutralizing as requested
+        const hasQuiz = (quizRes.data?.length ?? 0) > 0;
+        const hasTravessia = (travessiaUnlocksRes.data?.length ?? 0) >= 3;
         const hasCartografia = (cartoRes.data?.length ?? 0) > 0;
         const hasCidadela = Boolean(
           cidadelaRes.data?.id
@@ -67,7 +67,11 @@ export function useJourneyGuard(): JourneyState {
           && Object.keys((cidadelaRes.data.distritos_json as Record<string, unknown>) || {}).length > 0,
         );
 
-        if (!hasCartografia) {
+        if (!hasTravessia) {
+          setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
+        } else if (!hasTravessia) {
+          setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
+        } else if (!hasCartografia) {
           setState({ currentStep: 'cartografia', redirectTo: '/ferramenta/cartografia-psiquica-oracula', loading: false });
         } else if (!hasCidadela) {
           setState({ currentStep: 'cidadela', redirectTo: '/cidadela/revelacao', loading: false });

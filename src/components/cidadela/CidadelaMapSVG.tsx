@@ -54,8 +54,6 @@ const DISTRICT_NUMBER_BY_NAME: Record<string, number> = {
   'portal_renascimento': 12,
   'jardim da heroina': 13,
   'jardim_heroina': 13,
-  'casa matriz': 13,
-  'casa_matriz': 13,
 };
 
 function normalizeDistrictName(name: string | null | undefined) {

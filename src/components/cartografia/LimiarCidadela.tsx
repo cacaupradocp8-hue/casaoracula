@@ -34,20 +34,10 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1.2 }}
-          className="text-2xl md:text-4xl font-display text-gold leading-tight"
+          className="text-2xl md:text-3xl font-display text-gold leading-relaxed"
         >
-          Leitura Estrutural Orácula™ — CidaDELA Interior
+          Como você habita o seu mundo hoje?
         </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
-          className="text-muted-foreground italic text-lg"
-        >
-          Onde sua vida interior está concentrando energia neste momento?
-        </motion.p>
-
 
         <motion.div
           initial={{ opacity: 0 }}
@@ -60,7 +50,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
             onClick={onEnter}
             className="px-12 py-6 text-lg tracking-widest uppercase shadow-premium-glow"
           >
-            Desvelar a CidaDELA Interior
+            Entrar na CidadELA
           </Button>
         </motion.div>
       </div>

@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { Compass, ArrowRight, TreePine, Eye, Ghost, Star, Sparkles, Quote } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
@@ -12,8 +12,6 @@ import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 export default function RotaDosLobos() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const transitionText = (location.state as any)?.transitionText;
   const bussola = useBussolaOracular();
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
@@ -41,25 +39,6 @@ export default function RotaDosLobos() {
 
   return (
     <AppLayout>
-      <AnimatePresence>
-        {transitionText && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            animate={{ opacity: 0 }}
-            transition={{ delay: 4, duration: 1 }}
-            onAnimationComplete={() => navigate(location.pathname, { replace: true, state: {} })}
-            className="fixed inset-0 z-[100] bg-[#010816] flex items-center justify-center p-12 text-center"
-          >
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-gold font-serif text-2xl md:text-3xl max-w-3xl leading-relaxed italic"
-            >
-              {transitionText}
-            </motion.p>
-          </motion.div>
-        )}
-      </AnimatePresence>
       <div className="relative bg-[#010816] text-white min-h-screen overflow-x-hidden font-sans">
         {/* 1. HERO - CINEMATOGRÁFICO */}
         <section className="relative min-h-[80vh] flex flex-col justify-center pt-20 pb-12 z-10">

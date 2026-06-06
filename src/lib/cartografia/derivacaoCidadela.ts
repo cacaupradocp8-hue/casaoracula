@@ -22,10 +22,6 @@ export interface CidadelaDerivada {
   simbolo_derivado: string;
   simbolo_icon: string;
   indice_equilibrio: number;
-  // Novos campos de estado vibracional
-  territorio_dominante?: string;
-  territorio_tensao?: string;
-  territorio_adormecido?: string;
 }
 
 // ─── Mapeamento eixo → distritos ───
@@ -33,7 +29,7 @@ export interface CidadelaDerivada {
 const EIXO_DISTRITOS: Record<keyof MediasFatores, string[]> = {
   porta_do_possivel: ['portao_chegada', 'portal_renascimento'],
   torre_interna: ['torres', 'conselho_interior'],
-  campo_do_outro: ['espelho_vinculos', 'bosque_arquetipos'],
+  campo_do_outro: ['espelho_vinculos', 'jardim_arquetipos'],
   voz_no_mundo: ['forja', 'praca_integracao'],
   porta_do_abalo: ['praca_abalo', 'labirinto', 'casa_sonhos'],
 };
@@ -171,26 +167,10 @@ function calcularIndiceEquilibrio(medias: MediasFatores): number {
 // ─── Função principal ───
 
 export function derivarCidadela(
-  rawMedias: Record<string, any>,
+  rawMedias: Record<string, number>,
   tensaoCentral: string
 ): CidadelaDerivada {
   const medias = normalizarMedias(rawMedias);
-
-  // Lógica de Territórios Vibracionais baseada nas respostas de escolha forçada
-  const counts: Record<string, number> = {};
-  Object.values(rawMedias).forEach(v => {
-    if (typeof v === 'string') counts[v] = (counts[v] || 0) + 1;
-  });
-
-  const sortedTerritories = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-  const dominante = sortedTerritories[0]?.[0];
-  
-  // Tensão: Busca o segundo território com mais votos, ou um território de abalo se houver
-  const tensao = sortedTerritories.length > 1 ? sortedTerritories[1]?.[0] : (counts['praca_abalo'] || counts['labirinto'] ? (counts['praca_abalo'] > (counts['labirinto'] || 0) ? 'praca_abalo' : 'labirinto') : undefined);
-  
-  // Adormecido: Um território oficial que não teve NENHUM voto
-  const OFICIAIS = ['portao_chegada', 'torres', 'portas', 'labirinto', 'conselho_interior', 'bosque_arquetipos', 'casa_matriz', 'casa_sonhos', 'espelho_vinculos', 'praca_abalo', 'forja', 'portal_renascimento'];
-  const adormecido = OFICIAIS.find(t => !counts[t]) || OFICIAIS[Math.floor(Math.random() * OFICIAIS.length)];
 
   // Porta inicial = eixo com maior média
   const entries = Object.entries(medias) as [keyof MediasFatores, number][];
@@ -200,8 +180,8 @@ export function derivarCidadela(
   const simbolo = EIXO_SIMBOLO[eixoDominante];
 
   return {
-    porta_inicial: dominante || porta.key,
-    porta_inicial_nome: dominante ? dominante.replace(/_/g, ' ') : porta.nome,
+    porta_inicial: porta.key,
+    porta_inicial_nome: porta.nome,
     torre_dominante: derivarTorreDominante(medias),
     clima_cidadela: derivarClima(tensaoCentral, medias.porta_do_abalo),
     distritos_acesos: derivarDistritosAcesos(medias),
@@ -211,8 +191,5 @@ export function derivarCidadela(
     simbolo_derivado: simbolo.nome,
     simbolo_icon: simbolo.icon,
     indice_equilibrio: calcularIndiceEquilibrio(medias),
-    territorio_dominante: dominante,
-    territorio_tensao: tensao,
-    territorio_adormecido: adormecido
   };
 }

@@ -156,7 +156,7 @@ export const CLUBE_LIVRO_PORTAIS: LivroPortaisConfig[] = [
       'Annie Ernaux narra o inenarrável com precisão cirúrgica. Um modelo de coragem narrativa e de dignidade no testemunho da própria queda.',
     portais: [
       {
-        nome: 'Casa Matriz',
+        nome: 'Jardim da Heroína',
         descricao: 'Registro simbólico da travessia da cliente',
         rota: '/session-room',
         icone: '◈',
@@ -264,7 +264,7 @@ export const CLUBE_LIVRO_PORTAIS: LivroPortaisConfig[] = [
         icone: '◉',
       },
       {
-        nome: 'Jardim do Ofício',
+        nome: 'Casa das Máquinas — Jardim do Ofício',
         descricao: 'Reflexão profissional e presença pública',
         rota: '/casa-das-maquinas/jardim-oficio',
         icone: '◎',

@@ -105,8 +105,8 @@ export const CIDADELA_TERRITORIOS: CidadelaTerritorio[] = [
     modos_disponiveis: ['travessia']
   },
   {
-    id: 'casa_matriz',
-    nome: 'Casa Matriz',
+    id: 'jardim_heroina',
+    nome: 'Jardim da Heroína',
     descricao_curta: 'O percurso individual de crescimento e florescimento.',
     funcao_simbolica: 'O mito pessoal, a jornada individual de cura.',
     funcao_formativa: 'Autodesenvolvimento e autenticidade autoral.',

@@ -43,7 +43,7 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string; microcopy?: s
   forja: { nome: 'A Forja', icon: '🔥', microcopy: 'O fogo que refina, não consome.' },
   conselho_interior: { nome: 'Conselho Interior', icon: '👁️', microcopy: 'Ouça todas as vozes antes de decidir.' },
   labirinto: { nome: 'Labirinto', icon: '🌀', microcopy: 'Não há atalhos para o centro.' },
-  casa_matriz: { nome: 'Casa Matriz', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
+  jardim_heroina: { nome: 'Jardim da Heroína', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
   portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', microcopy: 'Você não é mais quem entrou.' },
 };
 
@@ -74,24 +74,17 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
     const states: Record<string, DistrictDisplayState> = {};
     const tensaoSet = new Set((data.distritos_tensao || []).map(d => d.toLowerCase()));
     const ativoSet = new Set((data.distritos_ativos || []).map(d => d.toLowerCase()));
-    
-    // Novas chaves de estado vibracional (se disponíveis no objeto data)
-    const dominanteKey = (data as any).territorio_dominante;
-    const adormecidoKey = (data as any).territorio_adormecido;
-
     Object.values(DISTRITOS_META).forEach(d => {
       const key = d.nome.toLowerCase();
-      const rawKey = Object.keys(DISTRITOS_META).find(k => DISTRITOS_META[k].nome.toLowerCase() === key);
-      
-      if (tensaoSet.has(key)) {
-        states[key] = 'em_tensao';
-      } else if (rawKey === adormecidoKey) {
-        states[key] = 'nao_explorado'; // Reduzir opacidade visualmente via state
-      } else if (ativoSet.has(key) || rawKey === dominanteKey) {
-        states[key] = 'ativo';
-      }
+      if (tensaoSet.has(key)) states[key] = 'em_tensao';
+      else if (ativoSet.has(key)) states[key] = 'ativo';
     });
-
+    if (data.distrito_dominante) {
+      const domKey = (data.distrito_dominante || data.distritos_ativos?.[0] || '').toLowerCase();
+      if (!states[domKey] || states[domKey] === 'nao_explorado') {
+        states[domKey] = 'ativo';
+      }
+    }
     return states;
   }, [data]);
 

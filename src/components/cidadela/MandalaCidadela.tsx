@@ -64,7 +64,7 @@ const VIRTUAL_DISTRICTS: MandalaDistrict[] = [
   {
     id: 'virtual-jardim-heroina',
     numero: 13,
-    nome: 'Casa Matriz',
+    nome: 'Jardim da Heroína',
     descricao: 'O território da jornada pessoal e da coragem interior.',
     icone: '🌺',
     cor: '#C9A24A',
@@ -389,7 +389,7 @@ const TERRITORY_ART: Record<number, (s: typeof STATE_STYLES.inativo) => JSX.Elem
     )}
   </g>,
 
-  // 13 — Casa Matriz (Território da CidaDELA)
+  // 13 — Jardim da Heroína (NOVO)
   13: (st) => <g>
     <circle cx="0" cy="0" r="36" fill={st.building} stroke={st.wall} strokeWidth="1.2" />
     <circle cx="0" cy="0" r="30" fill="none" stroke={st.wall} strokeWidth="0.6" />

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
+import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
 import { 
   Map, Sparkles, ShieldAlert, History, User, 
@@ -20,7 +20,12 @@ import { RevelacaoLoader } from './RevelacaoLoader';
 import { PortaInicialHero } from './PortaInicialHero';
 
 const STEPS: { id: CartografiaStepId; title: string; icon: any; anchor?: string }[] = [
-  { id: 'objetivas', title: 'Mapeamento', icon: User, anchor: 'Centro de Atenção' },
+  { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert, anchor: 'Presença' },
+  { id: 'historia', title: 'História', icon: History, anchor: 'Memória' },
+  { id: 'objetivas', title: 'Modo de Habitar', icon: User, anchor: 'Centro de Atenção' },
+  { id: 'crencas', title: 'Crenças', icon: Brain, anchor: 'Narrativa' },
+  { id: 'recursos', title: 'Recursos', icon: Heart, anchor: 'Vitalidade' },
+  { id: 'seguranca', title: 'Segurança', icon: ShieldCheck, anchor: 'Pacto' },
 ];
 
 const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
@@ -69,12 +74,22 @@ export function CartografiaEstruturalStepper() {
     const currentStepObj = STEPS.find(s => s.id === step);
     const nextAnchor = currentStepObj?.anchor || 'Avançando';
 
-    if (step === 'intro') setStep('objetivas');
-    else if (step === 'objetivas') triggerTransition(() => finalizar(), 'Revelação');
+    if (step === 'intro') setStep('sintoma');
+    else if (step === 'sintoma') triggerTransition(() => setStep('historia'), 'Memória');
+    else if (step === 'historia') triggerTransition(() => setStep('objetivas'), 'Centro de Atenção');
+    else if (step === 'objetivas') triggerTransition(() => setStep('crencas'), 'Narrativa');
+    else if (step === 'crencas') triggerTransition(() => setStep('recursos'), 'Vitalidade');
+    else if (step === 'recursos') triggerTransition(() => setStep('seguranca'), 'Pacto');
+    else if (step === 'seguranca') triggerTransition(() => finalizar(), 'Revelação');
   };
 
   const back = () => {
-    if (step === 'objetivas') setStep('intro');
+    if (step === 'sintoma') setStep('intro');
+    else if (step === 'historia') setStep('sintoma');
+    else if (step === 'objetivas') setStep('historia');
+    else if (step === 'crencas') setStep('objetivas');
+    else if (step === 'recursos') setStep('crencas');
+    else if (step === 'seguranca') setStep('recursos');
   };
 
   const slideVariants = {
@@ -94,7 +109,16 @@ export function CartografiaEstruturalStepper() {
     const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
 
     const handleAtravessar = () => {
-      navigate('/clube/rotas/lobos');
+      if (!portaSlug) {
+        navigate('/clube');
+        return;
+      }
+      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
+      if (exists) {
+        navigate(`/clube/rota/${portaSlug}`);
+      } else {
+        navigate('/clube');
+      }
     };
 
     return (
@@ -105,25 +129,18 @@ export function CartografiaEstruturalStepper() {
       >
 
         {/* 1. TÍTULO PRINCIPAL */}
-        <header className="text-center space-y-6 pt-12">
+        <header className="text-center space-y-4 pt-12">
+
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-2 border border-gold/20 shadow-premium-glow"
+            className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold/20 shadow-premium-glow"
           >
             <Compass className="w-10 h-10 text-gold/80" />
           </motion.div>
-          <div className="space-y-2">
-            <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
-            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">Primeira Cartografia</p>
-          </div>
-          <div className="max-w-2xl mx-auto pt-6 px-4">
-            <p className="text-foreground/80 italic text-base leading-relaxed">
-              “Sua CidadELA revelou onde sua energia está habitando agora. Este não é um diagnóstico. É uma cartografia do momento. A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.”
-            </p>
-          </div>
+          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
+          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
         </header>
-
 
         <section className="space-y-24">
           {/* 2. MANDALA CENTRAL (PRIORIDADE MÁXIMA) */}
@@ -145,71 +162,41 @@ export function CartografiaEstruturalStepper() {
             />
           </div>
 
-          {/* 3. LEITURA VIBRACIONAL (DOMINANTE, TENSÃO, ADORMECIDO) */}
-          <div className="max-w-3xl mx-auto px-6 space-y-12">
+          {/* 3. TERRITÓRIOS VIVOS */}
+          <div className="max-w-3xl mx-auto px-6 space-y-10">
             <div className="text-center space-y-2">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Leitura Vibracional dos Territórios</h3>
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">O que se acendeu na sua CidadELA</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Dominante */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="p-6 rounded-2xl border border-gold/20 bg-gold/10 flex flex-col items-center text-center gap-4 transition-all hover:bg-gold/15"
-              >
-                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center border border-gold/30">
-                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_dominante || '']?.icon || '🏛️'}</span>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm uppercase tracking-widest text-gold/60">Território Dominante</h4>
-                  <h5 className="text-xl font-display text-gold">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_dominante || '']?.nome || 'Em Revelação'}</h5>
-                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
-                    Onde sua energia está mais presente e estruturada agora.
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Tensão */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="p-6 rounded-2xl border border-red-500/10 bg-red-500/5 flex flex-col items-center text-center gap-4 transition-all hover:bg-red-500/10"
-              >
-                <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30">
-                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_tensao || '']?.icon || '⚡'}</span>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm uppercase tracking-widest text-red-400/60">Território de Tensão</h4>
-                  <h5 className="text-xl font-display text-red-400/80">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_tensao || '']?.nome || 'Em Revelação'}</h5>
-                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
-                    O ponto que pede atenção e cuidado para não gerar colapso.
-                  </p>
-                </div>
-              </motion.div>
-
-              {/* Adormecido */}
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="p-6 rounded-2xl border border-blue-500/10 bg-blue-500/5 flex flex-col items-center text-center gap-4 transition-all hover:bg-blue-500/10"
-              >
-                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
-                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_adormecido || '']?.icon || '🌙'}</span>
-                </div>
-                <div className="space-y-1">
-                  <h4 className="text-sm uppercase tracking-widest text-blue-400/60">Território Adormecido</h4>
-                  <h5 className="text-xl font-display text-blue-400/80">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_adormecido || '']?.nome || 'Em Revelação'}</h5>
-                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
-                    Onde reside um potencial ainda não explorado nesta fase.
-                  </p>
-                </div>
-              </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {cidadela.distritos_acesos?.map((distritoKey: string) => {
+                const meta = DISTRITOS_META[distritoKey] || { nome: distritoKey.replace(/_/g, ' '), icon: '📍' };
+                return (
+                  <motion.div 
+                    key={distritoKey}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4 transition-all hover:bg-gold/[0.04]"
+                  >
+                    <span className="text-2xl mt-1">{meta.icon}</span>
+                    <div className="space-y-1">
+                      <h4 className="text-lg font-display text-gold/90">{meta.nome}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed italic">
+                        {distritoKey === 'torres' ? 'Estrutura, limites e o modo como você organiza sua energia vital.' :
+                         distritoKey === 'labirinto' ? 'Onde você atravessa as perguntas que ainda não possuem resposta.' :
+                         distritoKey === 'portao_chegada' ? 'O início de tudo, onde a coragem do primeiro passo reside.' :
+                         distritoKey === 'conselho_interior' ? 'Onde suas vozes internas buscam harmonia e direção.' :
+                         distritoKey === 'espelho_vinculos' ? 'O que suas relações revelam sobre seu próprio interior.' :
+                         distritoKey === 'casa_sonhos' ? 'Onde o inconsciente fala através de imagens e silêncios.' :
+                         distritoKey === 'forja' ? 'O calor da transformação e a alquimia do próprio ser.' :
+                         distritoKey === 'portal_renascimento' ? 'O limiar entre o que precisa terminar e o que começa.' :
+                         'Este território se acende em resposta ao seu momento atual.'}
+                      </p>
+                    </div>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
 
@@ -247,27 +234,21 @@ export function CartografiaEstruturalStepper() {
                     </div>
                   </div>
 
-                  <div className="pt-8 w-full space-y-4">
+                  <div className="pt-8 w-full">
                     <Button 
                       variant="gold" 
                       size="lg" 
                       onClick={handleAtravessar}
-                      className="group px-12 h-16 text-lg shadow-premium-glow w-full sm:w-auto"
+                      className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
                     >
-                      Seguir para a Rota dos Lobos
-                      <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+                      Atravessar
+                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                     </Button>
-                    <div className="pt-2">
-                      <p className="text-xs text-muted-foreground/60 max-w-md mx-auto italic">
-                        A primeira travessia recomendada para fundadoras é a Rota dos Lobos. Nela, você começará a reconhecer onde sua voz foi silenciada e onde seu instinto tenta retornar.
-                      </p>
-                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
-
 
           {/* 5. TORRE DOMINANTE (SECUNDÁRIA) */}
           <div className="max-w-2xl mx-auto px-6">
@@ -365,97 +346,69 @@ export function CartografiaEstruturalStepper() {
           <LimiarCidadela key="intro" onEnter={next} />
         )}
 
+        {step === 'sintoma' && (
+          <QuestionStep 
+            key="sintoma"
+            title="Território do Sintoma"
+            description="O que tem pedido sua atenção nos últimos tempos? Mapeie desconfortos, padrões e sinais."
+            questions={[
+              "Que padrão parece se repetir na sua vida?",
+              "Onde isso aparece no corpo, nas emoções ou nas relações?",
+              "O que você sente que já não consegue mais sustentar?"
+            ]}
+            value={respostas.sintoma}
+            onChange={v => updateResposta('sintoma', v)}
+            onNext={next}
+            onBack={back}
+          />
+        )}
+
+        {step === 'historia' && (
+          <QuestionStep 
+            key="historia"
+            title="Território da História"
+            description="Compreenda eventos e vínculos que contextualizam seu momento atual."
+            questions={[
+              "Que acontecimentos marcaram a forma como você se vê hoje?",
+              "Que histórias você aprendeu a contar sobre si mesma?",
+              "Houve alguma virada importante que mudou seu modo de existir?"
+            ]}
+            value={respostas.historia}
+            onChange={v => updateResposta('historia', v)}
+            onNext={next}
+            onBack={back}
+          />
+        )}
 
         {step === 'objetivas' && (
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
-              <h2 className="text-2xl font-display text-foreground">Primeira Cartografia</h2>
-              <p className="text-sm text-muted-foreground">Onde sua vida interior está concentrando energia neste momento?</p>
+              <h2 className="text-2xl font-display text-foreground">Modo de Habitar</h2>
+              <p className="text-sm text-muted-foreground">O núcleo da sua forma de habitar o mundo.</p>
             </header>
             
             <Card className="glass border-gold/10">
-              <CardContent className="pt-6 space-y-12">
-                {/* Pergunta 1 */}
-                {/* Pergunta 1 */}
-                <div className="space-y-6">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    1. Quando você percebe que um ciclo está chegando ao fim e algo novo precisa nascer, qual é o seu primeiro movimento?
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'portao_chegada', text: 'Eu sinto um impulso de agir imediatamente, mesmo sem saber para onde vou.' },
-                      { id: 'torres', text: 'Eu tento organizar tudo o que restou e criar uma estrutura para o que virá.' },
-                      { id: 'labirinto', text: 'Eu me recolho para processar a dúvida e o medo de errar o caminho.' },
-                      { id: 'conselho_interior', text: 'Eu busco silenciar para ouvir o que a minha sabedoria interna diz sobre a mudança.' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p1', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p1'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium">{opt.text}</span>
-                      </button>
-                    ))}
+              <CardContent className="pt-6 space-y-8">
+                {perguntas.map((p, i) => (
+                  <div key={p.id} className="space-y-4">
+                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{(p as any).texto_pergunta || p.id}</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      {[1, 2, 3, 4, 5].map((val) => (
+                        <button
+                          key={val}
+                          onClick={() => updateObjetiva(p.id, val)}
+                          className={`h-10 rounded-md border text-sm transition-all ${
+                            respostas.objetivas[p.id] === val 
+                              ? 'bg-gold border-gold text-gold-foreground shadow-premium-glow' 
+                              : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                          }`}
+                        >
+                          {val}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-                {/* Pergunta 2 */}
-                <div className="space-y-6 pt-6 border-t border-gold/5">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    2. Em momentos de grande pressão externa ou crise, como sua energia se manifesta?
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'praca_abalo', text: 'Eu me sinto paralisada ou sinto que as bases do que eu acreditava foram abaladas.' },
-                      { id: 'forja', text: 'Eu canalizo essa pressão para transformar algo concreto na minha realidade.' },
-                      { id: 'espelho_vinculos', text: 'Eu me preocupo excessivamente com o impacto disso nas minhas relações.' },
-                      { id: 'casa_sonhos', text: 'Eu fujo para o meu mundo interno ou sinto um cansaço profundo e vontade de dormir.' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p2', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p2'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium">{opt.text}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pergunta 3 */}
-                <div className="space-y-6 pt-6 border-t border-gold/5">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    3. Qual dessas frases mais ressoa com a sua dificuldade atual?
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'portal_renascimento', text: 'Eu sei que preciso deixar algo ir, mas não sei como dar o adeus final.' },
-                      { id: 'bosque_arquetipos', text: 'Eu sinto que perdi o contato com a minha força selvagem e instintiva.' },
-                      { id: 'jardim_arquetipos', text: 'Eu sinto que cuido de todos ao meu redor, mas esqueço de nutrir a mim mesma.' },
-                      { id: 'casa_matriz', text: 'Eu sinto que não tenho um espaço seguro (interno ou externo) para ser quem eu sou.' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p3', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p3'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium">{opt.text}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                ))}
               </CardContent>
             </Card>
 
@@ -466,17 +419,102 @@ export function CartografiaEstruturalStepper() {
               <Button 
                 onClick={next} 
                 variant="gold" 
-                disabled={Object.keys(respostas.objetivas).length < 3 || loading}
+                disabled={Object.keys(respostas.objetivas).length < perguntas.length}
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Finalizar e Revelar'}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                Prosseguir <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>
+        )}
+
+        {step === 'crencas' && (
+          <QuestionStep 
+            key="crencas"
+            title="Território das Crenças"
+            description="Identifique as narrativas que governam suas decisões e percepções."
+            questions={[
+              "Que verdades absolutas você carrega sobre a vida?",
+              "Que voz interna mais te limita ou te impulsiona?",
+              "Quais são os 'não ditos' que ainda comandam suas ações?"
+            ]}
+            value={respostas.crencas}
+            onChange={v => updateResposta('crencas', v)}
+            onNext={next}
+            onBack={back}
+          />
+        )}
+
+        {step === 'recursos' && (
+          <QuestionStep 
+            key="recursos"
+            title="Território dos Recursos"
+            description="Mapeie suas forças, práticas de sustentação e saberes acumulados."
+            questions={[
+              "O que te devolve o eixo quando você se perde?",
+              "Quais são suas ferramentas naturais de enfrentamento?",
+              "Em que você reconhece sua maior vitalidade?"
+            ]}
+            value={respostas.recursos}
+            onChange={v => updateResposta('recursos', v)}
+            onNext={next}
+            onBack={back}
+          />
+        )}
+
+        {step === 'seguranca' && (
+          <QuestionStep 
+            key="seguranca"
+            title="Nível de Atenção e Segurança"
+            description="Estabeleça um pacto de cuidado para sua jornada de travessia."
+            questions={[
+              "Como você avalia sua capacidade atual de sustentar este processo?",
+              "Quais são seus limites inegociáveis neste momento?",
+              "Que tipo de suporte você sente que mais precisa agora?"
+            ]}
+            value={respostas.seguranca}
+            onChange={v => updateResposta('seguranca', v)}
+            onNext={next}
+            onBack={back}
+            cta="Finalizar e Revelar"
+          />
         )}
       </AnimatePresence>
     </div>
   );
 }
 
+function QuestionStep({ title, description, questions, value, onChange, onNext, onBack, cta = "Próximo" }: any) {
+  return (
+    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
+      <header className="space-y-2">
+        <h2 className="text-2xl font-display text-foreground">{title}</h2>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </header>
+      
+      <Card className="glass border-gold/10 bg-card/20">
+        <CardContent className="pt-6 space-y-6">
+          <div className="space-y-3">
+            {questions.map((q: string, i: number) => (
+              <p key={i} className="text-sm text-foreground/70 leading-relaxed italic">• {q}</p>
+            ))}
+          </div>
+          <Textarea 
+            placeholder="Escreva livremente sobre este território..."
+            className="min-h-[200px] bg-background/30 border-gold/10 focus-visible:ring-gold/20 resize-none text-sm"
+            value={value}
+            onChange={e => onChange(e.target.value)}
+          />
+        </CardContent>
+      </Card>
 
+      <div className="flex justify-between pt-4">
+        <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-gold hover:bg-transparent">
+          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+        </Button>
+        <Button onClick={onNext} variant="gold" disabled={!value || value.length < 5}>
+          {cta} <ArrowRight className="w-4 h-4 ml-2" />
+        </Button>
+      </div>
+    </motion.div>
+  );
+}
