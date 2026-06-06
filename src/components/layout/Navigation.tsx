@@ -317,6 +317,24 @@ export function Navigation() {
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-primary/10" />
                       </>
+                      </>
+                    )}
+
+                    {isAdmin && (
+                      <>
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            const newValue = !user?.founder_beta;
+                            user && updateUserMetadata({ founder_beta: newValue });
+                            toast.success(newValue ? 'Visualizando como Fundadora' : 'Visualizando como Admin');
+                          }} 
+                          className="cursor-pointer font-bold text-gold"
+                        >
+                          <Star className="w-4 h-4 mr-2" />
+                          {user?.founder_beta ? 'Voltar ao Modo Admin' : 'Ver como Fundadora'}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-primary/10" />
+                      </>
                     )}
 
                     <DropdownMenuItem onClick={() => navigate('/minha-conta')} className="cursor-pointer">
