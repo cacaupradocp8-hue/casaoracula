@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronUp, Map, ArrowRight } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { LucideIcon } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 
 interface TravessiaHeaderProps {
   number: number;
@@ -33,7 +32,6 @@ export function TravessiaHeader({
   colors,
 }: TravessiaHeaderProps) {
   const isMobile = useIsMobile();
-  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
   // Truncar descrição para mobile
@@ -113,37 +111,6 @@ export function TravessiaHeader({
           )}
         </div>
       </div>
-
-      {/* Banner para desvelar a CidadELA - Exclusivo Travessia 00 */}
-      {number === 0 && (
-        <div className="mt-8 relative overflow-hidden rounded-2xl bg-midnight border border-gold/30 p-8 shadow-premium-glow group">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_right,rgba(196,165,74,0.1),transparent_70%)] pointer-events-none" />
-          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="space-y-4 text-center md:text-left">
-              <div className="flex items-center justify-center md:justify-start gap-2 text-gold/60">
-                <Map className="w-5 h-5" />
-                <span className="text-xs uppercase tracking-[0.3em] font-bold">Iniciação</span>
-              </div>
-              <h3 className="text-2xl md:text-3xl font-serif text-white italic">
-                Pronta para desvelar sua <span className="text-gold">CidadELA</span>?
-              </h3>
-              <p className="text-white/60 text-sm max-w-md italic">
-                A cartografia completa que organiza seus padrões internos e revela o mapa da sua travessia.
-              </p>
-            </div>
-            
-            <Button 
-              variant="gold" 
-              size="lg"
-              className="rounded-full px-10 h-14 text-base font-bold shadow-glow group hover:scale-105 transition-all shrink-0"
-              onClick={() => navigate('/clube/primeira-cartografia')}
-            >
-              Revelar meu Mapa
-              <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

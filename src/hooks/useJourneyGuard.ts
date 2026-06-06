@@ -67,14 +67,14 @@ export function useJourneyGuard(): JourneyState {
           && Object.keys((cidadelaRes.data.distritos_json as Record<string, unknown>) || {}).length > 0,
         );
 
-        if (!hasTravessia && user?.portal !== 'visitante') {
+        if (!hasTravessia) {
           setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
-        } else if (!hasCartografia && user?.portal !== 'visitante') {
-          const cartoPath = user?.founder_beta ? '/clube/primeira-cartografia' : '/ferramenta/cartografia-psiquica-oracula';
-          setState({ currentStep: 'cartografia', redirectTo: cartoPath, loading: false });
-        } else if (!hasCidadela && user?.portal !== 'visitante') {
-          const resultPath = user?.founder_beta ? '/clube/cidadela/resultado' : '/cidadela/revelacao';
-          setState({ currentStep: 'cidadela', redirectTo: resultPath, loading: false });
+        } else if (!hasTravessia) {
+          setState({ currentStep: 'travessia', redirectTo: '/travessia/travessia-zero-o-limiar-da-casa', loading: false });
+        } else if (!hasCartografia) {
+          setState({ currentStep: 'cartografia', redirectTo: '/ferramenta/cartografia-psiquica-oracula', loading: false });
+        } else if (!hasCidadela) {
+          setState({ currentStep: 'cidadela', redirectTo: '/cidadela/revelacao', loading: false });
         } else {
           setState({ currentStep: 'complete', redirectTo: null, loading: false });
         }

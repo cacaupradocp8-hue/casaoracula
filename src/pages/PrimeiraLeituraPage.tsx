@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import { LimiarIntro } from '@/components/primeira-leitura/LimiarIntro';
 import { CasePresentation } from '@/components/primeira-leitura/CasePresentation';
 import { QuestionStep } from '@/components/primeira-leitura/QuestionStep';
@@ -11,7 +10,6 @@ import { PathSelector } from '@/components/primeira-leitura/PathSelector';
 type Step = 'intro' | 'case' | 'result' | 'paths';
 
 const PrimeiraLeituraPage = () => {
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>('intro');
   const [selectedEscuta, setSelectedEscuta] = useState<string | null>(null);
 
@@ -21,10 +19,7 @@ const PrimeiraLeituraPage = () => {
       setSelectedEscuta(escutaId);
       setCurrentStep('result');
     }
-    else if (currentStep === 'result') {
-      // Ao concluir a primeira leitura, redireciona para a Travessia 00
-      navigate('/travessia/travessia-zero-o-limiar-da-casa');
-    }
+    else if (currentStep === 'result') setCurrentStep('paths');
   };
 
 
@@ -60,7 +55,7 @@ const PrimeiraLeituraPage = () => {
                   onClick={() => handleNextStep()}
                   className="text-primary font-medium flex flex-col items-center gap-2 group"
                 >
-                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Seguir para a Travessia 00</span>
+                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Começar minha Travessia</span>
                   <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
                 </button>
 

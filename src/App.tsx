@@ -247,15 +247,7 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   if (result.status === 'loading') return <AuthLoading />;
   if (result.status === 'error') return <AppRouteError title="Erro na autenticação" message={result.errorMessage} />;
   if (result.status === 'redirect') return <Navigate to={result.to} replace />;
-  const { user } = useAuth();
-  const isFounder = !!user?.founder_beta;
-
-  if (result.status === 'locked-visitor') {
-    if (isFounder) {
-       return <Navigate to="/dashboard-membro" replace />;
-    }
-    return <LockedForVisitor />;
-  }
+  if (result.status === 'locked-visitor') return <LockedForVisitor />;
   return <>{children}</>;
 }
 
@@ -321,7 +313,7 @@ function AppRoutes() {
       {/* Core navigation */}
       
       {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
-      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="assinante"><RotaDosLobos /></ProtectedRoute>} />
+      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="visitante"><RotaDosLobos /></ProtectedRoute>} />
       
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
       

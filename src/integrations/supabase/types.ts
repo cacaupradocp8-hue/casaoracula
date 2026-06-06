@@ -11150,54 +11150,6 @@ export type Database = {
         }
         Relationships: []
       }
-      founder_feedback: {
-        Row: {
-          aplicabilidade: string | null
-          clareza: string | null
-          confusao: string | null
-          created_at: string
-          encantamento: string | null
-          id: string
-          pagaria: string | null
-          remocao: string | null
-          sugestoes: string | null
-          travou: string | null
-          updated_at: string
-          user_id: string
-          valor: string | null
-        }
-        Insert: {
-          aplicabilidade?: string | null
-          clareza?: string | null
-          confusao?: string | null
-          created_at?: string
-          encantamento?: string | null
-          id?: string
-          pagaria?: string | null
-          remocao?: string | null
-          sugestoes?: string | null
-          travou?: string | null
-          updated_at?: string
-          user_id: string
-          valor?: string | null
-        }
-        Update: {
-          aplicabilidade?: string | null
-          clareza?: string | null
-          confusao?: string | null
-          created_at?: string
-          encantamento?: string | null
-          id?: string
-          pagaria?: string | null
-          remocao?: string | null
-          sugestoes?: string | null
-          travou?: string | null
-          updated_at?: string
-          user_id?: string
-          valor?: string | null
-        }
-        Relationships: []
-      }
       founder_financial_daily: {
         Row: {
           active_mrr: number | null
@@ -17861,7 +17813,6 @@ export type Database = {
           entry_archetype: string | null
           entry_symbol: string | null
           formacao_oracula_concluida: boolean | null
-          founder_beta: boolean | null
           id: string
           is_professional_verified: boolean
           nome: string | null
@@ -17886,7 +17837,6 @@ export type Database = {
           entry_archetype?: string | null
           entry_symbol?: string | null
           formacao_oracula_concluida?: boolean | null
-          founder_beta?: boolean | null
           id: string
           is_professional_verified?: boolean
           nome?: string | null
@@ -17911,7 +17861,6 @@ export type Database = {
           entry_archetype?: string | null
           entry_symbol?: string | null
           formacao_oracula_concluida?: boolean | null
-          founder_beta?: boolean | null
           id?: string
           is_professional_verified?: boolean
           nome?: string | null

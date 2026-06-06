@@ -5,9 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { PortalBadge } from '@/components/shared/PortalBadge';
 import { useToast } from '@/hooks/use-toast';
 import { PORTALS, PortalType, getPortal } from '@/types/portal';
-import { Users, Search, Eye, Crown, Heart, GraduationCap, Sparkles, Star, UserPlus, UserCheck } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Users, Search, Eye, Crown, Heart, GraduationCap, Sparkles, Star } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
@@ -67,35 +65,6 @@ export function AdminUsersTab() {
       toast({
         title: 'Erro ao atualizar portal',
         description: 'Não foi possível atualizar o portal da usuária.',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleToggleFounder = async (userId: string, currentStatus: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ founder_beta: !currentStatus })
-        .eq('id', userId);
-
-      if (error) throw error;
-
-      setUsers(prev => prev.map(user => 
-        user.id === userId ? { ...user, founder_beta: !currentStatus } : user
-      ));
-      
-      const user = users.find(u => u.id === userId);
-      
-      toast({
-        title: !currentStatus ? 'Status de Fundadora Ativado' : 'Status de Fundadora Removido',
-        description: `${user?.name} agora ${!currentStatus ? 'tem' : 'não tem mais'} acesso à Founder Experience.`,
-      });
-    } catch (error) {
-      console.error('Error updating founder status:', error);
-      toast({
-        title: 'Erro ao atualizar status',
-        description: 'Não foi possível atualizar o status de fundadora.',
         variant: 'destructive',
       });
     }
@@ -219,40 +188,23 @@ export function AdminUsersTab() {
                   </div>
                 </div>
                 
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant={user.founder_beta ? "default" : "outline"}
-                      size="sm"
-                      className={cn(
-                        "gap-2",
-                        user.founder_beta ? "bg-gold hover:bg-gold/90 text-black" : "border-gold/30 text-gold/60"
-                      )}
-                      onClick={() => handleToggleFounder(user.id, !!user.founder_beta)}
-                    >
-                      {user.founder_beta ? <UserCheck className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
-                      {user.founder_beta ? "Fundadora" : "Tornar Fundadora"}
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center gap-4 border-l border-primary/10 pl-4">
-                    <PortalBadge portal={user.portal} />
-                    <Select
-                      value={user.portal}
-                      onValueChange={(v) => handlePortalChange(user.id, v as PortalType)}
-                    >
-                      <SelectTrigger className="w-44">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {PORTALS.map((portal) => (
-                          <SelectItem key={portal.type} value={portal.type}>
-                            {portal.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div className="flex items-center gap-4">
+                  <PortalBadge portal={user.portal} />
+                  <Select
+                    value={user.portal}
+                    onValueChange={(v) => handlePortalChange(user.id, v as PortalType)}
+                  >
+                    <SelectTrigger className="w-44">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {PORTALS.map((portal) => (
+                        <SelectItem key={portal.type} value={portal.type}>
+                          {portal.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
             </CardContent>

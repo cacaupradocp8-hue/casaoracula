@@ -1,92 +1,32 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Compass, ShieldCheck, Headphones, MessageCircle, Map as MapIcon, Star } from 'lucide-react';
+import { ArrowRight, BookOpen, MessageSquare, Map as MapIcon } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { Button } from '@/components/ui/button';
 import { useBussolaOracular } from '@/hooks/useBussolaOracular';
 import { useAuth } from '@/contexts/AuthContext';
+import { MiniMapaCidadela } from '@/components/bussola-home';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
-import { Card, CardContent } from '@/components/ui/card';
 
 export default function ClubeRotasPortal() {
   const navigate = useNavigate();
   const bussola = useBussolaOracular();
-  const { user } = useAuth();
+  const { effectivePortal } = useEffectivePortal();
   const { getSetting } = useAppSettings();
 
-  const isFounder = !!user?.founder_beta;
-  const hasCidadela = bussola.temCartografia;
-
-  const audioUrl = getSetting('portal_rotas_welcome_audio_url') || "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1771607764088.mp3";
+  const audioUrl = getSetting('portal_rotas_welcome_audio_url');
   const audioTitle = getSetting('portal_rotas_welcome_audio_title', 'A Voz da Casa');
-  
-  if (isFounder && !hasCidadela) {
-    return (
-      <AppLayout>
-        <div className="relative bg-midnight text-white min-h-screen overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(196,165,74,0.1),transparent_70%)] pointer-events-none" />
-          
-          <main className="relative z-10 pt-24 pb-32">
-            <ResponsiveContainer size="narrow" className="space-y-16">
-              <header className="text-center space-y-8">
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto border border-gold/30 shadow-premium-glow"
-                >
-                  <Star className="w-10 h-10 text-gold" />
-                </motion.div>
-                
-                <div className="space-y-4">
-                  <h1 className="text-4xl md:text-6xl font-serif leading-tight">Conselho <span className="text-gold italic">Fundador</span></h1>
-                  <p className="text-xl text-white/70 italic">Você está entrando na fase fundadora da Casa Orácula.</p>
-                </div>
-              </header>
+  const audioSubtitle = getSetting('portal_rotas_welcome_audio_subtitle', 'Antes de escolher uma rota, escute a chegada.');
+  const audioDescription = getSetting('portal_rotas_welcome_audio_description', 'Esta escuta foi criada para desacelerar sua entrada e abrir o primeiro silêncio da travessia.');
+  const audioImage = getSetting('portal_rotas_welcome_audio_image');
 
-              <Card className="bg-white/[0.02] border-white/10 rounded-[2.5rem] overflow-hidden">
-                <CardContent className="p-8 md:p-12 space-y-8">
-                  <p className="text-lg leading-relaxed text-white/80 font-serif italic">
-                    "Esta experiência ainda não é o lançamento oficial. É uma travessia guiada para terapeutas convidadas que irão nos ajudar a lapidar clareza, aplicabilidade e usabilidade da Casa. Seu papel aqui não é elogiar. É observar com honestidade."
-                  </p>
-                  
-                  <div className="space-y-6 pt-6 border-t border-white/5">
-                    <h3 className="text-xs uppercase tracking-[0.4em] text-gold/60 font-bold">Primeiro Passo</h3>
-                    <div className="flex items-start gap-4">
-                      <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center shrink-0 border border-gold/20">
-                        <Compass className="w-5 h-5 text-gold" />
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-white font-medium">Criar sua CidadELA Interior</p>
-                        <p className="text-sm text-white/50">Uma cartografia simbólica para mapear como sua vida interior está concentrando energia neste momento.</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Button 
-                    variant="gold" 
-                    size="xl" 
-                    className="w-full h-20 rounded-full text-xl font-bold uppercase tracking-widest shadow-glow mt-8"
-                    onClick={() => navigate('/clube/primeira-cartografia')}
-                  >
-                    Criar minha CidadELA
-                    <ArrowRight className="ml-3 w-6 h-6" />
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <div className="text-center">
-                <p className="text-[10px] text-white/20 uppercase tracking-[0.3em]">A Rota dos Lobos será sua próxima etapa</p>
-              </div>
-            </ResponsiveContainer>
-          </main>
-        </div>
-      </AppLayout>
-    );
-  }
+  const hasCidadela = bussola.temCartografia;
 
   return (
     <AppLayout>
@@ -208,7 +148,7 @@ export default function ClubeRotasPortal() {
                     <EscutaPremium 
                       audioUrl={audioUrl}
                       titulo={audioTitle}
-                      imagemEscuta={getSetting('portal_rotas_welcome_audio_image')}
+                      imagemEscuta={audioImage}
                       tipo="Boas-vindas"
                       className="bg-transparent border border-white/5 shadow-2xl"
                     />
@@ -218,7 +158,101 @@ export default function ClubeRotasPortal() {
             </section>
           )}
 
-          {/* 3. SECÇÃO DAS TRAVESSIAS - GALERIA VISUAL */}
+          {/* 3. BLOCO CIDADELA - FOCO NO MAPA */}
+          <section className="px-6 py-48 bg-black/20">
+            <ResponsiveContainer size="wide">
+              <div className="max-w-5xl mx-auto space-y-24">
+                <div className="text-center space-y-6">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    className="space-y-4"
+                  >
+                    <h2 className="text-5xl md:text-7xl font-serif text-white leading-tight">Sua <span className="italic text-gold">CidadELA</span></h2>
+                    <p className="text-xl md:text-2xl text-white/50 font-serif italic uppercase tracking-widest">Seu mapa vivo.</p>
+                  </motion.div>
+                </div>
+
+                <div className="flex justify-center">
+                  {hasCidadela ? (
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      className="w-full max-w-4xl bg-white/[0.01] border border-white/5 rounded-[4rem] p-8 md:p-20 relative overflow-hidden shadow-2xl group"
+                    >
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05),transparent_70%)] opacity-50 group-hover:opacity-100 transition-opacity duration-1000" />
+                      <div className="relative z-10 flex flex-col items-center gap-16">
+                        <div className="w-full max-w-[500px] drop-shadow-[0_0_50px_rgba(212,175,55,0.15)] hover:scale-105 transition-transform duration-1000">
+                          <MiniMapaCidadela 
+                            temCartografia={true}
+                            distritoDominante={bussola.distritoDominante}
+                            distritosAtivos={bussola.distritosAtivos}
+                            distritoTensao={bussola.distritoTensao}
+                            corHex={bussola.corHex}
+                            distritosRaw={bussola.distritosRaw}
+                          />
+                        </div>
+                        
+                        <Button 
+                          variant="mystical" 
+                          size="lg" 
+                          className="rounded-full px-12 h-16 border-gold/20 text-gold/80 hover:bg-gold/5 text-lg"
+                          onClick={() => navigate('/cidadela/revelacao')}
+                        >
+                          Ver mapa completo
+                        </Button>
+                      </div>
+                    </motion.div>
+                  ) : (
+                    <div className="bg-white/[0.01] border border-dashed border-white/10 rounded-[4rem] aspect-square w-full max-w-2xl flex items-center justify-center p-12 text-center group cursor-pointer hover:border-gold/20 transition-colors"
+                         onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}>
+                      <div className="space-y-8 opacity-20 group-hover:opacity-40 transition-opacity">
+                        <MapIcon className="w-20 h-20 mx-auto text-gold" />
+                        <p className="font-serif italic text-3xl tracking-wide">Territórios aguardando revelação...</p>
+                        <p className="text-xs uppercase tracking-[0.3em] font-bold">Toque para começar</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </ResponsiveContainer>
+          </section>
+
+          {/* 4. BLOCO SYNTHEIA - MINIMALISTA */}
+          <section className="px-6 py-48 bg-gradient-to-b from-transparent to-black/40">
+            <ResponsiveContainer size="wide">
+              <div className="max-w-4xl mx-auto">
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  className="space-y-24 text-center"
+                >
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-center gap-3 text-gold/40">
+                      <MessageSquare className="w-5 h-5" />
+                      <span className="text-[11px] tracking-[0.5em] uppercase font-bold">Syntheia Sussurra</span>
+                    </div>
+                  </div>
+
+                  <div className="min-h-[200px] flex items-center justify-center">
+                    <motion.p 
+                      initial={{ opacity: 0, y: 10 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 1, delay: 0.5 }}
+                      className="text-3xl md:text-5xl font-serif text-white/90 leading-tight italic max-w-3xl"
+                    >
+                      "{getSetting('portal_rotas_syntheia_quote', 'Só porque você se acostumou, não significa que pertence.')}"
+                    </motion.p>
+                  </div>
+                </motion.div>
+              </div>
+            </ResponsiveContainer>
+          </section>
+
+          {/* 5. SECÇÃO DAS TRAVESSIAS - GALERIA VISUAL */}
           <section className="px-6 py-48 border-t border-white/5">
             <ResponsiveContainer size="wide" className="space-y-32">
               <div className="max-w-4xl mx-auto text-center space-y-12">
@@ -287,27 +321,47 @@ export default function ClubeRotasPortal() {
             </ResponsiveContainer>
           </section>
 
-          {/* Footer Minimal */}
-          <footer className="py-20 border-t border-white/5 bg-black/40 text-center px-6">
+          {/* 6. ACERVO VIVO - DISCRETO E ELEGANTE */}
+          <section className="px-6 py-48 bg-black/40 border-t border-white/5">
             <ResponsiveContainer size="wide">
-              <div className="space-y-8">
-                <div className="text-[10px] uppercase tracking-[0.5em] text-white/20 font-bold">Casa Orácula • Conselho Fundador</div>
-                <p className="text-sm text-white/40 italic font-serif leading-relaxed max-w-lg mx-auto">
-                  "Onde o silêncio se encontra com a inteligência, a travessia se torna revelação."
-                </p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                className="max-w-4xl mx-auto"
+              >
+                <div className="p-12 md:p-24 rounded-[4rem] border border-white/5 bg-white/[0.01] text-center space-y-16">
+                  <div className="space-y-8">
+                    <div className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center border border-gold/10 mx-auto">
+                      <BookOpen className="w-8 h-8 text-gold/40" />
+                    </div>
+                    <div className="space-y-6">
+                      <h4 className="text-4xl md:text-5xl font-serif text-white">Acervo Vivo da Casa</h4>
+                      <p className="text-xl text-white/50 italic leading-relaxed font-light max-w-2xl mx-auto">
+                        "Algumas rotas já abriram seus portões. Outras ainda estão sendo tecidas."
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="pt-8">
+                    <Button 
+                      variant="ghost" 
+                      className="h-16 px-12 rounded-full bg-white/[0.03] hover:bg-white/[0.06] text-white/60 hover:text-white transition-all border border-white/10 group"
+                      onClick={() => navigate('/clube/acervo')}
+                    >
+                      <span className="text-lg font-light tracking-widest">Explorar Acervo Completo</span>
+                      <ArrowRight className="ml-4 w-5 h-5 opacity-40 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
             </ResponsiveContainer>
-          </footer>
+          </section>
         </main>
       </div>
     </AppLayout>
   );
 }
 
-function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
-  return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${className}`}>
-      {children}
-    </span>
-  );
-}
+
+

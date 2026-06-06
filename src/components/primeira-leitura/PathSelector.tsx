@@ -66,7 +66,7 @@ export const PathSelector: React.FC = () => {
             </p>
           </div>
           <Button 
-            onClick={() => navigate('/planos')}
+            onClick={() => navigate('/formacao')}
             variant="outline"
             className="w-full py-6 rounded-2xl border-primary/10 hover:bg-primary/5"
           >

@@ -140,24 +140,15 @@ export default function RotaDosLobos() {
         <section className="py-40 text-center px-6 bg-gradient-to-b from-transparent to-black/40">
           <ResponsiveContainer size="narrow" className="space-y-12">
             <h2 className="text-5xl md:text-7xl font-serif text-white leading-tight">A floresta já está esperando.</h2>
-            <div className="flex flex-col items-center gap-6">
-              <Button 
-                variant="gold" 
-                size="lg" 
-                className="rounded-full px-16 h-16 text-base font-bold uppercase tracking-[0.2em] shadow-premium-glow" 
-                onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
-              >
-                Entrar na Clareira
-                <ArrowRight className="ml-3 w-5 h-5" />
-              </Button>
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate('/clube/founder-feedback')}
-                className="text-white/30 hover:text-white uppercase tracking-widest text-[10px]"
-              >
-                Encerrar e Enviar Feedback
-              </Button>
-            </div>
+            <Button 
+              variant="gold" 
+              size="lg" 
+              className="rounded-full px-16 h-16 text-base font-bold uppercase tracking-[0.2em] shadow-premium-glow" 
+              onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
+            >
+              Entrar na Clareira
+              <ArrowRight className="ml-3 w-5 h-5" />
+            </Button>
           </ResponsiveContainer>
         </section>
 
