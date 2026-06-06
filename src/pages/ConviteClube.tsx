@@ -16,7 +16,7 @@ const fade = (delay = 0) => ({
 const EXPERIENCIAS = [
   {
     icon: Sprout,
-    titulo: 'Jardim da Psique',
+    titulo: 'Casa Matriz',
     subtitulo: 'registro pessoal',
     descricao: 'Um espaço silencioso para anotar o que se move em você a cada leitura — sem julgamento, sem pressa.',
   },
