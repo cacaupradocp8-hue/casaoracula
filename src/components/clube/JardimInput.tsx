@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { Loader2, Save, CheckCircle2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface JardimInputProps {
   type: 'psique' | 'oficio';
