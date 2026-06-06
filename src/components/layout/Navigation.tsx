@@ -25,6 +25,14 @@ import {
   DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 
+// ── FOUNDER BETA ─────────────────────────────────────────────────────────────
+const founderMenuGroups = () => [
+  { key: 'inicio', label: 'CidadELA', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'clube', label: 'Rota dos Lobos', icon: BookOpen, path: '/clube/rotas/rota-dos-lobos', subitems: [] },
+  { key: 'jardim', label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'feedback', label: 'Feedback', icon: MessageCircle, label_full: 'Feedback Founder', path: '/clube/founder-feedback', subitems: [] },
+];
+
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
   { key: 'visitante', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
