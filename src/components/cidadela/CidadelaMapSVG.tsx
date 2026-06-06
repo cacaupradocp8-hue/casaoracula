@@ -137,15 +137,7 @@ export default function CidadelaMapSVG({
     }
 
     setSelectedDistrict(district);
-  adormecido: {
-    fill: 'rgba(100,100,100,0.02)',
-    stroke: 'rgba(150,150,150,0.15)',
-    icon: 'rgba(150,150,150,0.20)',
-    text: 'rgba(150,150,150,0.30)',
-    glow: 'none',
-    building: 'rgba(100,100,100,0.05)',
-  },
-};
+  };
 
   return (
     <div className="relative mx-auto w-full overflow-hidden" style={{ maxWidth }}>
