@@ -19,7 +19,10 @@ const PrimeiraLeituraPage = () => {
       setSelectedEscuta(escutaId);
       setCurrentStep('result');
     }
-    else if (currentStep === 'result') setCurrentStep('paths');
+    else if (currentStep === 'result') {
+      // Ao concluir a primeira leitura, redireciona para a Travessia 00
+      navigate('/travessia/travessia-zero-o-limiar-da-casa');
+    }
   };
 
 
@@ -55,7 +58,7 @@ const PrimeiraLeituraPage = () => {
                   onClick={() => handleNextStep()}
                   className="text-primary font-medium flex flex-col items-center gap-2 group"
                 >
-                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Começar minha Travessia</span>
+                  <span className="text-sm uppercase tracking-widest font-display group-hover:tracking-[0.2em] transition-all">Seguir para a Travessia 00</span>
                   <div className="w-px h-12 bg-gradient-to-b from-primary to-transparent" />
                 </button>
 
