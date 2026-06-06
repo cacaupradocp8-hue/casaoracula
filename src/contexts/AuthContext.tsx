@@ -14,6 +14,7 @@ interface User {
   avatarUrl?: string;
   isMatriculada?: boolean;
   matriculadaAt?: Date;
+  founder_beta?: boolean;
 }
 
 interface AuthContextType {
