@@ -71,7 +71,7 @@ export function EstacaoHero({
               {kicker}
             </motion.span>
             
-            <h1 className="font-display font-light leading-[0.8] tracking-tighter text-7xl md:text-9xl lg:text-[10rem]">
+            <h1 className="font-display font-light leading-[0.85] tracking-tighter text-6xl md:text-8xl lg:text-9xl">
               <span className="bg-gradient-to-b from-white via-white to-white/30 bg-clip-text text-transparent inline-block pb-4">
                 {titulo.split(' ').map((word, i) => (
                   <span key={i} className={cn(
