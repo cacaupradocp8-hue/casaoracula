@@ -51,8 +51,9 @@ export function BottomNavPreview() {
       )}>
         {/* Indicador animado */}
         <motion.div
-          className="absolute -top-[22px] w-[20%] h-[64px] flex items-center justify-center pointer-events-none"
-          animate={{ left: `${currentIndex * 20}%` }}
+          className="absolute -top-[22px] h-[64px] flex items-center justify-center pointer-events-none"
+          style={{ width: `${100 / NAV_ITEMS.length}%` }}
+          animate={{ left: `${currentIndex * (100 / NAV_ITEMS.length)}%` }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         >
           <div className="w-14 h-14 rounded-full bg-primary border-[5px] border-background shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
