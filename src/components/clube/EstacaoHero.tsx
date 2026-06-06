@@ -36,13 +36,12 @@ export function EstacaoHero({
         <img 
           src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
           alt="" 
-          className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
-
+          className="w-full h-full object-cover opacity-80 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
         />
         {/* Cinematic Vignette and Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#010816] via-[#010816]/95 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/80" />
-        <div className="absolute inset-0 bg-[#010816]/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#010816]/90 via-[#010816]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/40" />
+        <div className="absolute inset-0 bg-[#010816]/10" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-12">
