@@ -145,41 +145,71 @@ export function CartografiaEstruturalStepper() {
             />
           </div>
 
-          {/* 3. TERRITÓRIOS VIVOS */}
-          <div className="max-w-3xl mx-auto px-6 space-y-10">
+          {/* 3. LEITURA VIBRACIONAL (DOMINANTE, TENSÃO, ADORMECIDO) */}
+          <div className="max-w-3xl mx-auto px-6 space-y-12">
             <div className="text-center space-y-2">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">O que se acendeu na sua CidadELA</h3>
+              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Leitura Vibracional dos Territórios</h3>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {cidadela.distritos_acesos?.map((distritoKey: string) => {
-                const meta = DISTRITOS_META[distritoKey] || { nome: distritoKey.replace(/_/g, ' '), icon: '📍' };
-                return (
-                  <motion.div 
-                    key={distritoKey}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4 transition-all hover:bg-gold/[0.04]"
-                  >
-                    <span className="text-2xl mt-1">{meta.icon}</span>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-display text-gold/90">{meta.nome}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed italic">
-                        {distritoKey === 'torres' ? 'Estrutura, limites e o modo como você organiza sua energia vital.' :
-                         distritoKey === 'labirinto' ? 'Onde você atravessa as perguntas que ainda não possuem resposta.' :
-                         distritoKey === 'portao_chegada' ? 'O início de tudo, onde a coragem do primeiro passo reside.' :
-                         distritoKey === 'conselho_interior' ? 'Onde suas vozes internas buscam harmonia e direção.' :
-                         distritoKey === 'espelho_vinculos' ? 'O que suas relações revelam sobre seu próprio interior.' :
-                         distritoKey === 'casa_sonhos' ? 'Onde o inconsciente fala através de imagens e silêncios.' :
-                         distritoKey === 'forja' ? 'O calor da transformação e a alquimia do próprio ser.' :
-                         distritoKey === 'portal_renascimento' ? 'O limiar entre o que precisa terminar e o que começa.' :
-                         'Este território se acende em resposta ao seu momento atual.'}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Dominante */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="p-6 rounded-2xl border border-gold/20 bg-gold/10 flex flex-col items-center text-center gap-4 transition-all hover:bg-gold/15"
+              >
+                <div className="w-12 h-12 rounded-full bg-gold/20 flex items-center justify-center border border-gold/30">
+                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_dominante || '']?.icon || '🏛️'}</span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm uppercase tracking-widest text-gold/60">Território Dominante</h4>
+                  <h5 className="text-xl font-display text-gold">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_dominante || '']?.nome || 'Em Revelação'}</h5>
+                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
+                    Onde sua energia está mais presente e estruturada agora.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Tensão */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="p-6 rounded-2xl border border-red-500/10 bg-red-500/5 flex flex-col items-center text-center gap-4 transition-all hover:bg-red-500/10"
+              >
+                <div className="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center border border-red-500/30">
+                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_tensao || '']?.icon || '⚡'}</span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm uppercase tracking-widest text-red-400/60">Território de Tensão</h4>
+                  <h5 className="text-xl font-display text-red-400/80">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_tensao || '']?.nome || 'Em Revelação'}</h5>
+                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
+                    O ponto que pede atenção e cuidado para não gerar colapso.
+                  </p>
+                </div>
+              </motion.div>
+
+              {/* Adormecido */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="p-6 rounded-2xl border border-blue-500/10 bg-blue-500/5 flex flex-col items-center text-center gap-4 transition-all hover:bg-blue-500/10"
+              >
+                <div className="w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center border border-blue-500/30">
+                  <span className="text-2xl">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_adormecido || '']?.icon || '🌙'}</span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-sm uppercase tracking-widest text-blue-400/60">Território Adormecido</h4>
+                  <h5 className="text-xl font-display text-blue-400/80">{DISTRITOS_META[result.profileJson.recomendacoes?.territorio_adormecido || '']?.nome || 'Em Revelação'}</h5>
+                  <p className="text-xs text-muted-foreground leading-relaxed italic mt-2">
+                    Onde reside um potencial ainda não explorado nesta fase.
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </div>
 
