@@ -121,16 +121,16 @@ export default function ClubeRotaPremium() {
         {/* CONTENT CONTAINER */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 md:space-y-48 pb-40">
           
-          {/* 4. CAMINHO DA ESTAÇÃO */}
-          <Section id="caminho-estacao" kicker="Travessia" titulo="Caminho da Estação">
-            <EstacaoCaminhoTrail />
-          </Section>
-
           {/* 2. O QUE ESTÁ ATIVO AGORA */}
           <section id="ativo-agora" className="space-y-12">
             <h2 className="text-xl md:text-3xl font-display text-white text-center">O que está ativo agora</h2>
             <AtivoAgoraBloco />
           </section>
+
+          {/* 4. CAMINHO DA ESTAÇÃO */}
+          <Section id="caminho-estacao" kicker="Travessia" titulo="Caminho da Estação">
+            <EstacaoCaminhoTrail />
+          </Section>
 
           {/* 3. TERRITÓRIOS ATIVADOS */}
           {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
