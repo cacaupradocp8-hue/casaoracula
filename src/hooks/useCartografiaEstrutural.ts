@@ -10,8 +10,8 @@ import { toast } from 'sonner';
 export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'objetivas' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
 
 export interface CartografiaRespostas {
-  // Objetivas (30 perguntas baseadas nos 5 eixos)
-  objetivas: Record<string, number>;
+  // Objetivas (Perguntas baseadas nos territórios)
+  objetivas: Record<string, string>;
   // Qualitativo (6 Territórios)
   sintoma: string;
   historia: string;
@@ -140,7 +140,7 @@ export function useCartografiaEstrutural() {
   const updateObjetiva = (perguntaId: string, territorioKey: string) => {
     setRespostas(prev => ({
       ...prev,
-      objetivas: { ...prev.objetivas, [perguntaId]: territorioKey as any }
+      objetivas: { ...prev.objetivas, [perguntaId]: territorioKey }
     }));
   };
 
