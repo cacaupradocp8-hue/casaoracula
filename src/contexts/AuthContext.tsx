@@ -419,6 +419,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return currentCaseCount < limit;
   };
 
+  const updateUserMetadata = (updates: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...updates } : null);
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -433,6 +437,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       canCreateCase,
       refreshUserPortal,
       refreshMatricula,
+      updateUserMetadata,
     }}>
       {children}
     </AuthContext.Provider>
