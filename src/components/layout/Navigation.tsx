@@ -31,6 +31,7 @@ const founderMenuGroups = () => [
   { key: 'inicio', label: 'CidadELA', icon: Home, path: '/dashboard-membro', subitems: [] },
   { key: 'clube', label: 'Rota dos Lobos', icon: BookOpen, path: '/clube/rotas/rota-dos-lobos', subitems: [] },
   { key: 'jardim', label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'planos', label: 'Planos', icon: Crown, path: '/planos', subitems: [] },
   { key: 'feedback', label: 'Feedback', icon: MessageCircle, label_full: 'Feedback Founder', path: '/clube/founder-feedback', subitems: [] },
 ];
 
@@ -42,17 +43,24 @@ const visitanteMenuGroups = () => [
 ];
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
-const assinanteMenuGroups = () => [
-  { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'cidadela', label: 'Cidadela', icon: Map, path: '/cidadela', subitems: [] },
-  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube/rotas', subitems: [] },
+const assinanteMenuGroups = (isFounder: boolean) => {
+  const base = [
+    { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
+    { key: 'cidadela', label: 'Cidadela', icon: Map, path: '/cidadela', subitems: [] },
+    { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube/rotas', subitems: [] },
+    { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
+    { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
+    { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+    { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
+  ];
 
+  if (isFounder) {
+    // Para fundadoras, não exibir "Práticas de Integração" (originalmente chamado "ferramentas")
+    return base.filter(item => item.key !== 'ferramentas');
+  }
 
-  { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
-  { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
-  { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
-  { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
-];
+  return base;
+};
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────
 const alunaMenuGroups = () => [
@@ -122,14 +130,18 @@ export function Navigation() {
 
   // Profile-based menu selection
   const getMenuForProfile = () => {
-    if (user?.founder_beta) return founderMenuGroups();
+    const isFounder = !!user?.founder_beta;
+    if (isFounder && user?.portal !== 'assinante' && user?.portal !== 'admin') {
+      return founderMenuGroups();
+    }
+    
     if (activeDomain === 'profissional') return profissionalMenuGroups(isAdmin, isMentorada);
-    if (isAdmin || hasOracula) return alunaMenuGroups(); // Aluna de formação
+    if (isAdmin || hasOracula) return alunaMenuGroups(); 
     const isAssinante = user ? canAccessFeature(user.portal, 'assinante') : false;
     const isAluna = user ? canAccessFeature(user.portal, 'aluna') : false;
-    if (isAssinante) return assinanteMenuGroups();
+    if (isAssinante) return assinanteMenuGroups(isFounder);
     if (isAluna) return alunaMenuGroups();
-    return visitanteMenuGroups(); // Visitante / Gratuito
+    return visitanteMenuGroups();
   };
   const menuGroups = getMenuForProfile();
 
