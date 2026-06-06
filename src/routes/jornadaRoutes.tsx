@@ -12,7 +12,7 @@ const TravessiaDetalhe = React.lazy(() => import("@/pages/TravessiaDetalhe"));
 const BibliotecaTravessiaDetalhe = React.lazy(() => import("@/pages/BibliotecaTravessiaDetalhe"));
 const BibliotecaTravessiasFamilia = React.lazy(() => import("@/pages/BibliotecaTravessiasFamilia"));
 const MinhaJornada = React.lazy(() => import("@/pages/MinhaJornada"));
-const CidadelaPage = React.lazy(() => import("@/pages/CidadelaPage"));
+const CidadelaPage = React.lazy(() => import("@/pages/RevelacaoCidadelaPage"));
 
 
 /**
