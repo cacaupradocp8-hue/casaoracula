@@ -109,16 +109,7 @@ export function CartografiaEstruturalStepper() {
     const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
 
     const handleAtravessar = () => {
-      if (!portaSlug) {
-        navigate('/clube');
-        return;
-      }
-      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
-      if (exists) {
-        navigate(`/clube/rota/${portaSlug}`);
-      } else {
-        navigate('/clube');
-      }
+      navigate('/clube/rotas/lobos');
     };
 
     return (
@@ -130,7 +121,6 @@ export function CartografiaEstruturalStepper() {
 
         {/* 1. TÍTULO PRINCIPAL */}
         <header className="text-center space-y-4 pt-12">
-
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -140,6 +130,11 @@ export function CartografiaEstruturalStepper() {
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
           <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+          <div className="max-w-xl mx-auto pt-4">
+            <p className="text-muted-foreground italic text-sm">
+              “Sua CidadELA revelou onde sua energia está habitando agora. Este não é um diagnóstico. É uma cartografia do momento. A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.”
+            </p>
+          </div>
         </header>
 
         <section className="space-y-24">

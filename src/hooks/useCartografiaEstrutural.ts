@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useBig5Oracular } from './useBig5Oracular';
 import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
