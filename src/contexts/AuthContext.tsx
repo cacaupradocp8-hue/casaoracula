@@ -121,6 +121,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           avatarUrl: profile.avatar_url || undefined,
           isMatriculada: !!matricula,
           matriculadaAt: matricula?.data_inicio ? parseDateSafe(matricula.data_inicio, 'auth-context.matricula.data_inicio') : undefined,
+          founder_beta: !!profile.founder_beta,
         });
 
         setAuthError(null);
