@@ -1112,11 +1112,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                           <Label className="text-[9px] uppercase text-white/40">Pergunta Central</Label>
                           <Input value={audio.pergunta_central} onChange={e => updateAudio(idx, 'pergunta_central', e.target.value)} className="bg-background/50 text-[10px]" />
                         </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </AccordionContent>
+                        <div className="space-y-1">
                           <Label className="text-[9px] uppercase text-white/40">Transcrição Opcional</Label>
                           <Textarea value={audio.transcricao} onChange={e => updateAudio(idx, 'transcricao', e.target.value)} className="bg-background/50 text-[10px] min-h-[60px]" />
                         </div>
