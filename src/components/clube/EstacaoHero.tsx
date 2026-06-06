@@ -33,11 +33,45 @@ export function EstacaoHero({
     <section className="relative min-h-[90vh] flex items-center px-4 sm:px-6 md:px-12 lg:px-24 z-10 overflow-hidden pt-20">
       {/* Background with Dark Forest Atmosphere */}
       <div className="absolute inset-0 pointer-events-none">
-        <img 
-          src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
-          alt="" 
-          className="w-full h-full object-cover opacity-80 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
-        />
+        <div className="relative w-full h-full">
+          <img 
+            src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
+            alt="" 
+            className="w-full h-full object-cover opacity-80 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
+          />
+          
+          {/* Smoke/Mist Effect Over the Background */}
+          <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
+            <motion.div 
+              animate={{ 
+                x: [0, 50, 0],
+                y: [0, -20, 0],
+                opacity: [0.2, 0.5, 0.2]
+              }}
+              transition={{ 
+                duration: 10, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-white/20 blur-[100px] rounded-full"
+            />
+            <motion.div 
+              animate={{ 
+                x: [0, -30, 0],
+                y: [0, -40, 0],
+                opacity: [0.1, 0.3, 0.1]
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 2
+              }}
+              className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-white/10 blur-[120px] rounded-full"
+            />
+          </div>
+        </div>
+        
         {/* Cinematic Vignette and Overlays */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#010816]/90 via-[#010816]/60 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/40" />
@@ -53,10 +87,10 @@ export function EstacaoHero({
         >
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-white/40 font-bold mb-4">
-            <span className="hover:text-gold/60 transition-colors cursor-default" onClick={() => window.location.href = '/clube'}>Clube da Casa</span>
+            <span className="hover:text-gold/60 transition-colors cursor-default" onClick={() => window.location.href = '/clube/rota/rota-dos-lobos'}>Rota dos Lobos</span>
             <ChevronRight className="w-2.5 h-2.5 opacity-40" />
-            <span className="hover:text-gold/60 transition-colors cursor-default" onClick={() => window.location.href = '/clube/rota/rota-dos-lobos'}>{parentName}</span>
-            <ChevronRight className="w-2.5 h-2.5 opacity-40" />
+            <span className="text-gold/80">{titulo}</span>
+          </nav>
             <span className="text-gold/80">{titulo}</span>
           </nav>
 
