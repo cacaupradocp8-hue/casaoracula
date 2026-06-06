@@ -31,20 +31,27 @@ export function AtivoAgoraBloco() {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
       {cards.map((card, i) => (
         <motion.div
           key={i}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: i * 0.1 }}
-          className="bg-white/[0.03] border border-white/10 p-6 rounded-3xl hover:bg-white/[0.05] transition-colors group"
+          viewport={{ once: true }}
+          transition={{ delay: i * 0.1, duration: 0.8, ease: "easeOut" }}
+          whileHover={{ y: -5 }}
+          className="relative group h-full"
         >
-          <div className="w-12 h-12 rounded-2xl bg-white/[0.05] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-            <card.icon className="w-6 h-6 text-gold/80" />
+          {/* Background Glow */}
+          <div className="absolute -inset-0.5 bg-gradient-to-br from-gold/20 via-transparent to-transparent rounded-[2.5rem] opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
+          
+          <div className="relative h-full bg-white/[0.03] border border-white/10 p-8 rounded-[2rem] backdrop-blur-sm group-hover:bg-white/[0.05] group-hover:border-white/20 transition-all duration-300 flex flex-col items-center text-center">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-gold/10 to-transparent border border-gold/20 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+              <card.icon className="w-7 h-7 text-gold/80" />
+            </div>
+            <p className="text-[10px] tracking-[0.4em] uppercase text-white/30 font-bold mb-3">{card.title}</p>
+            <p className="font-display text-xl text-white/90 leading-snug tracking-tight">{card.value}</p>
           </div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-white/40 font-bold mb-2">{card.title}</p>
-          <p className="font-display text-lg text-white/90 leading-tight">{card.value}</p>
         </motion.div>
       ))}
     </div>

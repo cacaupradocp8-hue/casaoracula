@@ -354,18 +354,35 @@ export default function ClubeRotaPremium() {
 
 function Section({ id, icon: Icon, kicker, titulo, children }: any) {
   return (
-    <section id={id} className="scroll-mt-24 space-y-8">
+    <motion.section 
+      id={id} 
+      className="scroll-mt-32 space-y-12"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 1, ease: [0.21, 1.02, 0.47, 0.98] }}
+    >
       {(kicker || titulo) && (
-        <div className="space-y-3 text-center md:text-left">
+        <div className="space-y-6 text-center">
           {kicker && (
-            <div className="flex items-center justify-center md:justify-start gap-2 text-[10px] uppercase tracking-[0.4em] text-gold/60 font-bold">
-              {Icon && <Icon className="w-3 h-3" />} {kicker}
+            <div className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.5em] text-gold/60 font-bold">
+              <span className="w-8 h-[1px] bg-gold/20" />
+              <div className="flex items-center gap-2">
+                {Icon && <Icon className="w-3.5 h-3.5 text-gold/40" />} {kicker}
+              </div>
+              <span className="w-8 h-[1px] bg-gold/20" />
             </div>
           )}
-          {titulo && <h2 className="text-2xl md:text-5xl font-display text-white tracking-tight leading-tight">{titulo}</h2>}
+          {titulo && (
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-display text-white tracking-tight leading-tight max-w-4xl mx-auto px-4">
+              {titulo}
+            </h2>
+          )}
         </div>
       )}
-      {children}
-    </section>
+      <div className="relative">
+        {children}
+      </div>
+    </motion.section>
   );
 }
