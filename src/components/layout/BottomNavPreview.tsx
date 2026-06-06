@@ -5,13 +5,6 @@ import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-const NAV_ITEMS = [
-  { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
-  { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube/rotas' },
-  { key: 'ferramentas', icon: Wrench, label: 'Práticas', path: '/ferramentas' },
-  { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
-  { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
-];
 
 export function BottomNavPreview() {
   const { user } = useAuth();
