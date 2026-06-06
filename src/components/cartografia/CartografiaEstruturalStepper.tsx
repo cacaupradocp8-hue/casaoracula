@@ -155,9 +155,10 @@ export function CartografiaEstruturalStepper() {
               corHex={cidadela.cor_hex}
               atmosfera={cidadela.atmosfera_derivada}
               simbolo={cidadela.simbolo_derivado}
-              simboloIcon={cidadela.simbolo_derivado_icon}
-              territorios={cidadela.distritos_acesos}
-              pontoPartida={cidadela.porta_inicial}
+               simboloIcon={cidadela.simbolo_derivado_icon}
+               territorios={cidadela.distritos_acesos}
+               distritos_adormecidos={cidadela.distritos_adormecidos}
+               pontoPartida={cidadela.porta_inicial}
               hideTechnical
             />
           </div>

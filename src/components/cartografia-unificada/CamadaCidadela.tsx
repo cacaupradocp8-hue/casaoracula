@@ -9,6 +9,7 @@ interface CidadelaData {
   distrito_dominante_descricao: string;
   distritos_ativos: string[];
   distritos_tensao: string[];
+  distritos_adormecidos?: string[];
   territorio_crescimento: string;
   territorio_crescimento_descricao: string;
   distritos_adormecidos?: string[];
@@ -26,6 +27,7 @@ interface Props {
   simbolo: string;
   simboloIcon: string;
   territorios: string[];
+  distritos_adormecidos?: string[];
   pontoPartida: string;
   /** Hide technical labels/headers */
   hideTechnical?: boolean;
@@ -54,7 +56,7 @@ const anim = (delay: number) => ({
   transition: { duration: 0.5, delay },
 });
 
-export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, pontoPartida, hideTechnical }: Props) {
+export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloIcon, territorios, distritos_adormecidos, pontoPartida, hideTechnical }: Props) {
   // A mandala sempre aparece se houver dados básicos, mesmo sem descrições completas
   const hasContent = !!(data.distrito_dominante || data.distritos_ativos?.length > 0 || data.distritos_tensao?.length > 0);
   
@@ -75,10 +77,13 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
     const states: Record<string, DistrictDisplayState> = {};
     const tensaoSet = new Set((data.distritos_tensao || []).map(d => d.toLowerCase()));
     const ativoSet = new Set((data.distritos_ativos || []).map(d => d.toLowerCase()));
+    const adormecidoSet = new Set((data.distritos_adormecidos || []).map(d => d.toLowerCase()));
+    
     Object.values(DISTRITOS_META).forEach(d => {
       const key = d.nome.toLowerCase();
       if (tensaoSet.has(key)) states[key] = 'em_tensao';
       else if (ativoSet.has(key)) states[key] = 'ativo';
+      else if (adormecidoSet.has(key)) states[key] = 'adormecido';
     });
     if (data.distrito_dominante) {
       const domKey = (data.distrito_dominante || data.distritos_ativos?.[0] || '').toLowerCase();
