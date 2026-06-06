@@ -1,10 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Compass, RefreshCw, Map } from 'lucide-react';
+import { Compass, RefreshCw, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
-import { PortaInicialHero } from '@/components/cartografia/PortaInicialHero';
 import type { BussolaData } from '@/hooks/useBussolaOracular';
 
 interface CidadelaRotasViewProps {
@@ -13,9 +12,7 @@ interface CidadelaRotasViewProps {
 
 export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
   const navigate = useNavigate();
-  
-  // Mapping district raw data to the format CamadaCidadela expects
-  // Version for "Rotas da Casa" (Cleaned of technical terms)
+
   const camadaData = {
     distrito_dominante: bussola.distritoDominante?.nome || '',
     distrito_dominante_descricao: bussola.leituraSimbolica || '',
@@ -28,36 +25,32 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
     direcao_travessia: bussola.acaoPrincipal.texto || '',
   };
 
+  const sinteseCurta = bussola.distritoDominante?.nome
+    ? `Seu território dominante: ${bussola.distritoDominante.nome}.`
+    : 'Seu mapa simbólico foi revelado.';
+
   return (
-    <div className="space-y-16 pb-20">
-      {/* 1. HERO NARRATIVO */}
-      <header className="text-center space-y-8 pt-8 max-w-3xl mx-auto">
-        <motion.div 
+    <div className="space-y-12 pb-16">
+      {/* HERO — MÍNIMO */}
+      <header className="text-center space-y-6 pt-8 max-w-2xl mx-auto">
+        <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="w-20 h-20 bg-gold/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-gold/20 shadow-premium-glow"
+          className="w-16 h-16 bg-gold/5 rounded-full flex items-center justify-center mx-auto border border-gold/20 shadow-premium-glow"
         >
-          <Compass className="w-10 h-10 text-gold/80" />
+          <Compass className="w-8 h-8 text-gold/80" />
         </motion.div>
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-7xl font-display text-foreground tracking-tight">
-            Sua <span className="text-gold italic">CidadELA Interior</span>
-          </h1>
-          <div className="max-w-xl mx-auto pt-4">
-            <p className="text-lg md:text-2xl text-muted-foreground leading-relaxed italic">
-              {bussola.leituraSimbolica || "Um mapa simbólico do seu momento atual."}
-            </p>
-          </div>
-        </div>
+        <h1 className="text-4xl md:text-6xl font-display text-foreground tracking-tight">
+          Sua <span className="text-gold italic">CidadELA</span>
+        </h1>
       </header>
 
-      {/* 2. MANDALA CENTRAL */}
-      <section className="relative py-8">
+      {/* MANDALA */}
+      <section className="relative">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
           <div className="w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-gold/5 blur-[120px] animate-pulse" />
         </div>
-        
-        <CamadaCidadela 
+        <CamadaCidadela
           data={camadaData as any}
           cor="CidadELA"
           corHex={bussola.corHex || '#C9A24A'}
@@ -70,41 +63,32 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         />
       </section>
 
-      {/* 3. PORTA INICIAL - TRANSIÇÃO NARRATIVA */}
-      <section className="px-4 space-y-12">
-        <div className="text-center max-w-2xl mx-auto space-y-6">
-          <p className="text-2xl md:text-3xl font-serif text-white/80 italic leading-relaxed">
-            Sua travessia recomendada: <span className="text-gold">Rota dos Lobos</span>.
-          </p>
+      {/* SÍNTESE CURTA + CTA */}
+      <section className="px-4 max-w-xl mx-auto text-center space-y-8">
+        <p className="text-lg md:text-xl text-white/70 font-serif italic leading-relaxed">
+          {sinteseCurta}
+        </p>
+        <div className="flex flex-col items-center gap-4">
+          <Button
+            variant="gold"
+            size="xl"
+            onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+            className="group px-12 h-16 text-lg shadow-premium-glow rounded-full"
+          >
+            Continuar Travessia
+            <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-1" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
+            className="text-muted-foreground/50 hover:text-gold gap-2 uppercase tracking-widest text-[10px]"
+          >
+            <RefreshCw className="w-3 h-3" />
+            Refazer Cartografia
+          </Button>
         </div>
-        
-        <PortaInicialHero 
-          portaNome={bussola.distritoDominante?.nome} 
-          portaSlug="rota-dos-lobos" 
-        />
       </section>
-
-      {/* 4. AÇÕES COMPLEMENTARES */}
-      <footer className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-12 border-t border-gold/5">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
-          className="text-muted-foreground/60 hover:text-gold gap-2 uppercase tracking-widest text-[10px]"
-        >
-          <RefreshCw className="w-3 h-3" />
-          Refazer Cartografia
-        </Button>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={() => navigate('/clube/rotas')}
-          className="text-muted-foreground/60 hover:text-gold gap-2 uppercase tracking-widest text-[10px]"
-        >
-          <Map className="w-3 h-3" />
-          Explorar Rotas da Casa
-        </Button>
-      </footer>
     </div>
   );
 }
