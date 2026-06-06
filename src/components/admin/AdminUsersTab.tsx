@@ -6,6 +6,8 @@ import { PortalBadge } from '@/components/shared/PortalBadge';
 import { useToast } from '@/hooks/use-toast';
 import { PORTALS, PortalType, getPortal } from '@/types/portal';
 import { Users, Search, Eye, Crown, Heart, GraduationCap, Sparkles, Star, UserPlus, UserCheck } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { supabase } from '@/integrations/supabase/client';
