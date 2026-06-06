@@ -33,7 +33,12 @@ export default function ClubeRotasPortal() {
       <div className="relative bg-background text-white selection:bg-gold/20 min-h-screen overflow-x-hidden">
         {/* Cinematic Background */}
         <div className="fixed inset-0 pointer-events-none z-0">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020D24] via-[#010816] to-[#010610]" />
+          <img 
+            src="https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80" 
+            className="absolute inset-0 w-full h-full object-cover opacity-20 grayscale"
+            alt="Fundo Cinematográfico"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020D24]/90 via-[#010816]/95 to-[#010610]" />
           <div className="absolute inset-0 opacity-[0.05] bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-soft-light" />
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_10%_20%,hsl(var(--gold)/0.05),transparent_60%)]" />
         </div>
@@ -65,25 +70,17 @@ export default function ClubeRotasPortal() {
                       {getSetting('portal_rotas_hero_title_line1', 'Casa')} <span className="text-gold italic">{getSetting('portal_rotas_hero_title_line2', 'Orácula')}</span>
                     </h1>
                     
-                    <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                      "{getSetting('portal_rotas_hero_quote', 'Toda travessia começa quando algo dentro pede passagem.')}"
-                    </p>
+                    <div className="space-y-4">
+                      <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
+                        "{getSetting('portal_rotas_hero_quote_line1', 'A Casa não oferece respostas.')}"
+                      </p>
+                      <p className="text-2xl md:text-4xl text-gold/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
+                        "{getSetting('portal_rotas_hero_quote_line2', 'Oferece mapas.')}"
+                      </p>
+                    </div>
                   </div>
 
-                  <div className="pt-8">
-                    <Button 
-                      variant="gold" 
-                      size="xl" 
-                      className="rounded-full px-16 h-20 text-xl font-bold shadow-glow group hover:scale-105 transition-all duration-500"
-                      onClick={() => {
-                        const el = document.getElementById('intro-editorial');
-                        el?.scrollIntoView({ behavior: 'smooth' });
-                      }}
-                    >
-                      Entrar na Casa
-                      <ArrowRight className="ml-3 w-6 h-6 transition-transform group-hover:translate-x-1" />
-                    </Button>
-                  </div>
+                  {/* Botão CTA removido para limpeza da página */}
                 </motion.div>
               </div>
             </ResponsiveContainer>
@@ -144,14 +141,24 @@ export default function ClubeRotasPortal() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1 }}
+                    className="grid grid-cols-1 md:grid-cols-2 gap-8"
                   >
                     <EscutaPremium 
                       audioUrl={audioUrl}
                       titulo={audioTitle}
                       imagemEscuta={audioImage}
-                      tipo="Boas-vindas"
+                      tipo="Boas-vindas I"
                       className="bg-transparent border border-white/5 shadow-2xl"
                     />
+                    {getSetting('portal_rotas_welcome_audio_url_2') && (
+                      <EscutaPremium 
+                        audioUrl={getSetting('portal_rotas_welcome_audio_url_2')}
+                        titulo={getSetting('portal_rotas_welcome_audio_title_2', 'A Voz da Casa II')}
+                        imagemEscuta={getSetting('portal_rotas_welcome_audio_image_2', audioImage)}
+                        tipo="Boas-vindas II"
+                        className="bg-transparent border border-white/5 shadow-2xl"
+                      />
+                    )}
                   </motion.div>
                 </div>
               </ResponsiveContainer>
