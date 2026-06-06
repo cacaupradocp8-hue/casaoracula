@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { LimiarIntro } from '@/components/primeira-leitura/LimiarIntro';
 import { CasePresentation } from '@/components/primeira-leitura/CasePresentation';
 import { QuestionStep } from '@/components/primeira-leitura/QuestionStep';
