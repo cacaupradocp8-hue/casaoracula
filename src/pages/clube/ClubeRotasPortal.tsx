@@ -67,20 +67,43 @@ export default function ClubeRotasPortal() {
                     </motion.div>
                     
                     <h1 className="text-6xl md:text-9xl font-serif leading-[1.1] tracking-tight">
-                      {getSetting('portal_rotas_hero_title_line1', 'Casa')} <span className="text-gold italic">{getSetting('portal_rotas_hero_title_line2', 'Orácula')}</span>
+                      Bem-vinda ao <span className="text-gold italic">Clube de Leitura Oracular</span>
                     </h1>
                     
-                    <div className="space-y-4">
+                    <div className="space-y-6 pt-8">
                       <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                        "{getSetting('portal_rotas_hero_quote_line1', 'A Casa não oferece respostas.')}"
+                        Uma travessia simbólica para transformar leitura em percepção, prática e método.
                       </p>
-                      <p className="text-2xl md:text-4xl text-gold/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                        "{getSetting('portal_rotas_hero_quote_line2', 'Oferece mapas.')}"
-                      </p>
+                      
+                      <div className="space-y-4 pt-4">
+                        <p className="text-xl md:text-2xl text-white/60 font-serif italic leading-relaxed max-w-2xl mx-auto">
+                          "A Casa não oferece respostas."
+                        </p>
+                        <p className="text-xl md:text-2xl text-gold/60 font-serif italic leading-relaxed max-w-2xl mx-auto">
+                          "Oferece mapas."
+                        </p>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Botão CTA removido para limpeza da página */}
+                  <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-12">
+                    <Button 
+                      variant="gold" 
+                      size="xl" 
+                      className="rounded-full px-12 h-16 shadow-glow-gold"
+                      onClick={() => navigate(hasCidadela ? '/cidadela/revelacao' : '/ferramenta/cartografia-psiquica-oracula')}
+                    >
+                      {hasCidadela ? 'Ver minha CidadELA' : 'Criar minha CidadELA'}
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="xl" 
+                      className="rounded-full px-12 h-16 border-white/10 hover:bg-white/5"
+                      onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                    >
+                      Conhecer a Rota dos Lobos
+                    </Button>
+                  </div>
                 </motion.div>
               </div>
             </ResponsiveContainer>
@@ -90,19 +113,42 @@ export default function ClubeRotasPortal() {
           </section>
 
           {/* 2. BLOCO INTRODUTÓRIO EDITORIAL */}
-          <section id="intro-editorial" className="relative py-40 px-6">
+          <section id="intro-editorial" className="relative py-40 px-6 bg-black/40">
             <ResponsiveContainer size="wide">
               <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 2 }}
-                className="max-w-2xl mx-auto text-center"
+                className="max-w-3xl mx-auto text-center space-y-12"
               >
-                <div className="space-y-4">
-                  <p className="text-3xl md:text-4xl font-serif text-white/90 leading-relaxed italic">
-                    "{getSetting('portal_rotas_editorial_quote_line1', 'A Casa não oferece respostas.')}" <br />
-                    <span className="text-gold/80">"{getSetting('portal_rotas_editorial_quote_line2', 'Oferece mapas.')}"</span>
+                <div className="space-y-8">
+                  <p className="text-xl md:text-2xl text-white/70 leading-relaxed font-light">
+                    Este não é um espaço para consumir conteúdos em sequência.
+                  </p>
+                  <p className="text-4xl md:text-6xl font-serif text-white/90 italic">
+                    É uma Casa viva.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-12">
+                  <div className="space-y-4">
+                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">Território</p>
+                    <p className="text-lg text-white/60 italic font-serif">Cada leitura abre um território.</p>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">CidadELA</p>
+                    <p className="text-lg text-white/60 italic font-serif">Cada rota acende uma parte da CidadELA.</p>
+                  </div>
+                  <div className="space-y-4">
+                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">Rastros</p>
+                    <p className="text-lg text-white/60 italic font-serif">Cada ferramenta recolhe rastros da sua travessia.</p>
+                  </div>
+                </div>
+
+                <div className="pt-16">
+                  <p className="text-2xl md:text-3xl font-serif text-gold/80 italic leading-relaxed">
+                    Antes de escolher uma rota, a Casa convida você a revelar o seu mapa.
                   </p>
                 </div>
               </motion.div>
@@ -124,15 +170,21 @@ export default function ClubeRotasPortal() {
                     viewport={{ once: true }}
                     className="text-center space-y-6"
                   >
-                    <div className="flex flex-col items-center gap-4">
+                    <div className="flex flex-col items-center gap-6">
                       <div className="flex items-center gap-3 text-gold/40">
                         <span className="h-px w-8 bg-current" />
-                        <span className="text-[10px] tracking-[0.4em] uppercase font-bold">A Voz da Casa</span>
+                        <span className="text-[10px] tracking-[0.4em] uppercase font-bold">Antes de atravessar</span>
                         <span className="h-px w-8 bg-current" />
                       </div>
                       <h2 className="text-4xl md:text-6xl font-serif text-white tracking-tight italic">
-                        {audioTitle}
+                        Escute o chamado inicial
                       </h2>
+                      <p className="text-white/50 text-lg md:text-xl font-serif italic max-w-2xl mx-auto">
+                        Escute este áudio como quem entra pela primeira vez numa Casa. Ele não é uma aula. É uma orientação inicial.
+                      </p>
+                      <p className="text-[10px] uppercase tracking-[0.3em] text-gold/40 font-bold">
+                        A Casa não começa pelas respostas. Começa pelo mapa.
+                      </p>
                     </div>
                   </motion.div>
 
