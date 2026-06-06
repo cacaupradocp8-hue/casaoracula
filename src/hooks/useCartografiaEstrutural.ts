@@ -7,17 +7,11 @@ import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { toast } from 'sonner';
 
-export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'objetivas' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
+export type CartografiaStepId = 'intro' | 'objetivas' | 'gerando' | 'resultado';
 
 export interface CartografiaRespostas {
-  // Objetivas (Perguntas baseadas nos territórios)
+  // Objetivas (Perguntas situacionais de escolha forçada)
   objetivas: Record<string, string>;
-  // Qualitativo (6 Territórios)
-  sintoma: string;
-  historia: string;
-  crencas: string;
-  recursos: string;
-  seguranca: string;
 }
 
 export function useCartografiaEstrutural() {
@@ -28,11 +22,6 @@ export function useCartografiaEstrutural() {
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
     objetivas: {},
-    sintoma: '',
-    historia: '',
-    crencas: '',
-    recursos: '',
-    seguranca: '',
   });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -157,11 +146,11 @@ export function useCartografiaEstrutural() {
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
         rawMedias: big5Medias.medias, 
         territorios: {
-          sintoma: respostas.sintoma,
-          historia_vida: respostas.historia,
-          crencas: respostas.crencas,
-          recursos: respostas.recursos,
-          seguranca: respostas.seguranca
+          sintoma: 'Mapeamento via escolha forçada',
+          historia_vida: 'Mapeamento via escolha forçada',
+          crencas: 'Mapeamento via escolha forçada',
+          recursos: 'Mapeamento via escolha forçada',
+          seguranca: 'Mapeamento via escolha forçada'
         },
         contexto: 'clube' 
       });
@@ -172,19 +161,14 @@ export function useCartografiaEstrutural() {
         cor_predominante: cidadela.cor_derivada,
         atmosfera: cidadela.atmosfera_derivada,
         territorios_principais: cidadela.distritos_acesos,
-        recursos_internos: respostas.recursos,
-        conflitos_tensoes: respostas.sintoma,
+        recursos_internos: 'Recursos mapeados via territórios',
+        conflitos_tensoes: 'Conflitos mapeados via territórios',
         simbolo_pessoal: cidadela.simbolo_derivado,
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
         metadata_json: { 
           medias_big5: big5Medias.medias,
-          respostas_qualitativas: {
-            sintoma: respostas.sintoma,
-            historia: respostas.historia,
-            crencas: respostas.crencas,
-            seguranca: respostas.seguranca
-          },
+          respostas_objetivas: respostas.objetivas,
           versao: '3.0-clube-estrutural',
           territorio_dominante: cidadela.territorio_dominante,
           territorio_tensao: cidadela.territorio_tensao,
@@ -237,7 +221,7 @@ export function useCartografiaEstrutural() {
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');
-      setStep('seguranca');
+      setStep('objetivas');
     } finally {
       setLoading(false);
     }
