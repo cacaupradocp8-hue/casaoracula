@@ -21,6 +21,7 @@ import {
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
@@ -36,6 +37,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular(slug);
 
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
@@ -386,9 +388,9 @@ export default function ClubeRotaPremium() {
                       <Button
                         variant="ghost"
                         className="rounded-full h-14 px-10 text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white hover:bg-white/5 transition-all"
-                        onClick={() => navigate('/clube')}
+                        onClick={() => navigate(user?.founder_beta ? '/dashboard-membro' : '/clube')}
                       >
-                        Voltar ao Mapa das Rotas
+                        {user?.founder_beta ? 'Ir para o Dashboard Founder' : 'Voltar ao Mapa das Rotas'}
                       </Button>
                     </div>
                   </div>
