@@ -7,6 +7,7 @@ export interface AdminUser {
   email: string;
   portal: PortalType;
   createdAt: Date;
+  founder_beta?: boolean;
 }
 
 export interface AdminUserStats {
@@ -25,7 +26,7 @@ export interface AdminUserStats {
 export async function listAdminUsers(): Promise<AdminUser[]> {
   const { data: profiles, error: profilesError } = await supabase
     .from('profiles')
-    .select('id, email, nome, created_at');
+    .select('id, email, nome, created_at, founder_beta');
 
   if (profilesError) throw profilesError;
 
@@ -43,6 +44,7 @@ export async function listAdminUsers(): Promise<AdminUser[]> {
       email: profile.email || '',
       portal: (role?.portal as PortalType) || 'visitante',
       createdAt: new Date(profile.created_at),
+      founder_beta: !!profile.founder_beta
     };
   });
 
