@@ -36,6 +36,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular(slug);
 
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
