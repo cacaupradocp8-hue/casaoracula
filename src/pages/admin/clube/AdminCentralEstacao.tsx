@@ -633,7 +633,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           url: a.url || '',
           roteiro: a.roteiro || '',
           transcricao: a.transcricao || ''
-        })).slice(0, 4)
+        }))
       : [
           { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
           { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
@@ -767,7 +767,7 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
             url: a.url || '',
             roteiro: a.roteiro || '',
             transcricao: a.transcricao || ''
-          })).slice(0, 4)
+          }))
         : [
             { titulo: 'Introdução', tipo: 'introducao', funcao: 'Abrir o campo simbólico da estação', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
             { titulo: 'Principal', tipo: 'principal', funcao: 'A travessia da semana', pergunta_central: '', duracao: '', url: '', roteiro: '', transcricao: '' },
@@ -1054,11 +1054,40 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                 </div>
               </AccordionTrigger>
               <AccordionContent className="pt-4 pb-6">
+                <div className="flex justify-end mb-4">
+                  <Button 
+                    size="sm" 
+                    variant="outline" 
+                    className="gap-2 border-gold/20 text-gold" 
+                    onClick={() => {
+                      const newAudios = [...form.audios, { titulo: 'Novo Áudio', tipo: 'extra', funcao: '', url: '', duracao: '', pergunta_central: '', roteiro: '', transcricao: '' }];
+                      setForm({ ...form, audios: newAudios });
+                    }}
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Adicionar Áudio
+                  </Button>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {form.audios.map((audio, idx) => (
-                    <div key={idx} className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4">
+                    <div key={idx} className="p-5 rounded-2xl bg-white/[0.03] border border-white/5 space-y-4 relative group">
+                      <Button 
+                        size="icon" 
+                        variant="ghost" 
+                        className="absolute top-2 right-2 h-6 w-6 text-white/20 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={() => {
+                          const newAudios = form.audios.filter((_, i) => i !== idx);
+                          setForm({ ...form, audios: newAudios });
+                        }}
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
                       <div className="flex items-center justify-between">
-                        <span className="text-[9px] font-bold text-gold/60 uppercase tracking-widest">{audio.tipo}</span>
+                        <Input 
+                          value={audio.tipo} 
+                          onChange={e => updateAudio(idx, 'tipo', e.target.value)} 
+                          className="bg-transparent border-none p-0 h-auto text-[9px] font-bold text-gold/60 uppercase tracking-widest focus-visible:ring-0 w-24"
+                          placeholder="TIPO"
+                        />
                       </div>
                       <div className="space-y-3">
                         <div className="space-y-1">
@@ -1083,11 +1112,11 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
                           <Label className="text-[9px] uppercase text-white/40">Pergunta Central</Label>
                           <Input value={audio.pergunta_central} onChange={e => updateAudio(idx, 'pergunta_central', e.target.value)} className="bg-background/50 text-[10px]" />
                         </div>
-                        <div className="space-y-1">
-                          <Label className="text-[9px] uppercase text-white/40">Roteiro de Gravação</Label>
-                          <Textarea value={audio.roteiro} onChange={e => updateAudio(idx, 'roteiro', e.target.value)} className="bg-background/50 text-[10px] min-h-[60px]" />
-                        </div>
-                        <div className="space-y-1">
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </AccordionContent>
                           <Label className="text-[9px] uppercase text-white/40">Transcrição Opcional</Label>
                           <Textarea value={audio.transcricao} onChange={e => updateAudio(idx, 'transcricao', e.target.value)} className="bg-background/50 text-[10px] min-h-[60px]" />
                         </div>
