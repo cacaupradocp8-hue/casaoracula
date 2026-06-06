@@ -1,55 +1,60 @@
 # FOUNDER_EXISTING_PAGES_REUSE_AUDIT
 
-## 1. Identificação de Páginas Existentes
+## 1. Identificação de Páginas e Status de Reuso
 
-Após auditoria técnica no diretório `src/pages/clube/` e `src/pages/`, mapeamos as seguintes interfaces:
+Após análise do diretório `src/pages/` e `src/components/clube/`, mapeamos a infraestrutura atual:
 
-| Rota Atual | Componente/Arquivo | Função Identificada | Status Visual |
+| Rota / Arquivo | Função Atual | Qualidade Visual | Decisão de Reuso |
 | :--- | :--- | :--- | :--- |
-| `/clube/rotas` | `ClubeRotasPortal.tsx` | Portal contemplativo com áudio de boas-vindas e CTA para Rota dos Lobos. | **Excelente** (Preservar) |
-| `/clube/rota-dos-lobos` | `RotaDosLobos.tsx` | Hero cinematográfico e lista das 6 estações. | **Excelente** (Preservar) |
-| `/clube/rota/:slug` | `ClubeRotaPremium.tsx` | Página interna de cada estação (Áudio, Conteúdo, Jardins, Missão). | **Bom** (Refinar CTAs) |
-| `/cidadela` | `CidadelaPage.tsx` | Visão técnica dos distritos e marcos acesos. | **Incompleto** (Reaproveitar lógica) |
-| `/dashboard-membro` | `DashboardMembro.tsx` | Landing atual com Mandala e resumo de ações. | **Bom** (Base para Dash Founder) |
-| `/ferramenta/cartografia...` | `CartografiaPsiquicaPage.tsx` | Motor do teste de CidadELA. | **Funcional** (Preservar motor) |
-| `/jardim-da-psique` | `JardimPsique.tsx` | Listagem de registros pessoais. | **Bom** (Preservar) |
+| `/clube/rotas` (`ClubeRotasPortal.tsx`) | Portal contemplativo com áudio e cards. | **Excelente** | **MANTER.** Será adaptada para `founder_beta` para focar na Rota dos Lobos. |
+| `/clube/rotas/rota-dos-lobos` (`RotaDosLobos.tsx`) | Página de entrada da jornada dos lobos. | **Excelente** | **MANTER.** Hero cinematográfico e cards de estações perfeitos. |
+| `/clube/rota/:slug` (`ClubeRotaPremium.tsx`) | Estrutura de cada uma das 6 estações. | **Excelente** | **MANTER.** Já integra áudio, conteúdo e inputs de Jardim. |
+| `/dashboard-membro` (`DashboardMembro.tsx`) | Landing da assinante com Mandala e Bússola. | **Bom** | **ADAPTAR.** Será a base do Dashboard Founder focado na CidadELA. |
+| `/cidadela` (`CidadelaPage.tsx`) | Visão técnica/gerencial dos distritos. | **Regular** | **NÃO USAR.** Usaremos o componente `CidadelaRotasView.tsx` no Dashboard. |
+| `/ferramenta/cartografia...` | Motor do teste de 30 perguntas. | **Funcional** | **SIMPLIFICAR.** Criar versão "Cartografia Express" (12 questões). |
+| `/jardim-da-psique` (`JardimPsique.tsx`) | Listagem de registros da usuária. | **Bom** | **MANTER.** Apenas garantir link no menu inferior. |
 
-## 2. O que será Preservado (NÃO recriar)
+## 2. Componentes de Alta Fidelidade (Preservar 100%)
 
-*   **Portal de Boas-Vindas (`ClubeRotasPortal`):** Já possui o tom editorial e áudio de chegada. Será o ponto 2 do fluxo.
-*   **Apresentação da Rota (`RotaDosLobos`):** Design de alto nível, 100% alinhado. Será o ponto 8 do fluxo.
-*   **Estrutura de Estação (`ClubeRotaPremium`):** Já integra áudios e inputs dos Jardins. Será o ponto 10 do fluxo.
-*   **Motor da Cartografia (`CartografiaEstruturalStepper`):** A lógica de cálculo e geração do JSON de perfil já está pronta e robusta.
+Estes componentes já seguem o design system "Netflix Premium" da Casa e serão os pilares da experiência:
 
-## 3. Páginas "Soltas" ou que precisam de Costura
+*   **`EscutaPremium.tsx`:** Player de áudio imersivo.
+*   **`EstacaoHero.tsx`:** Cabeçalho cinematográfico das estações.
+*   **`EstacaoCaminhoTrail.tsx`:** Navegação horizontal entre as estações.
+*   **`MiniMandalaTerritorios.tsx`:** Visualização compacta dos distritos ativos.
+*   **`JardimInput.tsx`:** Captura de respostas para Psique e Ofício.
 
-*   **Página 1 (Entrada Founder):** Atualmente, a entrada cai direto no dashboard genérico. Precisamos da Landing "Conselho Fundador" para receber a beta.
-*   **Resultado da CidadELA:** O resultado atual é muito técnico/clínico. Usaremos o componente `CidadelaRotasView.tsx` para uma exibição mais simbólica e "limpa" para a fundadora.
-*   **Dashboard Founder:** Substituiremos a visão genérica por uma versão que coloque a Mandala em destaque total, removendo acessos a "Cursos" ou "Formação" que não pertencem ao fluxo beta.
+## 3. Páginas "Soltas" que precisam de Costura
 
-## 4. Proposta de Reaproveitamento e Conexão (O Fluxo Final)
+Identificamos as interfaces que existem mas estão sem o fluxo linear desejado:
 
-| Etapa | Ação | Página/Componente Reaproveitado | Ajuste Necessário |
-| :--- | :--- | :--- | :--- |
-| **1. Entrada** | Boas-vindas Founder | `ClubeHomeFounder.tsx` (Nova) | Texto de recepção e CTA "Criar CidadELA". |
-| **2. Cartografia** | Teste Simbólico | `CartografiaPsiquicaPage.tsx` | Ajustar breadcrumb e CTAs de retorno. |
-| **3. Resultado** | Revelação da Cidade | `CidadelaRotasView.tsx` | Forçar versão "Rotas" (sem termos técnicos). |
-| **4. Início Rota** | Portal das Rotas | `ClubeRotasPortal.tsx` | Remover cards de outras rotas; focar Lobos. |
-| **5. A Rota** | Rota dos Lobos | `RotaDosLobos.tsx` | Conectar progresso real do banco aos cards. |
-| **6. Estação** | Conteúdo + Jardins | `ClubeRotaPremium.tsx` | Garantir que "Próxima Estação" flua no fim. |
-| **7. Dashboard** | Acompanhamento | `DashboardMembro.tsx` | Filtrar menus para esconder áreas profissionais. |
-| **8. Feedback** | Parecer Técnico | `ClubeFeedbackFounder.tsx` (Nova) | Formulário final para a fundadora. |
+*   **Entrada Founder:** Atualmente não existe uma "boas-vindas" específica ao Conselho Fundador. Adaptaremos o `ClubeRotasPortal` ou criaremos uma camada `FounderOverlay` sobre ele.
+*   **Resultado CidadELA:** Hoje a saída do teste é clínica. Reaproveitaremos o `CidadelaRotasView` (já existente no código) para mostrar o mapa de forma mística e progressiva.
+*   **Feedback Final:** Não há página de feedback técnico. Criaremos uma interface minimalista seguindo o estilo das estações.
 
-## 5. Componentes Reutilizáveis (Lego Técnico)
+## 4. Proposta de Implementação da Camada Founder
 
-*   `MiniMapaCidadela`: Para o Dashboard e fechamento de estações.
-*   `EscutaPremium`: Para todos os áudios do fluxo.
-*   `JardimInput`: Já configurado para salvar em `psique` e `oficio`.
-*   `EstacaoCaminhoTrail`: O trilho horizontal que já indica onde a usuária está.
+Em vez de criar um app paralelo, aplicaremos a flag `founder_beta` nos arquivos existentes:
 
-## 6. Riscos de Sobreposição
+1.  **Navegação:** `Navigation.tsx` e `BottomNavPreview.tsx` esconderão os links de "Formação", "Cursos" e "Admin" para fundadoras, deixando apenas: **Início (CidadELA) \| Rota dos Lobos \| Jardins \| Feedback.**
+2.  **Home Dinâmica:** A rota `/clube` detectará se a usuária é `founder_beta` e se já fez a Cartografia. Se não fez, exibe o convite ao Conselho Fundador e o CTA para a "Cartografia Express".
+3.  **Cartografia Express (Novo componente):** Uma versão reduzida do `CartografiaEstruturalStepper` com apenas 12 perguntas (1 por distrito), mapeando rapidamente o estado atual.
+4.  **Admin Switch:** No menu de perfil do Admin, adicionaremos um toggle "Visualizar como Fundadora" que ativa/desativa a flag `founder_beta` localmente para testes.
 
-Identificamos que o `BottomNavPreview` atual aponta para caminhos genéricos (`/cursos`, `/ferramentas`). Para a `founder_beta`, o menu inferior será simplificado para: **Início (CidadELA) \| Rota \| Jardins \| Feedback.**
+## 5. Estrutura de Dados (Feedback)
+
+*   **Tabela `founder_feedback`:** Criaremos esta tabela via migração para garantir que os dados sejam estruturados (Campos: `clareza`, `confusao`, `aplicabilidade`, `encantamento`, `sugestoes`, `valor_percebido`).
+
+## 6. Fluxo de Navegação Costurado
+
+1.  **Login** → Redireciona para `/clube`.
+2.  **`/clube` (Founder Layer)** → Vídeo/Áudio Onboarding + CTA "Criar minha CidadELA".
+3.  **Cartografia Express** (12 questões) → Salva perfil inicial.
+4.  **Resultado CidadELA** → Mostra Mandala Ativa + CTA "Entrar na Rota dos Lobos".
+5.  **Rota dos Lobos** → Apresentação Cinematográfica.
+6.  **Estações (1 a 6)** → Conteúdo → Jardim Psique → Jardim Ofício → Concluir (Acende Distrito).
+7.  **Dashboard Founder** → Mandala atualizada é a protagonista.
+8.  **Feedback** → Coleta do parecer técnico final.
 
 ---
-**Conclusão da Auditoria:** Temos 80% das páginas prontas e com visual excelente. O trabalho é 20% criação (Landing/Feedback) e 80% orquestração de rotas e permissões.
+**Conclusão:** O projeto já possui toda a "massa bruta" visual. O trabalho agora é puramente de engenharia de rotas, simplificação do teste e persistência do feedback.
