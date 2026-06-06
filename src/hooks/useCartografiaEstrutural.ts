@@ -21,6 +21,7 @@ export interface CartografiaRespostas {
 
 export function useCartografiaEstrutural() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { fatores, perguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
