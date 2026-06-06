@@ -39,13 +39,13 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         >
           <Compass className="w-10 h-10 text-gold/80" />
         </motion.div>
-        <div className=\"space-y-4\">
-          <h1 className=\"text-4xl md:text-7xl font-display text-foreground tracking-tight\">
-            Sua <span className=\"text-gold italic\">CidadELA Interior</span>
+        <div className="space-y-4">
+          <h1 className="text-4xl md:text-7xl font-display text-foreground tracking-tight">
+            Sua <span className="text-gold italic">CidadELA Interior</span>
           </h1>
-          <div className=\"max-w-xl mx-auto pt-4\">
-            <p className=\"text-lg md:text-2xl text-muted-foreground leading-relaxed italic\">
-              {bussola.leituraSimbolica || \"Um mapa simbólico do seu momento atual.\"}
+          <div className="max-w-xl mx-auto pt-4">
+            <p className="text-lg md:text-2xl text-muted-foreground leading-relaxed italic">
+              {bussola.leituraSimbolica || "Um mapa simbólico do seu momento atual."}
             </p>
           </div>
         </div>
@@ -72,9 +72,9 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
 
       {/* 3. PORTA INICIAL - TRANSIÇÃO NARRATIVA */}
       <section className="px-4 space-y-12">
-        <div className=\"text-center max-w-2xl mx-auto space-y-6\">
-          <p className=\"text-2xl md:text-3xl font-serif text-white/80 italic leading-relaxed\">
-            Sua travessia recomendada: <span className=\"text-gold\">Rota dos Lobos</span>.
+        <div className="text-center max-w-2xl mx-auto space-y-6">
+          <p className="text-2xl md:text-3xl font-serif text-white/80 italic leading-relaxed">
+            Sua travessia recomendada: <span className="text-gold">Rota dos Lobos</span>.
           </p>
         </div>
         

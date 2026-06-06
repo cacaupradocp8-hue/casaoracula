@@ -41,55 +41,55 @@ export default function RotaDosLobos() {
     <AppLayout>
       <div className="relative bg-[#010816] text-white min-h-screen overflow-x-hidden font-sans">
         {/* 1. HERO - CINEMATOGRÁFICO */}
-        <section className=\"relative min-h-[60vh] flex flex-col justify-center pt-20 pb-12 z-10\">
-          <div className=\"absolute inset-0 -z-10 overflow-hidden\">
-             <img src={getSetting('rota_dos_lobos_hero_image', \"https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80\")} className=\"w-full h-full object-cover grayscale opacity-30 mix-blend-luminosity\" alt=\"Floresta\" />
-             <div className=\"absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent\" />
+        <section className="relative min-h-[60vh] flex flex-col justify-center pt-20 pb-12 z-10">
+          <div className="absolute inset-0 -z-10 overflow-hidden">
+             <img src={getSetting('rota_dos_lobos_hero_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80")} className="w-full h-full object-cover grayscale opacity-30 mix-blend-luminosity" alt="Floresta" />
+             <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent" />
           </div>
-          <ResponsiveContainer size=\"wide\" className=\"px-6 text-center\">
+          <ResponsiveContainer size="wide" className="px-6 text-center">
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className=\"text-6xl md:text-8xl font-serif tracking-tighter leading-tight\"
+              className="text-6xl md:text-8xl font-serif tracking-tighter leading-tight"
             >
-              Rota dos <span className=\"text-gold italic\">Lobos</span>
+              Rota dos <span className="text-gold italic">Lobos</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className=\"text-xl md:text-2xl text-gold/60 font-serif italic mt-6\"
+              className="text-xl md:text-2xl text-gold/60 font-serif italic mt-6"
             >
-              \"Onde a voz silenciada volta a encontrar o corpo.\"
+              "Onde a voz silenciada volta a encontrar o corpo."
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8 }}
-              className=\"mt-12\"
+              className="mt-12"
             >
               <Button 
-                variant=\"gold\" 
-                size=\"xl\"
-                className=\"rounded-full px-12 h-16 shadow-premium-glow\"
+                variant="gold" 
+                size="xl"
+                className="rounded-full px-12 h-16 shadow-premium-glow"
                 onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
               >
                 Iniciar Estação 1
-                <ArrowRight className=\"ml-3 w-5 h-5\" />
+                <ArrowRight className="ml-3 w-5 h-5" />
               </Button>
             </motion.div>
           </ResponsiveContainer>
         </section>
 
         {/* 2. ÁUDIO E CARTA CONSOLIDADOS */}
-        <section className=\"py-20 px-6 border-y border-white/5 bg-black/20\">
-          <ResponsiveContainer size=\"narrow\" className=\"text-center space-y-12\">
-            <p className=\"text-lg text-white/50 leading-relaxed italic font-serif\">
-              \"Este é um retorno ao que foi silenciado em você. Deixe a pressa na entrada.\"
+        <section className="py-20 px-6 border-y border-white/5 bg-black/20">
+          <ResponsiveContainer size="narrow" className="text-center space-y-12">
+            <p className="text-lg text-white/50 leading-relaxed italic font-serif">
+              "Este é um retorno ao que foi silenciado em você. Deixe a pressa na entrada."
             </p>
             {audioUrl && (
-              <div className=\"max-w-md mx-auto\">
-                <EscutaPremium audioUrl={audioUrl} titulo=\"A Voz da Floresta\" tipo=\"Entrada\" className=\"bg-transparent border-none p-0\" />
+              <div className="max-w-md mx-auto">
+                <EscutaPremium audioUrl={audioUrl} titulo="A Voz da Floresta" tipo="Entrada" className="bg-transparent border-none p-0" />
               </div>
             )}
           </ResponsiveContainer>

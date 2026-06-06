@@ -80,22 +80,22 @@ export const PortaInicialHero: React.FC<PortaInicialHeroProps> = ({ portaNome, p
         <DoorOpen className="w-8 h-8 text-gold" />
       </div>
 
-      <div className=\"space-y-4\">
-        <h3 className=\"text-xs uppercase tracking-[0.3em] text-gold/40 font-bold\">Próximo Passo</h3>
-        <h2 className=\"text-4xl md:text-5xl font-serif text-white italic\">Entrar na Floresta</h2>
+      <div className="space-y-4">
+        <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40 font-bold">Próximo Passo</h3>
+        <h2 className="text-4xl md:text-5xl font-serif text-white italic">Entrar na Floresta</h2>
       </div>
 
-      <div className=\"flex flex-col items-center gap-4 pt-4\">
+      <div className="flex flex-col items-center gap-4 pt-4">
         <Button 
-          variant=\"gold\" 
-          size=\"xl\" 
+          variant="gold" 
+          size="xl" 
           onClick={handleNavigate}
           disabled={isLoading}
-          className=\"group px-16 h-16 text-lg shadow-premium-glow rounded-full\"
+          className="group px-16 h-16 text-lg shadow-premium-glow rounded-full"
         >
-          {isLoading ? <Loader2 className=\"w-4 h-4 animate-spin mr-2\" /> : null}
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
           Continuar Travessia
-          {!isLoading && <ArrowRight className=\"ml-3 w-5 h-5 transition-transform group-hover:translate-x-1\" />}
+          {!isLoading && <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-1" />}
         </Button>
         <button 
           onClick={() => navigate('/clube/rotas')}

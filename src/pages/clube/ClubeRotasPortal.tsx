@@ -71,7 +71,7 @@ export default function ClubeRotasPortal() {
                     </h1>
                     
                     <div className="space-y-6 pt-8">
-                      <p className=\"text-2xl md:text-3xl text-white/80 font-serif italic leading-relaxed max-w-2xl mx-auto\">
+                      <p className="text-2xl md:text-3xl text-white/80 font-serif italic leading-relaxed max-w-2xl mx-auto">
                         Onde leitura se transforma em percepção.
                       </p>
                     </div>
@@ -104,15 +104,15 @@ export default function ClubeRotasPortal() {
           </section>
 
           {/* 2. BLOCO INTRODUTÓRIO EDITORIAL - REDUZIDO */}
-          <section id=\"intro-editorial\" className=\"relative py-20 px-6 bg-black/40 border-y border-white/5\">
-            <ResponsiveContainer size=\"wide\">
+          <section id="intro-editorial" className="relative py-20 px-6 bg-black/40 border-y border-white/5">
+            <ResponsiveContainer size="wide">
               <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                className=\"max-w-3xl mx-auto text-center\"
+                className="max-w-3xl mx-auto text-center"
               >
-                <p className=\"text-2xl md:text-4xl font-serif text-white/90 italic\">
+                <p className="text-2xl md:text-4xl font-serif text-white/90 italic">
                   Sua jornada começa pelo mapa.
                 </p>
               </motion.div>
