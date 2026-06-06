@@ -71,18 +71,9 @@ export default function ClubeRotasPortal() {
                     </h1>
                     
                     <div className="space-y-6 pt-8">
-                      <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                        Uma travessia simbólica para transformar leitura em percepção, prática e método.
+                      <p className="text-2xl md:text-3xl text-white/80 font-serif italic leading-relaxed max-w-2xl mx-auto">
+                        Onde leitura se transforma em percepção.
                       </p>
-                      
-                      <div className="space-y-4 pt-4">
-                        <p className="text-xl md:text-2xl text-white/60 font-serif italic leading-relaxed max-w-2xl mx-auto">
-                          "A Casa não oferece respostas."
-                        </p>
-                        <p className="text-xl md:text-2xl text-gold/60 font-serif italic leading-relaxed max-w-2xl mx-auto">
-                          "Oferece mapas."
-                        </p>
-                      </div>
                     </div>
                   </div>
 
@@ -112,45 +103,18 @@ export default function ClubeRotasPortal() {
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
           </section>
 
-          {/* 2. BLOCO INTRODUTÓRIO EDITORIAL */}
-          <section id="intro-editorial" className="relative py-40 px-6 bg-black/40">
+          {/* 2. BLOCO INTRODUTÓRIO EDITORIAL - REDUZIDO */}
+          <section id="intro-editorial" className="relative py-20 px-6 bg-black/40 border-y border-white/5">
             <ResponsiveContainer size="wide">
               <motion.div 
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 2 }}
-                className="max-w-3xl mx-auto text-center space-y-12"
+                className="max-w-3xl mx-auto text-center"
               >
-                <div className="space-y-8">
-                  <p className="text-xl md:text-2xl text-white/70 leading-relaxed font-light">
-                    Este não é um espaço para consumir conteúdos em sequência.
-                  </p>
-                  <p className="text-4xl md:text-6xl font-serif text-white/90 italic">
-                    É uma Casa viva.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-12">
-                  <div className="space-y-4">
-                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">Território</p>
-                    <p className="text-lg text-white/60 italic font-serif">Cada leitura abre um território.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">CidadELA</p>
-                    <p className="text-lg text-white/60 italic font-serif">Cada rota acende uma parte da CidadELA.</p>
-                  </div>
-                  <div className="space-y-4">
-                    <p className="text-sm uppercase tracking-[0.2em] text-gold/50">Rastros</p>
-                    <p className="text-lg text-white/60 italic font-serif">Cada ferramenta recolhe rastros da sua travessia.</p>
-                  </div>
-                </div>
-
-                <div className="pt-16">
-                  <p className="text-2xl md:text-3xl font-serif text-gold/80 italic leading-relaxed">
-                    Antes de escolher uma rota, a Casa convida você a revelar o seu mapa.
-                  </p>
-                </div>
+                <p className="text-2xl md:text-4xl font-serif text-white/90 italic">
+                  Sua jornada começa pelo mapa.
+                </p>
               </motion.div>
             </ResponsiveContainer>
           </section>
