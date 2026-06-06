@@ -21,7 +21,7 @@ export interface MandalaDistrict {
 
 export interface MandalaDistrictState {
   district_id: string;
-  state: 'inativo' | 'ativo' | 'integrado';
+  state: 'inativo' | 'ativo' | 'integrado' | 'adormecido';
   sessions_count: number;
   last_session_at: string | null;
 }
@@ -150,6 +150,16 @@ const STATE_STYLES = {
     building: 'rgba(74,178,107,0.20)',
     wall: 'rgba(107,196,143,0.70)',
     accent: '#6bc48f',
+  },
+  adormecido: {
+    fill: 'rgba(100,100,100,0.05)',
+    stroke: 'rgba(150,150,150,0.20)',
+    icon: 'rgba(150,150,150,0.30)',
+    text: 'rgba(150,150,150,0.40)',
+    glow: 'transparent',
+    building: 'rgba(100,100,100,0.05)',
+    wall: 'rgba(150,150,150,0.15)',
+    accent: 'rgba(150,150,150,0.15)',
   },
 };
 
