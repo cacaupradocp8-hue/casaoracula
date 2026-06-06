@@ -114,16 +114,31 @@ export function EstacaoHero({
               <PawPrint className="w-4 h-4 mr-2 group-hover:animate-bounce" /> Iniciar Travessia
             </Button>
             
-            <div className="flex items-center gap-4 px-8 py-4 rounded-2xl border border-gold/20 bg-gold/5 backdrop-blur-xl shadow-premium-glow relative group/estacao">
-              <div className="absolute -inset-0.5 bg-gold/20 rounded-2xl blur opacity-0 group-hover/estacao:opacity-100 transition duration-500" />
-              <div className="w-2 h-2 rounded-full bg-gold shadow-[0_0_12px_rgba(212,175,55,1)] animate-pulse relative z-10" />
-              <div className="flex flex-col relative z-10">
-                <span className="text-[10px] tracking-[0.3em] uppercase text-gold font-black leading-none mb-1">
-                  Estação Ativa
-                </span>
-                <span className="text-xl font-serif italic text-white/90 leading-none">
-                  {estacaoNumero} <span className="text-white/30 text-sm not-italic ml-1">de 6</span>
-                </span>
+            <div className="flex items-center gap-4 px-8 py-5 rounded-[2rem] border border-gold/30 bg-gold/5 backdrop-blur-2xl shadow-premium-glow relative group/estacao overflow-hidden">
+              {/* Animated Inner Shine */}
+              <div className="absolute -inset-x-full inset-y-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent skew-x-[-30deg] animate-[shimmer_4s_infinite] pointer-events-none" />
+              
+              <div className="absolute -inset-1 bg-gold/10 rounded-[2rem] blur-xl opacity-0 group-hover/estacao:opacity-100 transition duration-700" />
+              
+              <div className="relative flex items-center gap-4 z-10">
+                <div className="relative">
+                  <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_15px_rgba(212,175,55,1)] animate-pulse" />
+                  <div className="absolute inset-0 rounded-full bg-gold animate-ping opacity-20" />
+                </div>
+                
+                <div className="flex flex-col">
+                  <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-black leading-none mb-1.5">
+                    Estação Ativa
+                  </span>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-3xl font-serif italic text-white leading-none">
+                      {estacaoNumero}
+                    </span>
+                    <span className="text-white/30 text-[10px] uppercase tracking-widest font-bold">
+                      de 6
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

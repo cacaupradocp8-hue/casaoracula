@@ -127,6 +127,11 @@ export default function ClubeRotaPremium() {
             <AtivoAgoraBloco />
           </section>
 
+          {/* 4. CAMINHO DA ESTAÇÃO */}
+          <Section id="caminho-estacao" kicker="Travessia" titulo="Caminho da Estação">
+            <EstacaoCaminhoTrail />
+          </Section>
+
           {/* 3. TERRITÓRIOS ATIVADOS */}
           {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
             <Section id="territorios-cidadela" kicker="Expansão da CidadELA" titulo="Territórios ativados">
@@ -135,11 +140,6 @@ export default function ClubeRotaPremium() {
               />
             </Section>
           )}
-
-          {/* 4. CAMINHO DA ESTAÇÃO */}
-          <Section kicker="Travessia" titulo="Caminho da Estação">
-            <EstacaoCaminhoTrail />
-          </Section>
 
           {/* FRASE TRAVESSIA 1 (Opcional, mantida se houver no metadado) */}
           {ponto.metadata?.frases_travessia?.[0] && (
