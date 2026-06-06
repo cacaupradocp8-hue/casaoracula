@@ -16,8 +16,9 @@ import {
   Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
   BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
   Cog, Users, Calendar, Sparkles, Map, Clock, Eye, Crown, ArrowLeftRight,
-  Headphones, FlaskConical, MessageCircle,
+  Headphones, FlaskConical, MessageCircle, Star,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
