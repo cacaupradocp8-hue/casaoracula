@@ -36,12 +36,12 @@ export function EstacaoHero({
         <img 
           src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
           alt="" 
-          className="w-full h-full object-cover opacity-40 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
+          className="w-full h-full object-cover opacity-80 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
         />
         {/* Cinematic Vignette and Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#010816] via-[#010816]/95 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/80" />
-        <div className="absolute inset-0 bg-[#010816]/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#010816]/90 via-[#010816]/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/40" />
+        <div className="absolute inset-0 bg-[#010816]/10" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-12">
@@ -113,34 +113,6 @@ export function EstacaoHero({
             >
               <PawPrint className="w-4 h-4 mr-2 group-hover:animate-bounce" /> Iniciar Travessia
             </Button>
-            
-            <div className="flex items-center gap-4 px-8 py-5 rounded-[2rem] border border-gold/30 bg-gold/5 backdrop-blur-2xl shadow-premium-glow relative group/estacao overflow-hidden">
-              {/* Animated Inner Shine */}
-              <div className="absolute -inset-x-full inset-y-0 bg-gradient-to-r from-transparent via-gold/10 to-transparent skew-x-[-30deg] animate-[shimmer_4s_infinite] pointer-events-none" />
-              
-              <div className="absolute -inset-1 bg-gold/10 rounded-[2rem] blur-xl opacity-0 group-hover/estacao:opacity-100 transition duration-700" />
-              
-              <div className="relative flex items-center gap-4 z-10">
-                <div className="relative">
-                  <div className="w-2.5 h-2.5 rounded-full bg-gold shadow-[0_0_15px_rgba(212,175,55,1)] animate-pulse" />
-                  <div className="absolute inset-0 rounded-full bg-gold animate-ping opacity-20" />
-                </div>
-                
-                <div className="flex flex-col">
-                  <span className="text-[10px] tracking-[0.4em] uppercase text-gold/80 font-black leading-none mb-1.5">
-                    Estação Ativa
-                  </span>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-3xl font-serif italic text-white leading-none">
-                      {estacaoNumero}
-                    </span>
-                    <span className="text-white/30 text-[10px] uppercase tracking-widest font-bold">
-                      de 6
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </motion.div>
 
