@@ -89,6 +89,8 @@ export function EstacaoHero({
           <nav className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-white/40 font-bold mb-4">
             <span className="hover:text-gold/60 transition-colors cursor-default" onClick={() => window.location.href = '/clube/rota/rota-dos-lobos'}>Rota dos Lobos</span>
             <ChevronRight className="w-2.5 h-2.5 opacity-40" />
+            <span className="text-white/40">Travessia</span>
+            <ChevronRight className="w-2.5 h-2.5 opacity-40" />
             <span className="text-gold/80">{titulo}</span>
           </nav>
 
