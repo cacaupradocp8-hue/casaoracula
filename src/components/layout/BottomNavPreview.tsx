@@ -1,21 +1,35 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, BookOpen, Wrench, Flower2, GraduationCap } from 'lucide-react';
+import { Home, BookOpen, Wrench, Flower2, GraduationCap, MessageCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 
-const NAV_ITEMS = [
-  { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
-  { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube/rotas' },
-  { key: 'ferramentas', icon: Wrench, label: 'Práticas', path: '/ferramentas' },
-  { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
-  { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
-];
 
 export function BottomNavPreview() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
+  const { user } = useAuth();
+  const isFounder = !!user?.founder_beta;
 
+  const NAV_ITEMS = isFounder ? [
+    { key: 'inicio', icon: Home, label: 'CidadELA', path: '/dashboard-membro' },
+    { key: 'clube', icon: BookOpen, label: 'Rota Lobos', path: '/clube/rotas/rota-dos-lobos' },
+    { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
+    { key: 'feedback', icon: MessageCircle, label: 'Feedback', path: '/clube/founder-feedback' },
+  ] : [
+    { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
+    { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube/rotas' },
+    { key: 'ferramentas', icon: Wrench, label: 'Práticas', path: '/ferramentas' },
+    { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
+    { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
+  ];
+
+  const [mounted, setMounted] = useState(false);
+  const [navItems, setNavItems] = useState(NAV_ITEMS);
+
+  useEffect(() => {
+    setNavItems(NAV_ITEMS);
+    setMounted(true);
+  }, [isFounder]);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -37,8 +51,9 @@ export function BottomNavPreview() {
       )}>
         {/* Indicador animado */}
         <motion.div
-          className="absolute -top-[22px] w-[20%] h-[64px] flex items-center justify-center pointer-events-none"
-          animate={{ left: `${currentIndex * 20}%` }}
+          className="absolute -top-[22px] h-[64px] flex items-center justify-center pointer-events-none"
+          style={{ width: `${100 / NAV_ITEMS.length}%` }}
+          animate={{ left: `${currentIndex * (100 / NAV_ITEMS.length)}%` }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         >
           <div className="w-14 h-14 rounded-full bg-primary border-[5px] border-background shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />

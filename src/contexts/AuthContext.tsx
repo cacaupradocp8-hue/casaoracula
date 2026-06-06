@@ -14,6 +14,7 @@ interface User {
   avatarUrl?: string;
   isMatriculada?: boolean;
   matriculadaAt?: Date;
+  founder_beta?: boolean;
 }
 
 interface AuthContextType {
@@ -29,6 +30,7 @@ interface AuthContextType {
   canCreateCase: (currentCaseCount: number) => boolean;
   refreshUserPortal: () => Promise<void>;
   refreshMatricula: () => Promise<void>;
+  updateUserMetadata: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -120,6 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           avatarUrl: profile.avatar_url || undefined,
           isMatriculada: !!matricula,
           matriculadaAt: matricula?.data_inicio ? parseDateSafe(matricula.data_inicio, 'auth-context.matricula.data_inicio') : undefined,
+          founder_beta: !!profile.founder_beta,
         });
 
         setAuthError(null);
@@ -416,6 +419,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return currentCaseCount < limit;
   };
 
+  const updateUserMetadata = (updates: Partial<User>) => {
+    setUser(prev => prev ? { ...prev, ...updates } : null);
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -430,6 +437,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       canCreateCase,
       refreshUserPortal,
       refreshMatricula,
+      updateUserMetadata,
     }}>
       {children}
     </AuthContext.Provider>

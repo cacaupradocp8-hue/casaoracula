@@ -16,14 +16,23 @@ import {
   Home, Settings, LogOut, Menu, X, User, LogIn, RefreshCw,
   BookOpen, Compass, Wrench, Flower2, GraduationCap, ChevronDown,
   Cog, Users, Calendar, Sparkles, Map, Clock, Eye, Crown, ArrowLeftRight,
-  Headphones, FlaskConical,
+  Headphones, FlaskConical, MessageCircle, Star,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
   DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub,
   DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
+
+// ── FOUNDER BETA ─────────────────────────────────────────────────────────────
+const founderMenuGroups = () => [
+  { key: 'inicio', label: 'CidadELA', icon: Home, path: '/dashboard-membro', subitems: [] },
+  { key: 'clube', label: 'Rota dos Lobos', icon: BookOpen, path: '/clube/rotas/rota-dos-lobos', subitems: [] },
+  { key: 'jardim', label: 'Jardim', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+  { key: 'feedback', label: 'Feedback', icon: MessageCircle, label_full: 'Feedback Founder', path: '/clube/founder-feedback', subitems: [] },
+];
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
@@ -93,7 +102,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
 ];
 
 export function Navigation() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserMetadata } = useAuth();
   const { domain, toggleDomain } = useAppDomain();
   const { getSetting } = useAppSettings();
   const location = useLocation();
@@ -113,6 +122,7 @@ export function Navigation() {
 
   // Profile-based menu selection
   const getMenuForProfile = () => {
+    if (user?.founder_beta) return founderMenuGroups();
     if (activeDomain === 'profissional') return profissionalMenuGroups(isAdmin, isMentorada);
     if (isAdmin || hasOracula) return alunaMenuGroups(); // Aluna de formação
     const isAssinante = user ? canAccessFeature(user.portal, 'assinante') : false;
@@ -305,6 +315,19 @@ export function Navigation() {
                         <DropdownMenuItem onClick={() => navigate('/admin')} className="cursor-pointer">
                           <Settings className="w-4 h-4 mr-2" />
                           Painel Admin
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator className="bg-primary/10" />
+                        
+                        <DropdownMenuItem 
+                          onClick={() => {
+                            const newValue = !user?.founder_beta;
+                            user && updateUserMetadata({ founder_beta: newValue });
+                            toast.success(newValue ? 'Visualizando como Fundadora' : 'Visualizando como Admin');
+                          }} 
+                          className="cursor-pointer font-bold text-gold"
+                        >
+                          <Star className="w-4 h-4 mr-2" />
+                          {user?.founder_beta ? 'Voltar ao Modo Admin' : 'Ver como Fundadora'}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-primary/10" />
                       </>

@@ -13,6 +13,9 @@ const BibliotecaTravessiaDetalhe = React.lazy(() => import("@/pages/BibliotecaTr
 const BibliotecaTravessiasFamilia = React.lazy(() => import("@/pages/BibliotecaTravessiasFamilia"));
 const MinhaJornada = React.lazy(() => import("@/pages/MinhaJornada"));
 const CidadelaPage = React.lazy(() => import("@/pages/CidadelaPage"));
+const CartografiaFounderExpress = React.lazy(() => import("@/components/clube/CartografiaFounderExpress").then(m => ({ default: m.CartografiaFounderExpress })));
+const ClubeFeedbackFounder = React.lazy(() => import("@/pages/clube/ClubeFeedbackFounder"));
+const CidadelaResultadoFounder = React.lazy(() => import("@/pages/clube/CidadelaResultadoFounder"));
 
 
 /**
@@ -33,8 +36,11 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       <Route path="/travessia/:slug" element={<ProtectedRoute><TravessiaDetalhe /></ProtectedRoute>} />
       
       {/* Clube & Rotas */}
-      <Route path="/clube" element={<ProtectedRoute minPortal="assinante"><Navigate to="/clube/rotas" replace /></ProtectedRoute>} />
+      <Route path="/clube" element={<ProtectedRoute minPortal="assinante"><ClubeRotasPortal /></ProtectedRoute>} />
       <Route path="/clube/rotas" element={<ProtectedRoute minPortal="assinante"><ClubeRotasPortal /></ProtectedRoute>} />
+      <Route path="/clube/primeira-cartografia" element={<ProtectedRoute minPortal="assinante"><CartografiaFounderExpress /></ProtectedRoute>} />
+      <Route path="/clube/cidadela/resultado" element={<ProtectedRoute minPortal="assinante"><CidadelaResultadoFounder /></ProtectedRoute>} />
+      <Route path="/clube/founder-feedback" element={<ProtectedRoute minPortal="assinante"><ClubeFeedbackFounder /></ProtectedRoute>} />
       <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="visitante"><RotaDosLobos /></ProtectedRoute>} />
       <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
       <Route path="/clube/acervo" element={<ProtectedRoute minPortal="assinante"><ClubeAcervo /></ProtectedRoute>} />
