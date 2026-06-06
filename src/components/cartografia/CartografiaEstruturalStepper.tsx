@@ -130,7 +130,7 @@ export function CartografiaEstruturalStepper() {
           </motion.div>
           <div className="space-y-2">
             <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
-            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">Primeira Cartografia</p>
           </div>
           <div className="max-w-2xl mx-auto pt-6 px-4">
             <p className="text-foreground/80 italic text-base leading-relaxed">
@@ -387,7 +387,7 @@ export function CartografiaEstruturalStepper() {
         {step === 'objetivas' && (
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
-              <h2 className="text-2xl font-display text-foreground">Modo de Habitar</h2>
+              <h2 className="text-2xl font-display text-foreground">Primeira Cartografia</h2>
               <p className="text-sm text-muted-foreground">Onde sua vida interior está concentrando energia neste momento?</p>
             </header>
             
@@ -407,14 +407,15 @@ export function CartografiaEstruturalStepper() {
                     ].map((opt) => (
                       <button
                         key={opt.id}
-                        onClick={() => updateObjetiva('p1', opt.id === 'torres' ? 5 : 3)} // Simplified logic for demo
+                        onClick={() => updateObjetiva('p1', opt.id)}
                         className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p1'] === (opt.id === 'torres' ? 5 : 3)
+                          respostas.objetivas['p1'] === opt.id
                             ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        {opt.text}
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
                       </button>
                     ))}
                   </div>
@@ -434,14 +435,15 @@ export function CartografiaEstruturalStepper() {
                     ].map((opt) => (
                       <button
                         key={opt.id}
-                        onClick={() => updateObjetiva('p2', opt.id === 'torres' ? 5 : 3)}
+                        onClick={() => updateObjetiva('p2', opt.id)}
                         className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p2'] === (opt.id === 'torres' ? 5 : 3)
+                          respostas.objetivas['p2'] === opt.id
                             ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        {opt.text}
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
                       </button>
                     ))}
                   </div>
@@ -461,14 +463,15 @@ export function CartografiaEstruturalStepper() {
                     ].map((opt) => (
                       <button
                         key={opt.id}
-                        onClick={() => updateObjetiva('p3', opt.id === 'conselho_interior' ? 5 : 3)}
+                        onClick={() => updateObjetiva('p3', opt.id)}
                         className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p3'] === (opt.id === 'conselho_interior' ? 5 : 3)
+                          respostas.objetivas['p3'] === opt.id
                             ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        {opt.text}
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
                       </button>
                     ))}
                   </div>
@@ -485,7 +488,7 @@ export function CartografiaEstruturalStepper() {
                 variant="gold" 
                 disabled={Object.keys(respostas.objetivas).length < 3}
               >
-                Revelar minha CidadELA <ArrowRight className="w-4 h-4 ml-2" />
+                Avançar para Crenças <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>

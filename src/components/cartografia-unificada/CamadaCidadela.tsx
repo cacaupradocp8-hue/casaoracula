@@ -74,17 +74,24 @@ export function CamadaCidadela({ data, cor, corHex, atmosfera, simbolo, simboloI
     const states: Record<string, DistrictDisplayState> = {};
     const tensaoSet = new Set((data.distritos_tensao || []).map(d => d.toLowerCase()));
     const ativoSet = new Set((data.distritos_ativos || []).map(d => d.toLowerCase()));
+    
+    // Novas chaves de estado vibracional (se disponíveis no objeto data)
+    const dominanteKey = (data as any).territorio_dominante;
+    const adormecidoKey = (data as any).territorio_adormecido;
+
     Object.values(DISTRITOS_META).forEach(d => {
       const key = d.nome.toLowerCase();
-      if (tensaoSet.has(key)) states[key] = 'em_tensao';
-      else if (ativoSet.has(key)) states[key] = 'ativo';
-    });
-    if (data.distrito_dominante) {
-      const domKey = (data.distrito_dominante || data.distritos_ativos?.[0] || '').toLowerCase();
-      if (!states[domKey] || states[domKey] === 'nao_explorado') {
-        states[domKey] = 'ativo';
+      const rawKey = Object.keys(DISTRITOS_META).find(k => DISTRITOS_META[k].nome.toLowerCase() === key);
+      
+      if (tensaoSet.has(key)) {
+        states[key] = 'em_tensao';
+      } else if (rawKey === adormecidoKey) {
+        states[key] = 'nao_explorado'; // Reduzir opacidade visualmente via state
+      } else if (ativoSet.has(key) || rawKey === dominanteKey) {
+        states[key] = 'ativo';
       }
-    }
+    });
+
     return states;
   }, [data]);
 

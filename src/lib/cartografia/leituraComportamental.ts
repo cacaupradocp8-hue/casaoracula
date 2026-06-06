@@ -69,11 +69,56 @@ const NORMALIZACAO: Record<string, keyof MediasFatores> = {
   porta_do_abalo: 'porta_do_abalo',
 };
 
-export function normalizarMedias(raw: Record<string, number>): MediasFatores {
+export function normalizarMedias(raw: Record<string, any>): MediasFatores {
   const result: Partial<MediasFatores> = {};
+  
+  // Se os valores forem strings (territórios), convertemos para pontuação numérica baseada no mapeamento
+  const isTerritoryMapping = Object.values(raw).some(v => typeof v === 'string');
+  
+  if (isTerritoryMapping) {
+    const scores: Record<keyof MediasFatores, number> = {
+      porta_do_possivel: 0,
+      torre_interna: 0,
+      campo_do_outro: 0,
+      voz_no_mundo: 0,
+      porta_do_abalo: 0
+    };
+    
+    // Mapeamento Território -> Eixo Big Five
+    const TERRITORY_TO_EIXO: Record<string, keyof MediasFatores> = {
+      portao_chegada: 'porta_do_possivel',
+      torres: 'torre_interna',
+      portas: 'porta_do_possivel',
+      labirinto: 'porta_do_abalo',
+      conselho_interior: 'torre_interna',
+      bosque_arquetipos: 'campo_do_outro',
+      jardim_heroina: 'campo_do_outro',
+      casa_sonhos: 'porta_do_abalo',
+      espelho_vinculos: 'campo_do_outro',
+      praca_abalo: 'porta_do_abalo',
+      forja: 'voz_no_mundo',
+      portal_renascimento: 'porta_do_possivel',
+      coracao_cidadela: 'torre_interna'
+    };
+
+    Object.values(raw).forEach(territorio => {
+      const eixo = TERRITORY_TO_EIXO[territorio as string];
+      if (eixo) scores[eixo] += 1;
+    });
+
+    // Normalizar para escala 1-5 (assumindo ~10 perguntas)
+    return {
+      porta_do_possivel: Math.min(5, 1 + scores.porta_do_possivel * 1.5),
+      torre_interna: Math.min(5, 1 + scores.torre_interna * 1.5),
+      campo_do_outro: Math.min(5, 1 + scores.campo_do_outro * 1.5),
+      voz_no_mundo: Math.min(5, 1 + scores.voz_no_mundo * 1.5),
+      porta_do_abalo: Math.min(5, 1 + scores.porta_do_abalo * 1.5),
+    };
+  }
+
   for (const [key, val] of Object.entries(raw)) {
     const norm = NORMALIZACAO[key];
-    if (norm) result[norm] = val;
+    if (norm) result[norm] = Number(val);
   }
   return {
     porta_do_possivel: result.porta_do_possivel ?? 3,
