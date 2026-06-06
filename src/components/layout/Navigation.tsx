@@ -34,15 +34,10 @@ const visitanteMenuGroups = () => [
 
 // ── ASSINANTE DO CLUBE ──────────────────────────────────────────────────────
 const assinanteMenuGroups = () => [
-  { key: 'inicio', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
-  { key: 'cidadela', label: 'Cidadela', icon: Map, path: '/cidadela', subitems: [] },
-  { key: 'clube', label: 'Rotas da Casa', icon: BookOpen, path: '/clube/rotas', subitems: [] },
-
-
-  { key: 'camara', label: 'Câmara do Sussurro', icon: Headphones, path: '/clube/treinamento', subitems: [] },
-  { key: 'ferramentas', label: 'Práticas de Integração', icon: Wrench, path: '/ferramentas', subitems: [] },
+  { key: 'clube', label: 'Clube', icon: BookOpen, path: '/clube/rotas', subitems: [] },
+  { key: 'cidadela', label: 'Cartografia', icon: Map, path: '/cidadela', subitems: [] },
   { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
-  { key: 'formacao', label: 'Formação Orácula', icon: GraduationCap, path: '/cursos', subitems: [] },
+  { key: 'dashboard', label: 'Dashboard', icon: Home, path: '/dashboard-membro', subitems: [] },
 ];
 
 // ── ALUNA DE FORMAÇÃO ───────────────────────────────────────────────────────

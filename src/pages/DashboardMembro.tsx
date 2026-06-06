@@ -74,21 +74,54 @@ export default function DashboardMembro() {
 
         {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA (VERSÃO ROTAS) */}
         {bussola.temCartografia ? (
-          <div className="space-y-12">
+          <div className="space-y-20">
+            <div className="text-center space-y-6 pt-12">
+               <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight">Sua <span className="text-gold italic">CidadELA</span> está viva</h1>
+               <p className="text-xl md:text-2xl text-white/50 font-serif italic max-w-2xl mx-auto">
+                 Este é o centro da sua travessia. Aqui a Casa reúne os rastros que você deixou nas rotas, nos Jardins e nas ferramentas.
+               </p>
+            </div>
+
             <CidadelaRotasView bussola={bussola} />
-            <div className="max-w-4xl mx-auto space-y-8">
-              <h2 className="text-2xl font-display text-center">Sua Travessia: Rota dos Lobos</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 {/* Reutilizando lógica de progresso simples ou botão de continuar */}
-                 <Button 
-                   variant="gold" 
-                   size="lg" 
-                   className="w-full h-16 shadow-premium-glow"
-                   onClick={() => navigate('/clube/rotas/lobos')}
-                 >
-                   Continuar Travessia
-                   <ArrowRight className="ml-2 w-5 h-5" />
-                 </Button>
+
+            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 pb-24">
+              <div className="space-y-8">
+                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/60 font-bold">Próximo passo recomendado</h3>
+                <div className="p-10 rounded-[3rem] border border-white/10 bg-white/[0.02] space-y-8 group hover:border-gold/20 transition-all duration-700">
+                   <div className="space-y-4">
+                     <h4 className="text-3xl font-serif text-white group-hover:text-gold transition-colors">Rota dos Lobos</h4>
+                     <p className="text-lg text-white/50 italic font-serif">O retorno da mulher que sabe. Sua cartografia revelou este caminho.</p>
+                   </div>
+                   <Button 
+                     variant="gold" 
+                     size="xl" 
+                     className="w-full h-16 shadow-premium-glow rounded-full"
+                     onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                   >
+                     Continuar Travessia
+                     <ArrowRight className="ml-2 w-5 h-5" />
+                   </Button>
+                </div>
+              </div>
+
+              <div className="space-y-8">
+                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/60 font-bold">Rastros nos Jardins</h3>
+                <div className="grid gap-4">
+                   <button 
+                     onClick={() => navigate('/jardim-da-psique')}
+                     className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all"
+                   >
+                     <p className="text-[10px] uppercase tracking-widest text-gold/40 mb-2">Jardim da Psique</p>
+                     <p className="text-white/60 italic font-serif">Ver últimos registros do inconsciente...</p>
+                   </button>
+                   <button 
+                     onClick={() => navigate('/casa-das-maquinas/jardim-oficio')}
+                     className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all"
+                   >
+                     <p className="text-[10px] uppercase tracking-widest text-gold/40 mb-2">Jardim do Ofício</p>
+                     <p className="text-white/60 italic font-serif">Ver últimos rastros da prática profissional...</p>
+                   </button>
+                </div>
               </div>
             </div>
           </div>

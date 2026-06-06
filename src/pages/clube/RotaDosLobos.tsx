@@ -57,6 +57,33 @@ export default function RotaDosLobos() {
           </ResponsiveContainer>
         </section>
 
+        {/* 1.5 CONTEXTUAL BANNER - PÓS CIDADELA */}
+        <section className="py-12 bg-gold/5 border-y border-gold/10 px-6">
+          <ResponsiveContainer size="wide">
+            <motion.div 
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="flex flex-col md:flex-row items-center justify-between gap-8"
+            >
+              <div className="space-y-2">
+                <h4 className="text-sm uppercase tracking-[0.2em] text-gold font-bold">Você chegou pela sua CidadELA</h4>
+                <p className="text-white/70 italic font-serif text-lg md:text-xl max-w-3xl">
+                  Sua cartografia apontou esta travessia como próximo passo. A Rota dos Lobos é a primeira floresta da Casa: um caminho para reconhecer silenciamentos e retorno à própria escuta.
+                </p>
+              </div>
+              <Button 
+                variant="gold" 
+                size="lg"
+                className="rounded-full px-8 h-14 whitespace-nowrap"
+                onClick={() => { const firstSlug = lobosEstacoes[0]?.slug; if (firstSlug) navigate(`/clube/rota/${firstSlug}`); }}
+              >
+                Iniciar Travessia
+              </Button>
+            </motion.div>
+          </ResponsiveContainer>
+        </section>
+
         {/* 2. ÁUDIO DE ENTRADA */}
         {audioUrl && (
           <section className="py-24 bg-black/40 border-y border-white/5">
