@@ -247,7 +247,15 @@ function ProtectedRoute({ children, minPortal = "visitante" }: { children: React
   if (result.status === 'loading') return <AuthLoading />;
   if (result.status === 'error') return <AppRouteError title="Erro na autenticação" message={result.errorMessage} />;
   if (result.status === 'redirect') return <Navigate to={result.to} replace />;
-  if (result.status === 'locked-visitor') return <LockedForVisitor />;
+  const { user } = useAuth();
+  const isFounder = !!user?.founder_beta;
+
+  if (result.status === 'locked-visitor') {
+    if (isFounder) {
+       return <Navigate to="/dashboard-membro" replace />;
+    }
+    return <LockedForVisitor />;
+  }
   return <>{children}</>;
 }
 
