@@ -50,7 +50,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
             onClick={onEnter}
             className="px-12 py-6 text-lg tracking-widest uppercase shadow-premium-glow"
           >
-            Entrar na CidadELA
+            Desvelar a CidaDELA Interior
           </Button>
         </motion.div>
       </div>
