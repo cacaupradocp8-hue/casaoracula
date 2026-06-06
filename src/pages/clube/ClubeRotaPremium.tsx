@@ -332,37 +332,60 @@ export default function ClubeRotaPremium() {
             const textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
             return (
               <Section id="fechamento" icon={Check} kicker="O Portal Se Fecha" titulo="Travessia Concluída">
-                {ponto.metadata?.fechamento?.imagem_fechamento && (
-                  <div className="max-w-4xl mx-auto mb-12 rounded-[2.5rem] overflow-hidden border border-white/5 shadow-2xl">
-                    <img src={ponto.metadata.fechamento.imagem_fechamento} alt="" className="w-full h-64 md:h-96 object-cover opacity-60 mix-blend-luminosity hover:opacity-100 transition-opacity duration-1000" />
-                  </div>
-                )}
-                <div className="max-w-2xl mx-auto text-center space-y-8">
-                  {textoRaw && (
-                    <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed">{textoRaw}</p>
-                  )}
-                  <div className="flex flex-col items-center gap-6">
-                    {ponto.estado !== 'completed' ? (
-                      <Button
-                        variant="gold"
-                        className="rounded-full h-16 px-12 text-lg font-bold shadow-glow text-midnight"
-                        onClick={() => concluirPonto.mutate(ponto.id)}
-                        disabled={concluirPonto.isPending}
-                      >
-                        {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
-                      </Button>
-                    ) : (
-                      <Badge variant="outline" className="border-gold/40 text-gold bg-gold/5 py-2 px-4 rounded-full">
-                        Estação Concluída
-                      </Badge>
-                    )}
-                    <Button
-                      variant="outline"
-                      className="rounded-full h-14 px-10 text-sm uppercase tracking-wider border-white/10 text-white/60 hover:text-white"
-                      onClick={() => navigate('/clube')}
+                <div className="max-w-5xl mx-auto space-y-16">
+                  {ponto.metadata?.fechamento?.imagem_fechamento && (
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 1.05 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 1.5 }}
+                      className="relative rounded-[3rem] overflow-hidden border border-white/10 shadow-3xl group"
                     >
-                      Voltar ao Mapa das Rotas
-                    </Button>
+                      <div className="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent z-10" />
+                      <img 
+                        src={ponto.metadata.fechamento.imagem_fechamento} 
+                        alt="" 
+                        className="w-full h-[400px] md:h-[600px] object-cover opacity-60 mix-blend-luminosity group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000" 
+                      />
+                    </motion.div>
+                  )}
+                  
+                  <div className="max-w-3xl mx-auto text-center space-y-12">
+                    {textoRaw && (
+                      <p className="text-2xl md:text-4xl text-white/80 font-display italic leading-snug tracking-tight">
+                        {textoRaw}
+                      </p>
+                    )}
+                    
+                    <div className="flex flex-col items-center gap-8">
+                      {ponto.estado !== 'completed' ? (
+                        <Button
+                          variant="gold"
+                          className="rounded-full h-20 px-16 text-xl font-bold shadow-glow text-midnight hover:scale-105 transition-transform"
+                          onClick={() => concluirPonto.mutate(ponto.id)}
+                          disabled={concluirPonto.isPending}
+                        >
+                          {concluirPonto.isPending ? (
+                            <Loader2 className="w-6 h-6 animate-spin mr-3" />
+                          ) : (
+                            <Check className="w-6 h-6 mr-3" />
+                          )}
+                          {concluirPonto.isPending ? 'Registrando...' : 'Selo de Conclusão'}
+                        </Button>
+                      ) : (
+                        <div className="inline-flex items-center gap-4 px-8 py-4 rounded-full border border-gold/40 text-gold bg-gold/5 shadow-[0_0_30px_rgba(196,165,74,0.1)]">
+                          <CheckCircle2 className="w-6 h-6" />
+                          <span className="font-bold uppercase tracking-[0.2em] text-sm">Estação Concluída</span>
+                        </div>
+                      )}
+                      
+                      <Button
+                        variant="ghost"
+                        className="rounded-full h-14 px-10 text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white hover:bg-white/5 transition-all"
+                        onClick={() => navigate('/clube')}
+                      >
+                        Voltar ao Mapa das Rotas
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </Section>
