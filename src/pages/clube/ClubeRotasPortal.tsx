@@ -70,9 +70,14 @@ export default function ClubeRotasPortal() {
                       {getSetting('portal_rotas_hero_title_line1', 'Casa')} <span className="text-gold italic">{getSetting('portal_rotas_hero_title_line2', 'Orácula')}</span>
                     </h1>
                     
-                    <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
-                      "{getSetting('portal_rotas_hero_quote', 'Toda travessia começa quando algo dentro pede passagem.')}"
-                    </p>
+                    <div className="space-y-4">
+                      <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
+                        "{getSetting('portal_rotas_hero_quote_line1', 'A Casa não oferece respostas.')}"
+                      </p>
+                      <p className="text-2xl md:text-4xl text-gold/80 font-serif italic leading-relaxed max-w-3xl mx-auto">
+                        "{getSetting('portal_rotas_hero_quote_line2', 'Oferece mapas.')}"
+                      </p>
+                    </div>
                   </div>
 
                   {/* Botão CTA removido para limpeza da página */}

@@ -43,7 +43,7 @@ export default function RotaDosLobos() {
         {/* 1. HERO - CINEMATOGRÁFICO */}
         <section className="relative min-h-[80vh] flex flex-col justify-center pt-20 pb-12 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
-             <img src={getSetting('rota_dos_lobos_hero_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80")} className="w-full h-full object-cover grayscale opacity-20" alt="Floresta" />
+             <img src={getSetting('rota_dos_lobos_hero_image', "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80")} className="w-full h-full object-cover grayscale opacity-40 mix-blend-luminosity" alt="Floresta" />
              <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent" />
           </div>
           <ResponsiveContainer size="wide" className="px-6">
