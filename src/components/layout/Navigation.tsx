@@ -102,7 +102,7 @@ const profissionalMenuGroups = (isAdmin: boolean, isMentorada: boolean) => [
 ];
 
 export function Navigation() {
-  const { user, logout } = useAuth();
+  const { user, logout, updateUserMetadata } = useAuth();
   const { domain, toggleDomain } = useAppDomain();
   const { getSetting } = useAppSettings();
   const location = useLocation();
