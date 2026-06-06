@@ -14,6 +14,22 @@ const NAV_ITEMS = [
 ];
 
 export function BottomNavPreview() {
+  const { user } = useAuth();
+  const isFounder = !!user?.founder_beta;
+
+  const NAV_ITEMS = isFounder ? [
+    { key: 'inicio', icon: Home, label: 'CidadELA', path: '/dashboard-membro' },
+    { key: 'clube', icon: BookOpen, label: 'Rota Lobos', path: '/clube/rotas/rota-dos-lobos' },
+    { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
+    { key: 'feedback', icon: MessageCircle, label: 'Feedback', path: '/clube/founder-feedback' },
+  ] : [
+    { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
+    { key: 'clube', icon: BookOpen, label: 'Rotas', path: '/clube/rotas' },
+    { key: 'ferramentas', icon: Wrench, label: 'Práticas', path: '/ferramentas' },
+    { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
+    { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
+  ];
+
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
 
