@@ -41,7 +41,7 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       <Route path="/clube/primeira-cartografia" element={<ProtectedRoute minPortal="assinante"><CartografiaFounderExpress /></ProtectedRoute>} />
       <Route path="/clube/cidadela/resultado" element={<ProtectedRoute minPortal="assinante"><CidadelaResultadoFounder /></ProtectedRoute>} />
       <Route path="/clube/founder-feedback" element={<ProtectedRoute minPortal="assinante"><ClubeFeedbackFounder /></ProtectedRoute>} />
-      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="visitante"><RotaDosLobos /></ProtectedRoute>} />
+      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="assinante"><RotaDosLobos /></ProtectedRoute>} />
       <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
       <Route path="/clube/acervo" element={<ProtectedRoute minPortal="assinante"><ClubeAcervo /></ProtectedRoute>} />
       
