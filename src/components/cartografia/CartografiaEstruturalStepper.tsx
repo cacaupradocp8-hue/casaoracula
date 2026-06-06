@@ -346,16 +346,17 @@ export function CartografiaEstruturalStepper() {
             <Card className="glass border-gold/10">
               <CardContent className="pt-6 space-y-12">
                 {/* Pergunta 1 */}
+                {/* Pergunta 1 */}
                 <div className="space-y-6">
                   <p className="text-sm font-medium text-foreground leading-relaxed">
-                    1. Quando algo começa a mudar na sua vida, sua primeira reação costuma ser:
+                    1. Quando você percebe que um ciclo está chegando ao fim e algo novo precisa nascer, qual é o seu primeiro movimento?
                   </p>
                   <div className="grid grid-cols-1 gap-3">
                     {[
-                      { id: 'torres', text: 'Tentar organizar tudo para não perder o controle.', territory: 'Torres' },
-                      { id: 'conselho_interior', text: 'Buscar entender o que isso significa antes de agir.', territory: 'Conselho Interior' },
-                      { id: 'espelho_vinculos', text: 'Sentir medo de desagradar ou romper vínculos.', territory: 'Espelho dos Vínculos' },
-                      { id: 'labirinto', text: 'Adiar a decisão até ter certeza.', territory: 'Labirinto' }
+                      { id: 'portao_chegada', text: 'Eu sinto um impulso de agir imediatamente, mesmo sem saber para onde vou.' },
+                      { id: 'torres', text: 'Eu tento organizar tudo o que restou e criar uma estrutura para o que virá.' },
+                      { id: 'labirinto', text: 'Eu me recolho para processar a dúvida e o medo de errar o caminho.' },
+                      { id: 'conselho_interior', text: 'Eu busco silenciar para ouvir o que a minha sabedoria interna diz sobre a mudança.' }
                     ].map((opt) => (
                       <button
                         key={opt.id}
@@ -366,24 +367,23 @@ export function CartografiaEstruturalStepper() {
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                        <span className="block font-medium">{opt.text}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Pergunta 2 */}
-                <div className="space-y-6">
+                <div className="space-y-6 pt-6 border-t border-gold/5">
                   <p className="text-sm font-medium text-foreground leading-relaxed">
-                    2. Quando você percebe que algo já não funciona, tende a:
+                    2. Em momentos de grande pressão externa ou crise, como sua energia se manifesta?
                   </p>
                   <div className="grid grid-cols-1 gap-3">
                     {[
-                      { id: 'torres', text: 'Insistir mais um pouco.', territory: 'Torres' },
-                      { id: 'bosque_arquetipos', text: 'Buscar sinais antes de agir.', territory: 'Bosque dos Arquétipos' },
-                      { id: 'espelho_vinculos', text: 'Sentir culpa por decepcionar alguém.', territory: 'Espelho dos Vínculos' },
-                      { id: 'praca_abalo', text: 'Esperar uma ruptura externa.', territory: 'Praça do Abalo' }
+                      { id: 'praca_abalo', text: 'Eu me sinto paralisada ou sinto que as bases do que eu acreditava foram abaladas.' },
+                      { id: 'forja', text: 'Eu canalizo essa pressão para transformar algo concreto na minha realidade.' },
+                      { id: 'espelho_vinculos', text: 'Eu me preocupo excessivamente com o impacto disso nas minhas relações.' },
+                      { id: 'casa_sonhos', text: 'Eu fujo para o meu mundo interno ou sinto um cansaço profundo e vontade de dormir.' }
                     ].map((opt) => (
                       <button
                         key={opt.id}
@@ -394,24 +394,23 @@ export function CartografiaEstruturalStepper() {
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                        <span className="block font-medium">{opt.text}</span>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 {/* Pergunta 3 */}
-                <div className="space-y-6">
+                <div className="space-y-6 pt-6 border-t border-gold/5">
                   <p className="text-sm font-medium text-foreground leading-relaxed">
-                    3. Quando sente um desejo próprio, normalmente:
+                    3. Qual dessas frases mais ressoa com a sua dificuldade atual?
                   </p>
                   <div className="grid grid-cols-1 gap-3">
                     {[
-                      { id: 'conselho_interior', text: 'Analisa se é viável.', territory: 'Conselho Interior' },
-                      { id: 'portas', text: 'Questiona se tem direito a isso.', territory: 'Portas' },
-                      { id: 'casa_matriz', text: 'Esconde para não incomodar.', territory: 'Casa Matriz' },
-                      { id: 'forja', text: 'Transforma em projeto concreto.', territory: 'A Forja' }
+                      { id: 'portal_renascimento', text: 'Eu sei que preciso deixar algo ir, mas não sei como dar o adeus final.' },
+                      { id: 'bosque_arquetipos', text: 'Eu sinto que perdi o contato com a minha força selvagem e instintiva.' },
+                      { id: 'jardim_arquetipos', text: 'Eu sinto que cuido de todos ao meu redor, mas esqueço de nutrir a mim mesma.' },
+                      { id: 'casa_matriz', text: 'Eu sinto que não tenho um espaço seguro (interno ou externo) para ser quem eu sou.' }
                     ].map((opt) => (
                       <button
                         key={opt.id}
@@ -422,120 +421,7 @@ export function CartografiaEstruturalStepper() {
                             : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
                         }`}
                       >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pergunta 4 */}
-                <div className="space-y-6">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    4. Diante de um impasse emocional profundo, você costuma:
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'labirinto', text: 'Mergulhar no silêncio até que a resposta surja.', territory: 'Labirinto' },
-                      { id: 'jardim_arquetipos', text: 'Buscar inspiração em símbolos ou histórias.', territory: 'Jardim dos Arquétipos' },
-                      { id: 'praca_integracao', text: 'Tentar equilibrar a razão e a emoção.', territory: 'Praça da Integração' },
-                      { id: 'portal_renascimento', text: 'Sentir que algo precisa morrer para o novo nascer.', territory: 'Portal de Renascimento' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p4', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p4'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pergunta 5 */}
-                <div className="space-y-6">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    5. O que mais te nutre em momentos de cansaço?
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'casa_sonhos', text: 'O recolhimento e o contato com meus sonhos.', territory: 'Casa dos Sonhos' },
-                      { id: 'bosque_arquetipos', text: 'Caminhar por lugares que me tragam paz.', territory: 'Bosque dos Arquétipos' },
-                      { id: 'forja', text: 'Realizar algo concreto e manual.', territory: 'Forja' },
-                      { id: 'portas', text: 'Rever meus limites e dizer "não".', territory: 'Portas' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p5', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p5'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pergunta 6 */}
-                <div className="space-y-6">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    6. Quando você se sente pressionada pelo mundo externo, sua tendência é:
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'torres', text: 'Endurecer e focar no dever.', territory: 'Torres' },
-                      { id: 'conselho_interior', text: 'Consultar minha sabedoria interna.', territory: 'Conselho Interior' },
-                      { id: 'praca_abalo', text: 'Sentir que tudo está prestes a desmoronar.', territory: 'Praça do Abalo' },
-                      { id: 'casa_matriz', text: 'Me esconder em meu jardim particular.', territory: 'Casa Matriz' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p6', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p6'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Pergunta 7 */}
-                <div className="space-y-6">
-                  <p className="text-sm font-medium text-foreground leading-relaxed">
-                    7. Para você, uma vida plena envolve principalmente:
-                  </p>
-                  <div className="grid grid-cols-1 gap-3">
-                    {[
-                      { id: 'portal_renascimento', text: 'A coragem de se transformar constantemente.', territory: 'Portal de Renascimento' },
-                      { id: 'espelho_vinculos', text: 'A profundidade das conexões humanas.', territory: 'Espelho dos Vínculos' },
-                      { id: 'jardim_arquetipos', text: 'A expressão da minha essência criativa.', territory: 'Jardim dos Arquétipos' },
-                      { id: 'praca_integracao', text: 'O sentimento de estar inteira em cada gesto.', territory: 'Praça da Integração' }
-                    ].map((opt) => (
-                      <button
-                        key={opt.id}
-                        onClick={() => updateObjetiva('p7', opt.id)}
-                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
-                          respostas.objetivas['p7'] === opt.id
-                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
-                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                        }`}
-                      >
-                        <span className="block font-medium mb-1">{opt.text}</span>
-                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                        <span className="block font-medium">{opt.text}</span>
                       </button>
                     ))}
                   </div>
@@ -550,9 +436,10 @@ export function CartografiaEstruturalStepper() {
               <Button 
                 onClick={next} 
                 variant="gold" 
-                disabled={Object.keys(respostas.objetivas).length < 7}
+                disabled={Object.keys(respostas.objetivas).length < 3 || loading}
               >
-                Finalizar e Revelar <ArrowRight className="w-4 h-4 ml-2" />
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Finalizar e Revelar'}
+                <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>
@@ -561,4 +448,5 @@ export function CartografiaEstruturalStepper() {
     </div>
   );
 }
+
 
