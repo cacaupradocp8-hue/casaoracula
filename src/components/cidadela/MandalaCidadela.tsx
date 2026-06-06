@@ -55,6 +55,7 @@ const CX = 400, CY = 400;
 // ============================================
 const NAME_OVERRIDES: Record<number, string> = {
   4: 'Bosque dos Arquétipos',
+  13: 'Casa Matriz',
 };
 
 // ============================================
@@ -64,7 +65,7 @@ const VIRTUAL_DISTRICTS: MandalaDistrict[] = [
   {
     id: 'virtual-jardim-heroina',
     numero: 13,
-    nome: 'Jardim da Heroína',
+    nome: 'Casa Matriz',
     descricao: 'O território da jornada pessoal e da coragem interior.',
     icone: '🌺',
     cor: '#C9A24A',

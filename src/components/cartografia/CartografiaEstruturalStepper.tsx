@@ -32,7 +32,6 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
   portao_chegada: { nome: 'Portão da Chegada', icon: '🚪' },
   torres: { nome: 'Torres', icon: '🏛️' },
   portas: { nome: 'Portas', icon: '🔑' },
-  jardim_arquetipos: { nome: 'Jardim dos Arquétipos', icon: '🌿' },
   bosque_arquetipos: { nome: 'Bosque dos Arquétipos', icon: '🌿' },
   praca_abalo: { nome: 'Praça do Abalo', icon: '⚡' },
   casa_sonhos: { nome: 'Casa dos Sonhos', icon: '🌙' },
@@ -40,8 +39,9 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
   forja: { nome: 'Forja', icon: '🔥' },
   conselho_interior: { nome: 'Conselho Interior', icon: '👁️' },
   labirinto: { nome: 'Labirinto', icon: '🌀' },
-  praca_integracao: { nome: 'Praça da Integração', icon: '☀️' },
   portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋' },
+  coracao_cidadela: { nome: 'Coração da CidadELA', icon: '❤️' },
+  casa_matriz: { nome: 'Casa Matriz', icon: '🏠' },
 };
 
 export function CartografiaEstruturalStepper() {
@@ -105,7 +105,7 @@ export function CartografiaEstruturalStepper() {
   if (step === 'resultado' && result) {
     const { cidadela, leitura, profileJson } = result;
     const portaNome = cidadela.porta_inicial_nome;
-    const proximoPasso = profileJson.recomendacoes?.proximo_passo || "Iniciar a Rota dos Lobos";
+    const proximoPasso = "Seguir para a Rota dos Lobos";
 
     const handleRotaLobos = () => {
       navigate('/clube/rotas/lobos');
@@ -113,7 +113,7 @@ export function CartografiaEstruturalStepper() {
 
     const territoriesMetadata: Record<string, { label: string; districts: string[] }> = {
       dominante: { label: 'Território Dominante', districts: [cidadela.porta_inicial] },
-      tensao: { label: 'Território em Tensão', districts: cidadela.distritos_tensao || [] },
+      tensao: { label: 'Território em Tensão', districts: [cidadela.distritos_tensao?.[0] || ''] },
       adormecido: { label: 'Território Adormecido', districts: cidadela.distritos_adormecidos || [] },
     };
 
@@ -324,19 +324,24 @@ export function CartografiaEstruturalStepper() {
               <CardContent className="pt-6 space-y-8">
                 {perguntas.map((p, i) => (
                   <div key={p.id} className="space-y-4">
-                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{(p as any).texto_pergunta || p.id}</p>
-                    <div className="grid grid-cols-5 gap-2">
-                      {[1, 2, 3, 4, 5].map((val) => (
+                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{p.texto_pergunta}</p>
+                    <div className="flex flex-col gap-3">
+                      {p.opcoes.map((opt, idx) => (
                         <button
-                          key={val}
-                          onClick={() => updateObjetiva(p.id, val)}
-                          className={`h-10 rounded-md border text-sm transition-all ${
-                            respostas.objetivas[p.id] === val 
-                              ? 'bg-gold border-gold text-gold-foreground shadow-premium-glow' 
-                              : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                          key={idx}
+                          onClick={() => updateObjetiva(p.id, idx)}
+                          className={`p-4 text-left rounded-xl border text-sm transition-all ${
+                            respostas.objetivas[p.id] === idx 
+                              ? 'bg-gold/10 border-gold text-foreground shadow-premium-glow' 
+                              : 'border-gold/10 hover:border-gold/20 text-muted-foreground bg-white/5'
                           }`}
                         >
-                          {val}
+                          <div className="flex items-center gap-3">
+                            <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${respostas.objetivas[p.id] === idx ? 'border-gold bg-gold' : 'border-gold/30'}`}>
+                              {respostas.objetivas[p.id] === idx && <Check className="w-2.5 h-2.5 text-gold-foreground" />}
+                            </div>
+                            {opt.label}
+                          </div>
                         </button>
                       ))}
                     </div>

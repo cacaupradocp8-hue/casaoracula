@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBig5Oracular } from './useBig5Oracular';
+import { usePerguntasSituacionais } from './usePerguntasSituacionais';
 import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { toast } from 'sonner';
@@ -21,7 +22,8 @@ export interface CartografiaRespostas {
 
 export function useCartografiaEstrutural() {
   const { user } = useAuth();
-  const { fatores, perguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
+  const { fatores, perguntas: rawPerguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
+  const { perguntas: situacionais } = usePerguntasSituacionais();
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
@@ -148,12 +150,27 @@ export function useCartografiaEstrutural() {
     setLoading(true);
 
     try {
-      // 1. Calcular médias a partir das 30 perguntas objetivas
-      const big5Medias = calcularMedias(respostas.objetivas);
+      // 1. Calcular médias a partir das perguntas situacionais
+      const medias: Record<string, number> = {
+        porta_do_possivel: 3,
+        torre_interna: 3,
+        campo_do_outro: 3,
+        voz_no_mundo: 3,
+        porta_do_abalo: 3,
+      };
+
+      // Mapeamento simples: cada escolha soma 1 ponto ao eixo
+      Object.entries(respostas.objetivas).forEach(([pId, choiceIndex]) => {
+        const p = situacionais.find(q => q.id === pId);
+        if (p) {
+          const eixo = p.opcoes[Number(choiceIndex)].eixo;
+          medias[eixo] = (medias[eixo] || 0) + 0.5; // Incremento suave sobre a base 3
+        }
+      });
       
       // 2. Montar Profile JSON Integrado (Territórios + Big Five)
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
-        rawMedias: big5Medias.medias, 
+        rawMedias: medias, 
         territorios: {
           sintoma: respostas.sintoma,
           historia_vida: respostas.historia,
@@ -176,7 +193,8 @@ export function useCartografiaEstrutural() {
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
         metadata_json: { 
-          medias_big5: big5Medias.medias,
+          medias_big5: medias,
+        raw_respostas_situacionais: respostas.objetivas,
           respostas_qualitativas: {
             sintoma: respostas.sintoma,
             historia: respostas.historia,
@@ -194,7 +212,7 @@ export function useCartografiaEstrutural() {
         userId: user.id,
         cartografiaId: cartoInserted.id,
         profileJson,
-        mediasRaw: big5Medias.medias,
+        mediasRaw: medias,
       });
 
       // 5. Atualizar Auto Mapeamento (Cidadela)
@@ -243,7 +261,7 @@ export function useCartografiaEstrutural() {
     updateObjetiva,
     loading: loading || loadingBig5,
     fatores,
-    perguntas,
+    perguntas: situacionais,
     finalizar,
     result,
     saveStatus,
