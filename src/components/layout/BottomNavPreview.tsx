@@ -24,6 +24,12 @@ export function BottomNavPreview() {
   ];
 
   const [mounted, setMounted] = useState(false);
+  const [navItems, setNavItems] = useState(NAV_ITEMS);
+
+  useEffect(() => {
+    setNavItems(NAV_ITEMS);
+    setMounted(true);
+  }, [isFounder]);
   useEffect(() => { setMounted(true); }, []);
 
   const navigate = useNavigate();
