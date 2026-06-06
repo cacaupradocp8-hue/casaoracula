@@ -34,10 +34,20 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1.2 }}
-          className="text-2xl md:text-3xl font-display text-gold leading-relaxed"
+          className="text-2xl md:text-4xl font-display text-gold leading-tight"
         >
-          Onde a sua energia interior está concentrada neste momento?
+          Leitura Estrutural Orácula™ — CidaDELA Interior
         </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="text-muted-foreground italic text-lg"
+        >
+          Onde sua vida interior está concentrando energia neste momento?
+        </motion.p>
+
 
         <motion.div
           initial={{ opacity: 0 }}
