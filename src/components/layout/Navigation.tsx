@@ -121,6 +121,7 @@ export function Navigation() {
 
   // Profile-based menu selection
   const getMenuForProfile = () => {
+    if (user?.founder_beta) return founderMenuGroups();
     if (activeDomain === 'profissional') return profissionalMenuGroups(isAdmin, isMentorada);
     if (isAdmin || hasOracula) return alunaMenuGroups(); // Aluna de formação
     const isAssinante = user ? canAccessFeature(user.portal, 'assinante') : false;
