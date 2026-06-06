@@ -103,6 +103,10 @@ export interface ProfileJsonFinal {
     rotas: string[];
     praticas: string[];
     proximo_passo: string;
+    // Novos campos vibracionais para o Atlas
+    territorio_dominante?: string;
+    territorio_tensao?: string;
+    territorio_adormecido?: string;
   };
 }
 
@@ -338,7 +342,12 @@ export function montarProfileJson({ rawMedias, territorios, contexto }: MontarPr
     // Derivados do mesmo motor — sem lógica paralela
     oracula_inicial: leitura.oracula_inicial,
     intensidade_oracular: leitura.intensidade_oracular,
-    recomendacoes: RECOMENDACOES_POR_TENSAO[leitura.profile.tensao_central] || RECOMENDACOES_POR_TENSAO['segurança vs movimento'],
+    recomendacoes: {
+      ...(RECOMENDACOES_POR_TENSAO[leitura.profile.tensao_central] || RECOMENDACOES_POR_TENSAO['segurança vs movimento']),
+      territorio_dominante: cidadela.territorio_dominante,
+      territorio_tensao: cidadela.territorio_tensao,
+      territorio_adormecido: cidadela.territorio_adormecido
+    },
   };
 
   return { profileJson, leitura, cidadela };
