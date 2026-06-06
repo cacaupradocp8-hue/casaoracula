@@ -386,9 +386,9 @@ export default function ClubeRotaPremium() {
                       <Button
                         variant="ghost"
                         className="rounded-full h-14 px-10 text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white hover:bg-white/5 transition-all"
-                        onClick={() => navigate('/clube')}
+                        onClick={() => navigate(user?.founder_beta ? '/dashboard-membro' : '/clube')}
                       >
-                        Voltar ao Mapa das Rotas
+                        {user?.founder_beta ? 'Ir para o Dashboard Founder' : 'Voltar ao Mapa das Rotas'}
                       </Button>
                     </div>
                   </div>
