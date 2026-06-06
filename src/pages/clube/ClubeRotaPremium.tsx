@@ -21,6 +21,7 @@ import {
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useAuth } from '@/contexts/AuthContext';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { AudioRitualPlayer } from '@/components/clube/AudioRitualPlayer';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
