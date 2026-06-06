@@ -12,7 +12,6 @@ interface CidadelaData {
   distritos_adormecidos?: string[];
   territorio_crescimento: string;
   territorio_crescimento_descricao: string;
-  distritos_adormecidos?: string[];
   leitura_integrada: string;
   tensao_simbolica: string;
   direcao_travessia: string;

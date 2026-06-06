@@ -152,16 +152,6 @@ const STATE_STYLES = {
     accent: '#6bc48f',
   },
   adormecido: {
-    fill: 'rgba(100,100,100,0.05)',
-    stroke: 'rgba(150,150,150,0.20)',
-    icon: 'rgba(150,150,150,0.30)',
-    text: 'rgba(150,150,150,0.40)',
-    glow: 'transparent',
-    building: 'rgba(100,100,100,0.05)',
-    wall: 'rgba(150,150,150,0.15)',
-    accent: 'rgba(150,150,150,0.15)',
-  },
-  adormecido: {
     fill: 'rgba(100,100,100,0.02)',
     stroke: 'rgba(150,150,150,0.15)',
     icon: 'rgba(150,150,150,0.20)',
