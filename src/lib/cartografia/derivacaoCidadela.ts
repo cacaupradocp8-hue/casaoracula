@@ -184,11 +184,13 @@ export function derivarCidadela(
 
   const sortedTerritories = Object.entries(counts).sort((a, b) => b[1] - a[1]);
   const dominante = sortedTerritories[0]?.[0];
-  const tensao = counts['praca_abalo'] || counts['labirinto'] ? (counts['praca_abalo'] > (counts['labirinto'] || 0) ? 'praca_abalo' : 'labirinto') : undefined;
   
-  // Adormecido: Um território oficial que não foi citado
+  // Tensão: Busca o segundo território com mais votos, ou um território de abalo se houver
+  const tensao = sortedTerritories.length > 1 ? sortedTerritories[1]?.[0] : (counts['praca_abalo'] || counts['labirinto'] ? (counts['praca_abalo'] > (counts['labirinto'] || 0) ? 'praca_abalo' : 'labirinto') : undefined);
+  
+  // Adormecido: Um território oficial que não teve NENHUM voto
   const OFICIAIS = ['portao_chegada', 'torres', 'portas', 'labirinto', 'conselho_interior', 'bosque_arquetipos', 'casa_matriz', 'casa_sonhos', 'espelho_vinculos', 'praca_abalo', 'forja', 'portal_renascimento'];
-  const adormecido = OFICIAIS.find(t => !counts[t]);
+  const adormecido = OFICIAIS.find(t => !counts[t]) || OFICIAIS[Math.floor(Math.random() * OFICIAIS.length)];
 
   // Porta inicial = eixo com maior média
   const entries = Object.entries(medias) as [keyof MediasFatores, number][];
