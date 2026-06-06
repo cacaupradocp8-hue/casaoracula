@@ -71,7 +71,7 @@ export function ClubeTravessiaProgress({ steps, className, isHidden = false }: C
                 isCompleted 
                   ? "bg-gold/5 border-gold/20" 
                   : isCurrent
-                    ? "bg-white/[0.04] border-white/10 ring-1 ring-gold/30 shadow-[0_0_20px_rgba(212,175,55,0.1)]"
+                    ? "bg-gold/10 border-gold/40 ring-2 ring-gold/40 shadow-[0_0_30px_rgba(212,175,55,0.2)] scale-105 z-10"
                     : "bg-white/[0.02] border-white/5 opacity-60"
               )}
             >
@@ -87,7 +87,7 @@ export function ClubeTravessiaProgress({ steps, className, isHidden = false }: C
                     <Check className="w-3 h-3 text-midnight" strokeWidth={3} />
                   </div>
                 ) : isCurrent ? (
-                  <div className="w-2 h-2 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+                  <div className="w-3 h-3 rounded-full bg-gold animate-pulse shadow-[0_0_15px_rgba(212,175,55,1)]" />
                 ) : null}
               </div>
               
