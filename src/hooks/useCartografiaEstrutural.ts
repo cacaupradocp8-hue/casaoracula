@@ -7,17 +7,11 @@ import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
 import { toast } from 'sonner';
 
-export type CartografiaStepId = 'intro' | 'sintoma' | 'historia' | 'objetivas' | 'crencas' | 'recursos' | 'seguranca' | 'gerando' | 'resultado';
+export type CartografiaStepId = 'intro' | 'objetivas' | 'gerando' | 'resultado';
 
 export interface CartografiaRespostas {
-  // Objetivas (Perguntas baseadas nos territórios)
+  // Objetivas (Perguntas situacionais de escolha forçada)
   objetivas: Record<string, string>;
-  // Qualitativo (6 Territórios)
-  sintoma: string;
-  historia: string;
-  crencas: string;
-  recursos: string;
-  seguranca: string;
 }
 
 export function useCartografiaEstrutural() {
@@ -28,11 +22,6 @@ export function useCartografiaEstrutural() {
   const [step, setStep] = useState<CartografiaStepId>('intro');
   const [respostas, setRespostas] = useState<CartografiaRespostas>({
     objetivas: {},
-    sintoma: '',
-    historia: '',
-    crencas: '',
-    recursos: '',
-    seguranca: '',
   });
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
@@ -157,11 +146,11 @@ export function useCartografiaEstrutural() {
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
         rawMedias: big5Medias.medias, 
         territorios: {
-          sintoma: respostas.sintoma,
-          historia_vida: respostas.historia,
-          crencas: respostas.crencas,
-          recursos: respostas.recursos,
-          seguranca: respostas.seguranca
+          sintoma: 'Mapeamento via escolha forçada',
+          historia_vida: 'Mapeamento via escolha forçada',
+          crencas: 'Mapeamento via escolha forçada',
+          recursos: 'Mapeamento via escolha forçada',
+          seguranca: 'Mapeamento via escolha forçada'
         },
         contexto: 'clube' 
       });
