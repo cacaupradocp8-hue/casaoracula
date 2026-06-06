@@ -30,6 +30,7 @@ interface AuthContextType {
   canCreateCase: (currentCaseCount: number) => boolean;
   refreshUserPortal: () => Promise<void>;
   refreshMatricula: () => Promise<void>;
+  updateUserMetadata: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
