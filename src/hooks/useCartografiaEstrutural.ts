@@ -161,19 +161,14 @@ export function useCartografiaEstrutural() {
         cor_predominante: cidadela.cor_derivada,
         atmosfera: cidadela.atmosfera_derivada,
         territorios_principais: cidadela.distritos_acesos,
-        recursos_internos: respostas.recursos,
-        conflitos_tensoes: respostas.sintoma,
+        recursos_internos: 'Recursos mapeados via territórios',
+        conflitos_tensoes: 'Conflitos mapeados via territórios',
         simbolo_pessoal: cidadela.simbolo_derivado,
         ponto_partida: cidadela.porta_inicial,
         indice_equilibrio: cidadela.indice_equilibrio,
         metadata_json: { 
           medias_big5: big5Medias.medias,
-          respostas_qualitativas: {
-            sintoma: respostas.sintoma,
-            historia: respostas.historia,
-            crencas: respostas.crencas,
-            seguranca: respostas.seguranca
-          },
+          respostas_objetivas: respostas.objetivas,
           versao: '3.0-clube-estrutural',
           territorio_dominante: cidadela.territorio_dominante,
           territorio_tensao: cidadela.territorio_tensao,
@@ -226,7 +221,7 @@ export function useCartografiaEstrutural() {
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');
-      setStep('seguranca');
+      setStep('objetivas');
     } finally {
       setLoading(false);
     }

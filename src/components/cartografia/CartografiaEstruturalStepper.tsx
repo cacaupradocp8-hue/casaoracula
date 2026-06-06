@@ -20,12 +20,7 @@ import { RevelacaoLoader } from './RevelacaoLoader';
 import { PortaInicialHero } from './PortaInicialHero';
 
 const STEPS: { id: CartografiaStepId; title: string; icon: any; anchor?: string }[] = [
-  { id: 'sintoma', title: 'Sintoma', icon: ShieldAlert, anchor: 'Presença' },
-  { id: 'historia', title: 'História', icon: History, anchor: 'Memória' },
-  { id: 'objetivas', title: 'Modo de Habitar', icon: User, anchor: 'Centro de Atenção' },
-  { id: 'crencas', title: 'Crenças', icon: Brain, anchor: 'Narrativa' },
-  { id: 'recursos', title: 'Recursos', icon: Heart, anchor: 'Vitalidade' },
-  { id: 'seguranca', title: 'Segurança', icon: ShieldCheck, anchor: 'Pacto' },
+  { id: 'objetivas', title: 'Mapeamento', icon: User, anchor: 'Centro de Atenção' },
 ];
 
 const DISTRITOS_META: Record<string, { nome: string; icon: string }> = {
@@ -74,22 +69,12 @@ export function CartografiaEstruturalStepper() {
     const currentStepObj = STEPS.find(s => s.id === step);
     const nextAnchor = currentStepObj?.anchor || 'Avançando';
 
-    if (step === 'intro') setStep('sintoma');
-    else if (step === 'sintoma') triggerTransition(() => setStep('historia'), 'Memória');
-    else if (step === 'historia') triggerTransition(() => setStep('objetivas'), 'Centro de Atenção');
-    else if (step === 'objetivas') triggerTransition(() => setStep('crencas'), 'Narrativa');
-    else if (step === 'crencas') triggerTransition(() => setStep('recursos'), 'Vitalidade');
-    else if (step === 'recursos') triggerTransition(() => setStep('seguranca'), 'Pacto');
-    else if (step === 'seguranca') triggerTransition(() => finalizar(), 'Revelação');
+    if (step === 'intro') setStep('objetivas');
+    else if (step === 'objetivas') triggerTransition(() => finalizar(), 'Revelação');
   };
 
   const back = () => {
-    if (step === 'sintoma') setStep('intro');
-    else if (step === 'historia') setStep('sintoma');
-    else if (step === 'objetivas') setStep('historia');
-    else if (step === 'crencas') setStep('objetivas');
-    else if (step === 'recursos') setStep('crencas');
-    else if (step === 'seguranca') setStep('recursos');
+    if (step === 'objetivas') setStep('intro');
   };
 
   const slideVariants = {
