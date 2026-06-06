@@ -109,7 +109,7 @@ export function EstacaoHero({
               size="lg"
               variant="gold"
               className="rounded-full px-12 h-16 shadow-glow text-midnight font-bold group w-full sm:w-auto"
-              onClick={() => document.getElementById('caminho-estacao')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.getElementById('ativo-agora')?.scrollIntoView({ behavior: 'smooth' })}
             >
               <PawPrint className="w-4 h-4 mr-2 group-hover:animate-bounce" /> Iniciar Travessia
             </Button>
