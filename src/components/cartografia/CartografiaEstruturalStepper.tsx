@@ -105,20 +105,16 @@ export function CartografiaEstruturalStepper() {
   if (step === 'resultado' && result) {
     const { cidadela, leitura, profileJson } = result;
     const portaNome = cidadela.porta_inicial_nome;
-    const rawSlug = result.profileJson.recomendacoes?.rotas?.[0];
-    const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
+    const proximoPasso = profileJson.recomendacoes?.proximo_passo || "Iniciar a Rota dos Lobos";
 
-    const handleAtravessar = () => {
-      if (!portaSlug) {
-        navigate('/clube');
-        return;
-      }
-      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
-      if (exists) {
-        navigate(`/clube/rota/${portaSlug}`);
-      } else {
-        navigate('/clube');
-      }
+    const handleRotaLobos = () => {
+      navigate('/clube/rotas/lobos');
+    };
+
+    const territoriesMetadata: Record<string, { label: string; districts: string[] }> = {
+      dominante: { label: 'Território Dominante', districts: [cidadela.porta_inicial] },
+      tensao: { label: 'Território em Tensão', districts: cidadela.distritos_tensao || [] },
+      adormecido: { label: 'Território Adormecido', districts: cidadela.distritos_adormecidos || [] },
     };
 
     return (
@@ -127,10 +123,7 @@ export function CartografiaEstruturalStepper() {
         animate={{ opacity: 1 }} 
         className="w-full max-w-4xl mx-auto space-y-16 pb-32"
       >
-
-        {/* 1. TÍTULO PRINCIPAL */}
         <header className="text-center space-y-4 pt-12">
-
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -138,19 +131,26 @@ export function CartografiaEstruturalStepper() {
           >
             <Compass className="w-10 h-10 text-gold/80" />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
-          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+          <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Leitura Estrutural Orácula™</h1>
+          <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">CidaDELA Interior</p>
         </header>
 
         <section className="space-y-24">
-          {/* 2. MANDALA CENTRAL (PRIORIDADE MÁXIMA) */}
           <div className="space-y-6 relative">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
               <div className="w-[400px] h-[400px] rounded-full bg-gold/5 blur-[100px] animate-pulse" />
             </div>
             
             <CamadaCidadela 
-              data={cidadela} 
+              data={{
+                ...cidadela,
+                distrito_dominante: cidadela.porta_inicial_nome,
+                distritos_ativos: cidadela.distritos_acesos,
+                distritos_tensao: cidadela.distritos_tensao,
+                leitura_integrada: profileJson.leitura_simbolica.frase_semente,
+                tensao_simbolica: profileJson.leitura_simbolica.tensao_que_pede_escuta,
+                direcao_travessia: profileJson.leitura_simbolica.movimento_necessario,
+              }} 
               cor={cidadela.cor_derivada} 
               corHex={cidadela.cor_hex}
               atmosfera={cidadela.atmosfera_derivada}
@@ -162,136 +162,69 @@ export function CartografiaEstruturalStepper() {
             />
           </div>
 
-          {/* 3. TERRITÓRIOS VIVOS */}
-          <div className="max-w-3xl mx-auto px-6 space-y-10">
-            <div className="text-center space-y-2">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">O que se acendeu na sua CidadELA</h3>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {cidadela.distritos_acesos?.map((distritoKey: string) => {
-                const meta = DISTRITOS_META[distritoKey] || { nome: distritoKey.replace(/_/g, ' '), icon: '📍' };
-                return (
-                  <motion.div 
-                    key={distritoKey}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="p-6 rounded-2xl border border-gold/10 bg-gold/[0.02] flex items-start gap-4 transition-all hover:bg-gold/[0.04]"
-                  >
-                    <span className="text-2xl mt-1">{meta.icon}</span>
-                    <div className="space-y-1">
-                      <h4 className="text-lg font-display text-gold/90">{meta.nome}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed italic">
-                        {distritoKey === 'torres' ? 'Estrutura, limites e o modo como você organiza sua energia vital.' :
-                         distritoKey === 'labirinto' ? 'Onde você atravessa as perguntas que ainda não possuem resposta.' :
-                         distritoKey === 'portao_chegada' ? 'O início de tudo, onde a coragem do primeiro passo reside.' :
-                         distritoKey === 'conselho_interior' ? 'Onde suas vozes internas buscam harmonia e direção.' :
-                         distritoKey === 'espelho_vinculos' ? 'O que suas relações revelam sobre seu próprio interior.' :
-                         distritoKey === 'casa_sonhos' ? 'Onde o inconsciente fala através de imagens e silêncios.' :
-                         distritoKey === 'forja' ? 'O calor da transformação e a alquimia do próprio ser.' :
-                         distritoKey === 'portal_renascimento' ? 'O limiar entre o que precisa terminar e o que começa.' :
-                         'Este território se acende em resposta ao seu momento atual.'}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
+          <div className="max-w-2xl mx-auto px-6 text-center space-y-8">
+            <div className="space-y-4">
+              <p className="text-lg text-foreground/90 font-display italic leading-relaxed">
+                "Sua CidadELA revelou onde sua energia está habitando agora. Este não é um diagnóstico. É uma cartografia do momento."
+              </p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.
+              </p>
             </div>
           </div>
 
-          {/* 4. PORTA INICIAL (CARD DE DESTAQUE) */}
-          <div className="max-w-3xl mx-auto px-4">
-            <div className="text-center space-y-2 mb-8">
-              <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua Porta Inicial</h3>
-            </div>
-            
-            <Card className="glass border-gold/20 bg-gold/[0.03] overflow-hidden relative shadow-premium-glow">
-              <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                <DoorOpen className="w-24 h-24 text-gold" />
-              </div>
-              <CardContent className="p-10 space-y-8 relative z-10">
-                <div className="flex flex-col items-center text-center space-y-6">
-                  <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center border border-gold/30">
-                    <DoorOpen className="w-8 h-8 text-gold" />
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <h2 className="text-3xl font-display text-gold">{portaNome}</h2>
-                    <p className="text-lg text-foreground/90 leading-relaxed italic max-w-xl mx-auto">
-                      "O mapa não é o território, mas o modo como escolhemos habitá-lo."
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left pt-6 border-t border-gold/10 w-full">
-                    <div className="space-y-2">
-                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Por onde começar</h4>
-                      <p className="text-sm text-muted-foreground">O território que mais pede sua presença e consciência neste exato momento.</p>
-                    </div>
-                    <div className="space-y-2">
-                      <h4 className="text-xs uppercase tracking-widest text-gold/50">Primeiro gesto</h4>
-                      <p className="text-sm text-muted-foreground">Observar como este tema se manifesta em sua rotina hoje, sem tentar mudar nada.</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-8 w-full">
-                    <Button 
-                      variant="gold" 
-                      size="lg" 
-                      onClick={handleAtravessar}
-                      className="group px-12 h-14 text-base shadow-premium-glow w-full sm:w-auto"
-                    >
-                      Atravessar
-                      <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* 5. TORRE DOMINANTE (SECUNDÁRIA) */}
-          <div className="max-w-2xl mx-auto px-6">
-             <div className="text-center space-y-6">
+          <div className="max-w-3xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Object.entries(territoriesMetadata).map(([key, meta]) => (
+              <motion.div 
+                key={key}
+                className={`p-6 rounded-2xl border transition-all ${
+                  key === 'dominante' ? 'border-gold/30 bg-gold/10 shadow-premium-glow' : 
+                  key === 'tensao' ? 'border-amber-500/20 bg-amber-500/5 animate-pulse' : 
+                  'border-white/5 bg-white/5 opacity-60'
+                }`}
+              >
+                <h4 className="text-xs uppercase tracking-widest text-gold/60 mb-3">{meta.label}</h4>
                 <div className="space-y-2">
-                  <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Sua forma de sustentar o agora</h3>
-                  <h4 className="text-2xl font-display text-gold/80">{cidadela.torre_dominante}</h4>
+                  {meta.districts.map(d => (
+                    <p key={d} className="text-lg font-display text-foreground">{DISTRITOS_META[d]?.nome || d}</p>
+                  ))}
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  Esta torre representa o alicerce estável de onde você observa o mundo e organiza sua energia vital.
-                </p>
-             </div>
+              </motion.div>
+            ))}
           </div>
 
-          {/* 6. ATMOSFERA DA CIDADELA (NARRATIVA) */}
           <div className="max-w-2xl mx-auto px-6 text-center">
-            <Card className="border-gold/5 bg-transparent shadow-none">
-              <CardContent className="space-y-6">
-                <div className="w-12 h-px bg-gold/20 mx-auto" />
-                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Atmosfera da CidadELA</h3>
-                <div className="space-y-4">
-                  <p className="text-lg text-foreground/80 font-display italic leading-relaxed">
-                    Sua CidadELA atravessa um período de {cidadela.clima_cidadela.toLowerCase()}.
-                  </p>
-                  <p className="text-sm text-muted-foreground leading-relaxed max-w-md mx-auto">
-                    Há um movimento de {cidadela.atmosfera_derivada.join(', ').toLowerCase()}. Nem tudo está claro. Mas algo já começou a mudar.
-                  </p>
+            <Card className="glass border-gold/20 bg-gold/[0.03]">
+              <CardContent className="p-8 space-y-6">
+                <div className="space-y-2">
+                  <h3 className="text-xs uppercase tracking-[0.3em] text-gold/40">Próxima Travessia Recomendada</h3>
+                  <h4 className="text-xl font-display text-gold">{proximoPasso}</h4>
                 </div>
-                <div className="w-12 h-px bg-gold/20 mx-auto" />
+                <div className="space-y-4 text-sm text-muted-foreground leading-relaxed">
+                  <p>A primeira travessia recomendada para fundadoras é a Rota dos Lobos.</p>
+                  <p className="italic">Nela, você começará a reconhecer onde sua voz foi silenciada, onde sua adaptação virou sobrevivência e onde seu instinto tenta retornar.</p>
+                </div>
+                <Button 
+                  variant="gold" 
+                  size="lg" 
+                  onClick={handleRotaLobos}
+                  className="w-full h-14 shadow-premium-glow group"
+                >
+                  Entrar na Rota dos Lobos
+                  <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => navigate('/clube/cidadela')}
+                  className="w-full text-muted-foreground/60 hover:text-gold"
+                >
+                  Ver minha CidadELA completa
+                </Button>
               </CardContent>
             </Card>
           </div>
         </section>
-
-        <div className="flex flex-col items-center gap-6 pt-12 border-t border-gold/5">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/clube')} 
-            className="text-muted-foreground/50 hover:text-gold hover:bg-transparent text-xs uppercase tracking-widest"
-          >
-            Retornar ao Painel
-          </Button>
-        </div>
       </motion.div>
     );
   }

@@ -6,7 +6,7 @@ import { MandalaMobile } from './MandalaMobile';
 import { DistrictDetailSheet } from './DistrictDetailSheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-export type DistrictDisplayState = 'nao_explorado' | 'ativo' | 'em_tensao' | 'integrado';
+export type DistrictDisplayState = 'nao_explorado' | 'ativo' | 'em_tensao' | 'integrado' | 'adormecido';
 
 interface Props {
   districtStates?: Record<string, DistrictDisplayState>;
@@ -71,6 +71,7 @@ function resolveDistrictNumber(name: string | null | undefined) {
 function mapState(state: DistrictDisplayState | undefined): MandalaDistrictState['state'] {
   if (state === 'integrado') return 'integrado';
   if (state === 'ativo' || state === 'em_tensao') return 'ativo';
+  if (state === 'adormecido') return 'inativo'; // Visual opacity logic is usually in SVG or CSS
   return 'inativo';
 }
 

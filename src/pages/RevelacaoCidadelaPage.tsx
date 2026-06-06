@@ -61,7 +61,7 @@ export default function RevelacaoCidadelaPage() {
                 onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
                 className="gap-2 px-12 h-16 text-lg shadow-premium-glow"
               >
-                Revelar minha CidadELA
+                Revelar minha CidadELA Interior
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
