@@ -130,7 +130,7 @@ export function CartografiaEstruturalStepper() {
           </motion.div>
           <div className="space-y-2">
             <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
-            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+            <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">Primeira Cartografia</p>
           </div>
           <div className="max-w-2xl mx-auto pt-6 px-4">
             <p className="text-foreground/80 italic text-base leading-relaxed">

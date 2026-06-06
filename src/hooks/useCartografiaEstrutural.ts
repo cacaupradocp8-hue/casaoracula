@@ -151,7 +151,7 @@ export function useCartografiaEstrutural() {
 
     try {
       // 1. Calcular médias a partir das perguntas objetivas (que agora pontuam territórios diretamente)
-      const big5Medias = calcularMedias(respostas.objetivas);
+      const big5Medias = calcularMedias(respostas.objetivas as any);
       
       // 2. Montar Profile JSON Integrado (Territórios + Big Five)
       const { profileJson, leitura, cidadela } = montarProfileJson({ 
@@ -185,7 +185,10 @@ export function useCartografiaEstrutural() {
             crencas: respostas.crencas,
             seguranca: respostas.seguranca
           },
-          versao: '3.0-clube-estrutural'
+          versao: '3.0-clube-estrutural',
+          territorio_dominante: cidadela.territorio_dominante,
+          territorio_tensao: cidadela.territorio_tensao,
+          territorio_adormecido: cidadela.territorio_adormecido
         },
       } as any).select('id').single();
 
