@@ -36,7 +36,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
           transition={{ delay: 0.8, duration: 1.2 }}
           className="text-2xl md:text-3xl font-display text-gold leading-relaxed"
         >
-          Como você habita o seu mundo hoje?
+          Onde a sua energia interior está concentrada neste momento?
         </motion.h1>
 
         <motion.div
@@ -50,7 +50,7 @@ export const LimiarCidadela: React.FC<LimiarCidadelaProps> = ({ onEnter }) => {
             onClick={onEnter}
             className="px-12 py-6 text-lg tracking-widest uppercase shadow-premium-glow"
           >
-            Entrar na CidadELA
+            Desvelar a CidaDELA Interior
           </Button>
         </motion.div>
       </div>

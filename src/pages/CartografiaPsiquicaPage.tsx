@@ -26,7 +26,7 @@ export default function CartografiaPsiquicaPage() {
               <div className="w-16 h-16 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-8 h-8 text-gold" />
               </div>
-              <CardTitle className="text-2xl font-display text-gold">CidaDELA Interior</CardTitle>
+              <CardTitle className="text-2xl font-display text-gold">Leitura Estrutural Orácula™ — CidaDELA Interior</CardTitle>
               <CardDescription className="text-muted-foreground pt-2">
                 O mapa profundo da sua psique é o coração das Rotas da Casa Orácula. Um benefício exclusivo para quem habita este espaço.
               </CardDescription>

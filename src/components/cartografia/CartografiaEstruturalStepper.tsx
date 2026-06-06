@@ -109,16 +109,7 @@ export function CartografiaEstruturalStepper() {
     const portaSlug = rawSlug?.replace(/^\/+/, '').replace(/^clube\/rota\//, '').replace(/^rota\//, '').split('?')[0];
 
     const handleAtravessar = () => {
-      if (!portaSlug) {
-        navigate('/clube');
-        return;
-      }
-      const exists = estacoes?.some(e => e.primeiro_slug === portaSlug && e.status !== 'locked');
-      if (exists) {
-        navigate(`/clube/rota/${portaSlug}`);
-      } else {
-        navigate('/clube');
-      }
+      navigate('/clube/rotas/lobos');
     };
 
     return (
@@ -130,7 +121,6 @@ export function CartografiaEstruturalStepper() {
 
         {/* 1. TÍTULO PRINCIPAL */}
         <header className="text-center space-y-4 pt-12">
-
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -140,6 +130,11 @@ export function CartografiaEstruturalStepper() {
           </motion.div>
           <h1 className="text-4xl md:text-5xl font-display text-foreground tracking-tight">Sua CidadELA</h1>
           <p className="text-sm font-display text-gold/60 italic tracking-widest uppercase">O mapa do modo como você habita o agora.</p>
+          <div className="max-w-xl mx-auto pt-4">
+            <p className="text-muted-foreground italic text-sm">
+              “Sua CidadELA revelou onde sua energia está habitando agora. Este não é um diagnóstico. É uma cartografia do momento. A Casa não vai dizer quem você é. Ela vai mostrar por onde sua travessia pode começar.”
+            </p>
+          </div>
         </header>
 
         <section className="space-y-24">
@@ -384,31 +379,91 @@ export function CartografiaEstruturalStepper() {
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
             <header className="space-y-2">
               <h2 className="text-2xl font-display text-foreground">Modo de Habitar</h2>
-              <p className="text-sm text-muted-foreground">O núcleo da sua forma de habitar o mundo.</p>
+              <p className="text-sm text-muted-foreground">Onde sua vida interior está concentrando energia neste momento?</p>
             </header>
             
             <Card className="glass border-gold/10">
-              <CardContent className="pt-6 space-y-8">
-                {perguntas.map((p, i) => (
-                  <div key={p.id} className="space-y-4">
-                    <p className="text-sm font-medium text-foreground/80 leading-relaxed">{(p as any).texto_pergunta || p.id}</p>
-                    <div className="grid grid-cols-5 gap-2">
-                      {[1, 2, 3, 4, 5].map((val) => (
-                        <button
-                          key={val}
-                          onClick={() => updateObjetiva(p.id, val)}
-                          className={`h-10 rounded-md border text-sm transition-all ${
-                            respostas.objetivas[p.id] === val 
-                              ? 'bg-gold border-gold text-gold-foreground shadow-premium-glow' 
-                              : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
-                          }`}
-                        >
-                          {val}
-                        </button>
-                      ))}
-                    </div>
+              <CardContent className="pt-6 space-y-12">
+                {/* Pergunta 1 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    1. Quando algo começa a mudar na sua vida, sua primeira reação costuma ser:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'torres', text: 'Tentar organizar tudo para não perder o controle.', territory: 'Torres' },
+                      { id: 'conselho_interior', text: 'Buscar entender o que isso significa antes de agir.', territory: 'Conselho Interior' },
+                      { id: 'espelho_vinculos', text: 'Sentir medo de desagradar ou romper vínculos.', territory: 'Espelho dos Vínculos' },
+                      { id: 'labirinto', text: 'Adiar a decisão até ter certeza.', territory: 'Labirinto' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p1', opt.id === 'torres' ? 5 : 3)} // Simplified logic for demo
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p1'] === (opt.id === 'torres' ? 5 : 3)
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        {opt.text}
+                      </button>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                {/* Pergunta 2 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    2. Quando você percebe que algo já não funciona, tende a:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'torres', text: 'Insistir mais um pouco.', territory: 'Torres' },
+                      { id: 'bosque_arquetipos', text: 'Buscar sinais antes de agir.', territory: 'Bosque dos Arquétipos' },
+                      { id: 'espelho_vinculos', text: 'Sentir culpa por decepcionar alguém.', territory: 'Espelho dos Vínculos' },
+                      { id: 'praca_abalo', text: 'Esperar uma ruptura externa.', territory: 'Praça do Abalo' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p2', opt.id === 'torres' ? 5 : 3)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p2'] === (opt.id === 'torres' ? 5 : 3)
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        {opt.text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pergunta 3 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    3. Quando sente um desejo próprio, normalmente:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'conselho_interior', text: 'Analisa se é viável.', territory: 'Conselho Interior' },
+                      { id: 'portas', text: 'Questiona se tem direito a isso.', territory: 'Portas' },
+                      { id: 'casa_matriz', text: 'Esconde para não incomodar.', territory: 'Casa Matriz' },
+                      { id: 'forja', text: 'Transforma em projeto concreto.', territory: 'A Forja' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p3', opt.id === 'conselho_interior' ? 5 : 3)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p3'] === (opt.id === 'conselho_interior' ? 5 : 3)
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        {opt.text}
+                      </button>
+                    ))}
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
@@ -419,9 +474,9 @@ export function CartografiaEstruturalStepper() {
               <Button 
                 onClick={next} 
                 variant="gold" 
-                disabled={Object.keys(respostas.objetivas).length < perguntas.length}
+                disabled={Object.keys(respostas.objetivas).length < 3}
               >
-                Prosseguir <ArrowRight className="w-4 h-4 ml-2" />
+                Revelar minha CidadELA <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>

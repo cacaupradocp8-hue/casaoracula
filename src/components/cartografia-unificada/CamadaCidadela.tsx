@@ -43,7 +43,7 @@ const DISTRITOS_META: Record<string, { nome: string; icon: string; microcopy?: s
   forja: { nome: 'A Forja', icon: '🔥', microcopy: 'O fogo que refina, não consome.' },
   conselho_interior: { nome: 'Conselho Interior', icon: '👁️', microcopy: 'Ouça todas as vozes antes de decidir.' },
   labirinto: { nome: 'Labirinto', icon: '🌀', microcopy: 'Não há atalhos para o centro.' },
-  jardim_heroina: { nome: 'Jardim da Heroína', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
+  casa_matriz: { nome: 'Casa Matriz', icon: '🌺', microcopy: 'Cultive sua própria natureza.' },
   portal_renascimento: { nome: 'Portal de Renascimento', icon: '🦋', microcopy: 'Você não é mais quem entrou.' },
 };
 

@@ -108,10 +108,10 @@ export default function DashboardMembro() {
 
             <div className="pt-12">
               <button 
-                onClick={() => navigate('/clube/rotas')}
+                onClick={() => navigate('/clube/rotas/lobos')}
                 className="text-xs text-muted-foreground/40 hover:text-gold/60 underline underline-offset-4 transition-colors"
               >
-                Explorar Rotas da Casa
+                Atravessar Rota dos Lobos
               </button>
             </div>
           </div>

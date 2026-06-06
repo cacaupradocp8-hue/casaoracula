@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { useBig5Oracular } from './useBig5Oracular';
 import { montarProfileJson } from '@/lib/cartografia/montarProfileJson';
 import { upsertCartografiaProfile } from '@/lib/dal/cartografiaProfile';
@@ -21,6 +22,7 @@ export interface CartografiaRespostas {
 
 export function useCartografiaEstrutural() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { fatores, perguntas, loading: loadingBig5, calcularMedias } = useBig5Oracular();
   
   const [step, setStep] = useState<CartografiaStepId>('intro');
@@ -226,6 +228,7 @@ export function useCartografiaEstrutural() {
       setResult({ profileJson, leitura, cidadela });
       setStep('resultado');
       toast.success('Sua CidaDELA Interior foi revelada ✨');
+      navigate('/clube/rotas/lobos', { state: { transitionText: 'A primeira travessia recomendada para fundadoras é a Rota dos Lobos. Nela, você começará a reconhecer onde sua voz foi silenciada, onde sua adaptação virou sobrevivência e onde seu instinto tenta retornar.' } });
     } catch (err) {
       console.error(err);
       toast.error('Erro ao gerar sua cartografia. Tente novamente.');

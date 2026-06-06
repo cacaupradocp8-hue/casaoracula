@@ -29,7 +29,7 @@ export interface CidadelaDerivada {
 const EIXO_DISTRITOS: Record<keyof MediasFatores, string[]> = {
   porta_do_possivel: ['portao_chegada', 'portal_renascimento'],
   torre_interna: ['torres', 'conselho_interior'],
-  campo_do_outro: ['espelho_vinculos', 'jardim_arquetipos'],
+  campo_do_outro: ['espelho_vinculos', 'bosque_arquetipos'],
   voz_no_mundo: ['forja', 'praca_integracao'],
   porta_do_abalo: ['praca_abalo', 'labirinto', 'casa_sonhos'],
 };
