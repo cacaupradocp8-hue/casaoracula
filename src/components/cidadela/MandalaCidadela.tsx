@@ -21,7 +21,7 @@ export interface MandalaDistrict {
 
 export interface MandalaDistrictState {
   district_id: string;
-  state: 'inativo' | 'ativo' | 'integrado';
+  state: 'inativo' | 'ativo' | 'integrado' | 'adormecido';
   sessions_count: number;
   last_session_at: string | null;
 }
@@ -55,6 +55,7 @@ const CX = 400, CY = 400;
 // ============================================
 const NAME_OVERRIDES: Record<number, string> = {
   4: 'Bosque dos Arquétipos',
+  13: 'Casa Matriz',
 };
 
 // ============================================
@@ -64,7 +65,7 @@ const VIRTUAL_DISTRICTS: MandalaDistrict[] = [
   {
     id: 'virtual-jardim-heroina',
     numero: 13,
-    nome: 'Jardim da Heroína',
+    nome: 'Casa Matriz',
     descricao: 'O território da jornada pessoal e da coragem interior.',
     icone: '🌺',
     cor: '#C9A24A',
@@ -149,6 +150,16 @@ const STATE_STYLES = {
     building: 'rgba(74,178,107,0.20)',
     wall: 'rgba(107,196,143,0.70)',
     accent: '#6bc48f',
+  },
+  adormecido: {
+    fill: 'rgba(100,100,100,0.02)',
+    stroke: 'rgba(150,150,150,0.15)',
+    icon: 'rgba(150,150,150,0.20)',
+    text: 'rgba(150,150,150,0.30)',
+    glow: 'none',
+    building: 'rgba(100,100,100,0.05)',
+    wall: 'rgba(150,150,150,0.15)',
+    accent: 'rgba(150,150,150,0.15)',
   },
 };
 

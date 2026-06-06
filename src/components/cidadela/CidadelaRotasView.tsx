@@ -68,7 +68,7 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
       <section className="px-4">
         <PortaInicialHero 
           portaNome={bussola.distritoDominante?.nome} 
-          portaSlug={bussola.acaoPrincipal.rota?.split('/').pop()} 
+          portaSlug="lobos" 
         />
       </section>
 

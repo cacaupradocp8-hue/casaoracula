@@ -33,7 +33,7 @@ const EIXO_DISTRITOS: Record<keyof MediasFatores, string[]> = {
   torre_interna: ['torres', 'conselho_interior'],
   campo_do_outro: ['espelho_vinculos', 'bosque_arquetipos'],
   voz_no_mundo: ['forja', 'coracao_cidadela'],
-  porta_do_abalo: ['praca_abalo', 'labirinto', 'casa_sonhos'],
+  porta_do_abalo: ['praca_abalo', 'labirinto', 'casa_sonhos', 'portas'],
 };
 
 // ─── Mapeamento eixo → porta de trabalho ───

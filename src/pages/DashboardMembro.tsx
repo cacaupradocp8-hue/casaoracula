@@ -74,7 +74,24 @@ export default function DashboardMembro() {
 
         {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA (VERSÃO ROTAS) */}
         {bussola.temCartografia ? (
-          <CidadelaRotasView bussola={bussola} />
+          <div className="space-y-12">
+            <CidadelaRotasView bussola={bussola} />
+            <div className="max-w-4xl mx-auto space-y-8">
+              <h2 className="text-2xl font-display text-center">Sua Travessia: Rota dos Lobos</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 {/* Reutilizando lógica de progresso simples ou botão de continuar */}
+                 <Button 
+                   variant="gold" 
+                   size="lg" 
+                   className="w-full h-16 shadow-premium-glow"
+                   onClick={() => navigate('/clube/rotas/lobos')}
+                 >
+                   Continuar Travessia
+                   <ArrowRight className="ml-2 w-5 h-5" />
+                 </Button>
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="min-h-[60vh] flex flex-col items-center justify-center text-center space-y-8 max-w-2xl mx-auto">
             <motion.div
