@@ -335,39 +335,6 @@ export function CartografiaEstruturalStepper() {
           <LimiarCidadela key="intro" onEnter={next} />
         )}
 
-        {step === 'sintoma' && (
-          <QuestionStep 
-            key="sintoma"
-            title="Território do Sintoma"
-            description="O que tem pedido sua atenção nos últimos tempos? Mapeie desconfortos, padrões e sinais."
-            questions={[
-              "Que padrão parece se repetir na sua vida?",
-              "Onde isso aparece no corpo, nas emoções ou nas relações?",
-              "O que você sente que já não consegue mais sustentar?"
-            ]}
-            value={respostas.sintoma}
-            onChange={v => updateResposta('sintoma', v)}
-            onNext={next}
-            onBack={back}
-          />
-        )}
-
-        {step === 'historia' && (
-          <QuestionStep 
-            key="historia"
-            title="Território da História"
-            description="Compreenda eventos e vínculos que contextualizam seu momento atual."
-            questions={[
-              "Que acontecimentos marcaram a forma como você se vê hoje?",
-              "Que histórias você aprendeu a contar sobre si mesma?",
-              "Houve alguma virada importante que mudou seu modo de existir?"
-            ]}
-            value={respostas.historia}
-            onChange={v => updateResposta('historia', v)}
-            onNext={next}
-            onBack={back}
-          />
-        )}
 
         {step === 'objetivas' && (
           <motion.div key="objetivas" {...slideVariants} className="space-y-6">
@@ -464,6 +431,120 @@ export function CartografiaEstruturalStepper() {
               </CardContent>
             </Card>
 
+                {/* Pergunta 4 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    4. Diante de um impasse emocional profundo, você costuma:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'labirinto', text: 'Mergulhar no silêncio até que a resposta surja.', territory: 'Labirinto' },
+                      { id: 'jardim_arquetipos', text: 'Buscar inspiração em símbolos ou histórias.', territory: 'Jardim dos Arquétipos' },
+                      { id: 'praca_integracao', text: 'Tentar equilibrar a razão e a emoção.', territory: 'Praça da Integração' },
+                      { id: 'portal_renascimento', text: 'Sentir que algo precisa morrer para o novo nascer.', territory: 'Portal de Renascimento' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p4', opt.id)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p4'] === opt.id
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pergunta 5 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    5. O que mais te nutre em momentos de cansaço?
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'casa_sonhos', text: 'O recolhimento e o contato com meus sonhos.', territory: 'Casa dos Sonhos' },
+                      { id: 'bosque_arquetipos', text: 'Caminhar por lugares que me tragam paz.', territory: 'Bosque dos Arquétipos' },
+                      { id: 'forja', text: 'Realizar algo concreto e manual.', territory: 'Forja' },
+                      { id: 'portas', text: 'Rever meus limites e dizer "não".', territory: 'Portas' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p5', opt.id)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p5'] === opt.id
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pergunta 6 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    6. Quando você se sente pressionada pelo mundo externo, sua tendência é:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'torres', text: 'Endurecer e focar no dever.', territory: 'Torres' },
+                      { id: 'conselho_interior', text: 'Consultar minha sabedoria interna.', territory: 'Conselho Interior' },
+                      { id: 'praca_abalo', text: 'Sentir que tudo está prestes a desmoronar.', territory: 'Praça do Abalo' },
+                      { id: 'casa_matriz', text: 'Me esconder em meu jardim particular.', territory: 'Casa Matriz' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p6', opt.id)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p6'] === opt.id
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Pergunta 7 */}
+                <div className="space-y-6">
+                  <p className="text-sm font-medium text-foreground leading-relaxed">
+                    7. Para você, uma vida plena envolve principalmente:
+                  </p>
+                  <div className="grid grid-cols-1 gap-3">
+                    {[
+                      { id: 'portal_renascimento', text: 'A coragem de se transformar constantemente.', territory: 'Portal de Renascimento' },
+                      { id: 'espelho_vinculos', text: 'A profundidade das conexões humanas.', territory: 'Espelho dos Vínculos' },
+                      { id: 'jardim_arquetipos', text: 'A expressão da minha essência criativa.', territory: 'Jardim dos Arquétipos' },
+                      { id: 'praca_integracao', text: 'O sentimento de estar inteira em cada gesto.', territory: 'Praça da Integração' }
+                    ].map((opt) => (
+                      <button
+                        key={opt.id}
+                        onClick={() => updateObjetiva('p7', opt.id)}
+                        className={`p-4 rounded-xl border text-sm text-left transition-all ${
+                          respostas.objetivas['p7'] === opt.id
+                            ? 'bg-gold/20 border-gold text-gold shadow-premium-glow' 
+                            : 'border-gold/10 hover:border-gold/30 text-muted-foreground'
+                        }`}
+                      >
+                        <span className="block font-medium mb-1">{opt.text}</span>
+                        <span className="text-[10px] uppercase tracking-widest opacity-40">→ {opt.territory}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <div className="flex justify-between pt-4">
               <Button variant="ghost" onClick={back} className="text-muted-foreground hover:text-gold hover:bg-transparent">
                 <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
@@ -471,102 +552,15 @@ export function CartografiaEstruturalStepper() {
               <Button 
                 onClick={next} 
                 variant="gold" 
-                disabled={Object.keys(respostas.objetivas).length < 3}
+                disabled={Object.keys(respostas.objetivas).length < 7}
               >
-                Avançar para Crenças <ArrowRight className="w-4 h-4 ml-2" />
+                Finalizar e Revelar <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>
           </motion.div>
-        )}
-
-        {step === 'crencas' && (
-          <QuestionStep 
-            key="crencas"
-            title="Território das Crenças"
-            description="Identifique as narrativas que governam suas decisões e percepções."
-            questions={[
-              "Que verdades absolutas você carrega sobre a vida?",
-              "Que voz interna mais te limita ou te impulsiona?",
-              "Quais são os 'não ditos' que ainda comandam suas ações?"
-            ]}
-            value={respostas.crencas}
-            onChange={v => updateResposta('crencas', v)}
-            onNext={next}
-            onBack={back}
-          />
-        )}
-
-        {step === 'recursos' && (
-          <QuestionStep 
-            key="recursos"
-            title="Território dos Recursos"
-            description="Mapeie suas forças, práticas de sustentação e saberes acumulados."
-            questions={[
-              "O que te devolve o eixo quando você se perde?",
-              "Quais são suas ferramentas naturais de enfrentamento?",
-              "Em que você reconhece sua maior vitalidade?"
-            ]}
-            value={respostas.recursos}
-            onChange={v => updateResposta('recursos', v)}
-            onNext={next}
-            onBack={back}
-          />
-        )}
-
-        {step === 'seguranca' && (
-          <QuestionStep 
-            key="seguranca"
-            title="Nível de Atenção e Segurança"
-            description="Estabeleça um pacto de cuidado para sua jornada de travessia."
-            questions={[
-              "Como você avalia sua capacidade atual de sustentar este processo?",
-              "Quais são seus limites inegociáveis neste momento?",
-              "Que tipo de suporte você sente que mais precisa agora?"
-            ]}
-            value={respostas.seguranca}
-            onChange={v => updateResposta('seguranca', v)}
-            onNext={next}
-            onBack={back}
-            cta="Finalizar e Revelar"
-          />
         )}
       </AnimatePresence>
     </div>
   );
 }
 
-function QuestionStep({ title, description, questions, value, onChange, onNext, onBack, cta = "Próximo" }: any) {
-  return (
-    <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
-      <header className="space-y-2">
-        <h2 className="text-2xl font-display text-foreground">{title}</h2>
-        <p className="text-sm text-muted-foreground">{description}</p>
-      </header>
-      
-      <Card className="glass border-gold/10 bg-card/20">
-        <CardContent className="pt-6 space-y-6">
-          <div className="space-y-3">
-            {questions.map((q: string, i: number) => (
-              <p key={i} className="text-sm text-foreground/70 leading-relaxed italic">• {q}</p>
-            ))}
-          </div>
-          <Textarea 
-            placeholder="Escreva livremente sobre este território..."
-            className="min-h-[200px] bg-background/30 border-gold/10 focus-visible:ring-gold/20 resize-none text-sm"
-            value={value}
-            onChange={e => onChange(e.target.value)}
-          />
-        </CardContent>
-      </Card>
-
-      <div className="flex justify-between pt-4">
-        <Button variant="ghost" onClick={onBack} className="text-muted-foreground hover:text-gold hover:bg-transparent">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
-        </Button>
-        <Button onClick={onNext} variant="gold" disabled={!value || value.length < 5}>
-          {cta} <ArrowRight className="w-4 h-4 ml-2" />
-        </Button>
-      </div>
-    </motion.div>
-  );
-}
