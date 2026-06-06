@@ -91,8 +91,6 @@ export function EstacaoHero({
             <ChevronRight className="w-2.5 h-2.5 opacity-40" />
             <span className="text-gold/80">{titulo}</span>
           </nav>
-            <span className="text-gold/80">{titulo}</span>
-          </nav>
 
           {/* Titles Section */}
           <div className="space-y-6">
