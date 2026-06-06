@@ -316,12 +316,7 @@ export function Navigation() {
                           Painel Admin
                         </DropdownMenuItem>
                         <DropdownMenuSeparator className="bg-primary/10" />
-                      </>
-                      </>
-                    )}
-
-                    {isAdmin && (
-                      <>
+                        
                         <DropdownMenuItem 
                           onClick={() => {
                             const newValue = !user?.founder_beta;
