@@ -178,8 +178,14 @@ export default function ClubeRotaPremium() {
             if (!relato) return null;
             return (
               <Section id="caso-simbolico" icon={Eye} kicker="Visão do Espelho" titulo={ponto.metadata?.caso_simbolico?.titulo || 'Caso Simbólico'}>
-                <div className="max-w-3xl mx-auto bg-foreground/[0.03] border-l-4 border-gold/40 p-8 rounded-r-2xl whitespace-pre-wrap font-serif text-lg leading-relaxed italic text-white/80">
-                  {relato}
+                <div className="relative max-w-4xl mx-auto group">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 via-white/5 to-gold/20 rounded-[2rem] blur opacity-25 group-hover:opacity-40 transition duration-1000" />
+                  <div className="relative bg-white/[0.02] border border-white/10 p-12 md:p-16 rounded-[2rem] backdrop-blur-xl shadow-2xl overflow-hidden">
+                    <div className="absolute top-0 left-0 w-1 h-full bg-gold/40" />
+                    <div className="font-serif text-xl md:text-2xl leading-relaxed italic text-white/90 whitespace-pre-wrap selection:bg-gold/30">
+                      {relato}
+                    </div>
+                  </div>
                 </div>
               </Section>
             );
@@ -191,8 +197,13 @@ export default function ClubeRotaPremium() {
             if (!desafio) return null;
             return (
               <Section id="desafio-escuta" icon={Sword} kicker="O Chamado do Agora" titulo="Desafio de Escuta">
-                <div className="max-w-3xl mx-auto border border-gold/20 bg-gold/5 p-10 rounded-3xl text-center">
-                  <p className="font-serif text-2xl text-gold leading-relaxed">{desafio}</p>
+                <div className="max-w-4xl mx-auto">
+                   <div className="relative p-12 md:p-20 rounded-[3rem] border border-gold/20 bg-gradient-to-br from-gold/10 via-midnight to-black text-center overflow-hidden shadow-2xl">
+                     <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(196,165,74,0.1),transparent_70%)]" />
+                     <p className="relative font-serif text-2xl md:text-4xl text-gold leading-tight tracking-tight italic">
+                       {desafio}
+                     </p>
+                   </div>
                 </div>
               </Section>
             );
