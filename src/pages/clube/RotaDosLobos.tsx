@@ -170,15 +170,18 @@ export default function RotaDosLobos() {
 
                   <div className="space-y-5">
                     <div 
-                      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-[360px]"
+                      className="flex items-center gap-2 cursor-pointer group w-fit"
                       onClick={togglePlay}
                     >
-                      <div className="w-10 h-10 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
-                        {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
+                      <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
+                        {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
                       </div>
-                      <div className="flex flex-col gap-0 min-w-0">
-                        <h3 className="text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
-                        <button className="text-[11px] text-gold font-medium uppercase tracking-wider text-left hover:underline">Ouvir Acolhimento →</button>
+                      <div className="flex flex-col -space-y-0.5">
+                        <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
+                        <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
+                          Ouvir Acolhimento
+                          <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
+                        </span>
                       </div>
                     </div>
 
