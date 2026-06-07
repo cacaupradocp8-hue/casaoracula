@@ -48,9 +48,21 @@ export default function RotaDosLobos() {
   });
 
   const irParaEstacao1 = () => {
-    const firstSlug = estacoesAtivas[0]?.primeiro_slug;
-    if (firstSlug) navigate(`/clube/rota/${firstSlug}`);
+    navigate('/clube/rota/clareira-do-chamado');
   };
+
+  const irParaSlug = (slug: string | undefined) => {
+    if (slug) navigate(`/clube/rota/${slug}`);
+  };
+
+  const slugsReais = [
+    'clareira-do-chamado',
+    'casa-da-boa-menina',
+    'porta-proibida',
+    'casa-da-boneca-interior',
+    'margem-dos-ossos',
+    'territorio-da-loba'
+  ];
 
   return (
     <AppLayout>
