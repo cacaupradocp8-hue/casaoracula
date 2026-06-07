@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
 
 export default function ClubeRotasPortal() {
   const navigate = useNavigate();
@@ -307,7 +308,8 @@ export default function ClubeRotasPortal() {
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#020D24]/80 z-10 hidden lg:block" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#020D24] to-transparent z-10 lg:hidden" />
                         <img 
-                          src="https://lovable-uploads.s3.us-west-2.amazonaws.com/055d0534-9226-4bf0-8ae4-347d57a5b1f6.png" 
+                          src={rotaLobosBg} 
+
 
                           alt="Rota dos Lobos" 
                           className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[3s]" 
