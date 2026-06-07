@@ -1,20 +1,50 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, ArrowRight, TreePine, Eye, Ghost, Star, Sparkles, Headphones } from 'lucide-react';
+import { ArrowRight, TreePine, Play, Pause, Lock } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
-import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Button } from '@/components/ui/button';
-import { useTodasRotas } from '@/hooks/useTodasRotas';
+import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
+import { cn } from '@/lib/utils';
+
+interface DisplayEstacao extends Partial<EstacaoCatalogo> {
+  id: string;
+  titulo: string;
+  status: EstacaoStatusUI;
+  numero: number;
+  primeiro_slug?: string;
+}
 
 export default function RotaDosLobos() {
   const navigate = useNavigate();
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
+  
+  const audioUrl = getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3');
+  const { isPlaying, togglePlay } = useAudioPlayer({ audioUrl });
 
   const estacoesAtivas = estacoes?.filter(e => e.ativa) || [];
+  
+  const totalEstacoes = 6;
+  const displayEstacoes: DisplayEstacao[] = Array.from({ length: totalEstacoes }).map((_, i) => {
+    const realEstacao = estacoesAtivas[i];
+    if (realEstacao) return realEstacao;
+    
+    return {
+      id: `placeholder-${i}`,
+      titulo: i === 0 ? "Clareira do Chamado" : 
+              i === 1 ? "Casa da Boa Menina" :
+              i === 2 ? "Porta Proibida" :
+              i === 3 ? "Casa da Boneca Interior" :
+              i === 4 ? "Margem dos Ossos" : "Território da Loba",
+      status: 'locked' as EstacaoStatusUI,
+      numero: i + 1,
+      primeiro_slug: undefined
+    };
+  });
 
   const irParaEstacao1 = () => {
     const firstSlug = estacoesAtivas[0]?.primeiro_slug;
@@ -23,121 +53,170 @@ export default function RotaDosLobos() {
 
   return (
     <AppLayout>
-      <div className="relative bg-[#010816] text-white min-h-screen overflow-x-hidden font-sans">
-        {/* HERO CURTO */}
-        <section className="relative min-h-[55vh] flex flex-col justify-center pt-16 pb-10 z-10">
+      <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
+        <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
               src={getSetting('rota_dos_lobos_hero_image', 'https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80')}
-              className="w-full h-full object-cover grayscale opacity-30 mix-blend-luminosity"
-              alt="Floresta"
+              className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110"
+              alt="Lobo na Floresta"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-[#020617]" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
           </div>
-          <ResponsiveContainer size="wide" className="px-6 text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-5xl md:text-7xl font-serif tracking-tighter leading-tight"
-            >
-              Rota dos <span className="text-gold italic">Lobos</span>
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="text-lg md:text-2xl text-gold/60 font-serif italic mt-6 max-w-xl mx-auto"
-            >
-              "Onde a voz silenciada volta a encontrar o corpo."
-            </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="mt-10"
-            >
-              <Button
-                variant="gold"
-                size="xl"
-                className="rounded-full px-12 h-16 shadow-premium-glow"
-                onClick={irParaEstacao1}
+
+          <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
+            <div className="max-w-2xl mt-12 space-y-8">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
               >
-                Entrar na Clareira do Chamado
-                <ArrowRight className="ml-3 w-5 h-5" />
-              </Button>
-            </motion.div>
-          </ResponsiveContainer>
-        </section>
+                <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+              </motion.div>
 
-        {/* A VOZ DA FLORESTA */}
-        <section className="py-12 px-6 border-y border-white/5 bg-white/[0.02]">
-          <ResponsiveContainer size="wide" className="max-w-4xl text-center">
-            <div className="space-y-6">
-              <div className="inline-flex p-3 rounded-2xl bg-gold/10 border border-gold/20 text-gold mb-2">
-                <Headphones className="w-6 h-6" />
-              </div>
-              <h2 className="text-3xl md:text-4xl font-serif text-white">A Voz da Floresta</h2>
-              <p className="text-lg text-white/60 font-serif italic max-w-2xl mx-auto">
-                Antes de entrar na primeira estação, escute a abertura da travessia. Este áudio prepara o campo simbólico da Rota dos Lobos.
-              </p>
-              <div className="pt-4">
-                <EscutaPremium 
-                  audioUrl={getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3')}
-                  titulo="Acolhimento: Rota dos Lobos"
-                  tipo="Abertura da Travessia"
-                  funcao="Preparação do Campo Simbólico"
-                  className="bg-transparent shadow-none py-0 md:py-0"
-                />
-              </div>
-            </div>
-          </ResponsiveContainer>
-        </section>
-
-        {/* AS ESTAÇÕES DINÂMICAS */}
-        <section id="estacoes" className="py-20 px-6">
-          <ResponsiveContainer size="wide">
-            <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-white/70">As Estações</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {estacoesAtivas.map((estacao, i) => (
-                <motion.button
-                  key={estacao.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.05 }}
-                  onClick={() => estacao.status !== 'locked' && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
-                  disabled={estacao.status === 'locked'}
-                  className="text-left p-6 rounded-3xl border border-white/10 bg-white/[0.02] flex flex-col gap-4 hover:border-gold/30 hover:bg-white/[0.04] transition-all group disabled:opacity-40 disabled:cursor-not-allowed"
+              <div className="space-y-4">
+                <motion.h1
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-6xl md:text-8xl font-serif leading-[0.9] tracking-tight"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center text-gold/60 group-hover:scale-110 transition-transform">
-                      {i % 6 === 0 && <TreePine className="w-5 h-5" />}
-                      {i % 6 === 1 && <Eye className="w-5 h-5" />}
-                      {i % 6 === 2 && <Ghost className="w-5 h-5" />}
-                      {i % 6 === 3 && <Star className="w-5 h-5" />}
-                      {i % 6 === 4 && <Sparkles className="w-5 h-5" />}
-                      {i % 6 === 5 && <Compass className="w-5 h-5" />}
-                      {i % 6 > 5 && <Sparkles className="w-5 h-5" />}
-                    </div>
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-gold/40 font-bold">Estação {estacao.numero}</span>
+                  Rota dos <br />
+                  <span className="text-gold italic font-light">Lobos</span>
+                </motion.h1>
+
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-xl md:text-2xl text-gold/80 font-serif italic max-w-md leading-relaxed"
+                >
+                  "Onde a voz silenciada volta a encontrar o corpo."
+                </motion.p>
+
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.4 }}
+                  className="text-sm md:text-base text-white/50 max-w-sm leading-relaxed"
+                >
+                  Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
+                </motion.p>
+              </div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/60 transition-all cursor-pointer"
+                onClick={togglePlay}
+              >
+                <div className="relative flex-shrink-0">
+                  <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
+                    {isPlaying ? (
+                      <Pause className="w-6 h-6 text-gold fill-gold" />
+                    ) : (
+                      <Play className="w-6 h-6 text-gold fill-gold" />
+                    )}
                   </div>
-                  <div className="space-y-2">
-                    <h4 className="text-xl font-serif group-hover:text-gold transition-colors">{estacao.titulo}</h4>
-                    <p className="text-sm text-white/50 italic font-serif leading-snug">"{estacao.subtitulo}"</p>
-                  </div>
-                </motion.button>
-              ))}
+                  <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
+                  <div className="absolute inset-[-8px] border border-gold/5 rounded-full" />
+                </div>
+                
+                <div className="flex flex-col gap-1">
+                  <h3 className="text-lg font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
+                  <p className="text-xs text-white/40 leading-relaxed">
+                    Escute a abertura da travessia e prepare o campo para sua jornada.
+                  </p>
+                  <button className="text-gold text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2 hover:translate-x-1 transition-transform">
+                    {isPlaying ? 'Pausar acolhimento' : 'Ouvir acolhimento'} <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 }}
+                className="pt-4"
+              >
+                <Button
+                  variant="gold"
+                  size="xl"
+                  className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none"
+                  onClick={irParaEstacao1}
+                >
+                  <TreePine className="mr-3 w-6 h-6" />
+                  Entrar na Clareira do Chamado
+                  <ArrowRight className="ml-3 w-5 h-5" />
+                </Button>
+              </motion.div>
+            </div>
+
+            <div className="mt-24 space-y-8">
+              <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
+                As 6 estações da Rota dos Lobos
+              </h2>
+
+              <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-4 overflow-x-auto pb-8 scrollbar-hide">
+                {displayEstacoes.map((estacao, i) => {
+                  const isLocked = estacao.status === 'locked';
+                  const isActive = i === 0 && !isLocked;
+
+                  return (
+                    <motion.div
+                      key={estacao.id}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.8 + (i * 0.1) }}
+                      className="flex flex-col items-center gap-4 min-w-[120px] group"
+                    >
+                      <button
+                        disabled={isLocked}
+                        onClick={() => !isLocked && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
+                        className={cn(
+                          "relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-500",
+                          isActive 
+                            ? "bg-gold/20 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.3)] scale-110" 
+                            : "bg-white/5 border border-white/10 hover:bg-white/10"
+                        )}
+                      >
+                        <div className={cn(
+                          "absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
+                          isActive ? "bg-gold text-black" : "bg-white/10 text-white/40"
+                        )}>
+                          {i + 1}
+                        </div>
+
+                        {isActive ? (
+                          <div className="relative">
+                            <TreePine className="w-8 h-8 text-gold" />
+                            <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
+                          </div>
+                        ) : (
+                          <Lock className="w-6 h-6 text-white/20" />
+                        )}
+
+                        {isActive && (
+                          <div className="absolute inset-0 rounded-full overflow-hidden -z-10 opacity-40">
+                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" alt="" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </button>
+
+                      <span className={cn(
+                        "text-[11px] text-center max-w-[100px] leading-tight font-medium uppercase tracking-wider",
+                        isActive ? "text-white" : "text-white/30"
+                      )}>
+                        {estacao.titulo}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </ResponsiveContainer>
         </section>
-
-        {/* Footer Minimal */}
-        <footer className="py-10 border-t border-white/5 bg-black/40">
-          <ResponsiveContainer size="wide" className="px-6 flex justify-between items-center text-[10px] uppercase tracking-widest text-white/20">
-            <button className="hover:text-white transition-colors" onClick={() => navigate('/clube/rotas')}>Voltar ao Portal</button>
-            <div>Casa Orácula © 2026</div>
-          </ResponsiveContainer>
-        </footer>
       </div>
     </AppLayout>
   );
