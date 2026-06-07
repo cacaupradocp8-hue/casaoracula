@@ -54,63 +54,67 @@ export default function RotaDosLobos() {
 
   return (
     <AppLayout>
-      <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
-        <ResponsiveContainer size="wide" className="px-4 md:px-12 lg:px-20 max-w-6xl mx-auto w-full pt-8 pb-32">
+      <div className="bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30 selection:text-white">
+        <div className="max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-12">
           
-          {/* NOVO HERO - REFEITO DO ZERO */}
-          <section className="relative overflow-hidden rounded-[32px] bg-[#0A0A0B] border border-gold/10 shadow-2xl">
+          {/* HERO REFEITO - MODELO OBRIGATÓRIO */}
+          <section className="relative overflow-hidden rounded-[32px] bg-[#0A0A0B] border border-white/5 shadow-2xl">
             <div className="flex flex-col lg:grid lg:grid-cols-[45%_55%]">
               
-              {/* Imagem (Top on Mobile, Right on Desktop) */}
-              <div className="relative w-full h-[280px] md:h-[350px] lg:h-auto order-1 lg:order-2 overflow-hidden bg-[#0A0A0B]">
+              {/* Direita: Imagem (Topo no mobile) */}
+              <div className="relative w-full h-[200px] sm:h-[250px] lg:h-auto order-1 lg:order-2 bg-[#0A0A0B]">
                 <img
                   src={rotaLobosBg}
                   className="w-full h-full object-cover lg:object-cover object-[center_20%]"
                   alt="Rota dos Lobos"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent" />
+                {/* Gradiente de fusão - Transição suave */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent lg:from-0% lg:via-20%" />
               </div>
 
-              {/* Conteúdo (Bottom on Mobile, Left on Desktop) */}
-              <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center gap-6 z-10 order-2 lg:order-1">
-                <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
-                  <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
-                </div>
+              {/* Esquerda: Conteúdo */}
+              <div className="p-6 md:p-8 lg:p-12 flex flex-col justify-center gap-6 order-2 lg:order-1 relative z-10">
+                <div className="space-y-4">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
+                    <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+                  </div>
 
-                <div className="space-y-3">
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-[0.9]">
-                    Rota dos <span className="text-gold italic block font-light mt-2">Lobos</span>
+                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white leading-tight lg:leading-[0.9]">
+                    Rota dos <br />
+                    <span className="text-gold italic font-light">Lobos</span>
                   </h1>
-                  <p className="text-lg md:text-xl text-gold/80 font-serif italic leading-relaxed">
+
+                  <p className="text-base md:text-xl text-gold/80 font-serif italic">
                     "Onde a voz silenciada volta a encontrar o corpo."
                   </p>
+
                   <p className="text-sm text-white/50 leading-relaxed max-w-sm">
                     Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
                   </p>
                 </div>
 
-                {/* Card de Áudio */}
+                {/* Card de Áudio: A Voz da Floresta */}
                 <div 
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer w-full"
+                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
                   onClick={togglePlay}
                 >
-                  <div className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0">
+                  <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0">
                     {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
                   </div>
-                  <div className="flex flex-col gap-0.5 overflow-hidden">
-                    <h3 className="text-sm font-serif text-white">A Voz da Floresta</h3>
-                    <p className="text-[10px] text-white/50 truncate">Escute a abertura da travessia e prepare o campo.</p>
+                  <div className="flex flex-col gap-0.5 min-w-0">
+                    <h3 className="text-sm font-serif text-white truncate">A Voz da Floresta</h3>
+                    <p className="text-[10px] text-white/40 truncate">Prepare o campo para a travessia.</p>
                   </div>
                 </div>
 
-                {/* CTA */}
+                {/* CTA Principal */}
                 <Button
                   variant="gold"
                   size="xl"
-                  className="w-full rounded-full py-6 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words h-auto shadow-xl"
+                  className="w-full rounded-full h-14 md:h-16 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words shadow-xl"
                   onClick={irParaEstacao1}
                 >
-                  <TreePine className="mr-2 w-4 h-4" />
+                  <TreePine className="mr-2 w-5 h-5" />
                   Entrar na Clareira do Chamado
                 </Button>
               </div>
@@ -118,7 +122,7 @@ export default function RotaDosLobos() {
           </section>
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
-          <div className="mt-24 space-y-12">
+          <div className="space-y-10 pt-4 pb-20">
             <div className="flex flex-col items-center md:items-start gap-4">
                <h2 className="text-xl md:text-2xl font-serif italic text-gold/60 tracking-wide">
                 As 6 estações da Rota dos Lobos
