@@ -72,71 +72,78 @@ export default function RotaDosLobos() {
           {/* HERO CINEMATOGRÁFICO - ESTRUTURA GRID PARA EVITAR CORTES NA IMAGEM */}
           <section className="relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#0A0A0B] border border-white/10 shadow-2xl">
             
-            <div className="grid grid-cols-1 md:grid-cols-2 min-h-fit md:min-h-[680px]">
+            <div className="flex flex-col md:grid md:grid-cols-2 min-h-fit md:min-h-[680px]">
               
+              {/* Imagem Mobile (Visível apenas em telas pequenas) */}
+              <div className="md:hidden h-[240px] bg-[#0A0A0B] flex items-center justify-center overflow-hidden border-b border-white/5">
+                <img
+                  src={rotaLobosBg}
+                  alt="Rota dos Lobos"
+                  className="h-full w-full object-contain object-center scale-105"
+                />
+              </div>
+
               {/* Coluna Esquerda: Conteúdo */}
-              <div className="relative z-20 flex flex-col justify-start p-6 md:p-14 lg:p-20 pt-10 md:pt-16 bg-gradient-to-b from-[#0A0A0B] via-[#0A0A0B] md:bg-none">
-                <div className="max-w-xl space-y-8">
+              <div className="relative z-20 flex flex-col justify-start p-6 md:p-14 lg:p-20 pt-8 md:pt-16">
+                <div className="max-w-xl space-y-6 md:space-y-8">
                   {/* Badge e Título */}
-                  <div className="space-y-4">
-                    <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
-                      <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-gold uppercase">Travessia Ativa</span>
+                  <div className="space-y-3 md:space-y-4">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
+                      <span className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-gold uppercase">Travessia Ativa</span>
                     </div>
 
-                    <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[0.9] tracking-tight">
+                    <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif text-white leading-[0.9] tracking-tight">
                       Rota dos <br />
                       <span className="text-gold italic font-light">Lobos</span>
                     </h1>
 
                     <div className="space-y-3">
-                      <p className="text-lg md:text-xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
+                      <p className="text-base md:text-xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
                         "Onde a voz silenciada volta a encontrar o corpo."
                       </p>
-                      <p className="text-xs md:text-sm text-white/60 leading-relaxed max-w-sm">
+                      <p className="text-[11px] md:text-sm text-white/60 leading-relaxed max-w-sm">
                         Uma jornada profunda em 6 estações para reconhecer silenciamentos e despertar o instinto selvagem.
                       </p>
                     </div>
                   </div>
 
                   {/* Card de Áudio e CTA */}
-                  <div className="space-y-5">
+                  <div className="space-y-4 md:space-y-5">
                     {/* Voz da Floresta */}
                     <div 
-                      className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-[360px]"
+                      className="group flex items-center gap-3 p-3 md:p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-[320px] md:max-w-[360px]"
                       onClick={togglePlay}
                     >
-                      <div className="w-10 h-10 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
-                        {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
+                      <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
+                        {isPlaying ? <Pause className="w-3 h-3 md:w-4 md:h-4 text-gold fill-gold" /> : <Play className="w-3 h-3 md:w-4 md:h-4 text-gold fill-gold ml-0.5" />}
                       </div>
                       <div className="flex flex-col gap-0 min-w-0">
-                        <h3 className="text-sm md:text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
-                        <button className="text-[11px] text-gold font-medium uppercase tracking-wider text-left hover:underline">Ouvir Acolhimento →</button>
+                        <h3 className="text-xs md:text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
+                        <button className="text-[10px] md:text-[11px] text-gold font-medium uppercase tracking-wider text-left hover:underline">Ouvir Acolhimento →</button>
                       </div>
                     </div>
 
                     {/* CTA Principal */}
                     <Button
                       variant="gold"
-                      className="w-full md:w-auto max-w-[420px] px-8 rounded-full h-[52px] md:h-[58px] text-sm md:text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95 whitespace-normal break-words py-2"
+                      className="w-full md:w-auto px-6 md:px-8 rounded-full h-[48px] md:h-[58px] text-xs md:text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_30px_rgba(233,167,88,0.2)] md:shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95 whitespace-normal break-words py-2"
                       onClick={irParaEstacao1}
                     >
                       <TreePine className="mr-2 w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
                       <span className="text-center">Entrar na Clareira do Chamado</span>
-                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0 hidden md:block" />
                     </Button>
                   </div>
                 </div>
               </div>
 
-              {/* Coluna Direita: Imagem do Lobo Controlada */}
-              <div className="relative flex items-center justify-center bg-[#0A0A0B] min-h-[400px] md:min-h-full overflow-hidden order-first md:order-last">
+              {/* Coluna Direita: Imagem Desktop (Oculta no mobile) */}
+              <div className="hidden md:flex relative items-center justify-center bg-[#0A0A0B] min-h-full overflow-hidden">
                 <img 
                   src={rotaLobosBg} 
                   alt="Lobo da Rota dos Lobos" 
-                  className="w-full h-full object-contain md:object-right-bottom scale-110 md:scale-100"
+                  className="w-full h-full object-contain object-right-bottom"
                 />
-                {/* Overlay para suavizar transição com o texto no mobile */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent md:hidden" />
               </div>
             </div>
           </section>
@@ -150,7 +157,7 @@ export default function RotaDosLobos() {
               <div className="h-px w-32 bg-gradient-to-r from-gold/50 to-transparent" />
             </div>
 
-            <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-6 overflow-x-auto pb-8 scrollbar-hide">
+            <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-4 md:gap-6 overflow-x-auto pb-8 scrollbar-hide">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked';
                 const isActive = i === 0 && !isLocked;
@@ -162,21 +169,21 @@ export default function RotaDosLobos() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="flex flex-col items-center gap-4 min-w-[140px] group"
+                    className="flex flex-col items-center gap-3 md:gap-4 min-w-[110px] md:min-w-[140px] group"
                   >
                     <button
                       disabled={isLocked}
                       onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
-                        "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-700",
+                        "relative w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
-                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
+                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.2)] md:shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
                           : "bg-white/5 border border-white/5 hover:border-white/20",
                         isLocked ? "cursor-not-allowed" : "cursor-pointer"
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-1 -left-1 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold z-30 shadow-lg",
+                        "absolute -top-1 -left-1 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold z-30 shadow-lg",
                         isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
