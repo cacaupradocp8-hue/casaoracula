@@ -343,76 +343,7 @@ export default function ClubeRotaPremium() {
             </Section>
           )}
 
-          {/* 10. JARDIM DA PSIQUE */}
-          {psiquePergunta && (
-            <Section id="jardim-psique" icon={Flower2} kicker="Semeadura Psíquica" titulo="Jardim da Psique">
-              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10 space-y-6">
-                <p className="text-white/70 font-serif italic text-lg leading-relaxed">{psiquePergunta}</p>
-                <JardimInput 
-                  type="psique" 
-                  pergunta={psiquePergunta} 
-                  pontoId={ponto.id} 
-                  sourceTitle={ponto.nome}
-                />
-              </div>
-            </Section>
-          )}
-
-          {/* 11. JARDIM DO OFÍCIO */}
-          {oficioPergunta && (
-            <Section id="jardim-oficio" icon={Flower2} kicker="Semeadura do Ofício" titulo="Jardim do Ofício">
-              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10 space-y-6">
-                <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
-                <JardimInput 
-                  type="oficio" 
-                  pergunta={oficioPergunta} 
-                  pontoId={ponto.id} 
-                  sourceTitle={ponto.nome}
-                />
-                <div className="mt-6 pt-4 border-t border-emerald-500/10">
-                   <p className="text-[10px] text-emerald-500/50 uppercase tracking-widest font-bold mb-1">Aviso Ético</p>
-                   <p className="text-[10px] text-white/30 italic">Registre apenas padrões gerais e percepções simbólicas. Não inclua nome, dados identificáveis ou informações sensíveis de mulheres acompanhadas.</p>
-                </div>
-              </div>
-            </Section>
-          )}
-
-          {/* 12. MISSÃO DE CAMPO */}
-          {temMissao && (
-            <Section id="missao-campo" icon={Target} kicker="Travessia Encarnada" titulo={missaoCampo.titulo || 'Missão de Campo'}>
-              <div className="max-w-4xl mx-auto space-y-8 relative group">
-                {/* Decorative border glow */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-gold/10 to-transparent rounded-[2.5rem] blur-xl opacity-50 group-hover:opacity-100 transition duration-1000" />
-                
-                <div className="relative space-y-10 p-12 md:p-16 rounded-[2.5rem] border border-white/10 bg-white/[0.02] backdrop-blur-md overflow-hidden">
-                  {missaoCampo.descricao && (
-                    <p className="text-white/90 font-serif italic text-2xl leading-relaxed whitespace-pre-wrap">
-                      {missaoCampo.descricao}
-                    </p>
-                  )}
-                  
-                  {missaoCampo.sinais && (
-                    <div className="relative border-l-2 border-gold/30 pl-8 py-2">
-                      <p className="text-[11px] uppercase tracking-[0.4em] text-gold/60 font-bold mb-4">Sinais a observar</p>
-                      <p className="text-white/70 font-serif text-lg leading-relaxed whitespace-pre-wrap italic">
-                        {missaoCampo.sinais}
-                      </p>
-                    </div>
-                  )}
-                  
-                  {missaoCampo.pergunta && (
-                    <div className="bg-gold/5 border border-gold/20 p-8 md:p-12 rounded-[2rem] shadow-inner">
-                      <p className="text-gold font-serif italic text-2xl md:text-3xl text-center leading-tight">
-                        {missaoCampo.pergunta}
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </Section>
-          )}
-
-          {/* 13. FECHAMENTO */}
+          {/* 13. FECHAMENTO (Travessia Concluída) */}
           {(() => {
             const textoRaw = renderContent(ponto.metadata?.fechamento?.texto || ponto.metadata?.fechamento);
             return (
@@ -436,7 +367,7 @@ export default function ClubeRotaPremium() {
                   
                   <div className="max-w-3xl mx-auto text-center space-y-12">
                     {textoRaw && (
-                      <p className="text-2xl md:text-4xl text-white/80 font-display italic leading-snug tracking-tight">
+                      <p className="text-2xl md:text-4xl text-white/80 font-serif italic leading-snug tracking-tight">
                         {textoRaw}
                       </p>
                     )}
@@ -445,7 +376,7 @@ export default function ClubeRotaPremium() {
                       {ponto.estado !== 'completed' ? (
                         <Button
                           variant="gold"
-                          className="rounded-full h-20 px-16 text-xl font-bold shadow-glow text-midnight hover:scale-105 transition-transform"
+                          className="rounded-full h-20 px-16 text-xl font-bold shadow-premium-glow text-midnight hover:scale-105 transition-transform"
                           onClick={() => concluirPonto.mutate(ponto.id)}
                           disabled={concluirPonto.isPending}
                         >
@@ -466,9 +397,9 @@ export default function ClubeRotaPremium() {
                       <Button
                         variant="ghost"
                         className="rounded-full h-14 px-10 text-[11px] uppercase tracking-[0.4em] text-white/30 hover:text-white hover:bg-white/5 transition-all"
-                        onClick={() => navigate('/clube')}
+                        onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
                       >
-                        Voltar ao Mapa das Rotas
+                        Voltar à Rota dos Lobos
                       </Button>
                     </div>
                   </div>
