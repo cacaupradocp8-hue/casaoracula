@@ -55,14 +55,24 @@ export default function RotaDosLobos() {
   return (
     <AppLayout>
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
-        <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full pt-8 pb-32">
+        <ResponsiveContainer size="wide" className="px-4 md:px-12 lg:px-20 max-w-6xl mx-auto w-full pt-8 pb-32">
           
           {/* NOVO HERO - REFEITO DO ZERO */}
           <section className="relative overflow-hidden rounded-[32px] bg-[#0A0A0B] border border-gold/10 shadow-2xl">
             <div className="flex flex-col lg:grid lg:grid-cols-[45%_55%]">
               
-              {/* Esquerda: Conteúdo */}
-              <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center gap-6 z-10">
+              {/* Imagem (Top on Mobile, Right on Desktop) */}
+              <div className="relative w-full h-[280px] md:h-[350px] lg:h-auto order-1 lg:order-2 overflow-hidden bg-[#0A0A0B]">
+                <img
+                  src={rotaLobosBg}
+                  className="w-full h-full object-cover lg:object-cover object-[center_20%]"
+                  alt="Rota dos Lobos"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent" />
+              </div>
+
+              {/* Conteúdo (Bottom on Mobile, Left on Desktop) */}
+              <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center gap-6 z-10 order-2 lg:order-1">
                 <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
                   <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
                 </div>
@@ -97,22 +107,12 @@ export default function RotaDosLobos() {
                 <Button
                   variant="gold"
                   size="xl"
-                  className="w-full rounded-full py-6 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words h-auto"
+                  className="w-full rounded-full py-6 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words h-auto shadow-xl"
                   onClick={irParaEstacao1}
                 >
                   <TreePine className="mr-2 w-4 h-4" />
                   Entrar na Clareira do Chamado
                 </Button>
-              </div>
-
-              {/* Direita: Imagem */}
-              <div className="relative w-full h-[300px] lg:h-[auto] min-h-[300px] lg:min-h-auto overflow-hidden">
-                <img
-                  src={rotaLobosBg}
-                  className="w-full h-full object-cover lg:object-cover object-[center_30%]"
-                  alt="Rota dos Lobos"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent" />
               </div>
             </div>
           </section>
