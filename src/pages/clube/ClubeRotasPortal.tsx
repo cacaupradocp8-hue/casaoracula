@@ -44,17 +44,17 @@ export default function ClubeRotasPortal() {
         </div>
 
         <main className="relative z-10">
-          {/* 1. HERO - ABERTURA CONTEMPLATIVA */}
-          <section className="relative min-h-[80vh] flex items-center justify-center pt-24 pb-32 px-6">
+          {/* 1. HERO - ABERTURA CONTEMPLATIVA - REDUZIDO PARA FLUXO DIRETO */}
+          <section className="relative min-h-[60vh] flex items-center justify-center pt-24 pb-20 px-6">
             <ResponsiveContainer size="wide">
-              <div className="max-w-4xl mx-auto text-center space-y-16">
+              <div className="max-w-4xl mx-auto text-center space-y-12">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1.5, ease: "easeOut" }}
-                  className="space-y-12"
+                  className="space-y-10"
                 >
-                  <div className="space-y-8">
+                  <div className="space-y-6">
                     <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -62,46 +62,46 @@ export default function ClubeRotasPortal() {
                       className="flex items-center justify-center gap-4 text-gold/40"
                     >
                       <span className="h-px w-12 bg-current" />
-                      <span className="text-[10px] tracking-[0.5em] uppercase font-medium">O Portal</span>
+                      <span className="text-[10px] tracking-[0.5em] uppercase font-medium">A Casa te recebe</span>
                       <span className="h-px w-12 bg-current" />
                     </motion.div>
                     
-                    <h1 className="text-6xl md:text-9xl font-serif leading-[1.1] tracking-tight">
-                      Bem-vinda ao <span className="text-gold italic">Clube de Leitura Oracular</span>
+                    <h1 className="text-5xl md:text-8xl font-serif leading-[1.1] tracking-tight">
+                      Clube <span className="text-gold italic">Rotas Oraculares</span>
                     </h1>
                     
-                    <div className="space-y-6 pt-8">
-                      <p className="text-2xl md:text-3xl text-white/80 font-serif italic leading-relaxed max-w-2xl mx-auto">
-                        Onde leitura se transforma em percepção.
+                    <div className="pt-4">
+                      <p className="text-xl md:text-2xl text-white/70 font-serif italic leading-relaxed max-w-2xl mx-auto">
+                        Onde a leitura se transforma em percepção.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col md:flex-row items-center justify-center gap-6 pt-12">
+                  <div className="flex flex-col items-center justify-center gap-6 pt-4">
                     <Button 
                       variant="gold" 
                       size="xl" 
-                      className="rounded-full px-12 h-16 shadow-glow-gold"
+                      className="rounded-full px-16 h-16 shadow-premium-glow text-lg"
+                      onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                    >
+                      Iniciar Rota dos Lobos
+                      <ArrowRight className="ml-3 w-5 h-5" />
+                    </Button>
+                    <button 
+                      className="text-white/30 hover:text-gold/60 text-[10px] uppercase tracking-[0.3em] font-bold transition-colors"
                       onClick={() => navigate(hasCidadela ? '/cidadela/revelacao' : '/ferramenta/cartografia-psiquica-oracula')}
                     >
                       {hasCidadela ? 'Ver minha CidadELA' : 'Criar minha CidadELA'}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      size="xl" 
-                      className="rounded-full px-12 h-16 border-white/10 hover:bg-white/5"
-                      onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
-                    >
-                      Conhecer a Rota dos Lobos
-                    </Button>
+                    </button>
                   </div>
                 </motion.div>
               </div>
             </ResponsiveContainer>
 
             {/* Visual element for hero */}
-            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-gold/10 to-transparent" />
           </section>
+
 
           {/* 2. BLOCO INTRODUTÓRIO EDITORIAL - REDUZIDO */}
           <section id="intro-editorial" className="relative py-20 px-6 bg-black/40 border-y border-white/5">

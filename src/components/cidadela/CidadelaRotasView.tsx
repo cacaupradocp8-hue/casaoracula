@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Compass, RefreshCw, ArrowRight } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { CamadaCidadela } from '@/components/cartografia-unificada/CamadaCidadela';
@@ -32,7 +32,7 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
   return (
     <div className="space-y-12 pb-16">
       {/* HERO — MÍNIMO */}
-      <header className="text-center space-y-6 pt-8 max-w-2xl mx-auto">
+      <header className="text-center space-y-6 pt-8 max-w-2xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -40,13 +40,16 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         >
           <Compass className="w-8 h-8 text-gold/80" />
         </motion.div>
-        <h1 className="text-4xl md:text-6xl font-display text-foreground tracking-tight">
-          Sua <span className="text-gold italic">CidadELA</span>
-        </h1>
+        <div className="space-y-2">
+          <h1 className="text-4xl md:text-6xl font-display text-foreground tracking-tight">
+            Sua <span className="text-gold italic">CidadELA</span>
+          </h1>
+          <p className="text-gold/60 text-xs uppercase tracking-[0.3em] font-medium">Cartografia Revelada</p>
+        </div>
       </header>
 
       {/* MANDALA */}
-      <section className="relative">
+      <section className="relative px-4">
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none -z-10">
           <div className="w-[300px] h-[300px] md:w-[500px] md:h-[500px] rounded-full bg-gold/5 blur-[120px] animate-pulse" />
         </div>
@@ -63,32 +66,28 @@ export function CidadelaRotasView({ bussola }: CidadelaRotasViewProps) {
         />
       </section>
 
-      {/* SÍNTESE CURTA + CTA */}
-      <section className="px-4 max-w-xl mx-auto text-center space-y-8">
-        <p className="text-lg md:text-xl text-white/70 font-serif italic leading-relaxed">
-          {sinteseCurta}
-        </p>
-        <div className="flex flex-col items-center gap-4">
+      {/* SÍNTESE CURTA + CTA PROTAGONISTA */}
+      <section className="px-6 max-w-xl mx-auto text-center space-y-10">
+        <div className="space-y-4">
+          <p className="text-lg md:text-xl text-white/70 font-serif italic leading-relaxed">
+            {sinteseCurta}
+          </p>
+          <p className="text-white/40 text-sm font-serif">A Floresta aguarda seu primeiro passo.</p>
+        </div>
+        
+        <div className="flex flex-col items-center gap-6">
           <Button
             variant="gold"
             size="xl"
             onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
-            className="group px-12 h-16 text-lg shadow-premium-glow rounded-full"
+            className="group px-12 h-16 text-lg shadow-premium-glow rounded-full w-full md:w-auto"
           >
-            Continuar Travessia
+            Entrar na Floresta
             <ArrowRight className="ml-3 w-5 h-5 transition-transform group-hover:translate-x-1" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate('/ferramenta/cartografia-psiquica-oracula')}
-            className="text-muted-foreground/50 hover:text-gold gap-2 uppercase tracking-widest text-[10px]"
-          >
-            <RefreshCw className="w-3 h-3" />
-            Refazer Cartografia
           </Button>
         </div>
       </section>
     </div>
   );
 }
+
