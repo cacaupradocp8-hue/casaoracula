@@ -1,27 +1,39 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, TreePine, Play, Lock, Headphones } from 'lucide-react';
+import { ArrowRight, TreePine, Play, Pause, Lock } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Button } from '@/components/ui/button';
-import { useTodasRotas } from '@/hooks/useTodasRotas';
+import { useTodasRotas, EstacaoCatalogo } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
+
+interface DisplayEstacao extends Partial<EstacaoCatalogo> {
+  id: string;
+  titulo: string;
+  status: string;
+  numero: number;
+  primeiro_slug?: string;
+}
 
 export default function RotaDosLobos() {
   const navigate = useNavigate();
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
-  const { playAudio } = useAudioPlayer();
+  
+  const audioUrl = getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3');
+  const { isPlaying, togglePlay } = useAudioPlayer({ audioUrl });
 
   const estacoesAtivas = estacoes?.filter(e => e.ativa) || [];
   
-  // Garantir que temos 6 slots para as estações conforme o design
   const totalEstacoes = 6;
-  const displayEstacoes = Array.from({ length: totalEstacoes }).map((_, i) => {
-    return estacoesAtivas[i] || {
+  const displayEstacoes: DisplayEstacao[] = Array.from({ length: totalEstacoes }).map((_, i) => {
+    const realEstacao = estacoesAtivas[i];
+    if (realEstacao) return realEstacao;
+    
+    return {
       id: `placeholder-${i}`,
       titulo: i === 0 ? "Clareira do Chamado" : 
               i === 1 ? "Casa da Boa Menina" :
@@ -29,7 +41,8 @@ export default function RotaDosLobos() {
               i === 3 ? "Casa da Boneca Interior" :
               i === 4 ? "Margem dos Ossos" : "Território da Loba",
       status: 'locked',
-      numero: i + 1
+      numero: i + 1,
+      primeiro_slug: undefined
     };
   });
 
@@ -38,19 +51,9 @@ export default function RotaDosLobos() {
     if (firstSlug) navigate(`/clube/rota/${firstSlug}`);
   };
 
-  const handlePlayAcolhimento = () => {
-    playAudio({
-      url: getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3'),
-      title: 'A Voz da Floresta',
-      artist: 'Acolhimento Premium',
-      cover: getSetting('rota_dos_lobos_hero_image', 'https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80')
-    });
-  };
-
   return (
     <AppLayout>
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
-        {/* HERO IMERSIVO */}
         <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
@@ -58,14 +61,12 @@ export default function RotaDosLobos() {
               className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110"
               alt="Lobo na Floresta"
             />
-            {/* Gradientes para profundidade conforme imagem */}
             <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-[#020617]" />
             <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
           </div>
 
           <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
             <div className="max-w-2xl mt-12 space-y-8">
-              {/* Badge */}
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -74,7 +75,6 @@ export default function RotaDosLobos() {
                 <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
               </motion.div>
 
-              {/* Título Principal */}
               <div className="space-y-4">
                 <motion.h1
                   initial={{ opacity: 0, y: 30 }}
@@ -104,19 +104,21 @@ export default function RotaDosLobos() {
                 </motion.p>
               </div>
 
-              {/* Card de Áudio: A Voz da Floresta */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
                 className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/60 transition-all cursor-pointer"
-                onClick={handlePlayAcolhimento}
+                onClick={togglePlay}
               >
                 <div className="relative flex-shrink-0">
                   <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
-                    <Play className="w-6 h-6 text-gold fill-gold" />
+                    {isPlaying ? (
+                      <Pause className="w-6 h-6 text-gold fill-gold" />
+                    ) : (
+                      <Play className="w-6 h-6 text-gold fill-gold" />
+                    )}
                   </div>
-                  {/* Círculos concêntricos decorativos */}
                   <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
                   <div className="absolute inset-[-8px] border border-gold/5 rounded-full" />
                 </div>
@@ -127,12 +129,11 @@ export default function RotaDosLobos() {
                     Escute a abertura da travessia e prepare o campo para sua jornada.
                   </p>
                   <button className="text-gold text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2 hover:translate-x-1 transition-transform">
-                    Ouvir acolhimento <ArrowRight className="w-3 h-3" />
+                    {isPlaying ? 'Pausar acolhimento' : 'Ouvir acolhimento'} <ArrowRight className="w-3 h-3" />
                   </button>
                 </div>
               </motion.div>
 
-              {/* CTA Principal */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -152,7 +153,6 @@ export default function RotaDosLobos() {
               </motion.div>
             </div>
 
-            {/* Seção das Estações (Horizontal) */}
             <div className="mt-24 space-y-8">
               <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
                 As 6 estações da Rota dos Lobos
@@ -160,8 +160,8 @@ export default function RotaDosLobos() {
 
               <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-4 overflow-x-auto pb-8 scrollbar-hide">
                 {displayEstacoes.map((estacao, i) => {
-                  const isLocked = estacao.status === 'locked' || !estacao.id || estacao.id.toString().includes('placeholder');
-                  const isActive = i === 0 && !isLocked; // Por enquanto assumindo que a 1 é a ativa se não estiver lockada
+                  const isLocked = estacao.status === 'locked';
+                  const isActive = i === 0 && !isLocked;
 
                   return (
                     <motion.div
@@ -181,7 +181,6 @@ export default function RotaDosLobos() {
                             : "bg-white/5 border border-white/10 hover:bg-white/10"
                         )}
                       >
-                        {/* Indicador de Número */}
                         <div className={cn(
                           "absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
                           isActive ? "bg-gold text-black" : "bg-white/10 text-white/40"
@@ -192,14 +191,12 @@ export default function RotaDosLobos() {
                         {isActive ? (
                           <div className="relative">
                             <TreePine className="w-8 h-8 text-gold" />
-                            {/* Efeito de brilho na imagem da estação se tivéssemos a imagem */}
                             <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
                           </div>
                         ) : (
                           <Lock className="w-6 h-6 text-white/20" />
                         )}
 
-                        {/* Imagem de fundo se estivesse ativa (opcional conforme design) */}
                         {isActive && (
                           <div className="absolute inset-0 rounded-full overflow-hidden -z-10 opacity-40">
                             <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" alt="" className="w-full h-full object-cover" />
@@ -220,8 +217,6 @@ export default function RotaDosLobos() {
             </div>
           </ResponsiveContainer>
         </section>
-
-        {/* Header Superior Simulado (O AppLayout já tem o Navigation, mas podemos ajustar transparência se necessário) */}
       </div>
     </AppLayout>
   );
