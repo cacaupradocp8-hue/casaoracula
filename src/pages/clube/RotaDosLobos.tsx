@@ -55,172 +55,192 @@ export default function RotaDosLobos() {
   return (
     <AppLayout>
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
-        <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <img
-              src={rotaLobosBg}
-              className="w-full h-full object-cover opacity-90 scale-100 object-center md:object-[center_20%]"
-              alt="Lobo em Destaque"
-            />
-            {/* Overlay lateral para profundidade e legibilidade à esquerda */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent w-full md:w-[60%]" />
-            {/* Gradiente de base para fusão suave com o conteúdo inferior */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#020617]" />
-          </div>
+        <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full pt-8 pb-32">
+          
+          {/* HERO GRID CONTROLADO */}
+          <section className="relative overflow-hidden rounded-[40px] bg-black/40 border border-white/5">
+            <div className="grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] items-stretch">
+              
+              {/* Lado Esquerdo: Conteúdo */}
+              <div className="relative z-20 p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10">
+                <div className="space-y-6">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md w-fit"
+                  >
+                    <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+                  </motion.div>
 
-          <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
-            <div className="max-w-2xl mt-12 space-y-8">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md"
-              >
-                <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
-              </motion.div>
+                  <div className="space-y-4">
+                    <motion.h1
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[0.9] tracking-tight"
+                    >
+                      Rota dos <br />
+                      <span className="text-gold italic font-light">Lobos</span>
+                    </motion.h1>
 
-              <div className="space-y-4">
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-6xl md:text-8xl font-serif leading-[0.9] tracking-tight"
-                >
-                  Rota dos <br />
-                  <span className="text-gold italic font-light">Lobos</span>
-                </motion.h1>
+                    <motion.p
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                      className="text-xl md:text-2xl text-gold/80 font-serif italic max-w-md leading-relaxed"
+                    >
+                      "Onde a voz silenciada volta a encontrar o corpo."
+                    </motion.p>
 
-                <motion.p
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                      className="text-sm md:text-base text-white/50 max-w-sm leading-relaxed"
+                    >
+                      Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
+                    </motion.p>
+                  </div>
+                </div>
+
+                {/* Card de Áudio */}
+                <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-xl md:text-2xl text-gold/80 font-serif italic max-w-md leading-relaxed"
+                  transition={{ delay: 0.5 }}
+                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/60 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/80 transition-all cursor-pointer"
+                  onClick={togglePlay}
                 >
-                  "Onde a voz silenciada volta a encontrar o corpo."
-                </motion.p>
+                  <div className="relative flex-shrink-0">
+                    <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
+                      {isPlaying ? (
+                        <Pause className="w-6 h-6 text-gold fill-gold" />
+                      ) : (
+                        <Play className="w-6 h-6 text-gold fill-gold" />
+                      )}
+                    </div>
+                    <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
+                    <div className="absolute inset-[-8px] border border-gold/5 rounded-full" />
+                  </div>
+                  
+                  <div className="flex flex-col gap-1">
+                    <h3 className="text-lg font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
+                    <p className="text-xs text-white/40 leading-relaxed">
+                      Escute a abertura da travessia e prepare o campo para sua jornada.
+                    </p>
+                    <button className="text-gold text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2 hover:translate-x-1 transition-transform">
+                      {isPlaying ? 'Pausar acolhimento' : 'Ouvir acolhimento'} <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </motion.div>
 
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-sm md:text-base text-white/50 max-w-sm leading-relaxed"
+                {/* CTA Principal */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 }}
                 >
-                  Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
-                </motion.p>
+                  <Button
+                    variant="gold"
+                    size="xl"
+                    className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none"
+                    onClick={irParaEstacao1}
+                  >
+                    <TreePine className="mr-3 w-6 h-6" />
+                    Entrar na Clareira do Chamado
+                    <ArrowRight className="ml-3 w-5 h-5" />
+                  </Button>
+                </motion.div>
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/60 transition-all cursor-pointer"
-                onClick={togglePlay}
-              >
-                <div className="relative flex-shrink-0">
-                  <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
-                    {isPlaying ? (
-                      <Pause className="w-6 h-6 text-gold fill-gold" />
-                    ) : (
-                      <Play className="w-6 h-6 text-gold fill-gold" />
-                    )}
-                  </div>
-                  <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
-                  <div className="absolute inset-[-8px] border border-gold/5 rounded-full" />
-                </div>
+              {/* Lado Direito: Imagem do Lobo Controlada */}
+              <div className="relative min-h-[400px] lg:min-h-full">
+                <div className="absolute inset-0 bg-[#020617]" />
+                <img
+                  src={rotaLobosBg}
+                  className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_20%] opacity-90 transition-transform duration-[2s]"
+                  alt="Lobo em Destaque"
+                />
+                {/* Gradientes internos para suavizar a transição com o conteúdo */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent lg:hidden" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-transparent to-transparent hidden lg:block" />
                 
-                <div className="flex flex-col gap-1">
-                  <h3 className="text-lg font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
-                  <p className="text-xs text-white/40 leading-relaxed">
-                    Escute a abertura da travessia e prepare o campo para sua jornada.
-                  </p>
-                  <button className="text-gold text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2 hover:translate-x-1 transition-transform">
-                    {isPlaying ? 'Pausar acolhimento' : 'Ouvir acolhimento'} <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-              </motion.div>
+                {/* Overlay quente de floresta (simulado) */}
+                <div className="absolute inset-0 bg-orange-900/10 mix-blend-overlay pointer-events-none" />
+              </div>
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 }}
-                className="pt-4"
-              >
-                <Button
-                  variant="gold"
-                  size="xl"
-                  className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none"
-                  onClick={irParaEstacao1}
-                >
-                  <TreePine className="mr-3 w-6 h-6" />
-                  Entrar na Clareira do Chamado
-                  <ArrowRight className="ml-3 w-5 h-5" />
-                </Button>
-              </motion.div>
             </div>
+          </section>
 
-            <div className="mt-24 space-y-8">
-              <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
+          {/* ESTAÇÕES ABAIXO DO HERO */}
+          <div className="mt-20 space-y-10">
+            <div className="flex flex-col items-center md:items-start gap-4">
+               <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
                 As 6 estações da Rota dos Lobos
               </h2>
-
-              <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-4 overflow-x-auto pb-8 scrollbar-hide">
-                {displayEstacoes.map((estacao, i) => {
-                  const isLocked = estacao.status === 'locked';
-                  const isActive = i === 0 && !isLocked;
-
-                  return (
-                    <motion.div
-                      key={estacao.id}
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 0.8 + (i * 0.1) }}
-                      className="flex flex-col items-center gap-4 min-w-[120px] group"
-                    >
-                      <button
-                        disabled={isLocked}
-                        onClick={() => !isLocked && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
-                        className={cn(
-                          "relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-500",
-                          isActive 
-                            ? "bg-gold/20 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.3)] scale-110" 
-                            : "bg-white/5 border border-white/10 hover:bg-white/10"
-                        )}
-                      >
-                        <div className={cn(
-                          "absolute -top-1 -left-1 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold",
-                          isActive ? "bg-gold text-black" : "bg-white/10 text-white/40"
-                        )}>
-                          {i + 1}
-                        </div>
-
-                        {isActive ? (
-                          <div className="relative">
-                            <TreePine className="w-8 h-8 text-gold" />
-                            <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
-                          </div>
-                        ) : (
-                          <Lock className="w-6 h-6 text-white/20" />
-                        )}
-
-                        {isActive && (
-                          <div className="absolute inset-0 rounded-full overflow-hidden -z-10 opacity-40">
-                            <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" alt="" className="w-full h-full object-cover" />
-                          </div>
-                        )}
-                      </button>
-
-                      <span className={cn(
-                        "text-[11px] text-center max-w-[100px] leading-tight font-medium uppercase tracking-wider",
-                        isActive ? "text-white" : "text-white/30"
-                      )}>
-                        {estacao.titulo}
-                      </span>
-                    </motion.div>
-                  );
-                })}
-              </div>
+              <div className="h-px w-24 bg-gold/30" />
             </div>
-          </ResponsiveContainer>
-        </section>
+
+            <div className="flex flex-nowrap md:flex-wrap items-start justify-center md:justify-between gap-6 overflow-x-auto pb-8 scrollbar-hide">
+              {displayEstacoes.map((estacao, i) => {
+                const isLocked = estacao.status === 'locked';
+                const isActive = i === 0 && !isLocked;
+
+                return (
+                  <motion.div
+                    key={estacao.id}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + (i * 0.1) }}
+                    className="flex flex-col items-center gap-4 min-w-[140px] group"
+                  >
+                    <button
+                      disabled={isLocked}
+                      onClick={() => !isLocked && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
+                      className={cn(
+                        "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-500",
+                        isActive 
+                          ? "bg-gold/20 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.3)] scale-110" 
+                          : "bg-white/5 border border-white/10 hover:bg-white/10"
+                      )}
+                    >
+                      <div className={cn(
+                        "absolute -top-1 -left-1 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold z-30",
+                        isActive ? "bg-gold text-black" : "bg-white/10 text-white/40"
+                      )}>
+                        {i + 1}
+                      </div>
+
+                      {isActive ? (
+                        <div className="relative z-20">
+                          <TreePine className="w-10 h-10 text-gold" />
+                          <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
+                        </div>
+                      ) : (
+                        <Lock className="w-7 h-7 text-white/20 z-20" />
+                      )}
+
+                      {isActive && (
+                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-60">
+                          <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" alt="" className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000" />
+                        </div>
+                      )}
+                    </button>
+
+                    <span className={cn(
+                      "text-[12px] text-center max-w-[120px] leading-tight font-medium uppercase tracking-wider",
+                      isActive ? "text-white" : "text-white/30"
+                    )}>
+                      {estacao.titulo}
+                    </span>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </div>
+
+        </ResponsiveContainer>
       </div>
     </AppLayout>
   );
+}
 }
