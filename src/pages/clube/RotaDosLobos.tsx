@@ -62,18 +62,20 @@ export default function RotaDosLobos() {
             <div className="flex flex-col lg:grid lg:grid-cols-[42%_58%] min-h-[600px] lg:min-h-[780px]">
               
               {/* CAMADA DE IMAGEM: Aparece no TOPO no Mobile, à DIREITA no Desktop */}
-              <div className="relative w-full h-[400px] sm:h-[500px] lg:h-full order-1 lg:order-2 bg-[#030816]">
+              <div className="relative w-full h-[450px] sm:h-[550px] lg:h-full order-1 lg:order-2 bg-[#030816]">
                 <motion.img
                   initial={{ opacity: 0, scale: 1.05 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 1.2, ease: "easeOut" }}
                   src={rotaLobosBg}
-                  className="absolute inset-0 w-full h-full object-contain lg:object-contain object-center lg:object-right-bottom z-10"
+                  className="absolute inset-0 w-full h-full object-contain lg:object-cover z-10"
+                  style={{ objectPosition: 'center 20%' }}
                   alt="Lobo Imponente"
                 />
                 
                 {/* Gradientes de Fusão para evitar recortes visíveis */}
-                <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#030816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#030816] lg:via-transparent lg:to-transparent lg:from-0% lg:via-20%" />
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#030816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#030816] lg:via-transparent lg:to-transparent lg:from-0% lg:via-35%" />
+
                 
                 {/* Brilho Atmosférico */}
                 <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold/5 blur-[120px] rounded-full z-0" />
