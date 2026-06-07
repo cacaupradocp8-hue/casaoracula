@@ -59,12 +59,12 @@ export default function RotaDosLobos() {
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
               src={rotaLobosBg}
-              className="w-full h-full object-cover opacity-90 scale-110 object-center"
-              alt="Lobo Imersivo"
+              className="w-full h-full object-cover opacity-90 scale-100 object-[70%_center] md:object-right"
+              alt="Lobo em Destaque"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-[#020617] mix-blend-multiply" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent" />
-            <div className="absolute inset-0 bg-black/40 mix-blend-overlay" />
+            {/* Overlay para legibilidade do texto à esquerda */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/40 to-transparent w-full md:w-[60%] lg:w-[50%]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#020617]" />
           </div>
 
           <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
