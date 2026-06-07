@@ -62,7 +62,7 @@ export default function RotaDosLobos() {
             <div className="flex flex-col lg:grid lg:grid-cols-[45%_55%]">
               
               {/* Direita: Imagem (Topo no mobile) */}
-              <div className="relative w-full h-[200px] sm:h-[250px] lg:h-auto order-1 lg:order-2 bg-[#0A0A0B]">
+              <div className="relative w-full h-[160px] sm:h-[200px] lg:h-auto order-1 lg:order-2 bg-[#0A0A0B]">
                 <img
                   src={rotaLobosBg}
                   className="w-full h-full object-cover lg:object-cover object-[center_20%]"
