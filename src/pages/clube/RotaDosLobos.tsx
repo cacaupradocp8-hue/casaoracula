@@ -227,21 +227,21 @@ export default function RotaDosLobos() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="flex flex-col items-center gap-3 md:gap-4 min-w-[110px] md:min-w-[140px] group"
+                    className="flex flex-col items-center gap-2 md:gap-3 min-w-[100px] md:min-w-[130px] group"
                   >
                     <button
                       disabled={isLocked}
                       onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
-                        "relative w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all duration-700",
+                        "relative w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
-                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.2)] md:shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
-                          : "bg-white/5 border border-white/5 hover:border-white/20",
-                        isLocked ? "cursor-not-allowed" : "cursor-pointer"
+                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_20px_rgba(233,167,88,0.2)] scale-110" 
+                          : "bg-white/5 border border-white/10 hover:border-gold/30",
+                        isLocked ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer"
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-1 -left-1 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold z-30 shadow-lg",
+                        "absolute -top-1 -left-1 w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[8px] md:text-[10px] font-bold z-30 shadow-lg",
                         isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
@@ -249,27 +249,27 @@ export default function RotaDosLobos() {
 
                       {isActive ? (
                         <div className="relative z-20">
-                          <TreePine className="w-10 h-10 text-gold" />
-                          <div className="absolute inset-0 bg-gold/20 blur-2xl rounded-full" />
+                          <TreePine className="w-8 h-8 text-gold" />
+                          <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
                         </div>
                       ) : (
-                        <Lock className="w-6 h-6 text-white/10 z-20" />
+                        <Lock className={cn("w-5 h-5 z-20", isLocked ? "text-white/20" : "text-gold/40")} />
                       )}
 
                       {isActive && (
-                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-40">
+                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-30">
                           <img 
                             src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" 
                             alt="" 
-                            className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[2000ms]" 
+                            className="w-full h-full object-cover scale-110" 
                           />
                         </div>
                       )}
                     </button>
 
                     <span className={cn(
-                      "text-[11px] text-center max-w-[120px] leading-tight font-medium uppercase tracking-[0.1em]",
-                      isActive ? "text-white" : "text-white/20"
+                      "text-[10px] text-center max-w-[100px] leading-tight font-medium uppercase tracking-[0.05em]",
+                      isActive ? "text-white" : isLocked ? "text-white/20" : "text-white/60"
                     )}>
                       {estacao.titulo}
                     </span>
