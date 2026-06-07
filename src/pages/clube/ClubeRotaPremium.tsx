@@ -129,80 +129,133 @@ export default function ClubeRotaPremium() {
         {/* CONTENT CONTAINER */}
         <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6 md:px-12 space-y-24 md:space-y-48 pb-40">
           
-          {/* 4. CAMINHO DA ESTAÇÃO */}
-          <Section id="caminho-estacao" kicker="Travessia" titulo="Caminho da Estação">
-            <EstacaoCaminhoTrail />
-          </Section>
-
-          {/* 2. O QUE ESTÁ ATIVO AGORA */}
-          <section id="ativo-agora" className="space-y-12">
-            <h2 className="text-xl md:text-3xl font-display text-white text-center">O que está ativo agora</h2>
-            <AtivoAgoraBloco />
-          </section>
-
-          {/* 3. TERRITÓRIOS ATIVADOS */}
-          {ponto.impacto_cidadela && ponto.impacto_cidadela.length > 0 && (
-            <Section id="territorios-cidadela" kicker="Expansão da CidadELA" titulo="Territórios ativados">
-              <MiniMandalaTerritorios 
-                territoriosAtivados={ponto.impacto_cidadela.map((i: any) => i.distrito || i.id || i)}
-              />
-            </Section>
-          )}
-
-          {/* FRASE TRAVESSIA 1 (Opcional, mantida se houver no metadado) */}
-          {ponto.metadata?.frases_travessia?.[0] && (
-            <FraseTravessia texto={ponto.metadata.frases_travessia[0]} />
-          )}
-
-          {/* 5. ÁUDIOS - ESTAÇÃO DE ESCUTA */}
+          {/* 1. ÁUDIOS - ESTAÇÃO DE ESCUTA (Prioridade Narrativa) */}
           {audios.length > 0 && (
-            <Section id="audios" icon={Headphones} kicker="Escuta Ritual" titulo="Estação de Escuta">
+            <Section id="audios" icon={Headphones} kicker="Escuta Ritual" titulo="Ritual de Entrada">
               <div className="space-y-24">
                 {/* Áudio Principal em Destaque */}
                 <EscutaPremium 
                   audioUrl={audios[0].url}
                   titulo={audios[0].titulo}
-                  tipo={audios[0].tipo || 'Áudio Principal'}
+                  tipo={audios[0].tipo || 'Abertura da Estação'}
                   funcao={audios[0].funcao}
                   duracao={audios[0].duracao}
                   imagemEscuta={ponto.metadata?.escuta?.imagem_escuta}
+                  className="bg-black/40 border border-white/5 shadow-2xl backdrop-blur-xl"
                 />
 
-                {/* Lista Completa de Áudios da Estação */}
-                <div className="max-w-4xl mx-auto space-y-12">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className="h-px flex-1 bg-white/10" />
-                    <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold">Acervo da Estação</span>
-                    <div className="h-px flex-1 bg-white/10" />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {audios.map((audio: any, i: number) => (
-                      <AudioRitualPlayer
-                        key={i}
-                        audioUrl={audio.url}
-                        titulo={audio.titulo}
-                        tipo={audio.tipo || (i === 0 ? 'Abertura' : 'Aprofundamento')}
-                        funcao={audio.funcao}
-                        duracao={audio.duracao}
-                      />
-                    ))}
+                {/* Lista de Aprofundamento */}
+                {audios.length > 1 && (
+                  <div className="max-w-4xl mx-auto space-y-12">
+                    <div className="flex items-center gap-4 mb-8">
+                      <div className="h-px flex-1 bg-white/10" />
+                      <span className="text-[10px] uppercase tracking-[0.3em] text-white/30 font-bold">Aprofundamento</span>
+                      <div className="h-px flex-1 bg-white/10" />
+                    </div>
                     
-                    {/* Placeholder para o 80-20 que será integrado via metadados */}
-                    {ponto.metadata?.has_80_20 && (
-                      <AudioRitualPlayer
-                        audioUrl={ponto.metadata?.audio_80_20_url}
-                        titulo="O Princípio 80-20 na Escuta"
-                        tipo="Conceito Estrutural"
-                        funcao="A essência do que realmente importa"
-                        duracao="12:00"
-                      />
-                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {audios.slice(1).map((audio: any, i: number) => (
+                        <AudioRitualPlayer
+                          key={i}
+                          audioUrl={audio.url}
+                          titulo={audio.titulo}
+                          tipo={audio.tipo || 'Aprofundamento'}
+                          funcao={audio.funcao}
+                          duracao={audio.duracao}
+                        />
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </Section>
           )}
+
+          {/* 2. CONTEÚDO DINÂMICO DO ADMIN (clube_rota_itens) */}
+          {ponto.conteudo_inline && (
+            <Section id="conteudo-principal" kicker="O Caminho" titulo={ponto.nome}>
+               <div className="max-w-4xl mx-auto prose prose-invert prose-gold">
+                  <div className="bg-white/[0.02] border border-white/5 p-12 md:p-16 rounded-[2.5rem] backdrop-blur-sm">
+                    {typeof ponto.conteudo_inline === 'string' ? (
+                      <div className="text-white/80 font-serif text-xl leading-relaxed whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: ponto.conteudo_inline }} />
+                    ) : (
+                      <div className="text-white/80 font-serif text-xl leading-relaxed whitespace-pre-wrap">
+                        {renderContent(ponto.conteudo_inline)}
+                      </div>
+                    )}
+                  </div>
+               </div>
+            </Section>
+          )}
+
+          {/* 3. FERRAMENTA ORACULAR */}
+          {ponto.metadata?.ferramenta_oracular?.enabled && (
+            <Section id="ferramenta-oracular" icon={Radar} kicker="Campo de Escuta" titulo={ponto.metadata.ferramenta_oracular.titulo || "Mapa do Instinto Soterrado"}>
+              <FerramentaOracularPlayer
+                data={{
+                  ...ponto.metadata.ferramenta_oracular,
+                  titulo: ponto.metadata.ferramenta_oracular.titulo || "Mapa do Instinto Soterrado",
+                  kicker: "Campo de Escuta",
+                  questoes:
+                    ponto.metadata.ferramenta_oracular.questoes ||
+                    ponto.metadata.ferramenta_oracular.indicadores?.map((ind: any) => ({
+                      id: ind.id,
+                      texto: ind.label,
+                      tipo_resposta:
+                        ind.tipo_resposta ||
+                        (ponto.metadata.ferramenta_oracular.tipo_resultado === 'intensidade' ? 'escala_1_5' : 'sim_nao'),
+                    })) ||
+                    [],
+                }}
+                onComplete={() => {}}
+              />
+            </Section>
+          )}
+
+          {/* 4. JARDIM DA PSIQUE */}
+          {psiquePergunta && (
+            <Section id="jardim-psique" icon={Flower2} kicker="Semeadura Psíquica" titulo="Jardim da Psique">
+              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-gold/10 to-midnight border border-gold/10 space-y-6">
+                <p className="text-white/70 font-serif italic text-lg leading-relaxed">{psiquePergunta}</p>
+                <JardimInput 
+                  type="psique" 
+                  pergunta={psiquePergunta} 
+                  pontoId={ponto.id} 
+                  sourceTitle={ponto.nome}
+                />
+              </div>
+            </Section>
+          )}
+
+          {/* 5. JARDIM DO OFÍCIO */}
+          {oficioPergunta && (
+            <Section id="jardim-oficio" icon={Flower2} kicker="Semeadura do Ofício" titulo="Jardim do Ofício">
+              <div className="max-w-3xl mx-auto p-8 rounded-[2.5rem] bg-gradient-to-br from-emerald-900/10 to-midnight border border-emerald-900/10 space-y-6">
+                <p className="text-white/70 font-serif italic text-lg leading-relaxed">{oficioPergunta}</p>
+                <JardimInput 
+                  type="oficio" 
+                  pergunta={oficioPergunta} 
+                  pontoId={ponto.id} 
+                  sourceTitle={ponto.nome}
+                />
+              </div>
+            </Section>
+          )}
+
+          {/* 6. CAMINHO DA ESTAÇÃO (Footer Navigation) */}
+          <Section id="caminho-estacao" kicker="Navegação" titulo="Seu Percurso">
+            <EstacaoCaminhoTrail />
+          </Section>
+
+          {/* 7. O QUE ESTÁ ATIVO AGORA (Resumo de Cartografia) */}
+          <section id="ativo-agora" className="space-y-12">
+            <div className="flex items-center justify-center gap-3 text-[11px] uppercase tracking-[0.5em] text-gold/40 font-bold mb-6">
+              <span className="w-8 h-[1px] bg-gold/20" />
+              Cartografia Ativa
+              <span className="w-8 h-[1px] bg-gold/20" />
+            </div>
+            <AtivoAgoraBloco />
+          </section>
 
           {/* 6. CASO SIMBÓLICO */}
           {(() => {
