@@ -112,29 +112,32 @@ export default function RotaDosLobos() {
                 </div>
               </div>
 
-              {/* Botões e Ações Abaixo da Imagem (Ainda dentro do card principal) */}
-              <div className="px-6 pb-12 space-y-5 bg-[#020617]">
+              {/* Botões e Ações Abaixo da Imagem */}
+              <div className="px-6 pb-12 space-y-6 bg-[#020617]">
                 {/* CTA Principal Mobile */}
                 <Button
                   variant="gold"
-                  className="w-full h-12 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none rounded-full shadow-[0_0_20px_rgba(233,167,88,0.2)] transition-all active:scale-95"
+                  className="w-full h-11 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none rounded-full shadow-[0_0_20px_rgba(233,167,88,0.2)] transition-all active:scale-95 max-w-[340px]"
                   onClick={irParaEstacao1}
                 >
                   <TreePine className="mr-2 w-4 h-4" />
                   Entrar na Clareira do Chamado
                 </Button>
 
-                {/* Card de Áudio Mobile */}
+                {/* Botão de Áudio Estilo Link Premium */}
                 <div 
-                  className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md"
+                  className="flex items-center gap-2 cursor-pointer group w-fit"
                   onClick={togglePlay}
                 >
-                  <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
                     {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
                   </div>
-                  <div className="flex flex-col gap-0 min-w-0">
-                    <h3 className="text-xs font-serif text-white tracking-wide">A Voz da Floresta</h3>
-                    <span className="text-[9px] text-gold font-medium uppercase tracking-wider">Ouvir Acolhimento →</span>
+                  <div className="flex flex-col -space-y-0.5">
+                    <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
+                    <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
+                      Ouvir Acolhimento
+                      <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
+                    </span>
                   </div>
                 </div>
               </div>
