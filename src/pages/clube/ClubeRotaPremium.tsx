@@ -36,7 +36,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto } = useRotaOracular(slug);
+  const { pontos, estacaoAtual, isLoading, marcarEmAndamento, concluirPonto, estacaoIncompleta } = useRotaOracular(slug);
 
   const ponto = useMemo(() => pontos.find(p => p.slug === slug), [pontos, slug]);
 
@@ -66,9 +66,16 @@ export default function ClubeRotaPremium() {
     return (
       <AppLayout>
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4 bg-midnight">
-          <h2 className="font-display text-2xl text-foreground mb-4">Rota não encontrada</h2>
-          <Button onClick={() => navigate('/clube')} variant="outline" className="rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
-            Voltar às Rotas
+          {estacaoIncompleta ? (
+            <div className="space-y-4">
+              <h2 className="font-display text-2xl text-foreground mb-4">Esta estação ainda não possui conteúdos publicados.</h2>
+              <p className="text-white/50 italic font-serif">Acesse o Admin para adicionar itens a esta estação.</p>
+            </div>
+          ) : (
+            <h2 className="font-display text-2xl text-foreground mb-4">Rota não encontrada</h2>
+          )}
+          <Button onClick={() => navigate('/clube/rota-dos-lobos')} variant="outline" className="mt-6 rounded-full border-gold/30 text-gold/80 hover:bg-gold/10">
+            Voltar à Rota dos Lobos
           </Button>
         </div>
       </AppLayout>

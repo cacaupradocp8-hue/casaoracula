@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Compass, ArrowRight, TreePine, Eye, Ghost, Star, Sparkles } from 'lucide-react';
+import { Compass, ArrowRight, TreePine, Eye, Ghost, Star, Sparkles, Headphones } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { Button } from '@/components/ui/button';
 import { useTodasRotas } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
@@ -13,23 +14,10 @@ export default function RotaDosLobos() {
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
 
-  const lobosEstacoesRaw = [
-    { numero: 1, nome: 'Clareira do Chamado', frase: 'A vida que ainda chama por baixo do funcionamento.', icon: <TreePine className="w-5 h-5" />, slug: 'clareira-do-chamado' },
-    { numero: 2, nome: 'Casa da Boa Menina', frase: 'A mulher que aprendeu a desaparecer de forma aceitável.', icon: <Eye className="w-5 h-5" />, slug: 'casa-da-boa-menina' },
-    { numero: 3, nome: 'Porta Proibida', frase: 'A mulher que negocia com o que já percebeu.', icon: <Ghost className="w-5 h-5" />, slug: 'porta-proibida' },
-    { numero: 4, nome: 'Casa da Boneca Interior', frase: 'A mulher que volta a confiar no que percebe.', icon: <Star className="w-5 h-5" />, slug: 'casa-da-boneca-interior' },
-    { numero: 5, nome: 'Margem dos Ossos', frase: 'O amor depois da superfície.', icon: <Sparkles className="w-5 h-5" />, slug: 'margem-dos-ossos' },
-    { numero: 6, nome: 'Território da Loba', frase: 'A mulher que volta para a própria vida.', icon: <Compass className="w-5 h-5" />, slug: 'territorio-da-loba' },
-  ];
-
-  const lobosEstacoes = lobosEstacoesRaw.map(base => {
-    const dbEst = estacoes?.find(e => e.numero === base.numero || e.titulo === base.nome);
-    const isLocked = dbEst ? dbEst.status === 'locked' : false;
-    return { ...base, dbData: dbEst, isLocked, completed: dbEst ? dbEst.status === 'completed' : false };
-  });
+  const estacoesAtivas = estacoes?.filter(e => e.ativa) || [];
 
   const irParaEstacao1 = () => {
-    const firstSlug = lobosEstacoes[0]?.slug;
+    const firstSlug = estacoesAtivas[0]?.primeiro_slug;
     if (firstSlug) navigate(`/clube/rota/${firstSlug}`);
   };
 
@@ -81,31 +69,61 @@ export default function RotaDosLobos() {
           </ResponsiveContainer>
         </section>
 
-        {/* AS 6 ESTAÇÕES */}
+        {/* A VOZ DA FLORESTA */}
+        <section className="py-12 px-6 border-y border-white/5 bg-white/[0.02]">
+          <ResponsiveContainer size="wide" className="max-w-4xl text-center">
+            <div className="space-y-6">
+              <div className="inline-flex p-3 rounded-2xl bg-gold/10 border border-gold/20 text-gold mb-2">
+                <Headphones className="w-6 h-6" />
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif text-white">A Voz da Floresta</h2>
+              <p className="text-lg text-white/60 font-serif italic max-w-2xl mx-auto">
+                Antes de entrar na primeira estação, escute a abertura da travessia. Este áudio prepara o campo simbólico da Rota dos Lobos.
+              </p>
+              <div className="pt-4">
+                <EscutaPremium 
+                  audioUrl={getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3')}
+                  titulo="Acolhimento: Rota dos Lobos"
+                  tipo="Abertura da Travessia"
+                  funcao="Preparação do Campo Simbólico"
+                  className="bg-transparent shadow-none py-0 md:py-0"
+                />
+              </div>
+            </div>
+          </ResponsiveContainer>
+        </section>
+
+        {/* AS ESTAÇÕES DINÂMICAS */}
         <section id="estacoes" className="py-20 px-6">
           <ResponsiveContainer size="wide">
-            <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-white/70">As Seis Estações</h2>
+            <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 text-white/70">As Estações</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {lobosEstacoes.map((estacao, i) => (
+              {estacoesAtivas.map((estacao, i) => (
                 <motion.button
-                  key={i}
+                  key={estacao.id}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.05 }}
-                  onClick={() => !estacao.isLocked && estacao.slug && navigate(`/clube/rota/${estacao.slug}`)}
-                  disabled={estacao.isLocked}
+                  onClick={() => estacao.status !== 'locked' && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
+                  disabled={estacao.status === 'locked'}
                   className="text-left p-6 rounded-3xl border border-white/10 bg-white/[0.02] flex flex-col gap-4 hover:border-gold/30 hover:bg-white/[0.04] transition-all group disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center text-gold/60 group-hover:scale-110 transition-transform">
-                      {estacao.icon}
+                      {i % 6 === 0 && <TreePine className="w-5 h-5" />}
+                      {i % 6 === 1 && <Eye className="w-5 h-5" />}
+                      {i % 6 === 2 && <Ghost className="w-5 h-5" />}
+                      {i % 6 === 3 && <Star className="w-5 h-5" />}
+                      {i % 6 === 4 && <Sparkles className="w-5 h-5" />}
+                      {i % 6 === 5 && <Compass className="w-5 h-5" />}
+                      {i % 6 > 5 && <Sparkles className="w-5 h-5" />}
                     </div>
                     <span className="text-[10px] uppercase tracking-[0.3em] text-gold/40 font-bold">Estação {estacao.numero}</span>
                   </div>
                   <div className="space-y-2">
-                    <h4 className="text-xl font-serif group-hover:text-gold transition-colors">{estacao.nome}</h4>
-                    <p className="text-sm text-white/50 italic font-serif leading-snug">"{estacao.frase}"</p>
+                    <h4 className="text-xl font-serif group-hover:text-gold transition-colors">{estacao.titulo}</h4>
+                    <p className="text-sm text-white/50 italic font-serif leading-snug">"{estacao.subtitulo}"</p>
                   </div>
                 </motion.button>
               ))}
