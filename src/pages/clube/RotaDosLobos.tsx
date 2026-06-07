@@ -57,7 +57,7 @@ export default function RotaDosLobos() {
         <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80"
+              src="https://lovable-uploads.s3.us-west-2.amazonaws.com/055d0534-9226-4bf0-8ae4-347d57a5b1f6.png"
               className="w-full h-full object-cover opacity-80 scale-110 object-center"
               alt="Lobo Imersivo"
             />

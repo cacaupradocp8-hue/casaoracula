@@ -307,7 +307,8 @@ export default function ClubeRotasPortal() {
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#020D24]/80 z-10 hidden lg:block" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#020D24] to-transparent z-10 lg:hidden" />
                         <img 
-                          src="https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80" 
+                          src="https://lovable-uploads.s3.us-west-2.amazonaws.com/055d0534-9226-4bf0-8ae4-347d57a5b1f6.png" 
+
                           alt="Rota dos Lobos" 
                           className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[3s]" 
                         />
