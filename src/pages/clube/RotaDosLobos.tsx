@@ -57,12 +57,32 @@ export default function RotaDosLobos() {
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
         <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full pt-8 pb-32">
           
-          {/* HERO GRID CONTROLADO — IGUAL À REFERÊNCIA */}
-          <section className="relative overflow-hidden rounded-[40px] bg-black/40 border border-white/5">
-            <div className="flex flex-col lg:flex-row items-stretch">
+          {/* SEÇÃO HERO ÚNICA E COESA */}
+          <section className="relative overflow-hidden rounded-[40px] bg-[#030816] border border-white/5 shadow-2xl">
+            <div className="flex flex-col lg:grid lg:grid-cols-[42%_58%] min-h-[600px] lg:min-h-[780px]">
               
-              {/* Lado Esquerdo: Conteúdo (Hierarquia Vertical) */}
-              <div className="relative z-20 w-full lg:w-[48%] p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10">
+              {/* CAMADA DE IMAGEM: Aparece no TOPO no Mobile, à DIREITA no Desktop */}
+              <div className="relative w-full h-[450px] sm:h-[550px] lg:h-full order-1 lg:order-2 bg-[#030816]">
+                <motion.img
+                  initial={{ opacity: 0, scale: 1.05 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 1.2, ease: "easeOut" }}
+                  src={rotaLobosBg}
+                  className="absolute inset-0 w-full h-full object-contain lg:object-cover z-10"
+                  style={{ objectPosition: 'center 20%' }}
+                  alt="Lobo Imponente"
+                />
+                
+                {/* Gradientes de Fusão para evitar recortes visíveis */}
+                <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#030816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#030816] lg:via-transparent lg:to-transparent lg:from-0% lg:via-35%" />
+
+                
+                {/* Brilho Atmosférico */}
+                <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold/5 blur-[120px] rounded-full z-0" />
+              </div>
+
+              {/* CAMADA DE CONTEÚDO: Abaixo da imagem no Mobile, à ESQUERDA no Desktop */}
+              <div className="relative z-30 w-full p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10 order-2 lg:order-1 bg-[#030816]">
                 <div className="space-y-6">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -107,28 +127,27 @@ export default function RotaDosLobos() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/60 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/80 transition-all cursor-pointer shadow-2xl"
+                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/60 transition-all cursor-pointer shadow-xl"
                   onClick={togglePlay}
                 >
                   <div className="relative flex-shrink-0">
-                    <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
+                    <div className="w-14 h-14 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
                       {isPlaying ? (
-                        <Pause className="w-6 h-6 text-gold fill-gold" />
+                        <Pause className="w-5 h-5 text-gold fill-gold" />
                       ) : (
-                        <Play className="w-6 h-6 text-gold fill-gold ml-1" />
+                        <Play className="w-5 h-5 text-gold fill-gold ml-1" />
                       )}
                     </div>
-                    <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
                   </div>
                   
                   <div className="flex flex-col gap-1">
-                    <h3 className="text-lg font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
-                    <p className="text-xs text-white/40 leading-relaxed">
-                      Escute a abertura da travessia e prepare o campo para sua jornada.
+                    <h3 className="text-base font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
+                    <p className="text-[11px] text-white/40 leading-tight">
+                      Escute a abertura da travessia e prepare o campo.
                     </p>
-                    <button className="text-gold text-[10px] font-bold uppercase tracking-widest mt-2 flex items-center gap-2 hover:translate-x-1 transition-transform">
-                      {isPlaying ? 'Pausar acolhimento' : 'Ouvir acolhimento'} <ArrowRight className="w-3 h-3" />
-                    </button>
+                    <span className="text-gold text-[9px] font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
+                      {isPlaying ? 'Pausar' : 'Ouvir'} <ArrowRight className="w-3 h-3" />
+                    </span>
                   </div>
                 </motion.div>
 
@@ -141,46 +160,29 @@ export default function RotaDosLobos() {
                   <Button
                     variant="gold"
                     size="xl"
-                    className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none"
+                    className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group w-full sm:w-fit"
                     onClick={irParaEstacao1}
                   >
                     <TreePine className="mr-3 w-6 h-6" />
                     Entrar na Clareira do Chamado
-                    <ArrowRight className="ml-3 w-5 h-5" />
+                    <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </motion.div>
-              </div>
-
-              {/* Lado Direito: Lobo Imponente (Fiel à Referência) */}
-              <div className="relative w-full lg:w-[52%] min-h-[450px] lg:min-h-full overflow-hidden bg-black/20">
-                <img
-                  src={rotaLobosBg}
-                  className="absolute inset-0 w-full h-full object-contain lg:object-right-top scale-[1.1] lg:scale-[1.3] pointer-events-none"
-                  style={{ objectPosition: 'center center' }}
-                  alt="Lobo em Destaque"
-                />
-                
-                {/* Gradientes internos para simular a iluminação da referência */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent lg:hidden" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#020617]/40 via-transparent to-transparent hidden lg:block" />
-                
-                {/* Overlay quente para atmosfera */}
-                <div className="absolute inset-0 bg-orange-900/5 mix-blend-color-dodge pointer-events-none" />
               </div>
 
             </div>
           </section>
 
-          {/* AS 6 ESTAÇÕES (Horizontal conforme referência) */}
-          <div className="mt-20 space-y-10">
+          {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
+          <div className="mt-24 space-y-12">
             <div className="flex flex-col items-center md:items-start gap-4">
-               <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
+               <h2 className="text-xl md:text-2xl font-serif italic text-gold/60 tracking-wide">
                 As 6 estações da Rota dos Lobos
               </h2>
-              <div className="h-px w-24 bg-gold/30" />
+              <div className="h-px w-32 bg-gradient-to-r from-gold/50 to-transparent" />
             </div>
 
-            <div className="flex flex-nowrap md:flex-wrap items-start justify-center md:justify-between gap-6 overflow-x-auto pb-8 scrollbar-hide">
+            <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-6 overflow-x-auto pb-8 scrollbar-hide">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked';
                 const isActive = i === 0 && !isLocked;
@@ -188,24 +190,24 @@ export default function RotaDosLobos() {
                 return (
                   <motion.div
                     key={estacao.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.8 + (i * 0.1) }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.9 + (i * 0.1) }}
                     className="flex flex-col items-center gap-4 min-w-[140px] group"
                   >
                     <button
                       disabled={isLocked}
                       onClick={() => !isLocked && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
                       className={cn(
-                        "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-500",
+                        "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
-                          ? "bg-gold/20 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.3)] scale-110" 
-                          : "bg-white/5 border border-white/10 hover:bg-white/10"
+                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
+                          : "bg-white/5 border border-white/5 hover:border-white/20"
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-1 -left-1 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold z-30",
-                        isActive ? "bg-gold text-black" : "bg-white/10 text-white/40"
+                        "absolute -top-1 -left-1 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold z-30 shadow-lg",
+                        isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
                       </div>
@@ -213,22 +215,26 @@ export default function RotaDosLobos() {
                       {isActive ? (
                         <div className="relative z-20">
                           <TreePine className="w-10 h-10 text-gold" />
-                          <div className="absolute inset-0 bg-gold/20 blur-xl rounded-full" />
+                          <div className="absolute inset-0 bg-gold/20 blur-2xl rounded-full" />
                         </div>
                       ) : (
-                        <Lock className="w-7 h-7 text-white/20 z-20" />
+                        <Lock className="w-6 h-6 text-white/10 z-20" />
                       )}
 
                       {isActive && (
-                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-60">
-                          <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" alt="" className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-1000" />
+                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-40">
+                          <img 
+                            src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80" 
+                            alt="" 
+                            className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[2000ms]" 
+                          />
                         </div>
                       )}
                     </button>
 
                     <span className={cn(
-                      "text-[12px] text-center max-w-[120px] leading-tight font-medium uppercase tracking-wider",
-                      isActive ? "text-white" : "text-white/30"
+                      "text-[11px] text-center max-w-[120px] leading-tight font-medium uppercase tracking-[0.1em]",
+                      isActive ? "text-white" : "text-white/20"
                     )}>
                       {estacao.titulo}
                     </span>
@@ -243,3 +249,4 @@ export default function RotaDosLobos() {
     </AppLayout>
   );
 }
+
