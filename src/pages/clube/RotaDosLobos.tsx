@@ -150,7 +150,7 @@ export default function RotaDosLobos() {
           </section>
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
-          <div className="space-y-10 pt-4 pb-20">
+          <div className="space-y-10 pt-4 pb-32">
             <div className="flex flex-col items-center md:items-start gap-4">
                <h2 className="text-xl md:text-2xl font-serif italic text-gold/60 tracking-wide">
                 As 6 estações da Rota dos Lobos
@@ -162,6 +162,7 @@ export default function RotaDosLobos() {
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked';
                 const isActive = i === 0 && !isLocked;
+                const slug = slugsReais[i];
 
                 return (
                   <motion.div
@@ -173,12 +174,13 @@ export default function RotaDosLobos() {
                   >
                     <button
                       disabled={isLocked}
-                      onClick={() => !isLocked && estacao.primeiro_slug && navigate(`/clube/rota/${estacao.primeiro_slug}`)}
+                      onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
                         "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
                           ? "bg-gold/10 border-2 border-gold shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
-                          : "bg-white/5 border border-white/5 hover:border-white/20"
+                          : "bg-white/5 border border-white/5 hover:border-white/20",
+                        isLocked ? "cursor-not-allowed" : "cursor-pointer"
                       )}
                     >
                       <div className={cn(
