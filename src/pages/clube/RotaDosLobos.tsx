@@ -57,12 +57,12 @@ export default function RotaDosLobos() {
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
         <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full pt-8 pb-32">
           
-          {/* HERO GRID CONTROLADO */}
+          {/* HERO GRID CONTROLADO — IGUAL À REFERÊNCIA */}
           <section className="relative overflow-hidden rounded-[40px] bg-black/40 border border-white/5">
-            <div className="grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] items-stretch">
+            <div className="flex flex-col lg:flex-row items-stretch">
               
-              {/* Lado Esquerdo: Conteúdo */}
-              <div className="relative z-20 p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10">
+              {/* Lado Esquerdo: Conteúdo (Hierarquia Vertical) */}
+              <div className="relative z-20 w-full lg:w-[48%] p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10">
                 <div className="space-y-6">
                   <motion.div
                     initial={{ opacity: 0, x: -20 }}
@@ -102,12 +102,12 @@ export default function RotaDosLobos() {
                   </div>
                 </div>
 
-                {/* Card de Áudio */}
+                {/* Card de Áudio: A Voz da Floresta */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.5 }}
-                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/60 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/80 transition-all cursor-pointer"
+                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/60 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/80 transition-all cursor-pointer shadow-2xl"
                   onClick={togglePlay}
                 >
                   <div className="relative flex-shrink-0">
@@ -115,11 +115,10 @@ export default function RotaDosLobos() {
                       {isPlaying ? (
                         <Pause className="w-6 h-6 text-gold fill-gold" />
                       ) : (
-                        <Play className="w-6 h-6 text-gold fill-gold" />
+                        <Play className="w-6 h-6 text-gold fill-gold ml-1" />
                       )}
                     </div>
                     <div className="absolute inset-[-4px] border border-gold/10 rounded-full animate-pulse" />
-                    <div className="absolute inset-[-8px] border border-gold/5 rounded-full" />
                   </div>
                   
                   <div className="flex flex-col gap-1">
@@ -152,26 +151,27 @@ export default function RotaDosLobos() {
                 </motion.div>
               </div>
 
-              {/* Lado Direito: Imagem do Lobo Controlada */}
-              <div className="relative min-h-[400px] lg:min-h-full">
-                <div className="absolute inset-0 bg-[#020617]" />
+              {/* Lado Direito: Lobo Imponente (Fiel à Referência) */}
+              <div className="relative w-full lg:w-[52%] min-h-[450px] lg:min-h-full overflow-hidden bg-black/20">
                 <img
                   src={rotaLobosBg}
-                  className="absolute inset-0 w-full h-full object-cover object-center lg:object-[center_20%] opacity-90 transition-transform duration-[2s]"
+                  className="absolute inset-0 w-full h-full object-contain lg:object-right-top scale-[1.1] lg:scale-[1.3] pointer-events-none"
+                  style={{ objectPosition: 'center center' }}
                   alt="Lobo em Destaque"
                 />
-                {/* Gradientes internos para suavizar a transição com o conteúdo */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent lg:hidden" />
-                <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-transparent to-transparent hidden lg:block" />
                 
-                {/* Overlay quente de floresta (simulado) */}
-                <div className="absolute inset-0 bg-orange-900/10 mix-blend-overlay pointer-events-none" />
+                {/* Gradientes internos para simular a iluminação da referência */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent lg:hidden" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#020617]/40 via-transparent to-transparent hidden lg:block" />
+                
+                {/* Overlay quente para atmosfera */}
+                <div className="absolute inset-0 bg-orange-900/5 mix-blend-color-dodge pointer-events-none" />
               </div>
 
             </div>
           </section>
 
-          {/* ESTAÇÕES ABAIXO DO HERO */}
+          {/* AS 6 ESTAÇÕES (Horizontal conforme referência) */}
           <div className="mt-20 space-y-10">
             <div className="flex flex-col items-center md:items-start gap-4">
                <h2 className="text-xl md:text-2xl font-serif italic text-gold/60">
@@ -242,4 +242,5 @@ export default function RotaDosLobos() {
       </div>
     </AppLayout>
   );
+}
 }
