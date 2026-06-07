@@ -73,7 +73,7 @@ export default function RotaDosLobos() {
               </div>
 
               {/* Esquerda: Conteúdo */}
-              <div className="p-6 md:p-8 lg:p-12 pb-12 flex flex-col justify-center gap-6 order-2 lg:order-1 relative z-10">
+              <div className="p-6 md:p-8 lg:p-12 pb-20 lg:pb-12 flex flex-col justify-center gap-6 order-2 lg:order-1 relative z-10">
                 <div className="space-y-4">
                   <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
                     <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
