@@ -13,23 +13,10 @@ export default function RotaDosLobos() {
   const { data: estacoes } = useTodasRotas();
   const { getSetting } = useAppSettings();
 
-  const lobosEstacoesRaw = [
-    { numero: 1, nome: 'Clareira do Chamado', frase: 'A vida que ainda chama por baixo do funcionamento.', icon: <TreePine className="w-5 h-5" />, slug: 'clareira-do-chamado' },
-    { numero: 2, nome: 'Casa da Boa Menina', frase: 'A mulher que aprendeu a desaparecer de forma aceitável.', icon: <Eye className="w-5 h-5" />, slug: 'casa-da-boa-menina' },
-    { numero: 3, nome: 'Porta Proibida', frase: 'A mulher que negocia com o que já percebeu.', icon: <Ghost className="w-5 h-5" />, slug: 'porta-proibida' },
-    { numero: 4, nome: 'Casa da Boneca Interior', frase: 'A mulher que volta a confiar no que percebe.', icon: <Star className="w-5 h-5" />, slug: 'casa-da-boneca-interior' },
-    { numero: 5, nome: 'Margem dos Ossos', frase: 'O amor depois da superfície.', icon: <Sparkles className="w-5 h-5" />, slug: 'margem-dos-ossos' },
-    { numero: 6, nome: 'Território da Loba', frase: 'A mulher que volta para a própria vida.', icon: <Compass className="w-5 h-5" />, slug: 'territorio-da-loba' },
-  ];
-
-  const lobosEstacoes = lobosEstacoesRaw.map(base => {
-    const dbEst = estacoes?.find(e => e.numero === base.numero || e.titulo === base.nome);
-    const isLocked = dbEst ? dbEst.status === 'locked' : false;
-    return { ...base, dbData: dbEst, isLocked, completed: dbEst ? dbEst.status === 'completed' : false };
-  });
+  const estacoesAtivas = estacoes?.filter(e => e.ativa) || [];
 
   const irParaEstacao1 = () => {
-    const firstSlug = lobosEstacoes[0]?.slug;
+    const firstSlug = estacoesAtivas[0]?.primeiro_slug;
     if (firstSlug) navigate(`/clube/rota/${firstSlug}`);
   };
 
