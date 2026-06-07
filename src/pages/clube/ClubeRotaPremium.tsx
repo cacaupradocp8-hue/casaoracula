@@ -122,6 +122,7 @@ export default function ClubeRotaPremium() {
           citacao={ponto.metadata?.revelacao_estacao?.porta}
           backgroundImage={ponto.metadata?.hero?.imagem_desktop || estacaoAtual?.banner_url}
           estacaoNome={estacaoAtual?.titulo || 'Rota dos Lobos'}
+          kicker={ponto.metadata?.hero?.kicker}
         />
 
 
