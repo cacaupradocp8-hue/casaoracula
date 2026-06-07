@@ -6,14 +6,14 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Button } from '@/components/ui/button';
-import { useTodasRotas, EstacaoCatalogo } from '@/hooks/useTodasRotas';
+import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
 
 interface DisplayEstacao extends Partial<EstacaoCatalogo> {
   id: string;
   titulo: string;
-  status: string;
+  status: EstacaoStatusUI;
   numero: number;
   primeiro_slug?: string;
 }
@@ -40,7 +40,7 @@ export default function RotaDosLobos() {
               i === 2 ? "Porta Proibida" :
               i === 3 ? "Casa da Boneca Interior" :
               i === 4 ? "Margem dos Ossos" : "Território da Loba",
-      status: 'locked',
+      status: 'locked' as EstacaoStatusUI,
       numero: i + 1,
       primeiro_slug: undefined
     };
