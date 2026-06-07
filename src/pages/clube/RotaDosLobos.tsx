@@ -157,7 +157,7 @@ export default function RotaDosLobos() {
               <div className="h-px w-32 bg-gradient-to-r from-gold/50 to-transparent" />
             </div>
 
-            <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-6 overflow-x-auto pb-8 scrollbar-hide">
+            <div className="flex flex-nowrap md:flex-wrap items-start justify-between gap-4 md:gap-6 overflow-x-auto pb-8 scrollbar-hide">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked';
                 const isActive = i === 0 && !isLocked;
@@ -169,21 +169,21 @@ export default function RotaDosLobos() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="flex flex-col items-center gap-4 min-w-[140px] group"
+                    className="flex flex-col items-center gap-3 md:gap-4 min-w-[110px] md:min-w-[140px] group"
                   >
                     <button
                       disabled={isLocked}
                       onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
-                        "relative w-28 h-28 rounded-full flex items-center justify-center transition-all duration-700",
+                        "relative w-20 h-20 md:w-28 md:h-28 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
-                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
+                          ? "bg-gold/10 border-2 border-gold shadow-[0_0_30px_rgba(233,167,88,0.2)] md:shadow-[0_0_40px_rgba(233,167,88,0.2)] scale-110" 
                           : "bg-white/5 border border-white/5 hover:border-white/20",
                         isLocked ? "cursor-not-allowed" : "cursor-pointer"
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-1 -left-1 w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold z-30 shadow-lg",
+                        "absolute -top-1 -left-1 w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-bold z-30 shadow-lg",
                         isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
