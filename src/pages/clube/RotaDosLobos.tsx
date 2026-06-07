@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // REBUILD_FORCE_V2
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, TreePine, Play, Pause, Lock } from 'lucide-react';
