@@ -29,18 +29,33 @@ export function EstacaoHero({
   // Fix for repeated title in breadcrumb
   const parentName = estacaoNome === titulo ? 'Rota dos Lobos' : (estacaoNome || 'Rota dos Lobos');
 
+  // Direção Visual: Imagens narrativas baseadas na estação
+  const defaultImages: Record<number, string> = {
+    1: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80', // Clareira
+    2: 'https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&q=80', // Cabana/Casa
+    3: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80', // Porta Proibida (Mistério/Escuro)
+    4: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80', // Boneca/Luz
+    5: 'https://images.unsplash.com/photo-1505833190871-964530df5702?auto=format&fit=crop&q=80', // Margem/Névoa
+    6: 'https://images.unsplash.com/photo-1615840287214-7ff58936c4cf?auto=format&fit=crop&q=80', // Território/Loba
+  };
+
+  const currentBg = backgroundImage || defaultImages[estacaoNumero] || defaultImages[1];
+
   return (
     <section className="relative min-h-[90vh] flex items-center px-4 sm:px-6 md:px-12 lg:px-24 z-10 overflow-hidden pt-20">
-      {/* Background with Dark Forest Atmosphere */}
+      {/* Background with Dark Forest Atmosphere - Atmospheric Refinement */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="relative w-full h-full">
+        <div className="relative w-full h-full bg-[#020617]">
           <img 
-            src={backgroundImage || 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80'} 
+            src={currentBg} 
             alt="" 
             className="w-full h-full object-cover opacity-80 mix-blend-luminosity scale-110 group-hover:scale-100 transition-transform duration-[20s]" 
           />
           
-          {/* Smoke/Mist Effect Over the Background */}
+          {/* Fog / Mist Overlay for Depth */}
+          <div className="absolute inset-0 bg-[#020617]/40 mix-blend-multiply" />
+          
+          {/* Animated Particles/Mist */}
           <div className="absolute inset-0 overflow-hidden opacity-30 pointer-events-none">
             <motion.div 
               animate={{ 
@@ -53,7 +68,7 @@ export function EstacaoHero({
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="absolute top-1/2 left-1/4 w-[500px] h-[300px] bg-white/20 blur-[100px] rounded-full"
+              className="absolute top-1/2 left-1/4 w-[600px] h-[400px] bg-white/10 blur-[120px] rounded-full"
             />
             <motion.div 
               animate={{ 
@@ -62,20 +77,20 @@ export function EstacaoHero({
                 opacity: [0.1, 0.3, 0.1]
               }}
               transition={{ 
-                duration: 8, 
+                duration: 15, 
                 repeat: Infinity,
                 ease: "easeInOut",
                 delay: 2
               }}
-              className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-white/10 blur-[120px] rounded-full"
+              className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-white/5 blur-[150px] rounded-full"
             />
           </div>
         </div>
         
-        {/* Cinematic Vignette and Overlays */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#010816]/90 via-[#010816]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#010816] via-transparent to-[#010816]/40" />
-        <div className="absolute inset-0 bg-[#010816]/10" />
+        {/* Cinematic Vignette and Overlays matching RotaDosLobos.tsx */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent w-full md:w-[60%]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-[#020617]" />
+        <div className="absolute inset-0 bg-black/40 mix-blend-overlay" />
       </div>
 
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center py-12">
@@ -87,7 +102,7 @@ export function EstacaoHero({
         >
           {/* Breadcrumb */}
           <nav className="flex items-center gap-2 text-[10px] tracking-[0.3em] uppercase text-white/40 font-bold mb-4">
-            <span className="hover:text-gold/60 transition-colors cursor-default" onClick={() => window.location.href = '/clube/rota/rota-dos-lobos'}>Rota dos Lobos</span>
+            <button className="hover:text-gold/60 transition-colors" onClick={() => window.location.href = '/clube/rota/rota-dos-lobos'}>Rota dos Lobos</button>
             <ChevronRight className="w-2.5 h-2.5 opacity-40" />
             <span className="text-gold/80">{titulo}</span>
           </nav>
@@ -100,50 +115,43 @@ export function EstacaoHero({
               transition={{ delay: 0.5 }}
               className="block text-gold/60 text-xs tracking-[0.5em] font-bold uppercase"
             >
-              {kicker}
+              ESTAÇÃO {estacaoNumero} — {kicker}
             </motion.span>
             
-            <h1 className="font-display font-light leading-[0.85] tracking-tighter text-6xl md:text-8xl lg:text-9xl">
-              <span className="bg-gradient-to-b from-white via-white to-white/30 bg-clip-text text-transparent inline-block pb-4">
-                {titulo.split(' ').map((word, i) => (
-                  <span key={i} className={cn(
-                    "block",
-                    i === 0 ? "font-serif italic font-light" : "font-sans font-black uppercase tracking-tighter"
-                  )}>
-                    {word}
-                  </span>
-                ))}
-              </span>
+            <h1 className="font-serif leading-[1] tracking-tight text-6xl md:text-8xl">
+              {titulo.split(' ').map((word, i) => (
+                <span key={i} className={cn(
+                  "block",
+                  i === 0 ? "text-white font-light" : "text-gold italic font-light"
+                )}>
+                  {word}
+                </span>
+              ))}
             </h1>
 
             <div className="relative border-l-2 border-gold/30 pl-8 py-2 max-w-2xl">
-              <h2 className="font-serif italic text-xl md:text-2xl text-gold/80 leading-relaxed uppercase tracking-widest">
+              <h2 className="font-serif italic text-xl md:text-2xl text-gold/80 leading-relaxed tracking-wide">
                 {subtitulo}
               </h2>
             </div>
           </div>
 
           {/* Description */}
-          {descricao ? (
-            <div className="max-w-xl space-y-4 font-serif text-lg text-white/60 leading-relaxed">
+          {descricao && (
+            <div className="max-w-xl space-y-4 font-serif text-lg text-white/50 leading-relaxed italic">
               {descricao.split('\n').map((para, i) => (para && <p key={i}>{para}</p>))}
-            </div>
-          ) : (
-            <div className="max-w-xl space-y-4 font-serif text-lg text-white/60 leading-relaxed">
-              <p>Seis travessias. Seis portais.</p>
-              <p>Um retorno ao que nunca deixou de viver em você.</p>
-              <p className="italic text-white/40">Inspirada na obra Mulheres que Correm com os Lobos, de Clarissa Pinkola Estés.</p>
             </div>
           )}
 
           <div className="flex flex-col sm:flex-row items-center gap-6 pt-6">
             <Button
-              size="lg"
+              size="xl"
               variant="gold"
-              className="rounded-full px-12 h-16 shadow-glow text-midnight font-bold group w-full sm:w-auto"
-              onClick={() => document.getElementById('ativo-agora')?.scrollIntoView({ behavior: 'smooth' })}
+              className="rounded-full px-12 h-16 shadow-premium-glow text-midnight font-bold group w-full sm:w-auto"
+              onClick={() => document.getElementById('audios')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <PawPrint className="w-4 h-4 mr-2 group-hover:animate-bounce" /> Iniciar Travessia
+              <PawPrint className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform" /> Iniciar Estação
+              <ChevronRight className="ml-2 w-4 h-4" />
             </Button>
           </div>
         </motion.div>
