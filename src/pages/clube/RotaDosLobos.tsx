@@ -57,119 +57,63 @@ export default function RotaDosLobos() {
       <div className="relative bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30">
         <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full pt-8 pb-32">
           
-          {/* SEÇÃO HERO ÚNICA E COESA */}
-          <section className="relative overflow-hidden rounded-[40px] bg-[#030816] border border-white/5 shadow-2xl">
-            <div className="flex flex-col lg:grid lg:grid-cols-[42%_58%] min-h-[600px] lg:min-h-[780px]">
+          {/* NOVO HERO - REFEITO DO ZERO */}
+          <section className="relative overflow-hidden rounded-[32px] bg-[#0A0A0B] border border-gold/10 shadow-2xl">
+            <div className="flex flex-col lg:grid lg:grid-cols-[45%_55%]">
               
-              {/* CAMADA DE IMAGEM: Aparece no TOPO no Mobile, à DIREITA no Desktop */}
-              <div className="relative w-full h-[450px] sm:h-[550px] lg:h-full order-1 lg:order-2 bg-[#030816]">
-                <motion.img
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1.2, ease: "easeOut" }}
-                  src={rotaLobosBg}
-                  className="absolute inset-0 w-full h-full object-contain lg:object-cover z-10"
-                  style={{ objectPosition: 'center 20%' }}
-                  alt="Lobo Imponente"
-                />
-                
-                {/* Gradientes de Fusão para evitar recortes visíveis */}
-                <div className="absolute inset-0 z-20 bg-gradient-to-t from-[#030816] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#030816] lg:via-transparent lg:to-transparent lg:from-0% lg:via-35%" />
+              {/* Esquerda: Conteúdo */}
+              <div className="p-6 md:p-10 lg:p-12 flex flex-col justify-center gap-6 z-10">
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
+                  <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+                </div>
 
-                
-                {/* Brilho Atmosférico */}
-                <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-gold/5 blur-[120px] rounded-full z-0" />
-              </div>
+                <div className="space-y-3">
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white leading-[0.9]">
+                    Rota dos <span className="text-gold italic block font-light mt-2">Lobos</span>
+                  </h1>
+                  <p className="text-lg md:text-xl text-gold/80 font-serif italic leading-relaxed">
+                    "Onde a voz silenciada volta a encontrar o corpo."
+                  </p>
+                  <p className="text-sm text-white/50 leading-relaxed max-w-sm">
+                    Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
+                  </p>
+                </div>
 
-              {/* CAMADA DE CONTEÚDO: Abaixo da imagem no Mobile, à ESQUERDA no Desktop */}
-              <div className="relative z-30 w-full p-8 md:p-12 lg:p-16 flex flex-col justify-center gap-10 order-2 lg:order-1 bg-[#030816]">
-                <div className="space-y-6">
-                  <motion.div
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md w-fit"
-                  >
-                    <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
-                  </motion.div>
-
-                  <div className="space-y-4">
-                    <motion.h1
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[0.9] tracking-tight"
-                    >
-                      Rota dos <br />
-                      <span className="text-gold italic font-light">Lobos</span>
-                    </motion.h1>
-
-                    <motion.p
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="text-xl md:text-2xl text-gold/80 font-serif italic max-w-md leading-relaxed"
-                    >
-                      "Onde a voz silenciada volta a encontrar o corpo."
-                    </motion.p>
-
-                    <motion.p
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: 0.4 }}
-                      className="text-sm md:text-base text-white/50 max-w-sm leading-relaxed"
-                    >
-                      Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
-                    </motion.p>
+                {/* Card de Áudio */}
+                <div 
+                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer w-full"
+                  onClick={togglePlay}
+                >
+                  <div className="w-12 h-12 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0">
+                    {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
+                  </div>
+                  <div className="flex flex-col gap-0.5 overflow-hidden">
+                    <h3 className="text-sm font-serif text-white">A Voz da Floresta</h3>
+                    <p className="text-[10px] text-white/50 truncate">Escute a abertura da travessia e prepare o campo.</p>
                   </div>
                 </div>
 
-                {/* Card de Áudio: A Voz da Floresta */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="group relative flex items-center gap-6 p-6 rounded-3xl bg-black/40 border border-white/10 backdrop-blur-xl max-w-md hover:bg-black/60 transition-all cursor-pointer shadow-xl"
-                  onClick={togglePlay}
+                {/* CTA */}
+                <Button
+                  variant="gold"
+                  size="xl"
+                  className="w-full rounded-full py-6 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words h-auto"
+                  onClick={irParaEstacao1}
                 >
-                  <div className="relative flex-shrink-0">
-                    <div className="w-14 h-14 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 group-hover:scale-110 transition-transform">
-                      {isPlaying ? (
-                        <Pause className="w-5 h-5 text-gold fill-gold" />
-                      ) : (
-                        <Play className="w-5 h-5 text-gold fill-gold ml-1" />
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-col gap-1">
-                    <h3 className="text-base font-serif text-white group-hover:text-gold transition-colors">A Voz da Floresta</h3>
-                    <p className="text-[11px] text-white/40 leading-tight">
-                      Escute a abertura da travessia e prepare o campo.
-                    </p>
-                    <span className="text-gold text-[9px] font-bold uppercase tracking-widest mt-1 flex items-center gap-1">
-                      {isPlaying ? 'Pausar' : 'Ouvir'} <ArrowRight className="w-3 h-3" />
-                    </span>
-                  </div>
-                </motion.div>
-
-                {/* CTA Principal */}
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.7 }}
-                >
-                  <Button
-                    variant="gold"
-                    size="xl"
-                    className="rounded-full px-10 h-16 shadow-2xl text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group w-full sm:w-fit"
-                    onClick={irParaEstacao1}
-                  >
-                    <TreePine className="mr-3 w-6 h-6" />
-                    Entrar na Clareira do Chamado
-                    <ArrowRight className="ml-3 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </motion.div>
+                  <TreePine className="mr-2 w-4 h-4" />
+                  Entrar na Clareira do Chamado
+                </Button>
               </div>
 
+              {/* Direita: Imagem */}
+              <div className="relative w-full h-[300px] lg:h-[auto] min-h-[300px] lg:min-h-auto overflow-hidden">
+                <img
+                  src={rotaLobosBg}
+                  className="w-full h-full object-cover lg:object-cover object-[center_30%]"
+                  alt="Rota dos Lobos"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent" />
+              </div>
             </div>
           </section>
 
