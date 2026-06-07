@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
+import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
 
 interface DisplayEstacao extends Partial<EstacaoCatalogo> {
   id: string;
