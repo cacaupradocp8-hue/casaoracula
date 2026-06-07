@@ -218,7 +218,7 @@ export default function RotaDosLobos() {
               <div className="h-px w-32 bg-gradient-to-r from-gold/50 to-transparent" />
             </div>
 
-            <div className="flex flex-nowrap md:flex-wrap items-start justify-start md:justify-between gap-2.5 md:gap-6 overflow-x-auto pb-8 scrollbar-hide">
+            <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-3 gap-y-6 md:gap-6 overflow-visible pb-8">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked';
                 const isActive = i === 0 && !isLocked;
@@ -230,13 +230,13 @@ export default function RotaDosLobos() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="flex flex-col items-center gap-1.5 md:gap-3 min-w-[52px] md:min-w-[130px] group"
+                    className="flex w-full min-w-0 flex-col items-center gap-2 md:gap-3 md:min-w-[130px] md:w-auto group"
                   >
                     <button
                       disabled={isLocked}
                       onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
-                        "relative w-10 h-10 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-700",
+                        "relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-700",
                         isActive 
                           ? "bg-gold/10 border border-gold/80 shadow-[0_0_12px_rgba(233,167,88,0.16)] md:scale-110" 
                           : "bg-white/[0.03] border border-white/10 hover:border-gold/30",
@@ -244,7 +244,7 @@ export default function RotaDosLobos() {
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-0.5 -left-0.5 w-3.5 h-3.5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[6px] md:text-[10px] font-bold z-30 shadow-lg",
+                        "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
                         isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
@@ -271,7 +271,7 @@ export default function RotaDosLobos() {
                     </button>
 
                     <span className={cn(
-                      "text-[6.5px] md:text-[10px] text-center max-w-[52px] md:max-w-[100px] leading-tight font-medium uppercase tracking-[0.02em]",
+                      "text-[8px] md:text-[10px] text-center w-full max-w-[86px] md:max-w-[100px] leading-[1.15] font-medium uppercase tracking-[0.02em] break-words px-0.5",
                       isActive ? "text-white" : isLocked ? "text-white/20" : "text-white/60"
                     )}>
                       {estacao.titulo}
