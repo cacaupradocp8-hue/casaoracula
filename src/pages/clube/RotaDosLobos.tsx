@@ -57,12 +57,13 @@ export default function RotaDosLobos() {
         <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
-              src={getSetting('rota_dos_lobos_hero_image', 'https://images.unsplash.com/photo-1550853024-fae8cd4be47f?auto=format&fit=crop&q=80')}
-              className="w-full h-full object-cover opacity-60 mix-blend-luminosity scale-110"
-              alt="Lobo na Floresta"
+              src="https://images.unsplash.com/photo-1615840287214-7ff58936c4cf?auto=format&fit=crop&q=80"
+              className="w-full h-full object-cover opacity-80 scale-110 object-[center_30%]"
+              alt="Lobo Imersivo"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/20 to-[#020617]" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-[#020617] mix-blend-multiply" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-black/40 mix-blend-overlay" />
           </div>
 
           <ResponsiveContainer size="wide" className="px-6 md:px-12 lg:px-20 max-w-7xl mx-auto w-full">
