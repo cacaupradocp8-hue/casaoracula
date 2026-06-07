@@ -189,6 +189,7 @@ export default function RotaDosLobos() {
                   </motion.div>
                 );
               })}
+            </div>
           </div>
         </div>
       </div>
