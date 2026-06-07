@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
+import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
 
 interface DisplayEstacao extends Partial<EstacaoCatalogo> {
   id: string;
@@ -57,8 +58,8 @@ export default function RotaDosLobos() {
         <section className="relative min-h-screen flex flex-col justify-start pt-20 pb-20 z-10">
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <img
-              src="https://lovable-uploads.s3.us-west-2.amazonaws.com/055d0534-9226-4bf0-8ae4-347d57a5b1f6.png"
-              className="w-full h-full object-cover opacity-80 scale-110 object-center"
+              src={rotaLobosBg}
+              className="w-full h-full object-cover opacity-90 scale-110 object-center"
               alt="Lobo Imersivo"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/10 to-[#020617] mix-blend-multiply" />
