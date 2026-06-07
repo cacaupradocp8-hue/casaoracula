@@ -189,10 +189,8 @@ export default function RotaDosLobos() {
                   </motion.div>
                 );
               })}
-            </div>
           </div>
-
-        </ResponsiveContainer>
+        </div>
       </div>
     </AppLayout>
   );
