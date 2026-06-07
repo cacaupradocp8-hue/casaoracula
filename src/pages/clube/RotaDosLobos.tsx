@@ -94,56 +94,55 @@ export default function RotaDosLobos() {
             </div>
 
             {/* Overlay Gradiente e Conteúdo Integrado */}
-            <div className="relative z-10 flex flex-col justify-center h-full min-h-[inherit] md:bg-gradient-to-r md:from-black/95 md:via-black/70 md:to-transparent p-6 md:p-14 lg:p-20">
+            <div className="relative z-10 flex flex-col justify-start h-full min-h-[inherit] md:bg-gradient-to-r md:from-black/95 md:via-black/70 md:to-transparent p-6 md:p-14 lg:p-20 pt-10 md:pt-16">
               
-              <div className="max-w-xl space-y-10 pb-32 md:pb-0">
+              <div className="max-w-xl space-y-8 pb-32 md:pb-0">
                 {/* Badge e Título */}
-                <div className="space-y-6">
+                <div className="space-y-4">
                   <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
                     <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-gold uppercase">Travessia Ativa</span>
                   </div>
 
-                  <h1 className="text-5xl md:text-6xl lg:text-8xl font-serif text-white leading-[0.85] tracking-tight">
+                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif text-white leading-[0.9] tracking-tight">
                     Rota dos <br />
                     <span className="text-gold italic font-light">Lobos</span>
                   </h1>
 
-                  <div className="space-y-4">
-                    <p className="text-lg md:text-2xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
+                  <div className="space-y-3">
+                    <p className="text-lg md:text-xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
                       "Onde a voz silenciada volta a encontrar o corpo."
                     </p>
-                    <p className="text-sm md:text-base text-white/60 leading-relaxed max-w-sm">
+                    <p className="text-xs md:text-sm text-white/60 leading-relaxed max-w-sm">
                       Uma jornada profunda em 6 estações para reconhecer silenciamentos e despertar o instinto selvagem.
                     </p>
                   </div>
                 </div>
 
                 {/* Card de Áudio e CTA: Integrados no mesmo bloco visual */}
-                <div className="space-y-6">
+                <div className="space-y-5">
                   {/* Voz da Floresta */}
                   <div 
-                    className="group flex items-center gap-5 p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-md"
+                    className="group flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-[360px]"
                     onClick={togglePlay}
                   >
-                    <div className="w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
-                      {isPlaying ? <Pause className="w-5 h-5 text-gold fill-gold" /> : <Play className="w-5 h-5 text-gold fill-gold ml-1" />}
+                    <div className="w-10 h-10 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
+                      {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
                     </div>
-                    <div className="flex flex-col gap-0.5 min-w-0">
-                      <h3 className="text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
-                      <p className="text-xs text-white/40 font-light italic">Sintonize com o chamado antes de começar.</p>
+                    <div className="flex flex-col gap-0 min-w-0">
+                      <h3 className="text-sm md:text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
+                      <button className="text-[11px] text-gold font-medium uppercase tracking-wider text-left hover:underline">Ouvir Acolhimento →</button>
                     </div>
                   </div>
 
                   {/* CTA Principal */}
                   <Button
                     variant="gold"
-                    size="xl"
-                    className="w-full md:w-auto px-12 rounded-full h-16 text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95"
+                    className="w-full md:w-auto max-w-[420px] px-8 rounded-full h-[52px] md:h-[58px] text-sm md:text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95 whitespace-normal break-words py-2"
                     onClick={irParaEstacao1}
                   >
-                    <TreePine className="mr-2 w-5 h-5" />
-                    Entrar na Clareira do Chamado
-                    <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                    <TreePine className="mr-2 w-4 h-4 md:w-5 md:h-5 flex-shrink-0" />
+                    <span className="text-center">Entrar na Clareira do Chamado</span>
+                    <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
                   </Button>
                 </div>
               </div>
