@@ -304,15 +304,13 @@ export default function ClubeRotasPortal() {
                 >
                   <Card className="bg-[#020D24] border-white/5 overflow-hidden h-full hover:border-gold/30 transition-all duration-1000 shadow-3xl rounded-[4rem]">
                     <div className="grid grid-cols-1 lg:grid-cols-2">
-                      <div className="relative h-[400px] lg:h-full overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-1000">
+                      <div className="relative h-[400px] lg:h-full overflow-hidden group-hover:grayscale-0 transition-all duration-1000">
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#020D24]/80 z-10 hidden lg:block" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#020D24] to-transparent z-10 lg:hidden" />
                         <img 
                           src={rotaLobosBg} 
-
-
                           alt="Rota dos Lobos" 
-                          className="w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[3s]" 
+                          className="w-full h-full object-cover object-[center_20%] scale-110 group-hover:scale-100 transition-transform duration-[3s]" 
                         />
                       </div>
                       
