@@ -187,11 +187,11 @@ export default function RotaDosLobos() {
 
                     <Button
                       variant="gold"
-                      className="w-auto px-5 rounded-full h-11 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95 max-w-[340px]"
+                      className="w-auto px-6 rounded-full h-11 text-sm font-bold bg-[#D48F3D] hover:bg-[#B57A34] text-black border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.2)] transition-all active:scale-95"
                       onClick={irParaEstacao1}
                     >
                       <TreePine className="mr-2 w-4 h-4 flex-shrink-0" />
-                      <span>Entrar na Clareira do Chamado</span>
+                      <span>Entrar na Clareira</span>
                       <ArrowRight className="ml-2 w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </Button>
                   </div>
