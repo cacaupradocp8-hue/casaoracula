@@ -72,61 +72,69 @@ export default function RotaDosLobos() {
           {/* HERO - LAYOUT MOBILE E DESKTOP DISTINTOS */}
           <section className="relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#0A0A0B] border border-white/10 shadow-2xl">
             
-            {/* MOBILE LAYOUT (Inspirado no modelo largo/cinematográfico) */}
-            <div className="md:hidden flex flex-col">
-              {/* Imagem de Capa com Título Sobreposto */}
-              <div className="relative h-[280px] w-full overflow-hidden bg-black">
+            {/* MOBILE LAYOUT (Inspirado no modelo visual aprovado) */}
+            <div className="md:hidden flex flex-col bg-[#020617] rounded-[32px] overflow-hidden border border-white/10">
+              {/* Hero com Imagem de Fundo e Texto Sobreposto */}
+              <div className="relative min-h-[520px] overflow-hidden">
                 <img
                   src={rotaLobosBg}
                   alt="Rota dos Lobos"
-                  className="h-full w-full object-cover object-top opacity-80"
+                  className="absolute inset-0 w-full h-full object-cover object-center"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent" />
                 
-                <div className="absolute bottom-0 left-0 right-0 p-6 pb-4">
-                  <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm mb-2">
-                    <span className="text-[8px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+                {/* Overlays de Gradiente e Blur para Fusão Perfeita */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-[#020617]" />
+                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] via-[#020617]/90 to-transparent backdrop-blur-[2px]" />
+                
+                {/* Camada Extra para Esconder Linha Final da Imagem */}
+                <div className="absolute bottom-0 left-0 right-0 h-12 bg-[#020617] blur-xl opacity-60 translate-y-6" />
+
+                <div className="relative z-10 flex min-h-[520px] flex-col justify-end p-6 pb-4">
+                  <div className="space-y-4">
+                    <div className="inline-flex items-center px-2 py-0.5 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
+                      <span className="text-[8px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+                    </div>
+
+                    <h1 className="text-4xl font-serif text-white leading-[0.9] tracking-tight">
+                      Rota dos <br />
+                      <span className="text-gold italic font-light">Lobos</span>
+                    </h1>
+
+                    <div className="space-y-3">
+                      <p className="text-sm text-gold/90 font-serif italic border-l-2 border-gold/30 pl-4">
+                        "Onde a voz silenciada volta a encontrar o corpo."
+                      </p>
+                      <p className="text-[11px] text-white/60 leading-relaxed max-w-[280px]">
+                        Uma jornada profunda em 6 estações para reconhecer silenciamentos e despertar o instinto selvagem.
+                      </p>
+                    </div>
                   </div>
-                  <h1 className="text-4xl font-serif text-white leading-[0.9] tracking-tight">
-                    Rota dos <span className="text-gold italic font-light">Lobos</span>
-                  </h1>
                 </div>
               </div>
 
-              {/* Conteúdo Abaixo da Imagem */}
-              <div className="p-6 pt-2 space-y-6">
-                <div className="space-y-3">
-                  <p className="text-sm text-gold/90 font-serif italic border-l-2 border-gold/30 pl-4">
-                    "Onde a voz silenciada volta a encontrar o corpo."
-                  </p>
-                  <p className="text-[11px] text-white/60 leading-relaxed">
-                    Uma jornada profunda em 6 estações para despertar o instinto selvagem.
-                  </p>
-                </div>
+              {/* Botões e Ações Abaixo da Imagem (Ainda dentro do card principal) */}
+              <div className="px-6 pb-12 space-y-5 bg-[#020617]">
+                {/* CTA Principal Mobile */}
+                <Button
+                  variant="gold"
+                  className="w-full h-12 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none rounded-full shadow-[0_0_20px_rgba(233,167,88,0.2)] transition-all active:scale-95"
+                  onClick={irParaEstacao1}
+                >
+                  <TreePine className="mr-2 w-4 h-4" />
+                  Entrar na Clareira do Chamado
+                </Button>
 
-                <div className="space-y-4">
-                  {/* CTA Principal Mobile */}
-                  <Button
-                    variant="gold"
-                    className="w-full h-11 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none rounded-full shadow-[0_0_20px_rgba(233,167,88,0.2)] transition-all active:scale-95"
-                    onClick={irParaEstacao1}
-                  >
-                    <TreePine className="mr-2 w-4 h-4" />
-                    Entrar na Clareira do Chamado
-                  </Button>
-
-                  {/* Card de Áudio Mobile */}
-                  <div 
-                    className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md"
-                    onClick={togglePlay}
-                  >
-                    <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0">
-                      {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
-                    </div>
-                    <div className="flex flex-col gap-0 min-w-0">
-                      <h3 className="text-xs font-serif text-white tracking-wide">A Voz da Floresta</h3>
-                      <span className="text-[9px] text-gold font-medium uppercase tracking-wider">Ouvir Acolhimento →</span>
-                    </div>
+                {/* Card de Áudio Mobile */}
+                <div 
+                  className="group flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md"
+                  onClick={togglePlay}
+                >
+                  <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0">
+                    {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                  </div>
+                  <div className="flex flex-col gap-0 min-w-0">
+                    <h3 className="text-xs font-serif text-white tracking-wide">A Voz da Floresta</h3>
+                    <span className="text-[9px] text-gold font-medium uppercase tracking-wider">Ouvir Acolhimento →</span>
                   </div>
                 </div>
               </div>
