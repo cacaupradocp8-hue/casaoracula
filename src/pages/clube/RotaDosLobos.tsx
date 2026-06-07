@@ -55,68 +55,85 @@ export default function RotaDosLobos() {
   return (
     <AppLayout>
       <div className="bg-[#020617] text-white min-h-screen overflow-x-hidden font-sans selection:bg-gold/30 selection:text-white">
-        <div className="max-w-6xl mx-auto px-4 py-6 md:py-10 space-y-12">
+        <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 space-y-12 pb-20">
           
-          {/* HERO REFEITO - MODELO OBRIGATÓRIO */}
-          <section className="relative overflow-hidden rounded-[32px] bg-[#0A0A0B] border border-white/5 shadow-2xl">
-            <div className="flex flex-col lg:grid lg:grid-cols-[45%_55%]">
-              
-              {/* Direita: Imagem (Topo no mobile) */}
-              <div className="relative w-full h-[160px] sm:h-[200px] lg:h-auto order-1 lg:order-2 bg-[#0A0A0B]">
-                <img
-                  src={rotaLobosBg}
-                  className="w-full h-full object-cover lg:object-cover object-[center_20%]"
-                  alt="Rota dos Lobos"
-                />
-                {/* Gradiente de fusão - Transição suave */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#0A0A0B] lg:to-transparent lg:from-0% lg:via-20%" />
-              </div>
+          {/* HERO CINEMATOGRÁFICO - REFERÊNCIA REAL - SUBSTITUIÇÃO COMPLETA */}
+          <section className="relative overflow-hidden rounded-[32px] md:rounded-[40px] bg-[#0A0A0B] border border-white/10 shadow-2xl min-h-fit md:min-h-[680px]">
+            
+            {/* Desktop Background: Lobo visível e dominante à direita */}
+            <div 
+              className="absolute inset-0 hidden md:block"
+              style={{ 
+                backgroundImage: `url(${rotaLobosBg})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'right center',
+                backgroundRepeat: 'no-repeat'
+              }}
+            />
+            
+            {/* Mobile: Imagem no topo do card com altura generosa (320px) */}
+            <div className="md:hidden w-full h-[340px] relative overflow-hidden">
+              <img 
+                src={rotaLobosBg} 
+                className="w-full h-full object-cover object-[center_30%]" 
+                alt="Rota dos Lobos" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/40 to-transparent" />
+            </div>
 
-              {/* Esquerda: Conteúdo */}
-              <div className="p-6 md:p-8 lg:p-12 pb-20 lg:pb-12 flex flex-col justify-center gap-6 order-2 lg:order-1 relative z-10">
-                <div className="space-y-4">
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 w-fit">
-                    <span className="text-[10px] font-bold tracking-[0.2em] text-gold uppercase">Travessia Ativa</span>
+            {/* Overlay Gradiente e Conteúdo Integrado */}
+            <div className="relative z-10 flex flex-col justify-center h-full min-h-[inherit] md:bg-gradient-to-r md:from-black/95 md:via-black/70 md:to-transparent p-6 md:p-14 lg:p-20">
+              
+              <div className="max-w-xl space-y-10 pb-32 md:pb-0">
+                {/* Badge e Título */}
+                <div className="space-y-6">
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
+                    <span className="text-[10px] md:text-xs font-bold tracking-[0.3em] text-gold uppercase">Travessia Ativa</span>
                   </div>
 
-                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white leading-tight lg:leading-[0.9]">
+                  <h1 className="text-5xl md:text-6xl lg:text-8xl font-serif text-white leading-[0.85] tracking-tight">
                     Rota dos <br />
                     <span className="text-gold italic font-light">Lobos</span>
                   </h1>
 
-                  <p className="text-base md:text-xl text-gold/80 font-serif italic">
-                    "Onde a voz silenciada volta a encontrar o corpo."
-                  </p>
-
-                  <p className="text-sm text-white/50 leading-relaxed max-w-sm">
-                    Uma jornada em 6 estações para reconhecer silenciamentos, domesticações e o retorno do instinto.
-                  </p>
-                </div>
-
-                {/* Card de Áudio: A Voz da Floresta */}
-                <div 
-                  className="group flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all cursor-pointer"
-                  onClick={togglePlay}
-                >
-                  <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0">
-                    {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
-                  </div>
-                  <div className="flex flex-col gap-0.5 min-w-0">
-                    <h3 className="text-sm font-serif text-white truncate">A Voz da Floresta</h3>
-                    <p className="text-[10px] text-white/40 truncate">Prepare o campo para a travessia.</p>
+                  <div className="space-y-4">
+                    <p className="text-lg md:text-2xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
+                      "Onde a voz silenciada volta a encontrar o corpo."
+                    </p>
+                    <p className="text-sm md:text-base text-white/60 leading-relaxed max-w-sm">
+                      Uma jornada profunda em 6 estações para reconhecer silenciamentos e despertar o instinto selvagem.
+                    </p>
                   </div>
                 </div>
 
-                {/* CTA Principal */}
-                <Button
-                  variant="gold"
-                  size="xl"
-                  className="w-full rounded-full h-14 md:h-16 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group whitespace-normal break-words shadow-xl"
-                  onClick={irParaEstacao1}
-                >
-                  <TreePine className="mr-2 w-5 h-5" />
-                  Entrar na Clareira do Chamado
-                </Button>
+                {/* Card de Áudio e CTA: Integrados no mesmo bloco visual */}
+                <div className="space-y-6">
+                  {/* Voz da Floresta */}
+                  <div 
+                    className="group flex items-center gap-5 p-5 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-gold/30 transition-all cursor-pointer backdrop-blur-md max-w-md"
+                    onClick={togglePlay}
+                  >
+                    <div className="w-12 h-12 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:scale-110 transition-transform">
+                      {isPlaying ? <Pause className="w-5 h-5 text-gold fill-gold" /> : <Play className="w-5 h-5 text-gold fill-gold ml-1" />}
+                    </div>
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <h3 className="text-base font-serif text-white tracking-wide">A Voz da Floresta</h3>
+                      <p className="text-xs text-white/40 font-light italic">Sintonize com o chamado antes de começar.</p>
+                    </div>
+                  </div>
+
+                  {/* CTA Principal */}
+                  <Button
+                    variant="gold"
+                    size="xl"
+                    className="w-full md:w-auto px-12 rounded-full h-16 text-base font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95"
+                    onClick={irParaEstacao1}
+                  >
+                    <TreePine className="mr-2 w-5 h-5" />
+                    Entrar na Clareira do Chamado
+                    <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                  </Button>
+                </div>
               </div>
             </div>
           </section>
@@ -140,7 +157,7 @@ export default function RotaDosLobos() {
                     key={estacao.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.9 + (i * 0.1) }}
+                    transition={{ delay: 0.2 + (i * 0.1) }}
                     className="flex flex-col items-center gap-4 min-w-[140px] group"
                   >
                     <button
@@ -196,4 +213,3 @@ export default function RotaDosLobos() {
     </AppLayout>
   );
 }
-
