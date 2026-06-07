@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; // REBUILD_FORCE_V2
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, TreePine, Play, Pause, Lock } from 'lucide-react';
@@ -114,29 +114,29 @@ export default function RotaDosLobos() {
 
               {/* Botões e Ações Abaixo da Imagem */}
               <div className="px-6 pb-12 space-y-6 bg-[#020617]">
-                {/* CTA Principal Mobile */}
+                {/* CTA Principal Mobile - REVISADO PARA COMPACTO */}
                 <Button
                   variant="gold"
-                  className="w-full h-11 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none rounded-full shadow-[0_0_20px_rgba(233,167,88,0.2)] transition-all active:scale-95 max-w-[340px]"
+                  className="w-full h-11 text-sm font-bold bg-[#D48F3D] hover:bg-[#B57A34] text-black border border-white/20 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.15)] transition-all active:scale-95 max-w-[320px]"
                   onClick={irParaEstacao1}
                 >
                   <TreePine className="mr-2 w-4 h-4" />
-                  Entrar na Clareira do Chamado
+                  Entrar na Clareira
                 </Button>
 
                 {/* Botão de Áudio Estilo Link Premium */}
                 <div 
-                  className="flex items-center gap-2 cursor-pointer group w-fit"
+                  className="flex items-center gap-3 cursor-pointer group w-fit"
                   onClick={togglePlay}
                 >
-                  <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
-                    {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                  <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0 group-hover:bg-gold/15 transition-all">
+                    {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
                   </div>
                   <div className="flex flex-col -space-y-0.5">
-                    <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
-                    <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
+                    <span className="text-[9px] text-white/40 uppercase tracking-[0.2em] font-medium">A Voz da Floresta</span>
+                    <span className="text-[11px] text-gold font-semibold uppercase tracking-wider flex items-center">
                       Ouvir Acolhimento
-                      <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
+                      <ArrowRight className="ml-1.5 w-3 h-3 transition-transform group-hover:translate-x-1" />
                     </span>
                   </div>
                 </div>
@@ -187,11 +187,11 @@ export default function RotaDosLobos() {
 
                     <Button
                       variant="gold"
-                      className="w-auto px-5 rounded-full h-11 text-sm font-bold bg-[#E9A758] hover:bg-[#D48F3D] text-black border-none group shadow-[0_0_40px_rgba(233,167,88,0.3)] transition-all active:scale-95 max-w-[340px]"
+                      className="w-auto px-6 rounded-full h-11 text-sm font-bold bg-[#D48F3D] hover:bg-[#B57A34] text-black border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.2)] transition-all active:scale-95"
                       onClick={irParaEstacao1}
                     >
                       <TreePine className="mr-2 w-4 h-4 flex-shrink-0" />
-                      <span>Entrar na Clareira do Chamado</span>
+                      <span>Entrar na Clareira</span>
                       <ArrowRight className="ml-2 w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </Button>
                   </div>
