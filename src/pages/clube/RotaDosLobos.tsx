@@ -113,24 +113,24 @@ export default function RotaDosLobos() {
               </div>
 
               {/* Botões e Ações Abaixo da Imagem */}
-              <div className="px-6 pb-12 space-y-6 bg-[#020617]">
-                {/* CTA Principal Mobile - REVISADO PARA COMPACTO */}
-                <Button
-                  variant="gold"
-                  className="w-full h-11 text-sm font-bold bg-[#D48F3D] hover:bg-[#B57A34] text-black border border-white/20 rounded-full shadow-[0_0_15px_rgba(212,175,55,0.15)] transition-all active:scale-95 max-w-[320px]"
+              <div className="px-6 pb-10 space-y-4 bg-[#020617]">
+                {/* CTA Principal Mobile - compacto, sem herdar o Button global */}
+                <button
+                  type="button"
+                  className="inline-flex h-9 w-auto min-w-0 items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/90 px-5 text-[12px] font-semibold leading-none text-[#08090B] shadow-[0_8px_22px_rgba(212,175,55,0.16)] transition-all active:scale-95"
                   onClick={irParaEstacao1}
                 >
-                  <TreePine className="mr-2 w-4 h-4" />
-                  Entrar na Clareira
-                </Button>
+                  <TreePine className="h-3.5 w-3.5 flex-shrink-0" />
+                  <span>Entrar na Clareira</span>
+                </button>
 
                 {/* Botão de Áudio Estilo Link Premium */}
                 <div 
-                  className="flex items-center gap-3 cursor-pointer group w-fit"
+                  className="flex items-center gap-2.5 cursor-pointer group w-fit"
                   onClick={togglePlay}
                 >
-                  <div className="w-10 h-10 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0 group-hover:bg-gold/15 transition-all">
-                    {isPlaying ? <Pause className="w-4 h-4 text-gold fill-gold" /> : <Play className="w-4 h-4 text-gold fill-gold ml-0.5" />}
+                  <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0 group-hover:bg-gold/15 transition-all">
+                    {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
                   </div>
                   <div className="flex flex-col -space-y-0.5">
                     <span className="text-[9px] text-white/40 uppercase tracking-[0.2em] font-medium">A Voz da Floresta</span>
