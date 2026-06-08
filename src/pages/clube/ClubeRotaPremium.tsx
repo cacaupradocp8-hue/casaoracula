@@ -5,7 +5,7 @@ import {
   ChevronRight, ChevronLeft, TreePine, Headphones, 
   Sparkles, Check, Eye, ArrowRight, Play, Pause, 
   Scroll, Map, BookOpen, MessageSquare, Award,
-  Compass, Ghost, Moon, Shield, DoorOpen, Info, X
+  Compass, Ghost, Moon, Shield, DoorOpen, Info, X, Lock, Plus
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
