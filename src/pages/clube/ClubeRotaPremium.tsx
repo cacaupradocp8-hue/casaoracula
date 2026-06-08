@@ -165,16 +165,16 @@ export default function ClubeRotaPremium() {
                 {currentStep === 1 && (
                   <div className="space-y-8 text-center max-w-2xl mx-auto">
                     <div className="space-y-2">
-                      <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Momento I</span>
-                      <h2 className="text-3xl font-serif">Escuta Ritual</h2>
+                      <h2 className="text-3xl font-serif">A Voz da Clareira</h2>
                     </div>
                     
-                    <div className="bg-[#0A0A0B]/60 backdrop-blur-md border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
+                    <div className="bg-[#0A0A0B]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
                       <EscutaPremium 
                         audioUrl="1780702648962.mp3" 
-                        titulo="O Chamado da Loba"
-                        tipo="Escuta Ritual"
-                        funcao="Acolhimento na Travessia"
+                        titulo="Abertura da Clareira"
+                        tipo="Introdução"
+                        funcao="Preparar a escuta para reconhecer o chamado interior."
+                        duracao="03:00"
                         className="py-12 md:py-16 !bg-transparent !shadow-none"
                       />
                     </div>
