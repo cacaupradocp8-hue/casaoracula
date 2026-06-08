@@ -186,10 +186,10 @@ export default function ClubeRotaPremium() {
                     <div className="pt-4">
                       <Button 
                         variant="outline"
-                        className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest"
+                        className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5"
                         onClick={handleNext}
                       >
-                        Já ouvi o chamado
+                        Continuar a Escuta
                         <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                     </div>
