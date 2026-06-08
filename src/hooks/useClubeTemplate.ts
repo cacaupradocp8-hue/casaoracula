@@ -66,12 +66,12 @@ export function useRotaHub(rotaSlug: string) {
       const { data: estacoes, error: estacoesError } = await supabase
         .from('clube_estacoes')
         .select('*')
-        .eq('rota_id', rota.id)
+        .eq('rota_id', (rota as any).id)
         .order('ordem', { ascending: true });
 
       if (estacoesError) throw estacoesError;
 
-      return { rota: rota as Rota, estacoes: estacoes as Estacao[] };
+      return { rota: rota as unknown as Rota, estacoes: estacoes as unknown as Estacao[] };
     },
     enabled: !!rotaSlug
   });
@@ -88,7 +88,7 @@ export function useEstacaoConteudo(estacaoSlug: string) {
         .single();
 
       if (error) throw error;
-      return estacao as Estacao & { clube_rotas: Rota };
+      return estacao as unknown as Estacao & { clube_rotas: Rota };
     },
     enabled: !!estacaoSlug
   });

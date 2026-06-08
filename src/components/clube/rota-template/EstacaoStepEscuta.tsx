@@ -37,9 +37,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         </div>
         
         <EscutaPremium 
-          estacaoId={estacaoId} 
           audioUrl={audioVozClareiraUrl}
-          showBanner={false}
         />
       </div>
 
