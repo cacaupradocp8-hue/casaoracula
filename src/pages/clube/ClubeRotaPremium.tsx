@@ -159,6 +159,36 @@ export default function ClubeRotaPremium() {
                       <TreePine className="w-4 h-4 mr-2" />
                       Entrar na Clareira
                     </Button>
+
+                    {/* Quick Access Bar */}
+                    <div className="pt-8 border-t border-white/5">
+                      <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-bold mb-6">Acessos Rápidos</p>
+                      <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                        {[
+                          { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
+                          { icon: Sparkles, label: 'Oráculo', step: 4 },
+                          { icon: TreePine, label: 'Psique', step: 5 },
+                          { icon: BookOpen, label: 'Ofício', step: 6 },
+                          { icon: Map, label: 'Mapa', path: '/clube/rota-dos-lobos' }
+                        ].map((item, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => {
+                              if (item.path) navigate(item.path);
+                              else if (item.step !== undefined) setCurrentStep(item.step);
+                            }}
+                            className="group flex flex-col items-center gap-2 transition-all"
+                          >
+                            <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 group-hover:border-gold/40 transition-all">
+                              <item.icon className="w-5 h-5 text-gold/60 group-hover:text-gold transition-colors" />
+                            </div>
+                            <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold group-hover:text-gold/80 transition-colors">
+                              {item.label}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 )}
 
