@@ -28,23 +28,9 @@ export interface Estacao {
   movimento_simbolico: string;
   frase_abertura: string;
   frase_voz_clareira: string;
-  caso_simbolico: {
-    titulo: string;
-    texto: string;
-    pergunta: string;
-    opcoes: string[];
-  };
-  revelacao: {
-    porta: string;
-    campo: string;
-    torre: string;
-    labirinto: string;
-    pergunta: string;
-  };
-  missao_campo: {
-    titulo: string;
-    instrucao: string;
-  };
+  caso_simbolico: any;
+  revelacao: any;
+  missao_campo: any;
   fechamento_texto: string;
   audio_voz_clareira_url: string;
   livro_imagem_banner_url: string;
@@ -86,17 +72,23 @@ export function useEstacaoConteudo(estacaoSlug: string) {
     queryFn: async () => {
       const { data: estacaoData, error } = await supabase
         .from('clube_estacoes')
-        .select('*, clube_rotas(*)')
+        .select('*')
         .eq('slug', estacaoSlug)
         .single();
 
       if (error) throw error;
       
-      const { clube_rotas, ...estacaoFields } = estacaoData as any;
+      const { data: rotaData, error: rotaError } = await supabase
+        .from('clube_rotas')
+        .select('*')
+        .eq('id', (estacaoData as any).rota_id)
+        .single();
+        
+      if (rotaError) throw rotaError;
       
       return {
-        ...estacaoFields,
-        clube_rotas: clube_rotas as Rota
+        ...(estacaoData as any),
+        clube_rotas: rotaData as Rota
       } as Estacao & { clube_rotas: Rota };
     },
     enabled: !!estacaoSlug
