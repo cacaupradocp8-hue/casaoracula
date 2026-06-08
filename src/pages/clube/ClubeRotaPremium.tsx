@@ -5,10 +5,12 @@ import {
   ChevronRight, ChevronLeft, TreePine, Headphones, 
   Sparkles, Check, Eye, ArrowRight, Play, Pause, 
   Scroll, Map, BookOpen, MessageSquare, Award,
-  Compass, Ghost, Moon, Shield, DoorOpen
+  Compass, Ghost, Moon, Shield, DoorOpen, Info, X
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
@@ -22,6 +24,8 @@ export default function ClubeRotaPremium() {
   const { pontos, isLoading, concluirPonto } = useRotaOracular(slug);
   const [currentStep, setCurrentStep] = useState(0);
   const [userHasRead, setUserHasRead] = useState(false);
+
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
 
   const steps = [
     { id: 'entrada', title: 'Entrada na Clareira', ritual: true },
@@ -204,7 +208,7 @@ export default function ClubeRotaPremium() {
                     {/* Quick Access Bar */}
                     <div className="pt-8 border-t border-white/10">
                       <p className="text-[10px] text-white/50 uppercase tracking-[0.3em] font-bold mb-6">Acessos Rápidos</p>
-                      <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                      <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-8">
                         {[
                           { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
                           { icon: Sparkles, label: 'Oráculo', step: 4 },
@@ -229,6 +233,78 @@ export default function ClubeRotaPremium() {
                           </button>
                         ))}
                       </div>
+
+                      <Dialog open={isInfoOpen} onOpenChange={setIsInfoOpen}>
+                        <DialogTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="text-gold/60 hover:text-gold hover:bg-gold/5 text-[10px] uppercase tracking-widest font-bold gap-2"
+                          >
+                            <Info className="w-4 h-4" />
+                            Ver Informações da Estação
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="bg-[#020617] border border-gold/20 text-white max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-3xl">
+                          <div className="absolute right-4 top-4 z-50">
+                            <button 
+                              onClick={() => setIsInfoOpen(false)}
+                              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-colors"
+                            >
+                              <X className="w-5 h-5 text-gold" />
+                            </button>
+                          </div>
+                          <DialogHeader className="p-8 pb-4">
+                            <DialogTitle className="text-2xl font-serif text-gold flex items-center gap-3">
+                              <TreePine className="w-6 h-6" />
+                              Cartografia da Estação
+                            </DialogTitle>
+                          </DialogHeader>
+                          <ScrollArea className="flex-grow p-8 pt-0">
+                            <div className="space-y-8 font-serif leading-relaxed text-white/80 pb-8">
+                              <div className="space-y-4">
+                                <div className="space-y-1">
+                                  <span className="text-gold/60 text-[10px] uppercase tracking-widest font-bold">Localização</span>
+                                  <h3 className="text-2xl text-white">🐺 ESTAÇÃO 1 — CLAREIRA DO CHAMADO</h3>
+                                  <p className="text-gold italic">Campo de Observação</p>
+                                </div>
+                                
+                                <div className="bg-white/5 border-l-2 border-gold/40 p-6 rounded-r-2xl space-y-4">
+                                  <p>Nem toda mulher chega dizendo: <span className="text-white italic">"Perdi minha essência."</span></p>
+                                  <p>A maioria chega dizendo:</p>
+                                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-2 text-gold/80 italic text-sm">
+                                    <li>• Estou cansada.</li>
+                                    <li>• Não sei o que quero.</li>
+                                    <li>• Parece que me perdi.</li>
+                                    <li>• Nada faz sentido.</li>
+                                    <li>• Não consigo me ouvir.</li>
+                                  </ul>
+                                </div>
+                                
+                                <p>A Clareira do Chamado ensina a perceber que muitas vezes isso não é falta de força. É afastamento do instinto.</p>
+                              </div>
+
+                              <div className="space-y-4 pt-4 border-t border-white/10">
+                                <div className="flex items-center gap-2 text-gold">
+                                  <Moon className="w-4 h-4" />
+                                  <h4 className="text-lg uppercase tracking-widest text-sm font-bold">🌑 Tese Central da Estação</h4>
+                                </div>
+                                <p className="text-xl italic text-white/90">O instinto raramente desaparece. Ele costuma ser enterrado sob camadas de adaptação.</p>
+                              </div>
+
+                              <div className="space-y-4 pt-4 border-t border-white/10">
+                                <h4 className="text-2xl text-gold"># Clareira do Chamado</h4>
+                                <p>Toda travessia começa antes do primeiro passo. Ela começa quando algo dentro da mulher deixa de aceitar a vida apenas como ela está.</p>
+                                <p>Nem sempre isso chega como clareza. Às vezes chega como cansaço. Às vezes como irritação. Às vezes como uma tristeza sem nome.</p>
+                                <p>Muitas mulheres acreditam que perderam sua força. Mas frequentemente o que perderam foi o contato com aquilo que sabem.</p>
+                                <p>Existe uma parte da psique que continua recolhendo ossos. Recolhendo rastros. Recolhendo fragmentos esquecidos.</p>
+                                <p className="bg-gold/10 p-6 rounded-2xl text-gold italic border border-gold/20">
+                                  Esta estação é um convite para escutar esse chamado. Não para responder imediatamente. Primeiro para reconhecê-lo.
+                                </p>
+                              </div>
+                            </div>
+                          </ScrollArea>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 )}
