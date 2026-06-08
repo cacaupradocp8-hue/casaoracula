@@ -29,7 +29,7 @@ export const EstacaoProgressHeader: React.FC<EstacaoProgressHeaderProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
-          <h2 className="text-xl md:text-2xl font-serif text-white border-b border-white/20 pb-0.5 px-2">Casa Orácula</h2>
+          {/* Casa Orácula title removed as requested for Clareira station */}
         </div>
         
         <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5">
