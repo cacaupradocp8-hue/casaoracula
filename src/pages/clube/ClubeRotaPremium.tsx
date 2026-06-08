@@ -21,6 +21,7 @@ export default function ClubeRotaPremium() {
   const navigate = useNavigate();
   const { pontos, isLoading, concluirPonto } = useRotaOracular(slug);
   const [currentStep, setCurrentStep] = useState(0);
+  const [userHasRead, setUserHasRead] = useState(false);
 
   const steps = [
     { id: 'entrada', title: 'Entrada na Clareira', ritual: true },
@@ -214,28 +215,44 @@ export default function ClubeRotaPremium() {
                       </div>
                     </div>
 
-                    <div className="space-y-6">
-                      <p className="text-center text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">O que mais chama sua atenção neste caso?</p>
-                      <div className="grid grid-cols-2 gap-4">
-                        {[
-                          { id: 'porta', label: 'Porta', icon: DoorOpen },
-                          { id: 'torre', label: 'Torre', icon: Shield },
-                          { id: 'labirinto', label: 'Labirinto', icon: Compass },
-                          { id: 'campo', label: 'Campo Psíquico', icon: Moon }
-                        ].map((opt) => (
-                          <button
-                            key={opt.id}
-                            onClick={handleNext}
-                            className="flex items-center gap-4 bg-[#0A0A0B]/60 border border-white/5 hover:border-gold/40 p-4 rounded-2xl transition-all group text-left"
-                          >
-                            <div className="w-10 h-10 rounded-xl bg-gold/5 border border-gold/10 flex items-center justify-center text-gold group-hover:bg-gold/20 transition-colors">
-                              <opt.icon className="w-5 h-5" />
-                            </div>
-                            <span className="font-serif text-sm text-white/70 group-hover:text-gold transition-colors">{opt.label}</span>
-                          </button>
-                        ))}
+                    {!userHasRead ? (
+                      <div className="flex justify-center pt-4">
+                        <Button 
+                          onClick={() => setUserHasRead(true)}
+                          className="rounded-full bg-gold/10 border border-gold/30 text-gold font-bold px-12 h-12 uppercase tracking-widest text-xs hover:bg-gold/20 transition-all"
+                        >
+                          Fiz a leitura
+                          <Check className="ml-2 w-4 h-4" />
+                        </Button>
                       </div>
-                    </div>
+                    ) : (
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="space-y-6"
+                      >
+                        <p className="text-center text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">O que mais chama sua atenção neste caso?</p>
+                        <div className="grid grid-cols-2 gap-4">
+                          {[
+                            { id: 'porta', label: 'Porta', icon: DoorOpen },
+                            { id: 'torre', label: 'Torre', icon: Shield },
+                            { id: 'labirinto', label: 'Labirinto', icon: Compass },
+                            { id: 'campo', label: 'Campo Psíquico', icon: Moon }
+                          ].map((opt) => (
+                            <button
+                              key={opt.id}
+                              onClick={handleNext}
+                              className="flex items-center gap-4 bg-[#0A0A0B]/60 border border-white/5 hover:border-gold/40 p-4 rounded-2xl transition-all group text-left"
+                            >
+                              <div className="w-10 h-10 rounded-xl bg-gold/5 border border-gold/10 flex items-center justify-center text-gold group-hover:bg-gold/20 transition-colors">
+                                <opt.icon className="w-5 h-5" />
+                              </div>
+                              <span className="font-serif text-sm text-white/70 group-hover:text-gold transition-colors">{opt.label}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
                   </div>
                 )}
 
