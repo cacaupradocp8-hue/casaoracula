@@ -75,9 +75,9 @@ export default function DashboardMembro() {
         {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA (VERSÃO ROTAS) */}
         {bussola.temCartografia ? (
           <div className="space-y-20">
-            <div className="text-center space-y-6 pt-12">
-               <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight">Sua <span className="text-gold italic">CidadELA</span> está viva</h1>
-               <p className="text-xl md:text-2xl text-white/50 font-serif italic max-w-2xl mx-auto">
+            <div className="text-center space-y-4 md:space-y-6 pt-8 md:pt-12">
+               <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-tight">Sua <span className="text-gold italic">CidadELA</span> está viva</h1>
+               <p className="text-lg md:text-xl lg:text-2xl text-white/50 font-serif italic max-w-2xl mx-auto px-4">
                  Este é o centro da sua travessia. Aqui a Casa reúne os rastros que você deixou nas rotas, nos Jardins e nas ferramentas.
                </p>
             </div>

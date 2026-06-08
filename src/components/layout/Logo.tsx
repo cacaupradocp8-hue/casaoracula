@@ -32,16 +32,16 @@ export const Logo = React.forwardRef<HTMLDivElement, LogoProps>(
       xl: 'h-20'
     };
     const horizontalSizes = {
-      sm: 'h-12 md:h-14',
-      md: 'h-14 md:h-16',
-      lg: 'h-16 md:h-18',
-      xl: 'h-12 md:h-16'
+      sm: 'h-10 md:h-12',
+      md: 'h-12 md:h-14',
+      lg: 'h-14 md:h-18',
+      xl: 'h-10 md:h-16'
     };
     const verticalSizes = {
-      sm: 'h-36 md:h-20',
-      md: 'h-52 md:h-28',
-      lg: 'h-64 md:h-40',
-      xl: 'h-72 md:h-48'
+      sm: 'h-24 md:h-20',
+      md: 'h-32 md:h-28',
+      lg: 'h-48 md:h-40',
+      xl: 'h-56 md:h-48'
     };
 
     // Horizontal variant - logo lado a lado (para header do portal)

@@ -15,7 +15,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     console.log("[DEBUG_UI] AppLayout montado");
   }, []);
   return (
-    <div className="min-h-screen bg-background relative flex flex-col overflow-x-hidden selection:bg-gold/30 selection:text-white">
+    <div className="min-h-screen bg-background relative flex flex-col overflow-x-hidden selection:bg-gold/30 selection:text-white pb-[env(safe-area-inset-bottom)]">
       {/* Subtle ambient texture */}
       <div className="fixed inset-0 pattern-geometric opacity-[0.03] pointer-events-none z-0" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--gold)/0.05),transparent_60%)] pointer-events-none z-0" />

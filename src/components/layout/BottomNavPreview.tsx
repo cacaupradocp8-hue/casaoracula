@@ -27,7 +27,7 @@ export function BottomNavPreview() {
   if (!mounted) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden pointer-events-none pb-[env(safe-area-inset-bottom,1rem)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden pointer-events-auto pb-[env(safe-area-inset-bottom,1rem)]">
       <div className="flex justify-center w-full px-4">
         <div className={cn(
           "relative h-[68px] w-full max-w-[460px] backdrop-blur-2xl rounded-2xl border shadow-[0_12px_40px_rgba(0,0,0,0.5)] pointer-events-auto",
