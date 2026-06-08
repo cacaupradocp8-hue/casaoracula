@@ -112,13 +112,16 @@ export default function ClubeRotaPremium() {
               </div>
             </div>
             
-            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner backdrop-blur-sm border border-white/[0.03]">
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
-                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                className="h-full bg-gradient-to-r from-gold/40 via-gold to-gold/40 shadow-[0_0_10px_rgba(212,175,55,0.3)]"
-              />
+                transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
+                className="h-full bg-gradient-to-r from-gold/40 via-gold to-gold/40 relative"
+              >
+                <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)] bg-[length:40px_40px] animate-[shimmer_2s_infinite_linear]" />
+                <div className="absolute inset-0 shadow-[0_0_15px_rgba(212,175,55,0.4)]" />
+              </motion.div>
             </div>
           </div>
 

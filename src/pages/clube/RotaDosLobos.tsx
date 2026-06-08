@@ -117,10 +117,10 @@ export default function RotaDosLobos() {
                 {/* CTA Principal Mobile - compacto, sem herdar o Button global */}
                 <button
                   type="button"
-                  className="inline-flex h-9 w-auto min-w-0 items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold/90 px-5 text-[12px] font-semibold leading-none text-[#08090B] shadow-[0_8px_22px_rgba(212,175,55,0.16)] transition-all active:scale-95"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold text-[13px] font-bold uppercase tracking-widest text-[#08090B] shadow-[0_12px_24px_rgba(212,175,55,0.2)] transition-all active:scale-[0.97] hover:bg-gold/90"
                   onClick={irParaEstacao1}
                 >
-                  <TreePine className="h-3.5 w-3.5 flex-shrink-0" />
+                  <TreePine className="h-4 w-4" />
                   <span>Entrar na Clareira</span>
                 </button>
 
@@ -187,12 +187,12 @@ export default function RotaDosLobos() {
 
                     <Button
                       variant="gold"
-                      className="w-auto px-6 rounded-full h-11 text-sm font-bold bg-[#D48F3D] hover:bg-[#B57A34] text-black border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.2)] transition-all active:scale-95"
+                      className="w-auto px-8 rounded-full h-12 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
                       onClick={irParaEstacao1}
                     >
-                      <TreePine className="mr-2 w-4 h-4 flex-shrink-0" />
+                      <TreePine className="mr-2 w-5 h-5 flex-shrink-0" />
                       <span>Entrar na Clareira</span>
-                      <ArrowRight className="ml-2 w-3 h-3 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </Button>
                   </div>
                 </div>
@@ -210,12 +210,12 @@ export default function RotaDosLobos() {
           </section>
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
-          <div className="space-y-10 pt-4 pb-32">
-            <div className="flex flex-col items-center md:items-start gap-4">
-               <h2 className="text-xl md:text-2xl font-serif italic text-gold/60 tracking-wide">
+          <div className="space-y-12 pt-8 pb-32">
+            <div className="flex flex-col items-center md:items-start gap-3">
+               <h2 className="text-2xl md:text-3xl font-serif italic text-gold/70 tracking-wide">
                 As 6 estações da Rota dos Lobos
               </h2>
-              <div className="h-px w-32 bg-gradient-to-r from-gold/50 to-transparent" />
+              <div className="h-0.5 w-24 bg-gradient-to-r from-gold/60 to-transparent" />
             </div>
 
             <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-2 gap-y-6 md:gap-6 overflow-visible pb-8">

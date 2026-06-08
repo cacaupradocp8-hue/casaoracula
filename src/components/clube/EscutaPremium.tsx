@@ -41,15 +41,15 @@ export function EscutaPremium({
 
 
   return (
-    <div className={cn("relative w-full max-w-6xl mx-auto py-24 md:py-32 px-6 overflow-hidden rounded-[4rem] shadow-3xl", className)}>
+    <div className={cn("relative w-full max-w-6xl mx-auto py-16 md:py-24 px-6 overflow-hidden rounded-[3rem] shadow-3xl border border-white/5", className)}>
       {/* Background with Blur & Image */}
       <div className="absolute inset-0 z-0">
         {imagemEscuta ? (
-          <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-10 mix-blend-luminosity scale-110 blur-xl" />
+          <img src={imagemEscuta} alt="" className="w-full h-full object-cover opacity-10 mix-blend-luminosity scale-110 blur-xl transition-opacity duration-1000" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-b from-zinc-950 via-midnight to-black" />
+          <div className="w-full h-full bg-gradient-to-b from-[#020617] via-[#0A0A0B] to-[#020617]" />
         )}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-midnight/50 to-midnight" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.05)_0%,transparent_70%)]" />
         <div className="absolute inset-0 backdrop-blur-[4px]" />
       </div>
 

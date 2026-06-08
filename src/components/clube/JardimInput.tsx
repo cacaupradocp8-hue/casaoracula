@@ -133,15 +133,15 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
 
   return (
     <div className="space-y-6 w-full group">
-      <div className="relative">
+      <div className="relative group/field">
         {/* Focus Glow */}
-        <div className="absolute -inset-0.5 bg-gradient-to-r from-gold/30 to-emerald-500/30 rounded-2xl blur opacity-0 group-focus-within:opacity-100 transition duration-1000" />
+        <div className="absolute -inset-1 bg-gradient-to-r from-gold/20 via-gold/5 to-emerald-500/20 rounded-2xl blur-lg opacity-0 group-focus-within/field:opacity-100 transition duration-700 pointer-events-none" />
         
         <Textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Registre aqui sua percepção simbólica..."
-          className="relative bg-midnight/60 border-white/5 min-h-[160px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 transition-all rounded-2xl p-6 leading-relaxed text-lg font-serif italic"
+          className="relative bg-[#0A0A0B]/80 backdrop-blur-xl border-white/5 min-h-[180px] text-white/90 placeholder:text-white/20 focus:border-gold/20 focus:ring-0 transition-all duration-500 rounded-2xl p-8 leading-relaxed text-lg font-serif italic shadow-2xl resize-none"
         />
       </div>
       
