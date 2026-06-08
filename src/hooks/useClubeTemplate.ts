@@ -40,26 +40,27 @@ export function useRotaHub(rotaSlug: string) {
   return useQuery({
     queryKey: ['rota-hub', rotaSlug],
     queryFn: async () => {
-      const { data: rotaData, error: rotaError } = await supabase
-        .from('clube_rotas' as any)
-        .select('*' as any)
-        .eq('slug' as any, rotaSlug as any)
-        .eq('ativa' as any, true as any)
+      const client = supabase as any;
+      const { data: rotaData, error: rotaError } = await client
+        .from('clube_rotas')
+        .select('*')
+        .eq('slug', rotaSlug)
+        .eq('ativa', true)
         .single();
 
       if (rotaError) throw rotaError;
 
-      const { data: estacoesData, error: estacoesError } = await supabase
-        .from('clube_estacoes' as any)
-        .select('*' as any)
-        .eq('rota_id' as any, (rotaData as any).id)
-        .order('ordem' as any, { ascending: true });
+      const { data: estacoesData, error: estacoesError } = await client
+        .from('clube_estacoes')
+        .select('*')
+        .eq('rota_id', rotaData.id)
+        .order('ordem', { ascending: true });
 
       if (estacoesError) throw estacoesError;
 
       return { 
-        rota: rotaData as unknown as Rota, 
-        estacoes: (estacoesData || []) as unknown as Estacao[] 
+        rota: rotaData as Rota, 
+        estacoes: (estacoesData || []) as Estacao[] 
       };
     },
     enabled: !!rotaSlug
@@ -70,24 +71,25 @@ export function useEstacaoConteudo(estacaoSlug: string) {
   return useQuery({
     queryKey: ['estacao-conteudo', estacaoSlug],
     queryFn: async () => {
-      const { data: estacaoData, error } = await supabase
-        .from('clube_estacoes' as any)
-        .select('*' as any)
-        .eq('slug' as any, estacaoSlug as any)
+      const client = supabase as any;
+      const { data: estacaoData, error } = await client
+        .from('clube_estacoes')
+        .select('*')
+        .eq('slug', estacaoSlug)
         .single();
 
       if (error) throw error;
       
-      const { data: rotaData, error: rotaError } = await supabase
-        .from('clube_rotas' as any)
-        .select('*' as any)
-        .eq('id' as any, (estacaoData as any).rota_id)
+      const { data: rotaData, error: rotaError } = await client
+        .from('clube_rotas')
+        .select('*')
+        .eq('id', estacaoData.rota_id)
         .single();
         
       if (rotaError) throw rotaError;
       
       return {
-        ...(estacaoData as any),
+        ...estacaoData,
         clube_rotas: rotaData as Rota
       } as Estacao & { clube_rotas: Rota };
     },
