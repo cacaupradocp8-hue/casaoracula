@@ -317,14 +317,15 @@ export default function ClubeRotaPremium() {
                       <p className="text-xl font-serif text-gold/80 italic">"Algo em você continua vivo mesmo quando parece esquecido."</p>
                     </div>
                     
-                    <div className="bg-[#0A0A0B]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
+                    <div className="bg-transparent">
                       <EscutaPremium 
                         audioUrl="uploads/1771607764088.mp3" 
-                        titulo="Abertura da Clareira"
+                        titulo="Travessia guiada em áudio"
                         tipo="Introdução"
                         funcao="Algo em você continua vivo mesmo quando parece esquecido."
                         duracao="03:00"
-                        className="py-12 md:py-16 !bg-transparent !shadow-none"
+                        imagemEscuta="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"
+                        className="py-4 !shadow-none"
                       />
                     </div>
                     
