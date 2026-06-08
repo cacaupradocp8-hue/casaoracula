@@ -1,7 +1,7 @@
 import React from 'react'; // REBUILD_FORCE_V2
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, TreePine, Play, Pause, Lock, Ghost } from 'lucide-react';
+import { ArrowRight, TreePine, Play, Pause, Lock, Ghost, Compass } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
