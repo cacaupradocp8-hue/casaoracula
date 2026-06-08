@@ -35,7 +35,11 @@ export function ClubeAudioCardImersivo({
       transition={{ delay: index * 0.08, duration: 0.5, ease: 'easeOut' }}
     >
       <button
-        onClick={onClick}
+        onClick={() => {
+          onClick();
+          // Navegar para a página premium se for clicado no contexto de álbum/série
+          window.location.href = `/clube/rota-premium/${id}`;
+        }}
         className={cn(
           "group relative w-full text-left rounded-2xl overflow-hidden",
           "bg-card/70 backdrop-blur-sm border border-border/30",

@@ -19,16 +19,10 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   audioVozClareiraUrl
 }) => {
   return (
-    <div className="space-y-10 text-center max-w-2xl mx-auto">
-      <RotaLivroBanner 
-        obraRegente={obraRegente}
-        capaUrl={livroCapaUrl}
-        fraseObra="Onde a voz silenciada volta a encontrar o corpo."
-        onAction={() => {}}
-      />
+    <div className="space-y-12 text-center max-w-2xl mx-auto pb-12">
 
-      <div className="space-y-8">
-        <div className="space-y-2">
+      <div className="space-y-0">
+        <div className="hidden space-y-2">
           <div className="flex items-center justify-center gap-2 text-gold">
             <Headphones className="w-4 h-4" />
             <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Álbum da Estação</span>

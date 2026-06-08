@@ -55,7 +55,7 @@ export function EscutaPremium({
     <div className={cn("relative w-full max-w-2xl mx-auto py-8 px-4", className)}>
       <audio ref={audioRef} src={resolvedUrl} preload="metadata" />
 
-      <div className="flex flex-col items-center space-y-10">
+      <div className="flex flex-col items-center space-y-12">
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
           {/* External Golden Glow */}
@@ -66,13 +66,13 @@ export function EscutaPremium({
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
               "w-64 h-64 md:w-80 md:h-80 rounded-full p-1 relative z-10",
-              "bg-[#0a0a0a] shadow-[0_0_60px_rgba(0,0,0,0.8),0_0_20px_rgba(212,175,55,0.2)] overflow-hidden",
-              "border-[6px] border-[#1a1a1a]"
+              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.15)] overflow-hidden",
+              "border-[8px] border-[#111111]"
             )}
           >
             {/* Vinil Texture Effect */}
             <div className="absolute inset-0 rounded-full pointer-events-none z-20" style={{ 
-              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)' 
+              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 1px, rgba(255,255,255,0.015) 1px, rgba(255,255,255,0.015) 2px)' 
             }} />
             
             {/* Golden Rim Internal */}
@@ -81,10 +81,11 @@ export function EscutaPremium({
             <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-900">
               {/* Shine/Reflection */}
               <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent,rgba(255,255,255,0.05),transparent_25%,transparent_50%,rgba(255,255,255,0.05),transparent_75%,transparent)] z-10 pointer-events-none opacity-40 animate-[spin_20s_linear_infinite]" />
               
               {/* The Central Art (Station Image) */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[45%] h-[45%] rounded-full overflow-hidden border-2 border-gold/40 z-30 bg-[#020617] relative">
+                <div className="w-[45%] h-[45%] rounded-full overflow-hidden border-[1px] border-gold/30 z-30 bg-[#020617] relative shadow-[0_0_20px_rgba(0,0,0,0.5)]">
                   {imagemEscuta ? (
                     <img 
                       src={imagemEscuta} 
@@ -109,10 +110,10 @@ export function EscutaPremium({
         {/* Playback Status */}
         <div className="text-center space-y-1">
           <div className="flex items-center justify-center gap-2 text-gold/60 text-[10px] uppercase tracking-[0.3em] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-            Reproduzindo Agora
+            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+            REPRODUZINDO AGORA
           </div>
-          <h3 className="text-white font-serif italic text-lg opacity-80">{titulo || "Travessia guiada em áudio"}</h3>
+          <h3 className="text-white font-serif italic text-lg opacity-80 tracking-wide">{titulo || "Travessia guiada em áudio"}</h3>
         </div>
 
         {/* Progress Slider */}
@@ -122,7 +123,7 @@ export function EscutaPremium({
             max={duration || 100}
             step={0.1}
             onValueChange={handleSeek}
-            className="py-2"
+            className="py-2 cursor-pointer"
           />
           <div className="flex justify-between text-[10px] font-mono tracking-widest text-white/30 uppercase tabular-nums font-bold">
             <span>{formatAudioTime(progress)}</span>
@@ -144,8 +145,9 @@ export function EscutaPremium({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
-            className="w-20 h-20 rounded-full bg-transparent border-2 border-gold/40 text-gold flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.1)] group hover:border-gold hover:bg-gold/5 transition-all"
+            className="w-20 h-20 rounded-full bg-transparent border-2 border-gold/40 text-gold flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.15)] group hover:border-gold hover:bg-gold/5 transition-all relative overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
             {isLoading ? (
               <Loader2 className="w-8 h-8 animate-spin" />
             ) : isPlaying ? (
@@ -165,11 +167,14 @@ export function EscutaPremium({
         </div>
 
         {/* Info Card */}
-        <div className="w-full max-w-sm bg-gold/5 border border-gold/10 rounded-2xl p-6 flex gap-4 items-start">
-          <div className="w-10 h-10 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
-              <path d="M18 6L6 18M6 6l12 12" />
-            </svg>
+        <div className="w-full max-w-sm bg-[#0a0a0b]/40 backdrop-blur-md border border-gold/10 rounded-2xl p-6 flex gap-4 items-start shadow-xl">
+          <div className="w-10 h-10 rounded-lg bg-gold/5 border border-gold/20 flex items-center justify-center shrink-0">
+            <div className="relative">
+              <div className="w-6 h-8 border border-gold/40 rounded-t-full flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-gold/60" />
+              </div>
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-4 h-px bg-gold/30" />
+            </div>
           </div>
           <div className="space-y-1">
             <h4 className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold">Orientação da Casa</h4>
