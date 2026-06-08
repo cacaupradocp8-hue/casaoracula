@@ -5,10 +5,12 @@ import {
   ChevronRight, ChevronLeft, TreePine, Headphones, 
   Sparkles, Check, Eye, ArrowRight, Play, Pause, 
   Scroll, Map, BookOpen, MessageSquare, Award,
-  Compass, Ghost, Moon, Shield, DoorOpen
+  Compass, Ghost, Moon, Shield, DoorOpen, Info, X
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useRotaOracular } from '@/hooks/useRotaOracular';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { FerramentaOracularPlayer } from '@/components/clube/FerramentaOracularPlayer';
