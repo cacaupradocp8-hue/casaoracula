@@ -311,33 +311,112 @@ export default function ClubeRotaPremium() {
 
                 {/* STEP 1: ESCUTA RITUAL - AUDIO FOCUS */}
                 {currentStep === 1 && (
-                  <div className="space-y-8 text-center max-w-2xl mx-auto">
-                    <div className="space-y-4">
-                      <h2 className="text-3xl font-serif">A Voz da Clareira</h2>
-                      <p className="text-xl font-serif text-gold/80 italic">"Algo em você continua vivo mesmo quando parece esquecido."</p>
+                  <div className="space-y-10 text-center max-w-2xl mx-auto">
+                    {/* Book Banner Section */}
+                    <div className="relative group overflow-hidden rounded-[32px] border border-gold/20 bg-midnight/40 shadow-2xl transition-all duration-700 hover:border-gold/40">
+                      <div className="absolute inset-0 z-0">
+                        {currentPonto?.image_url || mappingAtual.livro_imagem_banner_url ? (
+                          <img 
+                            src={currentPonto?.image_url || mappingAtual.livro_imagem_banner_url || "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"} 
+                            alt="Mulheres que Correm com os Lobos" 
+                            className="w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-1000"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-gradient-to-br from-gold/5 via-transparent to-primary/5" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/60 to-transparent" />
+                      </div>
+
+                      <div className="relative z-10 p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 text-left">
+                        <div className="w-32 md:w-40 shrink-0 shadow-[0_20px_50px_rgba(0,0,0,0.5)] rounded-lg overflow-hidden border border-white/10 group-hover:rotate-1 transition-transform duration-500">
+                          <img 
+                            src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1769532336325-14p8ds.jpg" 
+                            alt="Capa Mulheres que Correm com os Lobos" 
+                            className="w-full aspect-[2/3] object-cover" 
+                          />
+                        </div>
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <span className="h-px w-6 bg-gold/40" />
+                            <span className="text-[10px] tracking-[0.4em] uppercase text-gold/90 font-bold">Obra Regente</span>
+                          </div>
+                          <h2 className="text-3xl md:text-4xl font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h2>
+                          <p className="text-white/60 font-serif italic text-base leading-relaxed">
+                            "Dentro de toda mulher existe uma vida secreta, uma força poderosa, cheia de bons instintos, criatividade e sabedoria eterna."
+                          </p>
+                          <Button 
+                            variant="gold"
+                            size="sm"
+                            className="rounded-full px-6 text-[10px] uppercase tracking-widest font-bold"
+                            onClick={() => {
+                              const audioEl = document.querySelector('audio');
+                              if (audioEl) audioEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }}
+                          >
+                            <Headphones className="w-3.5 h-3.5 mr-2" />
+                            Ir para Voz da Clareira
+                          </Button>
+                        </div>
+                      </div>
                     </div>
-                    
-                    <div className="bg-transparent">
-                      <EscutaPremium 
-                        audioUrl="uploads/1771607764088.mp3" 
-                        titulo="Travessia guiada em áudio"
-                        tipo="Introdução"
-                        funcao="Algo em você continua vivo mesmo quando parece esquecido."
-                        duracao="03:00"
-                        imagemEscuta="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"
-                        className="py-4 !shadow-none"
-                      />
+
+                    <div className="space-y-6 pt-6">
+                      <div className="space-y-2">
+                        <h2 className="text-3xl font-serif">A Voz da Clareira</h2>
+                        <p className="text-xl font-serif text-gold/80 italic">"Algo em você continua vivo mesmo quando parece esquecido."</p>
+                      </div>
+                      
+                      <div className="bg-transparent">
+                        <EscutaPremium 
+                          audioUrl="uploads/1771607764088.mp3" 
+                          titulo="Travessia guiada em áudio"
+                          tipo="Introdução"
+                          funcao="Algo em você continua vivo mesmo quando parece esquecido."
+                          duracao="03:00"
+                          imagemEscuta="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"
+                          className="py-4 !shadow-none"
+                        />
+                      </div>
+                      
+                      <div className="pt-4 flex flex-col items-center gap-6">
+                        <div className="space-y-4 w-full">
+                          <p className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Série de Áudios da Estação</p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {[
+                              { title: 'O Chamado da Loba', dur: '04:20' },
+                              { title: 'Rastros no Bosque', dur: '05:15' }
+                            ].map((audio, i) => (
+                              <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 group hover:border-gold/30 transition-all cursor-not-allowed opacity-60">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-8 h-8 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center">
+                                    <Lock className="w-3 h-3 text-gold/60" />
+                                  </div>
+                                  <div className="text-left">
+                                    <p className="text-xs font-bold text-white/80">{audio.title}</p>
+                                    <p className="text-[10px] text-white/40 uppercase tracking-widest">{audio.dur}</p>
+                                  </div>
+                                </div>
+                                <Plus className="w-4 h-4 text-white/20" />
+                              </div>
+                            ))}
+                            <div className="md:col-span-2 p-4 rounded-2xl border border-dashed border-white/10 flex flex-col items-center justify-center gap-2 bg-white/[0.02]">
+                              <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">Novos áudios podem ser anexados pelo Admin</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Button 
+                          variant="outline"
+                          className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5 mt-4"
+                          onClick={handleNext}
+                        >
+                          Continuar a Escuta
+                          <ChevronRight className="w-4 h-4 ml-1" />
+                        </Button>
+                      </div>
                     </div>
-                    
-                    <div className="pt-4 flex flex-col items-center gap-4">
-                      <Button 
-                        variant="outline"
-                        className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5"
-                        onClick={handleNext}
-                      >
-                        Continuar a Escuta
-                        <ChevronRight className="w-4 h-4 ml-1" />
-                      </Button>
+                  </div>
+                )}
 
                       <Button 
                         variant="ghost"
