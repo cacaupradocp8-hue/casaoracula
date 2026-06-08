@@ -312,16 +312,17 @@ export default function ClubeRotaPremium() {
                 {/* STEP 1: ESCUTA RITUAL - AUDIO FOCUS */}
                 {currentStep === 1 && (
                   <div className="space-y-8 text-center max-w-2xl mx-auto">
-                    <div className="space-y-2">
+                    <div className="space-y-4">
                       <h2 className="text-3xl font-serif">A Voz da Clareira</h2>
+                      <h3 className="text-xl font-serif text-gold/80 italic">🎧 Áudio de Abertura da clareira</h3>
                     </div>
                     
                     <div className="bg-[#0A0A0B]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
                       <EscutaPremium 
-                        audioUrl="1780702648962.mp3" 
+                        audioUrl="1771607764088.mp3" 
                         titulo="Abertura da Clareira"
                         tipo="Introdução"
-                        funcao="Preparar a escuta para reconhecer o chamado interior."
+                        funcao="Algo em você continua vivo mesmo quando parece esquecido."
                         duracao="03:00"
                         className="py-12 md:py-16 !bg-transparent !shadow-none"
                       />
