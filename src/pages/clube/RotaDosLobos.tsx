@@ -128,7 +128,7 @@ export default function RotaDosLobos() {
                 <div className="relative group overflow-hidden rounded-2xl border border-gold/20 bg-midnight/40 p-5 flex items-center gap-4">
                   <div className="w-16 h-24 shrink-0 shadow-lg rounded border border-white/10 overflow-hidden">
                     <img 
-                      src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1769532336325-14p8ds.jpg" 
+                      src="/mulheres-lobos.webp" 
                       alt="Mulheres que Correm com os Lobos" 
                       className="w-full h-full object-cover" 
                     />
@@ -212,7 +212,7 @@ export default function RotaDosLobos() {
                     <div className="relative group overflow-hidden rounded-3xl border border-gold/20 bg-midnight/40 p-6 flex items-center gap-6 max-w-lg">
                       <div className="w-24 h-36 shrink-0 shadow-[0_15px_40px_rgba(0,0,0,0.4)] rounded-lg border border-white/10 overflow-hidden group-hover:rotate-1 transition-transform duration-500">
                         <img 
-                          src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1769532336325-14p8ds.jpg" 
+                          src="/mulheres-lobos.webp" 
                           alt="Mulheres que Correm com os Lobos" 
                           className="w-full h-full object-cover" 
                         />
