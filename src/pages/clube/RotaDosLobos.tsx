@@ -113,7 +113,29 @@ export default function RotaDosLobos() {
               </div>
 
               {/* Botões e Ações Abaixo da Imagem */}
-              <div className="px-6 pb-10 space-y-4 bg-[#020617]">
+              <div className="px-6 pb-10 space-y-6 bg-[#020617]">
+                {/* Book Banner Section Mobile */}
+                <div className="relative group overflow-hidden rounded-2xl border border-gold/20 bg-midnight/40 p-5 flex items-center gap-4">
+                  <div className="w-16 h-24 shrink-0 shadow-lg rounded border border-white/10 overflow-hidden">
+                    <img 
+                      src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1769532336325-14p8ds.jpg" 
+                      alt="Mulheres que Correm com os Lobos" 
+                      className="w-full h-full object-cover" 
+                    />
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <p className="text-[8px] tracking-[0.3em] uppercase text-gold font-bold">Obra Regente</p>
+                    <h3 className="text-sm font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h3>
+                    <button 
+                      onClick={irParaEstacao1}
+                      className="text-[9px] text-gold uppercase tracking-widest font-bold flex items-center gap-1 mt-2"
+                    >
+                      Ver Áudio de Abertura
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+
                 {/* Cartografia da Loba - Quick View Mobile */}
                 <div className="p-4 rounded-2xl bg-gold/5 border border-gold/10 space-y-3">
                   <div className="flex items-center justify-between">
@@ -225,6 +247,34 @@ export default function RotaDosLobos() {
                         <Ghost className="w-3.5 h-3.5 mr-2" />
                         Câmara do Sussurro
                       </Button>
+                    </div>
+
+                    {/* Book Banner Section Desktop */}
+                    <div className="relative group overflow-hidden rounded-3xl border border-gold/20 bg-midnight/40 p-6 flex items-center gap-6 max-w-lg">
+                      <div className="w-24 h-36 shrink-0 shadow-[0_15px_40px_rgba(0,0,0,0.4)] rounded-lg border border-white/10 overflow-hidden group-hover:rotate-1 transition-transform duration-500">
+                        <img 
+                          src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1769532336325-14p8ds.jpg" 
+                          alt="Mulheres que Correm com os Lobos" 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                      <div className="flex-1 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="h-px w-4 bg-gold/40" />
+                          <p className="text-[9px] tracking-[0.4em] uppercase text-gold font-bold">Obra Regente</p>
+                        </div>
+                        <h3 className="text-xl font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h3>
+                        <p className="text-white/40 text-[10px] font-serif italic">"Dentro de toda mulher existe uma vida secreta, uma força poderosa..."</p>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={irParaEstacao1}
+                          className="h-8 text-[10px] uppercase tracking-widest text-gold hover:bg-gold/10 p-0"
+                        >
+                          Ver Áudio de Abertura
+                          <ArrowRight className="w-3 h-3 ml-2" />
+                        </Button>
+                      </div>
                     </div>
 
                     <div className="p-6 rounded-3xl bg-gold/5 border border-gold/10 max-w-sm space-y-4">
