@@ -68,8 +68,14 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       <div className="bg-[#020617] min-h-screen text-white relative overflow-hidden">
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/20 via-transparent to-[#020617]" />
+        {/* Background Image Container */}
+        <div className="fixed inset-0 z-0">
+          <img 
+            src={estacao.banner_url || "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"} 
+            alt="" 
+            className="w-full h-full object-cover opacity-20"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-[#020617]/80 to-[#020617]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
@@ -92,7 +98,7 @@ export default function ClubeRotaPremium() {
               >
                 {currentStep === 0 && (
                   <EstacaoStepEntrada 
-                    titulo={estacao.nome}
+                    titulo={estacao.titulo || estacao.nome}
                     fraseAbertura={estacao.frase_abertura}
                     fraseVozClareira={estacao.frase_voz_clareira}
                     onNext={handleNext}

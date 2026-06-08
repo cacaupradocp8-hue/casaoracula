@@ -21,6 +21,7 @@ export interface Estacao {
   rota_id: string;
   slug: string;
   nome: string;
+  titulo?: string;
   ordem: number;
   ativa: boolean;
   distrito_cidadela: string;
@@ -34,6 +35,7 @@ export interface Estacao {
   fechamento_texto: string;
   audio_voz_clareira_url: string;
   livro_imagem_banner_url: string;
+  banner_url?: string;
 }
 
 export function useRotaHub(rotaSlug: string) {
