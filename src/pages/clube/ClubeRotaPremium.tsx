@@ -549,26 +549,41 @@ export default function ClubeRotaPremium() {
                     
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
+                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação Concluída</span>
                         <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
                       </div>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6">
                         {[
-                          { label: 'Ferramenta', val: 'Mapa do Instinto', icon: Map },
-                          { label: 'Distrito', val: 'CidadELA Interior', icon: Moon },
-                          { label: 'Movimento', val: 'Registrado', icon: Check }
+                          { label: 'Ferramenta', val: mappingAtual.ferramenta, icon: Map },
+                          { label: 'Distrito', val: mappingAtual.distrito, icon: Moon },
+                          { label: 'Movimento', val: mappingAtual.movimento, icon: Check },
+                          { label: 'Integração', val: 'Integrado', icon: Sparkles }
                         ].map((info, idx) => (
                           <div key={idx} className="bg-[#0A0A0B] border border-white/5 p-4 rounded-2xl flex flex-col items-center gap-2">
                             <info.icon className="w-4 h-4 text-gold/60" />
                             <span className="text-[9px] uppercase tracking-widest text-white/40">{info.label}</span>
-                            <span className="text-[10px] font-bold text-gold">{info.val}</span>
+                            <span className="text-[10px] font-bold text-gold leading-tight">{info.val}</span>
                           </div>
                         ))}
                       </div>
 
-                      <p className="text-white/40 text-xs uppercase tracking-widest max-w-xs mx-auto">
-                        Seu primeiro rastro foi registrado na cidadela.
+                      <div className="bg-gold/5 border border-gold/20 p-6 rounded-2xl max-w-xl mx-auto">
+                        <p className="text-white/70 font-serif italic text-lg leading-relaxed">
+                          "O movimento simbólico registrado nesta estação impactou seus distritos na CidadELA Interior. Seu rastro está vivo."
+                        </p>
+                      </div>
+
+                      <Button
+                        variant="link"
+                        onClick={() => navigate('/cidadela')}
+                        className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold"
+                      >
+                        Ver reflexo na CidadELA Interior
+                      </Button>
+
+                      <p className="text-white/40 text-[10px] uppercase tracking-widest max-w-xs mx-auto">
+                        Seu rastro foi registrado na cartografia.
                       </p>
                     </div>
 
