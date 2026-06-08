@@ -47,37 +47,43 @@ export default function ClubeRotaPremium() {
       titulo: "Clareira do Chamado",
       distrito: "Portão da Chegada + Bosque dos Arquétipos",
       ferramenta: "Mapa do Instinto Soterrado",
-      movimento: "Chamado Escutado"
+      movimento: "Chamado Escutado",
+      livro_imagem_banner_url: "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1780930080981-4n35e6.png"
     },
     {
       titulo: "Casa da Boa Menina",
       distrito: "Torres",
       ferramenta: "Escala de Domesticação",
-      movimento: "Padrão de Adequação Reconhecido"
+      movimento: "Padrão de Adequação Reconhecido",
+      livro_imagem_banner_url: null
     },
     {
       titulo: "Porta Proibida",
       distrito: "Portas + Labirinto",
       ferramenta: "Radar de Silenciamento",
-      movimento: "Limiar do Medo Atravessado"
+      movimento: "Limiar do Medo Atravessado",
+      livro_imagem_banner_url: null
     },
     {
       titulo: "Casa da Boneca Interior",
       distrito: "Conselho Interior",
       ferramenta: "Mapa da Intuição Silenciada",
-      movimento: "Voz da Boneca Resgatada"
+      movimento: "Voz da Boneca Resgatada",
+      livro_imagem_banner_url: null
     },
     {
       titulo: "Margem dos Ossos",
       distrito: "Espelho dos Vínculos + Praça do Abalo",
       ferramenta: "Cartografia da Vulnerabilidade",
-      movimento: "Ossos Reunidos"
+      movimento: "Ossos Reunidos",
+      livro_imagem_banner_url: null
     },
     {
       titulo: "Território da Loba",
       distrito: "Coração da CidadELA + Portal de Renascimento",
       ferramenta: "Síntese da Loba",
-      movimento: "Natureza Selvagem Integrada"
+      movimento: "Natureza Selvagem Integrada",
+      livro_imagem_banner_url: null
     }
   ];
 
