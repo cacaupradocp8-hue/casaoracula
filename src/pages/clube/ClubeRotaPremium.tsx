@@ -38,6 +38,47 @@ export default function ClubeRotaPremium() {
 
   const currentPonto = pontos.find(p => p.slug === slug) || pontos[0];
 
+  const cartografiaMapeamento = [
+    {
+      titulo: "Clareira do Chamado",
+      distrito: "Portão da Chegada + Bosque dos Arquétipos",
+      ferramenta: "Mapa do Instinto Soterrado",
+      movimento: "Chamado Escutado"
+    },
+    {
+      titulo: "Casa da Boa Menina",
+      distrito: "Torres",
+      ferramenta: "Escala de Domesticação",
+      movimento: "Padrão de Adequação Reconhecido"
+    },
+    {
+      titulo: "Porta Proibida",
+      distrito: "Portas + Labirinto",
+      ferramenta: "Radar de Silenciamento",
+      movimento: "Limiar do Medo Atravessado"
+    },
+    {
+      titulo: "Casa da Boneca Interior",
+      distrito: "Conselho Interior",
+      ferramenta: "Mapa da Intuição Silenciada",
+      movimento: "Voz da Boneca Resgatada"
+    },
+    {
+      titulo: "Margem dos Ossos",
+      distrito: "Espelho dos Vínculos + Praça do Abalo",
+      ferramenta: "Cartografia da Vulnerabilidade",
+      movimento: "Ossos Reunidos"
+    },
+    {
+      titulo: "Território da Loba",
+      distrito: "Coração da CidadELA + Portal de Renascimento",
+      ferramenta: "Síntese da Loba",
+      movimento: "Natureza Selvagem Integrada"
+    }
+  ];
+
+  const mappingAtual = cartografiaMapeamento.find(m => m.titulo === currentPonto?.nome) || cartografiaMapeamento[0];
+
   if (isLoading) return (
     <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-gold gap-4">
       <motion.div 
@@ -349,7 +390,7 @@ export default function ClubeRotaPremium() {
                   <div className="space-y-10 text-center max-w-2xl mx-auto">
                     <div className="space-y-4">
                       <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Momento IV</span>
-                      <h2 className="text-3xl font-serif italic text-gold">Mapa do Instinto Soterrado</h2>
+                      <h2 className="text-3xl font-serif italic text-gold">{mappingAtual.ferramenta}</h2>
                     </div>
 
                     <div className="relative p-1">
@@ -369,9 +410,9 @@ export default function ClubeRotaPremium() {
                           </div>
                           
                           <div className="space-y-3">
-                            <h3 className="text-xl font-serif">Ferramenta Oracular Ativada</h3>
+                             <h3 className="text-xl font-serif">Ferramenta Ativada</h3>
                             <p className="text-white/50 text-sm leading-relaxed max-w-sm mx-auto">
-                              O mapa revela os territórios onde sua intuição foi enterrada sob o peso da adequação.
+                              Esta ferramenta registra seus movimentos simbólicos e atualiza sua CidadELA Interior.
                             </p>
                           </div>
 
