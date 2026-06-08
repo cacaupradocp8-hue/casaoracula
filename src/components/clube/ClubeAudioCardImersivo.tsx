@@ -38,7 +38,7 @@ export function ClubeAudioCardImersivo({
         onClick={() => {
           onClick();
           // Navegar para a página premium se for clicado no contexto de álbum/série
-          window.location.href = `/clube/rota-premium/${id}`;
+          window.location.href = `/clube/rota-premium/clareira-do-chamado`;
         }}
         className={cn(
           "group relative w-full text-left rounded-2xl overflow-hidden",
