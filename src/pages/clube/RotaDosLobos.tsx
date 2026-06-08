@@ -341,8 +341,8 @@ export default function RotaDosLobos() {
 
             <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-2 gap-y-6 md:gap-6 overflow-visible pb-8">
               {displayEstacoes.map((estacao, i) => {
-                const isLocked = estacao.status === 'locked';
-                const isActive = (i === 0 && !isLocked) || (estacao.banner_url !== null);
+                const isLocked = estacao.status === 'locked' && i !== 0;
+                const isActive = (i === 0) || (estacao.banner_url !== null) || (estacao.status && estacao.status !== 'locked');
                 const slug = slugsReais[i];
 
                 return (
@@ -380,15 +380,13 @@ export default function RotaDosLobos() {
                         <Lock className={cn("w-3 h-3 md:w-5 md:h-5 z-20", isLocked ? "text-white/20" : "text-gold/40")} />
                       )}
 
-                      {isActive && (
-                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-60">
+                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-100">
                           <img 
                             src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
                             alt="" 
                             className="w-full h-full object-cover scale-110" 
                           />
                         </div>
-                      )}
                     </button>
 
                     <span className={cn(
