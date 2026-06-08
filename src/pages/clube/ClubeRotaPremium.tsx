@@ -319,7 +319,7 @@ export default function ClubeRotaPremium() {
                     
                     <div className="bg-[#0A0A0B]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
                       <EscutaPremium 
-                        audioUrl="1771607764088.mp3" 
+                        audioUrl="uploads/1771607764088.mp3" 
                         titulo="Abertura da Clareira"
                         tipo="Introdução"
                         funcao="Algo em você continua vivo mesmo quando parece esquecido."
