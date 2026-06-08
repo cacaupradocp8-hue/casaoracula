@@ -113,8 +113,18 @@ export default function RotaDosLobos() {
               </div>
 
               {/* Botões e Ações Abaixo da Imagem */}
-              <div className="px-6 pb-10 space-y-6 bg-[#020617]">
-                {/* Book Banner Section Mobile */}
+              <div className="px-6 pb-10 space-y-8 bg-[#020617]">
+                {/* CTA Principal Mobile */}
+                <button
+                  type="button"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold text-[13px] font-bold uppercase tracking-widest text-[#08090B] shadow-[0_12px_24px_rgba(212,175,55,0.2)] transition-all active:scale-[0.97] hover:bg-gold/90"
+                  onClick={irParaEstacao1}
+                >
+                  <TreePine className="h-4 w-4" />
+                  <span>Entrar na Clareira</span>
+                </button>
+
+                {/* Obra Regente Mobile - Movida para baixo do CTA na próxima dobra */}
                 <div className="relative group overflow-hidden rounded-2xl border border-gold/20 bg-midnight/40 p-5 flex items-center gap-4">
                   <div className="w-16 h-24 shrink-0 shadow-lg rounded border border-white/10 overflow-hidden">
                     <img 
@@ -128,7 +138,7 @@ export default function RotaDosLobos() {
                     <h3 className="text-sm font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h3>
                     <button 
                       onClick={irParaEstacao1}
-                      className="text-[9px] text-gold uppercase tracking-widest font-bold flex items-center gap-1 mt-2"
+                      className="text-[9px] text-gold uppercase tracking-widest font-bold flex items-center gap-1 mt-2 text-left"
                     >
                       Ver Áudio de Abertura
                       <ArrowRight className="w-3 h-3" />
@@ -158,40 +168,6 @@ export default function RotaDosLobos() {
                   >
                     Ver reflexo na CidadELA
                   </Button>
-                </div>
-
-                {/* CTA Principal Mobile */}
-                <button
-                  type="button"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold text-[13px] font-bold uppercase tracking-widest text-[#08090B] shadow-[0_12px_24px_rgba(212,175,55,0.2)] transition-all active:scale-[0.97] hover:bg-gold/90"
-                  onClick={irParaEstacao1}
-                >
-                  <TreePine className="h-4 w-4" />
-                  <span>Entrar na Clareira</span>
-                </button>
-
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Botão de Áudio */}
-                  <div 
-                    className="flex items-center gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.08] transition-all"
-                    onClick={togglePlay}
-                  >
-                    <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
-                      {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
-                    </div>
-                    <span className="text-[10px] text-gold font-bold uppercase tracking-wider">Acolhimento</span>
-                  </div>
-
-                  {/* Atalho para Câmara */}
-                  <div 
-                    onClick={() => navigate('/clube/camara-do-sussurro')}
-                    className="flex items-center gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.08] transition-all"
-                  >
-                    <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
-                      <Ghost className="w-3 h-3 text-gold" />
-                    </div>
-                    <span className="text-[10px] text-gold font-bold uppercase tracking-wider">Câmara</span>
-                  </div>
                 </div>
               </div>
             </div>
