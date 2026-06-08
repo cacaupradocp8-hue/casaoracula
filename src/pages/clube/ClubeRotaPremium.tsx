@@ -81,6 +81,16 @@ export default function ClubeRotaPremium() {
         
         {/* Ambient Background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
+          {/* Imagem de Fundo da Clareira */}
+          <div className="absolute inset-0 z-0">
+            <img 
+              src="/clareira-fundo.png" 
+              alt="Clareira Ritual" 
+              className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-[#020617]/40 to-[#020617]" />
+          </div>
+
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05),transparent_70%)]" />
           <motion.div 
             animate={{ 
