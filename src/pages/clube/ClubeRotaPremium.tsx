@@ -106,7 +106,7 @@ export default function ClubeRotaPremium() {
               </button>
               
               <div className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1 rounded-full border border-gold/10">
-                Etapa {currentStep + 1} de {steps.length}
+                Rastro {currentStep + 1} de {steps.length}
               </div>
             </div>
             
@@ -114,6 +114,7 @@ export default function ClubeRotaPremium() {
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                 className="h-full bg-gradient-to-r from-gold/40 via-gold to-gold/40 shadow-[0_0_10px_rgba(212,175,55,0.3)]"
               />
             </div>
@@ -185,10 +186,10 @@ export default function ClubeRotaPremium() {
                     <div className="pt-4">
                       <Button 
                         variant="outline"
-                        className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest"
+                        className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5"
                         onClick={handleNext}
                       >
-                        Já ouvi o chamado
+                        Continuar a Escuta
                         <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                     </div>
@@ -259,15 +260,17 @@ export default function ClubeRotaPremium() {
                         <motion.button
                           key={card.id}
                           whileHover={{ y: -10, scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                           onClick={handleNext}
-                          className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl"
+                          className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl transition-all"
                         >
-                          <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                          <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                          <div className="absolute inset-0 flex flex-col items-center justify-end p-6 space-y-2">
-                            <card.icon className="w-6 h-6 text-gold mb-2" />
-                            <span className="text-xs font-bold tracking-[0.3em] text-white uppercase">{card.title}</span>
+                          <div className="absolute inset-0 flex flex-col items-center justify-end p-4 md:p-6 space-y-2">
+                            <card.icon className="w-5 h-5 md:w-6 md:h-6 text-gold mb-2" />
+                            <span className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white uppercase text-center">{card.title}</span>
                             <div className="w-6 h-0.5 bg-gold/40 rounded-full group-hover:w-12 transition-all" />
+                            <span className="text-[8px] text-gold/60 opacity-0 group-hover:opacity-100 uppercase tracking-tighter transition-opacity pt-1">Revelar Leitura</span>
                           </div>
                         </motion.button>
                       ))}
@@ -310,7 +313,7 @@ export default function ClubeRotaPremium() {
                             className="rounded-full bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-12 h-12 text-xs font-bold uppercase tracking-widest shadow-inner group"
                             onClick={handleNext}
                           >
-                            Abrir Mapa do Instinto
+                            Abrir Ferramenta
                             <Sparkles className="w-4 h-4 ml-2 group-hover:rotate-12 transition-transform" />
                           </Button>
                         </div>
@@ -348,7 +351,7 @@ export default function ClubeRotaPremium() {
                         className="rounded-full bg-white/5 hover:bg-white/10 text-white/60 px-10 h-11 text-[11px] font-bold uppercase tracking-widest transition-all"
                         onClick={handleNext}
                       >
-                        Continuar para próxima etapa
+                        Guardar no Jardim
                         <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                     </div>
@@ -396,7 +399,8 @@ export default function ClubeRotaPremium() {
                   <div className="space-y-12 text-center max-w-lg mx-auto py-12">
                     <motion.div 
                       animate={{ 
-                        boxShadow: ['0 0 20px rgba(212,175,55,0)', '0 0 50px rgba(212,175,55,0.2)', '0 0 20px rgba(212,175,55,0)']
+                        boxShadow: ['0 0 20px rgba(212,175,55,0)', '0 0 50px rgba(212,175,55,0.2)', '0 0 20px rgba(212,175,55,0)'],
+                        y: [0, -5, 0]
                       }}
                       transition={{ duration: 4, repeat: Infinity }}
                       className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto text-gold"
@@ -414,10 +418,10 @@ export default function ClubeRotaPremium() {
 
                     <Button 
                       variant="ghost"
-                      className="text-gold/60 hover:text-gold hover:bg-transparent text-[10px] font-bold uppercase tracking-[0.5em] animate-pulse"
+                      className="text-gold hover:text-gold hover:bg-gold/5 text-[11px] font-bold uppercase tracking-[0.5em] animate-pulse rounded-full px-12"
                       onClick={handleNext}
                     >
-                      Concluir Travessia
+                      Selar Travessia
                     </Button>
                   </div>
                 )}
@@ -436,22 +440,42 @@ export default function ClubeRotaPremium() {
                       </motion.div>
                     </div>
                     
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
-                      <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
-                      <p className="text-white/40 text-sm uppercase tracking-widest max-w-xs mx-auto">
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
+                        <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-6">
+                        {[
+                          { label: 'Ferramenta', val: 'Mapa do Instinto', icon: Map },
+                          { label: 'Distrito', val: 'CidadELA Interior', icon: Moon },
+                          { label: 'Movimento', val: 'Registrado', icon: Check }
+                        ].map((info, idx) => (
+                          <div key={idx} className="bg-[#0A0A0B] border border-white/5 p-4 rounded-2xl flex flex-col items-center gap-2">
+                            <info.icon className="w-4 h-4 text-gold/60" />
+                            <span className="text-[9px] uppercase tracking-widest text-white/40">{info.label}</span>
+                            <span className="text-[10px] font-bold text-gold">{info.val}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="text-white/40 text-xs uppercase tracking-widest max-w-xs mx-auto">
                         Seu primeiro rastro foi registrado na cidadela.
                       </p>
                     </div>
 
                     <div className="pt-8 flex flex-col items-center gap-6">
-                      <Button 
-                        className="rounded-full bg-gold text-[#020617] font-extrabold px-12 h-14 text-sm tracking-[0.1em] uppercase shadow-[0_15px_45px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-all group"
-                        onClick={handleNext}
-                      >
-                        Próxima Estação
-                        <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-white/30 uppercase tracking-[0.2em]">Próxima Estação Sugerida</span>
+                        <Button 
+                          className="rounded-full bg-gold text-[#020617] font-extrabold px-12 h-14 text-sm tracking-[0.1em] uppercase shadow-[0_15px_45px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-all group"
+                          onClick={handleNext}
+                        >
+                          Entrar na Casa da Boa Menina
+                          <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
                       
                       <button 
                         onClick={() => navigate('/clube/rota-dos-lobos')}

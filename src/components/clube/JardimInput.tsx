@@ -122,7 +122,7 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
       if (error) throw error;
 
       setLastSaved(new Date());
-      toast.success('Semente guardada com sucesso no Jardim!');
+      toast.success(`Rastro guardado no Jardim ${type === 'psique' ? 'da Psique' : 'do Ofício'}.`);
     } catch (err: any) {
       console.error('Erro ao salvar no jardim:', err);
       toast.error('Falha ao salvar: ' + (err.message || 'Erro desconhecido'));
