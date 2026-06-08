@@ -144,10 +144,10 @@ export default function ClubeRotaPremium() {
                     <div className="space-y-6">
                       <h1 className="text-5xl md:text-6xl font-serif text-white leading-tight">Clareira do Chamado</h1>
                       <div className="w-24 h-px bg-gold/40 mx-auto" />
-                      <p className="text-white/90 font-serif text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
+                      <p className="text-white font-serif text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
                         Antes da mulher recuperar a própria voz, existe um instante quase invisível. Um chamado. Nem sempre ele chega como clareza. Às vezes chega como cansaço, inquietação ou a sensação de que algo importante ficou para trás.
                       </p>
-                      <p className="text-gold/80 font-serif italic text-lg leading-relaxed max-w-xl mx-auto">
+                      <p className="text-gold font-serif italic text-lg leading-relaxed max-w-xl mx-auto">
                         Nesta estação, você não precisa encontrar respostas. Apenas aprender a escutar o que continua chamando.
                       </p>
                     </div>
@@ -161,8 +161,8 @@ export default function ClubeRotaPremium() {
                     </Button>
 
                     {/* Quick Access Bar */}
-                    <div className="pt-8 border-t border-white/5">
-                      <p className="text-[10px] text-white/30 uppercase tracking-[0.3em] font-bold mb-6">Acessos Rápidos</p>
+                    <div className="pt-8 border-t border-white/10">
+                      <p className="text-[10px] text-white/50 uppercase tracking-[0.3em] font-bold mb-6">Acessos Rápidos</p>
                       <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                         {[
                           { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
@@ -182,7 +182,7 @@ export default function ClubeRotaPremium() {
                             <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 group-hover:border-gold/40 transition-all">
                               <item.icon className="w-5 h-5 text-gold/60 group-hover:text-gold transition-colors" />
                             </div>
-                            <span className="text-[9px] text-white/40 uppercase tracking-widest font-bold group-hover:text-gold/80 transition-colors">
+                            <span className="text-[9px] text-white/60 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
                               {item.label}
                             </span>
                           </button>
@@ -240,7 +240,7 @@ export default function ClubeRotaPremium() {
                           <p>Helena tem 42 anos. É terapeuta. Possui muitas formações. Atende regularmente.</p>
                           <p>Mesmo assim, diante de decisões importantes, sente necessidade constante de pedir opinião.</p>
                           <p>Quando percebe algo em uma sessão, frequentemente procura validação antes de confiar na própria leitura.</p>
-                          <p className="italic text-gold/80">Ela não sofre por falta de conhecimento. Ela sofre por ter se afastado da confiança naquilo que percebe.</p>
+                          <p className="italic text-gold font-medium">Ela não sofre por falta de conhecimento. Ela sofre por ter se afastado da confiança naquilo que percebe.</p>
                         </div>
                       </div>
                     </div>
