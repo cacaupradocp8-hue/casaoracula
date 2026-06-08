@@ -4353,6 +4353,7 @@ export type Database = {
           quiz_id: string | null
           revelacao: Json | null
           rota_id: string | null
+          slug: string | null
           status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4401,6 +4402,7 @@ export type Database = {
           quiz_id?: string | null
           revelacao?: Json | null
           rota_id?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4449,6 +4451,7 @@ export type Database = {
           quiz_id?: string | null
           revelacao?: Json | null
           rota_id?: string | null
+          slug?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
           titulo?: string
