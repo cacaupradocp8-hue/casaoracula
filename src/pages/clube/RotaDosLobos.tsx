@@ -172,112 +172,125 @@ export default function RotaDosLobos() {
               </div>
             </div>
 
-            {/* DESKTOP LAYOUT (Aprovado anteriormente - Mantido intacto) */}
+            {/* DESKTOP LAYOUT (Ajustado para segunda dobra e hierarquia visual) */}
             <div className="hidden md:grid md:grid-cols-2 min-h-[680px]">
               {/* Coluna Esquerda: Conteúdo */}
-              <div className="relative z-20 flex flex-col justify-start p-14 lg:p-20 pt-16">
-                <div className="max-w-xl space-y-8">
-                  <div className="space-y-4">
+              <div className="relative z-20 flex flex-col justify-center p-14 lg:p-20">
+                <div className="max-w-xl space-y-12">
+                  <div className="space-y-6">
                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-gold/10 border border-gold/20 backdrop-blur-sm w-fit">
                       <span className="text-xs font-bold tracking-[0.3em] text-gold uppercase">Travessia Ativa</span>
                     </div>
 
-                    <h1 className="text-6xl lg:text-7xl font-serif text-white leading-[0.9] tracking-tight">
+                    <h1 className="text-6xl lg:text-8xl font-serif text-white leading-[0.9] tracking-tight">
                       Rota dos <br />
                       <span className="text-gold italic font-light">Lobos</span>
                     </h1>
 
-                    <div className="space-y-3">
-                      <p className="text-xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-4">
+                    <div className="space-y-4">
+                      <p className="text-2xl text-gold/90 font-serif italic leading-tight border-l-2 border-gold/30 pl-6">
                         "Onde a voz silenciada volta a encontrar o corpo."
                       </p>
-                      <p className="text-sm text-white/60 leading-relaxed max-w-sm">
+                      <p className="text-base text-white/60 leading-relaxed max-w-sm">
                         Uma jornada profunda em 6 estações para reconhecer silenciamentos e despertar o instinto selvagem.
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-8">
+                  <div className="pt-8">
                     <Button
                       variant="gold"
-                      className="w-fit px-10 rounded-full h-14 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
+                      className="w-full sm:w-fit px-12 rounded-full h-16 text-base font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
                       onClick={irParaEstacao1}
                     >
-                      <TreePine className="mr-2 w-5 h-5 flex-shrink-0" />
+                      <TreePine className="mr-3 w-6 h-6 flex-shrink-0" />
                       <span>Entrar na Clareira</span>
-                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                      <ArrowRight className="ml-3 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
                     </Button>
-
-                    {/* Book Banner Section Desktop */}
-                    <div className="relative group overflow-hidden rounded-3xl border border-gold/20 bg-midnight/40 p-6 flex items-center gap-6 max-w-lg">
-                      <div className="w-24 h-36 shrink-0 shadow-[0_15px_40px_rgba(0,0,0,0.4)] rounded-lg border border-white/10 overflow-hidden group-hover:rotate-1 transition-transform duration-500">
-                        <img 
-                          src="/mulheres-lobos.webp" 
-                          alt="Mulheres que Correm com os Lobos" 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
-                      <div className="flex-1 space-y-2">
-                        <div className="flex items-center gap-2">
-                          <span className="h-px w-4 bg-gold/40" />
-                          <p className="text-[9px] tracking-[0.4em] uppercase text-gold font-bold">Obra Regente</p>
-                        </div>
-                        <h3 className="text-xl font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h3>
-                        <p className="text-white/40 text-[10px] font-serif italic">"Dentro de toda mulher existe uma vida secreta, uma força poderosa..."</p>
-                        <Button 
-                          variant="ghost" 
-                          size="sm"
-                          onClick={irParaEstacao1}
-                          className="h-8 text-[10px] uppercase tracking-widest text-gold hover:bg-gold/10 p-0"
-                        >
-                          Ver Áudio de Abertura
-                          <ArrowRight className="w-3 h-3 ml-2" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="p-6 rounded-3xl bg-gold/5 border border-gold/10 max-w-sm space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Compass className="w-5 h-5 text-gold" />
-                          <span className="text-xs text-gold font-bold uppercase tracking-[0.2em]">Cartografia da Loba</span>
-                        </div>
-                        <span className="text-xs text-white/30">16%</span>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-1">
-                          <p className="text-[10px] uppercase tracking-widest text-white/30">Estação Atual</p>
-                          <p className="text-xs text-white font-medium">Clareira do Chamado</p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] uppercase tracking-widest text-white/30">Ferramenta</p>
-                          <p className="text-xs text-white font-medium">Mapa do Instinto</p>
-                        </div>
-                      </div>
-
-                      <Button 
-                        onClick={() => navigate('/cidadela')}
-                        variant="outline"
-                        className="w-full h-10 border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-[0.2em] font-bold"
-                      >
-                        Ver reflexo na CidadELA Interior
-                      </Button>
-                    </div>
-
                   </div>
                 </div>
               </div>
 
-              {/* Coluna Direita: Imagem Desktop */}
+              {/* Coluna Direita: Imagem Desktop (Hero) */}
               <div className="relative flex items-center justify-center bg-[#0A0A0B] min-h-full overflow-hidden">
                 <img 
                   src={rotaLobosBg} 
                   alt="Lobo da Rota dos Lobos" 
-                  className="w-full h-full object-contain object-right-bottom"
+                  className="w-full h-full object-cover object-center lg:object-right"
                 />
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#0A0A0B]/80" />
               </div>
             </div>
+          </section>
+
+          {/* SEGUNDA DOBRA DESKTOP: Obra Regente e Cartografia Agrupados */}
+          <section className="hidden md:grid md:grid-cols-2 gap-12 pt-12 items-start">
+            {/* Obra Regente Desktop */}
+            <div className="relative group overflow-hidden rounded-[40px] border border-gold/20 bg-midnight/40 p-10 flex items-center gap-10">
+              <div className="w-32 h-48 shrink-0 shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-xl border border-white/10 overflow-hidden group-hover:rotate-2 transition-transform duration-500">
+                <img 
+                  src="/mulheres-lobos.webp" 
+                  alt="Mulheres que Correm com os Lobos" 
+                  className="w-full h-full object-cover" 
+                />
+              </div>
+              <div className="flex-1 space-y-4">
+                <div className="flex items-center gap-3">
+                  <span className="h-px w-6 bg-gold/40" />
+                  <p className="text-xs tracking-[0.4em] uppercase text-gold font-bold">Obra Regente</p>
+                </div>
+                <h3 className="text-3xl font-serif text-white leading-tight">Mulheres que Correm com os Lobos</h3>
+                <p className="text-white/50 text-sm font-serif italic leading-relaxed">"Dentro de toda mulher existe uma vida secreta, uma força poderosa feita de bons instintos e criatividade..."</p>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={irParaEstacao1}
+                  className="h-10 text-xs uppercase tracking-widest text-gold hover:bg-gold/10 p-0 flex items-center gap-2 group/btn"
+                >
+                  Ver Áudio de Abertura
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Cartografia da Loba Desktop */}
+            <div className="p-10 rounded-[40px] bg-gold/5 border border-gold/10 space-y-8 h-full flex flex-col justify-center">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 rounded-full bg-gold/10 border border-gold/20">
+                    <Compass className="w-6 h-6 text-gold" />
+                  </div>
+                  <div>
+                    <span className="text-sm text-gold font-bold uppercase tracking-[0.3em] block">Cartografia da Loba</span>
+                    <span className="text-xs text-white/30 italic">O reflexo do seu progresso</span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-3xl font-serif text-gold">16%</span>
+                  <p className="text-[10px] text-white/20 uppercase tracking-widest">Concluído</p>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-8 py-4 border-y border-white/5">
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Estação Atual</p>
+                  <p className="text-base text-white font-serif italic">Clareira do Chamado</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Ferramenta Ativa</p>
+                  <p className="text-base text-white font-serif italic">Mapa do Instinto</p>
+                </div>
+              </div>
+
+              <Button 
+                onClick={() => navigate('/cidadela')}
+                variant="outline"
+                className="w-full h-14 border-gold/20 text-gold hover:bg-gold/10 text-xs uppercase tracking-[0.2em] font-bold rounded-full transition-all"
+              >
+                Ver reflexo na CidadELA Interior
+              </Button>
+            </div>
+          </section>
           </section>
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
