@@ -328,7 +328,7 @@ export default function ClubeRotaPremium() {
                       />
                     </div>
                     
-                    <div className="pt-4">
+                    <div className="pt-4 flex flex-col items-center gap-4">
                       <Button 
                         variant="outline"
                         className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5"
@@ -336,6 +336,14 @@ export default function ClubeRotaPremium() {
                       >
                         Continuar a Escuta
                         <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+
+                      <Button 
+                        variant="ghost"
+                        className="text-white/40 hover:text-gold text-[10px] uppercase tracking-widest font-bold h-8"
+                        onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                      >
+                        Ver álbum da Estação
                       </Button>
                     </div>
                   </div>
