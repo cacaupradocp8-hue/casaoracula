@@ -21,6 +21,7 @@ export default function ClubeRotaPremium() {
   const navigate = useNavigate();
   const { pontos, isLoading, concluirPonto } = useRotaOracular(slug);
   const [currentStep, setCurrentStep] = useState(0);
+  const [userHasRead, setUserHasRead] = useState(false);
 
   const steps = [
     { id: 'entrada', title: 'Entrada na Clareira', ritual: true },
