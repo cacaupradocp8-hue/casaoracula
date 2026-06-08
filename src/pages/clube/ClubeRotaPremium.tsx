@@ -118,7 +118,6 @@ export default function ClubeRotaPremium() {
                     livroCapaUrl={estacao.clube_rotas.livro_capa_url}
                     livroBannerUrl={estacao.livro_imagem_banner_url}
                     audioVozClareiraUrl={estacao.audio_voz_clareira_url}
-                    isVozDaFloresta={slug === 'voz-da-floresta'}
                   />
                 )}
 

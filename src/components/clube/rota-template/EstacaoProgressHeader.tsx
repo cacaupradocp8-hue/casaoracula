@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, User } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface EstacaoProgressHeaderProps {
@@ -18,27 +18,17 @@ export const EstacaoProgressHeader: React.FC<EstacaoProgressHeaderProps> = ({
   return (
     <div className="mb-12 space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={onBack}
-            className="group flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold hover:text-gold transition-colors"
-          >
-            <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-            <span>Voltar</span>
-          </button>
-        </div>
-
-        <div className="flex items-center gap-3">
-          {/* Casa Orácula title removed as requested for Clareira station */}
-        </div>
+        <button 
+          onClick={onBack}
+          className="group flex items-center gap-2 text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold hover:text-gold transition-colors"
+        >
+          <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
+          <span>Voltar</span>
+        </button>
         
-        <div className="flex items-center justify-center w-10 h-10 rounded-full border border-white/10 bg-white/5">
-          <User className="w-5 h-5 text-white/40" />
+        <div className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1 rounded-full border border-gold/10">
+          Rastro {currentStep + 1} de {totalSteps}
         </div>
-      </div>
-      
-      <div className="hidden text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1 rounded-full border border-gold/10 w-fit mx-auto">
-        Rastro {currentStep + 1} de {totalSteps}
       </div>
       
       <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden shadow-inner backdrop-blur-sm border border-white/[0.03]">
