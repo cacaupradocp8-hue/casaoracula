@@ -86,20 +86,12 @@ export default function ClubeRotaPremium() {
             <img 
               src="/clareira-fundo.png" 
               alt="Clareira Ritual" 
-              className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+              className="w-full h-full object-cover opacity-60"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-[#020617]/40 to-[#020617]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-transparent to-[#020617]" />
           </div>
 
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(212,175,55,0.05),transparent_70%)]" />
-          <motion.div 
-            animate={{ 
-              opacity: [0.1, 0.15, 0.1],
-              scale: [1, 1.05, 1]
-            }}
-            transition={{ duration: 10, repeat: Infinity }}
-            className="absolute -top-1/4 -right-1/4 w-[80%] h-[80%] bg-gold/5 blur-[120px] rounded-full" 
-          />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
