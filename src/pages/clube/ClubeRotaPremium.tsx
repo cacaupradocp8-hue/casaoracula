@@ -418,17 +418,6 @@ export default function ClubeRotaPremium() {
                   </div>
                 )}
 
-                      <Button 
-                        variant="ghost"
-                        className="text-white/40 hover:text-gold text-[10px] uppercase tracking-widest font-bold h-8"
-                        onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
-                      >
-                        Ver álbum da Estação
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
                 {/* STEP 2: CASO SIMBÓLICO - HELENA */}
                 {currentStep === 2 && (
                   <div className="space-y-10 max-w-2xl mx-auto">
