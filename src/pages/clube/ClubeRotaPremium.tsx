@@ -399,7 +399,8 @@ export default function ClubeRotaPremium() {
                   <div className="space-y-12 text-center max-w-lg mx-auto py-12">
                     <motion.div 
                       animate={{ 
-                        boxShadow: ['0 0 20px rgba(212,175,55,0)', '0 0 50px rgba(212,175,55,0.2)', '0 0 20px rgba(212,175,55,0)']
+                        boxShadow: ['0 0 20px rgba(212,175,55,0)', '0 0 50px rgba(212,175,55,0.2)', '0 0 20px rgba(212,175,55,0)'],
+                        y: [0, -5, 0]
                       }}
                       transition={{ duration: 4, repeat: Infinity }}
                       className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto text-gold"
@@ -417,10 +418,10 @@ export default function ClubeRotaPremium() {
 
                     <Button 
                       variant="ghost"
-                      className="text-gold/60 hover:text-gold hover:bg-transparent text-[10px] font-bold uppercase tracking-[0.5em] animate-pulse"
+                      className="text-gold hover:text-gold hover:bg-gold/5 text-[11px] font-bold uppercase tracking-[0.5em] animate-pulse rounded-full px-12"
                       onClick={handleNext}
                     >
-                      Concluir Travessia
+                      Selar Travessia
                     </Button>
                   </div>
                 )}
