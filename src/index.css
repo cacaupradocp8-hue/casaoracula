@@ -393,9 +393,14 @@
     filter: brightness(1);
   }
   40% {
-    transform: scale(1.08);
-    filter: brightness(1.15);
+    transform: scale(1.05);
+    filter: brightness(1.1);
   }
+}
+
+@keyframes shimmer {
+  from { background-position: -40px 0; }
+  to { background-position: 40px 0; }
 }
 
 .animate-ritual-breathe {
