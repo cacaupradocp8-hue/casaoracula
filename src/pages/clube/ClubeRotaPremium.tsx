@@ -136,25 +136,16 @@ export default function ClubeRotaPremium() {
                 
                 {/* STEP 0: ENTRADA - PORTAL VIBE */}
                 {currentStep === 0 && (
-                  <div className="space-y-10 text-center">
-                    <div className="relative inline-block">
-                      <motion.div 
-                        animate={{ scale: [1, 1.05, 1], opacity: [0.5, 0.8, 0.5] }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                        className="absolute inset-0 bg-gold/20 blur-[40px] rounded-full"
-                      />
-                      <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full border border-gold/30 overflow-hidden shadow-2xl mx-auto">
-                        <img src={rotaLobosBg} alt="Clareira" className="w-full h-full object-cover" />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent" />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-4 max-w-lg mx-auto">
-                      <h1 className="text-4xl md:text-5xl font-serif text-white leading-tight">Clareira do Chamado</h1>
-                      <p className="text-gold/70 font-serif italic text-lg leading-relaxed">
-                        "Onde o silêncio ganha corpo e a jornada começa."
+                  <div className="space-y-10 text-center max-w-2xl mx-auto">
+                    <div className="space-y-6">
+                      <h1 className="text-5xl md:text-6xl font-serif text-white leading-tight">Clareira do Chamado</h1>
+                      <div className="w-24 h-px bg-gold/40 mx-auto" />
+                      <p className="text-white/90 font-serif text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
+                        Antes da mulher recuperar a própria voz, existe um instante quase invisível. Um chamado. Nem sempre ele chega como clareza. Às vezes chega como cansaço, inquietação ou a sensação de que algo importante ficou para trás.
                       </p>
-                      <p className="text-white/40 text-xs tracking-widest uppercase">Prepare seu espírito para a travessia.</p>
+                      <p className="text-gold/80 font-serif italic text-lg leading-relaxed max-w-xl mx-auto">
+                        Nesta estação, você não precisa encontrar respostas. Apenas aprender a escutar o que continua chamando.
+                      </p>
                     </div>
 
                     <Button 
