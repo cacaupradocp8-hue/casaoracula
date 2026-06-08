@@ -1,7 +1,7 @@
 import React from 'react'; // REBUILD_FORCE_V2
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, TreePine, Play, Pause, Lock, Ghost } from 'lucide-react';
+import { ArrowRight, TreePine, Play, Pause, Lock, Ghost, Compass } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
@@ -114,7 +114,31 @@ export default function RotaDosLobos() {
 
               {/* Botões e Ações Abaixo da Imagem */}
               <div className="px-6 pb-10 space-y-4 bg-[#020617]">
-                {/* CTA Principal Mobile - compacto, sem herdar o Button global */}
+                {/* Cartografia da Loba - Quick View Mobile */}
+                <div className="p-4 rounded-2xl bg-gold/5 border border-gold/10 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Compass className="w-4 h-4 text-gold" />
+                      <span className="text-[10px] text-gold font-bold uppercase tracking-widest">Cartografia da Loba</span>
+                    </div>
+                    <span className="text-[10px] text-white/40">Progresso: 16%</span>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-[11px] text-white/60">Estação: <span className="text-white">Clareira do Chamado</span></p>
+                    <p className="text-[11px] text-white/60">Ferramenta: <span className="text-white">Mapa do Instinto Soterrado</span></p>
+                    <p className="text-[11px] text-white/60">Impacto: <span className="text-white">Portão da Chegada</span></p>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => navigate('/cidadela')}
+                    className="w-full h-8 text-[10px] uppercase tracking-widest text-gold hover:bg-gold/10 border border-gold/20"
+                  >
+                    Ver reflexo na CidadELA
+                  </Button>
+                </div>
+
+                {/* CTA Principal Mobile */}
                 <button
                   type="button"
                   className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold text-[13px] font-bold uppercase tracking-widest text-[#08090B] shadow-[0_12px_24px_rgba(212,175,55,0.2)] transition-all active:scale-[0.97] hover:bg-gold/90"
@@ -124,39 +148,29 @@ export default function RotaDosLobos() {
                   <span>Entrar na Clareira</span>
                 </button>
 
-                {/* Botão de Áudio Estilo Link Premium */}
-                <div 
-                  className="flex items-center gap-2.5 cursor-pointer group w-fit"
-                  onClick={togglePlay}
-                >
-                  <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5 flex-shrink-0 group-hover:bg-gold/15 transition-all">
-                    {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Botão de Áudio */}
+                  <div 
+                    className="flex items-center gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.08] transition-all"
+                    onClick={togglePlay}
+                  >
+                    <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
+                      {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                    </div>
+                    <span className="text-[10px] text-gold font-bold uppercase tracking-wider">Acolhimento</span>
                   </div>
-                  <div className="flex flex-col -space-y-0.5">
-                    <span className="text-[9px] text-white/40 uppercase tracking-[0.2em] font-medium">A Voz da Floresta</span>
-                    <span className="text-[11px] text-gold font-semibold uppercase tracking-wider flex items-center">
-                      Ouvir Acolhimento
-                      <ArrowRight className="ml-1.5 w-3 h-3 transition-transform group-hover:translate-x-1" />
-                    </span>
+
+                  {/* Atalho para Câmara */}
+                  <div 
+                    onClick={() => navigate('/clube/camara-do-sussurro')}
+                    className="flex items-center gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer hover:bg-white/[0.08] transition-all"
+                  >
+                    <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
+                      <Ghost className="w-3 h-3 text-gold" />
+                    </div>
+                    <span className="text-[10px] text-gold font-bold uppercase tracking-wider">Câmara</span>
                   </div>
                 </div>
-
-                {/* Atalho para Câmara do Sussurro */}
-                <button
-                  onClick={() => navigate('/clube/camara-do-sussurro')}
-                  className="flex items-center justify-between p-4 rounded-2xl bg-gold/5 border border-gold/10 hover:bg-gold/10 transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
-                      <Ghost className="w-5 h-5 text-gold" />
-                    </div>
-                    <div className="text-left">
-                      <p className="text-[10px] text-gold/60 uppercase tracking-widest font-bold">Leitura de Casos</p>
-                      <p className="text-sm font-serif text-white">Câmara do Sussurro</p>
-                    </div>
-                  </div>
-                  <ArrowRight className="w-4 h-4 text-gold/40 group-hover:translate-x-1 transition-transform" />
-                </button>
               </div>
             </div>
 
@@ -185,26 +199,66 @@ export default function RotaDosLobos() {
                     </div>
                   </div>
 
-                  <div className="space-y-5">
-                    <div 
-                      className="flex items-center gap-2 cursor-pointer group w-fit"
-                      onClick={togglePlay}
-                    >
-                      <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
-                        {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                  <div className="flex flex-col gap-6">
+                    <div className="flex items-center gap-6">
+                      <div 
+                        className="flex items-center gap-2 cursor-pointer group w-fit"
+                        onClick={togglePlay}
+                      >
+                        <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
+                          {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
+                        </div>
+                        <div className="flex flex-col -space-y-0.5">
+                          <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
+                          <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
+                            Ouvir Acolhimento
+                            <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col -space-y-0.5">
-                        <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
-                        <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
-                          Ouvir Acolhimento
-                          <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
-                        </span>
+
+                      <Button
+                        variant="ghost"
+                        onClick={() => navigate('/clube/camara-do-sussurro')}
+                        className="text-white/40 hover:text-gold hover:bg-gold/5 text-[10px] uppercase tracking-widest font-bold h-8 px-4 border border-white/10 rounded-full"
+                      >
+                        <Ghost className="w-3.5 h-3.5 mr-2" />
+                        Câmara do Sussurro
+                      </Button>
+                    </div>
+
+                    <div className="p-6 rounded-3xl bg-gold/5 border border-gold/10 max-w-sm space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <Compass className="w-5 h-5 text-gold" />
+                          <span className="text-xs text-gold font-bold uppercase tracking-[0.2em]">Cartografia da Loba</span>
+                        </div>
+                        <span className="text-xs text-white/30">16%</span>
                       </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <p className="text-[10px] uppercase tracking-widest text-white/30">Estação Atual</p>
+                          <p className="text-xs text-white font-medium">Clareira do Chamado</p>
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-[10px] uppercase tracking-widest text-white/30">Ferramenta</p>
+                          <p className="text-xs text-white font-medium">Mapa do Instinto</p>
+                        </div>
+                      </div>
+
+                      <Button 
+                        onClick={() => navigate('/cidadela')}
+                        variant="outline"
+                        className="w-full h-10 border-gold/20 text-gold hover:bg-gold/10 text-[10px] uppercase tracking-[0.2em] font-bold"
+                      >
+                        Ver reflexo na CidadELA Interior
+                      </Button>
                     </div>
 
                     <Button
                       variant="gold"
-                      className="w-auto px-8 rounded-full h-12 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
+                      className="w-fit px-10 rounded-full h-14 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
                       onClick={irParaEstacao1}
                     >
                       <TreePine className="mr-2 w-5 h-5 flex-shrink-0" />

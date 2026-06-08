@@ -38,6 +38,47 @@ export default function ClubeRotaPremium() {
 
   const currentPonto = pontos.find(p => p.slug === slug) || pontos[0];
 
+  const cartografiaMapeamento = [
+    {
+      titulo: "Clareira do Chamado",
+      distrito: "Portão da Chegada + Bosque dos Arquétipos",
+      ferramenta: "Mapa do Instinto Soterrado",
+      movimento: "Chamado Escutado"
+    },
+    {
+      titulo: "Casa da Boa Menina",
+      distrito: "Torres",
+      ferramenta: "Escala de Domesticação",
+      movimento: "Padrão de Adequação Reconhecido"
+    },
+    {
+      titulo: "Porta Proibida",
+      distrito: "Portas + Labirinto",
+      ferramenta: "Radar de Silenciamento",
+      movimento: "Limiar do Medo Atravessado"
+    },
+    {
+      titulo: "Casa da Boneca Interior",
+      distrito: "Conselho Interior",
+      ferramenta: "Mapa da Intuição Silenciada",
+      movimento: "Voz da Boneca Resgatada"
+    },
+    {
+      titulo: "Margem dos Ossos",
+      distrito: "Espelho dos Vínculos + Praça do Abalo",
+      ferramenta: "Cartografia da Vulnerabilidade",
+      movimento: "Ossos Reunidos"
+    },
+    {
+      titulo: "Território da Loba",
+      distrito: "Coração da CidadELA + Portal de Renascimento",
+      ferramenta: "Síntese da Loba",
+      movimento: "Natureza Selvagem Integrada"
+    }
+  ];
+
+  const mappingAtual = cartografiaMapeamento.find(m => m.titulo === currentPonto?.nome) || cartografiaMapeamento[0];
+
   if (isLoading) return (
     <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-gold gap-4">
       <motion.div 
@@ -349,7 +390,7 @@ export default function ClubeRotaPremium() {
                   <div className="space-y-10 text-center max-w-2xl mx-auto">
                     <div className="space-y-4">
                       <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Momento IV</span>
-                      <h2 className="text-3xl font-serif italic text-gold">Mapa do Instinto Soterrado</h2>
+                      <h2 className="text-3xl font-serif italic text-gold">{mappingAtual.ferramenta}</h2>
                     </div>
 
                     <div className="relative p-1">
@@ -369,9 +410,9 @@ export default function ClubeRotaPremium() {
                           </div>
                           
                           <div className="space-y-3">
-                            <h3 className="text-xl font-serif">Ferramenta Oracular Ativada</h3>
+                             <h3 className="text-xl font-serif">Ferramenta Ativada</h3>
                             <p className="text-white/50 text-sm leading-relaxed max-w-sm mx-auto">
-                              O mapa revela os territórios onde sua intuição foi enterrada sob o peso da adequação.
+                              Esta ferramenta registra seus movimentos simbólicos e atualiza sua CidadELA Interior.
                             </p>
                           </div>
 
@@ -508,26 +549,41 @@ export default function ClubeRotaPremium() {
                     
                     <div className="space-y-6">
                       <div className="space-y-2">
-                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
+                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação Concluída</span>
                         <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
                       </div>
                       
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-6">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6">
                         {[
-                          { label: 'Ferramenta', val: 'Mapa do Instinto', icon: Map },
-                          { label: 'Distrito', val: 'CidadELA Interior', icon: Moon },
-                          { label: 'Movimento', val: 'Registrado', icon: Check }
+                          { label: 'Ferramenta', val: mappingAtual.ferramenta, icon: Map },
+                          { label: 'Distrito', val: mappingAtual.distrito, icon: Moon },
+                          { label: 'Movimento', val: mappingAtual.movimento, icon: Check },
+                          { label: 'Integração', val: 'Integrado', icon: Sparkles }
                         ].map((info, idx) => (
                           <div key={idx} className="bg-[#0A0A0B] border border-white/5 p-4 rounded-2xl flex flex-col items-center gap-2">
                             <info.icon className="w-4 h-4 text-gold/60" />
                             <span className="text-[9px] uppercase tracking-widest text-white/40">{info.label}</span>
-                            <span className="text-[10px] font-bold text-gold">{info.val}</span>
+                            <span className="text-[10px] font-bold text-gold leading-tight">{info.val}</span>
                           </div>
                         ))}
                       </div>
 
-                      <p className="text-white/40 text-xs uppercase tracking-widest max-w-xs mx-auto">
-                        Seu primeiro rastro foi registrado na cidadela.
+                      <div className="bg-gold/5 border border-gold/20 p-6 rounded-2xl max-w-xl mx-auto">
+                        <p className="text-white/70 font-serif italic text-lg leading-relaxed">
+                          "O movimento simbólico registrado nesta estação impactou seus distritos na CidadELA Interior. Seu rastro está vivo."
+                        </p>
+                      </div>
+
+                      <Button
+                        variant="link"
+                        onClick={() => navigate('/cidadela')}
+                        className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold"
+                      >
+                        Ver reflexo na CidadELA Interior
+                      </Button>
+
+                      <p className="text-white/40 text-[10px] uppercase tracking-widest max-w-xs mx-auto">
+                        Seu rastro foi registrado na cartografia.
                       </p>
                     </div>
 
