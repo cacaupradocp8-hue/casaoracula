@@ -4325,23 +4325,34 @@ export type Database = {
           aplicar_sessao_pergunta: string | null
           aplicar_sessao_risco: string | null
           ativa: boolean | null
+          audio_voz_clareira_url: string | null
           banner_url: string | null
           cartografia_id: string | null
+          caso_simbolico: Json | null
           created_at: string
           descricao: string | null
+          distrito_cidadela: string | null
           essencia_nucleo: string | null
           essencia_tensao: string | null
           essencia_transformacao: string | null
           fase_lunar: string | null
+          fechamento_texto: string | null
+          ferramenta_oracular_nome: string | null
+          frase_abertura: string | null
+          frase_voz_clareira: string | null
           id: string
           livro_autor: string | null
           livro_capa_url: string | null
           livro_imagem_banner_url: string | null
           livro_titulo: string
+          missao_campo: Json | null
+          movimento_simbolico: string | null
           numero: number
           ordem: number
           publicada: boolean | null
           quiz_id: string | null
+          revelacao: Json | null
+          rota_id: string | null
           status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4362,23 +4373,34 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
+          caso_simbolico?: Json | null
           created_at?: string
           descricao?: string | null
+          distrito_cidadela?: string | null
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
           fase_lunar?: string | null
+          fechamento_texto?: string | null
+          ferramenta_oracular_nome?: string | null
+          frase_abertura?: string | null
+          frase_voz_clareira?: string | null
           id?: string
           livro_autor?: string | null
           livro_capa_url?: string | null
           livro_imagem_banner_url?: string | null
           livro_titulo: string
+          missao_campo?: Json | null
+          movimento_simbolico?: string | null
           numero: number
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
+          revelacao?: Json | null
+          rota_id?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4399,23 +4421,34 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
+          caso_simbolico?: Json | null
           created_at?: string
           descricao?: string | null
+          distrito_cidadela?: string | null
           essencia_nucleo?: string | null
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
           fase_lunar?: string | null
+          fechamento_texto?: string | null
+          ferramenta_oracular_nome?: string | null
+          frase_abertura?: string | null
+          frase_voz_clareira?: string | null
           id?: string
           livro_autor?: string | null
           livro_capa_url?: string | null
           livro_imagem_banner_url?: string | null
           livro_titulo?: string
+          missao_campo?: Json | null
+          movimento_simbolico?: string | null
           numero?: number
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
+          revelacao?: Json | null
+          rota_id?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
           titulo?: string
@@ -4437,6 +4470,13 @@ export type Database = {
             columns: ["quiz_id"]
             isOneToOne: false
             referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_estacoes_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
             referencedColumns: ["id"]
           },
         ]
@@ -5618,6 +5658,60 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      clube_rotas: {
+        Row: {
+          ativa: boolean | null
+          audio_acolhimento_url: string | null
+          autor: string | null
+          banner_url: string | null
+          created_at: string | null
+          descricao: string | null
+          frase_guia: string | null
+          id: string
+          livro_capa_url: string | null
+          obra_regente: string | null
+          ordem: number | null
+          publicada: boolean | null
+          slug: string
+          titulo: string
+          updated_at: string | null
+        }
+        Insert: {
+          ativa?: boolean | null
+          audio_acolhimento_url?: string | null
+          autor?: string | null
+          banner_url?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          frase_guia?: string | null
+          id?: string
+          livro_capa_url?: string | null
+          obra_regente?: string | null
+          ordem?: number | null
+          publicada?: boolean | null
+          slug: string
+          titulo: string
+          updated_at?: string | null
+        }
+        Update: {
+          ativa?: boolean | null
+          audio_acolhimento_url?: string | null
+          autor?: string | null
+          banner_url?: string | null
+          created_at?: string | null
+          descricao?: string | null
+          frase_guia?: string | null
+          id?: string
+          livro_capa_url?: string | null
+          obra_regente?: string | null
+          ordem?: number | null
+          publicada?: boolean | null
+          slug?: string
+          titulo?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       clube_v3_routes: {
         Row: {
