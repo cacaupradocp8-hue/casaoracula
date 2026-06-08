@@ -260,15 +260,17 @@ export default function ClubeRotaPremium() {
                         <motion.button
                           key={card.id}
                           whileHover={{ y: -10, scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
                           onClick={handleNext}
-                          className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl"
+                          className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl transition-all"
                         >
-                          <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" />
+                          <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                          <div className="absolute inset-0 flex flex-col items-center justify-end p-6 space-y-2">
-                            <card.icon className="w-6 h-6 text-gold mb-2" />
-                            <span className="text-xs font-bold tracking-[0.3em] text-white uppercase">{card.title}</span>
+                          <div className="absolute inset-0 flex flex-col items-center justify-end p-4 md:p-6 space-y-2">
+                            <card.icon className="w-5 h-5 md:w-6 md:h-6 text-gold mb-2" />
+                            <span className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white uppercase text-center">{card.title}</span>
                             <div className="w-6 h-0.5 bg-gold/40 rounded-full group-hover:w-12 transition-all" />
+                            <span className="text-[8px] text-gold/60 opacity-0 group-hover:opacity-100 uppercase tracking-tighter transition-opacity pt-1">Revelar Leitura</span>
                           </div>
                         </motion.button>
                       ))}
