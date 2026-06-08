@@ -383,7 +383,7 @@ export default function RotaDosLobos() {
                       {isActive && (
                         <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-60">
                           <img 
-                            src={estacao.banner_url || "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80"} 
+                            src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
                             alt="" 
                             className="w-full h-full object-cover scale-110" 
                           />
