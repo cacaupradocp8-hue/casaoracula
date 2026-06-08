@@ -7,6 +7,7 @@ import { EstacaoProgressHeader } from '@/components/clube/rota-template/EstacaoP
 import { EstacaoStepEntrada } from '@/components/clube/rota-template/EstacaoStepEntrada';
 import { EstacaoStepEscuta } from '@/components/clube/rota-template/EstacaoStepEscuta';
 import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
