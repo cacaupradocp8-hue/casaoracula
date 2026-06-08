@@ -77,17 +77,17 @@ export default function RotaDosLobos() {
               {/* Hero com Imagem de Fundo e Texto Sobreposto */}
               <div className="relative min-h-[520px] overflow-hidden">
                 <img
-                  src={rotaLobosBg}
+                  src="/lobo-fundo.png"
                   alt="Rota dos Lobos"
                   className="absolute inset-0 w-full h-full object-cover object-center"
                 />
                 
                 {/* Overlays de Gradiente e Blur para Fusão Perfeita */}
-                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/35 to-[#020617]" />
-                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#020617] via-[#020617]/90 to-transparent backdrop-blur-[2px]" />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-[#020617]" />
+                <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#020617] via-[#020617] to-transparent" />
                 
-                {/* Camada Extra para Esconder Linha Final da Imagem */}
-                <div className="absolute bottom-0 left-0 right-0 h-12 bg-[#020617] blur-xl opacity-60 translate-y-6" />
+                {/* Camada Extra para Esconder Linha Final da Imagem com sombra suave */}
+                <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#020617] to-transparent z-[5]" />
 
                 <div className="relative z-10 flex min-h-[520px] flex-col justify-end p-6 pb-4">
                   <div className="space-y-4">
@@ -214,11 +214,12 @@ export default function RotaDosLobos() {
               {/* Coluna Direita: Imagem Desktop (Hero) */}
               <div className="relative flex items-center justify-center bg-[#0A0A0B] min-h-full overflow-hidden">
                 <img 
-                  src={rotaLobosBg} 
+                  src="/lobo-fundo.png" 
                   alt="Lobo da Rota dos Lobos" 
                   className="w-full h-full object-cover object-center lg:object-right"
                 />
-                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#0A0A0B]/80" />
+                <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#0A0A0B]" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />
               </div>
             </div>
           </section>
