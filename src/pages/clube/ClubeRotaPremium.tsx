@@ -106,7 +106,7 @@ export default function ClubeRotaPremium() {
               </button>
               
               <div className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1 rounded-full border border-gold/10">
-                Etapa {currentStep + 1} de {steps.length}
+                Rastro {currentStep + 1} de {steps.length}
               </div>
             </div>
             
@@ -114,6 +114,7 @@ export default function ClubeRotaPremium() {
               <motion.div 
                 initial={{ width: 0 }}
                 animate={{ width: `${progressPercentage}%` }}
+                transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
                 className="h-full bg-gradient-to-r from-gold/40 via-gold to-gold/40 shadow-[0_0_10px_rgba(212,175,55,0.3)]"
               />
             </div>
