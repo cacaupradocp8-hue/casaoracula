@@ -25,6 +25,8 @@ export default function ClubeRotaPremium() {
   const [currentStep, setCurrentStep] = useState(0);
   const [userHasRead, setUserHasRead] = useState(false);
 
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
+
   const steps = [
     { id: 'entrada', title: 'Entrada na Clareira', ritual: true },
     { id: 'escuta', title: 'Escuta Ritual', ritual: true },
