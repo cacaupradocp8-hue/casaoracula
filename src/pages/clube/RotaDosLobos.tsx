@@ -265,15 +265,6 @@ export default function RotaDosLobos() {
                       </Button>
                     </div>
 
-                    <Button
-                      variant="gold"
-                      className="w-fit px-10 rounded-full h-14 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
-                      onClick={irParaEstacao1}
-                    >
-                      <TreePine className="mr-2 w-5 h-5 flex-shrink-0" />
-                      <span>Entrar na Clareira</span>
-                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
-                    </Button>
                   </div>
                 </div>
               </div>
