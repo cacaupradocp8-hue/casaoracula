@@ -197,33 +197,16 @@ export default function RotaDosLobos() {
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-6">
-                    <div className="flex items-center gap-6">
-                      <div 
-                        className="flex items-center gap-2 cursor-pointer group w-fit"
-                        onClick={togglePlay}
-                      >
-                        <div className="w-8 h-8 rounded-full border border-gold/40 flex items-center justify-center bg-gold/10 flex-shrink-0 group-hover:bg-gold/20 transition-colors">
-                          {isPlaying ? <Pause className="w-3 h-3 text-gold fill-gold" /> : <Play className="w-3 h-3 text-gold fill-gold ml-0.5" />}
-                        </div>
-                        <div className="flex flex-col -space-y-0.5">
-                          <span className="text-[10px] text-white/50 uppercase tracking-[0.1em] font-medium">A Voz da Floresta</span>
-                          <span className="text-xs text-gold font-semibold uppercase tracking-wider flex items-center">
-                            Ouvir Acolhimento
-                            <ArrowRight className="ml-1 w-3 h-3 transition-transform group-hover:translate-x-1" />
-                          </span>
-                        </div>
-                      </div>
-
-                      <Button
-                        variant="ghost"
-                        onClick={() => navigate('/clube/camara-do-sussurro')}
-                        className="text-white/40 hover:text-gold hover:bg-gold/5 text-[10px] uppercase tracking-widest font-bold h-8 px-4 border border-white/10 rounded-full"
-                      >
-                        <Ghost className="w-3.5 h-3.5 mr-2" />
-                        Câmara do Sussurro
-                      </Button>
-                    </div>
+                  <div className="flex flex-col gap-8">
+                    <Button
+                      variant="gold"
+                      className="w-fit px-10 rounded-full h-14 text-sm font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
+                      onClick={irParaEstacao1}
+                    >
+                      <TreePine className="mr-2 w-5 h-5 flex-shrink-0" />
+                      <span>Entrar na Clareira</span>
+                      <ArrowRight className="ml-2 w-4 h-4 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
+                    </Button>
 
                     {/* Book Banner Section Desktop */}
                     <div className="relative group overflow-hidden rounded-3xl border border-gold/20 bg-midnight/40 p-6 flex items-center gap-6 max-w-lg">
