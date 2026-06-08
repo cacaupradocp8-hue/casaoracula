@@ -439,22 +439,42 @@ export default function ClubeRotaPremium() {
                       </motion.div>
                     </div>
                     
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
-                      <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
-                      <p className="text-white/40 text-sm uppercase tracking-widest max-w-xs mx-auto">
+                    <div className="space-y-6">
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Estação I Completa</span>
+                        <h2 className="text-4xl md:text-5xl font-serif">Cartografia da Loba</h2>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-6">
+                        {[
+                          { label: 'Ferramenta', val: 'Mapa do Instinto', icon: Map },
+                          { label: 'Distrito', val: 'CidadELA Interior', icon: Moon },
+                          { label: 'Movimento', val: 'Registrado', icon: Check }
+                        ].map((info, idx) => (
+                          <div key={idx} className="bg-[#0A0A0B] border border-white/5 p-4 rounded-2xl flex flex-col items-center gap-2">
+                            <info.icon className="w-4 h-4 text-gold/60" />
+                            <span className="text-[9px] uppercase tracking-widest text-white/40">{info.label}</span>
+                            <span className="text-[10px] font-bold text-gold">{info.val}</span>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="text-white/40 text-xs uppercase tracking-widest max-w-xs mx-auto">
                         Seu primeiro rastro foi registrado na cidadela.
                       </p>
                     </div>
 
                     <div className="pt-8 flex flex-col items-center gap-6">
-                      <Button 
-                        className="rounded-full bg-gold text-[#020617] font-extrabold px-12 h-14 text-sm tracking-[0.1em] uppercase shadow-[0_15px_45px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-all group"
-                        onClick={handleNext}
-                      >
-                        Próxima Estação
-                        <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </Button>
+                      <div className="space-y-2">
+                        <span className="text-[10px] text-white/30 uppercase tracking-[0.2em]">Próxima Estação Sugerida</span>
+                        <Button 
+                          className="rounded-full bg-gold text-[#020617] font-extrabold px-12 h-14 text-sm tracking-[0.1em] uppercase shadow-[0_15px_45px_rgba(212,175,55,0.3)] hover:scale-105 active:scale-95 transition-all group"
+                          onClick={handleNext}
+                        >
+                          Entrar na Casa da Boa Menina
+                          <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
                       
                       <button 
                         onClick={() => navigate('/clube/rota-dos-lobos')}
