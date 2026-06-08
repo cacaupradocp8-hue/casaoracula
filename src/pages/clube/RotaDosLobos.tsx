@@ -291,7 +291,7 @@ export default function RotaDosLobos() {
               </Button>
             </div>
           </section>
-          </section>
+
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
           <div className="space-y-12 pt-8 pb-32">
