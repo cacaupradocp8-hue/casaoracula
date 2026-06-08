@@ -1,7 +1,7 @@
 import React from 'react'; // REBUILD_FORCE_V2
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, TreePine, Play, Pause, Lock } from 'lucide-react';
+import { ArrowRight, TreePine, Play, Pause, Lock, Ghost } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
@@ -140,6 +140,23 @@ export default function RotaDosLobos() {
                     </span>
                   </div>
                 </div>
+
+                {/* Atalho para Câmara do Sussurro */}
+                <button
+                  onClick={() => navigate('/clube/camara-do-sussurro')}
+                  className="flex items-center justify-between p-4 rounded-2xl bg-gold/5 border border-gold/10 hover:bg-gold/10 transition-all group"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center border border-gold/20">
+                      <Ghost className="w-5 h-5 text-gold" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-[10px] text-gold/60 uppercase tracking-widest font-bold">Leitura de Casos</p>
+                      <p className="text-sm font-serif text-white">Câmara do Sussurro</p>
+                    </div>
+                  </div>
+                  <ArrowRight className="w-4 h-4 text-gold/40 group-hover:translate-x-1 transition-transform" />
+                </button>
               </div>
             </div>
 
