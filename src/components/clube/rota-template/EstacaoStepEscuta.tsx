@@ -8,6 +8,7 @@ interface EstacaoStepEscutaProps {
   livroCapaUrl: string;
   livroBannerUrl: string;
   audioVozClareiraUrl?: string;
+  isVozDaFloresta?: boolean;
 }
 
 export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
@@ -15,7 +16,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   obraRegente,
   livroCapaUrl,
   livroBannerUrl,
-  audioVozClareiraUrl
+  audioVozClareiraUrl,
+  isVozDaFloresta = false
 }) => {
   return (
     <div className="space-y-12 text-center max-w-2xl mx-auto pb-12">
@@ -25,13 +27,15 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
           <span className="text-[10px] uppercase tracking-[0.4em] font-bold">{obraRegente}</span>
           <div className="w-8 h-px bg-current opacity-20" />
         </div>
-        <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight">Estação — Chamado Selvagem</h1>
+        <h1 className="text-4xl md:text-5xl font-serif text-white tracking-tight">
+          {isVozDaFloresta ? "Álbum — Voz da Floresta" : "Estação — Chamado Selvagem"}
+        </h1>
       </div>
 
       <div className="space-y-0">
         <EscutaPremium 
           audioUrl={audioVozClareiraUrl}
-          titulo="Voz da Clareira"
+          titulo={isVozDaFloresta ? "A Voz da Floresta" : "Voz da Clareira"}
           imagemEscuta={livroCapaUrl}
         />
       </div>
