@@ -351,7 +351,7 @@ export default function ClubeRotaPremium() {
                         className="rounded-full bg-white/5 hover:bg-white/10 text-white/60 px-10 h-11 text-[11px] font-bold uppercase tracking-widest transition-all"
                         onClick={handleNext}
                       >
-                        Continuar para próxima etapa
+                        Guardar no Jardim
                         <ChevronRight className="w-4 h-4 ml-1" />
                       </Button>
                     </div>
