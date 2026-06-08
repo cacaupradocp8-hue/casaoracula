@@ -54,7 +54,7 @@ export function useRotaHub(rotaSlug: string) {
   return useQuery({
     queryKey: ['rota-hub', rotaSlug],
     queryFn: async () => {
-      const { data: rota, error: rotaError } = await supabase
+      const { data: rotaData, error: rotaError } = await supabase
         .from('clube_rotas')
         .select('*')
         .eq('slug', rotaSlug)
@@ -63,15 +63,18 @@ export function useRotaHub(rotaSlug: string) {
 
       if (rotaError) throw rotaError;
 
-      const { data: estacoes, error: estacoesError } = await supabase
+      const { data: estacoesData, error: estacoesError } = await supabase
         .from('clube_estacoes')
         .select('*')
-        .eq('rota_id', (rota as any).id)
+        .eq('rota_id', (rotaData as any).id)
         .order('ordem', { ascending: true });
 
       if (estacoesError) throw estacoesError;
 
-      return { rota: rota as unknown as Rota, estacoes: estacoes as unknown as Estacao[] };
+      return { 
+        rota: rotaData as unknown as Rota, 
+        estacoes: (estacoesData || []) as unknown as Estacao[] 
+      };
     },
     enabled: !!rotaSlug
   });
@@ -81,14 +84,20 @@ export function useEstacaoConteudo(estacaoSlug: string) {
   return useQuery({
     queryKey: ['estacao-conteudo', estacaoSlug],
     queryFn: async () => {
-      const { data: estacao, error } = await supabase
+      const { data: estacaoData, error } = await supabase
         .from('clube_estacoes')
         .select('*, clube_rotas(*)')
         .eq('slug', estacaoSlug)
         .single();
 
       if (error) throw error;
-      return estacao as unknown as Estacao & { clube_rotas: Rota };
+      
+      const { clube_rotas, ...estacaoFields } = estacaoData as any;
+      
+      return {
+        ...estacaoFields,
+        clube_rotas: clube_rotas as Rota
+      } as Estacao & { clube_rotas: Rota };
     },
     enabled: !!estacaoSlug
   });
