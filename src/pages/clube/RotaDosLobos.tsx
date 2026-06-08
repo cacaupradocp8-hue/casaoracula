@@ -128,7 +128,7 @@ export default function RotaDosLobos() {
                 <div className="relative group overflow-hidden rounded-2xl border border-gold/20 bg-midnight/40 p-5 flex items-center gap-4">
                   <div className="w-16 h-24 shrink-0 shadow-lg rounded border border-white/10 overflow-hidden">
                     <img 
-                      src="/mulheres-lobos.webp" 
+                      src="/capa-mulheres-lobos.webp" 
                       alt="Mulheres que Correm com os Lobos" 
                       className="w-full h-full object-cover" 
                     />
@@ -230,7 +230,7 @@ export default function RotaDosLobos() {
             <div className="relative group overflow-hidden rounded-[40px] border border-gold/20 bg-midnight/40 p-10 flex items-center gap-10">
               <div className="w-32 h-48 shrink-0 shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-xl border border-white/10 overflow-hidden group-hover:rotate-2 transition-transform duration-500">
                 <img 
-                  src="/mulheres-lobos.webp" 
+                  src="/capa-mulheres-lobos.webp" 
                   alt="Mulheres que Correm com os Lobos" 
                   className="w-full h-full object-cover" 
                 />
