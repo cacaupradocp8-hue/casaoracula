@@ -192,39 +192,41 @@ export default function ClubeRotaPremium() {
                   </div>
                 )}
 
-                {/* STEP 2: CASO SIMBÓLICO - CARTA/CASO STYLE */}
+                {/* STEP 2: CASO SIMBÓLICO - HELENA */}
                 {currentStep === 2 && (
                   <div className="space-y-10 max-w-2xl mx-auto">
                     <div className="text-center space-y-4">
-                      <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Momento II</span>
-                      <h2 className="text-3xl font-serif">Caso Simbólico: A Voz Soterrada</h2>
+                      <h2 className="text-3xl font-serif">Helena e a Escuta Esquecida</h2>
                     </div>
 
                     <div className="relative group">
                       <div className="absolute -inset-1 bg-gold/5 blur-xl rounded-[2rem]" />
-                      <div className="relative bg-[#0F0F11] border border-white/10 rounded-[2rem] p-8 md:p-12 shadow-2xl font-serif leading-relaxed text-white/80 italic">
+                      <div className="relative bg-[#0F0F11]/60 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 md:p-10 shadow-2xl font-serif leading-relaxed text-white/90">
                         <div className="absolute top-0 right-0 p-6 opacity-10">
                           <Scroll className="w-12 h-12" />
                         </div>
-                        <p className="text-lg md:text-xl">
-                          "Dizem que há uma loba em cada mulher, mas em muitas, ela foi silenciada por séculos de pedra e medo. Hoje, diante dessa clareira, o que você ouve no seu próprio silêncio?"
-                        </p>
+                        <div className="space-y-4 text-lg">
+                          <p>Helena tem 42 anos. É terapeuta. Possui muitas formações. Atende regularmente.</p>
+                          <p>Mesmo assim, diante de decisões importantes, sente necessidade constante de pedir opinião.</p>
+                          <p>Quando percebe algo em uma sessão, frequentemente procura validação antes de confiar na própria leitura.</p>
+                          <p className="italic text-gold/80">Ela não sofre por falta de conhecimento. Ela sofre por ter se afastado da confiança naquilo que percebe.</p>
+                        </div>
                       </div>
                     </div>
 
                     <div className="space-y-6">
-                      <p className="text-center text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">O que ecoa na sua percepção?</p>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <p className="text-center text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold">O que mais chama sua atenção neste caso?</p>
+                      <div className="grid grid-cols-2 gap-4">
                         {[
-                          { id: 'porta', label: 'Uma Porta que Range', icon: DoorOpen },
-                          { id: 'torre', label: 'Uma Torre que Vigia', icon: Shield },
-                          { id: 'labirinto', label: 'Um Labirinto de Sombra', icon: Compass },
-                          { id: 'campo', label: 'Um Campo em Chamas', icon: Moon }
+                          { id: 'porta', label: 'Porta', icon: DoorOpen },
+                          { id: 'torre', label: 'Torre', icon: Shield },
+                          { id: 'labirinto', label: 'Labirinto', icon: Compass },
+                          { id: 'campo', label: 'Campo Psíquico', icon: Moon }
                         ].map((opt) => (
                           <button
                             key={opt.id}
                             onClick={handleNext}
-                            className="flex items-center gap-4 bg-[#0A0A0B] border border-white/5 hover:border-gold/40 p-4 rounded-2xl transition-all group text-left"
+                            className="flex items-center gap-4 bg-[#0A0A0B]/60 border border-white/5 hover:border-gold/40 p-4 rounded-2xl transition-all group text-left"
                           >
                             <div className="w-10 h-10 rounded-xl bg-gold/5 border border-gold/10 flex items-center justify-center text-gold group-hover:bg-gold/20 transition-colors">
                               <opt.icon className="w-5 h-5" />
@@ -237,39 +239,60 @@ export default function ClubeRotaPremium() {
                   </div>
                 )}
 
-                {/* STEP 3: REVELAÇÃO - REAL VISUAL CARDS */}
+                {/* STEP 3: REVELAÇÃO - CASO HELENA */}
                 {currentStep === 3 && (
                   <div className="space-y-10 max-w-4xl mx-auto">
                     <div className="text-center space-y-4">
-                      <span className="text-[10px] text-gold font-bold tracking-[0.4em] uppercase">Momento III</span>
-                      <h2 className="text-3xl font-serif">Revelação das Imagens</h2>
-                      <p className="text-white/40 text-xs uppercase tracking-widest">Toque em uma imagem para revelar seu mistério.</p>
+                      <h2 className="text-3xl font-serif">Revelação: O Chamado Ignorado</h2>
+                      <p className="text-white/40 text-xs uppercase tracking-widest italic">A escuta que Helena esqueceu de honrar.</p>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                      {[
-                        { id: 'porta', title: 'A Porta', img: 'https://images.unsplash.com/photo-1517420822341-35abc0978f8c?auto=format&fit=crop&q=80&w=400', icon: DoorOpen },
-                        { id: 'torre', title: 'A Torre', img: 'https://images.unsplash.com/photo-1533154683836-84ea7a0bc310?auto=format&fit=crop&q=80&w=400', icon: Shield },
-                        { id: 'labirinto', title: 'O Labirinto', img: 'https://images.unsplash.com/photo-1542385151-efd9000785a0?auto=format&fit=crop&q=80&w=400', icon: Compass },
-                        { id: 'campo', title: 'O Campo', img: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&q=80&w=400', icon: Moon }
-                      ].map((card, i) => (
-                        <motion.button
-                          key={card.id}
-                          whileHover={{ y: -10, scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={handleNext}
-                          className="relative aspect-[3/4] rounded-3xl overflow-hidden border border-white/10 group shadow-2xl transition-all"
-                        >
-                          <img src={card.img} alt={card.title} className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-all duration-700" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
-                          <div className="absolute inset-0 flex flex-col items-center justify-end p-4 md:p-6 space-y-2">
-                            <card.icon className="w-5 h-5 md:w-6 md:h-6 text-gold mb-2" />
-                            <span className="text-[9px] md:text-xs font-bold tracking-[0.3em] text-white uppercase text-center">{card.title}</span>
-                            <div className="w-6 h-0.5 bg-gold/40 rounded-full group-hover:w-12 transition-all" />
-                            <span className="text-[8px] text-gold/60 opacity-0 group-hover:opacity-100 uppercase tracking-tighter transition-opacity pt-1">Revelar Leitura</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-6">
+                        <div className="bg-[#0A0A0B]/60 border border-white/5 p-6 rounded-2xl space-y-4">
+                          <div className="flex items-center gap-3 text-gold">
+                            <Moon className="w-5 h-5" />
+                            <h3 className="font-serif text-xl">Campo Psíquico</h3>
                           </div>
-                        </motion.button>
-                      ))}
+                          <p className="text-white/70 font-serif italic text-lg leading-relaxed">Afastamento gradual da percepção instintiva.</p>
+                        </div>
+
+                        <div className="bg-[#0A0A0B]/60 border border-white/5 p-6 rounded-2xl space-y-4">
+                          <div className="flex items-center gap-3 text-gold">
+                            <Shield className="w-5 h-5" />
+                            <h3 className="font-serif text-xl">Torre da Validação</h3>
+                          </div>
+                          <p className="text-white/70 font-serif italic text-lg leading-relaxed">Torre da Validação Externa.</p>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <div className="bg-[#0A0A0B]/60 border border-white/5 p-6 rounded-2xl space-y-4">
+                          <div className="flex items-center gap-3 text-gold">
+                            <Compass className="w-5 h-5" />
+                            <h3 className="font-serif text-xl">O Labirinto</h3>
+                          </div>
+                          <p className="text-white/70 font-serif italic text-lg leading-relaxed">Quanto mais busca confirmação, menos escuta a própria percepção.</p>
+                        </div>
+
+                        <div className="bg-gold/5 border border-gold/20 p-8 rounded-[2rem] space-y-4 shadow-2xl relative overflow-hidden">
+                          <Sparkles className="absolute -top-4 -right-4 w-24 h-24 text-gold/10 rotate-12" />
+                          <h3 className="font-serif text-2xl text-gold italic">Uma pergunta para você...</h3>
+                          <p className="text-white text-xl leading-relaxed font-serif">
+                            Em quais áreas da sua vida você já sabe a resposta, mas continua procurando autorização?
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center pt-8">
+                      <Button 
+                        className="rounded-full bg-gold text-midnight font-bold px-12 h-12 uppercase tracking-widest text-xs hover:bg-gold/90 transition-all shadow-gold"
+                        onClick={handleNext}
+                      >
+                        Continuar para a Prática
+                        <ArrowRight className="ml-2 w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
                 )}
