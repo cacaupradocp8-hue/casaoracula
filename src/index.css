@@ -156,10 +156,13 @@
     @apply bg-background text-foreground font-body antialiased;
     background-image: var(--gradient-midnight);
     min-height: 100vh;
-    line-height: 1.7;
-    letter-spacing: 0.015em;
+    min-height: -webkit-fill-available;
+    line-height: 1.6;
+    letter-spacing: 0.01em;
     word-break: break-word;
     overflow-wrap: break-word;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
   }
 
   /* Fluid Spacing & UX Utilities */
