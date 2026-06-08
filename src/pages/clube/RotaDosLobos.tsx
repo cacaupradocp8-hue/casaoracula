@@ -342,7 +342,7 @@ export default function RotaDosLobos() {
             <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-2 gap-y-6 md:gap-6 overflow-visible pb-8">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = estacao.status === 'locked' && i !== 0;
-                const isActive = (i === 0) || (estacao.banner_url !== null);
+                const isActive = (i === 0) || (estacao.banner_url !== null) || (estacao.status && estacao.status !== 'locked');
                 const slug = slugsReais[i];
 
                 return (
