@@ -313,7 +313,7 @@ export default function ClubeRotaPremium() {
                             className="rounded-full bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 px-12 h-12 text-xs font-bold uppercase tracking-widest shadow-inner group"
                             onClick={handleNext}
                           >
-                            Abrir Mapa do Instinto
+                            Abrir Ferramenta
                             <Sparkles className="w-4 h-4 ml-2 group-hover:rotate-12 transition-transform" />
                           </Button>
                         </div>
