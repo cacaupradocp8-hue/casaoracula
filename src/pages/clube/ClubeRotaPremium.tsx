@@ -314,7 +314,7 @@ export default function ClubeRotaPremium() {
                   <div className="space-y-8 text-center max-w-2xl mx-auto">
                     <div className="space-y-4">
                       <h2 className="text-3xl font-serif">A Voz da Clareira</h2>
-                      <h3 className="text-xl font-serif text-gold/80 italic">🎧 Áudio de Abertura da clareira</h3>
+                      <p className="text-xl font-serif text-gold/80 italic">"Algo em você continua vivo mesmo quando parece esquecido."</p>
                     </div>
                     
                     <div className="bg-[#0A0A0B]/40 backdrop-blur-xl border border-white/5 rounded-[2.5rem] p-4 md:p-8 shadow-2xl">
@@ -328,7 +328,7 @@ export default function ClubeRotaPremium() {
                       />
                     </div>
                     
-                    <div className="pt-4">
+                    <div className="pt-4 flex flex-col items-center gap-4">
                       <Button 
                         variant="outline"
                         className="rounded-full border-gold/30 text-gold hover:bg-gold/10 px-10 h-10 text-[11px] font-bold uppercase tracking-widest shadow-lg shadow-gold/5"
@@ -336,6 +336,14 @@ export default function ClubeRotaPremium() {
                       >
                         Continuar a Escuta
                         <ChevronRight className="w-4 h-4 ml-1" />
+                      </Button>
+
+                      <Button 
+                        variant="ghost"
+                        className="text-white/40 hover:text-gold text-[10px] uppercase tracking-widest font-bold h-8"
+                        onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+                      >
+                        Ver álbum da Estação
                       </Button>
                     </div>
                   </div>
