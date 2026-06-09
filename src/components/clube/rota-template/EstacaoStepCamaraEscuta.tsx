@@ -461,7 +461,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                       </div>
                       <div className="space-y-4">
                         <Label className="text-xl text-white font-serif italic block">
-                          O que esta obra revelou sobre você?
+                          {displayData.perguntaPsique || "O que esta obra revelou sobre você?"}
                         </Label>
                         <Textarea 
                           value={reflexaoPsique}
@@ -480,7 +480,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                       </div>
                       <div className="space-y-4">
                         <Label className="text-xl text-white font-serif italic block">
-                          O que esta obra revelou sobre sua escuta profissional?
+                          {displayData.perguntaOficio || "O que esta obra revelou sobre sua escuta profissional?"}
                         </Label>
                         <Textarea 
                           value={reflexaoOficio}
