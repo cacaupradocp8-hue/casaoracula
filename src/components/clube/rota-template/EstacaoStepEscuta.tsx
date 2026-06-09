@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Headphones, Sparkles, BookOpen, Music } from 'lucide-react';
+import { Headphones, Sparkles, BookOpen, Music, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { RotaLivroBanner } from './RotaLivroBanner';
 import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
@@ -16,6 +17,7 @@ interface EstacaoStepEscutaProps {
   spotifyPlaylistUrl?: string;
   spotifyPlaylists?: any[];
   vozClareiraTexto?: string;
+  onNext: () => void;
 }
 
 export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
@@ -26,7 +28,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   audioFlorestaUrl,
   spotifyPlaylistUrl,
   spotifyPlaylists,
-  vozClareiraTexto
+  vozClareiraTexto,
+  onNext
 }) => {
   const [activePlaylistIndex, setActivePlaylistIndex] = useState(0);
 
@@ -113,15 +116,25 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         )}
       </div>
 
-      <div className="max-w-2xl mx-auto grid grid-cols-2 gap-4 pt-8">
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-          <Sparkles className="w-5 h-5 text-gold/40 mx-auto" />
-          <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Série de Áudios</p>
+      <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
+        <div className="grid grid-cols-2 gap-4 w-full">
+          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 text-center">
+            <Sparkles className="w-5 h-5 text-gold/40 mx-auto" />
+            <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Série de Áudios</p>
+          </div>
+          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 text-center">
+            <BookOpen className="w-5 h-5 text-gold/40 mx-auto" />
+            <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Leitura Regente</p>
+          </div>
         </div>
-        <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
-          <BookOpen className="w-5 h-5 text-gold/40 mx-auto" />
-          <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Leitura Regente</p>
-        </div>
+
+        <Button 
+          onClick={onNext}
+          className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-14 rounded-full uppercase tracking-[0.2em] text-[10px] transition-all group"
+        >
+          Entrar na Câmara da Escuta
+          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+        </Button>
       </div>
     </div>
   );
