@@ -55,50 +55,52 @@ export function EscutaPremium({
     <div className={cn("relative w-full max-w-2xl mx-auto py-8 px-4", className)}>
       <audio ref={audioRef} src={resolvedUrl} preload="metadata" />
 
-      <div className="flex flex-col items-center space-y-10">
+      <div className="flex flex-col items-center space-y-8">
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
           {/* External Golden Glow */}
-          <div className="absolute -inset-4 bg-gold/20 rounded-full blur-[40px] z-0 opacity-50 group-hover:opacity-70 transition-opacity" />
+          <div className="absolute -inset-8 bg-gold/10 rounded-full blur-[60px] z-0 opacity-40 group-hover:opacity-60 transition-opacity" />
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
-              "w-64 h-64 md:w-80 md:h-80 rounded-full p-1 relative z-10",
-              "bg-[#0a0a0a] shadow-[0_0_60px_rgba(0,0,0,0.8),0_0_20px_rgba(212,175,55,0.2)] overflow-hidden",
-              "border-[6px] border-[#1a1a1a]"
+              "w-64 h-64 md:w-[22rem] md:h-[22rem] rounded-full p-1 relative z-10",
+              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.15)] overflow-hidden",
+              "border-[8px] border-[#1a1a1a]"
             )}
           >
-            {/* Vinil Texture Effect */}
-            <div className="absolute inset-0 rounded-full pointer-events-none z-20" style={{ 
-              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 4px)' 
+            {/* Vinil Texture Effect - Fine lines */}
+            <div className="absolute inset-0 rounded-full pointer-events-none z-20 opacity-30" style={{ 
+              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)' 
             }} />
             
-            {/* Golden Rim Internal */}
-            <div className="absolute inset-[2px] rounded-full border border-gold/30 z-20 pointer-events-none opacity-50" />
+            {/* Golden Rim Internal - Dynamic reflection */}
+            <div className="absolute inset-0 rounded-full border-[1px] border-gold/40 z-20 pointer-events-none shadow-[inset_0_0_20px_rgba(212,175,55,0.2)]" />
+            <div className="absolute inset-2 rounded-full border-[0.5px] border-white/5 z-20 pointer-events-none" />
 
-            <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-900">
+            <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950">
               {/* Shine/Reflection */}
               <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-10 pointer-events-none" />
               
               {/* The Central Art (Station Image) */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[45%] h-[45%] rounded-full overflow-hidden border-2 border-gold/40 z-30 bg-[#020617] relative">
+                <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl">
                   {imagemEscuta ? (
                     <img 
                       src={imagemEscuta} 
                       alt="" 
-                      className="w-full h-full object-cover opacity-80"
+                      className="w-full h-full object-cover opacity-90 scale-105"
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gold/20 to-transparent flex items-center justify-center">
-                      <Headphones className="w-8 h-8 text-gold/40" />
+                    <div className="w-full h-full bg-gradient-to-br from-gold/20 to-[#020617] flex items-center justify-center">
+                      <Headphones className="w-8 h-8 text-gold/30" />
                     </div>
                   )}
                   {/* Inner Hole */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-3 h-3 rounded-full bg-[#020617] border border-gold/20 shadow-inner z-40" />
+                    <div className="w-4 h-4 rounded-full bg-[#020617] border border-gold/20 shadow-inner z-40" />
+                    <div className="w-1 h-1 rounded-full bg-gold/40 z-50" />
                   </div>
                 </div>
               </div>
@@ -107,24 +109,26 @@ export function EscutaPremium({
         </div>
 
         {/* Playback Status */}
-        <div className="text-center space-y-1">
-          <div className="flex items-center justify-center gap-2 text-gold/60 text-[10px] uppercase tracking-[0.3em] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
-            Reproduzindo Agora
+        <div className="text-center space-y-2">
+          <div className="flex items-center justify-center gap-2 text-gold/60 text-[10px] uppercase tracking-[0.4em] font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+            REPRODUZINDO AGORA
           </div>
-          <h3 className="text-white font-serif italic text-lg opacity-80">{titulo || "Travessia guiada em áudio"}</h3>
+          <h3 className="text-white font-serif italic text-xl md:text-2xl opacity-90 leading-tight">
+            {titulo || "Travessia guiada em áudio"}
+          </h3>
         </div>
 
         {/* Progress Slider */}
-        <div className="w-full max-w-md space-y-2 px-4">
+        <div className="w-full max-w-md space-y-3 px-6">
           <Slider
             value={[progress]}
             max={duration || 100}
             step={0.1}
             onValueChange={handleSeek}
-            className="py-2"
+            className="py-2 cursor-pointer"
           />
-          <div className="flex justify-between text-[10px] font-mono tracking-widest text-white/30 uppercase tabular-nums font-bold">
+          <div className="flex justify-between text-[10px] font-mono tracking-widest text-white/40 uppercase tabular-nums">
             <span>{formatAudioTime(progress)}</span>
             <span>{duracao || (duration > 0 ? formatAudioTime(duration) : '--:--')}</span>
           </div>
@@ -134,46 +138,74 @@ export function EscutaPremium({
         <div className="flex items-center justify-center gap-6 md:gap-10">
           <button 
             onClick={skipBackward}
-            className="text-white/40 hover:text-gold transition-colors"
+            className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90"
+            title="Voltar 15s"
           >
-            <RotateCcw className="w-6 h-6" />
-            <span className="text-[8px] block mt-1">15</span>
+            <div className="relative">
+              <RotateCcw className="w-7 h-7" />
+              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold mt-0.5">15</span>
+            </div>
+          </button>
+
+          <button className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18L14.5 12L6 6V18ZM16 6V18H18V6H16Z" className="transform rotate-180 origin-center" />
+            </svg>
           </button>
 
           <motion.button 
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(212,175,55,0.2)" }}
             whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
-            className="w-20 h-20 rounded-full bg-transparent border-2 border-gold/40 text-gold flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.1)] group hover:border-gold hover:bg-gold/5 transition-all"
+            className={cn(
+              "w-20 h-20 rounded-full flex items-center justify-center transition-all border border-gold/40 shadow-xl",
+              "bg-transparent text-gold hover:bg-gold/10 hover:border-gold"
+            )}
           >
             {isLoading ? (
               <Loader2 className="w-8 h-8 animate-spin" />
             ) : isPlaying ? (
-              <Pause className="w-8 h-8 fill-current" />
+              <Pause className="w-9 h-9 fill-current" />
             ) : (
-              <Play className="w-8 h-8 fill-current ml-1" />
+              <Play className="w-9 h-9 fill-current ml-1" />
             )}
           </motion.button>
 
+          <button className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18L14.5 12L6 6V18ZM16 6V18H18V6H16Z" />
+            </svg>
+          </button>
+
           <button 
             onClick={skipForward}
-            className="text-white/40 hover:text-gold transition-colors"
+            className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90"
+            title="Avançar 15s"
           >
-            <RotateCw className="w-6 h-6" />
-            <span className="text-[8px] block mt-1">15</span>
+            <div className="relative">
+              <RotateCw className="w-7 h-7" />
+              <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold mt-0.5">15</span>
+            </div>
           </button>
         </div>
 
-        {/* Info Card */}
-        <div className="w-full max-w-sm bg-gold/5 border border-gold/10 rounded-2xl p-6 flex gap-4 items-start">
-          <div className="w-10 h-10 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center shrink-0">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gold">
-              <path d="M18 6L6 18M6 6l12 12" />
+        {/* Info Card - Matching the image exactly */}
+        <div className="w-full max-w-sm bg-gradient-to-b from-white/10 to-transparent border border-white/10 rounded-2xl p-6 flex gap-5 items-start backdrop-blur-md shadow-2xl">
+          <div className="w-14 h-14 rounded-xl border border-gold/30 flex items-center justify-center shrink-0 bg-[#020617]/40 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-gold/5 animate-pulse" />
+            <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gold/70 z-10">
+              <path d="M20 5V10M20 30V35M5 20H10M30 20H35" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M10 10L14 14M26 26L30 30M30 10L26 14M14 26L10 30" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+              <path d="M8 20C8 13.3726 13.3726 8 20 8C26.6274 8 32 13.3726 32 20C32 26.6274 26.6274 32 20 32C13.3726 32 8 26.6274 8 20Z" stroke="currentColor" strokeWidth="1.5"/>
+              <path d="M20 15V20H25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
-          <div className="space-y-1">
-            <h4 className="text-gold text-[10px] uppercase tracking-[0.2em] font-bold">Orientação da Casa</h4>
-            <p className="text-white/60 text-xs font-serif leading-relaxed italic">
+          <div className="space-y-1.5 pt-1">
+            <h4 className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold flex items-center gap-2">
+              ORIENTAÇÃO DA CASA
+              <span className="w-10 h-px bg-gold/30" />
+            </h4>
+            <p className="text-white/80 text-xs font-serif leading-relaxed italic">
               Ouça primeiro o áudio da estação. Depois, siga para a leitura simbólica e registre sua percepção no Jardim.
             </p>
           </div>
