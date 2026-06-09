@@ -109,6 +109,11 @@ export default function ClubeRotaPremium() {
                     fraseVozClareira={estacao.frase_voz_clareira}
                     onNext={handleNext}
                     onJumpToStep={setCurrentStep}
+                    audioAberturaUrl={estacao.audio_abertura_url}
+                    audioVozClareiraUrl={estacao.audio_voz_clareira_url}
+                    audioFlorestaUrl={estacao.audio_floresta_url}
+                    imagemEscuta={slug === 'clareira-do-chamado' ? "/clareira-chamado.png" : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")}
+                    obraRegente={estacao.clube_rotas.obra_regente}
                     infoContent={slug === 'clareira-do-chamado' ? {
                       distrito: "Bosque dos Arquétipos / Portão da Chegada",
                       tese: "A mulher não perdeu o instinto; ela o enterrou para sobreviver.",
