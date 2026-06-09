@@ -154,7 +154,7 @@ export function EscutaPremium({
           </button>
 
           <motion.button 
-            whileHover={{ scale: 1.05, shadow: "0 0 30px rgba(212,175,55,0.2)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(212,175,55,0.2)" }}
             whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
             className={cn(
