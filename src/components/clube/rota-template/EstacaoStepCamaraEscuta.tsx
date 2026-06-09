@@ -34,8 +34,8 @@ const CONTEUDO_ESPECIFICO: Record<string, any> = {
       "Não procurar culpados.",
       "Apenas observe a relação da personagem com a própria dor."
     ],
-    perguntaPsique: "Onde minha dor deixou de ser experiência e passou a ser identidade?",
-    perguntaOficio: "Como percebo quando uma cliente organiza toda sua narrativa em torno da própria ferida?",
+    perguntaPsique: "O que em mim ainda canta, mesmo depois de ter sido ferido?",
+    perguntaOficio: "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?",
     rastroSimbolo: "🩸 A Ferida Habitável",
     territorioImpactado: "Praça do Abalo"
   },
