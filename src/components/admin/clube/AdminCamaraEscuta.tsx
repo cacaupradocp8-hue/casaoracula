@@ -10,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Plus, Trash2, Save, Music, Headphones, Sparkles, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { AudioUpload } from '@/components/admin/AudioUpload';
 
 interface AdminCamaraEscutaProps {
   estacaoId: string;
@@ -154,12 +155,20 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
               <Input value={editingObra?.tipo} onChange={e => setEditingObra({...editingObra, tipo: e.target.value})} />
             </div>
             <div className="space-y-2">
-              <Label>URL do Áudio/Vídeo</Label>
-            <Input value={editingObra?.url} onChange={e => setEditingObra({...editingObra, url: e.target.value})} placeholder="URL do áudio principal (MP3)" />
+              <AudioUpload
+                label="URL do Áudio Principal (MP3)"
+                value={editingObra?.url || ''}
+                onChange={(url) => setEditingObra({...editingObra, url})}
+                folder="clube/camara/obras"
+              />
             </div>
             <div className="space-y-2">
-              <Label>URL do Áudio Regente (Opcional)</Label>
-              <Input value={editingObra?.audio_regente_url} onChange={e => setEditingObra({...editingObra, audio_regente_url: e.target.value})} placeholder="URL do áudio de abertura da obra (MP3)" />
+              <AudioUpload
+                label="URL do Áudio Regente (Abertura)"
+                value={editingObra?.audio_regente_url || ''}
+                onChange={(url) => setEditingObra({...editingObra, audio_regente_url: url})}
+                folder="clube/camara/regentes"
+              />
             </div>
             
             <div className="space-y-2 md:col-span-2">
