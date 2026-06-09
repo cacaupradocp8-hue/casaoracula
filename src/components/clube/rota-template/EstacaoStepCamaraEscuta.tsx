@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History, X, MapPin } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useCamaraObras, CamaraObra } from '@/hooks/useClubeTemplate';
 import { Button } from '@/components/ui/button';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { JardimInput } from '@/components/clube/JardimInput';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
@@ -15,6 +14,74 @@ interface EstacaoStepCamaraEscutaProps {
   estacaoId: string;
   onNext: () => void;
 }
+
+const CONTEUDO_ESPECIFICO: Record<string, any> = {
+  "FERA FERIDA": {
+    oQueEscutar: [
+      "Não escute a letra.",
+      "Escute a identidade.",
+      "Observe como a ferida aparece quase como uma companheira inseparável.",
+      "Pergunte-se: A ferida está sendo cuidada? Ou está sendo habitada?"
+    ],
+    oQueEvitar: [
+      "Não transformar a música numa análise psicológica.",
+      "Não procurar diagnósticos.",
+      "Não procurar culpados.",
+      "Apenas observe a relação da personagem com a própria dor."
+    ],
+    perguntaPsique: "Onde minha dor deixou de ser experiência e passou a ser identidade?",
+    perguntaOficio: "Como percebo quando uma cliente organiza toda sua narrativa em torno da própria ferida?",
+    rastroSimbolo: "🩸 A Ferida Habitável",
+    territorioImpactado: "Praça do Abalo"
+  },
+  "NOTURNO": {
+    oQueEscutar: [
+      "Escute o vazio.",
+      "Escute a ausência.",
+      "Escute aquilo que não está sendo dito.",
+      "Esta música não fala apenas de amor. Fala daquilo que continua presente mesmo quando desapareceu."
+    ],
+    oQueEvitar: [
+      "Não interpretar literalmente.",
+      "A ausência nem sempre é uma pessoa.",
+      "Pode ser: um sonho, uma identidade, uma fase da vida ou uma potência esquecida."
+    ],
+    perguntaPsique: "O que continua vivendo dentro de mim mesmo depois de ter partido?",
+    perguntaOficio: "Como reconhecer quando a cliente está vivendo uma perda que ainda não conseguiu nomear?",
+    rastroSimbolo: "🌑 O Lugar Vazio",
+    territorioImpactado: "Casa dos Sonhos"
+  },
+  "REVELAÇÃO": {
+    oQueEscutar: [
+      "Escute o instante da percepção.",
+      "O momento em que algo que sempre esteve presente finalmente se torna visível.",
+      "Essa música trabalha um fenômeno fundamental da leitura simbólica: não descobrir algo novo, mas perceber algo que sempre esteve ali."
+    ],
+    oQueEvitar: [
+      "Não procurar grandes epifanias.",
+      "Às vezes a revelação é pequena. Mas muda tudo."
+    ],
+    perguntaPsique: "O que eu já sabia antes mesmo de conseguir explicar?",
+    perguntaOficio: "Como reconhecer quando a percepção da cliente chegou antes da linguagem?",
+    rastroSimbolo: "🔑 A Verdade Reconhecida",
+    territorioImpactado: "Portas"
+  },
+  "MARIA MARIA": {
+    oQueEscutar: [
+      "Escute a força. Mas não a força heroica.",
+      "Escute a força cotidiana.",
+      "Aquela que continua caminhando mesmo quando está cansada."
+    ],
+    oQueEvitar: [
+      "Não romantizar sofrimento.",
+      "A força desta música não está em suportar tudo. Está em continuar viva."
+    ],
+    perguntaPsique: "Qual parte de mim permaneceu viva mesmo durante os períodos mais difíceis?",
+    perguntaOficio: "Como ajudar uma mulher a reconhecer recursos internos que ela já possui?",
+    rastroSimbolo: "🌻 A Mulher que Continua",
+    territorioImpactado: "A Forja"
+  }
+};
 
 export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = ({
   estacaoId,
@@ -24,6 +91,8 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const { data: obras, isLoading } = useCamaraObras(estacaoId);
   const [activeObra, setActiveObra] = useState<CamaraObra | null>(null);
   const [showRastro, setShowRastro] = useState(false);
+  const [showDevolutiva, setShowDevolutiva] = useState(false);
+  const [devolutivaChoice, setDevolutivaChoice] = useState<string | null>(null);
 
   if (isLoading) {
     return (
@@ -34,9 +103,69 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
     );
   }
 
-  const handleConcluir = () => {
-    setShowRastro(true);
+  const handleConcluirObra = () => {
+    if (obras && activeObra) {
+      const currentIndex = obras.findIndex(o => o.id === activeObra.id);
+      if (currentIndex === obras.length - 1) {
+        setShowDevolutiva(true);
+        setActiveObra(null);
+      } else {
+        setActiveObra(null);
+      }
+    }
   };
+
+  const handleDevolutivaFinal = async (choice: string) => {
+    setDevolutivaChoice(choice);
+    setShowRastro(true);
+    setShowDevolutiva(false);
+    toast.success("Rastro permanente gerado na Cartografia.");
+  };
+
+  if (showDevolutiva) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto py-20 px-6 space-y-12 text-center"
+      >
+        <div className="space-y-6">
+          <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
+            <Sparkles className="w-10 h-10 text-gold" />
+          </div>
+          <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight">Você atravessou a Sequência da Clareira.</h2>
+          <div className="space-y-2 text-gold/60 font-serif italic text-xl">
+            <p>Escutou a ferida.</p>
+            <p>Escutou a ausência.</p>
+            <p>Escutou a revelação.</p>
+            <p>Escutou a força.</p>
+          </div>
+        </div>
+
+        <div className="space-y-8 pt-10">
+          <p className="text-white font-serif italic text-2xl">Agora observe: Qual dessas vozes ainda continua ecoando?</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-2xl mx-auto">
+            {[
+              { id: 'ferida', label: 'A Ferida', icon: '🩸' },
+              { id: 'ausencia', label: 'A Ausência', icon: '🌑' },
+              { id: 'revelacao', label: 'A Revelação', icon: '🔑' },
+              { id: 'forca', label: 'A Força', icon: '🌻' }
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleDevolutivaFinal(item.label)}
+                className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all group text-left flex items-center gap-6"
+              >
+                <span className="text-3xl">{item.icon}</span>
+                <span className="text-xl font-serif text-white group-hover:text-gold transition-colors">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   if (showRastro) {
     return (
@@ -66,16 +195,8 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <p className="text-white font-serif italic text-lg">Sequência de Escuta da Clareira</p>
             </div>
             <div className="space-y-1">
-              <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Território Principal</span>
-              <p className="text-white font-serif italic text-lg">Praça do Abalo</p>
-            </div>
-            <div className="space-y-1">
-              <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Território Secundário</span>
-              <p className="text-white font-serif italic text-lg">Bosque dos Arquétipos</p>
-            </div>
-            <div className="space-y-1">
-              <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Movimento Simbólico</span>
-              <p className="text-white font-serif italic text-lg">reconhecer vitalidade soterrada</p>
+              <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Voz Ecoante Selecionada</span>
+              <p className="text-gold font-serif italic text-lg">{devolutivaChoice}</p>
             </div>
             <div className="space-y-1">
               <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Data do Registro</span>
@@ -97,11 +218,13 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   }
 
   if (activeObra) {
+    const specific = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+
     return (
       <motion.div 
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="space-y-12 max-w-5xl mx-auto pb-20"
+        className="space-y-12 max-w-6xl mx-auto pb-20"
       >
         <button 
           onClick={() => setActiveObra(null)}
@@ -113,64 +236,88 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           Voltar à Sequência de Escuta
         </button>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          <div className="space-y-10 sticky top-12">
+        <div className="grid lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-4 space-y-8 sticky top-12">
             <div className="space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Escuta em Processo</span>
-              <h3 className="text-5xl font-serif text-white italic leading-tight">{activeObra.titulo}</h3>
-              <p className="text-gold/80 font-serif italic text-xl border-l-2 border-gold/20 pl-6 py-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Guia de Percepção</span>
+              <h3 className="text-4xl font-serif text-white italic leading-tight">{activeObra.titulo}</h3>
+              <p className="text-gold/80 font-serif italic text-lg border-l-2 border-gold/20 pl-6 py-2">
                 {activeObra.funcao_escuta}
               </p>
             </div>
 
-            <div className="space-y-6 bg-white/[0.02] border border-white/5 p-8 rounded-[32px]">
-              <div className="flex items-center gap-3 text-gold/60">
-                <Sparkles className="w-5 h-5" />
-                <h4 className="text-[10px] uppercase tracking-widest font-bold">Impacto Cartográfico</h4>
+            {specific.oQueEscutar && (
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] space-y-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-gold/60">
+                    <Headphones className="w-4 h-4" />
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold">O que escutar</h4>
+                  </div>
+                  <ul className="space-y-3">
+                    {specific.oQueEscutar.map((item: string, i: number) => (
+                      <li key={i} className="text-sm text-white/70 font-serif italic leading-relaxed">
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="space-y-4 pt-6 border-t border-white/5">
+                  <div className="flex items-center gap-3 text-red-400/60">
+                    <X className="w-4 h-4" />
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
+                  </div>
+                  <ul className="space-y-3">
+                    {specific.oQueEvitar.map((item: string, i: number) => (
+                      <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
+                        • {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
-              <div className="flex flex-wrap gap-3">
-                <span className="px-5 py-2 rounded-full bg-gold/10 border border-gold/20 text-[10px] text-gold uppercase tracking-widest font-bold">
-                  {activeObra.territorio_principal}
-                </span>
-                {activeObra.territorio_secundario_1 && (
-                   <span className="px-5 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] text-white/40 uppercase tracking-widest font-bold">
-                    {activeObra.territorio_secundario_1}
-                   </span>
-                )}
+            )}
+
+            <div className="bg-gold/5 border border-gold/10 p-8 rounded-[32px] space-y-4">
+               <div className="flex items-center gap-3 text-gold/60">
+                <MapPin className="w-4 h-4" />
+                <h4 className="text-[10px] uppercase tracking-widest font-bold">Impacto na Cartografia</h4>
+              </div>
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Símbolo</span>
+                  <p className="text-gold font-serif italic">{specific.rastroSimbolo || "Observado no rastro"}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Território</span>
+                  <p className="text-white/80 font-serif italic">{specific.territorioImpactado || activeObra.territorio_principal}</p>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="space-y-12">
+          <div className="lg:col-span-8 space-y-8">
             <div className="bg-[#050505]/40 backdrop-blur-md border border-white/5 p-10 rounded-[40px] shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
-                <Music className="w-32 h-32 text-gold" />
-              </div>
-              
-              <div className="relative z-10 space-y-8">
+              <div className="relative z-10 space-y-12">
                 <EscutaPremium 
                   audioUrl={activeObra.url}
                   titulo={activeObra.titulo}
                   imagemEscuta="/clareira-disco.png"
                 />
 
-                <div className="pt-10 border-t border-white/10 space-y-10">
-                  <div className="text-center space-y-4">
-                    <p className="text-gold/60 font-serif italic text-sm">“Depois de ouvir, registre o que permaneceu ecoando.”</p>
-                  </div>
-
-                  <div className="space-y-8">
+                <div className="pt-10 border-t border-white/10 space-y-12">
+                  <div className="space-y-12">
                     <div className="space-y-4">
                       <div className="flex items-center gap-3 text-gold/80">
                         <Heart className="w-4 h-4" />
-                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Jardim da Psique</h4>
+                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Pergunta da Psique</h4>
                       </div>
-                      <p className="text-xl text-white/90 font-serif italic leading-relaxed">
-                        “O que em mim ainda canta, mesmo depois de ter sido ferido?”
+                      <p className="text-2xl text-white font-serif italic leading-relaxed">
+                        “{specific.perguntaPsique || "O que em mim ainda canta, mesmo depois de ter sido ferido?"}”
                       </p>
                       <JardimInput 
                         type="psique"
-                        pergunta="O que em mim ainda canta, mesmo depois de ter sido ferido?"
+                        pergunta={specific.perguntaPsique || "O que em mim ainda canta, mesmo depois de ter sido ferido?"}
                         estacaoId={estacaoId}
                         pontoId={`escuta:${activeObra.id}`}
                         sourceTitle={`Escuta: ${activeObra.titulo}`}
@@ -180,14 +327,14 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                     <div className="space-y-4 pt-8 border-t border-white/5">
                       <div className="flex items-center gap-3 text-gold/80">
                         <BookOpen className="w-4 h-4" />
-                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Jardim do Ofício</h4>
+                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Pergunta do Ofício</h4>
                       </div>
-                      <p className="text-xl text-white/90 font-serif italic leading-relaxed">
-                        “Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?”
+                      <p className="text-2xl text-white font-serif italic leading-relaxed">
+                        “{specific.perguntaOficio || "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?"}”
                       </p>
                       <JardimInput 
                         type="oficio"
-                        pergunta="Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?"
+                        pergunta={specific.perguntaOficio || "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?"}
                         estacaoId={estacaoId}
                         pontoId={`escuta:${activeObra.id}`}
                         sourceTitle={`Escuta: ${activeObra.titulo}`}
@@ -198,12 +345,12 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               </div>
             </div>
 
-            <div className="flex justify-center pt-8">
+            <div className="flex justify-center pt-4">
                <Button 
-                onClick={handleConcluir}
-                className="bg-white/5 hover:bg-gold/10 border border-white/10 hover:border-gold/30 text-white/60 hover:text-gold font-bold px-12 py-7 rounded-full uppercase tracking-widest text-[10px] transition-all"
+                onClick={handleConcluirObra}
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs transition-all shadow-xl shadow-gold/10"
               >
-                Concluir Registro da Obra
+                Concluir Registro e Avançar na Sequência
               </Button>
             </div>
           </div>
