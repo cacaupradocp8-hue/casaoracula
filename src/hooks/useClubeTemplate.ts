@@ -38,6 +38,25 @@ export interface Estacao {
   banner_url?: string;
 }
 
+export interface CamaraObra {
+  id: string;
+  titulo: string;
+  tipo: string;
+  autor: string | null;
+  url: string;
+  funcao_escuta: string;
+  pergunta_psique: string;
+  pergunta_oficio: string;
+  reflexao_opcional: string | null;
+  territorio_principal: string;
+  territorio_secundario_1: string | null;
+  territorio_secundario_2: string | null;
+  rota_id: string;
+  estacao_id: string;
+  ordem: number;
+}
+
+
 export function useRotaHub(rotaSlug: string) {
   return useQuery({
     queryKey: ['rota-hub', rotaSlug],
@@ -98,3 +117,23 @@ export function useEstacaoConteudo(estacaoSlug: string) {
     enabled: !!estacaoSlug
   });
 }
+
+export function useCamaraObras(estacaoId: string) {
+  return useQuery({
+    queryKey: ['camara-obras', estacaoId],
+    queryFn: async () => {
+      const client = supabase as any;
+      const { data, error } = await client
+        .from('clube_camara_escuta_obras')
+        .select('*')
+        .eq('estacao_id', estacaoId)
+        .eq('ativo', true)
+        .order('ordem', { ascending: true });
+
+      if (error) throw error;
+      return data as CamaraObra[];
+    },
+    enabled: !!estacaoId
+  });
+}
+
