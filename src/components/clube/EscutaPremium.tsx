@@ -65,6 +65,27 @@ export function EscutaPremium({
     }
   }, []);
 
+  if (!audioUrl) return null;
+
+  // Handle Spotify Embed
+  if (audioUrl.includes('open.spotify.com/embed')) {
+    return (
+      <div className={cn("w-full max-w-2xl mx-auto py-8 px-4", className)}>
+        <iframe
+          style={{ borderRadius: '12px' }}
+          src={audioUrl}
+          width="100%"
+          height="352"
+          frameBorder="0"
+          allowFullScreen
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy"
+          className="shadow-2xl"
+        ></iframe>
+      </div>
+    );
+  }
+
   if (!resolvedUrl || hasError) return null;
 
   return (
