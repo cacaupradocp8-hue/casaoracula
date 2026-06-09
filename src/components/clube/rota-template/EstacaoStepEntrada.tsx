@@ -80,8 +80,11 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
         {infoContent && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="ghost" className="text-gold/60 hover:text-gold hover:bg-gold/5 text-[10px] uppercase tracking-widest font-bold gap-2">
-                <Info className="w-4 h-4" /> Ver Informações da Estação
+              <Button 
+                variant="ghost" 
+                className="text-gold hover:text-white hover:bg-gold/10 text-xs md:text-sm uppercase tracking-[0.2em] font-black gap-3 py-6 px-8 border border-gold/30 rounded-2xl animate-pulse bg-gold/5"
+              >
+                <Info className="w-5 h-5" /> ABRA, ENTRE, OLHE
               </Button>
             </DialogTrigger>
             <DialogContent className="bg-[#020617] border border-gold/20 text-white max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-3xl">

@@ -103,7 +103,15 @@ export default function ClubeRotaPremium() {
                     fraseVozClareira={estacao.frase_voz_clareira}
                     onNext={handleNext}
                     onJumpToStep={setCurrentStep}
-                    infoContent={{
+                    infoContent={slug === 'clareira-do-chamado' ? {
+                      distrito: "Bosque dos Arquétipos / Portão da Chegada",
+                      tese: "A mulher não perdeu o instinto; ela o enterrou para sobreviver.",
+                      detalhes: [
+                        "Conto-base: La Loba",
+                        "Competência formada: reconhecer vitalidade soterrada",
+                        "Ferramenta: Mapa do Instinto Soterrado"
+                      ]
+                    } : {
                       distrito: estacao.distrito_cidadela,
                       tese: estacao.frase_voz_clareira,
                       detalhes: ["Conteúdo da estação carregado dinamicamente."]
