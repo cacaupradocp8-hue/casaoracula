@@ -287,7 +287,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <button
                 key={item.id}
                 onClick={() => handleDevolutivaFinal(item.label)}
-                className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all group text-left flex items-center gap-6"
+                disabled={isSaving}
+                className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all group text-left flex items-center gap-6 disabled:opacity-50 disabled:cursor-not-allowed"
+
               >
                 <span className="text-3xl">{item.icon}</span>
                 <span className="text-xl font-serif text-white group-hover:text-gold transition-colors">{item.label}</span>
