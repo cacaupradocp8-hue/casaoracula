@@ -250,7 +250,8 @@ export default function AdminCentralEstacao() {
           ativa: data.ativa,
           banner_url: data.banner_url,
           livro_capa_url: data.livro_capa_url,
-          livro_titulo: data.livro_titulo
+          livro_titulo: data.livro_titulo,
+          spotify_playlist_url: data.spotify_playlist_url
         })
         .eq('id', estacaoId);
       if (error) throw error;
