@@ -6,7 +6,9 @@ import { useEstacaoConteudo } from '@/hooks/useClubeTemplate';
 import { EstacaoProgressHeader } from '@/components/clube/rota-template/EstacaoProgressHeader';
 import { EstacaoStepEntrada } from '@/components/clube/rota-template/EstacaoStepEntrada';
 import { EstacaoStepEscuta } from '@/components/clube/rota-template/EstacaoStepEscuta';
+import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/EstacaoStepCamaraEscuta';
 import { Loader2 } from 'lucide-react';
+
 import { Button } from '@/components/ui/button';
 
 export default function ClubeRotaPremium() {
@@ -17,7 +19,8 @@ export default function ClubeRotaPremium() {
 
   const steps = [
     { id: 'entrada', title: 'Entrada' },
-    { id: 'escuta', title: 'Escuta Ritual' },
+    { id: 'escuta_ritual', title: 'Escuta Ritual' },
+    { id: 'camara_escuta', title: 'Câmara da Escuta' },
     { id: 'caso', title: 'Caso Simbólico' },
     { id: 'revelacao', title: 'Revelação' },
     { id: 'ferramenta', title: 'Ferramenta Oracular' },
@@ -27,6 +30,7 @@ export default function ClubeRotaPremium() {
     { id: 'fechamento', title: 'Fechamento Ritual' },
     { id: 'conclusao', title: 'Cartografia' }
   ];
+
 
   if (isLoading) {
     return (
@@ -129,14 +133,21 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
+                {currentStep === 2 && (
+                  <EstacaoStepCamaraEscuta 
+                    estacaoId={estacao.id}
+                  />
+                )}
+
                 {/* Other steps will be implemented following the same pattern */}
-                {currentStep > 1 && (
+                {currentStep > 2 && (
                   <div className="text-center space-y-6">
                     <h2 className="text-3xl font-serif">{steps[currentStep].title}</h2>
                     <p className="text-gold/60 italic">Conteúdo em implementação para o template dinâmico.</p>
                     <Button onClick={handleNext} className="bg-gold text-midnight font-bold">Continuar</Button>
                   </div>
                 )}
+
               </motion.div>
             </AnimatePresence>
           </main>
