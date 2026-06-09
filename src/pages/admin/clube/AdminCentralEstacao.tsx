@@ -169,6 +169,7 @@ export default function AdminCentralEstacao() {
   const [importerOpen, setImporterOpen] = useState(false);
   const [selectedPassoId, setSelectedPassoId] = useState<string | null>(null);
   
+  const [activeTab, setActiveTab] = useState<'conteudo' | 'camara'>('conteudo');
   const [stationForm, setStationForm] = useState({
     titulo: '',
     subtitulo: '',
