@@ -1647,11 +1647,9 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
           </Accordion>
         </CardContent>
       </Card>
-
-        </CardContent>
-      </Card>
     </div>
   );
+}
 }
 
 // Helper para extrair texto de metadata
