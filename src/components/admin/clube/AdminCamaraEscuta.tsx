@@ -154,13 +154,16 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
               <Label>Tipo (Música, Vídeo, Poema)</Label>
               <Input value={editingObra?.tipo} onChange={e => setEditingObra({...editingObra, tipo: e.target.value})} />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 md:col-span-2">
               <AudioUpload
-                label="URL do Áudio Principal (MP3)"
+                label="URL do Áudio Principal (ou link embed do Spotify)"
                 value={editingObra?.url || ''}
                 onChange={(url) => setEditingObra({...editingObra, url})}
                 folder="clube/camara/obras"
               />
+              <p className="text-[10px] text-muted-foreground italic">
+                Para Spotify, cole o link do "src" do código de embed (ex: https://open.spotify.com/embed/...)
+              </p>
             </div>
             <div className="space-y-2">
               <AudioUpload
