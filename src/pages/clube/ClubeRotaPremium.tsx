@@ -146,6 +146,7 @@ export default function ClubeRotaPremium() {
                     spotifyPlaylistUrl={estacao.spotify_playlist_url}
                     spotifyPlaylists={estacao.spotify_playlists}
                     vozClareiraTexto={estacao.voz_clareira_texto}
+                    onNext={handleNext}
                   />
                 )}
 
