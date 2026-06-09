@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
-import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History, X, MapPin } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History, X, MapPin, Loader2, Save } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCamaraObras, CamaraObra } from '@/hooks/useClubeTemplate';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
-import { JardimInput } from '@/components/clube/JardimInput';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
 
 interface EstacaoStepCamaraEscutaProps {
   estacaoId: string;
@@ -93,6 +98,22 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const [showRastro, setShowRastro] = useState(false);
   const [showDevolutiva, setShowDevolutiva] = useState(false);
   const [devolutivaChoice, setDevolutivaChoice] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Form State
+  const [reflexaoPsique, setReflexaoPsique] = useState('');
+  const [reflexaoOficio, setReflexaoOficio] = useState('');
+  const [simbolo, setSimbolo] = useState('');
+  const [intensidade, setIntensidade] = useState('Moderada');
+
+  useEffect(() => {
+    if (activeObra) {
+      setReflexaoPsique('');
+      setReflexaoOficio('');
+      setSimbolo('');
+      setIntensidade('Moderada');
+    }
+  }, [activeObra]);
 
   if (isLoading) {
     return (
@@ -103,8 +124,90 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
     );
   }
 
-  const handleConcluirObra = () => {
-    if (obras && activeObra) {
+  const handleConcluirObra = async () => {
+    if (!obras || !activeObra || !user) return;
+
+    if (!reflexaoPsique.trim() || !reflexaoOficio.trim() || !simbolo.trim()) {
+      toast.error("Por favor, preencha todas as reflexões e o símbolo observado.");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const specific = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+      const puntoId = `escuta:${activeObra.id}`;
+      
+      // 1. Save to clube_camara_escuta_registros
+      const { error: regError } = await (supabase as any)
+        .from('clube_camara_escuta_registros')
+        .insert({
+          user_id: user.id,
+          obra_id: activeObra.id,
+          rota_id: activeObra.rota_id,
+          estacao_id: activeObra.estacao_id,
+          simbolo_observado: simbolo,
+          intensidade_escuta: intensidade,
+          territorio_impactado: specific.territorioImpactado || activeObra.territorio_principal,
+          registro_psique: reflexaoPsique,
+          registro_oficio: reflexaoOficio,
+          data_escuta: new Date().toISOString()
+        });
+
+      if (regError) throw regError;
+
+      // 2. Save to Jardim da Psique
+      const { error: psiqueError } = await (supabase as any)
+        .from('jardim_psique_registros')
+        .insert({
+          user_id: user.id,
+          reflexao_pessoal: reflexaoPsique,
+          titulo: `Escuta: ${activeObra.titulo}`,
+          tipo_registro: 'estacao_rota',
+          ferramenta_chave: puntoId,
+          ferramenta_nome: `Câmara da Escuta: ${activeObra.titulo}`,
+          data_aplicacao: new Date().toISOString()
+        });
+
+      if (psiqueError) throw psiqueError;
+
+      // 3. Save to Jardim do Ofício
+      const { error: oficioError } = await (supabase as any)
+        .from('jardim_do_oficio')
+        .insert({
+          user_id: user.id,
+          reflexao_profissional: reflexaoOficio,
+          contexto_origem: `ponto:${puntoId}`
+        });
+
+      if (oficioError) throw oficioError;
+
+      // 4. Update Cartografia (user_cidadela_estado)
+      const territorio = specific.territorioImpactado || activeObra.territorio_principal;
+      if (territorio) {
+        try {
+          const { data: estado } = await (supabase as any)
+            .from('user_cidadela_estado')
+            .select('distritos_ativados')
+            .eq('user_id', user.id)
+            .maybeSingle();
+            
+          const distritos = estado?.distritos_ativados || [];
+          if (!distritos.includes(territorio)) {
+            await (supabase as any)
+              .from('user_cidadela_estado')
+              .upsert({
+                user_id: user.id,
+                distritos_ativados: [...distritos, territorio],
+                ultimo_movimento: new Date().toISOString()
+              });
+          }
+        } catch (e) {
+          console.error("Erro ao atualizar território na cartografia:", e);
+        }
+      }
+
+      toast.success("Registro concluído com sucesso.");
+
       const currentIndex = obras.findIndex(o => o.id === activeObra.id);
       if (currentIndex === obras.length - 1) {
         setShowDevolutiva(true);
@@ -112,15 +215,44 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       } else {
         setActiveObra(null);
       }
+    } catch (err: any) {
+      console.error('Erro ao salvar registro de escuta:', err);
+      toast.error("Erro ao salvar: " + (err.message || "Erro desconhecido"));
+    } finally {
+      setIsSaving(false);
     }
   };
 
+
   const handleDevolutivaFinal = async (choice: string) => {
+    if (!user) return;
+    
     setDevolutivaChoice(choice);
-    setShowRastro(true);
-    setShowDevolutiva(false);
-    toast.success("Rastro permanente gerado na Cartografia.");
+    setIsSaving(true);
+    
+    try {
+      // Save final choice to cartografia
+      await (supabase as any)
+        .from('user_cidadela_estado')
+        .upsert({
+          user_id: user.id,
+          voz: choice,
+          ultimo_movimento: new Date().toISOString()
+        });
+
+      setShowRastro(true);
+      setShowDevolutiva(false);
+      toast.success("Rastro permanente gerado na Cartografia.");
+    } catch (err) {
+      console.error("Erro ao salvar voz ecoante:", err);
+      // Still show the next step even if this minor update fails
+      setShowRastro(true);
+      setShowDevolutiva(false);
+    } finally {
+      setIsSaving(false);
+    }
   };
+
 
   if (showDevolutiva) {
     return (
@@ -155,7 +287,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <button
                 key={item.id}
                 onClick={() => handleDevolutivaFinal(item.label)}
-                className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all group text-left flex items-center gap-6"
+                disabled={isSaving}
+                className="p-8 rounded-[32px] bg-white/[0.03] border border-white/10 hover:border-gold/40 hover:bg-gold/5 transition-all group text-left flex items-center gap-6 disabled:opacity-50 disabled:cursor-not-allowed"
+
               >
                 <span className="text-3xl">{item.icon}</span>
                 <span className="text-xl font-serif text-white group-hover:text-gold transition-colors">{item.label}</span>
@@ -307,52 +441,127 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
                 <div className="pt-10 border-t border-white/10 space-y-12">
                   <div className="space-y-12">
-                    <div className="space-y-4">
+                    {/* BLOCO 1 — JARDIM DA PSIQUE */}
+                    <div className="space-y-6">
                       <div className="flex items-center gap-3 text-gold/80">
-                        <Heart className="w-4 h-4" />
-                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Pergunta da Psique</h4>
+                        <Heart className="w-5 h-5" />
+                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim da Psique</h4>
                       </div>
-                      <p className="text-2xl text-white font-serif italic leading-relaxed">
-                        “{specific.perguntaPsique || "O que em mim ainda canta, mesmo depois de ter sido ferido?"}”
-                      </p>
-                      <JardimInput 
-                        type="psique"
-                        pergunta={specific.perguntaPsique || "O que em mim ainda canta, mesmo depois de ter sido ferido?"}
-                        estacaoId={estacaoId}
-                        pontoId={`escuta:${activeObra.id}`}
-                        sourceTitle={`Escuta: ${activeObra.titulo}`}
-                      />
+                      <div className="space-y-4">
+                        <Label className="text-xl text-white font-serif italic block">
+                          O que esta obra revelou sobre você?
+                        </Label>
+                        <Textarea 
+                          value={reflexaoPsique}
+                          onChange={(e) => setReflexaoPsique(e.target.value)}
+                          placeholder="Escreva livremente o que surgiu durante a escuta."
+                          className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
+                        />
+                      </div>
                     </div>
 
-                    <div className="space-y-4 pt-8 border-t border-white/5">
-                      <div className="flex items-center gap-3 text-gold/80">
-                        <BookOpen className="w-4 h-4" />
-                        <h4 className="text-xs uppercase tracking-widest font-bold font-serif">Pergunta do Ofício</h4>
+                    {/* BLOCO 2 — JARDIM DO OFÍCIO */}
+                    <div className="space-y-6 pt-8 border-t border-white/5">
+                      <div className="flex items-center gap-3 text-emerald-400/80">
+                        <BookOpen className="w-5 h-5" />
+                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim do Ofício</h4>
                       </div>
-                      <p className="text-2xl text-white font-serif italic leading-relaxed">
-                        “{specific.perguntaOficio || "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?"}”
-                      </p>
-                      <JardimInput 
-                        type="oficio"
-                        pergunta={specific.perguntaOficio || "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?"}
-                        estacaoId={estacaoId}
-                        pontoId={`escuta:${activeObra.id}`}
-                        sourceTitle={`Escuta: ${activeObra.titulo}`}
-                      />
+                      <div className="space-y-4">
+                        <Label className="text-xl text-white font-serif italic block">
+                          O que esta obra revelou sobre sua escuta profissional?
+                        </Label>
+                        <Textarea 
+                          value={reflexaoOficio}
+                          onChange={(e) => setReflexaoOficio(e.target.value)}
+                          placeholder="Que movimentos, padrões ou narrativas você reconhece nas mulheres que acompanha?"
+                          className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-emerald-500/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* BLOCO 3 — SÍMBOLO OBSERVADO */}
+                    <div className="space-y-6 pt-8 border-t border-white/5">
+                      <div className="flex items-center gap-3 text-blue-400/80">
+                        <Sparkles className="w-5 h-5" />
+                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Símbolo Observado</h4>
+                      </div>
+                      <div className="space-y-4">
+                        <Label className="text-xl text-white font-serif italic block">
+                          Qual símbolo permaneceu ecoando?
+                        </Label>
+                        <div className="space-y-4">
+                          <Input 
+                            value={simbolo}
+                            onChange={(e) => setSimbolo(e.target.value)}
+                            placeholder="Escreva o símbolo principal (ex: floresta, ponte, casa...)"
+                            className="bg-white/[0.03] border-white/10 h-14 text-white placeholder:text-white/20 focus:border-blue-400/30 rounded-full px-8 text-lg font-serif italic"
+                          />
+                          <div className="flex flex-wrap gap-2 px-2">
+                            {["floresta", "ponte", "casa", "ferida", "lobo", "mar", "porta", "espelho", "ossos"].map(s => (
+                              <button 
+                                key={s}
+                                onClick={() => setSimbolo(s)}
+                                className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-gold hover:border-gold/30 transition-all"
+                              >
+                                {s}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* BLOCO 4 — INTENSIDADE DA ESCUTA */}
+                    <div className="space-y-6 pt-8 border-t border-white/5">
+                      <div className="flex items-center gap-3 text-purple-400/80">
+                        <Music className="w-5 h-5" />
+                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Intensidade da Escuta</h4>
+                      </div>
+                      <div className="space-y-6">
+                        <Label className="text-xl text-white font-serif italic block">
+                          Como esta obra impactou sua percepção?
+                        </Label>
+                        <RadioGroup 
+                          value={intensidade} 
+                          onValueChange={setIntensidade}
+                          className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                        >
+                          {["Leve", "Moderada", "Profunda", "Transformadora"].map((opt) => (
+                            <div key={opt} className="relative">
+                              <RadioGroupItem value={opt} id={opt} className="peer sr-only" />
+                              <Label
+                                htmlFor={opt}
+                                className="flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] peer-data-[state=checked]:border-gold/50 peer-data-[state=checked]:bg-gold/5 transition-all cursor-pointer text-center group"
+                              >
+                                <span className="text-xs uppercase tracking-widest font-bold text-white/40 peer-data-[state=checked]:text-gold group-hover:text-white/60 transition-colors">
+                                  {opt}
+                                </span>
+                              </Label>
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center pt-8">
                <Button 
                 onClick={handleConcluirObra}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs transition-all shadow-xl shadow-gold/10"
+                disabled={isSaving}
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-20 rounded-full uppercase tracking-[0.2em] text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
               >
-                Concluir Registro e Avançar na Sequência
+                {isSaving ? (
+                  <Loader2 className="w-5 h-5 animate-spin mr-3" />
+                ) : (
+                  <Save className="w-5 h-5 mr-3" />
+                )}
+                Concluir Escuta e Avançar na Sequência
               </Button>
             </div>
+
           </div>
         </div>
       </motion.div>
