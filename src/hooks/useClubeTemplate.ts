@@ -36,6 +36,7 @@ export interface Estacao {
   audio_voz_clareira_url: string;
   livro_imagem_banner_url: string;
   banner_url?: string;
+  spotify_playlist_url?: string;
 }
 
 export interface CamaraObra {

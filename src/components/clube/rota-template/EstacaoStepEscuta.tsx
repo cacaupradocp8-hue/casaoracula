@@ -2,6 +2,7 @@ import React from 'react';
 import { Headphones, Sparkles, BookOpen } from 'lucide-react';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { RotaLivroBanner } from './RotaLivroBanner';
+import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
 
 interface EstacaoStepEscutaProps {
   estacaoId: string;
@@ -9,6 +10,7 @@ interface EstacaoStepEscutaProps {
   livroCapaUrl: string;
   livroBannerUrl: string;
   audioVozClareiraUrl?: string;
+  spotifyPlaylistUrl?: string;
 }
 
 export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
@@ -16,7 +18,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   obraRegente,
   livroCapaUrl,
   livroBannerUrl,
-  audioVozClareiraUrl
+  audioVozClareiraUrl,
+  spotifyPlaylistUrl
 }) => {
   return (
     <div className="space-y-10 text-center max-w-2xl mx-auto">
@@ -39,6 +42,10 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         <EscutaPremium 
           audioUrl={audioVozClareiraUrl}
         />
+        
+        {spotifyPlaylistUrl && (
+          <SpotifyPlaylistEmbed url={spotifyPlaylistUrl} />
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-8">

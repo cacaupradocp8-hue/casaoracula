@@ -4479,6 +4479,7 @@ export type Database = {
           revelacao: Json | null
           rota_id: string | null
           slug: string | null
+          spotify_playlist_url: string | null
           status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4528,6 +4529,7 @@ export type Database = {
           revelacao?: Json | null
           rota_id?: string | null
           slug?: string | null
+          spotify_playlist_url?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4577,6 +4579,7 @@ export type Database = {
           revelacao?: Json | null
           rota_id?: string | null
           slug?: string | null
+          spotify_playlist_url?: string | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
           titulo?: string
