@@ -197,10 +197,16 @@ export function AudioUpload({
         <div className="space-y-2">
           <div className="flex items-center gap-2 p-3 rounded-lg border bg-muted/50">
             <Music className="w-5 h-5 text-muted-foreground shrink-0" />
-            <audio controls className="flex-1 h-8">
-              <source src={value} />
-              Seu navegador não suporta áudio.
-            </audio>
+            {value.includes('open.spotify.com/embed') ? (
+              <div className="flex-1 text-xs text-gold font-bold uppercase tracking-widest">
+                Player do Spotify Integrado
+              </div>
+            ) : (
+              <audio controls className="flex-1 h-8">
+                <source src={value} />
+                Seu navegador não suporta áudio.
+              </audio>
+            )}
             <Button
               type="button"
               variant="ghost"
