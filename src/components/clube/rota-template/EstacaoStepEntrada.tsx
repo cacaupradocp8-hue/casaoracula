@@ -1,5 +1,5 @@
 import React from 'react';
-import { TreePine, Ghost, Sparkles, BookOpen, Map, Info, X, Moon } from 'lucide-react';
+import { TreePine, Ghost, Sparkles, BookOpen, Map, Info, X, Moon, Music, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -129,7 +129,6 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
               key={idx}
               onClick={() => {
                 if (item.path) navigate(item.path);
-                else if (item.step !== undefined) onJumpToStep(item.step);
               }}
               className="group flex flex-col items-center gap-2 transition-all"
             >
