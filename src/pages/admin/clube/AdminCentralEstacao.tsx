@@ -177,7 +177,8 @@ export default function AdminCentralEstacao() {
     ativa: false,
     banner_url: '',
     livro_capa_url: '',
-    livro_titulo: ''
+    livro_titulo: '',
+    spotify_playlist_url: ''
   });
 
   // 1. Fetch Estação
