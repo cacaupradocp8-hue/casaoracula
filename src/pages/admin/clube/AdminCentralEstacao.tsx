@@ -477,7 +477,9 @@ export default function AdminCentralEstacao() {
             </div>
           )}
         </div>
-      </div>
+      ) : (
+        <AdminCamaraEscuta estacaoId={estacaoId!} />
+      )}
 
       {/* Edit Station Dialog */}
       <ImportadorEstacao
