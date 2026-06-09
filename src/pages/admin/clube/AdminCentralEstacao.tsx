@@ -180,7 +180,11 @@ export default function AdminCentralEstacao() {
     banner_url: '',
     livro_capa_url: '',
     livro_titulo: '',
-    spotify_playlist_url: ''
+    spotify_playlist_url: '',
+    voz_clareira_texto: '',
+    audio_abertura_url: '',
+    audio_floresta_url: '',
+    spotify_playlists: [] as any[]
   });
 
   // 1. Fetch Estação
@@ -226,7 +230,11 @@ export default function AdminCentralEstacao() {
         banner_url: estacao.banner_url || '',
         livro_capa_url: estacao.livro_capa_url || '',
         livro_titulo: estacao.livro_titulo || '',
-        spotify_playlist_url: estacao.spotify_playlist_url || ''
+        spotify_playlist_url: estacao.spotify_playlist_url || '',
+        voz_clareira_texto: estacao.voz_clareira_texto || '',
+        audio_abertura_url: estacao.audio_abertura_url || '',
+        audio_floresta_url: estacao.audio_floresta_url || '',
+        spotify_playlists: (estacao.spotify_playlists as any[]) || []
       });
     }
   }, [estacao]);
@@ -253,7 +261,11 @@ export default function AdminCentralEstacao() {
           banner_url: data.banner_url,
           livro_capa_url: data.livro_capa_url,
           livro_titulo: data.livro_titulo,
-          spotify_playlist_url: data.spotify_playlist_url
+          spotify_playlist_url: data.spotify_playlist_url,
+          voz_clareira_texto: data.voz_clareira_texto,
+          audio_abertura_url: data.audio_abertura_url,
+          audio_floresta_url: data.audio_floresta_url,
+          spotify_playlists: data.spotify_playlists
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -492,46 +504,158 @@ export default function AdminCentralEstacao() {
       />
 
       <Dialog open={editStationOpen} onOpenChange={setEditStationOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Configurações da Estação</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4 max-h-[70vh] overflow-y-auto pr-2 text-left">
-            <div className="space-y-2">
-              <Label>Obra / Livro Base</Label>
-              <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} placeholder="Ex: Mulheres que Correm com os Lobos" />
-            </div>
-            <div className="space-y-2">
-              <Label>Título da Estação</Label>
-              <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
-            </div>
-            <div className="space-y-2">
-              <Label>Subtítulo</Label>
-              <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
-            </div>
-            <div className="space-y-2">
-              <Label>Banner URL (Fundo Imersivo)</Label>
-              <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} placeholder="https://..." />
-            </div>
-            <div className="space-y-2">
-              <Label>Playlist do Spotify URL</Label>
-              <Input value={stationForm.spotify_playlist_url} onChange={e => setStationForm({...stationForm, spotify_playlist_url: e.target.value})} placeholder="https://open.spotify.com/playlist/..." />
-              <p className="text-[10px] text-muted-foreground italic">O player aparecerá na seção "Voz da Clareira" da estação.</p>
-            </div>
-            <div className="flex items-center gap-6 pt-2">
-              <div className="flex items-center gap-2">
-                <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
-                <Label>Publicada</Label>
-              </div>
-              <div className="flex items-center gap-2">
-                <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
-                <Label>Ativa</Label>
-              </div>
-            </div>
+          <div className="space-y-6 py-4 text-left">
+            <Accordion type="single" collapsible defaultValue="geral">
+              <AccordionItem value="geral">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Informações Gerais</AccordionTrigger>
+                <AccordionContent className="space-y-4 pt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Obra / Livro Base</Label>
+                      <Input value={stationForm.livro_titulo} onChange={e => setStationForm({...stationForm, livro_titulo: e.target.value})} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Título da Estação</Label>
+                      <Input value={stationForm.titulo} onChange={e => setStationForm({...stationForm, titulo: e.target.value})} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Subtítulo</Label>
+                    <Input value={stationForm.subtitulo} onChange={e => setStationForm({...stationForm, subtitulo: e.target.value})} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Banner URL (Fundo Imersivo)</Label>
+                    <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} />
+                  </div>
+                  <div className="flex items-center gap-6 pt-2">
+                    <div className="flex items-center gap-2">
+                      <Switch checked={stationForm.publicada} onCheckedChange={v => setStationForm({...stationForm, publicada: v})} />
+                      <Label>Publicada</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch checked={stationForm.ativa} onCheckedChange={v => setStationForm({...stationForm, ativa: v})} />
+                      <Label>Ativa</Label>
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="voz">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Voz da Clareira e Playlists</AccordionTrigger>
+                <AccordionContent className="space-y-4 pt-2">
+                  <div className="space-y-2">
+                    <Label>Texto Poético (Voz da Clareira)</Label>
+                    <Textarea 
+                      value={stationForm.voz_clareira_texto} 
+                      onChange={e => setStationForm({...stationForm, voz_clareira_texto: e.target.value})} 
+                      className="min-h-[100px] font-serif italic" 
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Áudio Abertura (.mp3)</Label>
+                      <Input value={stationForm.audio_abertura_url} onChange={e => setStationForm({...stationForm, audio_abertura_url: e.target.value})} placeholder="URL do áudio de abertura imersiva" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Áudio Voz da Floresta (.mp3)</Label>
+                      <Input value={stationForm.audio_floresta_url} onChange={e => setStationForm({...stationForm, audio_floresta_url: e.target.value})} placeholder="URL do áudio Voz da Floresta" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-primary/5">
+                    <div className="flex items-center justify-between">
+                      <Label className="font-bold">Playlists do Spotify</Label>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-[10px] gap-2 border-primary/20"
+                        onClick={() => {
+                          const newList = [...stationForm.spotify_playlists, { url: '', label: '', territorio: '' }];
+                          setStationForm({...stationForm, spotify_playlists: newList});
+                        }}
+                      >
+                        <Plus className="w-3 h-3" /> Add Playlist
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {stationForm.spotify_playlists.map((pl: any, idx: number) => (
+                        <div key={idx} className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3 relative group">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="absolute top-2 right-2 h-6 w-6 text-primary/20 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              const newList = stationForm.spotify_playlists.filter((_: any, i: number) => i !== idx);
+                              setStationForm({...stationForm, spotify_playlists: newList});
+                            }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Label / Nome</Label>
+                              <Input 
+                                value={pl.label} 
+                                onChange={e => {
+                                  const newList = [...stationForm.spotify_playlists];
+                                  newList[idx].label = e.target.value;
+                                  setStationForm({...stationForm, spotify_playlists: newList});
+                                }} 
+                                className="text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Território</Label>
+                              <Input 
+                                value={pl.territorio} 
+                                onChange={e => {
+                                  const newList = [...stationForm.spotify_playlists];
+                                  newList[idx].territorio = e.target.value;
+                                  setStationForm({...stationForm, spotify_playlists: newList});
+                                }} 
+                                className="text-xs"
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase">Spotify URL</Label>
+                            <Input 
+                              value={pl.url} 
+                              onChange={e => {
+                                const val = e.target.value;
+                                if (val && !val.includes('spotify.com/playlist/') && !val.includes('spotify:playlist:')) {
+                                  toast({ title: 'Aviso', description: 'Link inválido', variant: 'destructive' });
+                                }
+                                const newList = [...stationForm.spotify_playlists];
+                                newList[idx].url = val;
+                                setStationForm({...stationForm, spotify_playlists: newList});
+                              }} 
+                              className="text-xs font-mono"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditStationOpen(false)}>Cancelar</Button>
-            <Button className="bg-gold text-black font-bold" onClick={() => updateStationMutation.mutate(stationForm)}>Salvar</Button>
+            <Button 
+              className="bg-gold text-black font-bold" 
+              disabled={updateStationMutation.isPending}
+              onClick={() => updateStationMutation.mutate(stationForm)}
+            >
+              {updateStationMutation.isPending && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+              Salvar Configurações
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1521,7 +1645,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-
         </CardContent>
       </Card>
     </div>

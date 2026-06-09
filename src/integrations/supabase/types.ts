@@ -4183,6 +4183,7 @@ export type Database = {
       clube_camara_escuta_obras: {
         Row: {
           ativo: boolean | null
+          audio_regente_url: string | null
           autor: string | null
           created_at: string | null
           estacao_id: string | null
@@ -4203,6 +4204,7 @@ export type Database = {
         }
         Insert: {
           ativo?: boolean | null
+          audio_regente_url?: string | null
           autor?: string | null
           created_at?: string | null
           estacao_id?: string | null
@@ -4223,6 +4225,7 @@ export type Database = {
         }
         Update: {
           ativo?: boolean | null
+          audio_regente_url?: string | null
           autor?: string | null
           created_at?: string | null
           estacao_id?: string | null
@@ -4501,6 +4504,8 @@ export type Database = {
           aplicar_sessao_pergunta: string | null
           aplicar_sessao_risco: string | null
           ativa: boolean | null
+          audio_abertura_url: string | null
+          audio_floresta_url: string | null
           audio_voz_clareira_url: string | null
           banner_url: string | null
           cartografia_id: string | null
@@ -4531,6 +4536,7 @@ export type Database = {
           rota_id: string | null
           slug: string | null
           spotify_playlist_url: string | null
+          spotify_playlists: Json | null
           status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4538,6 +4544,7 @@ export type Database = {
           traducao_circulo: string | null
           traducao_sessao: string | null
           updated_at: string
+          voz_clareira_texto: string | null
         }
         Insert: {
           aplicacao_acao?: string | null
@@ -4551,6 +4558,8 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          audio_abertura_url?: string | null
+          audio_floresta_url?: string | null
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
@@ -4581,6 +4590,7 @@ export type Database = {
           rota_id?: string | null
           slug?: string | null
           spotify_playlist_url?: string | null
+          spotify_playlists?: Json | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
           titulo: string
@@ -4588,6 +4598,7 @@ export type Database = {
           traducao_circulo?: string | null
           traducao_sessao?: string | null
           updated_at?: string
+          voz_clareira_texto?: string | null
         }
         Update: {
           aplicacao_acao?: string | null
@@ -4601,6 +4612,8 @@ export type Database = {
           aplicar_sessao_pergunta?: string | null
           aplicar_sessao_risco?: string | null
           ativa?: boolean | null
+          audio_abertura_url?: string | null
+          audio_floresta_url?: string | null
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
@@ -4631,6 +4644,7 @@ export type Database = {
           rota_id?: string | null
           slug?: string | null
           spotify_playlist_url?: string | null
+          spotify_playlists?: Json | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
           titulo?: string
@@ -4638,6 +4652,7 @@ export type Database = {
           traducao_circulo?: string | null
           traducao_sessao?: string | null
           updated_at?: string
+          voz_clareira_texto?: string | null
         }
         Relationships: [
           {

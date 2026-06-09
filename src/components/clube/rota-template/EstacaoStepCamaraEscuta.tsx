@@ -91,6 +91,16 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               titulo={activeObra.titulo}
             />
 
+            {activeObra.audio_regente_url && (
+              <div className="pt-4 border-t border-white/5 space-y-2">
+                <span className="text-[9px] uppercase tracking-widest font-bold text-white/30">Áudio Regente da Obra</span>
+                <EscutaPremium 
+                  audioUrl={activeObra.audio_regente_url}
+                  titulo={`Regente: ${activeObra.titulo}`}
+                />
+              </div>
+            )}
+
             <div className="pt-8 border-t border-white/10 space-y-8">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gold/80">
