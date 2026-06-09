@@ -268,6 +268,7 @@ export default function AdminCentralEstacao() {
           voz_clareira_texto: data.voz_clareira_texto,
           audio_abertura_url: data.audio_abertura_url,
           audio_floresta_url: data.audio_floresta_url,
+          audio_voz_clareira_url: data.audio_voz_clareira_url,
           spotify_playlists: data.spotify_playlists
         })
         .eq('id', estacaoId);
