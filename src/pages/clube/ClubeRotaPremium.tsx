@@ -9,8 +9,9 @@ import { EstacaoStepEscuta } from '@/components/clube/rota-template/EstacaoStepE
 import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/EstacaoStepCamaraEscuta';
 import { EstacaoStepTraducaoOracular } from '@/components/clube/rota-template/EstacaoStepTraducaoOracular';
 import { Loader2 } from 'lucide-react';
-
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
