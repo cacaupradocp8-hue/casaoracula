@@ -1,0 +1,1 @@
+ALTER TABLE public.clube_estacoes ADD COLUMN IF NOT EXISTS spotify_playlist_url TEXT;
