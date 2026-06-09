@@ -7,6 +7,7 @@ import { EstacaoProgressHeader } from '@/components/clube/rota-template/EstacaoP
 import { EstacaoStepEntrada } from '@/components/clube/rota-template/EstacaoStepEntrada';
 import { EstacaoStepEscuta } from '@/components/clube/rota-template/EstacaoStepEscuta';
 import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/EstacaoStepCamaraEscuta';
+import { EstacaoStepTraducaoOracular } from '@/components/clube/rota-template/EstacaoStepTraducaoOracular';
 import { Loader2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ export default function ClubeRotaPremium() {
     { id: 'entrada', title: 'Entrada' },
     { id: 'escuta_ritual', title: 'Escuta Ritual' },
     { id: 'camara_escuta', title: 'Câmara da Escuta' },
+    { id: 'traducao_oracular', title: 'Tradução Oracular' },
     { id: 'caso', title: 'Caso Simbólico' },
     { id: 'revelacao', title: 'Revelação' },
     { id: 'ferramenta', title: 'Ferramenta Oracular' },
@@ -139,8 +141,15 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
+                {currentStep === 3 && (
+                  <EstacaoStepTraducaoOracular 
+                    estacaoId={estacao.id}
+                    onNext={handleNext}
+                  />
+                )}
+                
                 {/* Other steps will be implemented following the same pattern */}
-                {currentStep > 2 && (
+                {currentStep > 3 && (
                   <div className="text-center space-y-6">
                     <h2 className="text-3xl font-serif">{steps[currentStep].title}</h2>
                     <p className="text-gold/60 italic">Conteúdo em implementação para o template dinâmico.</p>
