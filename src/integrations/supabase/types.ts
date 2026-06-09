@@ -4188,10 +4188,13 @@ export type Database = {
           created_at: string | null
           estacao_id: string | null
           funcao_escuta: string
+          guia_escuta: string[] | null
+          guia_evitar: string[] | null
           id: string
           ordem: number | null
           pergunta_oficio: string
           pergunta_psique: string
+          rastro_simbolo: string | null
           reflexao_opcional: string | null
           rota_id: string | null
           territorio_principal: string
@@ -4209,10 +4212,13 @@ export type Database = {
           created_at?: string | null
           estacao_id?: string | null
           funcao_escuta: string
+          guia_escuta?: string[] | null
+          guia_evitar?: string[] | null
           id?: string
           ordem?: number | null
           pergunta_oficio: string
           pergunta_psique: string
+          rastro_simbolo?: string | null
           reflexao_opcional?: string | null
           rota_id?: string | null
           territorio_principal: string
@@ -4230,10 +4236,13 @@ export type Database = {
           created_at?: string | null
           estacao_id?: string | null
           funcao_escuta?: string
+          guia_escuta?: string[] | null
+          guia_evitar?: string[] | null
           id?: string
           ordem?: number | null
           pergunta_oficio?: string
           pergunta_psique?: string
+          rastro_simbolo?: string | null
           reflexao_opcional?: string | null
           rota_id?: string | null
           territorio_principal?: string

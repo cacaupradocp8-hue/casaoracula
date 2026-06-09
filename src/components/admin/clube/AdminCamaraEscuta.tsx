@@ -193,6 +193,37 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
 
             <div className="space-y-2 md:col-span-2 border-t border-primary/5 pt-4">
               <h4 className="text-xs uppercase tracking-widest text-gold font-bold mb-2 flex items-center gap-2">
+                <Music className="w-3 h-3" /> Guia de Escuta (Formação Simbólica)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>O que escutar (um por linha)</Label>
+                  <Textarea 
+                    value={editingObra?.guia_escuta?.join('\n')} 
+                    onChange={e => setEditingObra({...editingObra, guia_escuta: e.target.value.split('\n')})} 
+                    className="h-24" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>O que evitar (um por linha)</Label>
+                  <Textarea 
+                    value={editingObra?.guia_evitar?.join('\n')} 
+                    onChange={e => setEditingObra({...editingObra, guia_evitar: e.target.value.split('\n')})} 
+                    className="h-24" 
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label>Rastro Simbólico (Ex: 🩸 A Ferida Habitável)</Label>
+                  <Input 
+                    value={editingObra?.rastro_simbolo || ''} 
+                    onChange={e => setEditingObra({...editingObra, rastro_simbolo: e.target.value})} 
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 md:col-span-2 border-t border-primary/5 pt-4">
+              <h4 className="text-xs uppercase tracking-widest text-gold font-bold mb-2 flex items-center gap-2">
                 <Sparkles className="w-3 h-3" /> Registros no Jardim
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
