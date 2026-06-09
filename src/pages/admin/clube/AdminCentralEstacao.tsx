@@ -185,6 +185,7 @@ export default function AdminCentralEstacao() {
     voz_clareira_texto: '',
     audio_abertura_url: '',
     audio_floresta_url: '',
+    audio_voz_clareira_url: '',
     spotify_playlists: [] as any[]
   });
 
