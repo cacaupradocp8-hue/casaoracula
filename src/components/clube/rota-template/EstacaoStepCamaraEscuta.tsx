@@ -354,13 +354,13 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   if (activeObra) {
     const specificFromCode = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
     
-    // Combine data from database and code (fallback)
+    // Prioritizar dados do banco (cadastrados no Admin)
     const displayData = {
-      oQueEscutar: (activeObra as any).guia_escuta?.length > 0 ? (activeObra as any).guia_escuta : specificFromCode.oQueEscutar,
-      oQueEvitar: (activeObra as any).guia_evitar?.length > 0 ? (activeObra as any).guia_evitar : specificFromCode.oQueEvitar,
-      rastroSimbolo: (activeObra as any).rastro_simbolo || specificFromCode.rastroSimbolo,
-      perguntaPsique: (activeObra as any).pergunta_psique || specificFromCode.perguntaPsique,
-      perguntaOficio: (activeObra as any).pergunta_oficio || specificFromCode.perguntaOficio,
+      oQueEscutar: (activeObra.guia_escuta && activeObra.guia_escuta.length > 0) ? activeObra.guia_escuta : specificFromCode.oQueEscutar,
+      oQueEvitar: (activeObra.guia_evitar && activeObra.guia_evitar.length > 0) ? activeObra.guia_evitar : specificFromCode.oQueEvitar,
+      rastroSimbolo: activeObra.rastro_simbolo || specificFromCode.rastroSimbolo,
+      perguntaPsique: activeObra.pergunta_psique || specificFromCode.perguntaPsique,
+      perguntaOficio: activeObra.pergunta_oficio || specificFromCode.perguntaOficio,
       territorioImpactado: activeObra.territorio_principal || specificFromCode.territorioImpactado
     };
 
