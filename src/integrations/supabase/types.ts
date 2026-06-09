@@ -4402,6 +4402,57 @@ export type Database = {
           },
         ]
       }
+      clube_escuta_registros_v2: {
+        Row: {
+          created_at: string | null
+          emocao_predominante: string | null
+          estacao_id: string
+          id: string
+          metadata: Json | null
+          obra_id: string
+          simbolo_percebido: string | null
+          territorio_impactado: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          emocao_predominante?: string | null
+          estacao_id: string
+          id?: string
+          metadata?: Json | null
+          obra_id: string
+          simbolo_percebido?: string | null
+          territorio_impactado?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          emocao_predominante?: string | null
+          estacao_id?: string
+          id?: string
+          metadata?: Json | null
+          obra_id?: string
+          simbolo_percebido?: string | null
+          territorio_impactado?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_escuta_registros_v2_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_escuta_registros_v2_obra_id_fkey"
+            columns: ["obra_id"]
+            isOneToOne: false
+            referencedRelation: "clube_camara_escuta_obras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_estacao_registros: {
         Row: {
           created_at: string
