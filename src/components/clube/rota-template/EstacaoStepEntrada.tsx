@@ -5,12 +5,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
+
 interface EstacaoStepEntradaProps {
   titulo: string;
   fraseAbertura: string;
   fraseVozClareira: string;
   onNext: () => void;
   onJumpToStep: (step: number) => void;
+  audioAberturaUrl?: string;
+  imagemEscuta?: string;
+  obraRegente?: string;
   infoContent?: {
     distrito: string;
     tese: string;
@@ -24,30 +29,52 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   fraseVozClareira,
   onNext,
   onJumpToStep,
+  audioAberturaUrl,
+  imagemEscuta,
+  obraRegente,
   infoContent
 }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-10 text-center max-w-2xl mx-auto">
-      <div className="space-y-6">
-        <h1 className="text-5xl md:text-6xl font-serif text-white leading-tight">{titulo}</h1>
-        <div className="w-24 h-px bg-gold/40 mx-auto" />
-        <p className="text-white font-serif text-lg md:text-xl leading-relaxed max-w-xl mx-auto">
-          {fraseAbertura}
-        </p>
-        <p className="text-gold font-serif italic text-lg leading-relaxed max-w-xl mx-auto">
-          {fraseVozClareira}
-        </p>
+    <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
+      {/* Header Info - Minimalist as per screenshot */}
+      <div className="space-y-4 pt-4">
+        <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold flex items-center justify-center gap-3">
+          <span className="w-8 h-px bg-gold/30" />
+          {obraRegente || "Obra Regente"}
+          <span className="w-8 h-px bg-gold/30" />
+        </h4>
+        <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight leading-tight">
+          Estação — <span className="italic">{titulo.replace('Estação', '').replace('—', '').trim()}</span>
+        </h1>
       </div>
 
-      <Button 
-        className="rounded-full bg-gold text-[#020617] font-bold px-8 h-11 hover:bg-gold/90 shadow-[0_8px_30px_rgba(212,175,55,0.2)] active:scale-95 transition-all text-xs tracking-widest uppercase"
-        onClick={onNext}
-      >
-        <TreePine className="w-4 h-4 mr-2" />
-        Entrar na Clareira
-      </Button>
+      {/* Main Player - The "Abertura" experience */}
+      <div className="relative">
+        <EscutaPremium 
+          audioUrl={audioAberturaUrl} 
+          titulo="Abertura da Estação" 
+          imagemEscuta={imagemEscuta}
+          className="py-0"
+        />
+      </div>
+
+      <div className="flex flex-col items-center gap-8">
+        <div className="space-y-4 max-w-xl">
+          <p className="text-white/80 font-serif text-lg leading-relaxed italic">
+            "{fraseAbertura}"
+          </p>
+        </div>
+
+        <Button 
+          className="rounded-full bg-gold text-[#020617] font-bold px-10 h-14 hover:bg-gold/90 shadow-[0_10px_40px_rgba(212,175,55,0.3)] active:scale-95 transition-all text-xs tracking-[0.2em] uppercase group"
+          onClick={onNext}
+        >
+          <TreePine className="w-5 h-5 mr-3 group-hover:rotate-12 transition-transform" />
+          Entrar na Clareira
+        </Button>
+      </div>
 
       <div className="pt-8 border-t border-white/10">
         <p className="text-[10px] text-white/50 uppercase tracking-[0.3em] font-bold mb-6">Acessos Rápidos</p>
