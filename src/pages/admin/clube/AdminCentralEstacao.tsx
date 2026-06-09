@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import ImportadorEstacao from "@/components/admin/clube/ImportadorEstacao";
+import { AdminCamaraEscuta } from "@/components/admin/clube/AdminCamaraEscuta";
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -169,6 +170,7 @@ export default function AdminCentralEstacao() {
   const [importerOpen, setImporterOpen] = useState(false);
   const [selectedPassoId, setSelectedPassoId] = useState<string | null>(null);
   
+  const [activeTab, setActiveTab] = useState<'conteudo' | 'camara'>('conteudo');
   const [stationForm, setStationForm] = useState({
     titulo: '',
     subtitulo: '',
@@ -177,7 +179,8 @@ export default function AdminCentralEstacao() {
     ativa: false,
     banner_url: '',
     livro_capa_url: '',
-    livro_titulo: ''
+    livro_titulo: '',
+    spotify_playlist_url: ''
   });
 
   // 1. Fetch Estação
@@ -222,7 +225,8 @@ export default function AdminCentralEstacao() {
         ativa: estacao.ativa || false,
         banner_url: estacao.banner_url || '',
         livro_capa_url: estacao.livro_capa_url || '',
-        livro_titulo: estacao.livro_titulo || ''
+        livro_titulo: estacao.livro_titulo || '',
+        spotify_playlist_url: estacao.spotify_playlist_url || ''
       });
     }
   }, [estacao]);
@@ -248,7 +252,8 @@ export default function AdminCentralEstacao() {
           ativa: data.ativa,
           banner_url: data.banner_url,
           livro_capa_url: data.livro_capa_url,
-          livro_titulo: data.livro_titulo
+          livro_titulo: data.livro_titulo,
+          spotify_playlist_url: data.spotify_playlist_url
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -385,8 +390,30 @@ export default function AdminCentralEstacao() {
         </div>
       </div>
 
-      {/* Unique Editor Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Tabs */}
+      <div className="flex items-center gap-4 mb-8 border-b border-primary/10">
+        <button 
+          onClick={() => setActiveTab('conteudo')}
+          className={cn(
+            "pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2",
+            activeTab === 'conteudo' ? "border-gold text-gold" : "border-transparent text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Conteúdo da Rota
+        </button>
+        <button 
+          onClick={() => setActiveTab('camara')}
+          className={cn(
+            "pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2",
+            activeTab === 'camara' ? "border-gold text-gold" : "border-transparent text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Câmara da Escuta (Obras)
+        </button>
+      </div>
+
+      {activeTab === 'conteudo' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Steps List */}
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
@@ -452,6 +479,9 @@ export default function AdminCentralEstacao() {
           )}
         </div>
       </div>
+      ) : (
+        <AdminCamaraEscuta estacaoId={estacaoId!} />
+      )}
 
       {/* Edit Station Dialog */}
       <ImportadorEstacao
@@ -484,8 +514,9 @@ export default function AdminCentralEstacao() {
               <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} placeholder="https://..." />
             </div>
             <div className="space-y-2">
-              <Label>Capa do Livro URL (Miniatura)</Label>
-              <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} placeholder="https://..." />
+              <Label>Playlist do Spotify URL</Label>
+              <Input value={stationForm.spotify_playlist_url} onChange={e => setStationForm({...stationForm, spotify_playlist_url: e.target.value})} placeholder="https://open.spotify.com/playlist/..." />
+              <p className="text-[10px] text-muted-foreground italic">O player aparecerá na seção "Voz da Clareira" da estação.</p>
             </div>
             <div className="flex items-center gap-6 pt-2">
               <div className="flex items-center gap-2">
