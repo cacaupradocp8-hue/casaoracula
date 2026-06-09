@@ -142,44 +142,27 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           ))}
         </div>
 
-        {infoContent && (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button 
-                variant="ghost" 
-                className="text-gold hover:text-white hover:bg-gold/10 text-xs md:text-sm uppercase tracking-[0.2em] font-black gap-3 py-6 px-8 border border-gold/30 rounded-2xl animate-pulse bg-gold/5"
-              >
-                <Info className="w-5 h-5" /> ABRA, ENTRE, OLHE
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="bg-[#020617] border border-gold/20 text-white max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 rounded-3xl">
-              <DialogHeader className="p-8 pb-4">
-                <DialogTitle className="text-2xl font-serif text-gold flex items-center gap-3">
-                  <TreePine className="w-6 h-6" /> Cartografia da Estação
-                </DialogTitle>
-              </DialogHeader>
-              <ScrollArea className="flex-grow p-8 pt-0">
-                <div className="space-y-8 font-serif leading-relaxed text-white/80 pb-8">
-                  <div className="space-y-4">
-                    <span className="text-gold/60 text-[10px] uppercase tracking-widest font-bold">Localização</span>
-                    <h3 className="text-2xl text-white">{titulo}</h3>
-                    <p className="text-gold italic">{infoContent.distrito}</p>
-                    <div className="bg-white/5 border-l-2 border-gold/40 p-6 rounded-r-2xl space-y-4">
-                      {infoContent.detalhes.map((d, i) => <p key={i}>{d}</p>)}
-                    </div>
-                  </div>
-                  <div className="space-y-4 pt-4 border-t border-white/10">
-                    <div className="flex items-center gap-2 text-gold">
-                      <Moon className="w-4 h-4" />
-                      <h4 className="text-sm font-bold uppercase tracking-widest">Tese Central</h4>
-                    </div>
-                    <p className="text-xl italic text-white/90">{infoContent.tese}</p>
-                  </div>
-                </div>
-              </ScrollArea>
-            </DialogContent>
-          </Dialog>
-        )}
+        <div className="mt-20 flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
+          {[
+            { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
+            { icon: Map, label: 'Atlas', path: '/clube/rota-dos-lobos' }
+          ].map((item, idx) => (
+            <button
+              key={idx}
+              onClick={() => {
+                if (item.path) navigate(item.path);
+              }}
+              className="group flex flex-col items-center gap-2 transition-all"
+            >
+              <div className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
+                <item.icon className="w-4 h-4 text-gold/60 group-hover:text-gold" />
+              </div>
+              <span className="text-[8px] text-white/60 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
