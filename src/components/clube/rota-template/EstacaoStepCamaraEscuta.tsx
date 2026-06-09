@@ -606,16 +606,31 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 px-4">
-        {obras?.map((obra, index) => (
-          <motion.button
-            key={obra.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            whileHover={{ y: -8, scale: 1.02 }}
-            onClick={() => setActiveObra(obra)}
-            className="group relative overflow-hidden bg-white/[0.02] border border-white/5 rounded-[40px] p-10 text-left transition-all hover:bg-gold/[0.03] hover:border-gold/20 flex flex-col h-full shadow-2xl backdrop-blur-sm"
-          >
+        {obras?.map((obra, index) => {
+          const isSpotify = obra.url.includes('spotify.com');
+          return (
+            <motion.button
+              key={obra.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              onClick={() => setActiveObra(obra)}
+              className={cn(
+                "group relative overflow-hidden border rounded-[40px] p-10 text-left transition-all flex flex-col h-full shadow-2xl backdrop-blur-sm",
+                isSpotify 
+                  ? "bg-emerald-500/5 border-emerald-500/20 hover:bg-emerald-500/10 hover:border-emerald-500/40" 
+                  : "bg-white/[0.02] border-white/5 hover:bg-gold/[0.03] hover:border-gold/20"
+              )}
+            >
+              {isSpotify && (
+                <div className="absolute top-6 right-8">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
+                    <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[8px] font-bold text-emerald-400 uppercase tracking-widest">Playlist</span>
+                  </div>
+                </div>
+              )}
             <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
                <Music className="w-16 h-16 text-gold" />
             </div>
