@@ -76,6 +76,11 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                     {activeObra.territorio_secundario_1}
                    </span>
                 )}
+                {activeObra.territorio_secundario_2 && (
+                   <span className="px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[9px] text-white/40 uppercase tracking-widest font-bold">
+                    {activeObra.territorio_secundario_2}
+                   </span>
+                )}
               </div>
             </div>
           </div>
