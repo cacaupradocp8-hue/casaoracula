@@ -162,7 +162,8 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
                 folder="clube/camara/obras"
               />
               <p className="text-[10px] text-muted-foreground italic">
-                Para Spotify, cole o link do "src" do código de embed (ex: https://open.spotify.com/embed/...)
+                Para Spotify, pode colar o link direto da playlist/álbum (ex: https://open.spotify.com/playlist/...) ou o link "src" do embed.
+
               </p>
             </div>
             <div className="space-y-2">
