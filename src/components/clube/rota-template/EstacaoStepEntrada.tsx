@@ -120,28 +120,6 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           )}
         </div>
 
-        <div className="mt-12 flex flex-wrap justify-center gap-6">
-          {[
-            { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
-            { icon: Map, label: 'Atlas Orácula', path: '/clube/rota-dos-lobos' }
-          ].map((item, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                if (item.path) navigate(item.path);
-              }}
-              className="group flex flex-col items-center gap-2 transition-all"
-            >
-              <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 group-hover:border-gold/40 transition-all">
-                <item.icon className="w-5 h-5 text-gold/60 group-hover:text-gold transition-colors" />
-              </div>
-              <span className="text-[9px] text-white/60 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
-                {item.label}
-              </span>
-            </button>
-          ))}
-        </div>
-
         <div className="mt-20 flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
           {[
             { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
