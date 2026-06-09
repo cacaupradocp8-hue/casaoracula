@@ -127,7 +127,10 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const handleConcluirObra = async () => {
     if (!obras || !activeObra || !user) return;
 
-    if (!reflexaoPsique.trim() || !reflexaoOficio.trim() || !simbolo.trim()) {
+    // Se for Spotify, não exigimos preenchimento obrigatório para avançar (opcional)
+    const isSpotify = activeObra.url.includes('spotify.com');
+    
+    if (!isSpotify && (!reflexaoPsique.trim() || !reflexaoOficio.trim() || !simbolo.trim())) {
       toast.error("Por favor, preencha todas as reflexões e o símbolo observado.");
       return;
     }
