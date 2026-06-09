@@ -132,7 +132,11 @@ export default function ClubeRotaPremium() {
                     livroCapaUrl={estacao.clube_rotas.livro_capa_url}
                     livroBannerUrl={estacao.livro_imagem_banner_url}
                     audioVozClareiraUrl={estacao.audio_voz_clareira_url}
+                    audioAberturaUrl={estacao.audio_abertura_url}
+                    audioFlorestaUrl={estacao.audio_floresta_url}
                     spotifyPlaylistUrl={estacao.spotify_playlist_url}
+                    spotifyPlaylists={estacao.spotify_playlists}
+                    vozClareiraTexto={estacao.voz_clareira_texto}
                   />
                 )}
 
