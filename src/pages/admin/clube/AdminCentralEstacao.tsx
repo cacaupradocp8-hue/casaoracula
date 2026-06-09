@@ -276,6 +276,10 @@ export default function AdminCentralEstacao() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-v3-estacao-detail', estacaoId] });
+      // Também invalidar a query do conteúdo da estação (usada na visão da aluna)
+      if (estacao?.slug) {
+        qc.invalidateQueries({ queryKey: ['estacao-conteudo', estacao.slug] });
+      }
       setEditStationOpen(false);
       toast({ title: 'Estação atualizada!' });
     }
