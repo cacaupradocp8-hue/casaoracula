@@ -1650,7 +1650,6 @@ function EditorUnico({ passo, onSave, onDelete, loading }: { passo: any, onSave:
     </div>
   );
 }
-}
 
 // Helper para extrair texto de metadata
 const renderContent = (content: any) => {
