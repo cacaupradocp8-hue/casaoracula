@@ -68,12 +68,16 @@ export function EscutaPremium({
   if (!audioUrl) return null;
 
   // Handle Spotify Embed
-  if (audioUrl.includes('open.spotify.com/embed')) {
+  if (audioUrl.includes('spotify.com')) {
+    const embedUrl = audioUrl.includes('embed') 
+      ? audioUrl 
+      : audioUrl.replace('open.spotify.com/', 'open.spotify.com/embed/');
+
     return (
       <div className={cn("w-full max-w-2xl mx-auto py-8 px-4", className)}>
         <iframe
           style={{ borderRadius: '12px' }}
-          src={audioUrl}
+          src={embedUrl}
           width="100%"
           height="352"
           frameBorder="0"
