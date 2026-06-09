@@ -557,15 +557,28 @@ export default function AdminCentralEstacao() {
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label>Áudio Abertura (.mp3)</Label>
-                      <Input value={stationForm.audio_abertura_url} onChange={e => setStationForm({...stationForm, audio_abertura_url: e.target.value})} placeholder="URL do áudio de abertura imersiva" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Áudio Voz da Floresta (.mp3)</Label>
-                      <Input value={stationForm.audio_floresta_url} onChange={e => setStationForm({...stationForm, audio_floresta_url: e.target.value})} placeholder="URL do áudio Voz da Floresta" />
-                    </div>
+                    <AudioUpload
+                      label="Áudio Abertura Imersiva"
+                      value={stationForm.audio_abertura_url}
+                      onChange={(url) => setStationForm({...stationForm, audio_abertura_url: url})}
+                      folder="clube/estacoes/abertura"
+                    />
+                    <AudioUpload
+                      label="Áudio Voz da Floresta"
+                      value={stationForm.audio_floresta_url}
+                      onChange={(url) => setStationForm({...stationForm, audio_floresta_url: url})}
+                      folder="clube/estacoes/floresta"
+                    />
                   </div>
+                  <div className="space-y-2">
+                    <AudioUpload
+                      label="Áudio Voz da Clareira (principal)"
+                      value={stationForm.audio_voz_clareira_url}
+                      onChange={(url) => setStationForm({...stationForm, audio_voz_clareira_url: url})}
+                      folder="clube/estacoes/voz-clareira"
+                    />
+                  </div>
+
 
                   <div className="space-y-4 pt-4 border-t border-primary/5">
                     <div className="flex items-center justify-between">
