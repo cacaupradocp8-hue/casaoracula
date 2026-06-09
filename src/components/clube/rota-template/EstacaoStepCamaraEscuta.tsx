@@ -34,8 +34,8 @@ const CONTEUDO_ESPECIFICO: Record<string, any> = {
       "Não procurar culpados.",
       "Apenas observe a relação da personagem com a própria dor."
     ],
-    perguntaPsique: "Onde minha dor deixou de ser experiência e passou a ser identidade?",
-    perguntaOficio: "Como percebo quando uma cliente organiza toda sua narrativa em torno da própria ferida?",
+    perguntaPsique: "O que em mim ainda canta, mesmo depois de ter sido ferido?",
+    perguntaOficio: "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?",
     rastroSimbolo: "🩸 A Ferida Habitável",
     territorioImpactado: "Praça do Abalo"
   },
@@ -354,13 +354,13 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   if (activeObra) {
     const specificFromCode = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
     
-    // Combine data from database and code (fallback)
+    // Prioritizar dados do banco (cadastrados no Admin)
     const displayData = {
-      oQueEscutar: (activeObra as any).guia_escuta?.length > 0 ? (activeObra as any).guia_escuta : specificFromCode.oQueEscutar,
-      oQueEvitar: (activeObra as any).guia_evitar?.length > 0 ? (activeObra as any).guia_evitar : specificFromCode.oQueEvitar,
-      rastroSimbolo: (activeObra as any).rastro_simbolo || specificFromCode.rastroSimbolo,
-      perguntaPsique: (activeObra as any).pergunta_psique || specificFromCode.perguntaPsique,
-      perguntaOficio: (activeObra as any).pergunta_oficio || specificFromCode.perguntaOficio,
+      oQueEscutar: (activeObra.guia_escuta && activeObra.guia_escuta.length > 0) ? activeObra.guia_escuta : specificFromCode.oQueEscutar,
+      oQueEvitar: (activeObra.guia_evitar && activeObra.guia_evitar.length > 0) ? activeObra.guia_evitar : specificFromCode.oQueEvitar,
+      rastroSimbolo: activeObra.rastro_simbolo || specificFromCode.rastroSimbolo,
+      perguntaPsique: activeObra.pergunta_psique || specificFromCode.perguntaPsique,
+      perguntaOficio: activeObra.pergunta_oficio || specificFromCode.perguntaOficio,
       territorioImpactado: activeObra.territorio_principal || specificFromCode.territorioImpactado
     };
 

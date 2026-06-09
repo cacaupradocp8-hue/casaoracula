@@ -53,6 +53,9 @@ export interface CamaraObra {
   funcao_escuta: string;
   pergunta_psique: string;
   pergunta_oficio: string;
+  guia_escuta?: string[];
+  guia_evitar?: string[];
+  rastro_simbolo?: string;
   reflexao_opcional: string | null;
   territorio_principal: string;
   territorio_secundario_1: string | null;
