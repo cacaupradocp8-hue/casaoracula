@@ -78,7 +78,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
               <EscutaPremium 
                 audioUrl={audioFlorestaUrl} 
                 titulo="Voz da Floresta" 
-                imagemEscuta="/clareira-chamado.png"
+                imagemEscuta="/clareira-disco.png"
                 className="py-0"
               />
             </div>
