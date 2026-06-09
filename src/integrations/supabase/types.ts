@@ -4180,6 +4180,131 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_camara_escuta_obras: {
+        Row: {
+          ativo: boolean | null
+          autor: string | null
+          created_at: string | null
+          estacao_id: string | null
+          funcao_escuta: string
+          id: string
+          ordem: number | null
+          pergunta_oficio: string
+          pergunta_psique: string
+          reflexao_opcional: string | null
+          rota_id: string | null
+          territorio_principal: string
+          territorio_secundario_1: string | null
+          territorio_secundario_2: string | null
+          tipo: string
+          titulo: string
+          updated_at: string | null
+          url: string
+        }
+        Insert: {
+          ativo?: boolean | null
+          autor?: string | null
+          created_at?: string | null
+          estacao_id?: string | null
+          funcao_escuta: string
+          id?: string
+          ordem?: number | null
+          pergunta_oficio: string
+          pergunta_psique: string
+          reflexao_opcional?: string | null
+          rota_id?: string | null
+          territorio_principal: string
+          territorio_secundario_1?: string | null
+          territorio_secundario_2?: string | null
+          tipo: string
+          titulo: string
+          updated_at?: string | null
+          url: string
+        }
+        Update: {
+          ativo?: boolean | null
+          autor?: string | null
+          created_at?: string | null
+          estacao_id?: string | null
+          funcao_escuta?: string
+          id?: string
+          ordem?: number | null
+          pergunta_oficio?: string
+          pergunta_psique?: string
+          reflexao_opcional?: string | null
+          rota_id?: string | null
+          territorio_principal?: string
+          territorio_secundario_1?: string | null
+          territorio_secundario_2?: string | null
+          tipo?: string
+          titulo?: string
+          updated_at?: string | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_camara_escuta_obras_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_camara_escuta_obras_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_camara_escuta_registros: {
+        Row: {
+          created_at: string | null
+          data_escuta: string | null
+          emocao_predominante: string
+          id: string
+          obra_id: string
+          registro_oficio: string | null
+          registro_psique: string | null
+          simbolo_observado: string
+          territorio_impactado: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_escuta?: string | null
+          emocao_predominante: string
+          id?: string
+          obra_id: string
+          registro_oficio?: string | null
+          registro_psique?: string | null
+          simbolo_observado: string
+          territorio_impactado: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data_escuta?: string | null
+          emocao_predominante?: string
+          id?: string
+          obra_id?: string
+          registro_oficio?: string | null
+          registro_psique?: string | null
+          simbolo_observado?: string
+          territorio_impactado?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_camara_escuta_registros_obra_id_fkey"
+            columns: ["obra_id"]
+            isOneToOne: false
+            referencedRelation: "clube_camara_escuta_obras"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_carrossel_slides: {
         Row: {
           created_at: string
