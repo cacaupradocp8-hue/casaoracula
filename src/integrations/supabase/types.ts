@@ -5841,6 +5841,101 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_traducao_oracular: {
+        Row: {
+          conto_titulo: string
+          created_at: string | null
+          estacao_id: string | null
+          id: string
+          pergunta_integracao: string
+          pergunta_profissional: string
+          porque_principal: string
+          porque_secundario: string | null
+          territorio_principal: string
+          territorio_secundario: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          conto_titulo: string
+          created_at?: string | null
+          estacao_id?: string | null
+          id?: string
+          pergunta_integracao?: string
+          pergunta_profissional?: string
+          porque_principal: string
+          porque_secundario?: string | null
+          territorio_principal: string
+          territorio_secundario?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          conto_titulo?: string
+          created_at?: string | null
+          estacao_id?: string | null
+          id?: string
+          pergunta_integracao?: string
+          pergunta_profissional?: string
+          porque_principal?: string
+          porque_secundario?: string | null
+          territorio_principal?: string
+          territorio_secundario?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_traducao_oracular_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_traducao_registros: {
+        Row: {
+          created_at: string | null
+          estacao_id: string | null
+          id: string
+          resposta_integracao: string | null
+          resposta_profissional: string | null
+          traducao_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          estacao_id?: string | null
+          id?: string
+          resposta_integracao?: string | null
+          resposta_profissional?: string | null
+          traducao_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          estacao_id?: string | null
+          id?: string
+          resposta_integracao?: string | null
+          resposta_profissional?: string | null
+          traducao_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_traducao_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_traducao_registros_traducao_id_fkey"
+            columns: ["traducao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_traducao_oracular"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_v3_routes: {
         Row: {
           audio_welcome_image: string | null

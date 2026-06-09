@@ -9,11 +9,13 @@ import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 interface EstacaoStepCamaraEscutaProps {
   estacaoId: string;
+  onNext: () => void;
 }
 
 
 export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = ({
   estacaoId,
+  onNext
 }) => {
   const { data: obras, isLoading } = useCamaraObras(estacaoId);
   const [activeObra, setActiveObra] = useState<CamaraObra | null>(null);
@@ -173,6 +175,12 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       </div>
 
       <div className="pt-12 border-t border-white/5 flex flex-col items-center gap-6">
+        <Button 
+          onClick={onNext}
+          className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 py-7 rounded-full uppercase tracking-widest text-xs"
+        >
+          Concluir Escuta e Traduzir
+        </Button>
         <div className="flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 border border-white/10">
           <CheckCircle2 className="w-4 h-4 text-gold/40" />
           <span className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Escola de Escuta Simbólica</span>
