@@ -487,8 +487,9 @@ export default function AdminCentralEstacao() {
               <Input value={stationForm.banner_url} onChange={e => setStationForm({...stationForm, banner_url: e.target.value})} placeholder="https://..." />
             </div>
             <div className="space-y-2">
-              <Label>Capa do Livro URL (Miniatura)</Label>
-              <Input value={stationForm.livro_capa_url} onChange={e => setStationForm({...stationForm, livro_capa_url: e.target.value})} placeholder="https://..." />
+              <Label>Playlist do Spotify URL</Label>
+              <Input value={stationForm.spotify_playlist_url} onChange={e => setStationForm({...stationForm, spotify_playlist_url: e.target.value})} placeholder="https://open.spotify.com/playlist/..." />
+              <p className="text-[10px] text-muted-foreground italic">O player aparecerá na seção "Voz da Clareira" da estação.</p>
             </div>
             <div className="flex items-center gap-6 pt-2">
               <div className="flex items-center gap-2">
