@@ -35,57 +35,58 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
     : (spotifyPlaylistUrl ? [{ url: spotifyPlaylistUrl, label: 'Playlist Principal' }] : []);
 
   return (
-    <div className="space-y-16 text-center max-w-2xl mx-auto pb-20">
-      <div className="space-y-6">
-        <div className="flex items-center justify-center gap-2 text-gold">
-          <Headphones className="w-4 h-4" />
-          <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
+    <div className="pb-20">
+      <div className="space-y-16 text-center max-w-2xl mx-auto mb-20">
+        <div className="space-y-6">
+          <div className="flex items-center justify-center gap-2 text-gold">
+            <Headphones className="w-4 h-4" />
+            <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
+          </div>
+          <h2 className="text-3xl md:text-5xl font-serif text-white italic tracking-tight">Vozes da Clareira</h2>
+          
+          {vozClareiraTexto && (
+            <div className="max-w-lg mx-auto p-8 rounded-[2rem] bg-gradient-to-b from-white/5 to-transparent border border-white/10 backdrop-blur-sm">
+              <p className="text-sm md:text-base font-serif italic text-white/70 leading-relaxed whitespace-pre-line">
+                {vozClareiraTexto}
+              </p>
+            </div>
+          )}
         </div>
-        <h2 className="text-3xl md:text-5xl font-serif text-white italic tracking-tight">Vozes da Clareira</h2>
         
-        {vozClareiraTexto && (
-          <div className="max-w-lg mx-auto p-8 rounded-[2rem] bg-gradient-to-b from-white/5 to-transparent border border-white/10 backdrop-blur-sm">
-            <p className="text-sm md:text-base font-serif italic text-white/70 leading-relaxed whitespace-pre-line">
-              {vozClareiraTexto}
-            </p>
-          </div>
-        )}
-      </div>
-      
-      <div className="space-y-24">
-        {audioVozClareiraUrl && (
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
-              <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Voz da Clareira</span>
+        <div className="space-y-24">
+          {audioVozClareiraUrl && (
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
+                <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Voz da Clareira</span>
+              </div>
+              <EscutaPremium 
+                audioUrl={audioVozClareiraUrl} 
+                titulo="A Voz da Clareira" 
+                imagemEscuta={livroCapaUrl}
+                className="py-0"
+              />
             </div>
-            <EscutaPremium 
-              audioUrl={audioVozClareiraUrl} 
-              titulo="A Voz da Clareira" 
-              imagemEscuta={livroCapaUrl}
-              className="py-0"
-            />
-          </div>
-        )}
+          )}
 
-        {audioFlorestaUrl && (
-          <div className="space-y-6 pt-12 border-t border-white/5">
-            <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
-              <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Sons da Natureza</span>
+          {audioFlorestaUrl && (
+            <div className="space-y-6 pt-12 border-t border-white/5">
+              <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
+                <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Sons da Natureza</span>
+              </div>
+              <EscutaPremium 
+                audioUrl={audioFlorestaUrl} 
+                titulo="Voz da Floresta" 
+                imagemEscuta="/clareira-chamado.png"
+                className="py-0"
+              />
             </div>
-            <EscutaPremium 
-              audioUrl={audioFlorestaUrl} 
-              titulo="Voz da Floresta" 
-              imagemEscuta="/clareira-chamado.png"
-              className="py-0"
-            />
-          </div>
-        )}
-      </div>
-        
+          )}
+        </div>
+          
         {playlists.length > 0 && (
-          <div className="space-y-6 pt-6 border-t border-white/10">
+          <div className="space-y-6 pt-12 border-t border-white/10">
             <div className="flex items-center justify-center gap-4 flex-wrap">
               {playlists.map((pl, idx) => (
                 <button
@@ -112,7 +113,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pt-8">
+      <div className="max-w-2xl mx-auto grid grid-cols-2 gap-4 pt-8">
         <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2">
           <Sparkles className="w-5 h-5 text-gold/40 mx-auto" />
           <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Série de Áudios</p>
