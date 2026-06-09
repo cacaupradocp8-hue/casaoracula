@@ -223,7 +223,8 @@ export default function AdminCentralEstacao() {
         ativa: estacao.ativa || false,
         banner_url: estacao.banner_url || '',
         livro_capa_url: estacao.livro_capa_url || '',
-        livro_titulo: estacao.livro_titulo || ''
+        livro_titulo: estacao.livro_titulo || '',
+        spotify_playlist_url: estacao.spotify_playlist_url || ''
       });
     }
   }, [estacao]);
