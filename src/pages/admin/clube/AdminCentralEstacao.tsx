@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import ImportadorEstacao from "@/components/admin/clube/ImportadorEstacao";
 import { AdminCamaraEscuta } from "@/components/admin/clube/AdminCamaraEscuta";
+import { AudioUpload } from "@/components/admin/AudioUpload";
 
 function slugify(text: string) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
