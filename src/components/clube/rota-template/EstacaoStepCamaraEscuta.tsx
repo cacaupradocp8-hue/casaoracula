@@ -352,7 +352,17 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   }
 
   if (activeObra) {
-    const specific = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+    const specificFromCode = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+    
+    // Combine data from database and code (fallback)
+    const displayData = {
+      oQueEscutar: (activeObra as any).guia_escuta?.length > 0 ? (activeObra as any).guia_escuta : specificFromCode.oQueEscutar,
+      oQueEvitar: (activeObra as any).guia_evitar?.length > 0 ? (activeObra as any).guia_evitar : specificFromCode.oQueEvitar,
+      rastroSimbolo: (activeObra as any).rastro_simbolo || specificFromCode.rastroSimbolo,
+      perguntaPsique: (activeObra as any).pergunta_psique || specificFromCode.perguntaPsique,
+      perguntaOficio: (activeObra as any).pergunta_oficio || specificFromCode.perguntaOficio,
+      territorioImpactado: activeObra.territorio_principal || specificFromCode.territorioImpactado
+    };
 
     return (
       <motion.div 
@@ -380,7 +390,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               </p>
             </div>
 
-            {specific.oQueEscutar && (
+            {displayData.oQueEscutar && displayData.oQueEscutar.length > 0 && (
               <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-gold/60">
@@ -388,7 +398,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                     <h4 className="text-[10px] uppercase tracking-widest font-bold">O que escutar</h4>
                   </div>
                   <ul className="space-y-3">
-                    {specific.oQueEscutar.map((item: string, i: number) => (
+                    {displayData.oQueEscutar.map((item: string, i: number) => (
                       <li key={i} className="text-sm text-white/70 font-serif italic leading-relaxed">
                         • {item}
                       </li>
@@ -396,19 +406,21 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                   </ul>
                 </div>
 
-                <div className="space-y-4 pt-6 border-t border-white/5">
-                  <div className="flex items-center gap-3 text-red-400/60">
-                    <X className="w-4 h-4" />
-                    <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
+                {displayData.oQueEvitar && displayData.oQueEvitar.length > 0 && (
+                  <div className="space-y-4 pt-6 border-t border-white/5">
+                    <div className="flex items-center gap-3 text-red-400/60">
+                      <X className="w-4 h-4" />
+                      <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
+                    </div>
+                    <ul className="space-y-3">
+                      {displayData.oQueEvitar.map((item: string, i: number) => (
+                        <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
+                          • {item}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="space-y-3">
-                    {specific.oQueEvitar.map((item: string, i: number) => (
-                      <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
-                        • {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                )}
               </div>
             )}
 
@@ -420,11 +432,11 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <div className="space-y-4">
                 <div className="space-y-1">
                   <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Símbolo</span>
-                  <p className="text-gold font-serif italic">{specific.rastroSimbolo || "Observado no rastro"}</p>
+                  <p className="text-gold font-serif italic">{displayData.rastroSimbolo || "Observado no rastro"}</p>
                 </div>
                 <div className="space-y-1">
                   <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Território</span>
-                  <p className="text-white/80 font-serif italic">{specific.territorioImpactado || activeObra.territorio_principal}</p>
+                  <p className="text-white/80 font-serif italic">{displayData.territorioImpactado || activeObra.territorio_principal}</p>
                 </div>
               </div>
             </div>
@@ -449,7 +461,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                       </div>
                       <div className="space-y-4">
                         <Label className="text-xl text-white font-serif italic block">
-                          O que esta obra revelou sobre você?
+                          {displayData.perguntaPsique || "O que esta obra revelou sobre você?"}
                         </Label>
                         <Textarea 
                           value={reflexaoPsique}
@@ -468,7 +480,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                       </div>
                       <div className="space-y-4">
                         <Label className="text-xl text-white font-serif italic block">
-                          O que esta obra revelou sobre sua escuta profissional?
+                          {displayData.perguntaOficio || "O que esta obra revelou sobre sua escuta profissional?"}
                         </Label>
                         <Textarea 
                           value={reflexaoOficio}
