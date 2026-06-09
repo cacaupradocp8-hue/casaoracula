@@ -181,6 +181,31 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
       if (oficioError) throw oficioError;
 
+      // 4. Update Cartografia (user_cidadela_estado)
+      const territorio = specific.territorioImpactado || activeObra.territorio_principal;
+      if (territorio) {
+        try {
+          const { data: estado } = await (supabase as any)
+            .from('user_cidadela_estado')
+            .select('distritos_ativados')
+            .eq('user_id', user.id)
+            .maybeSingle();
+            
+          const distritos = estado?.distritos_ativados || [];
+          if (!distritos.includes(territorio)) {
+            await (supabase as any)
+              .from('user_cidadela_estado')
+              .upsert({
+                user_id: user.id,
+                distritos_ativados: [...distritos, territorio],
+                ultimo_movimento: new Date().toISOString()
+              });
+          }
+        } catch (e) {
+          console.error("Erro ao atualizar território na cartografia:", e);
+        }
+      }
+
       toast.success("Registro concluído com sucesso.");
 
       const currentIndex = obras.findIndex(o => o.id === activeObra.id);
@@ -200,11 +225,34 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
 
   const handleDevolutivaFinal = async (choice: string) => {
+    if (!user) return;
+    
     setDevolutivaChoice(choice);
-    setShowRastro(true);
-    setShowDevolutiva(false);
-    toast.success("Rastro permanente gerado na Cartografia.");
+    setIsSaving(true);
+    
+    try {
+      // Save final choice to cartografia
+      await (supabase as any)
+        .from('user_cidadela_estado')
+        .upsert({
+          user_id: user.id,
+          voz: choice,
+          ultimo_movimento: new Date().toISOString()
+        });
+
+      setShowRastro(true);
+      setShowDevolutiva(false);
+      toast.success("Rastro permanente gerado na Cartografia.");
+    } catch (err) {
+      console.error("Erro ao salvar voz ecoante:", err);
+      // Still show the next step even if this minor update fails
+      setShowRastro(true);
+      setShowDevolutiva(false);
+    } finally {
+      setIsSaving(false);
+    }
   };
+
 
   if (showDevolutiva) {
     return (
