@@ -1,10 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Headphones, Play, Pause, Loader2, RotateCcw, RotateCw } from 'lucide-react';
+import { Headphones, Play, Pause, Loader2, RotateCcw, RotateCw, Gauge } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatAudioTime } from '@/lib/audioUtils';
 import { Slider } from '@/components/ui/slider';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface EscutaPremiumProps {
   audioUrl: string | null | undefined;
@@ -16,6 +22,8 @@ interface EscutaPremiumProps {
   className?: string;
 }
 
+const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
 export function EscutaPremium({
   audioUrl,
   titulo,
@@ -25,6 +33,7 @@ export function EscutaPremium({
   imagemEscuta,
   className,
 }: EscutaPremiumProps) {
+  const [playbackRate, setPlaybackRate] = useState(1);
   const {
     audioRef,
     isPlaying,
@@ -46,6 +55,13 @@ export function EscutaPremium({
   const skipBackward = useCallback(() => {
     if (audioRef.current) {
       audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 15, 0);
+    }
+  }, []);
+
+  const changePlaybackRate = useCallback((rate: number) => {
+    if (audioRef.current) {
+      audioRef.current.playbackRate = rate;
+      setPlaybackRate(rate);
     }
   }, []);
 
@@ -135,7 +151,32 @@ export function EscutaPremium({
         </div>
 
         {/* Controls */}
-        <div className="flex items-center justify-center gap-6 md:gap-10">
+        <div className="flex items-center justify-center gap-6 md:gap-10 w-full max-w-md relative">
+          <div className="absolute left-0 -translate-x-full pr-4 hidden md:block">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex flex-col items-center gap-1 text-white/40 hover:text-gold transition-colors">
+                  <Gauge className="w-5 h-5" />
+                  <span className="text-[8px] font-bold">{playbackRate}x</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="bg-[#0a0a0a] border-white/10 text-white min-w-[80px]">
+                {PLAYBACK_SPEEDS.map((speed) => (
+                  <DropdownMenuItem 
+                    key={speed}
+                    onClick={() => changePlaybackRate(speed)}
+                    className={cn(
+                      "text-xs justify-center hover:bg-gold/10 hover:text-gold cursor-pointer",
+                      playbackRate === speed && "text-gold bg-gold/5"
+                    )}
+                  >
+                    {speed}x
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
           <button 
             onClick={skipBackward}
             className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90"
@@ -145,12 +186,6 @@ export function EscutaPremium({
               <RotateCcw className="w-7 h-7" />
               <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold mt-0.5">15</span>
             </div>
-          </button>
-
-          <button className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 18L14.5 12L6 6V18ZM16 6V18H18V6H16Z" className="transform rotate-180 origin-center" />
-            </svg>
           </button>
 
           <motion.button 
@@ -171,12 +206,6 @@ export function EscutaPremium({
             )}
           </motion.button>
 
-          <button className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M6 18L14.5 12L6 6V18ZM16 6V18H18V6H16Z" />
-            </svg>
-          </button>
-
           <button 
             onClick={skipForward}
             className="text-white/50 hover:text-gold transition-all hover:scale-110 active:scale-90"
@@ -187,6 +216,31 @@ export function EscutaPremium({
               <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold mt-0.5">15</span>
             </div>
           </button>
+
+          <div className="md:hidden mt-4">
+             <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors px-3 py-1 rounded-full border border-white/10">
+                  <Gauge className="w-4 h-4" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest">{playbackRate}x</span>
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="bg-[#0a0a0a] border-white/10 text-white min-w-[80px]">
+                {PLAYBACK_SPEEDS.map((speed) => (
+                  <DropdownMenuItem 
+                    key={speed}
+                    onClick={() => changePlaybackRate(speed)}
+                    className={cn(
+                      "text-xs justify-center hover:bg-gold/10 hover:text-gold cursor-pointer",
+                      playbackRate === speed && "text-gold bg-gold/5"
+                    )}
+                  >
+                    {speed}x
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
 
         {/* Info Card - Matching the image exactly */}
