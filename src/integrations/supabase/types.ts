@@ -4266,10 +4266,13 @@ export type Database = {
           created_at: string | null
           data_escuta: string | null
           emocao_predominante: string
+          estacao_id: string | null
           id: string
+          intensidade_escuta: string | null
           obra_id: string
           registro_oficio: string | null
           registro_psique: string | null
+          rota_id: string | null
           simbolo_observado: string
           territorio_impactado: string
           user_id: string
@@ -4278,10 +4281,13 @@ export type Database = {
           created_at?: string | null
           data_escuta?: string | null
           emocao_predominante: string
+          estacao_id?: string | null
           id?: string
+          intensidade_escuta?: string | null
           obra_id: string
           registro_oficio?: string | null
           registro_psique?: string | null
+          rota_id?: string | null
           simbolo_observado: string
           territorio_impactado: string
           user_id: string
@@ -4290,10 +4296,13 @@ export type Database = {
           created_at?: string | null
           data_escuta?: string | null
           emocao_predominante?: string
+          estacao_id?: string | null
           id?: string
+          intensidade_escuta?: string | null
           obra_id?: string
           registro_oficio?: string | null
           registro_psique?: string | null
+          rota_id?: string | null
           simbolo_observado?: string
           territorio_impactado?: string
           user_id?: string
