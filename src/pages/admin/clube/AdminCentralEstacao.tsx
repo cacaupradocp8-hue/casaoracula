@@ -389,8 +389,30 @@ export default function AdminCentralEstacao() {
         </div>
       </div>
 
-      {/* Unique Editor Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      {/* Tabs */}
+      <div className="flex items-center gap-4 mb-8 border-b border-primary/10">
+        <button 
+          onClick={() => setActiveTab('conteudo')}
+          className={cn(
+            "pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2",
+            activeTab === 'conteudo' ? "border-gold text-gold" : "border-transparent text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Conteúdo da Rota
+        </button>
+        <button 
+          onClick={() => setActiveTab('camara')}
+          className={cn(
+            "pb-4 text-xs uppercase tracking-widest font-bold transition-all border-b-2",
+            activeTab === 'camara' ? "border-gold text-gold" : "border-transparent text-muted-foreground hover:text-foreground"
+          )}
+        >
+          Câmara da Escuta (Obras)
+        </button>
+      </div>
+
+      {activeTab === 'conteudo' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left: Steps List */}
         <div className="lg:col-span-4 space-y-4">
           <div className="flex items-center justify-between mb-2">
