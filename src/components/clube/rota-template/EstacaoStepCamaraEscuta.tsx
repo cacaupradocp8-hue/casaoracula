@@ -671,7 +671,8 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               </div>
             </div>
           </motion.button>
-        ))}
+            );
+        })}
 
         {(!obras || obras.length === 0) && (
           <div className="col-span-full py-32 text-white/10 border-2 border-dashed border-white/5 rounded-[40px] font-serif italic text-2xl flex flex-col items-center gap-4">
