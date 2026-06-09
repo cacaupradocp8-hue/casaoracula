@@ -5,9 +5,10 @@ import { Music2 } from 'lucide-react';
 interface SpotifyPlaylistEmbedProps {
   url: string | null | undefined;
   className?: string;
+  territorio?: string;
 }
 
-export function SpotifyPlaylistEmbed({ url, className }: SpotifyPlaylistEmbedProps) {
+export function SpotifyPlaylistEmbed({ url, className, territorio }: SpotifyPlaylistEmbedProps) {
   if (!url) return null;
 
   // Extrair o ID da playlist ou a URL completa formatada para embed
@@ -30,7 +31,9 @@ export function SpotifyPlaylistEmbed({ url, className }: SpotifyPlaylistEmbedPro
     <div className={cn("w-full max-w-2xl mx-auto space-y-4", className)}>
       <div className="flex items-center gap-2 text-gold/60 mb-2">
         <Music2 className="w-4 h-4" />
-        <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Trilha Sonora da Estação</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] font-bold">
+          {territorio ? `Trilha: ${territorio}` : 'Trilha Sonora da Estação'}
+        </span>
       </div>
       <div className="relative rounded-[2rem] overflow-hidden bg-[#121212] border border-white/10 shadow-2xl min-h-[152px]">
         <iframe

@@ -85,6 +85,7 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
             tipo: 'Música', 
             autor: '', 
             url: '', 
+            audio_regente_url: '',
             funcao_escuta: '', 
             pergunta_psique: '', 
             pergunta_oficio: '',
@@ -154,7 +155,11 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
             </div>
             <div className="space-y-2">
               <Label>URL do Áudio/Vídeo</Label>
-              <Input value={editingObra?.url} onChange={e => setEditingObra({...editingObra, url: e.target.value})} placeholder="https://..." />
+            <Input value={editingObra?.url} onChange={e => setEditingObra({...editingObra, url: e.target.value})} placeholder="URL do áudio principal (MP3)" />
+            </div>
+            <div className="space-y-2">
+              <Label>URL do Áudio Regente (Opcional)</Label>
+              <Input value={editingObra?.audio_regente_url} onChange={e => setEditingObra({...editingObra, audio_regente_url: e.target.value})} placeholder="URL do áudio de abertura da obra (MP3)" />
             </div>
             
             <div className="space-y-2 md:col-span-2">

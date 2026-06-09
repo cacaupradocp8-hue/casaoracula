@@ -29,14 +29,18 @@ export interface Estacao {
   movimento_simbolico: string;
   frase_abertura: string;
   frase_voz_clareira: string;
+  voz_clareira_texto?: string;
   caso_simbolico: any;
   revelacao: any;
   missao_campo: any;
   fechamento_texto: string;
   audio_voz_clareira_url: string;
+  audio_abertura_url?: string;
+  audio_floresta_url?: string;
   livro_imagem_banner_url: string;
   banner_url?: string;
   spotify_playlist_url?: string;
+  spotify_playlists?: any[];
 }
 
 export interface CamaraObra {
@@ -45,6 +49,7 @@ export interface CamaraObra {
   tipo: string;
   autor: string | null;
   url: string;
+  audio_regente_url?: string;
   funcao_escuta: string;
   pergunta_psique: string;
   pergunta_oficio: string;

@@ -180,7 +180,11 @@ export default function AdminCentralEstacao() {
     banner_url: '',
     livro_capa_url: '',
     livro_titulo: '',
-    spotify_playlist_url: ''
+    spotify_playlist_url: '',
+    voz_clareira_texto: '',
+    audio_abertura_url: '',
+    audio_floresta_url: '',
+    spotify_playlists: [] as any[]
   });
 
   // 1. Fetch Estação
@@ -226,7 +230,11 @@ export default function AdminCentralEstacao() {
         banner_url: estacao.banner_url || '',
         livro_capa_url: estacao.livro_capa_url || '',
         livro_titulo: estacao.livro_titulo || '',
-        spotify_playlist_url: estacao.spotify_playlist_url || ''
+        spotify_playlist_url: estacao.spotify_playlist_url || '',
+        voz_clareira_texto: estacao.voz_clareira_texto || '',
+        audio_abertura_url: estacao.audio_abertura_url || '',
+        audio_floresta_url: estacao.audio_floresta_url || '',
+        spotify_playlists: estacao.spotify_playlists || []
       });
     }
   }, [estacao]);
@@ -253,7 +261,11 @@ export default function AdminCentralEstacao() {
           banner_url: data.banner_url,
           livro_capa_url: data.livro_capa_url,
           livro_titulo: data.livro_titulo,
-          spotify_playlist_url: data.spotify_playlist_url
+          spotify_playlist_url: data.spotify_playlist_url,
+          voz_clareira_texto: data.voz_clareira_texto,
+          audio_abertura_url: data.audio_abertura_url,
+          audio_floresta_url: data.audio_floresta_url,
+          spotify_playlists: data.spotify_playlists
         })
         .eq('id', estacaoId);
       if (error) throw error;
