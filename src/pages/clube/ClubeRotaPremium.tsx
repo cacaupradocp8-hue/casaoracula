@@ -138,6 +138,7 @@ export default function ClubeRotaPremium() {
                 {currentStep === 2 && (
                   <EstacaoStepCamaraEscuta 
                     estacaoId={estacao.id}
+                    onNext={handleNext}
                   />
                 )}
 
