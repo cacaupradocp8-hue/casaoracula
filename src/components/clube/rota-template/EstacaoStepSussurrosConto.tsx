@@ -23,6 +23,7 @@ interface SussurrosContoProps {
     imagemUrl?: string;
     erroComum: string;
     sussurroGuardia: string;
+    sussurros_frases?: { texto: string; ordem: number }[];
   };
   onNext: () => void;
 }

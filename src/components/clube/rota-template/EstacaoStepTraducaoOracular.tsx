@@ -8,6 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { TextCarousel } from '@/components/clube/TextCarousel';
 import { cn } from '@/lib/utils';
 
 interface TraducaoOracularProps {
@@ -148,9 +149,10 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                     <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioPrincipal}</h4>
                   </div>
                   <div className="w-16 h-px bg-gold/30" />
-                  <p className="text-white/60 leading-relaxed font-serif italic text-lg">
-                    "{traducaoData.justificativaPrincipal}"
-                  </p>
+                  <TextCarousel 
+                    text={traducaoData.justificativaPrincipal} 
+                    className="text-white/60 font-serif italic text-lg"
+                  />
                 </div>
               </Card>
 
@@ -164,9 +166,10 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                     <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioSecundario}</h4>
                   </div>
                   <div className="w-16 h-px bg-gold/30" />
-                  <p className="text-white/60 leading-relaxed font-serif italic text-lg">
-                    "{traducaoData.justificativaSecundaria}"
-                  </p>
+                  <TextCarousel 
+                    text={traducaoData.justificativaSecundaria} 
+                    className="text-white/60 font-serif italic text-lg"
+                  />
                 </div>
               </Card>
             </div>

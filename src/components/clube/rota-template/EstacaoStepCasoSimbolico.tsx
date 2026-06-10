@@ -7,6 +7,7 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { TextCarousel } from '@/components/clube/TextCarousel';
 
 interface CasoSimbolicoProps {
   estacaoId: string;
@@ -114,9 +115,10 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
                   </div>
                 </div>
                 
-                <p className="text-white/80 text-lg leading-relaxed font-serif italic border-l-2 border-gold/30 pl-6">
-                  {casoData.contexto}
-                </p>
+                <TextCarousel 
+                  text={casoData.contexto} 
+                  className="text-white/80 text-lg leading-relaxed font-serif italic border-l-2 border-gold/30 pl-6"
+                />
 
                 <div className="bg-gold/5 border border-gold/10 p-6 rounded-2xl italic text-gold text-xl font-serif text-center">
                   "{casoData.fraseCentral}"
