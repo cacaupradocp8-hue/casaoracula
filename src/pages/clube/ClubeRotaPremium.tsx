@@ -272,9 +272,23 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 10 && (
+                  <EstacaoStepMissaoCampo 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    titulo={estacao.missao_titulo || 'Observar o que ainda pulsa'}
+                    texto={estacao.missao_texto || ''}
+                    checklist={estacao.missao_checklist || []}
+                    labelObservacao={estacao.missao_label_observacao || 'O que observei?'}
+                    labelSinal={estacao.missao_label_sinal || 'Que sinal de vida soterrada apareceu?'}
+                    labelPergunta={estacao.missao_label_pergunta || 'Que pergunta segura poderia ser feita?'}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 11 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">10. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">11. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
