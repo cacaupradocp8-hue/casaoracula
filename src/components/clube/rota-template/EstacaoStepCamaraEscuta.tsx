@@ -662,7 +662,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
             <div className="h-px w-8 bg-gold/20" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-serif text-white italic leading-tight">Sequência de Escuta da Clareira</h2>
+          <h2 className="text-4xl md:text-6xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h2>
         </div>
         
         <div className="space-y-6 px-4">
