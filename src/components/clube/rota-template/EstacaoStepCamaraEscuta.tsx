@@ -840,6 +840,15 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       </div>
 
       <div className="pt-16 flex flex-col items-center gap-8">
+        <Button 
+          variant="outline"
+          onClick={() => navigate('/clube/rota-dos-lobos')}
+          className="border-white/10 text-white/40 hover:text-gold hover:border-gold/30 rounded-full px-10 h-14 uppercase tracking-widest text-[10px] font-bold"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Voltar para a Rota dos Lobos
+        </Button>
+
         <div className="flex items-center gap-4 px-8 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
           <CheckCircle2 className="w-4 h-4 text-gold/40" />
           <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Treinamento de Percepção Simbólica</span>
