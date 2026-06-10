@@ -148,7 +148,7 @@ export default function ClubeRotaPremium() {
           <img 
             src={slug === 'clareira-do-chamado' ? "/background-rastro-2.png" : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")} 
             alt="" 
-            className="w-full h-full object-cover opacity-90"
+            className={`w-full h-full object-cover opacity-90 ${slug === 'clareira-do-chamado' ? 'object-top' : ''}`}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/50 via-[#020617]/20 to-[#020617]" />
         </div>
