@@ -345,12 +345,12 @@ export default function AdminCentralEstacao() {
           caso_idade: data.caso_idade,
           caso_contexto: data.caso_contexto,
           caso_frase_central: data.caso_frase_central,
-          caso_campo_superficie: data.campo_superficie,
-          caso_campo_simbolico: data.campo_simbolico,
-          caso_campo_nao_concluir: data.campo_nao_concluir,
-          caso_relacao_conto: data.relacao_conto,
-          caso_pergunta_conducao: data.pergunta_conducao,
-          caso_cautela_etica: data.cautela_etica
+          caso_campo_superficie: data.caso_campo_superficie,
+          caso_campo_simbolico: data.caso_campo_simbolico,
+          caso_campo_nao_concluir: data.caso_campo_nao_concluir,
+          caso_relacao_conto: data.caso_relacao_conto,
+          caso_pergunta_conducao: data.caso_pergunta_conducao,
+          caso_cautela_etica: data.caso_cautela_etica
         })
         .eq('id', estacaoId);
       if (error) throw error;
