@@ -135,11 +135,8 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
                 )}
               >
                 {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
-                <div className="text-left">
-                  <span className="text-[10px] uppercase tracking-widest font-black block opacity-60">
-                    {isPlaying ? 'Ouvindo Agora' : 'Sussurro de Fechamento'}
-                  </span>
-                  <span className="text-sm font-serif italic">Escutar síntese final (3 min)</span>
+                <div className="text-center">
+                  <span className="text-sm font-serif italic">Sussurro de Fechamento</span>
                 </div>
               </Button>
             </div>
