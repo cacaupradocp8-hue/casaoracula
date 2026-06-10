@@ -117,7 +117,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       setSimbolo('');
       setIntensidade('Moderada');
     }
-  }, [activeObra]);
+  }, [activeObra?.id]);
 
   if (isLoading) {
     return (
