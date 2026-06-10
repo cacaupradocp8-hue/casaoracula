@@ -10,6 +10,7 @@ import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/Estaca
 import { EstacaoStepTraducaoOracular } from '@/components/clube/rota-template/EstacaoStepTraducaoOracular';
 import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/EstacaoStepSussurrosConto';
 import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/EstacaoStepCasoSimbolico';
+import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
