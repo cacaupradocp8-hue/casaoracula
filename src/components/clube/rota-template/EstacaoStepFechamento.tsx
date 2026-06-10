@@ -98,7 +98,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
         </motion.div>
       </div>
 
-      <Card className="bg-[#0A0A0B]/60 backdrop-blur-xl border-white/5 p-12 rounded-[48px] space-y-10 relative overflow-hidden">
+      <Card className="bg-[#0A0A0B]/60 backdrop-blur-xl border-white/5 p-6 md:p-12 rounded-[32px] md:rounded-[48px] space-y-10 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <Sparkles className="w-40 h-40 text-gold" />
         </div>
