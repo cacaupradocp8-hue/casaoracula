@@ -391,16 +391,17 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
   if (activeObra || inPlaylistMode) {
     const currentObra = activeObra || faixasObras[0];
-    const specificFromCode = CONTEUDO_ESPECIFICO[currentObra?.titulo?.toUpperCase()] || {};
+    const specificFromDb = currentObra?.metadata || {};
     
     const displayData = {
-      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : specificFromCode.oQueEscutar,
-      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : specificFromCode.oQueEvitar,
-      rastroSimbolo: currentObra?.rastro_simbolo || specificFromCode.rastroSimbolo,
-      perguntaPsique: currentObra?.pergunta_psique || specificFromCode.perguntaPsique,
-      perguntaOficio: currentObra?.pergunta_oficio || specificFromCode.perguntaOficio,
-      territorioImpactado: currentObra?.territorio_principal || specificFromCode.territorioImpactado
+      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : (specificFromDb.oQueEscutar || []),
+      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : (specificFromDb.oQueEvitar || []),
+      rastroSimbolo: currentObra?.rastro_simbolo || specificFromDb.rastroSimbolo,
+      perguntaPsique: currentObra?.pergunta_psique || specificFromDb.perguntaPsique,
+      perguntaOficio: currentObra?.pergunta_oficio || specificFromDb.perguntaOficio,
+      territorioImpactado: currentObra?.territorio_principal || specificFromDb.territorioImpactado
     };
+
 
     return (
       <motion.div 
