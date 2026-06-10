@@ -1640,7 +1640,6 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
-              {/* Camada 13 — Fechamento 80/20 */}
               <AccordionItem value="fechamento-estacao" className="border-b border-primary/5">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Fechamento 80/20 (Camada 13)</AccordionTrigger>
                 <AccordionContent className="space-y-8 py-6">
