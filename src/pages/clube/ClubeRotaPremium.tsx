@@ -28,13 +28,13 @@ export default function ClubeRotaPremium() {
     { id: 'traducao_oracular', title: 'Tradução Oracular' },
     { id: 'caso', title: 'Caso Simbólico' },
     { id: 'desafio', title: 'Desafio de Escuta' },
-    { id: 'ferramenta', title: 'Ferramenta Oracular' },
     { id: 'jardim_psique', title: 'Jardim da Psique' },
     { id: 'jardim_oficio', title: 'Jardim do Ofício' },
     { id: 'missao', title: 'Missão de Campo' },
     { id: 'oraculo', title: 'Oráculo da Estação' },
     { id: 'conclusao', title: 'Cartografia da Loba' },
-    { id: 'fechamento', title: 'Fechamento 80/20' }
+    { id: 'fechamento', title: 'Fechamento 80/20' },
+    { id: 'ferramenta', title: 'Ferramenta Oracular' }
   ];
 
 

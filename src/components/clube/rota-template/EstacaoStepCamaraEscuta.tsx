@@ -410,10 +410,10 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
         <div className="pt-8 flex flex-col items-center justify-center gap-4">
           <Button 
-            onClick={() => navigate(`/clube/rota/${estacaoSlug || estacaoId}`)}
+            onClick={onNext}
             className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-gold/20 transition-all hover:scale-105 w-full sm:w-auto flex items-center gap-3"
           >
-            <span>Próximo Passo: Rastro 4</span>
+            <span>Próximo Passo: Conto</span>
             <ArrowRight className="w-4 h-4" />
           </Button>
           
