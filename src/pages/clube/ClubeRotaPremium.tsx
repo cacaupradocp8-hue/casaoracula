@@ -14,6 +14,7 @@ import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/Estac
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
 import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
+import { EstacaoStepOraculo } from '@/components/clube/rota-template/EstacaoStepOraculo';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -37,6 +38,7 @@ export default function ClubeRotaPremium() {
     { id: 'jardim_psique', title: 'Jardim da Psique' },
     { id: 'jardim_oficio', title: 'Jardim do Ofício' },
     { id: 'missao_campo', title: 'Missão de Campo' },
+    { id: 'oraculo', title: 'Oráculo da Estação' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
@@ -286,9 +288,22 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 11 && (
+                  <EstacaoStepOraculo 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    nomeCarta={estacao.oraculo_nome || 'O Osso que Canta'}
+                    imagemUrl={estacao.oraculo_imagem_url || ''}
+                    mensagem={estacao.oraculo_mensagem || ''}
+                    pergunta={estacao.oraculo_pergunta || ''}
+                    integracaoTexto={estacao.oraculo_integracao_texto || ''}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 12 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">11. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">12. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
