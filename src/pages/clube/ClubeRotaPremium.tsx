@@ -8,6 +8,7 @@ import { EstacaoStepEntrada } from '@/components/clube/rota-template/EstacaoStep
 import { EstacaoStepEscuta } from '@/components/clube/rota-template/EstacaoStepEscuta';
 import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/EstacaoStepCamaraEscuta';
 import { EstacaoStepTraducaoOracular } from '@/components/clube/rota-template/EstacaoStepTraducaoOracular';
+import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/EstacaoStepSussurrosConto';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -23,7 +24,6 @@ export default function ClubeRotaPremium() {
     { id: 'entrada', title: 'Entrada' },
     { id: 'escuta_ritual', title: 'Escuta Ritual' },
     { id: 'camara_escuta', title: 'Câmara da Escuta' },
-    { id: 'conto_loba', title: 'Conto: La Loba' },
     { id: 'sussurros', title: 'Sussurros do Conto' },
     { id: 'traducao_oracular', title: 'Tradução Oracular' },
     { id: 'caso', title: 'Caso Simbólico' },
@@ -159,50 +159,48 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 3 && (
-                  <div className="text-center space-y-8">
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">4. Conto / Voz da Loba</span>
-                      <h2 className="text-4xl font-serif text-white italic">La Loba</h2>
-                    </div>
-                    <div className="max-w-2xl mx-auto">
-                      <EscutaPremium 
-                        audioUrl={estacao.audio_voz_clareira_url} 
-                        titulo="La Loba — O Conto Narrado"
-                        imagemEscuta={estacao.clube_rotas.livro_capa_url}
-                      />
-                    </div>
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Escutar os Sussurros</Button>
-                  </div>
+                  <EstacaoStepSussurrosConto 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    contoData={{
+                      titulo: estacao.conto_titulo || 'Conto da Estação',
+                      sintese: estacao.conto_sintese || 'Síntese do conto...',
+                      texto: estacao.conto_texto || '',
+                      audioUrl: estacao.conto_audio_url || '',
+                      imagemUrl: estacao.conto_imagem_url || '',
+                      erroComum: estacao.conto_erro_comum || 'Erro comum de leitura...',
+                      sussurroGuardia: estacao.conto_sussurro_guardia || 'Sussurro da Guardiã...'
+                    }}
+                    onNext={handleNext}
+                  />
                 )}
 
                 {currentStep === 4 && (
-                  <div className="text-center space-y-8 max-w-2xl mx-auto">
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">5. Sussurros do Conto</span>
-                      <h2 className="text-4xl font-serif text-white">O que o conto revela?</h2>
-                    </div>
-                    <div className="grid gap-4 text-left">
-                      {[
-                        "O que este conto tenta revelar?",
-                        "O que foi soterrado?",
-                        "Que imagem insiste?",
-                        "Quem recolhe os ossos?",
-                        "O que ainda canta?"
-                      ].map((q, i) => (
-                        <div key={i} className="p-6 rounded-2xl bg-white/5 border border-white/10 italic font-serif text-lg text-white/80">
-                          {q}
-                        </div>
-                      ))}
-                    </div>
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Avançar para Tradução</Button>
-                  </div>
-                )}
-
-                {currentStep === 5 && (
                   <EstacaoStepTraducaoOracular 
                     estacaoId={estacao.id}
                     onNext={handleNext}
                   />
+                )}
+
+                {currentStep === 5 && (
+                  <div className="text-center space-y-8 max-w-2xl mx-auto">
+                    <div className="space-y-4">
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">5. Caso Simbólico</span>
+                      <h2 className="text-4xl font-serif text-white italic">O Espelho do Atendimento</h2>
+                    </div>
+                    
+                    <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem] text-left space-y-6">
+                      <div className="space-y-2">
+                        <h4 className="text-gold font-serif text-2xl italic">{estacao.caso_simbolico?.titulo || 'Helena, 42 anos'}</h4>
+                        <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">Perfil: Terapeuta</p>
+                      </div>
+                      <p className="text-lg font-serif italic text-white/80 leading-relaxed whitespace-pre-line">
+                        {estacao.caso_simbolico?.relato || "“Minha vida funciona, mas não me toca.”\n\nHelena sente que, apesar de toda a formação e sucesso aparente, há um vazio de direção que os livros não preenchem."}
+                      </p>
+                    </Card>
+
+                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Enfrentar o Desafio</Button>
+                  </div>
                 )}
 
                 {currentStep === 6 && (
