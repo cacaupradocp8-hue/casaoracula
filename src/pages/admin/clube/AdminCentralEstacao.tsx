@@ -246,6 +246,7 @@ export default function AdminCentralEstacao() {
     cartografia_mensagem_conclusao: '',
     fechamento_titulo: '',
     fechamento_subtitulo: '',
+    fechamento_texto: '',
     fechamento_audio_url: '',
     fechamento_botao_proxima: ''
   });
