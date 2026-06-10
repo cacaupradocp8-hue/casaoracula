@@ -243,7 +243,11 @@ export default function AdminCentralEstacao() {
     cartografia_distrito_secundario: '',
     cartografia_competencia: '',
     cartografia_proxima_travessia: '',
-    cartografia_mensagem_conclusao: ''
+    cartografia_mensagem_conclusao: '',
+    fechamento_titulo: '',
+    fechamento_subtitulo: '',
+    fechamento_audio_url: '',
+    fechamento_botao_proxima: ''
   });
 
   // 1. Fetch Estação
