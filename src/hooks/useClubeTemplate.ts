@@ -58,6 +58,16 @@ export interface Estacao {
   traducao_ferramenta_associada?: string;
   traducao_pergunta_pessoal?: string;
   traducao_pergunta_profissional?: string;
+  caso_nome_ficticio?: string;
+  caso_idade?: string;
+  caso_contexto?: string;
+  caso_frase_central?: string;
+  caso_campo_superficie?: string;
+  caso_campo_simbolico?: string;
+  caso_campo_nao_concluir?: string;
+  caso_relacao_conto?: string;
+  caso_pergunta_conducao?: string;
+  caso_cautela_etica?: string;
 }
 
 export interface CamaraObra {

@@ -203,7 +203,17 @@ export default function AdminCentralEstacao() {
     traducao_labirinto: '',
     traducao_ferramenta_associada: '',
     traducao_pergunta_pessoal: '',
-    traducao_pergunta_profissional: ''
+    traducao_pergunta_profissional: '',
+    caso_nome_ficticio: '',
+    caso_idade: '',
+    caso_contexto: '',
+    caso_frase_central: '',
+    caso_campo_superficie: '',
+    caso_campo_simbolico: '',
+    caso_campo_nao_concluir: '',
+    caso_relacao_conto: '',
+    caso_pergunta_conducao: '',
+    caso_cautela_etica: ''
   });
 
   // 1. Fetch Estação
@@ -271,7 +281,17 @@ export default function AdminCentralEstacao() {
         traducao_labirinto: estacao.traducao_labirinto || '',
         traducao_ferramenta_associada: estacao.traducao_ferramenta_associada || '',
         traducao_pergunta_pessoal: estacao.traducao_pergunta_pessoal || '',
-        traducao_pergunta_profissional: estacao.traducao_pergunta_profissional || ''
+        traducao_pergunta_profissional: estacao.traducao_pergunta_profissional || '',
+        caso_nome_ficticio: estacao.caso_nome_ficticio || '',
+        caso_idade: estacao.caso_idade || '',
+        caso_contexto: estacao.caso_contexto || '',
+        caso_frase_central: estacao.caso_frase_central || '',
+        caso_campo_superficie: estacao.caso_campo_superficie || '',
+        caso_campo_simbolico: estacao.caso_campo_simbolico || '',
+        caso_campo_nao_concluir: estacao.caso_campo_nao_concluir || '',
+        caso_relacao_conto: estacao.caso_relacao_conto || '',
+        caso_pergunta_conducao: estacao.caso_pergunta_conducao || '',
+        caso_cautela_etica: estacao.caso_cautela_etica || ''
       });
     }
   }, [estacao]);
@@ -320,7 +340,17 @@ export default function AdminCentralEstacao() {
           traducao_labirinto: data.traducao_labirinto,
           traducao_ferramenta_associada: data.traducao_ferramenta_associada,
           traducao_pergunta_pessoal: data.traducao_pergunta_pessoal,
-          traducao_pergunta_profissional: data.traducao_pergunta_profissional
+          traducao_pergunta_profissional: data.traducao_pergunta_profissional,
+          caso_nome_ficticio: data.caso_nome_ficticio,
+          caso_idade: data.caso_idade,
+          caso_contexto: data.caso_contexto,
+          caso_frase_central: data.caso_frase_central,
+          caso_campo_superficie: data.caso_campo_superficie,
+          caso_campo_simbolico: data.caso_campo_simbolico,
+          caso_campo_nao_concluir: data.caso_campo_nao_concluir,
+          caso_relacao_conto: data.caso_relacao_conto,
+          caso_pergunta_conducao: data.caso_pergunta_conducao,
+          caso_cautela_etica: data.caso_cautela_etica
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -777,6 +807,120 @@ export default function AdminCentralEstacao() {
                       onChange={e => setStationForm({...stationForm, conto_sussurro_guardia: e.target.value})} 
                       placeholder="Frase curta de impacto..."
                     />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Camada 5 — Caso Simbólico */}
+              <AccordionItem value="caso-simbolico" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Caso Simbólico (Camada 5)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome Fictício</Label>
+                      <Input 
+                        value={stationForm.caso_nome_ficticio}
+                        onChange={(e) => setStationForm({ ...stationForm, caso_nome_ficticio: e.target.value })}
+                        placeholder="Ex: Helena"
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Idade</Label>
+                      <Input 
+                        value={stationForm.caso_idade}
+                        onChange={(e) => setStationForm({ ...stationForm, caso_idade: e.target.value })}
+                        placeholder="Ex: 42 anos"
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Contexto Breve</Label>
+                    <Textarea 
+                      value={stationForm.caso_contexto}
+                      onChange={(e) => setStationForm({ ...stationForm, caso_contexto: e.target.value })}
+                      placeholder="Descreva o contexto do caso..."
+                      className="bg-white/5 border-white/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Frase Central</Label>
+                    <Input 
+                      value={stationForm.caso_frase_central}
+                      onChange={(e) => setStationForm({ ...stationForm, caso_frase_central: e.target.value })}
+                      placeholder="Ex: 'Minha vida funciona, mas não me toca.'"
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Campo na Superfície</Label>
+                      <Textarea 
+                        value={stationForm.caso_campo_superficie}
+                        onChange={(e) => setStationForm({ ...stationForm, caso_campo_superficie: e.target.value })}
+                        className="bg-white/5 border-white/10 min-h-[100px]"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Campo Simbólico</Label>
+                      <Textarea 
+                        value={stationForm.caso_campo_simbolico}
+                        onChange={(e) => setStationForm({ ...stationForm, caso_campo_simbolico: e.target.value })}
+                        className="bg-white/5 border-white/10 min-h-[100px]"
+                      />
+                    </div>
+                    <div className="space-y-2 text-red-400">
+                      <Label className="text-[10px] uppercase tracking-widest text-red-400/60 font-bold">O que NÃO concluir</Label>
+                      <Textarea 
+                        value={stationForm.caso_campo_nao_concluir}
+                        onChange={(e) => setStationForm({ ...stationForm, caso_campo_nao_concluir: e.target.value })}
+                        className="bg-red-500/5 border-red-500/10 min-h-[100px]"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Relação com o Conto</Label>
+                    <Textarea 
+                      value={stationForm.caso_relacao_conto}
+                      onChange={(e) => setStationForm({ ...stationForm, caso_relacao_conto: e.target.value })}
+                      placeholder="Como este caso se conecta com o conto trabalhado?"
+                      className="bg-white/5 border-white/10 min-h-[100px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground text-gold">Pergunta de Condução</Label>
+                    <Input 
+                      value={stationForm.caso_pergunta_conducao}
+                      onChange={(e) => setStationForm({ ...stationForm, caso_pergunta_conducao: e.target.value })}
+                      placeholder="Uma pergunta segura para a terapeuta usar..."
+                      className="bg-gold/5 border-gold/10"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-blue-400/60 font-bold">Cautela Ética</Label>
+                    <Textarea 
+                      value={stationForm.caso_cautela_etica}
+                      onChange={(e) => setStationForm({ ...stationForm, caso_cautela_etica: e.target.value })}
+                      placeholder="Orientações sobre o que não fazer..."
+                      className="bg-blue-500/5 border-blue-500/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 5'}
+                    </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
