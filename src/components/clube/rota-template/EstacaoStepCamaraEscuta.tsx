@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History, X, MapPin, Loader2, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -95,6 +96,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   estacaoId,
   onNext
 }) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: obras, isLoading } = useCamaraObras(estacaoId);
   const [activeObra, setActiveObra] = useState<CamaraObra | null>(null);
@@ -109,6 +111,36 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const [reflexaoOficio, setReflexaoOficio] = useState('');
   const [simbolo, setSimbolo] = useState('');
   const [intensidade, setIntensidade] = useState('Moderada');
+
+  useEffect(() => {
+    const checkProgress = async () => {
+      if (!user || !obras || obras.length === 0) return;
+      
+      const { data: records } = await supabase
+        .from('clube_camara_escuta_registros')
+        .select('obra_id')
+        .eq('user_id', user.id)
+        .eq('estacao_id', estacaoId);
+        
+      if (records && records.length > 0) {
+        const completedIds = new Set(records.map(r => r.obra_id));
+        const faixasObras = obras.filter(o => !o.url.includes('spotify.com'));
+        
+        // Encontra a primeira obra não concluída
+        const nextObra = faixasObras.find(o => !completedIds.has(o.id));
+        
+        if (nextObra) {
+          // Se encontrou uma não concluída, mas já concluiu algumas, podemos perguntar ou já setar
+          // Para simplicidade e fluidez, vamos apenas manter o estado limpo se mudar de obra
+        } else if (completedIds.size >= faixasObras.length && faixasObras.length > 0) {
+          // Se já concluiu todas, mostra a devolutiva
+          setShowDevolutiva(true);
+        }
+      }
+    };
+    
+    checkProgress();
+  }, [user, obras, estacaoId]);
 
   useEffect(() => {
     if (activeObra) {
@@ -810,6 +842,15 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       </div>
 
       <div className="pt-16 flex flex-col items-center gap-8">
+        <Button 
+          variant="outline"
+          onClick={() => navigate('/clube/rota-dos-lobos')}
+          className="border-white/10 text-white/40 hover:text-gold hover:border-gold/30 rounded-full px-10 h-14 uppercase tracking-widest text-[10px] font-bold"
+        >
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Voltar para a Rota dos Lobos
+        </Button>
+
         <div className="flex items-center gap-4 px-8 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
           <CheckCircle2 className="w-4 h-4 text-gold/40" />
           <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Treinamento de Percepção Simbólica</span>
