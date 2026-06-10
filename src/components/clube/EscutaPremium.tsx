@@ -69,9 +69,10 @@ export function EscutaPremium({
 
   // Handle Spotify Embed
   if (audioUrl.includes('spotify.com')) {
-    const embedUrl = audioUrl.includes('embed') 
-      ? audioUrl 
-      : audioUrl.replace('open.spotify.com/', 'open.spotify.com/embed/');
+    let embedUrl = audioUrl;
+    if (!audioUrl.includes('/embed/')) {
+      embedUrl = audioUrl.replace('open.spotify.com/', 'open.spotify.com/embed/');
+    }
 
     return (
       <div className={cn("w-full max-w-2xl mx-auto py-8 px-4", className)}>
