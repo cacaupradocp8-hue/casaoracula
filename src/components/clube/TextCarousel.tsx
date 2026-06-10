@@ -98,9 +98,9 @@ export const TextCarousel: React.FC<TextCarouselProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="relative min-h-[200px] flex flex-col justify-center"
+            className="relative min-h-[180px] md:min-h-[200px] flex flex-col justify-center"
           >
-            <div className="overflow-hidden px-12">
+            <div className="overflow-hidden px-8 md:px-12">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
@@ -108,7 +108,7 @@ export const TextCarousel: React.FC<TextCarouselProps> = ({
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="text-center text-white font-serif italic text-xl md:text-2xl leading-relaxed py-8"
+                  className="text-center text-white font-serif italic text-lg md:text-2xl leading-relaxed py-4 md:py-8"
                 >
                   {cards[currentIndex]}
                 </motion.div>
