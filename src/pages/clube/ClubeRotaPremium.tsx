@@ -320,44 +320,16 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 13 && (
-                  <div className="text-center space-y-12 max-w-2xl mx-auto py-10">
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-black">Selo da Travessia</span>
-                      <h2 className="text-4xl md:text-6xl font-serif text-white italic">Fechamento 80/20</h2>
-                    </div>
-
-                    <Card className="bg-[#0A0A0B] border-white/5 p-12 rounded-[48px] relative overflow-hidden group">
-                      <div className="absolute top-0 right-0 p-12 opacity-5 group-hover:opacity-10 transition-opacity">
-                        <Sparkles className="w-32 h-32 text-gold" />
-                      </div>
-                      
-                      <div className="relative z-10 space-y-8">
-                        <p className="text-white/80 font-serif italic text-2xl md:text-3xl leading-relaxed">
-                          {estacao.fechamento_texto || 'Você concluiu as camadas fundamentais desta estação. Os próximos jardins e missões estão sendo preparados para sua jornada.'}
-                        </p>
-                        
-                        <div className="h-px w-24 bg-gold/20 mx-auto" />
-                        
-                        <p className="text-gold/40 text-[10px] uppercase tracking-[0.4em] font-black">Sua jornada continua</p>
-                      </div>
-                    </Card>
-
-                    <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-                      <Button 
-                        onClick={() => navigate('/clube/cidadela')}
-                        variant="outline"
-                        className="border-white/10 text-white/40 hover:text-white hover:bg-white/5 rounded-full px-12 h-16 text-[10px] uppercase tracking-widest font-black"
-                      >
-                        Ver CidadELA
-                      </Button>
-                      <Button 
-                        onClick={handleNext} 
-                        className="bg-gold hover:bg-gold/80 text-midnight font-bold rounded-full px-16 h-16 text-[10px] uppercase tracking-widest shadow-2xl shadow-gold/20 transition-all hover:scale-105"
-                      >
-                        Concluir Estação
-                      </Button>
-                    </div>
-                  </div>
+                  <EstacaoStepFechamento 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    titulo={estacao.fechamento_titulo || 'Essência 80/20'}
+                    subtitulo={estacao.fechamento_subtitulo || ''}
+                    texto={estacao.fechamento_texto || ''}
+                    audioUrl={estacao.fechamento_audio_url}
+                    proximaEstacaoNome={estacao.fechamento_botao_proxima}
+                    onFinish={handleNext}
+                  />
                 )}
 
               </motion.div>
