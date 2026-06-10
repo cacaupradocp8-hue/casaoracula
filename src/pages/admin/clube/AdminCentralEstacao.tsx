@@ -1087,9 +1087,6 @@ export default function AdminCentralEstacao() {
                       {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 6'}
                     </Button>
                   </div>
-                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 6'}
-                    </Button>
-                  </div>
                 </AccordionContent>
               </AccordionItem>
 
