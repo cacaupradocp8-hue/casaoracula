@@ -433,7 +433,14 @@ export default function AdminCentralEstacao() {
           oraculo_imagem_url: data.oraculo_imagem_url,
           oraculo_mensagem: data.oraculo_mensagem,
           oraculo_pergunta: data.oraculo_pergunta,
-          oraculo_integracao_texto: data.oraculo_integracao_texto
+          oraculo_integracao_texto: data.oraculo_integracao_texto,
+          cartografia_rastro_nome: data.cartografia_rastro_nome,
+          cartografia_ferramenta_desbloqueada: data.cartografia_ferramenta_desbloqueada,
+          cartografia_distrito_impactado: data.cartografia_distrito_impactado,
+          cartografia_distrito_secundario: data.cartografia_distrito_secundario,
+          cartografia_competencia: data.cartografia_competencia,
+          cartografia_proxima_travessia: data.cartografia_proxima_travessia,
+          cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao
         })
         .eq('id', estacaoId);
       if (error) throw error;
