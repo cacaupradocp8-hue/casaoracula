@@ -139,10 +139,10 @@ export function EscutaPremium({
                       <Headphones className="w-8 h-8 text-gold/30" />
                     </div>
                   )}
-                  {/* Inner Hole */}
+                  {/* Inner Hole - Subtle and Deep */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-white/20 border border-gold/40 shadow-inner z-40 backdrop-blur-sm" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-white z-50 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+                    <div className="w-4 h-4 rounded-full bg-black border border-white/5 shadow-inner z-40" />
+                    <div className="w-1 h-1 rounded-full bg-[#1a1a1a] z-50 shadow-[inset_0_0_2px_rgba(255,255,255,0.2)]" />
                   </div>
                 </div>
               </div>
