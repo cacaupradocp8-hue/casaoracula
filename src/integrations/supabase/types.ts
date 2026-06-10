@@ -4690,6 +4690,11 @@ export type Database = {
           missao_titulo: string | null
           movimento_simbolico: string | null
           numero: number
+          oraculo_imagem_url: string | null
+          oraculo_integracao_texto: string | null
+          oraculo_mensagem: string | null
+          oraculo_nome: string | null
+          oraculo_pergunta: string | null
           ordem: number
           publicada: boolean | null
           quiz_id: string | null
@@ -4789,6 +4794,11 @@ export type Database = {
           missao_titulo?: string | null
           movimento_simbolico?: string | null
           numero: number
+          oraculo_imagem_url?: string | null
+          oraculo_integracao_texto?: string | null
+          oraculo_mensagem?: string | null
+          oraculo_nome?: string | null
+          oraculo_pergunta?: string | null
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
@@ -4888,6 +4898,11 @@ export type Database = {
           missao_titulo?: string | null
           movimento_simbolico?: string | null
           numero?: number
+          oraculo_imagem_url?: string | null
+          oraculo_integracao_texto?: string | null
+          oraculo_mensagem?: string | null
+          oraculo_nome?: string | null
+          oraculo_pergunta?: string | null
           ordem?: number
           publicada?: boolean | null
           quiz_id?: string | null
@@ -5691,6 +5706,60 @@ export type Database = {
             columns: ["book_id"]
             isOneToOne: true
             referencedRelation: "books"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_oraculo_estacao_registros: {
+        Row: {
+          created_at: string | null
+          data: string | null
+          estacao_id: string | null
+          id: string
+          oraculo_nome: string | null
+          pergunta_oraculo: string | null
+          rota_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          oraculo_nome?: string | null
+          pergunta_oraculo?: string | null
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          oraculo_nome?: string | null
+          pergunta_oraculo?: string | null
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_oraculo_estacao_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_oraculo_estacao_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
             referencedColumns: ["id"]
           },
         ]
