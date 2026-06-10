@@ -398,7 +398,13 @@ export default function AdminCentralEstacao() {
           jardim_psique_pergunta: data.jardim_psique_pergunta,
           jardim_psique_subperguntas: data.jardim_psique_subperguntas,
           jardim_oficio_pergunta: data.jardim_oficio_pergunta,
-          jardim_oficio_subperguntas: data.jardim_oficio_subperguntas
+          jardim_oficio_subperguntas: data.jardim_oficio_subperguntas,
+          missao_titulo: data.missao_titulo,
+          missao_texto: data.missao_texto,
+          missao_checklist: data.missao_checklist,
+          missao_label_observacao: data.missao_label_observacao,
+          missao_label_sinal: data.missao_label_sinal,
+          missao_label_pergunta: data.missao_label_pergunta
         })
         .eq('id', estacaoId);
       if (error) throw error;
