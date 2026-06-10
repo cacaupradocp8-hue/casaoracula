@@ -221,7 +221,11 @@ export default function AdminCentralEstacao() {
     ferramenta_nome: '',
     ferramenta_descricao: '',
     ferramenta_eixos: [] as any[],
-    ferramenta_resultados: [] as any[]
+    ferramenta_resultados: [] as any[],
+    jardim_psique_pergunta: '',
+    jardim_psique_subperguntas: [] as string[],
+    jardim_oficio_pergunta: '',
+    jardim_oficio_subperguntas: [] as string[]
   });
 
   // 1. Fetch Estação
