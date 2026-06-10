@@ -16,6 +16,9 @@ interface OraculoEstacaoProps {
   mensagem: string;
   pergunta: string;
   integracaoTexto: string;
+  traducaoPorta?: string;
+  traducaoTorre?: string;
+  traducaoLabirinto?: string;
   onNext: () => void;
 }
 
