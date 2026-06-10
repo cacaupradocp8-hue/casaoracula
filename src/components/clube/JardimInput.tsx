@@ -161,7 +161,15 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
             ) : (
               <Save className="w-5 h-5 mr-3 group-hover:scale-110 transition-transform duration-300" />
             )}
-            Guardar no Jardim {type === 'psique' ? 'da Psique' : 'do Ofício'}
+            {lastSaved ? 'Atualizar Jardim' : `Guardar no Jardim ${type === 'psique' ? 'da Psique' : 'do Ofício'}`}
+          </Button>
+
+          <Button
+            variant="ghost"
+            onClick={() => toast.info('Rascunho temporário mantido no navegador.')}
+            className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white"
+          >
+            Salvar e continuar depois
           </Button>
           
           {lastSaved && (
@@ -178,6 +186,7 @@ export function JardimInput({ type, pergunta, estacaoId, pontoId, sourceTitle }:
           )}
         </div>
       </div>
+
     </div>
   );
 }
