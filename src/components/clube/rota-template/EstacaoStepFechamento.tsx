@@ -1,0 +1,171 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle2, Headphones, Play, Pause, ChevronRight, Sparkles, Footprints, ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useMutation } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+
+interface FechamentoStepProps {
+  estacaoId: string;
+  rotaId: string;
+  titulo: string;
+  subtitulo: string;
+  texto: string;
+  audioUrl?: string;
+  proximaEstacaoNome?: string;
+  onFinish: () => void;
+}
+
+export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
+  estacaoId,
+  rotaId,
+  titulo,
+  subtitulo,
+  texto,
+  audioUrl,
+  proximaEstacaoNome,
+  onFinish
+}) => {
+  const { user } = useAuth();
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [audio] = useState(audioUrl ? new Audio(audioUrl) : null);
+
+  const conclusionMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) return;
+      
+      const { error } = await supabase
+        .from('clube_conclusao_estacoes')
+        .upsert({
+          user_id: user.id,
+          rota_id: rotaId,
+          estacao_id: estacaoId,
+          fechamento_concluido: true,
+          proxima_estacao_liberada: proximaEstacaoNome,
+          data_conclusao: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,estacao_id'
+        });
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success('Estação concluída com sucesso!');
+      onFinish();
+    },
+    onError: (err: any) => {
+      toast.error('Erro ao concluir estação: ' + err.message);
+    }
+  });
+
+  const toggleAudio = () => {
+    if (!audio) return;
+    if (isPlaying) {
+      audio.pause();
+    } else {
+      audio.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+    };
+  }, [audio]);
+
+  return (
+    <div className="max-w-4xl mx-auto space-y-12 pb-32 px-4">
+      <div className="text-center space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="space-y-4"
+        >
+          <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Essência 80/20</span>
+          <h2 className="text-4xl md:text-6xl font-serif text-white italic">{titulo}</h2>
+          <p className="text-gold/60 text-xl md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed">
+            “{subtitulo}”
+          </p>
+        </motion.div>
+      </div>
+
+      <Card className="bg-[#0A0A0B]/60 backdrop-blur-xl border-white/5 p-12 rounded-[48px] space-y-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
+          <Sparkles className="w-40 h-40 text-gold" />
+        </div>
+
+        <div className="relative z-10 space-y-8">
+          <div className="prose prose-invert prose-p:font-serif prose-p:italic prose-p:text-xl prose-p:text-white/70 prose-p:leading-relaxed max-w-3xl mx-auto text-center">
+            {texto.split('\n\n').map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
+          </div>
+
+          {audioUrl && (
+            <div className="flex justify-center pt-6">
+              <Button
+                onClick={toggleAudio}
+                className={cn(
+                  "h-20 px-10 rounded-full gap-4 transition-all duration-500",
+                  isPlaying 
+                    ? "bg-gold text-midnight shadow-[0_0_40px_rgba(212,175,55,0.3)]" 
+                    : "bg-white/5 hover:bg-white/10 text-white/80 border border-white/10"
+                )}
+              >
+                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
+                <div className="text-left">
+                  <span className="text-[10px] uppercase tracking-widest font-black block opacity-60">
+                    {isPlaying ? 'Ouvindo Agora' : 'Sussurro de Fechamento'}
+                  </span>
+                  <span className="text-sm font-serif italic">Escutar síntese final (3 min)</span>
+                </div>
+              </Button>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <div className="flex flex-col items-center gap-8 pt-8">
+        <div className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl justify-center">
+          <Button
+            onClick={() => conclusionMutation.mutate()}
+            disabled={conclusionMutation.isPending}
+            className="flex-1 bg-white text-midnight hover:bg-white/90 font-bold h-20 rounded-full text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105"
+          >
+            {conclusionMutation.isPending ? 'Finalizando...' : 'Concluir Estação'}
+          </Button>
+          
+          {proximaEstacaoNome && (
+            <Button
+              variant="outline"
+              disabled={conclusionMutation.isPending}
+              onClick={() => conclusionMutation.mutate()}
+              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-xs uppercase tracking-widest transition-all group"
+            >
+              Entrar na Próxima Travessia
+              <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
+            </Button>
+          )}
+        </div>
+        
+        {proximaEstacaoNome && (
+          <div className="flex items-center gap-3 text-white/30">
+            <Footprints className="w-4 h-4" />
+            <span className="text-[10px] uppercase tracking-[0.3em] font-black italic">
+              Rumo à {proximaEstacaoNome}
+            </span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+import { cn } from '@/lib/utils';
