@@ -1456,6 +1456,73 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 11 — Oráculo da Estação */}
+              <AccordionItem value="oraculo-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Oráculo da Estação (Camada 11)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome da Carta</Label>
+                      <Input 
+                        value={stationForm.oraculo_nome}
+                        onChange={(e) => setStationForm({ ...stationForm, oraculo_nome: e.target.value })}
+                        placeholder="Ex: O Osso que Canta"
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Imagem Simbólica URL</Label>
+                      <Input 
+                        value={stationForm.oraculo_imagem_url}
+                        onChange={(e) => setStationForm({ ...stationForm, oraculo_imagem_url: e.target.value })}
+                        placeholder="URL da imagem da carta..."
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Mensagem da Carta</Label>
+                    <Textarea 
+                      value={stationForm.oraculo_mensagem}
+                      onChange={(e) => setStationForm({ ...stationForm, oraculo_mensagem: e.target.value })}
+                      placeholder="A mensagem poética que a carta carrega..."
+                      className="bg-white/5 border-white/10 min-h-[100px] font-serif italic"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground text-gold">Pergunta de Integração</Label>
+                    <Input 
+                      value={stationForm.oraculo_pergunta}
+                      onChange={(e) => setStationForm({ ...stationForm, oraculo_pergunta: e.target.value })}
+                      placeholder="A pergunta final para fechar a estação..."
+                      className="bg-gold/5 border-gold/10"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Texto de Integração Final</Label>
+                    <Textarea 
+                      value={stationForm.oraculo_integracao_texto}
+                      onChange={(e) => setStationForm({ ...stationForm, oraculo_integracao_texto: e.target.value })}
+                      placeholder="Conclusão pedagógica do oráculo..."
+                      className="bg-white/5 border-white/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 11'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
