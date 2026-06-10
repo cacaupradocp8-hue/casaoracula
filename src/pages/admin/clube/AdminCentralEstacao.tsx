@@ -1368,6 +1368,79 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 10 — Missão de Campo */}
+              <AccordionItem value="missao-campo-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Missão de Campo (Camada 10)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Título da Missão</Label>
+                    <Input 
+                      value={stationForm.missao_titulo}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_titulo: e.target.value })}
+                      placeholder="Ex: Observar o que ainda pulsa"
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Texto de Orientação</Label>
+                    <Textarea 
+                      value={stationForm.missao_texto}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_texto: e.target.value })}
+                      placeholder="Explique os passos da missão..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Itens do Checklist (um por linha)</Label>
+                    <Textarea 
+                      value={stationForm.missao_checklist?.join('\n')}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_checklist: e.target.value.split('\n') })}
+                      placeholder="Identifiquei uma frase...&#10;Observei um desejo..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/5">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Observação</Label>
+                      <Input 
+                        value={stationForm.missao_label_observacao}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_observacao: e.target.value })}
+                        placeholder="Ex: O que observei?"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Sinal</Label>
+                      <Input 
+                        value={stationForm.missao_label_sinal}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_sinal: e.target.value })}
+                        placeholder="Ex: Que sinal apareceu?"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Pergunta</Label>
+                      <Input 
+                        value={stationForm.missao_label_pergunta}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_pergunta: e.target.value })}
+                        placeholder="Ex: Que pergunta fazer?"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 10'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
