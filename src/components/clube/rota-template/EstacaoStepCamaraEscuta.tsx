@@ -174,7 +174,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           user_id: user.id,
           reflexao_pessoal: reflexaoPsique,
           titulo: `Escuta: ${activeObra.titulo}`,
-          tipo_registro: 'estacao_rota',
+          tipo_registro: 'ferramenta',
           ferramenta_chave: puntoId,
           ferramenta_nome: `Câmara da Escuta: ${activeObra.titulo}`,
           data_aplicacao: new Date().toISOString(),
