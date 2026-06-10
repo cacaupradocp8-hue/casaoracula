@@ -403,7 +403,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="space-y-8">
             <div className="text-center space-y-4">
               <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Imersão Sonora</span>
-              <h3 className="text-4xl font-serif text-white italic leading-tight">{playlistObra.titulo}</h3>
+              <h3 className="text-4xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h3>
             </div>
             <SpotifyPlaylistEmbed url={playlistObra.url} />
           </div>
