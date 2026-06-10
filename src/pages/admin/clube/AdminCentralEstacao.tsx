@@ -295,7 +295,11 @@ export default function AdminCentralEstacao() {
         caso_campo_nao_concluir: estacao.caso_campo_nao_concluir || '',
         caso_relacao_conto: estacao.caso_relacao_conto || '',
         caso_pergunta_conducao: estacao.caso_pergunta_conducao || '',
-        caso_cautela_etica: estacao.caso_cautela_etica || ''
+        caso_cautela_etica: estacao.caso_cautela_etica || '',
+        desafio_pergunta: estacao.desafio_pergunta || '',
+        desafio_alternativas: (estacao.desafio_alternativas as any[]) || [],
+        desafio_leitura_modelo: estacao.desafio_leitura_modelo || '',
+        desafio_cuidado_etico: estacao.desafio_cuidado_etico || ''
       });
     }
   }, [estacao]);
