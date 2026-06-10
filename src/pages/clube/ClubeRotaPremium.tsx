@@ -13,6 +13,7 @@ import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/Estac
 import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
+import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
