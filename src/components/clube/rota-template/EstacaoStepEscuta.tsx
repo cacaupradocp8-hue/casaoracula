@@ -59,21 +59,24 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
 
           {/* Main Title - Compacted for better mobile flow */}
           <div className="space-y-4 py-4">
-            <div className="flex flex-col items-center gap-1">
-              <span className="text-base md:text-xl font-display text-gold/90 uppercase tracking-[0.4em] leading-none">Clareira do</span>
-              <h2 className="text-5xl md:text-8xl font-display text-gold italic tracking-tight leading-none drop-shadow-2xl">Chamado</h2>
+            <div className="flex flex-col items-center gap-1 group">
+              <h1 className="text-4xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block">
+                <span className="bg-gradient-to-b from-white via-[#e2c186] to-[#b89555] bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter contrast-[1.1]">
+                  Clareira do<br />Chamado
+                </span>
+              </h1>
             </div>
             
-            <div className="flex items-center justify-center gap-4 py-2">
-              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
-              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
-              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+            <div className="flex items-center justify-center gap-4 py-2 opacity-60">
+              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-[#b89555] to-transparent" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/50" />
+              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-[#b89555] to-transparent" />
             </div>
 
             <div className="flex items-center justify-center gap-3">
-              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
-              <span className="text-2xl md:text-3xl font-display italic text-gold/80 tracking-widest">Rota dos Lobos</span>
-              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/40" />
+              <span className="text-xl md:text-2xl font-display text-white/80 tracking-[0.3em] uppercase">Rota dos Lobos</span>
+              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/40" />
             </div>
           </div>
           

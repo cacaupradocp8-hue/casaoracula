@@ -32,7 +32,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['Cormorant Garamond', 'serif'],
+        display: ['Cinzel', 'serif'],
+        cormorant: ['Cormorant Garamond', 'serif'],
         body: ['Inter', 'sans-serif'],
       },
       boxShadow: {

@@ -41,8 +41,11 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           {obraRegente || "Obra Regente"}
           <span className="w-8 h-px bg-gold/30" />
         </h4>
-        <h1 className="text-4xl md:text-6xl font-serif text-white tracking-tight leading-tight">
-          Estação — <span className="italic">{titulo.replace('Estação', '').replace('—', '').trim()}</span>
+        <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block group">
+          <span className="bg-gradient-to-b from-white via-[#e2c186] to-[#b89555] bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter contrast-[1.1]">
+            {titulo.replace('Estação', '').replace('—', '').trim()}
+          </span>
+          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#b89555] to-transparent opacity-50" />
         </h1>
       </div>
 
@@ -58,7 +61,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
 
       <div className="flex flex-col items-center gap-8">
         <div className="space-y-4 max-w-xl">
-          <p className="text-white/80 font-serif text-lg leading-relaxed italic">
+          <p className="text-white/80 font-cormorant text-xl leading-relaxed italic">
             "{fraseAbertura}"
           </p>
         </div>
