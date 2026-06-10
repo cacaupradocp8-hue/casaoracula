@@ -83,7 +83,19 @@ export const EstacaoStepMissaoCampo: React.FC<MissaoCampoProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
+      {view !== 'orientacao' && view !== 'concluido' && (
+        <button 
+          onClick={() => {
+            if (view === 'registro') setView('orientacao');
+          }}
+          className="flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-bold hover:text-white transition-colors"
+        >
+          <Sword className="w-3 h-3 rotate-180" />
+          Voltar na Missão
+        </button>
+      )}
       <AnimatePresence mode="wait">
+
         {view === 'orientacao' && (
           <motion.div
             key="orientacao"
