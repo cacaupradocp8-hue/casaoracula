@@ -4665,7 +4665,11 @@ export type Database = {
           essencia_transformacao: string | null
           fase_lunar: string | null
           fechamento_texto: string | null
+          ferramenta_descricao: string | null
+          ferramenta_eixos: Json | null
+          ferramenta_nome: string | null
           ferramenta_oracular_nome: string | null
+          ferramenta_resultados: Json | null
           frase_abertura: string | null
           frase_voz_clareira: string | null
           id: string
@@ -4750,7 +4754,11 @@ export type Database = {
           essencia_transformacao?: string | null
           fase_lunar?: string | null
           fechamento_texto?: string | null
+          ferramenta_descricao?: string | null
+          ferramenta_eixos?: Json | null
+          ferramenta_nome?: string | null
           ferramenta_oracular_nome?: string | null
+          ferramenta_resultados?: Json | null
           frase_abertura?: string | null
           frase_voz_clareira?: string | null
           id?: string
@@ -4835,7 +4843,11 @@ export type Database = {
           essencia_transformacao?: string | null
           fase_lunar?: string | null
           fechamento_texto?: string | null
+          ferramenta_descricao?: string | null
+          ferramenta_eixos?: Json | null
+          ferramenta_nome?: string | null
           ferramenta_oracular_nome?: string | null
+          ferramenta_resultados?: Json | null
           frase_abertura?: string | null
           frase_voz_clareira?: string | null
           id?: string
@@ -4890,6 +4902,69 @@ export type Database = {
           },
           {
             foreignKeyName: "clube_estacoes_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_ferramenta_oracular_registros: {
+        Row: {
+          created_at: string | null
+          data: string | null
+          estacao_id: string | null
+          id: string
+          nome_ferramenta: string | null
+          rastro: string | null
+          respostas: Json | null
+          resultado_simbolico: string | null
+          rota_id: string | null
+          status: string | null
+          territorio_impactado: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          nome_ferramenta?: string | null
+          rastro?: string | null
+          respostas?: Json | null
+          resultado_simbolico?: string | null
+          rota_id?: string | null
+          status?: string | null
+          territorio_impactado?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          nome_ferramenta?: string | null
+          rastro?: string | null
+          respostas?: Json | null
+          resultado_simbolico?: string | null
+          rota_id?: string | null
+          status?: string | null
+          territorio_impactado?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_ferramenta_oracular_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_ferramenta_oracular_registros_rota_id_fkey"
             columns: ["rota_id"]
             isOneToOne: false
             referencedRelation: "clube_rotas"
