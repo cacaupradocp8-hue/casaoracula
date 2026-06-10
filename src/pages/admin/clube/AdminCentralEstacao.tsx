@@ -382,7 +382,11 @@ export default function AdminCentralEstacao() {
           ferramenta_nome: data.ferramenta_nome,
           ferramenta_descricao: data.ferramenta_descricao,
           ferramenta_eixos: data.ferramenta_eixos,
-          ferramenta_resultados: data.ferramenta_resultados
+          ferramenta_resultados: data.ferramenta_resultados,
+          jardim_psique_pergunta: data.jardim_psique_pergunta,
+          jardim_psique_subperguntas: data.jardim_psique_subperguntas,
+          jardim_oficio_pergunta: data.jardim_oficio_pergunta,
+          jardim_oficio_subperguntas: data.jardim_oficio_subperguntas
         })
         .eq('id', estacaoId);
       if (error) throw error;
