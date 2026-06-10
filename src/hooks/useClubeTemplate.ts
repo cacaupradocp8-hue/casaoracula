@@ -91,6 +91,13 @@ export interface Estacao {
   oraculo_mensagem?: string;
   oraculo_pergunta?: string;
   oraculo_integracao_texto?: string;
+  cartografia_rastro_nome?: string;
+  cartografia_ferramenta_desbloqueada?: string;
+  cartografia_distrito_impactado?: string;
+  cartografia_distrito_secundario?: string;
+  cartografia_competencia?: string;
+  cartografia_proxima_travessia?: string;
+  cartografia_mensagem_conclusao?: string;
 }
 
 export interface CamaraObra {
