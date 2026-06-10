@@ -52,17 +52,12 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
     <div className="pb-20">
       <div className="space-y-8 text-center max-w-2xl mx-auto mb-20">
         <div className="space-y-12">
-          {/* Header context */}
-          <div className="space-y-4">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-gold/60">{obraRegente || "Mulheres que correm com os lobos"}</span>
-          </div>
-
           {/* Main Title - Compacted for better mobile flow */}
           <div className="space-y-4 py-4">
             <div className="flex flex-col items-center gap-1 group">
               <h1 className="text-4xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block">
                 <span className="bg-gradient-to-b from-white via-[#e2c186] to-[#b89555] bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter contrast-[1.1]">
-                  Clareira do<br />Chamado
+                  Escuta Ritual
                 </span>
               </h1>
             </div>
