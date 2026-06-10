@@ -193,7 +193,17 @@ export default function AdminCentralEstacao() {
     conto_audio_url: '',
     conto_imagem_url: '',
     conto_erro_comum: '',
-    conto_sussurro_guardia: ''
+    conto_sussurro_guardia: '',
+    traducao_territorio_principal: '',
+    traducao_justificativa_principal: '',
+    traducao_territorio_secundario: '',
+    traducao_justificativa_secundaria: '',
+    traducao_porta: '',
+    traducao_torre: '',
+    traducao_labirinto: '',
+    traducao_ferramenta_associada: '',
+    traducao_pergunta_pessoal: '',
+    traducao_pergunta_profissional: ''
   });
 
   // 1. Fetch Estação
