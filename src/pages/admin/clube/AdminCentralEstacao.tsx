@@ -217,7 +217,11 @@ export default function AdminCentralEstacao() {
     desafio_pergunta: '',
     desafio_alternativas: [] as any[],
     desafio_leitura_modelo: '',
-    desafio_cuidado_etico: ''
+    desafio_cuidado_etico: '',
+    ferramenta_nome: '',
+    ferramenta_descricao: '',
+    ferramenta_eixos: [] as any[],
+    ferramenta_resultados: [] as any[]
   });
 
   // 1. Fetch Estação
@@ -299,7 +303,11 @@ export default function AdminCentralEstacao() {
         desafio_pergunta: estacao.desafio_pergunta || '',
         desafio_alternativas: (estacao.desafio_alternativas as any[]) || [],
         desafio_leitura_modelo: estacao.desafio_leitura_modelo || '',
-        desafio_cuidado_etico: estacao.desafio_cuidado_etico || ''
+        desafio_cuidado_etico: estacao.desafio_cuidado_etico || '',
+        ferramenta_nome: estacao.ferramenta_nome || '',
+        ferramenta_descricao: estacao.ferramenta_descricao || '',
+        ferramenta_eixos: (estacao.ferramenta_eixos as any[]) || [],
+        ferramenta_resultados: (estacao.ferramenta_resultados as any[]) || []
       });
     }
   }, [estacao]);
@@ -362,7 +370,11 @@ export default function AdminCentralEstacao() {
           desafio_pergunta: data.desafio_pergunta,
           desafio_alternativas: data.desafio_alternativas,
           desafio_leitura_modelo: data.desafio_leitura_modelo,
-          desafio_cuidado_etico: data.desafio_cuidado_etico
+          desafio_cuidado_etico: data.desafio_cuidado_etico,
+          ferramenta_nome: data.ferramenta_nome,
+          ferramenta_descricao: data.ferramenta_descricao,
+          ferramenta_eixos: data.ferramenta_eixos,
+          ferramenta_resultados: data.ferramenta_resultados
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -1066,7 +1078,6 @@ export default function AdminCentralEstacao() {
                       className="bg-blue-500/5 border-blue-500/10 min-h-[80px]"
                     />
                   </div>
-
                   <div className="flex justify-end pt-4">
                     <Button 
                       onClick={() => updateStationMutation.mutate(stationForm)}
@@ -1074,6 +1085,182 @@ export default function AdminCentralEstacao() {
                       className="bg-gold text-midnight font-bold"
                     >
                       {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 6'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Camada 7 — Ferramenta Oracular */}
+              <AccordionItem value="ferramenta-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Ferramenta Oracular (Camada 7)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome da Ferramenta</Label>
+                      <Input 
+                        value={stationForm.ferramenta_nome}
+                        onChange={(e) => setStationForm({ ...stationForm, ferramenta_nome: e.target.value })}
+                        placeholder="Ex: Mapa do Instinto Soterrado"
+                        className="bg-white/5 border-white/10"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Descrição</Label>
+                    <Textarea 
+                      value={stationForm.ferramenta_descricao}
+                      onChange={(e) => setStationForm({ ...stationForm, ferramenta_descricao: e.target.value })}
+                      placeholder="Explique o objetivo da ferramenta..."
+                      className="bg-white/5 border-white/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  {/* Eixos */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Eixos / Perguntas</Label>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-[10px] gap-2 border-primary/20"
+                        onClick={() => {
+                          const newList = [...stationForm.ferramenta_eixos, { id: '', tipo: 'multipla', pergunta: '', opcoes: [] }];
+                          setStationForm({...stationForm, ferramenta_eixos: newList});
+                        }}
+                      >
+                        <Plus className="w-3 h-3" /> Add Eixo
+                      </Button>
+                    </div>
+
+                    <div className="space-y-4">
+                      {stationForm.ferramenta_eixos.map((eixo: any, idx: number) => (
+                        <div key={idx} className="p-6 rounded-xl bg-primary/5 border border-primary/10 space-y-4 relative group">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="absolute top-2 right-2 h-6 w-6 text-primary/20 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              const newList = stationForm.ferramenta_eixos.filter((_: any, i: number) => i !== idx);
+                              setStationForm({...stationForm, ferramenta_eixos: newList});
+                            }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">ID / Identificador</Label>
+                              <Input 
+                                value={eixo.id} 
+                                onChange={e => {
+                                  const newList = [...stationForm.ferramenta_eixos];
+                                  newList[idx].id = e.target.value;
+                                  setStationForm({...stationForm, ferramenta_eixos: newList});
+                                }} 
+                                className="text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Tipo</Label>
+                              <Select 
+                                value={eixo.tipo} 
+                                onValueChange={(v) => {
+                                  const newList = [...stationForm.ferramenta_eixos];
+                                  newList[idx].tipo = v;
+                                  setStationForm({...stationForm, ferramenta_eixos: newList});
+                                }}
+                              >
+                                <SelectTrigger className="text-xs h-9">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="multipla">Múltipla Escolha</SelectItem>
+                                  <SelectItem value="aberta">Campo Aberto</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase">Pergunta</Label>
+                            <Input 
+                              value={eixo.pergunta} 
+                              onChange={e => {
+                                const newList = [...stationForm.ferramenta_eixos];
+                                newList[idx].pergunta = e.target.value;
+                                setStationForm({...stationForm, ferramenta_eixos: newList});
+                              }} 
+                              className="text-xs"
+                            />
+                          </div>
+
+                          {eixo.tipo === 'multipla' && (
+                            <div className="space-y-2">
+                              <Label className="text-[9px] uppercase">Opções (uma por linha)</Label>
+                              <Textarea 
+                                value={eixo.opcoes?.join('\n')} 
+                                onChange={e => {
+                                  const newList = [...stationForm.ferramenta_eixos];
+                                  newList[idx].opcoes = e.target.value.split('\n');
+                                  setStationForm({...stationForm, ferramenta_eixos: newList});
+                                }} 
+                                className="text-xs min-h-[80px]"
+                                placeholder="Opção 1 (Preservado)&#10;Opção 2 (Oscilante)&#10;Opção 3 (Soterrado)&#10;Opção 4 (Soterrado)"
+                              />
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Resultados */}
+                  <div className="space-y-4">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Resultados Simbólicos (Fixos: 3 estados)</Label>
+                    <div className="space-y-4">
+                      {stationForm.ferramenta_resultados.map((res: any, idx: number) => (
+                        <div key={idx} className="p-6 rounded-xl bg-gold/5 border border-gold/10 space-y-3">
+                          <Label className="text-[10px] uppercase font-bold text-gold">{res.estado}</Label>
+                          <Textarea 
+                            value={res.texto} 
+                            onChange={e => {
+                              const newList = [...stationForm.ferramenta_resultados];
+                              newList[idx].texto = e.target.value;
+                              setStationForm({...stationForm, ferramenta_resultados: newList});
+                            }} 
+                            className="text-xs min-h-[60px]"
+                          />
+                        </div>
+                      ))}
+                      {stationForm.ferramenta_resultados.length === 0 && (
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => {
+                            setStationForm({
+                              ...stationForm, 
+                              ferramenta_resultados: [
+                                { estado: 'Instinto Preservado', texto: '' },
+                                { estado: 'Instinto Oscilante', texto: '' },
+                                { estado: 'Instinto Soterrado', texto: '' }
+                              ]
+                            });
+                          }}
+                        >
+                          Inicializar Resultados
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 7'}
                     </Button>
                   </div>
                 </AccordionContent>
