@@ -141,8 +141,8 @@ export function EscutaPremium({
                   )}
                   {/* Inner Hole */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-[#020617] border border-gold/20 shadow-inner z-40" />
-                    <div className="w-1 h-1 rounded-full bg-gold/40 z-50" />
+                    <div className="w-4 h-4 rounded-full bg-white/20 border border-gold/40 shadow-inner z-40 backdrop-blur-sm" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white z-50 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
                   </div>
                 </div>
               </div>
