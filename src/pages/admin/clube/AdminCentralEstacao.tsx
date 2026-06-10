@@ -686,6 +686,70 @@ export default function AdminCentralEstacao() {
                   </div>
                 </AccordionContent>
               </AccordionItem>
+
+              <AccordionItem value="sussurros">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Sussurros do Conto (Camada 3)</AccordionTrigger>
+                <AccordionContent className="space-y-4 pt-2">
+                  <div className="space-y-2">
+                    <Label>Título do Conto</Label>
+                    <Input 
+                      value={stationForm.conto_titulo} 
+                      onChange={e => setStationForm({...stationForm, conto_titulo: e.target.value})} 
+                      placeholder="Ex: La Loba"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Síntese Autoral (Curta)</Label>
+                    <Textarea 
+                      value={stationForm.conto_sintese} 
+                      onChange={e => setStationForm({...stationForm, conto_sintese: e.target.value})} 
+                      placeholder="Resumo simbólico do conto..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Texto Narrativo (Opcional)</Label>
+                    <Textarea 
+                      value={stationForm.conto_texto} 
+                      onChange={e => setStationForm({...stationForm, conto_texto: e.target.value})} 
+                      className="min-h-[150px]"
+                      placeholder="O conto na íntegra..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Imagem Simbólica URL</Label>
+                      <Input 
+                        value={stationForm.conto_imagem_url} 
+                        onChange={e => setStationForm({...stationForm, conto_imagem_url: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <AudioUpload
+                        label="Áudio Narrado (Conto)"
+                        value={stationForm.conto_audio_url}
+                        onChange={(url) => setStationForm({...stationForm, conto_audio_url: url})}
+                        folder="clube/estacoes/contos"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Erro Comum de Leitura (Obrigatório)</Label>
+                    <Textarea 
+                      value={stationForm.conto_erro_comum} 
+                      onChange={e => setStationForm({...stationForm, conto_erro_comum: e.target.value})} 
+                      placeholder="Como esse conto é lido de forma rasa?"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Sussurro da Guardiã (Síntese Final)</Label>
+                    <Input 
+                      value={stationForm.conto_sussurro_guardia} 
+                      onChange={e => setStationForm({...stationForm, conto_sussurro_guardia: e.target.value})} 
+                      placeholder="Frase curta de impacto..."
+                    />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
           </div>
           <DialogFooter>
