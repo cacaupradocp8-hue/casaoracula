@@ -203,7 +203,17 @@ export default function AdminCentralEstacao() {
     traducao_labirinto: '',
     traducao_ferramenta_associada: '',
     traducao_pergunta_pessoal: '',
-    traducao_pergunta_profissional: ''
+    traducao_pergunta_profissional: '',
+    caso_nome_ficticio: '',
+    caso_idade: '',
+    caso_contexto: '',
+    caso_frase_central: '',
+    caso_campo_superficie: '',
+    caso_campo_simbolico: '',
+    caso_campo_nao_concluir: '',
+    caso_relacao_conto: '',
+    caso_pergunta_conducao: '',
+    caso_cautela_etica: ''
   });
 
   // 1. Fetch Estação
