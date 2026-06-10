@@ -10,6 +10,7 @@ import { EstacaoStepCamaraEscuta } from '@/components/clube/rota-template/Estaca
 import { EstacaoStepTraducaoOracular } from '@/components/clube/rota-template/EstacaoStepTraducaoOracular';
 import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/EstacaoStepSussurrosConto';
 import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/EstacaoStepCasoSimbolico';
+import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -28,6 +29,7 @@ export default function ClubeRotaPremium() {
     { id: 'sussurros', title: 'Sussurros do Conto' },
     { id: 'traducao_oracular', title: 'Tradução Oracular' },
     { id: 'caso', title: 'Caso Simbólico' },
+    { id: 'desafio_escuta', title: 'Desafio de Escuta' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
@@ -215,9 +217,21 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 6 && (
+                  <EstacaoStepDesafioEscuta 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    pergunta={estacao.desafio_pergunta || 'O que você percebe primeiro?'}
+                    alternativas={estacao.desafio_alternativas || []}
+                    leituraModelo={estacao.desafio_leitura_modelo || ''}
+                    cuidadoEtico={estacao.desafio_cuidado_etico || ''}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 7 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">6. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">7. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
@@ -225,38 +239,6 @@ export default function ClubeRotaPremium() {
                         Você concluiu as camadas fundamentais desta estação. Os próximos jardins e missões estão sendo preparados para sua jornada.
                       </p>
                     </Card>
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Continuar</Button>
-                  </div>
-                )}
-
-                {currentStep === 7 && (
-                  <div className="text-center space-y-8 max-w-2xl mx-auto">
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">8. Desafio de Escuta</span>
-                      <h2 className="text-4xl font-serif text-white">O que você percebe primeiro?</h2>
-                    </div>
-
-                    <div className="grid gap-3">
-                      {[
-                        "Falta de motivação",
-                        "Excesso de formação",
-                        "Instinto soterrado",
-                        "Necessidade de planejamento"
-                      ].map((opt, i) => (
-                        <button key={i} className="w-full p-6 rounded-2xl bg-white/5 border border-white/10 hover:border-gold/50 hover:bg-gold/5 transition-all text-left text-white/70 font-serif text-lg">
-                          {opt}
-                        </button>
-                      ))}
-                    </div>
-
-                    <Button onClick={handleNext} className="bg-white/10 text-white font-bold rounded-full px-12 py-6">Revelar Leitura-Modelo</Button>
-                  </div>
-                )}
-                
-                {currentStep > 7 && (
-                  <div className="text-center space-y-6">
-                    <h2 className="text-3xl font-serif">{steps[currentStep].title}</h2>
-                    <p className="text-gold/60 italic">Conteúdo em implementação para o template dinâmico.</p>
                     <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Continuar</Button>
                   </div>
                 )}
