@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -21,12 +21,17 @@ import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { data: estacao, isLoading, error } = useEstacaoConteudo(slug || '');
   const [currentStep, setCurrentStep] = useState(0);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
   const steps = [
     { id: 'entrada', title: 'Entrada' },
@@ -45,8 +50,56 @@ export default function ClubeRotaPremium() {
     { id: 'proximos_passos', title: 'Fechamento 80/20' }
   ];
 
+  // Carregar progresso inicial
+  useEffect(() => {
+    const loadProgress = async () => {
+      if (!user || !estacao) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('clube_conclusao_estacoes')
+          .select('ultimo_passo')
+          .eq('user_id', user.id)
+          .eq('estacao_id', estacao.id)
+          .maybeSingle();
+          
+        if (data && data.ultimo_passo !== undefined) {
+          setCurrentStep(data.ultimo_passo);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar progresso:', err);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+    
+    if (estacao) {
+      loadProgress();
+    }
+  }, [user, estacao]);
 
-  if (isLoading) {
+  // Persistir progresso ao mudar de passo
+  const saveProgress = async (step: number) => {
+    if (!user || !estacao) return;
+    
+    try {
+      await supabase
+        .from('clube_conclusao_estacoes')
+        .upsert({
+          user_id: user.id,
+          rota_id: estacao.rota_id,
+          estacao_id: estacao.id,
+          ultimo_passo: step,
+          updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id,estacao_id'
+        });
+    } catch (err) {
+      console.error('Erro ao salvar progresso:', err);
+    }
+  };
+
+  if (isLoading || isInitialLoading) {
     return (
       <div className="min-h-screen bg-[#020617] flex flex-col items-center justify-center text-gold gap-4">
         <Loader2 className="w-12 h-12 animate-spin" />
@@ -65,7 +118,9 @@ export default function ClubeRotaPremium() {
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(prev => prev + 1);
+      const nextStep = currentStep + 1;
+      setCurrentStep(nextStep);
+      saveProgress(nextStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
@@ -74,7 +129,9 @@ export default function ClubeRotaPremium() {
 
   const handleBack = () => {
     if (currentStep > 0) {
-      setCurrentStep(prev => prev - 1);
+      const prevStep = currentStep - 1;
+      setCurrentStep(prevStep);
+      saveProgress(prevStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
@@ -89,7 +146,7 @@ export default function ClubeRotaPremium() {
         {/* Background Image Container */}
         <div className="fixed inset-0 z-0">
           <img 
-            src={slug === 'clareira-do-chamado' ? "/clareira-chamado.png" : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")} 
+            src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
             alt="" 
             className="w-full h-full object-cover opacity-90"
           />
@@ -120,30 +177,30 @@ export default function ClubeRotaPremium() {
                     fraseAbertura={estacao.frase_abertura}
                     fraseVozClareira={estacao.frase_voz_clareira}
                     onNext={handleNext}
-                    onJumpToStep={setCurrentStep}
+                    onJumpToStep={(step) => {
+                      setCurrentStep(step);
+                      saveProgress(step);
+                    }}
                     audioAberturaUrl={estacao.audio_abertura_url}
                     audioVozClareiraUrl={estacao.audio_voz_clareira_url}
                     audioFlorestaUrl={estacao.audio_floresta_url}
-                    imagemEscuta={slug === 'clareira-do-chamado' ? "/clareira-chamado.png" : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")}
+                    imagemEscuta={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"}
                     obraRegente={estacao.clube_rotas.obra_regente}
-                    infoContent={slug === 'clareira-do-chamado' ? {
-                      distrito: "Bosque dos Arquétipos / Portão da Chegada",
-                      tese: "A mulher não perdeu o instinto; ela o enterrou para sobreviver.",
-                      detalhes: [
-                        "Conto-base: La Loba",
-                        "Competência formada: reconhecer vitalidade soterrada",
-                        "Ferramenta: Mapa do Instinto Soterrado"
-                      ]
-                    } : {
+                    infoContent={{
                       distrito: estacao.distrito_cidadela,
                       tese: estacao.frase_voz_clareira,
-                      detalhes: ["Conteúdo da estação carregado dinamicamente."]
+                      detalhes: [
+                        `Conto-base: ${estacao.conto_titulo || 'Não definido'}`,
+                        `Competência formada: ${estacao.cartografia_competencia || 'Não definida'}`,
+                        `Ferramenta: ${estacao.ferramenta_nome || 'Não definida'}`
+                      ]
                     }}
                   />
                 )}
 
                 {currentStep === 1 && (
                   <EstacaoStepEscuta 
+
                     estacaoId={estacao.id}
                     obraRegente={estacao.clube_rotas.obra_regente}
                     livroCapaUrl={estacao.clube_rotas.livro_capa_url}

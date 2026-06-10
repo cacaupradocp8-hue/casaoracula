@@ -25,73 +25,6 @@ interface EstacaoStepCamaraEscutaProps {
   onNext: () => void;
 }
 
-const CONTEUDO_ESPECIFICO: Record<string, any> = {
-  "FERA FERIDA": {
-    oQueEscutar: [
-      "Não escute a letra.",
-      "Escute a identidade.",
-      "Observe como a ferida aparece quase como uma companheira inseparável.",
-      "Pergunte-se: A ferida está sendo cuidada? Ou está sendo habitada?"
-    ],
-    oQueEvitar: [
-      "Não transformar a música numa análise psicológica.",
-      "Não procurar diagnósticos.",
-      "Não procurar culpados.",
-      "Apenas observe a relação da personagem com a própria dor."
-    ],
-    perguntaPsique: "O que em mim ainda canta, mesmo depois de ter sido ferido?",
-    perguntaOficio: "Que sinais de vitalidade soterrada eu consigo reconhecer nas mulheres que acompanho?",
-    rastroSimbolo: "🩸 A Ferida Habitável",
-    territorioImpactado: "Praça do Abalo"
-  },
-  "NOTURNO": {
-    oQueEscutar: [
-      "Escute o vazio.",
-      "Escute a ausência.",
-      "Escute aquilo que não está sendo dito.",
-      "Esta música não fala apenas de amor. Fala daquilo que continua presente mesmo quando desapareceu."
-    ],
-    oQueEvitar: [
-      "Não interpretar literalmente.",
-      "A ausência nem sempre é uma pessoa.",
-      "Pode ser: um sonho, uma identidade, uma fase da vida ou uma potência esquecida."
-    ],
-    perguntaPsique: "O que continua vivendo dentro de mim mesmo depois de ter partido?",
-    perguntaOficio: "Como reconhecer quando a cliente está vivendo uma perda que ainda não conseguiu nomear?",
-    rastroSimbolo: "🌑 O Lugar Vazio",
-    territorioImpactado: "Casa dos Sonhos"
-  },
-  "REVELAÇÃO": {
-    oQueEscutar: [
-      "Escute o instante da percepção.",
-      "O momento em que algo que sempre esteve presente finalmente se torna visível.",
-      "Essa música trabalha um fenômeno fundamental da leitura simbólica: não descobrir algo novo, mas perceber algo que sempre esteve ali."
-    ],
-    oQueEvitar: [
-      "Não procurar grandes epifanias.",
-      "Às vezes a revelação é pequena. Mas muda tudo."
-    ],
-    perguntaPsique: "O que eu já sabia antes mesmo de conseguir explicar?",
-    perguntaOficio: "Como reconhecer quando a percepção da cliente chegou antes da linguagem?",
-    rastroSimbolo: "🔑 A Verdade Reconhecida",
-    territorioImpactado: "Portas"
-  },
-  "MARIA MARIA": {
-    oQueEscutar: [
-      "Escute a força. Mas não a força heroica.",
-      "Escute a força cotidiana.",
-      "Aquela que continua caminhando mesmo quando está cansada."
-    ],
-    oQueEvitar: [
-      "Não romantizar sofrimento.",
-      "A força desta música não está em suportar tudo. Está em continuar viva."
-    ],
-    perguntaPsique: "Qual parte de mim permaneceu viva mesmo durante os períodos mais difíceis?",
-    perguntaOficio: "Como ajudar uma mulher a reconhecer recursos internos que ela já possui?",
-    rastroSimbolo: "🌻 A Mulher que Continua",
-    territorioImpactado: "A Forja"
-  }
-};
 
 export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = ({
   estacaoId,
@@ -185,7 +118,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
     setIsSaving(true);
     try {
-      const specific = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+      const specific = activeObra.metadata || {};
       const puntoId = `escuta:${activeObra.id}`;
       
       // 1. Save to clube_camara_escuta_registros
@@ -224,13 +157,14 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             simbolo_observado: simbolo,
             intensidade_escuta: intensidade,
             reflexao_psique: reflexaoPsique,
-            pergunta_origem: specific.perguntaPsique ?? null,
+            pergunta_origem: specific.perguntaPsique ?? activeObra.pergunta_psique ?? null,
             territorio_impactado: specific.territorioImpactado ?? activeObra.territorio_principal ?? null,
             rastro: specific.rastroSimbolo ?? activeObra.rastro_simbolo ?? null,
           }
         }]);
 
       if (psiqueError) throw psiqueError;
+
 
 
       // 3. Save to Jardim do Ofício
@@ -457,16 +391,17 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
   if (activeObra || inPlaylistMode) {
     const currentObra = activeObra || faixasObras[0];
-    const specificFromCode = CONTEUDO_ESPECIFICO[currentObra?.titulo?.toUpperCase()] || {};
+    const specificFromDb = currentObra?.metadata || {};
     
     const displayData = {
-      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : specificFromCode.oQueEscutar,
-      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : specificFromCode.oQueEvitar,
-      rastroSimbolo: currentObra?.rastro_simbolo || specificFromCode.rastroSimbolo,
-      perguntaPsique: currentObra?.pergunta_psique || specificFromCode.perguntaPsique,
-      perguntaOficio: currentObra?.pergunta_oficio || specificFromCode.perguntaOficio,
-      territorioImpactado: currentObra?.territorio_principal || specificFromCode.territorioImpactado
+      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : (specificFromDb.oQueEscutar || []),
+      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : (specificFromDb.oQueEvitar || []),
+      rastroSimbolo: currentObra?.rastro_simbolo || specificFromDb.rastroSimbolo,
+      perguntaPsique: currentObra?.pergunta_psique || specificFromDb.perguntaPsique,
+      perguntaOficio: currentObra?.pergunta_oficio || specificFromDb.perguntaOficio,
+      territorioImpactado: currentObra?.territorio_principal || specificFromDb.territorioImpactado
     };
+
 
     return (
       <motion.div 

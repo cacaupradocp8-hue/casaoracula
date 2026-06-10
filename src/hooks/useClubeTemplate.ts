@@ -124,7 +124,16 @@ export interface CamaraObra {
   rota_id: string;
   estacao_id: string;
   ordem: number;
+  metadata?: {
+    oQueEscutar?: string[];
+    oQueEvitar?: string[];
+    perguntaPsique?: string;
+    perguntaOficio?: string;
+    rastroSimbolo?: string;
+    territorioImpactado?: string;
+  };
 }
+
 
 
 export function useRotaHub(rotaSlug: string) {
