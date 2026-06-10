@@ -340,7 +340,17 @@ export default function AdminCentralEstacao() {
           traducao_labirinto: data.traducao_labirinto,
           traducao_ferramenta_associada: data.traducao_ferramenta_associada,
           traducao_pergunta_pessoal: data.traducao_pergunta_pessoal,
-          traducao_pergunta_profissional: data.traducao_pergunta_profissional
+          traducao_pergunta_profissional: data.traducao_pergunta_profissional,
+          caso_nome_ficticio: data.caso_nome_ficticio,
+          caso_idade: data.caso_idade,
+          caso_contexto: data.caso_contexto,
+          caso_frase_central: data.caso_frase_central,
+          caso_campo_superficie: data.campo_superficie,
+          caso_campo_simbolico: data.campo_simbolico,
+          caso_campo_nao_concluir: data.campo_nao_concluir,
+          caso_relacao_conto: data.relacao_conto,
+          caso_pergunta_conducao: data.pergunta_conducao,
+          caso_cautela_etica: data.cautela_etica
         })
         .eq('id', estacaoId);
       if (error) throw error;
