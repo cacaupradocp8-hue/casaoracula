@@ -780,6 +780,95 @@ export default function AdminCentralEstacao() {
                   </div>
                 </AccordionContent>
               </AccordionItem>
+
+              <AccordionItem value="traducao">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
+                <AccordionContent className="space-y-6 pt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Território Principal</Label>
+                        <Input 
+                          value={stationForm.traducao_territorio_principal} 
+                          onChange={e => setStationForm({...stationForm, traducao_territorio_principal: e.target.value})} 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Justificativa (Principal)</Label>
+                        <Textarea 
+                          value={stationForm.traducao_justificativa_principal} 
+                          onChange={e => setStationForm({...stationForm, traducao_justificativa_principal: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Território Secundário</Label>
+                        <Input 
+                          value={stationForm.traducao_territorio_secundario} 
+                          onChange={e => setStationForm({...stationForm, traducao_territorio_secundario: e.target.value})} 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Justificativa (Secundária)</Label>
+                        <Textarea 
+                          value={stationForm.traducao_justificativa_secundaria} 
+                          onChange={e => setStationForm({...stationForm, traducao_justificativa_secundaria: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-primary/5 pt-4">
+                    <div className="space-y-2">
+                      <Label>Porta Ativada</Label>
+                      <Input 
+                        value={stationForm.traducao_porta} 
+                        onChange={e => setStationForm({...stationForm, traducao_porta: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Torre Relacionada</Label>
+                      <Input 
+                        value={stationForm.traducao_torre} 
+                        onChange={e => setStationForm({...stationForm, traducao_torre: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Labirinto Observado</Label>
+                      <Input 
+                        value={stationForm.traducao_labirinto} 
+                        onChange={e => setStationForm({...stationForm, traducao_labirinto: e.target.value})} 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 border-t border-primary/5 pt-4">
+                    <Label>Ferramenta Associada</Label>
+                    <Input 
+                      value={stationForm.traducao_ferramenta_associada} 
+                      onChange={e => setStationForm({...stationForm, traducao_ferramenta_associada: e.target.value})} 
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-primary/5 pt-4">
+                    <div className="space-y-2">
+                      <Label>Pergunta Integração Pessoal</Label>
+                      <Textarea 
+                        value={stationForm.traducao_pergunta_pessoal} 
+                        onChange={e => setStationForm({...stationForm, traducao_pergunta_pessoal: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Pergunta Integração Profissional</Label>
+                      <Textarea 
+                        value={stationForm.traducao_pergunta_profissional} 
+                        onChange={e => setStationForm({...stationForm, traducao_pergunta_profissional: e.target.value})} 
+                      />
+                    </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
           </div>
           <DialogFooter>
