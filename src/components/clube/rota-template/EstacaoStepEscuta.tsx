@@ -66,18 +66,6 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
                 </span>
               </h1>
             </div>
-            
-            <div className="flex items-center justify-center gap-4 py-2 opacity-60">
-              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-[#b89555] to-transparent" />
-              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/50" />
-              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-[#b89555] to-transparent" />
-            </div>
-
-            <div className="flex items-center justify-center gap-3">
-              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/40" />
-              <span className="text-xl md:text-2xl font-display text-white/80 tracking-[0.3em] uppercase">Rota dos Lobos</span>
-              <div className="w-1.5 h-1.5 rotate-45 border border-[#b89555]/40" />
-            </div>
           </div>
           
           {vozClareiraTexto && (
@@ -183,16 +171,6 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
       </div>
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
-        <div className="grid grid-cols-2 gap-4 w-full">
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 text-center">
-            <Sparkles className="w-5 h-5 text-gold/40 mx-auto" />
-            <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Série de Áudios</p>
-          </div>
-          <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/5 space-y-2 text-center">
-            <BookOpen className="w-5 h-5 text-gold/40 mx-auto" />
-            <p className="text-[10px] text-white/40 uppercase tracking-widest font-bold">Leitura Regente</p>
-          </div>
-        </div>
 
         <Button 
           onClick={onNext}
