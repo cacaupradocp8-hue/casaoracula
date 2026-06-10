@@ -4376,6 +4376,75 @@ export type Database = {
           },
         ]
       }
+      clube_cartografia_loba_registros: {
+        Row: {
+          competencia_desenvolvida: string | null
+          created_at: string | null
+          data: string | null
+          distrito_impactado: string | null
+          distrito_secundario: string | null
+          estacao_id: string | null
+          estacao_nome: string | null
+          ferramenta_desbloqueada: string | null
+          id: string
+          proxima_travessia: string | null
+          rastro_nome: string | null
+          rota_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          competencia_desenvolvida?: string | null
+          created_at?: string | null
+          data?: string | null
+          distrito_impactado?: string | null
+          distrito_secundario?: string | null
+          estacao_id?: string | null
+          estacao_nome?: string | null
+          ferramenta_desbloqueada?: string | null
+          id?: string
+          proxima_travessia?: string | null
+          rastro_nome?: string | null
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          competencia_desenvolvida?: string | null
+          created_at?: string | null
+          data?: string | null
+          distrito_impactado?: string | null
+          distrito_secundario?: string | null
+          estacao_id?: string | null
+          estacao_nome?: string | null
+          ferramenta_desbloqueada?: string | null
+          id?: string
+          proxima_travessia?: string | null
+          rastro_nome?: string | null
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_cartografia_loba_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_cartografia_loba_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_caso_simbolico_registros: {
         Row: {
           caso_titulo: string | null
@@ -4634,7 +4703,14 @@ export type Database = {
           audio_floresta_url: string | null
           audio_voz_clareira_url: string | null
           banner_url: string | null
+          cartografia_competencia: string | null
+          cartografia_distrito_impactado: string | null
+          cartografia_distrito_secundario: string | null
+          cartografia_ferramenta_desbloqueada: string | null
           cartografia_id: string | null
+          cartografia_mensagem_conclusao: string | null
+          cartografia_proxima_travessia: string | null
+          cartografia_rastro_nome: string | null
           caso_campo_nao_concluir: string | null
           caso_campo_simbolico: string | null
           caso_campo_superficie: string | null
@@ -4738,7 +4814,14 @@ export type Database = {
           audio_floresta_url?: string | null
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
+          cartografia_competencia?: string | null
+          cartografia_distrito_impactado?: string | null
+          cartografia_distrito_secundario?: string | null
+          cartografia_ferramenta_desbloqueada?: string | null
           cartografia_id?: string | null
+          cartografia_mensagem_conclusao?: string | null
+          cartografia_proxima_travessia?: string | null
+          cartografia_rastro_nome?: string | null
           caso_campo_nao_concluir?: string | null
           caso_campo_simbolico?: string | null
           caso_campo_superficie?: string | null
@@ -4842,7 +4925,14 @@ export type Database = {
           audio_floresta_url?: string | null
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
+          cartografia_competencia?: string | null
+          cartografia_distrito_impactado?: string | null
+          cartografia_distrito_secundario?: string | null
+          cartografia_ferramenta_desbloqueada?: string | null
           cartografia_id?: string | null
+          cartografia_mensagem_conclusao?: string | null
+          cartografia_proxima_travessia?: string | null
+          cartografia_rastro_nome?: string | null
           caso_campo_nao_concluir?: string | null
           caso_campo_simbolico?: string | null
           caso_campo_superficie?: string | null
