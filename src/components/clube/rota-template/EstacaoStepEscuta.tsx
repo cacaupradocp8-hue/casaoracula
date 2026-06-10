@@ -198,7 +198,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
           onClick={onNext}
           className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-14 rounded-full uppercase tracking-[0.2em] text-[10px] transition-all group"
         >
-          Entrar na Câmara da Escuta
+          Próximo Passo
           <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Button>
       </div>
