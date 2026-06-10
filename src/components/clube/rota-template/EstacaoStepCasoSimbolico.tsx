@@ -106,7 +106,7 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
                 </p>
 
                 <div className="bg-gold/5 border border-gold/10 p-6 rounded-2xl italic text-gold text-xl font-serif text-center">
-                  "{casoData.frase_central || casoData.fraseCentral}"
+                  "{casoData.fraseCentral}"
                 </div>
               </div>
 
