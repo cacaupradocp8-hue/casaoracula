@@ -100,8 +100,24 @@ export function EscutaPremium({
       <div className="flex flex-col items-center space-y-8">
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
-          {/* External Golden Glow */}
+          {/* External Golden Glow & Pulsating Light Effect */}
           <div className="absolute -inset-8 bg-gold/10 rounded-full blur-[60px] z-0 opacity-40 group-hover:opacity-60 transition-opacity" />
+          
+          {isPlaying && (
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ 
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0.5, 0.2],
+              }}
+              transition={{ 
+                duration: 3, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="absolute -inset-12 bg-gold/20 rounded-full blur-[80px] z-0 pointer-events-none"
+            />
+          )}
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
