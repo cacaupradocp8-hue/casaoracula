@@ -213,7 +213,11 @@ export default function AdminCentralEstacao() {
     caso_campo_nao_concluir: '',
     caso_relacao_conto: '',
     caso_pergunta_conducao: '',
-    caso_cautela_etica: ''
+    caso_cautela_etica: '',
+    desafio_pergunta: '',
+    desafio_alternativas: [] as any[],
+    desafio_leitura_modelo: '',
+    desafio_cuidado_etico: ''
   });
 
   // 1. Fetch Estação
