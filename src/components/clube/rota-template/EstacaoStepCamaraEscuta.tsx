@@ -406,12 +406,19 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           </div>
         </div>
 
-        <div className="pt-8">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button 
-            onClick={onNext}
-            className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-gold/20 transition-all hover:scale-105"
+            onClick={() => navigate('/clube/rota/casa-da-boneca-interior')}
+            className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-gold/20 transition-all hover:scale-105 w-full sm:w-auto"
           >
-            Continuar a Travessia
+            Avançar para Estação 4
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={onNext}
+            className="border-white/10 text-white/60 hover:text-white hover:border-white/30 px-12 h-16 rounded-full uppercase tracking-widest text-xs transition-all w-full sm:w-auto"
+          >
+            Continuar Travessia
           </Button>
         </div>
       </motion.div>
@@ -844,7 +851,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       <div className="pt-16 flex flex-col items-center gap-8">
         <Button 
           variant="outline"
-          onClick={() => navigate('/clube/rota-dos-lobos')}
+          onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
           className="border-white/10 text-white/40 hover:text-gold hover:border-gold/30 rounded-full px-10 h-14 uppercase tracking-widest text-[10px] font-bold"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
