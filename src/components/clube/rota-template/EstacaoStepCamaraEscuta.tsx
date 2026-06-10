@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Headphones, Sparkles, BookOpen, Music, CheckCircle2, ChevronRight, Info, Heart, ArrowLeft, History, X, MapPin, Loader2, Save } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCamaraObras, CamaraObra } from '@/hooks/useClubeTemplate';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
