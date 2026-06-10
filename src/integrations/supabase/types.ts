@@ -4496,6 +4496,57 @@ export type Database = {
           },
         ]
       }
+      clube_conclusao_estacoes: {
+        Row: {
+          created_at: string | null
+          data_conclusao: string | null
+          estacao_id: string | null
+          fechamento_concluido: boolean | null
+          id: string
+          proxima_estacao_liberada: string | null
+          rota_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          data_conclusao?: string | null
+          estacao_id?: string | null
+          fechamento_concluido?: boolean | null
+          id?: string
+          proxima_estacao_liberada?: string | null
+          rota_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          data_conclusao?: string | null
+          estacao_id?: string | null
+          fechamento_concluido?: boolean | null
+          id?: string
+          proxima_estacao_liberada?: string | null
+          rota_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_conclusao_estacoes_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_conclusao_estacoes_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_desafio_escuta_registros: {
         Row: {
           alternativa_escolhida: string | null
@@ -4740,7 +4791,11 @@ export type Database = {
           essencia_tensao: string | null
           essencia_transformacao: string | null
           fase_lunar: string | null
+          fechamento_audio_url: string | null
+          fechamento_botao_proxima: string | null
+          fechamento_subtitulo: string | null
           fechamento_texto: string | null
+          fechamento_titulo: string | null
           ferramenta_descricao: string | null
           ferramenta_eixos: Json | null
           ferramenta_nome: string | null
@@ -4851,7 +4906,11 @@ export type Database = {
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
           fase_lunar?: string | null
+          fechamento_audio_url?: string | null
+          fechamento_botao_proxima?: string | null
+          fechamento_subtitulo?: string | null
           fechamento_texto?: string | null
+          fechamento_titulo?: string | null
           ferramenta_descricao?: string | null
           ferramenta_eixos?: Json | null
           ferramenta_nome?: string | null
@@ -4962,7 +5021,11 @@ export type Database = {
           essencia_tensao?: string | null
           essencia_transformacao?: string | null
           fase_lunar?: string | null
+          fechamento_audio_url?: string | null
+          fechamento_botao_proxima?: string | null
+          fechamento_subtitulo?: string | null
           fechamento_texto?: string | null
+          fechamento_titulo?: string | null
           ferramenta_descricao?: string | null
           ferramenta_eixos?: Json | null
           ferramenta_nome?: string | null
