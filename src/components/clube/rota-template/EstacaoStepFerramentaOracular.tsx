@@ -67,6 +67,7 @@ export const EstacaoStepFerramentaOracular: React.FC<FerramentaOracularProps> = 
         });
       
       if (error) throw error;
+      return resultadoFinal;
     },
     onSuccess: () => {
       setView('resultado');
