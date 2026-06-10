@@ -1544,6 +1544,87 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 12 — Cartografia da Loba */}
+              <AccordionItem value="cartografia-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-emerald-400 transition-colors">Cartografia da Loba (Camada 12)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome do Rastro</Label>
+                      <Input 
+                        value={stationForm.cartografia_rastro_nome}
+                        onChange={(e) => setStationForm({ ...stationForm, cartografia_rastro_nome: e.target.value })}
+                        placeholder="Ex: O Chamado Foi Escutado"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Ferramenta Desbloqueada</Label>
+                      <Input 
+                        value={stationForm.cartografia_ferramenta_desbloqueada}
+                        onChange={(e) => setStationForm({ ...stationForm, cartografia_ferramenta_desbloqueada: e.target.value })}
+                        placeholder="Ex: Mapa do Instinto Soterrado"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Distrito Impactado (Principal)</Label>
+                      <Input 
+                        value={stationForm.cartografia_distrito_impactado}
+                        onChange={(e) => setStationForm({ ...stationForm, cartografia_distrito_impactado: e.target.value })}
+                        placeholder="Ex: Bosque dos Arquétipos"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Distrito Secundário</Label>
+                      <Input 
+                        value={stationForm.cartografia_distrito_secundario}
+                        onChange={(e) => setStationForm({ ...stationForm, cartografia_distrito_secundario: e.target.value })}
+                        placeholder="Ex: Portão da Chegada"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Competência Desenvolvida</Label>
+                      <Input 
+                        value={stationForm.cartografia_competencia}
+                        onChange={(e) => setStationForm({ ...stationForm, cartografia_competencia: e.target.value })}
+                        placeholder="Ex: Reconhecer sinais de instinto soterrado"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Próxima Travessia</Label>
+                    <Input 
+                      value={stationForm.cartografia_proxima_travessia}
+                      onChange={(e) => setStationForm({ ...stationForm, cartografia_proxima_travessia: e.target.value })}
+                      placeholder="Ex: Casa da Boa Menina"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Mensagem de Conclusão</Label>
+                    <Textarea 
+                      value={stationForm.cartografia_mensagem_conclusao}
+                      onChange={(e) => setStationForm({ ...stationForm, cartografia_mensagem_conclusao: e.target.value })}
+                      placeholder="Texto final celebrando a travessia..."
+                      className="min-h-[120px] font-serif italic"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-emerald-500 text-midnight font-bold hover:bg-emerald-400"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 12'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
