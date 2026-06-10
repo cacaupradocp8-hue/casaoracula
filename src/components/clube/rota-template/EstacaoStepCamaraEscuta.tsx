@@ -281,7 +281,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
             <Sparkles className="w-10 h-10 text-gold" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight">Você atravessou a Sequência da Clareira.</h2>
+          <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight">Você atravessou a Câmara da Escuta Simbólica.</h2>
           <div className="space-y-2 text-gold/60 font-serif italic text-xl">
             <p>Escutou a ferida.</p>
             <p>Escutou a ausência.</p>
