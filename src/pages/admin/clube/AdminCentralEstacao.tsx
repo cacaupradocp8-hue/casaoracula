@@ -231,7 +231,12 @@ export default function AdminCentralEstacao() {
     missao_checklist: [] as string[],
     missao_label_observacao: '',
     missao_label_sinal: '',
-    missao_label_pergunta: ''
+    missao_label_pergunta: '',
+    oraculo_nome: '',
+    oraculo_imagem_url: '',
+    oraculo_mensagem: '',
+    oraculo_pergunta: '',
+    oraculo_integracao_texto: ''
   });
 
   // 1. Fetch Estação
