@@ -128,6 +128,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
     );
   }
 
+  const playlistObra = obras?.find(o => o.url.includes('spotify.com'));
+  const faixasObras = obras?.filter(o => !o.url.includes('spotify.com')) || [];
+
   const handleConcluirObra = async () => {
     if (!obras || !activeObra || !user) return;
 
