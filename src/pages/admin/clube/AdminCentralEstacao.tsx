@@ -344,7 +344,14 @@ export default function AdminCentralEstacao() {
         oraculo_imagem_url: estacao.oraculo_imagem_url || '',
         oraculo_mensagem: estacao.oraculo_mensagem || '',
         oraculo_pergunta: estacao.oraculo_pergunta || '',
-        oraculo_integracao_texto: estacao.oraculo_integracao_texto || ''
+        oraculo_integracao_texto: estacao.oraculo_integracao_texto || '',
+        cartografia_rastro_nome: estacao.cartografia_rastro_nome || '',
+        cartografia_ferramenta_desbloqueada: estacao.cartografia_ferramenta_desbloqueada || '',
+        cartografia_distrito_impactado: estacao.cartografia_distrito_impactado || '',
+        cartografia_distrito_secundario: estacao.cartografia_distrito_secundario || '',
+        cartografia_competencia: estacao.cartografia_competencia || '',
+        cartografia_proxima_travessia: estacao.cartografia_proxima_travessia || '',
+        cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || ''
       });
     }
   }, [estacao]);
