@@ -1637,6 +1637,70 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 13 — Fechamento 80/20 */}
+              <AccordionItem value="fechamento-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Fechamento 80/20 (Camada 13)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Título do Fechamento</Label>
+                      <Input 
+                        value={stationForm.fechamento_titulo}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_titulo: e.target.value })}
+                        placeholder="Ex: Essência 80/20 da Clareira"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Subtítulo</Label>
+                      <Input 
+                        value={stationForm.fechamento_subtitulo}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_subtitulo: e.target.value })}
+                        placeholder="Ex: O instinto não desaparece..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Texto de Fechamento</Label>
+                    <Textarea 
+                      value={stationForm.fechamento_texto}
+                      onChange={(e) => setStationForm({ ...stationForm, fechamento_texto: e.target.value })}
+                      placeholder="Síntese poética final..."
+                      className="min-h-[150px] font-serif italic"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div className="space-y-2">
+                      <AudioUpload
+                        label="Áudio de Fechamento (Sussurro)"
+                        value={stationForm.fechamento_audio_url || ''}
+                        onChange={(url) => setStationForm({ ...stationForm, fechamento_audio_url: url })}
+                        folder="clube/estacoes/fechamento"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome Próxima Estação</Label>
+                      <Input 
+                        value={stationForm.fechamento_botao_proxima}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_botao_proxima: e.target.value })}
+                        placeholder="Ex: Casa da Boa Menina"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 13'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
