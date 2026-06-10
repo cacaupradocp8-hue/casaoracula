@@ -332,7 +332,12 @@ export default function AdminCentralEstacao() {
         missao_checklist: (estacao.missao_checklist as string[]) || [],
         missao_label_observacao: estacao.missao_label_observacao || '',
         missao_label_sinal: estacao.missao_label_sinal || '',
-        missao_label_pergunta: estacao.missao_label_pergunta || ''
+        missao_label_pergunta: estacao.missao_label_pergunta || '',
+        oraculo_nome: estacao.oraculo_nome || '',
+        oraculo_imagem_url: estacao.oraculo_imagem_url || '',
+        oraculo_mensagem: estacao.oraculo_mensagem || '',
+        oraculo_pergunta: estacao.oraculo_pergunta || '',
+        oraculo_integracao_texto: estacao.oraculo_integracao_texto || ''
       });
     }
   }, [estacao]);
