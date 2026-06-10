@@ -7,6 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { TextCarousel } from '@/components/clube/TextCarousel';
+import { cn } from '@/lib/utils';
 
 interface FechamentoStepProps {
   estacaoId: string;
@@ -102,10 +104,11 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
         </div>
 
         <div className="relative z-10 space-y-8">
-          <div className="prose prose-invert prose-p:font-serif prose-p:italic prose-p:text-xl prose-p:text-white/70 prose-p:leading-relaxed max-w-3xl mx-auto text-center">
-            {texto.split('\n\n').map((para, i) => (
-              <p key={i}>{para}</p>
-            ))}
+          <div className="max-w-3xl mx-auto">
+            <TextCarousel 
+              text={texto} 
+              className="text-center italic"
+            />
           </div>
 
           {audioUrl && (
@@ -167,5 +170,3 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
     </div>
   );
 };
-
-import { cn } from '@/lib/utils';

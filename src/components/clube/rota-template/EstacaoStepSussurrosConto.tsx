@@ -8,6 +8,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { TextCarousel } from '@/components/clube/TextCarousel';
+import { PlacarSussurros } from '@/components/clube/PlacarSussurros';
 import { cn } from '@/lib/utils';
 
 interface SussurrosContoProps {
@@ -21,6 +23,7 @@ interface SussurrosContoProps {
     imagemUrl?: string;
     erroComum: string;
     sussurroGuardia: string;
+    sussurros_frases?: { texto: string; ordem: number }[];
   };
   onNext: () => void;
 }
@@ -105,9 +108,10 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             )}
 
             <Card className="bg-white/[0.03] border-white/10 p-8 rounded-[2rem] space-y-6">
-              <p className="text-xl font-serif italic text-white/90 leading-relaxed text-center">
-                "{contoData.sintese}"
-              </p>
+              <TextCarousel 
+                text={contoData.sintese} 
+                className="text-center italic"
+              />
             </Card>
 
             {contoData.audioUrl && (
@@ -125,8 +129,21 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             )}
 
             {contoData.texto && (
-              <div className="max-w-xl mx-auto prose prose-invert prose-p:font-serif prose-p:italic prose-p:text-lg prose-p:text-white/70">
-                <div className="whitespace-pre-line">{contoData.texto}</div>
+              <div className="max-w-2xl mx-auto">
+                <TextCarousel 
+                  text={contoData.texto} 
+                  maxLength={350}
+                  className="prose prose-invert prose-p:font-serif prose-p:italic prose-p:text-lg prose-p:text-white/70"
+                />
+              </div>
+            )}
+
+            {contoData.sussurros_frases && contoData.sussurros_frases.length > 0 && (
+              <div className="py-12 border-t border-white/5">
+                <div className="text-center mb-8">
+                  <span className="text-[10px] text-gold/40 uppercase tracking-[0.4em] font-bold">Placar de Sussurros</span>
+                </div>
+                <PlacarSussurros frases={contoData.sussurros_frases} />
               </div>
             )}
 
