@@ -111,6 +111,36 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const [intensidade, setIntensidade] = useState('Moderada');
 
   useEffect(() => {
+    const checkProgress = async () => {
+      if (!user || !obras || obras.length === 0) return;
+      
+      const { data: records } = await supabase
+        .from('clube_camara_escuta_registros')
+        .select('obra_id')
+        .eq('user_id', user.id)
+        .eq('estacao_id', estacaoId);
+        
+      if (records && records.length > 0) {
+        const completedIds = new Set(records.map(r => r.obra_id));
+        const faixasObras = obras.filter(o => !o.url.includes('spotify.com'));
+        
+        // Encontra a primeira obra não concluída
+        const nextObra = faixasObras.find(o => !completedIds.has(o.id));
+        
+        if (nextObra) {
+          // Se encontrou uma não concluída, mas já concluiu algumas, podemos perguntar ou já setar
+          // Para simplicidade e fluidez, vamos apenas manter o estado limpo se mudar de obra
+        } else if (completedIds.size >= faixasObras.length && faixasObras.length > 0) {
+          // Se já concluiu todas, mostra a devolutiva
+          setShowDevolutiva(true);
+        }
+      }
+    };
+    
+    checkProgress();
+  }, [user, obras, estacaoId]);
+
+  useEffect(() => {
     if (activeObra) {
       setReflexaoPsique('');
       setReflexaoOficio('');
