@@ -72,6 +72,10 @@ export interface Estacao {
   desafio_alternativas?: any[];
   desafio_leitura_modelo?: string;
   desafio_cuidado_etico?: string;
+  ferramenta_nome?: string;
+  ferramenta_descricao?: string;
+  ferramenta_eixos?: any[];
+  ferramenta_resultados?: any[];
 }
 
 export interface CamaraObra {
