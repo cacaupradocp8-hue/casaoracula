@@ -396,7 +396,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/30">
             <ArrowLeft className="w-3 h-3" />
           </div>
-          Voltar à Sequência de Escuta
+          Voltar à Câmara da Escuta Simbólica
         </button>
 
         {inPlaylistMode && playlistObra && (
