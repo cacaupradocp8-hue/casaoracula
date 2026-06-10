@@ -41,6 +41,13 @@ export interface Estacao {
   banner_url?: string;
   spotify_playlist_url?: string;
   spotify_playlists?: any[];
+  conto_titulo?: string;
+  conto_sintese?: string;
+  conto_texto?: string;
+  conto_audio_url?: string;
+  conto_imagem_url?: string;
+  conto_erro_comum?: string;
+  conto_sussurro_guardia?: string;
 }
 
 export interface CamaraObra {

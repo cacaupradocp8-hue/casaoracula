@@ -186,7 +186,14 @@ export default function AdminCentralEstacao() {
     audio_abertura_url: '',
     audio_floresta_url: '',
     audio_voz_clareira_url: '',
-    spotify_playlists: [] as any[]
+    spotify_playlists: [] as any[],
+    conto_titulo: '',
+    conto_sintese: '',
+    conto_texto: '',
+    conto_audio_url: '',
+    conto_imagem_url: '',
+    conto_erro_comum: '',
+    conto_sussurro_guardia: ''
   });
 
   // 1. Fetch Estação
@@ -237,7 +244,14 @@ export default function AdminCentralEstacao() {
         audio_abertura_url: estacao.audio_abertura_url || '',
         audio_floresta_url: estacao.audio_floresta_url || '',
         audio_voz_clareira_url: estacao.audio_voz_clareira_url || '',
-        spotify_playlists: (estacao.spotify_playlists as any[]) || []
+        spotify_playlists: (estacao.spotify_playlists as any[]) || [],
+        conto_titulo: estacao.conto_titulo || '',
+        conto_sintese: estacao.conto_sintese || '',
+        conto_texto: estacao.conto_texto || '',
+        conto_audio_url: estacao.conto_audio_url || '',
+        conto_imagem_url: estacao.conto_imagem_url || '',
+        conto_erro_comum: estacao.conto_erro_comum || '',
+        conto_sussurro_guardia: estacao.conto_sussurro_guardia || ''
       });
     }
   }, [estacao]);
@@ -269,7 +283,14 @@ export default function AdminCentralEstacao() {
           audio_abertura_url: data.audio_abertura_url,
           audio_floresta_url: data.audio_floresta_url,
           audio_voz_clareira_url: data.audio_voz_clareira_url,
-          spotify_playlists: data.spotify_playlists
+          spotify_playlists: data.spotify_playlists,
+          conto_titulo: data.conto_titulo,
+          conto_sintese: data.conto_sintese,
+          conto_texto: data.conto_texto,
+          conto_audio_url: data.conto_audio_url,
+          conto_imagem_url: data.conto_imagem_url,
+          conto_erro_comum: data.conto_erro_comum,
+          conto_sussurro_guardia: data.conto_sussurro_guardia
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -662,6 +683,70 @@ export default function AdminCentralEstacao() {
                         </div>
                       ))}
                     </div>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="sussurros">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Sussurros do Conto (Camada 3)</AccordionTrigger>
+                <AccordionContent className="space-y-4 pt-2">
+                  <div className="space-y-2">
+                    <Label>Título do Conto</Label>
+                    <Input 
+                      value={stationForm.conto_titulo} 
+                      onChange={e => setStationForm({...stationForm, conto_titulo: e.target.value})} 
+                      placeholder="Ex: La Loba"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Síntese Autoral (Curta)</Label>
+                    <Textarea 
+                      value={stationForm.conto_sintese} 
+                      onChange={e => setStationForm({...stationForm, conto_sintese: e.target.value})} 
+                      placeholder="Resumo simbólico do conto..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Texto Narrativo (Opcional)</Label>
+                    <Textarea 
+                      value={stationForm.conto_texto} 
+                      onChange={e => setStationForm({...stationForm, conto_texto: e.target.value})} 
+                      className="min-h-[150px]"
+                      placeholder="O conto na íntegra..."
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Imagem Simbólica URL</Label>
+                      <Input 
+                        value={stationForm.conto_imagem_url} 
+                        onChange={e => setStationForm({...stationForm, conto_imagem_url: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <AudioUpload
+                        label="Áudio Narrado (Conto)"
+                        value={stationForm.conto_audio_url}
+                        onChange={(url) => setStationForm({...stationForm, conto_audio_url: url})}
+                        folder="clube/estacoes/contos"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Erro Comum de Leitura (Obrigatório)</Label>
+                    <Textarea 
+                      value={stationForm.conto_erro_comum} 
+                      onChange={e => setStationForm({...stationForm, conto_erro_comum: e.target.value})} 
+                      placeholder="Como esse conto é lido de forma rasa?"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Sussurro da Guardiã (Síntese Final)</Label>
+                    <Input 
+                      value={stationForm.conto_sussurro_guardia} 
+                      onChange={e => setStationForm({...stationForm, conto_sussurro_guardia: e.target.value})} 
+                      placeholder="Frase curta de impacto..."
+                    />
                   </div>
                 </AccordionContent>
               </AccordionItem>
