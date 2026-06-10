@@ -4673,6 +4673,10 @@ export type Database = {
           frase_abertura: string | null
           frase_voz_clareira: string | null
           id: string
+          jardim_oficio_pergunta: string | null
+          jardim_oficio_subperguntas: Json | null
+          jardim_psique_pergunta: string | null
+          jardim_psique_subperguntas: Json | null
           livro_autor: string | null
           livro_capa_url: string | null
           livro_imagem_banner_url: string | null
@@ -4762,6 +4766,10 @@ export type Database = {
           frase_abertura?: string | null
           frase_voz_clareira?: string | null
           id?: string
+          jardim_oficio_pergunta?: string | null
+          jardim_oficio_subperguntas?: Json | null
+          jardim_psique_pergunta?: string | null
+          jardim_psique_subperguntas?: Json | null
           livro_autor?: string | null
           livro_capa_url?: string | null
           livro_imagem_banner_url?: string | null
@@ -4851,6 +4859,10 @@ export type Database = {
           frase_abertura?: string | null
           frase_voz_clareira?: string | null
           id?: string
+          jardim_oficio_pergunta?: string | null
+          jardim_oficio_subperguntas?: Json | null
+          jardim_psique_pergunta?: string | null
+          jardim_psique_subperguntas?: Json | null
           livro_autor?: string | null
           livro_capa_url?: string | null
           livro_imagem_banner_url?: string | null
