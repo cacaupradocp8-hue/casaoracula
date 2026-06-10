@@ -12,6 +12,7 @@ import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/Esta
 import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/EstacaoStepCasoSimbolico';
 import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
+import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,6 +33,8 @@ export default function ClubeRotaPremium() {
     { id: 'caso', title: 'Caso Simbólico' },
     { id: 'desafio_escuta', title: 'Desafio de Escuta' },
     { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
+    { id: 'jardim_psique', title: 'Jardim da Psique' },
+    { id: 'jardim_oficio', title: 'Jardim do Ofício' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
@@ -243,9 +246,33 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 8 && (
+                  <EstacaoStepJardim 
+                    type="psique"
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    pergunta={estacao.jardim_psique_pergunta || 'Qual parte de mim continua tentando chamar minha atenção?'}
+                    subperguntas={estacao.jardim_psique_subperguntas || []}
+                    estacaoNome={estacao.nome}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 9 && (
+                  <EstacaoStepJardim 
+                    type="oficio"
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    pergunta={estacao.jardim_oficio_pergunta || 'Onde percebo, nas mulheres que acompanho, sinais de vida soterrada?'}
+                    subperguntas={estacao.jardim_oficio_subperguntas || []}
+                    estacaoNome={estacao.nome}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 10 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">8. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">10. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
