@@ -76,7 +76,20 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
 
   return (
     <div className="max-w-5xl mx-auto space-y-12 pb-20 px-4">
+      {view !== 'intro' && view !== 'concluido' && (
+        <button 
+          onClick={() => {
+            if (view === 'cartografia') setView('intro');
+            if (view === 'pergunta') setView('cartografia');
+          }}
+          className="flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-bold hover:text-white transition-colors"
+        >
+          <Compass className="w-3 h-3 rotate-180" />
+          Voltar Tradução
+        </button>
+      )}
       <AnimatePresence mode="wait">
+
         {view === 'intro' && (
           <motion.div 
             key="intro"

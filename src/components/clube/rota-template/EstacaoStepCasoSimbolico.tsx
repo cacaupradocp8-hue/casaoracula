@@ -67,7 +67,20 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
+      {view !== 'intro' && view !== 'concluido' && (
+        <button 
+          onClick={() => {
+            if (view === 'analise') setView('intro');
+            if (view === 'integracao') setView('analise');
+          }}
+          className="flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-bold hover:text-white transition-colors"
+        >
+          <User className="w-3 h-3 rotate-180" />
+          Voltar no Caso
+        </button>
+      )}
       <AnimatePresence mode="wait">
+
         {view === 'intro' && (
           <motion.div
             key="intro"

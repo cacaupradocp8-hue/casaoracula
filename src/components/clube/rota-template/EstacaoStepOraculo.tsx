@@ -60,7 +60,17 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
+      {view === 'revelacao' && (
+        <button 
+          onClick={() => setView('carta')}
+          className="flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-bold hover:text-white transition-colors"
+        >
+          <Sparkles className="w-3 h-3" />
+          Voltar para a Carta
+        </button>
+      )}
       <AnimatePresence mode="wait">
+
         {view === 'carta' && (
           <motion.div
             key="carta"
