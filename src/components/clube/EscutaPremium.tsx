@@ -139,10 +139,10 @@ export function EscutaPremium({
                       <Headphones className="w-8 h-8 text-gold/30" />
                     </div>
                   )}
-                  {/* Inner Hole - Subtle and Deep */}
+                  {/* Inner Hole - Subtle and Deep (No white spot) */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-4 h-4 rounded-full bg-black border border-white/5 shadow-inner z-40" />
-                    <div className="w-1 h-1 rounded-full bg-[#1a1a1a] z-50 shadow-[inset_0_0_2px_rgba(255,255,255,0.2)]" />
+                    {/* Removed the central dot that was appearing as a white spot */}
                   </div>
                 </div>
               </div>

@@ -39,12 +39,14 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
 
   return (
     <div className="pb-20">
-      <div className="space-y-16 text-center max-w-2xl mx-auto mb-20">
-        <div className="space-y-6">
-          <div className="flex items-center justify-center gap-2 text-gold">
-            <Headphones className="w-4 h-4" />
-            <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
+      <div className="space-y-8 text-center max-w-2xl mx-auto mb-20">
+        <div className="space-y-12">
+          {/* Header context */}
+          <div className="space-y-4">
+            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-gold/60">Mulheres que correm com os lobos</span>
           </div>
+
+          {/* Main Title - Matching the reference exactly */}
           <div className="space-y-4 py-8">
             <div className="flex flex-col items-center gap-1">
               <span className="text-xl md:text-2xl font-display text-gold/90 uppercase tracking-[0.4em] leading-none">Clareira do</span>
