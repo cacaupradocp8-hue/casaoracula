@@ -30,6 +30,9 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
   mensagem,
   pergunta,
   integracaoTexto,
+  traducaoPorta,
+  traducaoTorre,
+  traducaoLabirinto,
   onNext
 }) => {
   const { user } = useAuth();
