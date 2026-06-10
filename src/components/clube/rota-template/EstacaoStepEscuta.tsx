@@ -137,32 +137,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
           </div>
         )}
           
-        {playlists.length > 0 && (
-          <div className="space-y-6 pt-12 border-t border-white/10">
-            <div className="flex items-center justify-center gap-4 flex-wrap">
-              {playlists.map((pl, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActivePlaylistIndex(idx)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-[10px] uppercase tracking-widest font-bold transition-all border",
-                    activePlaylistIndex === idx 
-                      ? "bg-gold text-midnight border-gold" 
-                      : "bg-white/5 text-white/40 border-white/10 hover:border-gold/30"
-                  )}
-                >
-                  <Music className="w-3 h-3 inline mr-2" />
-                  {pl.label || pl.territorio || `Playlist ${idx + 1}`}
-                </button>
-              ))}
-            </div>
-
-            <SpotifyPlaylistEmbed 
-              url={playlists[activePlaylistIndex].url} 
-              territorio={playlists[activePlaylistIndex].territorio}
-            />
-          </div>
-        )}
+        {/* Spotify section removed by user request */}
       </div>
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
