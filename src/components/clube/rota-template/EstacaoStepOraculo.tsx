@@ -112,57 +112,100 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
             className="w-full max-w-7xl mx-auto"
           >
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-8 lg:gap-16 items-start">
-              {/* Lado Esquerdo: A Carta Física */}
+              {/* Lado Esquerdo: A Carta Física com Efeito Frente e Verso */}
               <motion.div
                 initial={{ x: -30, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="relative aspect-[2/3] w-full max-w-md mx-auto"
+                className="relative aspect-[2/3] w-full max-w-md mx-auto perspective-1000 group cursor-pointer"
+                onClick={() => setIsFlipped(!isFlipped)}
               >
-                {/* Frame Externo Dourado */}
-                <div className="absolute -inset-1 bg-gradient-to-br from-[#D4AF37] via-[#FBF5B7] to-[#8A6D3B] rounded-[40px] opacity-80 blur-[2px]" />
-                
-                <Card className="absolute inset-0 bg-[#0A0A0B] rounded-[38px] overflow-hidden border-[6px] border-[#0A0A0B] shadow-2xl flex flex-col p-6 text-center">
-                  {/* Conteúdo Interno da Carta Estilizada */}
-                  <div className="relative h-full border border-gold/30 rounded-[32px] flex flex-col items-center py-6 px-4">
-                    <div className="text-[10px] tracking-[0.4em] text-gold/60 uppercase font-bold mb-1">Oráculo da Estação</div>
-                    <h4 className="text-3xl font-serif text-white tracking-widest mb-1">{nomeCarta}</h4>
-                    <div className="text-[10px] tracking-[0.2em] text-gold/80 uppercase font-medium mb-4">A ARQUITETA DO CHAMADO</div>
+                <motion.div
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ duration: 0.8, type: "spring", stiffness: 260, damping: 20 }}
+                  className="relative w-full h-full transition-all duration-500 preserve-3d"
+                >
+                  {/* FRENTE DA CARTA */}
+                  <div className="absolute inset-0 backface-hidden">
+                    {/* Frame Externo Dourado */}
+                    <div className="absolute -inset-1 bg-gradient-to-br from-[#D4AF37] via-[#FBF5B7] to-[#8A6D3B] rounded-[40px] opacity-80 blur-[2px]" />
                     
-                    <div className="absolute top-6 right-6 w-8 h-12 border border-gold/30 rounded-full flex flex-col items-center justify-center">
-                      <span className="text-xs text-gold font-serif">01</span>
-                      <div className="w-1 h-2 bg-gold/20 rounded-full mt-1" />
-                    </div>
+                    <Card className="absolute inset-0 bg-[#0A0A0B] rounded-[38px] overflow-hidden border-[6px] border-[#0A0A0B] shadow-2xl flex flex-col p-6 text-center">
+                      <div className="relative h-full border border-gold/30 rounded-[32px] flex flex-col items-center py-6 px-4">
+                        <div className="text-[10px] tracking-[0.4em] text-gold/60 uppercase font-bold mb-1">Oráculo da Estação</div>
+                        <h4 className="text-3xl font-serif text-white tracking-widest mb-1">{nomeCarta}</h4>
+                        <div className="text-[10px] tracking-[0.2em] text-gold/80 uppercase font-medium mb-4">A ARQUITETA DO CHAMADO</div>
+                        
+                        <div className="absolute top-6 right-6 w-8 h-12 border border-gold/30 rounded-full flex flex-col items-center justify-center">
+                          <span className="text-xs text-gold font-serif">01</span>
+                          <div className="w-1 h-2 bg-gold/20 rounded-full mt-1" />
+                        </div>
 
-                    <div className="absolute top-6 left-6 w-8 h-8 opacity-40">
-                      <div className="w-full h-full border border-gold/30 rounded-full flex items-center justify-center">
-                        <div className="w-full h-px bg-gold/30 rotate-45" />
-                        <div className="w-full h-px bg-gold/30 -rotate-45 absolute" />
-                        <div className="w-px h-full bg-gold/30 absolute" />
-                        <div className="w-full h-px bg-gold/30 absolute" />
+                        <div className="absolute top-6 left-6 w-8 h-8 opacity-40">
+                          <div className="w-full h-full border border-gold/30 rounded-full flex items-center justify-center">
+                            <div className="w-full h-px bg-gold/30 rotate-45" />
+                            <div className="w-full h-px bg-gold/30 -rotate-45 absolute" />
+                            <div className="w-px h-full bg-gold/30 absolute" />
+                            <div className="w-full h-px bg-gold/30 absolute" />
+                          </div>
+                        </div>
+
+                        <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-gold/20 mb-6">
+                          <img src={imagemUrl} alt={nomeCarta} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
+                        </div>
+
+                        <div className="space-y-4 flex-1 flex flex-col justify-center">
+                          <div className="relative">
+                            <Quote className="w-6 h-6 text-gold/20 absolute -top-4 -left-2 rotate-180" />
+                            <p className="text-white/90 text-sm font-serif italic leading-relaxed px-4">
+                              “Eu recolho o que o mundo descartou, porque sei que cada osso guarda um chamado que ainda pulsa.”
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="mt-auto pt-6 w-full">
+                          <div className="h-px w-12 bg-gold/20 mx-auto mb-2" />
+                          <span className="text-[9px] tracking-[0.3em] text-gold/40 uppercase font-bold italic">Clareira do Chamado</span>
+                        </div>
                       </div>
-                    </div>
-
-                    <div className="relative w-full aspect-square rounded-full overflow-hidden border-2 border-gold/20 mb-6 group">
-                      <img src={imagemUrl} alt={nomeCarta} className="w-full h-full object-cover transition-transform duration-[20s] group-hover:scale-110" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-                    </div>
-
-                    <div className="space-y-4 flex-1 flex flex-col justify-center">
-                      <div className="relative">
-                        <Quote className="w-6 h-6 text-gold/20 absolute -top-4 -left-2 rotate-180" />
-                        <p className="text-white/90 text-sm font-serif italic leading-relaxed px-4">
-                          “Eu recolho o que o mundo descartou, porque sei que cada osso guarda um chamado que ainda pulsa.”
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="mt-auto pt-6 w-full">
-                      <div className="h-px w-12 bg-gold/20 mx-auto mb-2" />
-                      <span className="text-[9px] tracking-[0.3em] text-gold/40 uppercase font-bold italic">Clareira do Chamado</span>
+                    </Card>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-4 py-1 rounded-full border border-gold/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-[8px] text-gold tracking-widest uppercase">Toque para Ver o Verso</span>
                     </div>
                   </div>
-                </Card>
+
+                  {/* VERSO DA CARTA */}
+                  <div className="absolute inset-0 backface-hidden rotate-y-180">
+                    {/* Frame Externo Dourado */}
+                    <div className="absolute -inset-1 bg-gradient-to-br from-[#D4AF37] via-[#FBF5B7] to-[#8A6D3B] rounded-[40px] opacity-80 blur-[2px]" />
+                    
+                    <Card className="absolute inset-0 bg-[#0A0A0B] rounded-[38px] overflow-hidden border-[6px] border-[#0A0A0B] shadow-2xl flex flex-col p-6 text-center">
+                      <div className="relative h-full border border-gold/30 rounded-[32px] flex flex-col items-center justify-center p-8 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/5 via-transparent to-transparent">
+                        <div className="w-48 h-48 rounded-full border-2 border-gold/20 flex items-center justify-center p-4 mb-8">
+                          <div className="w-full h-full rounded-full border border-gold/40 flex items-center justify-center">
+                             <Sparkles className="w-20 h-20 text-gold/20" />
+                          </div>
+                        </div>
+                        <div className="space-y-4">
+                          <div className="text-[10px] tracking-[0.5em] text-gold/40 uppercase font-black">CASA ORÁCULA</div>
+                          <div className="h-px w-12 bg-gold/30 mx-auto" />
+                          <div className="text-[8px] tracking-[0.3em] text-gold/60 uppercase font-medium">Método Oracular Integrado</div>
+                        </div>
+                        <div className="absolute inset-0 opacity-[0.03] pointer-events-none overflow-hidden rounded-[32px]">
+                          <div className="absolute inset-0 grid grid-cols-6 gap-4 p-4">
+                            {Array.from({ length: 24 }).map((_, i) => (
+                              <div key={i} className="aspect-square border border-gold rounded-full" />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-4 py-1 rounded-full border border-gold/20 pointer-events-none">
+                      <span className="text-[8px] text-gold tracking-widest uppercase">Toque para Ver a Frente</span>
+                    </div>
+                  </div>
+                </motion.div>
               </motion.div>
 
               {/* Lado Direito: Informações Oraculares */}
