@@ -844,7 +844,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       <div className="pt-16 flex flex-col items-center gap-8">
         <Button 
           variant="outline"
-          onClick={() => navigate('/clube/rota-dos-lobos')}
+          onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
           className="border-white/10 text-white/40 hover:text-gold hover:border-gold/30 rounded-full px-10 h-14 uppercase tracking-widest text-[10px] font-bold"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
