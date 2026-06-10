@@ -358,7 +358,11 @@ export default function AdminCentralEstacao() {
           caso_campo_nao_concluir: data.caso_campo_nao_concluir,
           caso_relacao_conto: data.caso_relacao_conto,
           caso_pergunta_conducao: data.caso_pergunta_conducao,
-          caso_cautela_etica: data.caso_cautela_etica
+          caso_cautela_etica: data.caso_cautela_etica,
+          desafio_pergunta: data.desafio_pergunta,
+          desafio_alternativas: data.desafio_alternativas,
+          desafio_leitura_modelo: data.desafio_leitura_modelo,
+          desafio_cuidado_etico: data.desafio_cuidado_etico
         })
         .eq('id', estacaoId);
       if (error) throw error;
