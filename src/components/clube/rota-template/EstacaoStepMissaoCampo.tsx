@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sword, CheckCircle2, Send, Info, Calendar, Target, MessageSquare, ClipboardCheck } from 'lucide-react';
+import { Sword, CheckCircle2, Send, Info, Calendar, Target, MessageSquare, ClipboardCheck, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
