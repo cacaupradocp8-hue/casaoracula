@@ -31,6 +31,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
 }) => {
   const { user } = useAuth();
   const [view, setView] = useState<'carta' | 'revelacao' | 'concluido'>('carta');
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const saveMutation = useMutation({
     mutationFn: async () => {
