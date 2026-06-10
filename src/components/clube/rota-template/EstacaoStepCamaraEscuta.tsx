@@ -706,9 +706,11 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                 <h4 className="text-4xl md:text-6xl font-serif text-white italic leading-tight group-hover:text-emerald-400 transition-colors">
                   Câmara da Escuta Simbólica
                 </h4>
-                <p className="text-xl text-white/50 font-serif italic leading-relaxed max-w-2xl">
-                  {playlistObra.funcao_escuta}
-                </p>
+                {playlistObra.funcao_escuta && (
+                  <p className="text-xl text-white/50 font-serif italic leading-relaxed max-w-2xl">
+                    {playlistObra.funcao_escuta}
+                  </p>
+                )}
               </div>
 
               <div className="flex flex-wrap items-center justify-center md:justify-start gap-8 pt-4">
