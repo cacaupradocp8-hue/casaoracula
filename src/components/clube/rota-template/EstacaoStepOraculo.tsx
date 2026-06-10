@@ -228,11 +228,11 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                 </div>
 
                 {/* Grid de Trindade (Porta, Torre, Labirinto) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
                   {[
-                    { title: 'A PORTA', subtitle: 'CLAREIRA DO CHAMADO', text: 'Você está diante do limiar entre a vida adaptada e o retorno à sua natureza.', icon: '⛩️' },
-                    { title: 'A TORRE', subtitle: 'A ADAPTAÇÃO', text: 'Você aprendeu a ser aceita, mas se afastou daquilo que te torna verdadeiramente viva.', icon: '🏰' },
-                    { title: 'O LABIRINTO', subtitle: 'O EXÍLIO DA PRÓPRIA NATUREZA', text: 'Você se perdeu de si para pertencer. Agora o caminho de volta começa aqui.', icon: '🌀' }
+                    { title: 'A PORTA', subtitle: 'CLAREIRA DO CHAMADO', text: traducaoPorta || 'Você está diante do limiar entre a vida adaptada e o retorno à sua natureza.', icon: '⛩️' },
+                    { title: 'A TORRE', subtitle: 'A ADAPTAÇÃO', text: traducaoTorre || 'Você aprendeu a ser aceita, mas se afastou daquilo que te torna verdadeiramente viva.', icon: '🏰' },
+                    { title: 'O LABIRINTO', subtitle: 'O EXÍLIO DA PRÓPRIA NATUREZA', text: traducaoLabirinto || 'Você se perdeu de si para pertencer. Agora o caminho de volta começa aqui.', icon: '🌀' }
                   ].map((item, idx) => (
                     <div key={idx} className="bg-white/[0.02] border border-white/5 rounded-2xl p-6 text-center space-y-3 flex flex-col items-center">
                       <div className="text-2xl mb-2 grayscale opacity-60">{item.icon}</div>
