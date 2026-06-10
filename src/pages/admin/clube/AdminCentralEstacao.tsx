@@ -937,6 +937,148 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 6 — Desafio de Escuta */}
+              <AccordionItem value="desafio-escuta" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Desafio de Escuta (Camada 6)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Pergunta do Desafio</Label>
+                    <Input 
+                      value={stationForm.desafio_pergunta}
+                      onChange={(e) => setStationForm({ ...stationForm, desafio_pergunta: e.target.value })}
+                      placeholder="Ex: O que você percebe primeiro no caso de Helena?"
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Alternativas</Label>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-[10px] gap-2 border-primary/20"
+                        onClick={() => {
+                          const newList = [...stationForm.desafio_alternativas, { titulo: '', descricao: '', classificacao: 'adequada', feedback: '' }];
+                          setStationForm({...stationForm, desafio_alternativas: newList});
+                        }}
+                      >
+                        <Plus className="w-3 h-3" /> Add Alternativa
+                      </Button>
+                    </div>
+
+                    <div className="space-y-4">
+                      {stationForm.desafio_alternativas.map((alt: any, idx: number) => (
+                        <div key={idx} className="p-6 rounded-xl bg-primary/5 border border-primary/10 space-y-4 relative group">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="absolute top-2 right-2 h-6 w-6 text-primary/20 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              const newList = stationForm.desafio_alternativas.filter((_: any, i: number) => i !== idx);
+                              setStationForm({...stationForm, desafio_alternativas: newList});
+                            }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                          
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Título</Label>
+                              <Input 
+                                value={alt.titulo} 
+                                onChange={e => {
+                                  const newList = [...stationForm.desafio_alternativas];
+                                  newList[idx].titulo = e.target.value;
+                                  setStationForm({...stationForm, desafio_alternativas: newList});
+                                }} 
+                                className="text-xs"
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Classificação</Label>
+                              <Select 
+                                value={alt.classificacao} 
+                                onValueChange={(v) => {
+                                  const newList = [...stationForm.desafio_alternativas];
+                                  newList[idx].classificacao = v;
+                                  setStationForm({...stationForm, desafio_alternativas: newList});
+                                }}
+                              >
+                                <SelectTrigger className="text-xs h-9">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="adequada">Adequada</SelectItem>
+                                  <SelectItem value="parcial">Parcial</SelectItem>
+                                  <SelectItem value="apressada">Apressada</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase">Descrição Curta</Label>
+                            <Input 
+                              value={alt.descricao} 
+                              onChange={e => {
+                                const newList = [...stationForm.desafio_alternativas];
+                                newList[idx].descricao = e.target.value;
+                                setStationForm({...stationForm, desafio_alternativas: newList});
+                              }} 
+                              className="text-xs"
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <Label className="text-[9px] uppercase">Feedback Explicativo</Label>
+                            <Textarea 
+                              value={alt.feedback} 
+                              onChange={e => {
+                                const newList = [...stationForm.desafio_alternativas];
+                                newList[idx].feedback = e.target.value;
+                                setStationForm({...stationForm, desafio_alternativas: newList});
+                              }} 
+                              className="text-xs min-h-[60px]"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-emerald-400/60 font-bold">Leitura-Modelo</Label>
+                    <Textarea 
+                      value={stationForm.desafio_leitura_modelo}
+                      onChange={(e) => setStationForm({ ...stationForm, desafio_leitura_modelo: e.target.value })}
+                      placeholder="Explicação ideal da Casa..."
+                      className="bg-emerald-500/5 border-emerald-500/10 min-h-[100px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-blue-400/60 font-bold">Cuidado Ético do Desafio</Label>
+                    <Textarea 
+                      value={stationForm.desafio_cuidado_etico}
+                      onChange={(e) => setStationForm({ ...stationForm, desafio_cuidado_etico: e.target.value })}
+                      placeholder="Orientações éticas específicas para este desafio..."
+                      className="bg-blue-500/5 border-blue-500/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 6'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
