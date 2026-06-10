@@ -271,11 +271,7 @@ export default function RotaDosLobos() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-8 py-4 border-y border-white/5">
-                <div className="space-y-2">
-                  <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Estação Atual</p>
-                  <p className="text-base text-white font-serif italic">Clareira do Chamado</p>
-                </div>
+              <div className="grid grid-cols-1 gap-8 py-4 border-y border-white/5">
                 <div className="space-y-2">
                   <p className="text-[10px] uppercase tracking-widest text-white/30 font-bold">Ferramenta Ativa</p>
                   <p className="text-base text-white font-serif italic">Mapa do Instinto</p>
