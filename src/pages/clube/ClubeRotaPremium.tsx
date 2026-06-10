@@ -36,6 +36,7 @@ export default function ClubeRotaPremium() {
     { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
     { id: 'jardim_psique', title: 'Jardim da Psique' },
     { id: 'jardim_oficio', title: 'Jardim do Ofício' },
+    { id: 'missao_campo', title: 'Missão de Campo' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
