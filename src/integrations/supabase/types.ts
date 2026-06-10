@@ -4682,6 +4682,12 @@ export type Database = {
           livro_imagem_banner_url: string | null
           livro_titulo: string
           missao_campo: Json | null
+          missao_checklist: Json | null
+          missao_label_observacao: string | null
+          missao_label_pergunta: string | null
+          missao_label_sinal: string | null
+          missao_texto: string | null
+          missao_titulo: string | null
           movimento_simbolico: string | null
           numero: number
           ordem: number
@@ -4775,6 +4781,12 @@ export type Database = {
           livro_imagem_banner_url?: string | null
           livro_titulo: string
           missao_campo?: Json | null
+          missao_checklist?: Json | null
+          missao_label_observacao?: string | null
+          missao_label_pergunta?: string | null
+          missao_label_sinal?: string | null
+          missao_texto?: string | null
+          missao_titulo?: string | null
           movimento_simbolico?: string | null
           numero: number
           ordem?: number
@@ -4868,6 +4880,12 @@ export type Database = {
           livro_imagem_banner_url?: string | null
           livro_titulo?: string
           missao_campo?: Json | null
+          missao_checklist?: Json | null
+          missao_label_observacao?: string | null
+          missao_label_pergunta?: string | null
+          missao_label_sinal?: string | null
+          missao_texto?: string | null
+          missao_titulo?: string | null
           movimento_simbolico?: string | null
           numero?: number
           ordem?: number
@@ -5557,6 +5575,69 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      clube_missao_campo_registros: {
+        Row: {
+          checklist_concluido: Json | null
+          created_at: string | null
+          data: string | null
+          estacao_id: string | null
+          id: string
+          resposta_observacao: string | null
+          resposta_pergunta: string | null
+          resposta_sinal: string | null
+          rota_id: string | null
+          status: string | null
+          titulo_missao: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          checklist_concluido?: Json | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          resposta_observacao?: string | null
+          resposta_pergunta?: string | null
+          resposta_sinal?: string | null
+          rota_id?: string | null
+          status?: string | null
+          titulo_missao?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          checklist_concluido?: Json | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          resposta_observacao?: string | null
+          resposta_pergunta?: string | null
+          resposta_sinal?: string | null
+          rota_id?: string | null
+          status?: string | null
+          titulo_missao?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_missao_campo_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_missao_campo_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clube_obras_essencia_8020: {
         Row: {
