@@ -138,6 +138,15 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
               </div>
             )}
 
+            {contoData.sussurros_frases && contoData.sussurros_frases.length > 0 && (
+              <div className="py-12 border-t border-white/5">
+                <div className="text-center mb-8">
+                  <span className="text-[10px] text-gold/40 uppercase tracking-[0.4em] font-bold">Placar de Sussurros</span>
+                </div>
+                <PlacarSussurros frases={contoData.sussurros_frases} />
+              </div>
+            )}
+
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('escuta_conto')}

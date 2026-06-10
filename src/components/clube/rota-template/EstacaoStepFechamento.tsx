@@ -170,5 +170,3 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
     </div>
   );
 };
-
-import { cn } from '@/lib/utils';
