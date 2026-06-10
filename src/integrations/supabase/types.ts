@@ -4567,7 +4567,17 @@ export type Database = {
           titulo: string
           traducao_aula: string | null
           traducao_circulo: string | null
+          traducao_ferramenta_associada: string | null
+          traducao_justificativa_principal: string | null
+          traducao_justificativa_secundaria: string | null
+          traducao_labirinto: string | null
+          traducao_pergunta_pessoal: string | null
+          traducao_pergunta_profissional: string | null
+          traducao_porta: string | null
           traducao_sessao: string | null
+          traducao_territorio_principal: string | null
+          traducao_territorio_secundario: string | null
+          traducao_torre: string | null
           updated_at: string
           voz_clareira_texto: string | null
         }
@@ -4628,7 +4638,17 @@ export type Database = {
           titulo: string
           traducao_aula?: string | null
           traducao_circulo?: string | null
+          traducao_ferramenta_associada?: string | null
+          traducao_justificativa_principal?: string | null
+          traducao_justificativa_secundaria?: string | null
+          traducao_labirinto?: string | null
+          traducao_pergunta_pessoal?: string | null
+          traducao_pergunta_profissional?: string | null
+          traducao_porta?: string | null
           traducao_sessao?: string | null
+          traducao_territorio_principal?: string | null
+          traducao_territorio_secundario?: string | null
+          traducao_torre?: string | null
           updated_at?: string
           voz_clareira_texto?: string | null
         }
@@ -4689,7 +4709,17 @@ export type Database = {
           titulo?: string
           traducao_aula?: string | null
           traducao_circulo?: string | null
+          traducao_ferramenta_associada?: string | null
+          traducao_justificativa_principal?: string | null
+          traducao_justificativa_secundaria?: string | null
+          traducao_labirinto?: string | null
+          traducao_pergunta_pessoal?: string | null
+          traducao_pergunta_profissional?: string | null
+          traducao_porta?: string | null
           traducao_sessao?: string | null
+          traducao_territorio_principal?: string | null
+          traducao_territorio_secundario?: string | null
+          traducao_torre?: string | null
           updated_at?: string
           voz_clareira_texto?: string | null
         }
@@ -6091,6 +6121,78 @@ export type Database = {
             columns: ["traducao_id"]
             isOneToOne: false
             referencedRelation: "clube_traducao_oracular"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_traducao_registros_v2: {
+        Row: {
+          concluido: boolean | null
+          conto_origem: string
+          created_at: string
+          estacao_id: string
+          ferramenta_associada: string | null
+          id: string
+          labirinto: string | null
+          porta: string | null
+          resposta_pessoal: string | null
+          resposta_profissional: string | null
+          rota_id: string
+          territorio_principal: string | null
+          territorio_secundario: string | null
+          torre: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean | null
+          conto_origem: string
+          created_at?: string
+          estacao_id: string
+          ferramenta_associada?: string | null
+          id?: string
+          labirinto?: string | null
+          porta?: string | null
+          resposta_pessoal?: string | null
+          resposta_profissional?: string | null
+          rota_id: string
+          territorio_principal?: string | null
+          territorio_secundario?: string | null
+          torre?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean | null
+          conto_origem?: string
+          created_at?: string
+          estacao_id?: string
+          ferramenta_associada?: string | null
+          id?: string
+          labirinto?: string | null
+          porta?: string | null
+          resposta_pessoal?: string | null
+          resposta_profissional?: string | null
+          rota_id?: string
+          territorio_principal?: string | null
+          territorio_secundario?: string | null
+          torre?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_traducao_registros_v2_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_traducao_registros_v2_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
             referencedColumns: ["id"]
           },
         ]
