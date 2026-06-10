@@ -1,79 +1,81 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, BookOpen, Sparkles, Send, CheckCircle2, FlaskConical } from 'lucide-react';
+import { Compass, BookOpen, Sparkles, Send, CheckCircle2, FlaskConical, Map, DoorOpen, TowerControl, GitBranch, Wrench } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface TraducaoOracularProps {
   estacaoId: string;
+  rotaId: string;
+  contoOrigem: string;
+  traducaoData: {
+    territorioPrincipal: string;
+    justificativaPrincipal: string;
+    territorioSecundario: string;
+    justificativaSecundaria: string;
+    porta: string;
+    torre: string;
+    labirinto: string;
+    ferramentaAssociada: string;
+    perguntaPessoal: string;
+    perguntaProfissional: string;
+  };
   onNext: () => void;
 }
 
-export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({ estacaoId, onNext }) => {
+export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({ 
+  estacaoId, 
+  rotaId,
+  contoOrigem,
+  traducaoData,
+  onNext 
+}) => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [integracao, setIntegracao] = useState('');
-  const [profissional, setProfissional] = useState('');
-  const [view, setView] = useState<'intro' | 'traducao' | 'pergunta' | 'concluido'>('intro');
-
-  const { data: traducao, isLoading } = useQuery({
-    queryKey: ['traducao-oracular', estacaoId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('clube_traducao_oracular')
-        .select('*')
-        .eq('estacao_id', estacaoId)
-        .maybeSingle();
-      
-      if (error) throw error;
-      return data;
-    }
-  });
+  const [respostaPessoal, setRespostaPessoal] = useState('');
+  const [respostaProfissional, setRespostaProfissional] = useState('');
+  const [view, setView] = useState<'intro' | 'cartografia' | 'pergunta' | 'concluido'>('intro');
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      if (!user || !traducao) return;
+      if (!user) return;
       
       const { error } = await supabase
-        .from('clube_traducao_registros')
+        .from('clube_traducao_registros_v2')
         .insert({
           user_id: user.id,
-          traducao_id: traducao.id,
+          rota_id: rotaId,
           estacao_id: estacaoId,
-          resposta_integracao: integracao,
-          resposta_profissional: profissional
+          conto_origem: contoOrigem,
+          territorio_principal: traducaoData.territorioPrincipal,
+          territorio_secundario: traducaoData.territorioSecundario,
+          porta: traducaoData.porta,
+          torre: traducaoData.torre,
+          labirinto: traducaoData.labirinto,
+          ferramenta_associada: traducaoData.ferramentaAssociada,
+          resposta_pessoal: respostaPessoal,
+          resposta_profissional: respostaProfissional,
+          concluido: true
         });
       
       if (error) throw error;
     },
     onSuccess: () => {
       setView('concluido');
-      toast.success('Tradução registrada com sucesso!');
+      toast.success('Cartografia simbólica registrada!');
     },
     onError: (err: any) => {
       toast.error('Erro ao salvar registro: ' + err.message);
     }
   });
 
-  if (isLoading) return null;
-
-  if (!traducao) {
-    return (
-      <div className="text-center py-20 space-y-4">
-        <Compass className="w-12 h-12 text-gold/20 mx-auto animate-pulse" />
-        <p className="text-gold/40 italic font-serif">Aguardando cartografia simbólica...</p>
-        <Button onClick={onNext} variant="ghost" className="text-white/60">Pular passo</Button>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-3xl mx-auto space-y-12 pb-20">
+    <div className="max-w-5xl mx-auto space-y-12 pb-20 px-4">
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
@@ -84,71 +86,125 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({ e
             className="text-center space-y-8 py-10"
           >
             <div className="space-y-4">
-              <Compass className="w-16 h-16 text-gold mx-auto" />
-              <h2 className="text-4xl font-serif text-white">Tradução Oracular</h2>
-              <p className="text-gold/60 text-lg max-w-xl mx-auto font-serif italic">
-                Aprenda a traduzir a linguagem dos símbolos para a cartografia da Casa.
+              <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
+                <Compass className="w-10 h-10 text-gold" />
+              </div>
+              <h2 className="text-4xl md:text-5xl font-serif text-white italic">Tradução Oracular</h2>
+              <p className="text-gold/60 text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
+                “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
               </p>
             </div>
             
-            <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[2rem] space-y-6">
-              <p className="text-white/80 leading-relaxed">
-                Nesta etapa, observamos quais territórios da psique o conto <strong>{traducao.conto_titulo}</strong> está ativando. 
-                Não buscamos diagnósticos, mas padrões de observação.
+            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[32px] space-y-6 max-w-3xl mx-auto">
+              <p className="text-white/80 text-lg leading-relaxed font-serif italic">
+                Nesta etapa, traduzimos os símbolos de <strong>{contoOrigem}</strong> para a cartografia da psique e do ofício. 
+                Não buscamos diagnósticos, mas padrões de observação e movimentos da alma.
               </p>
               <Button 
-                onClick={() => setView('traducao')}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-10 py-6 rounded-full"
+                onClick={() => setView('cartografia')}
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest transition-all shadow-2xl shadow-gold/20 hover:scale-105"
               >
-                Iniciar Tradução
+                Mapear Símbolos
               </Button>
             </div>
           </motion.div>
         )}
 
-        {view === 'traducao' && (
+        {view === 'cartografia' && (
           <motion.div 
-            key="traducao"
+            key="cartografia"
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="space-y-10"
+            className="space-y-12"
           >
             <div className="text-center space-y-2">
-              <h3 className="text-sm uppercase tracking-[0.3em] text-gold font-bold">O que este conto ajuda a observar?</h3>
-              <p className="text-white/40 font-serif italic">Leitura simbólica de {traducao.conto_titulo}</p>
+              <h3 className="text-sm uppercase tracking-[0.4em] text-gold font-bold">Cartografia Simbólica</h3>
+              <p className="text-white/40 font-serif italic text-lg">Base narrativa: {contoOrigem}</p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card className="bg-white/[0.03] border-white/10 p-8 rounded-[2rem] space-y-6 flex flex-col items-center text-center">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase tracking-widest text-gold/60 font-bold">Território Principal</span>
-                  <h4 className="text-2xl font-serif text-white">{traducao.territorio_principal}</h4>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Territórios */}
+              <Card className="bg-white/[0.03] border-white/10 p-10 rounded-[32px] space-y-6 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Map className="w-24 h-24 text-gold" />
                 </div>
-                <div className="w-12 h-px bg-gold/20" />
-                <p className="text-sm text-white/60 leading-relaxed italic">
-                  "{traducao.porque_principal}"
-                </p>
+                <div className="space-y-6 relative z-10">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase tracking-widest text-gold/60 font-black">Território Principal</span>
+                    <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioPrincipal}</h4>
+                  </div>
+                  <div className="w-16 h-px bg-gold/30" />
+                  <p className="text-white/60 leading-relaxed font-serif italic text-lg">
+                    "{traducaoData.justificativaPrincipal}"
+                  </p>
+                </div>
               </Card>
 
-              <Card className="bg-white/[0.03] border-white/10 p-8 rounded-[2rem] space-y-6 flex flex-col items-center text-center">
-                <div className="space-y-1">
-                  <span className="text-[10px] uppercase tracking-widest text-gold/60 font-bold">Território Secundário</span>
-                  <h4 className="text-2xl font-serif text-white">{traducao.territorio_secundario}</h4>
+              <Card className="bg-white/[0.03] border-white/10 p-10 rounded-[32px] space-y-6 relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Map className="w-24 h-24 text-gold" />
                 </div>
-                <div className="w-12 h-px bg-gold/20" />
-                <p className="text-sm text-white/60 leading-relaxed italic">
-                  "{traducao.porque_secundario}"
-                </p>
+                <div className="space-y-6 relative z-10">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase tracking-widest text-gold/60 font-black">Território Secundário</span>
+                    <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioSecundario}</h4>
+                  </div>
+                  <div className="w-16 h-px bg-gold/30" />
+                  <p className="text-white/60 leading-relaxed font-serif italic text-lg">
+                    "{traducaoData.justificativaSecundaria}"
+                  </p>
+                </div>
               </Card>
             </div>
 
-            <div className="flex justify-center">
+            {/* Elementos da Casa */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+                <DoorOpen className="w-8 h-8 text-gold/40 mx-auto" />
+                <div className="space-y-1">
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Porta Ativada</span>
+                  <p className="text-white/80 font-serif italic">{traducaoData.porta}</p>
+                </div>
+              </div>
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+                <TowerControl className="w-8 h-8 text-gold/40 mx-auto" />
+                <div className="space-y-1">
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Torre Relacionada</span>
+                  <p className="text-white/80 font-serif italic">{traducaoData.torre}</p>
+                </div>
+              </div>
+              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+                <GitBranch className="w-8 h-8 text-gold/40 mx-auto" />
+                <div className="space-y-1">
+                  <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Labirinto Observado</span>
+                  <p className="text-white/80 font-serif italic">{traducaoData.labirinto}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Ferramenta */}
+            <div className="bg-gold/5 border border-gold/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-6">
+                <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center border border-gold/20">
+                  <Wrench className="w-6 h-6 text-gold" />
+                </div>
+                <div>
+                  <span className="text-[9px] uppercase tracking-widest text-gold/60 font-black block">Ferramenta Associada</span>
+                  <p className="text-xl font-serif text-white italic">{traducaoData.ferramentaAssociada}</p>
+                </div>
+              </div>
+              <div className="text-gold/40 text-[10px] uppercase tracking-widest font-bold font-serif italic">
+                Prática de Integração
+              </div>
+            </div>
+
+            <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setView('pergunta')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-10 py-6 rounded-full"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest"
               >
-                Avançar para Integração
+                Prosseguir para Integração
               </Button>
             </div>
           </motion.div>
@@ -160,48 +216,55 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({ e
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="space-y-10 py-10"
+            className="space-y-12 py-10"
           >
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3 text-gold">
-                  <BookOpen className="w-5 h-5" />
-                  <h4 className="text-lg font-serif">Integração na Psique</h4>
+            <div className="space-y-12">
+              <div className="space-y-6">
+                <div className="flex items-center gap-4 text-gold/80">
+                  <Sparkles className="w-6 h-6" />
+                  <h4 className="text-xl font-serif italic tracking-wide">Integração Pessoal</h4>
                 </div>
-                <p className="text-white/80 font-serif italic text-xl">{traducao.pergunta_integracao}</p>
+                <p className="text-white/90 font-serif italic text-2xl leading-relaxed">{traducaoData.perguntaPessoal}</p>
                 <Textarea 
-                  value={integracao}
-                  onChange={(e) => setIntegracao(e.target.value)}
-                  placeholder="Escreva sua percepção..."
-                  className="bg-white/5 border-white/10 min-h-[120px] rounded-2xl focus:ring-gold/40 text-white"
+                  value={respostaPessoal}
+                  onChange={(e) => setRespostaPessoal(e.target.value)}
+                  placeholder="Sua percepção interna..."
+                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-[2rem] p-8 focus:ring-gold/30 text-white font-serif italic text-xl shadow-inner resize-none"
                 />
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-white/5">
-                <div className="flex items-center gap-3 text-gold">
-                  <FlaskConical className="w-5 h-5" />
-                  <h4 className="text-lg font-serif">Olhar Profissional</h4>
+              <div className="space-y-6 pt-10 border-t border-white/5">
+                <div className="flex items-center gap-4 text-emerald-400/80">
+                  <FlaskConical className="w-6 h-6" />
+                  <h4 className="text-xl font-serif italic tracking-wide">Olhar Profissional</h4>
                 </div>
-                <p className="text-white/80 font-serif italic text-xl">{traducao.pergunta_profissional}</p>
+                <p className="text-white/90 font-serif italic text-2xl leading-relaxed">{traducaoData.perguntaProfissional}</p>
                 <Textarea 
-                  value={profissional}
-                  onChange={(e) => setProfissional(e.target.value)}
-                  placeholder="Como isso se aplica no seu ofício?"
-                  className="bg-white/5 border-white/10 min-h-[120px] rounded-2xl focus:ring-gold/40 text-white"
+                  value={respostaProfissional}
+                  onChange={(e) => setRespostaProfissional(e.target.value)}
+                  placeholder="Observação da prática..."
+                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-[2rem] p-8 focus:ring-emerald-500/30 text-white font-serif italic text-xl shadow-inner resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex justify-center pt-6">
+            <div className="flex justify-center pt-8">
               <Button 
-                disabled={!integracao || !profissional || saveMutation.isPending}
+                disabled={!respostaPessoal || !respostaProfissional || saveMutation.isPending}
                 onClick={() => saveMutation.mutate()}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 py-7 rounded-full gap-3 shadow-lg"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-20 rounded-full text-xs uppercase tracking-widest shadow-2xl shadow-gold/20 transition-all hover:scale-105"
               >
-                {saveMutation.isPending ? 'Salvando...' : (
+                {saveMutation.isPending ? (
+                  <span className="flex items-center gap-3">
+                    <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1 }}>
+                      <Compass className="w-5 h-5" />
+                    </motion.div>
+                    Salvando Cartografia...
+                  </span>
+                ) : (
                   <>
-                    <Send className="w-4 h-4" />
-                    Registrar na Cartografia
+                    <Send className="w-4 h-4 mr-3" />
+                    Registrar na CidadELA
                   </>
                 )}
               </Button>
@@ -214,20 +277,20 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({ e
             key="concluido"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="text-center space-y-8 py-20"
+            className="text-center space-y-12 py-20"
           >
-            <div className="w-24 h-24 bg-gold/10 rounded-full flex items-center justify-center mx-auto text-gold">
-              <CheckCircle2 className="w-12 h-12" />
+            <div className="w-28 h-24 bg-gold/10 rounded-full flex items-center justify-center mx-auto text-gold border border-gold/20 shadow-2xl shadow-gold/10">
+              <CheckCircle2 className="w-14 h-14" />
             </div>
-            <div className="space-y-2">
-              <h2 className="text-3xl font-serif text-white">Escuta Registrada</h2>
-              <p className="text-white/40 max-w-sm mx-auto">
-                Sua tradução oracular foi integrada à CidadELA e ao seu Atlas Simbólico.
+            <div className="space-y-4">
+              <h2 className="text-4xl md:text-5xl font-serif text-white italic">Cartografia Integrada</h2>
+              <p className="text-white/40 text-lg max-w-md mx-auto font-serif italic">
+                Sua tradução oracular foi integrada à CidadELA e ao seu Atlas Simbólico com sucesso.
               </p>
             </div>
             <Button 
               onClick={onNext}
-              className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 py-6 rounded-full"
+              className="bg-white/10 hover:bg-white/20 text-white font-bold px-16 h-16 rounded-full text-[10px] uppercase tracking-[0.3em]"
             >
               Continuar Travessia
             </Button>

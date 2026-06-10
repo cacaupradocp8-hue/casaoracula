@@ -48,6 +48,16 @@ export interface Estacao {
   conto_imagem_url?: string;
   conto_erro_comum?: string;
   conto_sussurro_guardia?: string;
+  traducao_territorio_principal?: string;
+  traducao_justificativa_principal?: string;
+  traducao_territorio_secundario?: string;
+  traducao_justificativa_secundaria?: string;
+  traducao_porta?: string;
+  traducao_torre?: string;
+  traducao_labirinto?: string;
+  traducao_ferramenta_associada?: string;
+  traducao_pergunta_pessoal?: string;
+  traducao_pergunta_profissional?: string;
 }
 
 export interface CamaraObra {

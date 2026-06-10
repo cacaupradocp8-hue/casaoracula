@@ -193,7 +193,17 @@ export default function AdminCentralEstacao() {
     conto_audio_url: '',
     conto_imagem_url: '',
     conto_erro_comum: '',
-    conto_sussurro_guardia: ''
+    conto_sussurro_guardia: '',
+    traducao_territorio_principal: '',
+    traducao_justificativa_principal: '',
+    traducao_territorio_secundario: '',
+    traducao_justificativa_secundaria: '',
+    traducao_porta: '',
+    traducao_torre: '',
+    traducao_labirinto: '',
+    traducao_ferramenta_associada: '',
+    traducao_pergunta_pessoal: '',
+    traducao_pergunta_profissional: ''
   });
 
   // 1. Fetch Estação
@@ -251,7 +261,17 @@ export default function AdminCentralEstacao() {
         conto_audio_url: estacao.conto_audio_url || '',
         conto_imagem_url: estacao.conto_imagem_url || '',
         conto_erro_comum: estacao.conto_erro_comum || '',
-        conto_sussurro_guardia: estacao.conto_sussurro_guardia || ''
+        conto_sussurro_guardia: estacao.conto_sussurro_guardia || '',
+        traducao_territorio_principal: estacao.traducao_territorio_principal || '',
+        traducao_justificativa_principal: estacao.traducao_justificativa_principal || '',
+        traducao_territorio_secundario: estacao.traducao_territorio_secundario || '',
+        traducao_justificativa_secundaria: estacao.traducao_justificativa_secundaria || '',
+        traducao_porta: estacao.traducao_porta || '',
+        traducao_torre: estacao.traducao_torre || '',
+        traducao_labirinto: estacao.traducao_labirinto || '',
+        traducao_ferramenta_associada: estacao.traducao_ferramenta_associada || '',
+        traducao_pergunta_pessoal: estacao.traducao_pergunta_pessoal || '',
+        traducao_pergunta_profissional: estacao.traducao_pergunta_profissional || ''
       });
     }
   }, [estacao]);
@@ -290,7 +310,17 @@ export default function AdminCentralEstacao() {
           conto_audio_url: data.conto_audio_url,
           conto_imagem_url: data.conto_imagem_url,
           conto_erro_comum: data.conto_erro_comum,
-          conto_sussurro_guardia: data.conto_sussurro_guardia
+          conto_sussurro_guardia: data.conto_sussurro_guardia,
+          traducao_territorio_principal: data.traducao_territorio_principal,
+          traducao_justificativa_principal: data.traducao_justificativa_principal,
+          traducao_territorio_secundario: data.traducao_territorio_secundario,
+          traducao_justificativa_secundaria: data.traducao_justificativa_secundaria,
+          traducao_porta: data.traducao_porta,
+          traducao_torre: data.traducao_torre,
+          traducao_labirinto: data.traducao_labirinto,
+          traducao_ferramenta_associada: data.traducao_ferramenta_associada,
+          traducao_pergunta_pessoal: data.traducao_pergunta_pessoal,
+          traducao_pergunta_profissional: data.traducao_pergunta_profissional
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -747,6 +777,95 @@ export default function AdminCentralEstacao() {
                       onChange={e => setStationForm({...stationForm, conto_sussurro_guardia: e.target.value})} 
                       placeholder="Frase curta de impacto..."
                     />
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="traducao">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
+                <AccordionContent className="space-y-6 pt-2">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Território Principal</Label>
+                        <Input 
+                          value={stationForm.traducao_territorio_principal} 
+                          onChange={e => setStationForm({...stationForm, traducao_territorio_principal: e.target.value})} 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Justificativa (Principal)</Label>
+                        <Textarea 
+                          value={stationForm.traducao_justificativa_principal} 
+                          onChange={e => setStationForm({...stationForm, traducao_justificativa_principal: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label>Território Secundário</Label>
+                        <Input 
+                          value={stationForm.traducao_territorio_secundario} 
+                          onChange={e => setStationForm({...stationForm, traducao_territorio_secundario: e.target.value})} 
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Justificativa (Secundária)</Label>
+                        <Textarea 
+                          value={stationForm.traducao_justificativa_secundaria} 
+                          onChange={e => setStationForm({...stationForm, traducao_justificativa_secundaria: e.target.value})} 
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-primary/5 pt-4">
+                    <div className="space-y-2">
+                      <Label>Porta Ativada</Label>
+                      <Input 
+                        value={stationForm.traducao_porta} 
+                        onChange={e => setStationForm({...stationForm, traducao_porta: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Torre Relacionada</Label>
+                      <Input 
+                        value={stationForm.traducao_torre} 
+                        onChange={e => setStationForm({...stationForm, traducao_torre: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Labirinto Observado</Label>
+                      <Input 
+                        value={stationForm.traducao_labirinto} 
+                        onChange={e => setStationForm({...stationForm, traducao_labirinto: e.target.value})} 
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 border-t border-primary/5 pt-4">
+                    <Label>Ferramenta Associada</Label>
+                    <Input 
+                      value={stationForm.traducao_ferramenta_associada} 
+                      onChange={e => setStationForm({...stationForm, traducao_ferramenta_associada: e.target.value})} 
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-primary/5 pt-4">
+                    <div className="space-y-2">
+                      <Label>Pergunta Integração Pessoal</Label>
+                      <Textarea 
+                        value={stationForm.traducao_pergunta_pessoal} 
+                        onChange={e => setStationForm({...stationForm, traducao_pergunta_pessoal: e.target.value})} 
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Pergunta Integração Profissional</Label>
+                      <Textarea 
+                        value={stationForm.traducao_pergunta_profissional} 
+                        onChange={e => setStationForm({...stationForm, traducao_pergunta_profissional: e.target.value})} 
+                      />
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>

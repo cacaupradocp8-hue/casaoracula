@@ -178,6 +178,20 @@ export default function ClubeRotaPremium() {
                 {currentStep === 4 && (
                   <EstacaoStepTraducaoOracular 
                     estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    contoOrigem={estacao.conto_titulo || 'Conto da Estação'}
+                    traducaoData={{
+                      territorioPrincipal: estacao.traducao_territorio_principal || 'Território Principal',
+                      justificativaPrincipal: estacao.traducao_justificativa_principal || '',
+                      territorioSecundario: estacao.traducao_territorio_secundario || 'Território Secundário',
+                      justificativaSecundaria: estacao.traducao_justificativa_secundaria || '',
+                      porta: estacao.traducao_porta || 'Porta',
+                      torre: estacao.traducao_torre || 'Torre',
+                      labirinto: estacao.traducao_labirinto || 'Labirinto',
+                      ferramentaAssociada: estacao.traducao_ferramenta_associada || 'Ferramenta',
+                      perguntaPessoal: estacao.traducao_pergunta_pessoal || 'Sua percepção pessoal?',
+                      perguntaProfissional: estacao.traducao_pergunta_profissional || 'Sua observação profissional?'
+                    }}
                     onNext={handleNext}
                   />
                 )}
