@@ -236,7 +236,14 @@ export default function AdminCentralEstacao() {
     oraculo_imagem_url: '',
     oraculo_mensagem: '',
     oraculo_pergunta: '',
-    oraculo_integracao_texto: ''
+    oraculo_integracao_texto: '',
+    cartografia_rastro_nome: '',
+    cartografia_ferramenta_desbloqueada: '',
+    cartografia_distrito_impactado: '',
+    cartografia_distrito_secundario: '',
+    cartografia_competencia: '',
+    cartografia_proxima_travessia: '',
+    cartografia_mensagem_conclusao: ''
   });
 
   // 1. Fetch Estação
