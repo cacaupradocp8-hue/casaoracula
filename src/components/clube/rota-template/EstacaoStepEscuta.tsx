@@ -45,12 +45,22 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <Headphones className="w-4 h-4" />
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
           </div>
-          <div className="space-y-4">
-            <h2 className="text-4xl md:text-6xl font-serif text-white italic tracking-tight leading-tight">Clareira do Chamado</h2>
-            <div className="flex items-center justify-center gap-4 text-gold/60">
-              <div className="h-px w-8 bg-gold/20" />
-              <span className="text-lg md:text-xl font-serif italic tracking-[0.1em]">Rota dos Lobos</span>
-              <div className="h-px w-8 bg-gold/20" />
+          <div className="space-y-4 py-8">
+            <div className="flex flex-col items-center gap-1">
+              <span className="text-xl md:text-2xl font-display text-gold/90 uppercase tracking-[0.4em] leading-none">Clareira do</span>
+              <h2 className="text-6xl md:text-9xl font-display text-gold italic tracking-tight leading-none drop-shadow-2xl">Chamado</h2>
+            </div>
+            
+            <div className="flex items-center justify-center gap-4 py-4">
+              <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+              <div className="w-2 h-2 rotate-45 border border-gold/60" />
+              <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+            </div>
+
+            <div className="flex items-center justify-center gap-3">
+              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
+              <span className="text-2xl md:text-3xl font-display italic text-gold/80 tracking-widest">Rota dos Lobos</span>
+              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
             </div>
           </div>
           
