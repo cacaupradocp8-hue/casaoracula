@@ -111,7 +111,11 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             </Card>
 
             {contoData.audioUrl && (
-              <div className="py-4">
+              <div className="py-8 border-y border-white/5 my-8">
+                <div className="text-center mb-6 space-y-1">
+                  <span className="text-[9px] text-gold/60 uppercase tracking-widest font-black">Escuta Profunda</span>
+                  <h3 className="text-xl font-serif text-white italic">O Áudio do Conto</h3>
+                </div>
                 <EscutaPremium 
                   audioUrl={contoData.audioUrl} 
                   titulo={`${contoData.titulo} — Narração`}
