@@ -128,15 +128,22 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
         const completedIds = new Set(records.map(r => r.obra_id));
         const faixasObras = obras.filter(o => !o.url.includes('spotify.com'));
         
-        // Encontra a primeira obra não concluída
-        const nextObra = faixasObras.find(o => !completedIds.has(o.id));
-        
-        if (nextObra) {
-          // Se encontrou uma não concluída, mas já concluiu algumas, podemos perguntar ou já setar
-          // Para simplicidade e fluidez, vamos apenas manter o estado limpo se mudar de obra
-        } else if (completedIds.size >= faixasObras.length && faixasObras.length > 0) {
-          // Se já concluiu todas, mostra a devolutiva
-          setShowDevolutiva(true);
+        if (completedIds.size >= faixasObras.length && faixasObras.length > 0) {
+          // Se já concluiu todas, verifica se já escolheu a voz
+          const { data: estado } = await supabase
+            .from('user_cidadela_estado')
+            .select('voz')
+            .eq('user_id', user.id)
+            .maybeSingle();
+
+          if (estado?.voz) {
+            setDevolutivaChoice(estado.voz);
+            setShowRastro(true);
+            setShowDevolutiva(false);
+          } else {
+            setShowDevolutiva(true);
+            setShowRastro(false);
+          }
         }
       }
     };
@@ -289,12 +296,15 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
 
   const handleDevolutivaFinal = async (choice: string) => {
-    if (!user) return;
+    if (!user || !obras || obras.length === 0) return;
     
     setDevolutivaChoice(choice);
     setIsSaving(true);
     
     try {
+      const activeRotaId = obras[0].rota_id;
+      const obraExemplo = obras[0]; // Para pegar rota/estação se necessário no histórico
+      
       // Save final choice to cartografia
       await supabase
         .from('user_cidadela_estado')
@@ -303,6 +313,21 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           voz: choice,
           ultimo_movimento: new Date().toISOString()
         });
+
+      // Registrar movimento histórico na Cidadela para Auditoria/Atlas
+      await supabase
+        .from('journey_events')
+        .insert([{
+          user_id: user.id,
+          event_type: 'camara_escuta_finalizada',
+          metadata: {
+            voz_ecoante: choice,
+            estacao_id: estacaoId,
+            rota_id: activeRotaId,
+            estacao_slug: estacaoSlug,
+            timestamp: new Date().toISOString()
+          }
+        }]);
 
       setShowRastro(true);
       setShowDevolutiva(false);
