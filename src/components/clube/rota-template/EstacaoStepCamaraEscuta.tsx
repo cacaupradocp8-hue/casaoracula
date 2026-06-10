@@ -98,6 +98,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   const { user } = useAuth();
   const { data: obras, isLoading } = useCamaraObras(estacaoId);
   const [activeObra, setActiveObra] = useState<CamaraObra | null>(null);
+  const [inPlaylistMode, setInPlaylistMode] = useState(false);
   const [showRastro, setShowRastro] = useState(false);
   const [showDevolutiva, setShowDevolutiva] = useState(false);
   const [devolutivaChoice, setDevolutivaChoice] = useState<string | null>(null);
