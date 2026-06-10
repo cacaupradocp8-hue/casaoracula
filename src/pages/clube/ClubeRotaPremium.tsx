@@ -13,6 +13,7 @@ import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/Estac
 import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
+import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -35,6 +36,7 @@ export default function ClubeRotaPremium() {
     { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
     { id: 'jardim_psique', title: 'Jardim da Psique' },
     { id: 'jardim_oficio', title: 'Jardim do Ofício' },
+    { id: 'missao_campo', title: 'Missão de Campo' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
@@ -270,9 +272,23 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 10 && (
+                  <EstacaoStepMissaoCampo 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    titulo={estacao.missao_titulo || 'Observar o que ainda pulsa'}
+                    texto={estacao.missao_texto || ''}
+                    checklist={estacao.missao_checklist || []}
+                    labelObservacao={estacao.missao_label_observacao || 'O que observei?'}
+                    labelSinal={estacao.missao_label_sinal || 'Que sinal de vida soterrada apareceu?'}
+                    labelPergunta={estacao.missao_label_pergunta || 'Que pergunta segura poderia ser feita?'}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 11 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">10. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">11. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">

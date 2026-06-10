@@ -225,7 +225,13 @@ export default function AdminCentralEstacao() {
     jardim_psique_pergunta: '',
     jardim_psique_subperguntas: [] as string[],
     jardim_oficio_pergunta: '',
-    jardim_oficio_subperguntas: [] as string[]
+    jardim_oficio_subperguntas: [] as string[],
+    missao_titulo: '',
+    missao_texto: '',
+    missao_checklist: [] as string[],
+    missao_label_observacao: '',
+    missao_label_sinal: '',
+    missao_label_pergunta: ''
   });
 
   // 1. Fetch Estação
@@ -315,7 +321,13 @@ export default function AdminCentralEstacao() {
         jardim_psique_pergunta: estacao.jardim_psique_pergunta || '',
         jardim_psique_subperguntas: (estacao.jardim_psique_subperguntas as string[]) || [],
         jardim_oficio_pergunta: estacao.jardim_oficio_pergunta || '',
-        jardim_oficio_subperguntas: (estacao.jardim_oficio_subperguntas as string[]) || []
+        jardim_oficio_subperguntas: (estacao.jardim_oficio_subperguntas as string[]) || [],
+        missao_titulo: estacao.missao_titulo || '',
+        missao_texto: estacao.missao_texto || '',
+        missao_checklist: (estacao.missao_checklist as string[]) || [],
+        missao_label_observacao: estacao.missao_label_observacao || '',
+        missao_label_sinal: estacao.missao_label_sinal || '',
+        missao_label_pergunta: estacao.missao_label_pergunta || ''
       });
     }
   }, [estacao]);
@@ -386,7 +398,13 @@ export default function AdminCentralEstacao() {
           jardim_psique_pergunta: data.jardim_psique_pergunta,
           jardim_psique_subperguntas: data.jardim_psique_subperguntas,
           jardim_oficio_pergunta: data.jardim_oficio_pergunta,
-          jardim_oficio_subperguntas: data.jardim_oficio_subperguntas
+          jardim_oficio_subperguntas: data.jardim_oficio_subperguntas,
+          missao_titulo: data.missao_titulo,
+          missao_texto: data.missao_texto,
+          missao_checklist: data.missao_checklist,
+          missao_label_observacao: data.missao_label_observacao,
+          missao_label_sinal: data.missao_label_sinal,
+          missao_label_pergunta: data.missao_label_pergunta
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -1345,6 +1363,79 @@ export default function AdminCentralEstacao() {
                       className="bg-emerald-500 text-midnight font-bold hover:bg-emerald-400"
                     >
                       {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 9'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Camada 10 — Missão de Campo */}
+              <AccordionItem value="missao-campo-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Missão de Campo (Camada 10)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Título da Missão</Label>
+                    <Input 
+                      value={stationForm.missao_titulo}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_titulo: e.target.value })}
+                      placeholder="Ex: Observar o que ainda pulsa"
+                      className="bg-white/5 border-white/10"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Texto de Orientação</Label>
+                    <Textarea 
+                      value={stationForm.missao_texto}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_texto: e.target.value })}
+                      placeholder="Explique os passos da missão..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Itens do Checklist (um por linha)</Label>
+                    <Textarea 
+                      value={stationForm.missao_checklist?.join('\n')}
+                      onChange={(e) => setStationForm({ ...stationForm, missao_checklist: e.target.value.split('\n') })}
+                      placeholder="Identifiquei uma frase...&#10;Observei um desejo..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 border-t border-white/5">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Observação</Label>
+                      <Input 
+                        value={stationForm.missao_label_observacao}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_observacao: e.target.value })}
+                        placeholder="Ex: O que observei?"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Sinal</Label>
+                      <Input 
+                        value={stationForm.missao_label_sinal}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_sinal: e.target.value })}
+                        placeholder="Ex: Que sinal apareceu?"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Label: Pergunta</Label>
+                      <Input 
+                        value={stationForm.missao_label_pergunta}
+                        onChange={(e) => setStationForm({ ...stationForm, missao_label_pergunta: e.target.value })}
+                        placeholder="Ex: Que pergunta fazer?"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 10'}
                     </Button>
                   </div>
                 </AccordionContent>

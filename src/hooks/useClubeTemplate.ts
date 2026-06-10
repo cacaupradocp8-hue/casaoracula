@@ -80,6 +80,12 @@ export interface Estacao {
   jardim_psique_subperguntas?: string[];
   jardim_oficio_pergunta?: string;
   jardim_oficio_subperguntas?: string[];
+  missao_titulo?: string;
+  missao_texto?: string;
+  missao_checklist?: string[];
+  missao_label_observacao?: string;
+  missao_label_sinal?: string;
+  missao_label_pergunta?: string;
 }
 
 export interface CamaraObra {
