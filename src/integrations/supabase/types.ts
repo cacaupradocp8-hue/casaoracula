@@ -4376,6 +4376,57 @@ export type Database = {
           },
         ]
       }
+      clube_caso_simbolico_registros: {
+        Row: {
+          caso_titulo: string | null
+          created_at: string | null
+          data: string | null
+          estacao_id: string | null
+          id: string
+          rota_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          caso_titulo?: string | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          caso_titulo?: string | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          id?: string
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_caso_simbolico_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_caso_simbolico_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_engajamento: {
         Row: {
           acessos: number
@@ -4527,6 +4578,16 @@ export type Database = {
           audio_voz_clareira_url: string | null
           banner_url: string | null
           cartografia_id: string | null
+          caso_campo_nao_concluir: string | null
+          caso_campo_simbolico: string | null
+          caso_campo_superficie: string | null
+          caso_cautela_etica: string | null
+          caso_contexto: string | null
+          caso_frase_central: string | null
+          caso_idade: string | null
+          caso_nome_ficticio: string | null
+          caso_pergunta_conducao: string | null
+          caso_relacao_conto: string | null
           caso_simbolico: Json | null
           conto_audio_url: string | null
           conto_erro_comum: string | null
@@ -4598,6 +4659,16 @@ export type Database = {
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
+          caso_campo_nao_concluir?: string | null
+          caso_campo_simbolico?: string | null
+          caso_campo_superficie?: string | null
+          caso_cautela_etica?: string | null
+          caso_contexto?: string | null
+          caso_frase_central?: string | null
+          caso_idade?: string | null
+          caso_nome_ficticio?: string | null
+          caso_pergunta_conducao?: string | null
+          caso_relacao_conto?: string | null
           caso_simbolico?: Json | null
           conto_audio_url?: string | null
           conto_erro_comum?: string | null
@@ -4669,6 +4740,16 @@ export type Database = {
           audio_voz_clareira_url?: string | null
           banner_url?: string | null
           cartografia_id?: string | null
+          caso_campo_nao_concluir?: string | null
+          caso_campo_simbolico?: string | null
+          caso_campo_superficie?: string | null
+          caso_cautela_etica?: string | null
+          caso_contexto?: string | null
+          caso_frase_central?: string | null
+          caso_idade?: string | null
+          caso_nome_ficticio?: string | null
+          caso_pergunta_conducao?: string | null
+          caso_relacao_conto?: string | null
           caso_simbolico?: Json | null
           conto_audio_url?: string | null
           conto_erro_comum?: string | null
