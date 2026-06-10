@@ -98,6 +98,10 @@ export interface Estacao {
   cartografia_competencia?: string;
   cartografia_proxima_travessia?: string;
   cartografia_mensagem_conclusao?: string;
+  fechamento_titulo?: string;
+  fechamento_subtitulo?: string;
+  fechamento_audio_url?: string;
+  fechamento_botao_proxima?: string;
 }
 
 export interface CamaraObra {
