@@ -328,7 +328,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
             <History className="w-10 h-10 text-gold" />
           </div>
-          <h2 className="text-4xl font-serif text-white italic">Escuta da Clareira registrada</h2>
+          <h2 className="text-4xl font-serif text-white italic">Escuta Simbólica registrada</h2>
           <p className="text-gold/80 font-serif italic text-lg max-w-xl mx-auto leading-relaxed">
             “Sua escuta deixou um rastro na Cartografia da Loba. Algo em você começou a reconhecer o que ainda canta por baixo da ferida.”
           </p>
