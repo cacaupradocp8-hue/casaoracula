@@ -303,7 +303,11 @@ export default function AdminCentralEstacao() {
         desafio_pergunta: estacao.desafio_pergunta || '',
         desafio_alternativas: (estacao.desafio_alternativas as any[]) || [],
         desafio_leitura_modelo: estacao.desafio_leitura_modelo || '',
-        desafio_cuidado_etico: estacao.desafio_cuidado_etico || ''
+        desafio_cuidado_etico: estacao.desafio_cuidado_etico || '',
+        ferramenta_nome: estacao.ferramenta_nome || '',
+        ferramenta_descricao: estacao.ferramenta_descricao || '',
+        ferramenta_eixos: (estacao.ferramenta_eixos as any[]) || [],
+        ferramenta_resultados: (estacao.ferramenta_resultados as any[]) || []
       });
     }
   }, [estacao]);
