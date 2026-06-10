@@ -453,6 +453,7 @@ export default function AdminCentralEstacao() {
           cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao,
           fechamento_titulo: data.fechamento_titulo,
           fechamento_subtitulo: data.fechamento_subtitulo,
+          fechamento_texto: data.fechamento_texto,
           fechamento_audio_url: data.fechamento_audio_url,
           fechamento_botao_proxima: data.fechamento_botao_proxima
         })
