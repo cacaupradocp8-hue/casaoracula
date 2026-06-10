@@ -315,15 +315,16 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
         });
 
       // Registrar movimento histórico na Cidadela para Auditoria/Atlas
+      // Usando clube_engajamento para persistir o rastro específico da estação
       await supabase
-        .from('journey_events')
+        .from('clube_engajamento')
         .insert([{
           user_id: user.id,
-          event_type: 'camara_escuta_finalizada',
+          rota_id: activeRotaId,
+          tipo_evento: 'camara_escuta_finalizada',
           metadata: {
             voz_ecoante: choice,
             estacao_id: estacaoId,
-            rota_id: activeRotaId,
             estacao_slug: estacaoSlug,
             timestamp: new Date().toISOString()
           }
