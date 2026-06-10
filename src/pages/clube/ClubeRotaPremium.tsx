@@ -33,6 +33,8 @@ export default function ClubeRotaPremium() {
     { id: 'caso', title: 'Caso Simbólico' },
     { id: 'desafio_escuta', title: 'Desafio de Escuta' },
     { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
+    { id: 'jardim_psique', title: 'Jardim da Psique' },
+    { id: 'jardim_oficio', title: 'Jardim do Ofício' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
