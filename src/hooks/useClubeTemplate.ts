@@ -86,6 +86,11 @@ export interface Estacao {
   missao_label_observacao?: string;
   missao_label_sinal?: string;
   missao_label_pergunta?: string;
+  oraculo_nome?: string;
+  oraculo_imagem_url?: string;
+  oraculo_mensagem?: string;
+  oraculo_pergunta?: string;
+  oraculo_integracao_texto?: string;
 }
 
 export interface CamaraObra {
