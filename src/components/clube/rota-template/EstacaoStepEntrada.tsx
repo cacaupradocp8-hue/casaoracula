@@ -61,7 +61,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
 
       <div className="flex flex-col items-center gap-8">
         <div className="space-y-4 max-w-xl">
-          <p className="text-white/80 font-serif text-lg leading-relaxed italic">
+          <p className="text-white/80 font-cormorant text-xl leading-relaxed italic">
             "{fraseAbertura}"
           </p>
         </div>
