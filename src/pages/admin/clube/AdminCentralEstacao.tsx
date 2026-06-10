@@ -1278,6 +1278,78 @@ export default function AdminCentralEstacao() {
                 </AccordionContent>
               </AccordionItem>
 
+              {/* Camada 8 — Jardim da Psique */}
+              <AccordionItem value="jardim-psique-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Jardim da Psique (Camada 8)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Pergunta Principal (Psique)</Label>
+                    <Textarea 
+                      value={stationForm.jardim_psique_pergunta}
+                      onChange={(e) => setStationForm({ ...stationForm, jardim_psique_pergunta: e.target.value })}
+                      placeholder="Ex: Qual parte de mim continua tentando chamar minha atenção?"
+                      className="bg-white/5 border-white/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Subperguntas / Sinais (uma por linha)</Label>
+                    <Textarea 
+                      value={stationForm.jardim_psique_subperguntas?.join('\n')}
+                      onChange={(e) => setStationForm({ ...stationForm, jardim_psique_subperguntas: e.target.value.split('\n') })}
+                      placeholder="O que venho ignorando por parecer pequeno?&#10;Que incômodo retorna apesar das minhas tentativas?..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 8'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Camada 9 — Jardim do Ofício */}
+              <AccordionItem value="jardim-oficio-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-emerald-400 transition-colors">Jardim do Ofício (Camada 9)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Pergunta Principal (Ofício)</Label>
+                    <Textarea 
+                      value={stationForm.jardim_oficio_pergunta}
+                      onChange={(e) => setStationForm({ ...stationForm, jardim_oficio_pergunta: e.target.value })}
+                      placeholder="Ex: Onde percebo, nas mulheres que acompanho, sinais de vida soterrada?"
+                      className="bg-white/5 border-white/10 min-h-[80px]"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Subperguntas / Sinais (uma por linha)</Label>
+                    <Textarea 
+                      value={stationForm.jardim_oficio_subperguntas?.join('\n')}
+                      onChange={(e) => setStationForm({ ...stationForm, jardim_oficio_subperguntas: e.target.value.split('\n') })}
+                      placeholder="Que frases indicam perda de vitalidade?&#10;Onde confundo cansaço com falta de disciplina?..."
+                      className="bg-white/5 border-white/10 min-h-[120px]"
+                    />
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-emerald-500 text-midnight font-bold hover:bg-emerald-400"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 9'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
               <AccordionItem value="traducao">
                 <AccordionTrigger className="text-sm font-bold uppercase tracking-widest">Tradução Oracular (Camada 4)</AccordionTrigger>
                 <AccordionContent className="space-y-6 pt-2">
