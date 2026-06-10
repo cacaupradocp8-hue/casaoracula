@@ -96,6 +96,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   estacaoId,
   onNext
 }) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { data: obras, isLoading } = useCamaraObras(estacaoId);
   const [activeObra, setActiveObra] = useState<CamaraObra | null>(null);
