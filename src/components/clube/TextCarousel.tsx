@@ -24,39 +24,43 @@ export const TextCarousel: React.FC<TextCarouselProps> = ({
   const splitText = (input: string, limit: number): string[] => {
     if (!input) return [];
     
-    // Se for curto o suficiente, retorna como card único
-    if (input.length <= limit) return [input];
+    // Limpa o texto de quebras de linha excessivas para o carrossel
+    const cleanInput = input.replace(/\s+/g, ' ').trim();
 
-    const sentences = input.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [input];
+    // Se for curto o suficiente, retorna como card único
+    if (cleanInput.length <= limit) return [cleanInput];
+
+    const sentences = cleanInput.match(/[^.!?]+[.!?]+|[^.!?]+$/g) || [cleanInput];
     const cards: string[] = [];
     let currentCard = "";
 
     sentences.forEach(sentence => {
-      if ((currentCard + sentence).length <= limit) {
-        currentCard += sentence;
+      const trimmedSentence = sentence.trim();
+      if ((currentCard + (currentCard ? " " : "") + trimmedSentence).length <= limit) {
+        currentCard += (currentCard ? " " : "") + trimmedSentence;
       } else {
-        if (currentCard) cards.push(currentCard.trim());
+        if (currentCard) cards.push(currentCard);
         
         // Se uma única sentença for maior que o limite, divide por palavras
-        if (sentence.length > limit) {
-          const words = sentence.split(' ');
+        if (trimmedSentence.length > limit) {
+          const words = trimmedSentence.split(' ');
           let tempCard = "";
           words.forEach(word => {
-            if ((tempCard + word).length <= limit) {
+            if ((tempCard + (tempCard ? " " : "") + word).length <= limit) {
               tempCard += (tempCard ? " " : "") + word;
             } else {
-              cards.push(tempCard.trim());
+              if (tempCard) cards.push(tempCard);
               tempCard = word;
             }
           });
           currentCard = tempCard;
         } else {
-          currentCard = sentence;
+          currentCard = trimmedSentence;
         }
       }
     });
     
-    if (currentCard) cards.push(currentCard.trim());
+    if (currentCard) cards.push(currentCard);
     return cards;
   };
 
