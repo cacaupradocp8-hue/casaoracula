@@ -45,7 +45,14 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <Headphones className="w-4 h-4" />
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
           </div>
-          <h2 className="text-3xl md:text-5xl font-serif text-white italic tracking-tight">Vozes da Clareira</h2>
+          <div className="space-y-4">
+            <h2 className="text-4xl md:text-6xl font-serif text-white italic tracking-tight leading-tight">Clareira do Chamado</h2>
+            <div className="flex items-center justify-center gap-4 text-gold/60">
+              <div className="h-px w-8 bg-gold/20" />
+              <span className="text-lg md:text-xl font-serif italic tracking-[0.1em]">Rota dos Lobos</span>
+              <div className="h-px w-8 bg-gold/20" />
+            </div>
+          </div>
           
           {vozClareiraTexto && (
             <div className="max-w-lg mx-auto p-8 rounded-[2rem] bg-gradient-to-b from-white/5 to-transparent border border-white/10 backdrop-blur-sm">

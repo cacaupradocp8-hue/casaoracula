@@ -141,8 +141,8 @@ export function EscutaPremium({
                   )}
                   {/* Inner Hole */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-[#020617] border border-gold/20 shadow-inner z-40" />
-                    <div className="w-1 h-1 rounded-full bg-gold/40 z-50" />
+                    <div className="w-4 h-4 rounded-full bg-white/20 border border-gold/40 shadow-inner z-40 backdrop-blur-sm" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-white z-50 shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
                   </div>
                 </div>
               </div>
@@ -215,20 +215,20 @@ export function EscutaPremium({
           </button>
 
           <motion.button 
-            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(212,175,55,0.2)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(212,175,55,0.1)" }}
             whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
             className={cn(
-              "w-20 h-20 rounded-full flex items-center justify-center transition-all border border-gold/40 shadow-xl",
-              "bg-transparent text-gold hover:bg-gold/10 hover:border-gold"
+              "w-16 h-16 rounded-full flex items-center justify-center transition-all border border-white/10 shadow-lg",
+              "bg-white/5 text-gold/80 hover:bg-white/10 hover:border-gold/30"
             )}
           >
             {isLoading ? (
-              <Loader2 className="w-8 h-8 animate-spin" />
+              <Loader2 className="w-6 h-6 animate-spin" />
             ) : isPlaying ? (
-              <Pause className="w-9 h-9 fill-current" />
+              <Pause className="w-7 h-7 fill-current" />
             ) : (
-              <Play className="w-9 h-9 fill-current ml-1" />
+              <Play className="w-7 h-7 fill-current ml-1" />
             )}
           </motion.button>
 
