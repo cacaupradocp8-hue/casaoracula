@@ -198,44 +198,41 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 5 && (
-                  <div className="text-center space-y-8 max-w-2xl mx-auto">
-                    <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">5. Caso Simbólico</span>
-                      <h2 className="text-4xl font-serif text-white italic">O Espelho do Atendimento</h2>
-                    </div>
-                    
-                    <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem] text-left space-y-6">
-                      <div className="space-y-2">
-                        <h4 className="text-gold font-serif text-2xl italic">{estacao.caso_simbolico?.titulo || 'Helena, 42 anos'}</h4>
-                        <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">Perfil: Terapeuta</p>
-                      </div>
-                      <p className="text-lg font-serif italic text-white/80 leading-relaxed whitespace-pre-line">
-                        {estacao.caso_simbolico?.relato || "“Minha vida funciona, mas não me toca.”\n\nHelena sente que, apesar de toda a formação e sucesso aparente, há um vazio de direção que os livros não preenchem."}
-                      </p>
-                    </Card>
-
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Enfrentar o Desafio</Button>
-                  </div>
+                  <EstacaoStepCasoSimbolico 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    casoData={{
+                      nomeFicticio: estacao.caso_nome_ficticio || 'Helena',
+                      idade: estacao.caso_idade || '42 anos',
+                      contexto: estacao.caso_contexto || '',
+                      fraseCentral: estacao.caso_frase_central || '',
+                      campoSuperficie: estacao.caso_campo_superficie || '',
+                      campoSimbolico: estacao.caso_campo_simbolico || '',
+                      campoNaoConcluir: estacao.caso_campo_nao_concluir || '',
+                      relacaoConto: estacao.caso_relacao_conto || '',
+                      perguntaConducao: estacao.caso_pergunta_conducao || '',
+                      cautelaEtica: estacao.caso_cautela_etica || '',
+                      traducaoTerritorio: estacao.traducao_territorio_principal,
+                      traducaoPorta: estacao.traducao_porta,
+                      traducaoTorre: estacao.traducao_torre,
+                      traducaoLabirinto: estacao.traducao_labirinto
+                    }}
+                    onNext={handleNext}
+                  />
                 )}
 
                 {currentStep === 6 && (
-                  <div className="text-center space-y-8 max-w-2xl mx-auto">
+                  <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">7. Caso Simbólico</span>
-                      <h2 className="text-4xl font-serif text-white italic">O Espelho do Atendimento</h2>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">6. Próximos Passos</span>
+                      <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
-                    
-                    <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem] text-left space-y-6">
-                      <div className="space-y-2">
-                        <h4 className="text-gold font-serif text-2xl italic">{estacao.caso_simbolico?.titulo || 'Helena, 42 anos'}</h4>
-                        <p className="text-white/40 text-[10px] uppercase tracking-widest font-bold">Perfil: Terapeuta</p>
-                      </div>
-                      <p className="text-lg font-serif italic text-white/80 leading-relaxed whitespace-pre-line">
-                        {estacao.caso_simbolico?.relato || "“Minha vida funciona, mas não me toca.”\n\nHelena sente que, apesar de toda a formação e sucesso aparente, há um vazio de direção que os livros não preenchem."}
+                    <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
+                      <p className="text-lg font-serif italic text-white/60 leading-relaxed">
+                        Você concluiu as camadas fundamentais desta estação. Os próximos jardins e missões estão sendo preparados para sua jornada.
                       </p>
                     </Card>
-
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Enfrentar o Desafio</Button>
+                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Continuar</Button>
                   </div>
                 )}
 
