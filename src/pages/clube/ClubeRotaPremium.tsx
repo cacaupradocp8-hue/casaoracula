@@ -288,9 +288,22 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 11 && (
+                  <EstacaoStepOraculo 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    nomeCarta={estacao.oraculo_nome || 'O Osso que Canta'}
+                    imagemUrl={estacao.oraculo_imagem_url || ''}
+                    mensagem={estacao.oraculo_mensagem || ''}
+                    pergunta={estacao.oraculo_pergunta || ''}
+                    integracaoTexto={estacao.oraculo_integracao_texto || ''}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 12 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">11. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">12. Próximos Passos</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
