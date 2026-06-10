@@ -281,7 +281,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
             <Sparkles className="w-10 h-10 text-gold" />
           </div>
-          <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight">Você atravessou a Sequência da Clareira.</h2>
+          <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight">Você atravessou a Câmara da Escuta Simbólica.</h2>
           <div className="space-y-2 text-gold/60 font-serif italic text-xl">
             <p>Escutou a ferida.</p>
             <p>Escutou a ausência.</p>
@@ -328,7 +328,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
             <History className="w-10 h-10 text-gold" />
           </div>
-          <h2 className="text-4xl font-serif text-white italic">Escuta da Clareira registrada</h2>
+          <h2 className="text-4xl font-serif text-white italic">Escuta Simbólica registrada</h2>
           <p className="text-gold/80 font-serif italic text-lg max-w-xl mx-auto leading-relaxed">
             “Sua escuta deixou um rastro na Cartografia da Loba. Algo em você começou a reconhecer o que ainda canta por baixo da ferida.”
           </p>
@@ -342,7 +342,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             </div>
             <div className="space-y-1">
               <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Obra</span>
-              <p className="text-white font-serif italic text-lg">Sequência de Escuta da Clareira</p>
+              <p className="text-white font-serif italic text-lg">Câmara da Escuta Simbólica</p>
             </div>
             <div className="space-y-1">
               <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Voz Ecoante Selecionada</span>
@@ -396,14 +396,14 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/30">
             <ArrowLeft className="w-3 h-3" />
           </div>
-          Voltar à Sequência de Escuta
+          Voltar à Câmara da Escuta Simbólica
         </button>
 
         {inPlaylistMode && playlistObra && (
           <div className="space-y-8">
             <div className="text-center space-y-4">
               <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Imersão Sonora</span>
-              <h3 className="text-4xl font-serif text-white italic leading-tight">{playlistObra.titulo}</h3>
+              <h3 className="text-4xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h3>
             </div>
             <SpotifyPlaylistEmbed url={playlistObra.url} />
           </div>
@@ -662,7 +662,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
             <div className="h-px w-8 bg-gold/20" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-serif text-white italic leading-tight">Sequência de Escuta da Clareira</h2>
+          <h2 className="text-4xl md:text-6xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h2>
         </div>
         
         <div className="space-y-6 px-4">
@@ -694,7 +694,6 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
               <img src="/clareira-disco.png" className="w-full h-full object-cover relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" alt="Playlist" />
               <div className="absolute inset-0 flex items-center justify-center z-20">
-                <Music className="w-16 h-16 text-emerald-400 group-hover:scale-110 transition-transform" />
               </div>
             </div>
 
@@ -705,7 +704,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                   <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Sequência Recomendada</span>
                 </div>
                 <h4 className="text-4xl md:text-6xl font-serif text-white italic leading-tight group-hover:text-emerald-400 transition-colors">
-                  {playlistObra.titulo}
+                  Câmara da Escuta Simbólica
                 </h4>
                 <p className="text-xl text-white/50 font-serif italic leading-relaxed max-w-2xl">
                   {playlistObra.funcao_escuta}
