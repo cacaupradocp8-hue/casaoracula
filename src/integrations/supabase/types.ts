@@ -4528,6 +4528,13 @@ export type Database = {
           banner_url: string | null
           cartografia_id: string | null
           caso_simbolico: Json | null
+          conto_audio_url: string | null
+          conto_erro_comum: string | null
+          conto_imagem_url: string | null
+          conto_sintese: string | null
+          conto_sussurro_guardia: string | null
+          conto_texto: string | null
+          conto_titulo: string | null
           created_at: string
           descricao: string | null
           distrito_cidadela: string | null
@@ -4582,6 +4589,13 @@ export type Database = {
           banner_url?: string | null
           cartografia_id?: string | null
           caso_simbolico?: Json | null
+          conto_audio_url?: string | null
+          conto_erro_comum?: string | null
+          conto_imagem_url?: string | null
+          conto_sintese?: string | null
+          conto_sussurro_guardia?: string | null
+          conto_texto?: string | null
+          conto_titulo?: string | null
           created_at?: string
           descricao?: string | null
           distrito_cidadela?: string | null
@@ -4636,6 +4650,13 @@ export type Database = {
           banner_url?: string | null
           cartografia_id?: string | null
           caso_simbolico?: Json | null
+          conto_audio_url?: string | null
+          conto_erro_comum?: string | null
+          conto_imagem_url?: string | null
+          conto_sintese?: string | null
+          conto_sussurro_guardia?: string | null
+          conto_texto?: string | null
+          conto_titulo?: string | null
           created_at?: string
           descricao?: string | null
           distrito_cidadela?: string | null
@@ -5927,6 +5948,57 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      clube_sussurros_registros: {
+        Row: {
+          concluido: boolean | null
+          conto_titulo: string
+          created_at: string
+          estacao_id: string
+          id: string
+          respostas: Json
+          rota_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean | null
+          conto_titulo: string
+          created_at?: string
+          estacao_id: string
+          id?: string
+          respostas?: Json
+          rota_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean | null
+          conto_titulo?: string
+          created_at?: string
+          estacao_id?: string
+          id?: string
+          respostas?: Json
+          rota_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_sussurros_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_sussurros_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       clube_traducao_oracular: {
         Row: {
