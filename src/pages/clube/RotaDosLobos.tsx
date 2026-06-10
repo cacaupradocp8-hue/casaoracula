@@ -156,7 +156,6 @@ export default function RotaDosLobos() {
                     <span className="text-[10px] text-white/40">Progresso: 16%</span>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[11px] text-white/60">Estação: <span className="text-white">Clareira do Chamado</span></p>
                     <p className="text-[11px] text-white/60">Ferramenta: <span className="text-white">Mapa do Instinto Soterrado</span></p>
                     <p className="text-[11px] text-white/60">Impacto: <span className="text-white">Portão da Chegada</span></p>
                   </div>
