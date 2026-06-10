@@ -4842,6 +4842,7 @@ export type Database = {
           spotify_playlists: Json | null
           status: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
+          sussurros_frases: Json | null
           titulo: string
           traducao_aula: string | null
           traducao_circulo: string | null
@@ -4957,6 +4958,7 @@ export type Database = {
           spotify_playlists?: Json | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo: string
+          sussurros_frases?: Json | null
           titulo: string
           traducao_aula?: string | null
           traducao_circulo?: string | null
@@ -5072,6 +5074,7 @@ export type Database = {
           spotify_playlists?: Json | null
           status?: Database["public"]["Enums"]["clube_status"] | null
           subtitulo?: string
+          sussurros_frases?: Json | null
           titulo?: string
           traducao_aula?: string | null
           traducao_circulo?: string | null
