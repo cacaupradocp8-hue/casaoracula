@@ -359,6 +359,7 @@ export default function AdminCentralEstacao() {
         cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || '',
         fechamento_titulo: estacao.fechamento_titulo || '',
         fechamento_subtitulo: estacao.fechamento_subtitulo || '',
+        fechamento_texto: estacao.fechamento_texto || '',
         fechamento_audio_url: estacao.fechamento_audio_url || '',
         fechamento_botao_proxima: estacao.fechamento_botao_proxima || ''
       });
