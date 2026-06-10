@@ -1077,8 +1077,14 @@ export default function AdminCentralEstacao() {
                       placeholder="Orientações éticas específicas para este desafio..."
                       className="bg-blue-500/5 border-blue-500/10 min-h-[80px]"
                     />
-                  </div>
-
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 6'}
+                    </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
