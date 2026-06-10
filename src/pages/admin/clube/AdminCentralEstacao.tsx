@@ -448,7 +448,11 @@ export default function AdminCentralEstacao() {
           cartografia_distrito_secundario: data.cartografia_distrito_secundario,
           cartografia_competencia: data.cartografia_competencia,
           cartografia_proxima_travessia: data.cartografia_proxima_travessia,
-          cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao
+          cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao,
+          fechamento_titulo: data.fechamento_titulo,
+          fechamento_subtitulo: data.fechamento_subtitulo,
+          fechamento_audio_url: data.fechamento_audio_url,
+          fechamento_botao_proxima: data.fechamento_botao_proxima
         })
         .eq('id', estacaoId);
       if (error) throw error;
