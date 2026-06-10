@@ -311,7 +311,11 @@ export default function AdminCentralEstacao() {
         ferramenta_nome: estacao.ferramenta_nome || '',
         ferramenta_descricao: estacao.ferramenta_descricao || '',
         ferramenta_eixos: (estacao.ferramenta_eixos as any[]) || [],
-        ferramenta_resultados: (estacao.ferramenta_resultados as any[]) || []
+        ferramenta_resultados: (estacao.ferramenta_resultados as any[]) || [],
+        jardim_psique_pergunta: estacao.jardim_psique_pergunta || '',
+        jardim_psique_subperguntas: (estacao.jardim_psique_subperguntas as string[]) || [],
+        jardim_oficio_pergunta: estacao.jardim_oficio_pergunta || '',
+        jardim_oficio_subperguntas: (estacao.jardim_oficio_subperguntas as string[]) || []
       });
     }
   }, [estacao]);
