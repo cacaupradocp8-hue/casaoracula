@@ -15,6 +15,7 @@ import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
 import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
 import { EstacaoStepOraculo } from '@/components/clube/rota-template/EstacaoStepOraculo';
+import { EstacaoStepCartografiaLoba } from '@/components/clube/rota-template/EstacaoStepCartografiaLoba';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
