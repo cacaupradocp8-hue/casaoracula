@@ -311,8 +311,22 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
   };
 
   return (
-    <div className="max-w-4xl mx-auto pb-20 px-4">
+    <div className="max-w-4xl mx-auto pb-20 px-4 space-y-12">
+      {activeStep !== 'conto' && (
+        <button 
+          onClick={() => {
+            const steps: Step[] = ['conto', 'escuta_conto', 'escuta_personagem', 'aplicacao', 'conclusao'];
+            const idx = steps.indexOf(activeStep);
+            if (idx > 0) setActiveStep(steps[idx - 1]);
+          }}
+          className="flex items-center gap-2 text-[10px] text-white/30 uppercase tracking-widest font-bold hover:text-white transition-colors"
+        >
+          <ChevronRight className="w-3 h-3 rotate-180" />
+          Voltar na Escuta
+        </button>
+      )}
       {renderStepContent()}
     </div>
   );
 };
+
