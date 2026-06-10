@@ -76,6 +76,10 @@ export interface Estacao {
   ferramenta_descricao?: string;
   ferramenta_eixos?: any[];
   ferramenta_resultados?: any[];
+  jardim_psique_pergunta?: string;
+  jardim_psique_subperguntas?: string[];
+  jardim_oficio_pergunta?: string;
+  jardim_oficio_subperguntas?: string[];
 }
 
 export interface CamaraObra {
