@@ -148,27 +148,29 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       const puntoId = `escuta:${activeObra.id}`;
       
       // 1. Save to clube_camara_escuta_registros
-      const { error: regError } = await (supabase as any)
+      const { error: regError } = await supabase
         .from('clube_camara_escuta_registros')
-        .insert({
+        .insert([{
           user_id: user.id,
           obra_id: activeObra.id,
           rota_id: activeObra.rota_id,
           estacao_id: activeObra.estacao_id,
           simbolo_observado: simbolo,
+          emocao_predominante: '', // Adicionando campo obrigatório conforme tipos
           intensidade_escuta: intensidade,
-          territorio_impactado: specific.territorioImpactado || activeObra.territorio_principal,
+          territorio_impactado: specific.territorioImpactado || activeObra.territorio_principal || '',
           registro_psique: reflexaoPsique,
           registro_oficio: reflexaoOficio,
           data_escuta: new Date().toISOString()
-        });
+        }]);
 
       if (regError) throw regError;
 
+
       // 2. Save to Jardim da Psique
-      const { error: psiqueError } = await (supabase as any)
+      const { error: psiqueError } = await supabase
         .from('jardim_psique_registros')
-        .insert({
+        .insert([{
           user_id: user.id,
           reflexao_pessoal: reflexaoPsique,
           titulo: `Escuta: ${activeObra.titulo}`,
@@ -176,26 +178,28 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           ferramenta_chave: puntoId,
           ferramenta_nome: `Câmara da Escuta: ${activeObra.titulo}`,
           data_aplicacao: new Date().toISOString()
-        });
+        }]);
 
       if (psiqueError) throw psiqueError;
 
+
       // 3. Save to Jardim do Ofício
-      const { error: oficioError } = await (supabase as any)
+      const { error: oficioError } = await supabase
         .from('jardim_do_oficio')
-        .insert({
+        .insert([{
           user_id: user.id,
           reflexao_profissional: reflexaoOficio,
           contexto_origem: `ponto:${puntoId}`
-        });
+        }]);
 
       if (oficioError) throw oficioError;
+
 
       // 4. Update Cartografia (user_cidadela_estado)
       const territorio = specific.territorioImpactado || activeObra.territorio_principal;
       if (territorio) {
         try {
-          const { data: estado } = await (supabase as any)
+          const { data: estado } = await supabase
             .from('user_cidadela_estado')
             .select('distritos_ativados')
             .eq('user_id', user.id)
@@ -203,7 +207,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             
           const distritos = estado?.distritos_ativados || [];
           if (!distritos.includes(territorio)) {
-            await (supabase as any)
+            await supabase
               .from('user_cidadela_estado')
               .upsert({
                 user_id: user.id,
@@ -240,6 +244,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   };
 
 
+
   const handleDevolutivaFinal = async (choice: string) => {
     if (!user) return;
     
@@ -248,7 +253,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
     
     try {
       // Save final choice to cartografia
-      await (supabase as any)
+      await supabase
         .from('user_cidadela_estado')
         .upsert({
           user_id: user.id,
@@ -268,6 +273,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       setIsSaving(false);
     }
   };
+
 
 
   if (showDevolutiva) {
