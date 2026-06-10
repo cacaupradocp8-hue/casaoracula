@@ -225,7 +225,13 @@ export default function AdminCentralEstacao() {
     jardim_psique_pergunta: '',
     jardim_psique_subperguntas: [] as string[],
     jardim_oficio_pergunta: '',
-    jardim_oficio_subperguntas: [] as string[]
+    jardim_oficio_subperguntas: [] as string[],
+    missao_titulo: '',
+    missao_texto: '',
+    missao_checklist: [] as string[],
+    missao_label_observacao: '',
+    missao_label_sinal: '',
+    missao_label_pergunta: ''
   });
 
   // 1. Fetch Estação
