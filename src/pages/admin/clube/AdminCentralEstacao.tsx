@@ -261,7 +261,17 @@ export default function AdminCentralEstacao() {
         conto_audio_url: estacao.conto_audio_url || '',
         conto_imagem_url: estacao.conto_imagem_url || '',
         conto_erro_comum: estacao.conto_erro_comum || '',
-        conto_sussurro_guardia: estacao.conto_sussurro_guardia || ''
+        conto_sussurro_guardia: estacao.conto_sussurro_guardia || '',
+        traducao_territorio_principal: estacao.traducao_territorio_principal || '',
+        traducao_justificativa_principal: estacao.traducao_justificativa_principal || '',
+        traducao_territorio_secundario: estacao.traducao_territorio_secundario || '',
+        traducao_justificativa_secundaria: estacao.traducao_justificativa_secundaria || '',
+        traducao_porta: estacao.traducao_porta || '',
+        traducao_torre: estacao.traducao_torre || '',
+        traducao_labirinto: estacao.traducao_labirinto || '',
+        traducao_ferramenta_associada: estacao.traducao_ferramenta_associada || '',
+        traducao_pergunta_pessoal: estacao.traducao_pergunta_pessoal || '',
+        traducao_pergunta_profissional: estacao.traducao_pergunta_profissional || ''
       });
     }
   }, [estacao]);
