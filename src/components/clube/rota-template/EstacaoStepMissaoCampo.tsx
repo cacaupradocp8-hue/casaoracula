@@ -264,5 +264,6 @@ export const EstacaoStepMissaoCampo: React.FC<MissaoCampoProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
   );
 };
