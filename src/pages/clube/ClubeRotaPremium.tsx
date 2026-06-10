@@ -29,6 +29,7 @@ export default function ClubeRotaPremium() {
     { id: 'sussurros', title: 'Sussurros do Conto' },
     { id: 'traducao_oracular', title: 'Tradução Oracular' },
     { id: 'caso', title: 'Caso Simbólico' },
+    { id: 'desafio_escuta', title: 'Desafio de Escuta' },
     { id: 'proximos_passos', title: 'Próximos Passos' }
   ];
 
