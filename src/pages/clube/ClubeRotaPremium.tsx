@@ -303,9 +303,25 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 12 && (
+                  <EstacaoStepCartografiaLoba 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    estacaoNome={estacao.nome}
+                    rastroNome={estacao.cartografia_rastro_nome || 'O Chamado Foi Escutado'}
+                    ferramentaDesbloqueada={estacao.cartografia_ferramenta_desbloqueada || 'Mapa do Instinto Soterrado'}
+                    distritoImpactado={estacao.cartografia_distrito_impactado || 'Bosque dos Arquétipos'}
+                    distritoSecundario={estacao.cartografia_distrito_secundario || 'Portão da Chegada'}
+                    competenciaDesenvolvida={estacao.cartografia_competencia || ''}
+                    proximaTravessia={estacao.cartografia_proxima_travessia || ''}
+                    mensagemConclusao={estacao.cartografia_mensagem_conclusao || ''}
+                    onNext={handleNext}
+                  />
+                )}
+
+                {currentStep === 13 && (
                   <div className="text-center space-y-8 max-w-2xl mx-auto py-20">
                     <div className="space-y-4">
-                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">12. Próximos Passos</span>
+                      <span className="text-[10px] text-gold uppercase tracking-[0.3em] font-bold">13. Fechamento 80/20</span>
                       <h2 className="text-4xl font-serif text-white italic">A Caminhada Continua</h2>
                     </div>
                     <Card className="bg-white/5 border-white/10 p-8 rounded-[2rem]">
@@ -313,7 +329,7 @@ export default function ClubeRotaPremium() {
                         Você concluiu as camadas fundamentais desta estação. Os próximos jardins e missões estão sendo preparados para sua jornada.
                       </p>
                     </Card>
-                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Continuar</Button>
+                    <Button onClick={handleNext} className="bg-gold text-midnight font-bold rounded-full px-12 py-6">Concluir Estação</Button>
                   </div>
                 )}
 
