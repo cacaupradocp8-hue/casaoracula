@@ -177,7 +177,16 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           tipo_registro: 'estacao_rota',
           ferramenta_chave: puntoId,
           ferramenta_nome: `Câmara da Escuta: ${activeObra.titulo}`,
-          data_aplicacao: new Date().toISOString()
+          data_aplicacao: new Date().toISOString(),
+          conteudo: {
+            obra: activeObra.titulo,
+            simbolo_observado: simbolo,
+            intensidade_escuta: intensidade,
+            reflexao_psique: reflexaoPsique,
+            pergunta_origem: specific.perguntaPsique ?? null,
+            territorio_impactado: specific.territorioImpactado ?? activeObra.territorio_principal ?? null,
+            rastro: specific.rastroSimbolo ?? activeObra.rastro_simbolo ?? null,
+          }
         }]);
 
       if (psiqueError) throw psiqueError;
