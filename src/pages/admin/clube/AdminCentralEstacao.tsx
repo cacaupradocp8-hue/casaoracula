@@ -414,7 +414,12 @@ export default function AdminCentralEstacao() {
           missao_checklist: data.missao_checklist,
           missao_label_observacao: data.missao_label_observacao,
           missao_label_sinal: data.missao_label_sinal,
-          missao_label_pergunta: data.missao_label_pergunta
+          missao_label_pergunta: data.missao_label_pergunta,
+          oraculo_nome: data.oraculo_nome,
+          oraculo_imagem_url: data.oraculo_imagem_url,
+          oraculo_mensagem: data.oraculo_mensagem,
+          oraculo_pergunta: data.oraculo_pergunta,
+          oraculo_integracao_texto: data.oraculo_integracao_texto
         })
         .eq('id', estacaoId);
       if (error) throw error;
