@@ -4427,6 +4427,63 @@ export type Database = {
           },
         ]
       }
+      clube_desafio_escuta_registros: {
+        Row: {
+          alternativa_escolhida: string | null
+          classificacao: string | null
+          created_at: string | null
+          data: string | null
+          estacao_id: string | null
+          feedback_exibido: string | null
+          id: string
+          rota_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          alternativa_escolhida?: string | null
+          classificacao?: string | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          feedback_exibido?: string | null
+          id?: string
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          alternativa_escolhida?: string | null
+          classificacao?: string | null
+          created_at?: string | null
+          data?: string | null
+          estacao_id?: string | null
+          feedback_exibido?: string | null
+          id?: string
+          rota_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_desafio_escuta_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clube_desafio_escuta_registros_rota_id_fkey"
+            columns: ["rota_id"]
+            isOneToOne: false
+            referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_engajamento: {
         Row: {
           acessos: number
@@ -4597,6 +4654,10 @@ export type Database = {
           conto_texto: string | null
           conto_titulo: string | null
           created_at: string
+          desafio_alternativas: Json | null
+          desafio_cuidado_etico: string | null
+          desafio_leitura_modelo: string | null
+          desafio_pergunta: string | null
           descricao: string | null
           distrito_cidadela: string | null
           essencia_nucleo: string | null
@@ -4678,6 +4739,10 @@ export type Database = {
           conto_texto?: string | null
           conto_titulo?: string | null
           created_at?: string
+          desafio_alternativas?: Json | null
+          desafio_cuidado_etico?: string | null
+          desafio_leitura_modelo?: string | null
+          desafio_pergunta?: string | null
           descricao?: string | null
           distrito_cidadela?: string | null
           essencia_nucleo?: string | null
@@ -4759,6 +4824,10 @@ export type Database = {
           conto_texto?: string | null
           conto_titulo?: string | null
           created_at?: string
+          desafio_alternativas?: Json | null
+          desafio_cuidado_etico?: string | null
+          desafio_leitura_modelo?: string | null
+          desafio_pergunta?: string | null
           descricao?: string | null
           distrito_cidadela?: string | null
           essencia_nucleo?: string | null
