@@ -146,7 +146,7 @@ export default function ClubeRotaPremium() {
         {/* Background Image Container */}
         <div className="fixed inset-0 z-0">
           <img 
-            src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
+            src={slug === 'clareira-do-chamado' ? "/background-rastro-2.png" : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")} 
             alt="" 
             className="w-full h-full object-cover opacity-90"
           />
