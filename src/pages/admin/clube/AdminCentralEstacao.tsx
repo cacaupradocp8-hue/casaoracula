@@ -321,7 +321,13 @@ export default function AdminCentralEstacao() {
         jardim_psique_pergunta: estacao.jardim_psique_pergunta || '',
         jardim_psique_subperguntas: (estacao.jardim_psique_subperguntas as string[]) || [],
         jardim_oficio_pergunta: estacao.jardim_oficio_pergunta || '',
-        jardim_oficio_subperguntas: (estacao.jardim_oficio_subperguntas as string[]) || []
+        jardim_oficio_subperguntas: (estacao.jardim_oficio_subperguntas as string[]) || [],
+        missao_titulo: estacao.missao_titulo || '',
+        missao_texto: estacao.missao_texto || '',
+        missao_checklist: (estacao.missao_checklist as string[]) || [],
+        missao_label_observacao: estacao.missao_label_observacao || '',
+        missao_label_sinal: estacao.missao_label_sinal || '',
+        missao_label_pergunta: estacao.missao_label_pergunta || ''
       });
     }
   }, [estacao]);
