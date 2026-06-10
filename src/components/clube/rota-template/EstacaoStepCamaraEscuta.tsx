@@ -342,7 +342,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             </div>
             <div className="space-y-1">
               <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Obra</span>
-              <p className="text-white font-serif italic text-lg">Sequência de Escuta da Clareira</p>
+              <p className="text-white font-serif italic text-lg">Câmara da Escuta Simbólica</p>
             </div>
             <div className="space-y-1">
               <span className="text-[10px] text-gold/40 uppercase tracking-widest font-bold">Voz Ecoante Selecionada</span>
