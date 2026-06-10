@@ -355,7 +355,11 @@ export default function AdminCentralEstacao() {
         cartografia_distrito_secundario: estacao.cartografia_distrito_secundario || '',
         cartografia_competencia: estacao.cartografia_competencia || '',
         cartografia_proxima_travessia: estacao.cartografia_proxima_travessia || '',
-        cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || ''
+        cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || '',
+        fechamento_titulo: estacao.fechamento_titulo || '',
+        fechamento_subtitulo: estacao.fechamento_subtitulo || '',
+        fechamento_audio_url: estacao.fechamento_audio_url || '',
+        fechamento_botao_proxima: estacao.fechamento_botao_proxima || ''
       });
     }
   }, [estacao]);
