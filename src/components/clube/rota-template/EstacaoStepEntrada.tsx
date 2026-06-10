@@ -81,43 +81,39 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
       </div>
 
       <div className="pt-12 border-t border-white/10 w-full max-w-xl mx-auto">
-        <p className="text-[10px] text-white/40 uppercase tracking-[0.4em] font-black mb-8">Outros Audios da Jornada</p>
+        <p className="text-[10px] text-white/40 uppercase tracking-[0.4em] font-black mb-8">Fluxo da Estação</p>
         <div className="grid grid-cols-2 gap-6 w-full">
-          {audioVozClareiraUrl && (
-            <button
-              onClick={() => onJumpToStep(1)}
-              className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
-                <Music className="w-8 h-8 text-gold" />
-              </div>
-              <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-                <Headphones className="w-5 h-5 text-gold/60 group-hover:text-gold" />
-              </div>
-              <div className="text-center">
-                <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Escutar</span>
-                <span className="text-xs text-gold font-serif italic font-bold">Voz da Clareira</span>
-              </div>
-            </button>
-          )}
+          <button
+            onClick={() => onJumpToStep(1)}
+            className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
+              <Headphones className="w-8 h-8 text-gold" />
+            </div>
+            <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
+              <Music className="w-5 h-5 text-gold/60 group-hover:text-gold" />
+            </div>
+            <div className="text-center">
+              <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Acessar</span>
+              <span className="text-xs text-gold font-serif italic font-bold">Escuta Ritual</span>
+            </div>
+          </button>
 
-          {audioFlorestaUrl && (
-            <button
-              onClick={() => onJumpToStep(1)}
-              className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
-                <Sparkles className="w-8 h-8 text-gold" />
-              </div>
-              <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-                <TreePine className="w-5 h-5 text-gold/60 group-hover:text-gold" />
-              </div>
-              <div className="text-center">
-                <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Escutar</span>
-                <span className="text-xs text-gold font-serif italic font-bold">Voz da Floresta</span>
-              </div>
-            </button>
-          )}
+          <button
+            onClick={() => onJumpToStep(2)}
+            className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
+              <Sparkles className="w-8 h-8 text-gold" />
+            </div>
+            <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
+              <Ghost className="w-5 h-5 text-gold/60 group-hover:text-gold" />
+            </div>
+            <div className="text-center">
+              <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Entrar na</span>
+              <span className="text-xs text-gold font-serif italic font-bold">Câmara Escuta</span>
+            </div>
+          </button>
         </div>
 
         <div className="mt-20 flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">

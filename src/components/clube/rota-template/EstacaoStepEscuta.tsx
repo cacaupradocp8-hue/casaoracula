@@ -32,6 +32,17 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   onNext
 }) => {
   const [activePlaylistIndex, setActivePlaylistIndex] = useState(0);
+  
+  // Audio Playlist Logic
+  const audioPlaylist = useMemo(() => {
+    const list = [];
+    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Voz da Clareira", type: "content", icon: Headphones });
+    if (audioAberturaUrl) list.push({ url: audioAberturaUrl, title: "Abertura da Estação", type: "intro", icon: Music });
+    if (audioFlorestaUrl) list.push({ url: audioFlorestaUrl, title: "Voz da Floresta", type: "ambient", icon: TreePine });
+    return list;
+  }, [audioVozClareiraUrl, audioAberturaUrl, audioFlorestaUrl]);
+
+  const [activeAudioIndex, setActiveAudioIndex] = useState(0);
 
   const playlists = spotifyPlaylists && spotifyPlaylists.length > 0 
     ? spotifyPlaylists 
@@ -43,7 +54,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         <div className="space-y-12">
           {/* Header context */}
           <div className="space-y-4">
-            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-gold/60">Mulheres que correm com os lobos</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-gold/60">{obraRegente || "Mulheres que correm com os lobos"}</span>
           </div>
 
           {/* Main Title - Matching the reference exactly */}
@@ -75,37 +86,70 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
           )}
         </div>
         
-        <div className="space-y-24">
-          {audioVozClareiraUrl && (
+        {/* Unified Audio Playlist Section */}
+        {audioPlaylist.length > 0 && (
+          <div className="space-y-12">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
                 <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Voz da Clareira</span>
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Rastros Sonoros</span>
               </div>
-              <EscutaPremium 
-                audioUrl={audioVozClareiraUrl} 
-                titulo="A Voz da Clareira" 
-                imagemEscuta={livroCapaUrl}
-                className="py-0"
-              />
-            </div>
-          )}
+              
+              {/* Main Player for Active Audio */}
+              <div className="relative">
+                <EscutaPremium 
+                  key={audioPlaylist[activeAudioIndex]?.url}
+                  audioUrl={audioPlaylist[activeAudioIndex]?.url} 
+                  titulo={audioPlaylist[activeAudioIndex]?.title} 
+                  imagemEscuta={audioPlaylist[activeAudioIndex]?.type === 'ambient' ? "/clareira-disco.png" : livroCapaUrl}
+                  className="py-0"
+                />
+              </div>
 
-          {audioFlorestaUrl && (
-            <div className="space-y-6 pt-12 border-t border-white/5">
-              <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
-                <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Sons da Natureza</span>
+              {/* Selection List - Discreta e Sofisticada */}
+              <div className="flex flex-col gap-2 max-w-md mx-auto pt-4">
+                <p className="text-[9px] text-white/30 uppercase tracking-[0.3em] font-bold mb-2">Anexos desta Estação</p>
+                {audioPlaylist.map((audio, idx) => {
+                  const Icon = audio.icon;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveAudioIndex(idx)}
+                      className={cn(
+                        "flex items-center justify-between p-4 rounded-2xl border transition-all duration-500 group",
+                        activeAudioIndex === idx 
+                          ? "bg-gold/10 border-gold/40 text-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]" 
+                          : "bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/20"
+                      )}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className={cn(
+                          "w-8 h-8 rounded-full flex items-center justify-center border transition-colors",
+                          activeAudioIndex === idx ? "border-gold/30 bg-gold/10" : "border-white/10 bg-white/5"
+                        )}>
+                          <Icon className={cn("w-4 h-4", activeAudioIndex === idx ? "text-gold" : "text-white/40")} />
+                        </div>
+                        <div className="text-left">
+                          <span className="text-xs font-serif italic block tracking-wide">{audio.title}</span>
+                          <span className="text-[8px] uppercase tracking-widest font-bold opacity-40">
+                            {audio.type === 'content' ? 'Conteúdo Principal' : audio.type === 'ambient' ? 'Ambiência' : 'Introdução'}
+                          </span>
+                        </div>
+                      </div>
+                      {activeAudioIndex === idx && (
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3].map(i => (
+                            <div key={i} className="w-0.5 h-3 bg-gold animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-              <EscutaPremium 
-                audioUrl={audioFlorestaUrl} 
-                titulo="Voz da Floresta" 
-                imagemEscuta="/clareira-disco.png"
-                className="py-0"
-              />
             </div>
-          )}
-        </div>
+          </div>
+        )}
           
         {playlists.length > 0 && (
           <div className="space-y-6 pt-12 border-t border-white/10">
