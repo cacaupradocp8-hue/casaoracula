@@ -370,7 +370,11 @@ export default function AdminCentralEstacao() {
           desafio_pergunta: data.desafio_pergunta,
           desafio_alternativas: data.desafio_alternativas,
           desafio_leitura_modelo: data.desafio_leitura_modelo,
-          desafio_cuidado_etico: data.desafio_cuidado_etico
+          desafio_cuidado_etico: data.desafio_cuidado_etico,
+          ferramenta_nome: data.ferramenta_nome,
+          ferramenta_descricao: data.ferramenta_descricao,
+          ferramenta_eixos: data.ferramenta_eixos,
+          ferramenta_resultados: data.ferramenta_resultados
         })
         .eq('id', estacaoId);
       if (error) throw error;
