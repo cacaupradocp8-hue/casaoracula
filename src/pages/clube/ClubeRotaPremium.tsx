@@ -401,6 +401,9 @@ export default function ClubeRotaPremium() {
                     mensagem={estacao.oraculo_mensagem || ''}
                     pergunta={estacao.oraculo_pergunta || ''}
                     integracaoTexto={estacao.oraculo_integracao_texto || ''}
+                    traducaoPorta={estacao.traducao_porta}
+                    traducaoTorre={estacao.traducao_torre}
+                    traducaoLabirinto={estacao.traducao_labirinto}
                     onNext={handleNext}
                   />
                 )}
