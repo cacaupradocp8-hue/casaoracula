@@ -1,8 +1,6 @@
 import React from 'react';
-import { TreePine, Ghost, Sparkles, BookOpen, Map, Info, X, Moon, Music, Headphones } from 'lucide-react';
+import { TreePine, Ghost, Sparkles, Map, Music, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
@@ -28,21 +26,15 @@ interface EstacaoStepEntradaProps {
 export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   titulo,
   fraseAbertura,
-  fraseVozClareira,
   onNext,
-  onJumpToStep,
   audioAberturaUrl,
-  audioVozClareiraUrl,
-  audioFlorestaUrl,
-  imagemEscuta,
   obraRegente,
-  infoContent
 }) => {
   const navigate = useNavigate();
 
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
-      {/* Header Info - Minimalist as per screenshot */}
+      {/* Header Info - Minimalist */}
       <div className="space-y-4 pt-4">
         <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold flex items-center justify-center gap-3">
           <span className="w-8 h-px bg-gold/30" />
@@ -54,7 +46,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
         </h1>
       </div>
 
-      {/* Main Player - The "Abertura" experience */}
+      {/* Main Player */}
       <div className="relative">
         <EscutaPremium 
           audioUrl={audioAberturaUrl} 
@@ -99,29 +91,6 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
                 <item.icon className="w-4 h-4 text-white/40 group-hover:text-gold" />
               </div>
               <span className="text-[8px] text-white/40 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
-                {item.label}
-              </span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-        <div className="mt-20 flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
-          {[
-            { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
-            { icon: Map, label: 'Atlas', path: '/clube/rota-dos-lobos' }
-          ].map((item, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                if (item.path) navigate(item.path);
-              }}
-              className="group flex flex-col items-center gap-2 transition-all"
-            >
-              <div className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-                <item.icon className="w-4 h-4 text-gold/60 group-hover:text-gold" />
-              </div>
-              <span className="text-[8px] text-white/60 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
                 {item.label}
               </span>
             </button>
