@@ -215,12 +215,12 @@ export function EscutaPremium({
           </button>
 
           <motion.button 
-            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(212,175,55,0.2)" }}
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(212,175,55,0.1)" }}
             whileTap={{ scale: 0.95 }}
             onClick={togglePlay}
             className={cn(
-              "w-20 h-20 rounded-full flex items-center justify-center transition-all border border-gold/40 shadow-xl",
-              "bg-transparent text-gold hover:bg-gold/10 hover:border-gold"
+              "w-16 h-16 rounded-full flex items-center justify-center transition-all border border-white/10 shadow-lg",
+              "bg-white/5 text-gold/80 hover:bg-white/10 hover:border-gold/30"
             )}
           >
             {isLoading ? (
