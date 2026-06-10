@@ -40,7 +40,8 @@ export default function ClubeRotaPremium() {
     { id: 'jardim_oficio', title: 'Jardim do Ofício' },
     { id: 'missao_campo', title: 'Missão de Campo' },
     { id: 'oraculo', title: 'Oráculo da Estação' },
-    { id: 'proximos_passos', title: 'Próximos Passos' }
+    { id: 'cartografia', title: 'Cartografia da Loba' },
+    { id: 'proximos_passos', title: 'Fechamento 80/20' }
   ];
 
 
