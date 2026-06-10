@@ -57,17 +57,17 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <span className="text-[10px] uppercase tracking-[0.4em] font-bold text-gold/60">{obraRegente || "Mulheres que correm com os lobos"}</span>
           </div>
 
-          {/* Main Title - Matching the reference exactly */}
-          <div className="space-y-4 py-8">
+          {/* Main Title - Compacted for better mobile flow */}
+          <div className="space-y-4 py-4">
             <div className="flex flex-col items-center gap-1">
-              <span className="text-xl md:text-2xl font-display text-gold/90 uppercase tracking-[0.4em] leading-none">Clareira do</span>
-              <h2 className="text-6xl md:text-9xl font-display text-gold italic tracking-tight leading-none drop-shadow-2xl">Chamado</h2>
+              <span className="text-base md:text-xl font-display text-gold/90 uppercase tracking-[0.4em] leading-none">Clareira do</span>
+              <h2 className="text-5xl md:text-8xl font-display text-gold italic tracking-tight leading-none drop-shadow-2xl">Chamado</h2>
             </div>
             
-            <div className="flex items-center justify-center gap-4 py-4">
-              <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-              <div className="w-2 h-2 rotate-45 border border-gold/60" />
-              <div className="h-[1px] w-24 bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+            <div className="flex items-center justify-center gap-4 py-2">
+              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
+              <div className="w-1.5 h-1.5 rotate-45 border border-gold/40" />
+              <div className="h-[1px] w-16 bg-gradient-to-r from-transparent via-gold/30 to-transparent" />
             </div>
 
             <div className="flex items-center justify-center gap-3">

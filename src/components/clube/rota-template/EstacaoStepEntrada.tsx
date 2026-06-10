@@ -1,8 +1,6 @@
 import React from 'react';
-import { TreePine, Ghost, Sparkles, BookOpen, Map, Info, X, Moon, Music, Headphones } from 'lucide-react';
+import { TreePine, Ghost, Sparkles, Map, Music, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useNavigate } from 'react-router-dom';
 
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
@@ -28,21 +26,15 @@ interface EstacaoStepEntradaProps {
 export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   titulo,
   fraseAbertura,
-  fraseVozClareira,
   onNext,
-  onJumpToStep,
   audioAberturaUrl,
-  audioVozClareiraUrl,
-  audioFlorestaUrl,
-  imagemEscuta,
   obraRegente,
-  infoContent
 }) => {
   const navigate = useNavigate();
 
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
-      {/* Header Info - Minimalist as per screenshot */}
+      {/* Header Info - Minimalist */}
       <div className="space-y-4 pt-4">
         <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold flex items-center justify-center gap-3">
           <span className="w-8 h-px bg-gold/30" />
@@ -54,7 +46,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
         </h1>
       </div>
 
-      {/* Main Player - The "Abertura" experience */}
+      {/* Main Player */}
       <div className="relative">
         <EscutaPremium 
           audioUrl={audioAberturaUrl} 
@@ -80,43 +72,10 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
         </Button>
       </div>
 
-      <div className="pt-12 border-t border-white/10 w-full max-w-xl mx-auto">
-        <p className="text-[10px] text-white/40 uppercase tracking-[0.4em] font-black mb-8">Fluxo da Estação</p>
-        <div className="grid grid-cols-2 gap-6 w-full">
-          <button
-            onClick={() => onJumpToStep(1)}
-            className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
-              <Headphones className="w-8 h-8 text-gold" />
-            </div>
-            <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-              <Music className="w-5 h-5 text-gold/60 group-hover:text-gold" />
-            </div>
-            <div className="text-center">
-              <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Acessar</span>
-              <span className="text-xs text-gold font-serif italic font-bold">Escuta Ritual</span>
-            </div>
-          </button>
-
-          <button
-            onClick={() => onJumpToStep(2)}
-            className="group relative flex flex-col items-center gap-4 p-6 rounded-3xl bg-white/5 border border-white/10 hover:border-gold/30 hover:bg-white/10 transition-all overflow-hidden"
-          >
-            <div className="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-40">
-              <Sparkles className="w-8 h-8 text-gold" />
-            </div>
-            <div className="w-12 h-12 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-              <Ghost className="w-5 h-5 text-gold/60 group-hover:text-gold" />
-            </div>
-            <div className="text-center">
-              <span className="text-[10px] text-white/40 uppercase tracking-widest font-black block mb-1">Entrar na</span>
-              <span className="text-xs text-gold font-serif italic font-bold">Câmara Escuta</span>
-            </div>
-          </button>
-        </div>
-
-        <div className="mt-20 flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
+      <div className="pt-12 border-t border-white/10 w-full max-w-xl mx-auto flex flex-col items-center gap-6">
+        <p className="text-[10px] text-white/20 uppercase tracking-[0.4em] font-black">Siga o fluxo da estação</p>
+        
+        <div className="flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
           {[
             { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
             { icon: Map, label: 'Atlas', path: '/clube/rota-dos-lobos' }
@@ -128,10 +87,10 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
               }}
               className="group flex flex-col items-center gap-2 transition-all"
             >
-              <div className="w-10 h-10 rounded-full border border-gold/20 flex items-center justify-center bg-gold/5 group-hover:bg-gold/20 transition-all">
-                <item.icon className="w-4 h-4 text-gold/60 group-hover:text-gold" />
+              <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
+                <item.icon className="w-4 h-4 text-white/40 group-hover:text-gold" />
               </div>
-              <span className="text-[8px] text-white/60 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
+              <span className="text-[8px] text-white/40 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
                 {item.label}
               </span>
             </button>
