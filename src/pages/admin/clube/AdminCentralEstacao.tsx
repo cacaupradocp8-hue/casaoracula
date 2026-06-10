@@ -194,6 +194,7 @@ export default function AdminCentralEstacao() {
     conto_imagem_url: '',
     conto_erro_comum: '',
     conto_sussurro_guardia: '',
+    sussurros_frases: [] as { texto: string; ordem: number }[],
     traducao_territorio_principal: '',
     traducao_justificativa_principal: '',
     traducao_territorio_secundario: '',
@@ -307,6 +308,7 @@ export default function AdminCentralEstacao() {
         conto_imagem_url: estacao.conto_imagem_url || '',
         conto_erro_comum: estacao.conto_erro_comum || '',
         conto_sussurro_guardia: estacao.conto_sussurro_guardia || '',
+        sussurros_frases: (estacao.sussurros_frases as any[]) || [],
         traducao_territorio_principal: estacao.traducao_territorio_principal || '',
         traducao_justificativa_principal: estacao.traducao_justificativa_principal || '',
         traducao_territorio_secundario: estacao.traducao_territorio_secundario || '',
@@ -401,6 +403,7 @@ export default function AdminCentralEstacao() {
           conto_imagem_url: data.conto_imagem_url,
           conto_erro_comum: data.conto_erro_comum,
           conto_sussurro_guardia: data.conto_sussurro_guardia,
+          sussurros_frases: data.sussurros_frases,
           traducao_territorio_principal: data.traducao_territorio_principal,
           traducao_justificativa_principal: data.traducao_justificativa_principal,
           traducao_territorio_secundario: data.traducao_territorio_secundario,
@@ -912,6 +915,69 @@ export default function AdminCentralEstacao() {
                       onChange={e => setStationForm({...stationForm, conto_sussurro_guardia: e.target.value})} 
                       placeholder="Frase curta de impacto..."
                     />
+                  </div>
+
+                  <div className="space-y-4 pt-4 border-t border-primary/5">
+                    <div className="flex items-center justify-between">
+                      <Label className="font-bold">Placar de Sussurros (Frases Contemplativas)</Label>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="h-7 text-[10px] gap-2 border-primary/20"
+                        onClick={() => {
+                          const newList = [...stationForm.sussurros_frases, { texto: '', ordem: stationForm.sussurros_frases.length + 1 }];
+                          setStationForm({...stationForm, sussurros_frases: newList});
+                        }}
+                      >
+                        <Plus className="w-3 h-3" /> Add Frase
+                      </Button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {stationForm.sussurros_frases.map((frase, idx) => (
+                        <div key={idx} className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3 relative group">
+                          <Button 
+                            size="icon" 
+                            variant="ghost" 
+                            className="absolute top-2 right-2 h-6 w-6 text-primary/20 hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => {
+                              const newList = stationForm.sussurros_frases.filter((_, i) => i !== idx);
+                              setStationForm({...stationForm, sussurros_frases: newList});
+                            }}
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </Button>
+                          <div className="grid grid-cols-[1fr_80px] gap-3">
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Texto do Sussurro</Label>
+                              <Input 
+                                value={frase.texto} 
+                                onChange={e => {
+                                  const newList = [...stationForm.sussurros_frases];
+                                  newList[idx].texto = e.target.value;
+                                  setStationForm({...stationForm, sussurros_frases: newList});
+                                }} 
+                                className="text-xs"
+                                placeholder="Ex: O que foi abandonado ainda pode cantar."
+                              />
+                            </div>
+                            <div className="space-y-1">
+                              <Label className="text-[9px] uppercase">Ordem</Label>
+                              <Input 
+                                type="number"
+                                value={frase.ordem} 
+                                onChange={e => {
+                                  const newList = [...stationForm.sussurros_frases];
+                                  newList[idx].ordem = parseInt(e.target.value) || 0;
+                                  setStationForm({...stationForm, sussurros_frases: newList});
+                                }} 
+                                className="text-xs"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </AccordionContent>
               </AccordionItem>
