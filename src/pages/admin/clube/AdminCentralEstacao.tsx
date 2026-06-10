@@ -310,7 +310,17 @@ export default function AdminCentralEstacao() {
           conto_audio_url: data.conto_audio_url,
           conto_imagem_url: data.conto_imagem_url,
           conto_erro_comum: data.conto_erro_comum,
-          conto_sussurro_guardia: data.conto_sussurro_guardia
+          conto_sussurro_guardia: data.conto_sussurro_guardia,
+          traducao_territorio_principal: data.traducao_territorio_principal,
+          traducao_justificativa_principal: data.traducao_justificativa_principal,
+          traducao_territorio_secundario: data.traducao_territorio_secundario,
+          traducao_justificativa_secundaria: data.traducao_justificativa_secundaria,
+          traducao_porta: data.traducao_porta,
+          traducao_torre: data.traducao_torre,
+          traducao_labirinto: data.traducao_labirinto,
+          traducao_ferramenta_associada: data.traducao_ferramenta_associada,
+          traducao_pergunta_pessoal: data.traducao_pergunta_pessoal,
+          traducao_pergunta_profissional: data.traducao_pergunta_profissional
         })
         .eq('id', estacaoId);
       if (error) throw error;
