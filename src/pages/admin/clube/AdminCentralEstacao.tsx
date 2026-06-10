@@ -243,7 +243,12 @@ export default function AdminCentralEstacao() {
     cartografia_distrito_secundario: '',
     cartografia_competencia: '',
     cartografia_proxima_travessia: '',
-    cartografia_mensagem_conclusao: ''
+    cartografia_mensagem_conclusao: '',
+    fechamento_titulo: '',
+    fechamento_subtitulo: '',
+    fechamento_texto: '',
+    fechamento_audio_url: '',
+    fechamento_botao_proxima: ''
   });
 
   // 1. Fetch Estação
@@ -351,7 +356,12 @@ export default function AdminCentralEstacao() {
         cartografia_distrito_secundario: estacao.cartografia_distrito_secundario || '',
         cartografia_competencia: estacao.cartografia_competencia || '',
         cartografia_proxima_travessia: estacao.cartografia_proxima_travessia || '',
-        cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || ''
+        cartografia_mensagem_conclusao: estacao.cartografia_mensagem_conclusao || '',
+        fechamento_titulo: estacao.fechamento_titulo || '',
+        fechamento_subtitulo: estacao.fechamento_subtitulo || '',
+        fechamento_texto: estacao.fechamento_texto || '',
+        fechamento_audio_url: estacao.fechamento_audio_url || '',
+        fechamento_botao_proxima: estacao.fechamento_botao_proxima || ''
       });
     }
   }, [estacao]);
@@ -440,7 +450,12 @@ export default function AdminCentralEstacao() {
           cartografia_distrito_secundario: data.cartografia_distrito_secundario,
           cartografia_competencia: data.cartografia_competencia,
           cartografia_proxima_travessia: data.cartografia_proxima_travessia,
-          cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao
+          cartografia_mensagem_conclusao: data.cartografia_mensagem_conclusao,
+          fechamento_titulo: data.fechamento_titulo,
+          fechamento_subtitulo: data.fechamento_subtitulo,
+          fechamento_texto: data.fechamento_texto,
+          fechamento_audio_url: data.fechamento_audio_url,
+          fechamento_botao_proxima: data.fechamento_botao_proxima
         })
         .eq('id', estacaoId);
       if (error) throw error;
@@ -1620,6 +1635,69 @@ export default function AdminCentralEstacao() {
                       className="bg-emerald-500 text-midnight font-bold hover:bg-emerald-400"
                     >
                       {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 12'}
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="fechamento-estacao" className="border-b border-primary/5">
+                <AccordionTrigger className="text-sm font-bold uppercase tracking-widest hover:text-gold transition-colors">Fechamento 80/20 (Camada 13)</AccordionTrigger>
+                <AccordionContent className="space-y-8 py-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Título do Fechamento</Label>
+                      <Input 
+                        value={stationForm.fechamento_titulo}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_titulo: e.target.value })}
+                        placeholder="Ex: Essência 80/20 da Clareira"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Subtítulo</Label>
+                      <Input 
+                        value={stationForm.fechamento_subtitulo}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_subtitulo: e.target.value })}
+                        placeholder="Ex: O instinto não desaparece..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Texto de Fechamento</Label>
+                    <Textarea 
+                      value={stationForm.fechamento_texto}
+                      onChange={(e) => setStationForm({ ...stationForm, fechamento_texto: e.target.value })}
+                      placeholder="Síntese poética final..."
+                      className="min-h-[150px] font-serif italic"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div className="space-y-2">
+                      <AudioUpload
+                        label="Áudio de Fechamento (Sussurro)"
+                        value={stationForm.fechamento_audio_url || ''}
+                        onChange={(url) => setStationForm({ ...stationForm, fechamento_audio_url: url })}
+                        folder="clube/estacoes/fechamento"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] uppercase tracking-widest text-muted-foreground">Nome Próxima Estação</Label>
+                      <Input 
+                        value={stationForm.fechamento_botao_proxima}
+                        onChange={(e) => setStationForm({ ...stationForm, fechamento_botao_proxima: e.target.value })}
+                        placeholder="Ex: Casa da Boa Menina"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end pt-4">
+                    <Button 
+                      onClick={() => updateStationMutation.mutate(stationForm)}
+                      disabled={updateStationMutation.isPending}
+                      className="bg-gold text-midnight font-bold"
+                    >
+                      {updateStationMutation.isPending ? 'Salvando...' : 'Salvar Camada 13'}
                     </Button>
                   </div>
                 </AccordionContent>
