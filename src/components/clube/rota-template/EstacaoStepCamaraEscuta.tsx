@@ -406,12 +406,19 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           </div>
         </div>
 
-        <div className="pt-8">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Button 
-            onClick={onNext}
-            className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-gold/20 transition-all hover:scale-105"
+            onClick={() => navigate('/clube/rota/casa-da-boneca-interior')}
+            className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-gold/20 transition-all hover:scale-105 w-full sm:w-auto"
           >
-            Continuar a Travessia
+            Avançar para Estação 4
+          </Button>
+          <Button 
+            variant="outline"
+            onClick={onNext}
+            className="border-white/10 text-white/60 hover:text-white hover:border-white/30 px-12 h-16 rounded-full uppercase tracking-widest text-xs transition-all w-full sm:w-auto"
+          >
+            Continuar Travessia
           </Button>
         </div>
       </motion.div>
