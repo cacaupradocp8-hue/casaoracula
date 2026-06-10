@@ -118,7 +118,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
     setIsSaving(true);
     try {
-      const specific = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+      const specific = activeObra.metadata || {};
       const puntoId = `escuta:${activeObra.id}`;
       
       // 1. Save to clube_camara_escuta_registros
@@ -157,13 +157,14 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             simbolo_observado: simbolo,
             intensidade_escuta: intensidade,
             reflexao_psique: reflexaoPsique,
-            pergunta_origem: specific.perguntaPsique ?? null,
+            pergunta_origem: specific.perguntaPsique ?? activeObra.pergunta_psique ?? null,
             territorio_impactado: specific.territorioImpactado ?? activeObra.territorio_principal ?? null,
             rastro: specific.rastroSimbolo ?? activeObra.rastro_simbolo ?? null,
           }
         }]);
 
       if (psiqueError) throw psiqueError;
+
 
 
       // 3. Save to Jardim do Ofício
