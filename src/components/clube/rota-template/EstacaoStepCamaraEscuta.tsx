@@ -218,12 +218,18 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
       toast.success("Registro concluído com sucesso.");
 
-      const currentIndex = obras.findIndex(o => o.id === activeObra.id);
-      if (currentIndex === obras.length - 1) {
+      const currentIndex = faixasObras.findIndex(o => o.id === activeObra.id);
+      if (currentIndex === faixasObras.length - 1) {
         setShowDevolutiva(true);
         setActiveObra(null);
+        setInPlaylistMode(false);
       } else {
-        setActiveObra(null);
+        // Se estiver no modo playlist, avança para a próxima aba automaticamente
+        if (inPlaylistMode) {
+          setActiveObra(faixasObras[currentIndex + 1]);
+        } else {
+          setActiveObra(null);
+        }
       }
     } catch (err: any) {
       console.error('Erro ao salvar registro de escuta:', err);
