@@ -4191,6 +4191,7 @@ export type Database = {
           guia_escuta: string[] | null
           guia_evitar: string[] | null
           id: string
+          metadata: Json | null
           ordem: number | null
           pergunta_oficio: string
           pergunta_psique: string
@@ -4215,6 +4216,7 @@ export type Database = {
           guia_escuta?: string[] | null
           guia_evitar?: string[] | null
           id?: string
+          metadata?: Json | null
           ordem?: number | null
           pergunta_oficio: string
           pergunta_psique: string
@@ -4239,6 +4241,7 @@ export type Database = {
           guia_escuta?: string[] | null
           guia_evitar?: string[] | null
           id?: string
+          metadata?: Json | null
           ordem?: number | null
           pergunta_oficio?: string
           pergunta_psique?: string
@@ -4505,6 +4508,7 @@ export type Database = {
           id: string
           proxima_estacao_liberada: string | null
           rota_id: string | null
+          ultimo_passo: number | null
           updated_at: string | null
           user_id: string
         }
@@ -4516,6 +4520,7 @@ export type Database = {
           id?: string
           proxima_estacao_liberada?: string | null
           rota_id?: string | null
+          ultimo_passo?: number | null
           updated_at?: string | null
           user_id: string
         }
@@ -4527,6 +4532,7 @@ export type Database = {
           id?: string
           proxima_estacao_liberada?: string | null
           rota_id?: string | null
+          ultimo_passo?: number | null
           updated_at?: string | null
           user_id?: string
         }
