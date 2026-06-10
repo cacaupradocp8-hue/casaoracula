@@ -694,7 +694,6 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
               <img src="/clareira-disco.png" className="w-full h-full object-cover relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" alt="Playlist" />
               <div className="absolute inset-0 flex items-center justify-center z-20">
-                <Music className="w-16 h-16 text-emerald-400 group-hover:scale-110 transition-transform" />
               </div>
             </div>
 
