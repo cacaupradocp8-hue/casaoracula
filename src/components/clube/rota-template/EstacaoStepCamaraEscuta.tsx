@@ -367,17 +367,17 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
     );
   }
 
-  if (activeObra) {
-    const specificFromCode = CONTEUDO_ESPECIFICO[activeObra.titulo.toUpperCase()] || {};
+  if (activeObra || inPlaylistMode) {
+    const currentObra = activeObra || faixasObras[0];
+    const specificFromCode = CONTEUDO_ESPECIFICO[currentObra?.titulo?.toUpperCase()] || {};
     
-    // Prioritizar dados do banco (cadastrados no Admin)
     const displayData = {
-      oQueEscutar: (activeObra.guia_escuta && activeObra.guia_escuta.length > 0) ? activeObra.guia_escuta : specificFromCode.oQueEscutar,
-      oQueEvitar: (activeObra.guia_evitar && activeObra.guia_evitar.length > 0) ? activeObra.guia_evitar : specificFromCode.oQueEvitar,
-      rastroSimbolo: activeObra.rastro_simbolo || specificFromCode.rastroSimbolo,
-      perguntaPsique: activeObra.pergunta_psique || specificFromCode.perguntaPsique,
-      perguntaOficio: activeObra.pergunta_oficio || specificFromCode.perguntaOficio,
-      territorioImpactado: activeObra.territorio_principal || specificFromCode.territorioImpactado
+      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : specificFromCode.oQueEscutar,
+      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : specificFromCode.oQueEvitar,
+      rastroSimbolo: currentObra?.rastro_simbolo || specificFromCode.rastroSimbolo,
+      perguntaPsique: currentObra?.pergunta_psique || specificFromCode.perguntaPsique,
+      perguntaOficio: currentObra?.pergunta_oficio || specificFromCode.perguntaOficio,
+      territorioImpactado: currentObra?.territorio_principal || specificFromCode.territorioImpactado
     };
 
     return (
@@ -387,7 +387,10 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
         className="space-y-12 max-w-6xl mx-auto pb-20"
       >
         <button 
-          onClick={() => setActiveObra(null)}
+          onClick={() => {
+            setActiveObra(null);
+            setInPlaylistMode(false);
+          }}
           className="flex items-center gap-3 text-[10px] text-white/40 uppercase tracking-widest font-bold hover:text-gold transition-all group"
         >
           <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/30">
@@ -396,183 +399,235 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           Voltar à Sequência de Escuta
         </button>
 
+        {inPlaylistMode && playlistObra && (
+          <div className="space-y-8">
+            <div className="text-center space-y-4">
+              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Imersão Sonora</span>
+              <h3 className="text-4xl font-serif text-white italic leading-tight">{playlistObra.titulo}</h3>
+            </div>
+            <SpotifyPlaylistEmbed url={playlistObra.url} />
+          </div>
+        )}
+
         <div className="grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4 space-y-8 sticky top-12">
-            <div className="space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Guia de Percepção</span>
-              <h3 className="text-4xl font-serif text-white italic leading-tight">{activeObra.titulo}</h3>
-              <p className="text-gold/80 font-serif italic text-lg border-l-2 border-gold/20 pl-6 py-2">
-                {activeObra.funcao_escuta}
-              </p>
-            </div>
-
-            {displayData.oQueEscutar && displayData.oQueEscutar.length > 0 && (
-              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] space-y-6">
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-gold/60">
-                    <Headphones className="w-4 h-4" />
-                    <h4 className="text-[10px] uppercase tracking-widest font-bold">O que escutar</h4>
-                  </div>
-                  <ul className="space-y-3">
-                    {displayData.oQueEscutar.map((item: string, i: number) => (
-                      <li key={i} className="text-sm text-white/70 font-serif italic leading-relaxed">
-                        • {item}
-                      </li>
-                    ))}
-                  </ul>
+            {inPlaylistMode ? (
+              <div className="bg-white/[0.02] border border-white/5 p-6 rounded-[32px] space-y-4">
+                <span className="text-[9px] text-gold uppercase tracking-[0.3em] font-bold opacity-40 block">Obras da Sequência</span>
+                <div className="space-y-2">
+                  {faixasObras.map((f, i) => (
+                    <button
+                      key={f.id}
+                      onClick={() => setActiveObra(f)}
+                      className={cn(
+                        "w-full text-left p-4 rounded-2xl transition-all border font-serif italic text-sm",
+                        currentObra?.id === f.id
+                          ? "bg-gold/10 border-gold/30 text-gold"
+                          : "bg-transparent border-transparent text-white/40 hover:text-white/60"
+                      )}
+                    >
+                      {i + 1}. {f.titulo}
+                    </button>
+                  ))}
                 </div>
-
-                {displayData.oQueEvitar && displayData.oQueEvitar.length > 0 && (
-                  <div className="space-y-4 pt-6 border-t border-white/5">
-                    <div className="flex items-center gap-3 text-red-400/60">
-                      <X className="w-4 h-4" />
-                      <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
-                    </div>
-                    <ul className="space-y-3">
-                      {displayData.oQueEvitar.map((item: string, i: number) => (
-                        <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
-                          • {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Guia de Percepção</span>
+                <h3 className="text-4xl font-serif text-white italic leading-tight">{currentObra?.titulo}</h3>
+                <p className="text-gold/80 font-serif italic text-lg border-l-2 border-gold/20 pl-6 py-2">
+                  {currentObra?.funcao_escuta}
+                </p>
               </div>
             )}
 
-            <div className="bg-gold/5 border border-gold/10 p-8 rounded-[32px] space-y-4">
-               <div className="flex items-center gap-3 text-gold/60">
-                <MapPin className="w-4 h-4" />
-                <h4 className="text-[10px] uppercase tracking-widest font-bold">Impacto na Cartografia</h4>
-              </div>
-              <div className="space-y-4">
-                <div className="space-y-1">
-                  <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Símbolo</span>
-                  <p className="text-gold font-serif italic">{displayData.rastroSimbolo || "Observado no rastro"}</p>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentObra?.id}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="space-y-8"
+              >
+                {displayData.oQueEscutar && displayData.oQueEscutar.length > 0 && (
+                  <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] space-y-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3 text-gold/60">
+                        <Headphones className="w-4 h-4" />
+                        <h4 className="text-[10px] uppercase tracking-widest font-bold">O que escutar</h4>
+                      </div>
+                      <ul className="space-y-3">
+                        {displayData.oQueEscutar.map((item: string, i: number) => (
+                          <li key={i} className="text-sm text-white/70 font-serif italic leading-relaxed">
+                            • {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {displayData.oQueEvitar && displayData.oQueEvitar.length > 0 && (
+                      <div className="space-y-4 pt-6 border-t border-white/5">
+                        <div className="flex items-center gap-3 text-red-400/60">
+                          <X className="w-4 h-4" />
+                          <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
+                        </div>
+                        <ul className="space-y-3">
+                          {displayData.oQueEvitar.map((item: string, i: number) => (
+                            <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
+                              • {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <div className="bg-gold/5 border border-gold/10 p-8 rounded-[32px] space-y-4">
+                  <div className="flex items-center gap-3 text-gold/60">
+                    <MapPin className="w-4 h-4" />
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold">Impacto na Cartografia</h4>
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Símbolo</span>
+                      <p className="text-gold font-serif italic">{displayData.rastroSimbolo || "Observado no rastro"}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Território</span>
+                      <p className="text-white/80 font-serif italic">{displayData.territorioImpactado || currentObra?.territorio_principal}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="space-y-1">
-                  <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Território</span>
-                  <p className="text-white/80 font-serif italic">{displayData.territorioImpactado || activeObra.territorio_principal}</p>
-                </div>
-              </div>
-            </div>
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           <div className="lg:col-span-8 space-y-8">
             <div className="bg-[#050505]/40 backdrop-blur-md border border-white/5 p-10 rounded-[40px] shadow-2xl relative overflow-hidden group">
-              <div className="relative z-10 space-y-12">
-                <EscutaPremium 
-                  audioUrl={activeObra.url}
-                  titulo={activeObra.titulo}
-                  imagemEscuta="/clareira-disco.png"
-                />
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={currentObra?.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="relative z-10 space-y-12"
+                >
+                  {currentObra && !inPlaylistMode && (
+                    <EscutaPremium 
+                      audioUrl={currentObra.url}
+                      titulo={currentObra.titulo}
+                      imagemEscuta="/clareira-disco.png"
+                    />
+                  )}
 
-                <div className="pt-10 border-t border-white/10 space-y-12">
-                  <div className="space-y-12">
-                    {/* BLOCO 1 — JARDIM DA PSIQUE */}
-                    <div className="space-y-6">
-                      <div className="flex items-center gap-3 text-gold/80">
-                        <Heart className="w-5 h-5" />
-                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim da Psique</h4>
-                      </div>
-                      <div className="space-y-4">
-                        <Label className="text-xl text-white font-serif italic block">
-                          {displayData.perguntaPsique || "O que esta obra revelou sobre você?"}
-                        </Label>
-                        <Textarea 
-                          value={reflexaoPsique}
-                          onChange={(e) => setReflexaoPsique(e.target.value)}
-                          placeholder="Escreva livremente o que surgiu durante a escuta."
-                          className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
-                        />
-                      </div>
-                    </div>
-
-                    {/* BLOCO 2 — JARDIM DO OFÍCIO */}
-                    <div className="space-y-6 pt-8 border-t border-white/5">
-                      <div className="flex items-center gap-3 text-emerald-400/80">
-                        <BookOpen className="w-5 h-5" />
-                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim do Ofício</h4>
-                      </div>
-                      <div className="space-y-4">
-                        <Label className="text-xl text-white font-serif italic block">
-                          {displayData.perguntaOficio || "O que esta obra revelou sobre sua escuta profissional?"}
-                        </Label>
-                        <Textarea 
-                          value={reflexaoOficio}
-                          onChange={(e) => setReflexaoOficio(e.target.value)}
-                          placeholder="Que movimentos, padrões ou narrativas você reconhece nas mulheres que acompanha?"
-                          className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-emerald-500/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
-                        />
-                      </div>
-                    </div>
-
-                    {/* BLOCO 3 — SÍMBOLO OBSERVADO */}
-                    <div className="space-y-6 pt-8 border-t border-white/5">
-                      <div className="flex items-center gap-3 text-blue-400/80">
-                        <Sparkles className="w-5 h-5" />
-                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Símbolo Observado</h4>
-                      </div>
-                      <div className="space-y-4">
-                        <Label className="text-xl text-white font-serif italic block">
-                          Qual símbolo permaneceu ecoando?
-                        </Label>
+                  <div className={cn("space-y-12", !inPlaylistMode && "pt-10 border-t border-white/10")}>
+                    <div className="space-y-12">
+                      {/* BLOCO 1 — JARDIM DA PSIQUE */}
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-3 text-gold/80">
+                          <Heart className="w-5 h-5" />
+                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim da Psique</h4>
+                        </div>
                         <div className="space-y-4">
-                          <Input 
-                            value={simbolo}
-                            onChange={(e) => setSimbolo(e.target.value)}
-                            placeholder="Escreva o símbolo principal (ex: floresta, ponte, casa...)"
-                            className="bg-white/[0.03] border-white/10 h-14 text-white placeholder:text-white/20 focus:border-blue-400/30 rounded-full px-8 text-lg font-serif italic"
+                          <Label className="text-xl text-white font-serif italic block">
+                            {displayData.perguntaPsique || "O que esta obra revelou sobre você?"}
+                          </Label>
+                          <Textarea 
+                            value={reflexaoPsique}
+                            onChange={(e) => setReflexaoPsique(e.target.value)}
+                            placeholder="Escreva livremente o que surgiu durante a escuta."
+                            className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
                           />
-                          <div className="flex flex-wrap gap-2 px-2">
-                            {["floresta", "ponte", "casa", "ferida", "lobo", "mar", "porta", "espelho", "ossos"].map(s => (
-                              <button 
-                                key={s}
-                                onClick={() => setSimbolo(s)}
-                                className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-gold hover:border-gold/30 transition-all"
-                              >
-                                {s}
-                              </button>
-                            ))}
+                        </div>
+                      </div>
+
+                      {/* BLOCO 2 — JARDIM DO OFÍCIO */}
+                      <div className="space-y-6 pt-8 border-t border-white/5">
+                        <div className="flex items-center gap-3 text-emerald-400/80">
+                          <BookOpen className="w-5 h-5" />
+                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim do Ofício</h4>
+                        </div>
+                        <div className="space-y-4">
+                          <Label className="text-xl text-white font-serif italic block">
+                            {displayData.perguntaOficio || "O que esta obra revelou sobre sua escuta profissional?"}
+                          </Label>
+                          <Textarea 
+                            value={reflexaoOficio}
+                            onChange={(e) => setReflexaoOficio(e.target.value)}
+                            placeholder="Que movimentos, padrões ou narrativas você reconhece nas mulheres que acompanha?"
+                            className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-emerald-500/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      {/* BLOCO 3 — SÍMBOLO OBSERVADO */}
+                      <div className="space-y-6 pt-8 border-t border-white/5">
+                        <div className="flex items-center gap-3 text-blue-400/80">
+                          <Sparkles className="w-5 h-5" />
+                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Símbolo Observado</h4>
+                        </div>
+                        <div className="space-y-4">
+                          <Label className="text-xl text-white font-serif italic block">
+                            Qual símbolo permaneceu ecoando?
+                          </Label>
+                          <div className="space-y-4">
+                            <Input 
+                              value={simbolo}
+                              onChange={(e) => setSimbolo(e.target.value)}
+                              placeholder="Escreva o símbolo principal (ex: floresta, ponte, casa...)"
+                              className="bg-white/[0.03] border-white/10 h-14 text-white placeholder:text-white/20 focus:border-blue-400/30 rounded-full px-8 text-lg font-serif italic"
+                            />
+                            <div className="flex flex-wrap gap-2 px-2">
+                              {["floresta", "ponte", "casa", "ferida", "lobo", "mar", "porta", "espelho", "ossos"].map(s => (
+                                <button 
+                                  key={s}
+                                  onClick={() => setSimbolo(s)}
+                                  className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-gold hover:border-gold/30 transition-all"
+                                >
+                                  {s}
+                                </button>
+                              ))}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* BLOCO 4 — INTENSIDADE DA ESCUTA */}
-                    <div className="space-y-6 pt-8 border-t border-white/5">
-                      <div className="flex items-center gap-3 text-purple-400/80">
-                        <Music className="w-5 h-5" />
-                        <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Intensidade da Escuta</h4>
-                      </div>
-                      <div className="space-y-6">
-                        <Label className="text-xl text-white font-serif italic block">
-                          Como esta obra impactou sua percepção?
-                        </Label>
-                        <RadioGroup 
-                          value={intensidade} 
-                          onValueChange={setIntensidade}
-                          className="grid grid-cols-2 md:grid-cols-4 gap-4"
-                        >
-                          {["Leve", "Moderada", "Profunda", "Transformadora"].map((opt) => (
-                            <div key={opt} className="relative">
-                              <RadioGroupItem value={opt} id={opt} className="peer sr-only" />
-                              <Label
-                                htmlFor={opt}
-                                className="flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] peer-data-[state=checked]:border-gold/50 peer-data-[state=checked]:bg-gold/5 transition-all cursor-pointer text-center group"
-                              >
-                                <span className="text-xs uppercase tracking-widest font-bold text-white/40 peer-data-[state=checked]:text-gold group-hover:text-white/60 transition-colors">
-                                  {opt}
-                                </span>
-                              </Label>
-                            </div>
-                          ))}
-                        </RadioGroup>
+                      {/* BLOCO 4 — INTENSIDADE DA ESCUTA */}
+                      <div className="space-y-6 pt-8 border-t border-white/5">
+                        <div className="flex items-center gap-3 text-purple-400/80">
+                          <Music className="w-5 h-5" />
+                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Intensidade da Escuta</h4>
+                        </div>
+                        <div className="space-y-6">
+                          <Label className="text-xl text-white font-serif italic block">
+                            Como esta obra impactou sua percepção?
+                          </Label>
+                          <RadioGroup 
+                            value={intensidade} 
+                            onValueChange={setIntensidade}
+                            className="grid grid-cols-2 md:grid-cols-4 gap-4"
+                          >
+                            {["Leve", "Moderada", "Profunda", "Transformadora"].map((opt) => (
+                              <div key={opt} className="relative">
+                                <RadioGroupItem value={opt} id={opt} className="peer sr-only" />
+                                <Label
+                                  htmlFor={opt}
+                                  className="flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] peer-data-[state=checked]:border-gold/50 peer-data-[state=checked]:bg-gold/5 transition-all cursor-pointer text-center group"
+                                >
+                                  <span className="text-xs uppercase tracking-widest font-bold text-white/40 peer-data-[state=checked]:text-gold group-hover:text-white/60 transition-colors">
+                                    {opt}
+                                  </span>
+                                </Label>
+                              </div>
+                            ))}
+                          </RadioGroup>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <div className="flex justify-center pt-8">
@@ -586,7 +641,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                 ) : (
                   <Save className="w-5 h-5 mr-3" />
                 )}
-                Concluir Escuta e Avançar na Sequência
+                {faixasObras.indexOf(currentObra!) === faixasObras.length - 1 
+                  ? "Finalizar Sequência de Escuta" 
+                  : "Concluir Escuta e Próxima Obra"}
               </Button>
             </div>
 
