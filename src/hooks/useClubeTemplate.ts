@@ -68,6 +68,10 @@ export interface Estacao {
   caso_relacao_conto?: string;
   caso_pergunta_conducao?: string;
   caso_cautela_etica?: string;
+  desafio_pergunta?: string;
+  desafio_alternativas?: any[];
+  desafio_leitura_modelo?: string;
+  desafio_cuidado_etico?: string;
 }
 
 export interface CamaraObra {
