@@ -78,22 +78,20 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
       <div className="pt-12 border-t border-white/10 w-full max-w-xl mx-auto flex flex-col items-center gap-6">
         <p className="text-[10px] text-white/20 uppercase tracking-[0.4em] font-black">Siga o fluxo da estação</p>
         
-        <div className="flex justify-center gap-8 opacity-40 hover:opacity-100 transition-opacity">
+        <div className="flex justify-center gap-8 opacity-20 transition-opacity">
           {[
             { icon: Ghost, label: 'Câmara', path: '/clube/camara-do-sussurro' },
             { icon: Map, label: 'Atlas', path: '/clube/rota-dos-lobos' }
           ].map((item, idx) => (
             <button
               key={idx}
-              onClick={() => {
-                if (item.path) navigate(item.path);
-              }}
-              className="group flex flex-col items-center gap-2 transition-all"
+              disabled
+              className="group flex flex-col items-center gap-2 transition-all cursor-not-allowed"
             >
-              <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 group-hover:bg-gold/10 group-hover:border-gold/30 transition-all">
-                <item.icon className="w-4 h-4 text-white/40 group-hover:text-gold" />
+              <div className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-white/5 transition-all">
+                <item.icon className="w-4 h-4 text-white/20" />
               </div>
-              <span className="text-[8px] text-white/40 uppercase tracking-widest font-bold group-hover:text-gold transition-colors">
+              <span className="text-[8px] text-white/20 uppercase tracking-widest font-bold">
                 {item.label}
               </span>
             </button>
