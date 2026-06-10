@@ -18,6 +18,7 @@ interface FechamentoStepProps {
   texto: string;
   audioUrl?: string;
   proximaEstacaoNome?: string;
+  backgroundImage?: string;
   onFinish: () => void;
 }
 
@@ -29,6 +30,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
   texto,
   audioUrl,
   proximaEstacaoNome,
+  backgroundImage,
   onFinish
 }) => {
   const { user } = useAuth();
@@ -99,6 +101,16 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
       </div>
 
       <Card className="bg-[#0A0A0B]/60 backdrop-blur-xl border-white/5 p-6 md:p-12 rounded-[32px] md:rounded-[48px] space-y-10 relative overflow-hidden">
+        {backgroundImage && (
+          <div className="absolute inset-0 z-0">
+            <img 
+              src={backgroundImage} 
+              alt="" 
+              className="w-full h-full object-cover opacity-20"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/80 via-transparent to-[#0A0A0B]/80" />
+          </div>
+        )}
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
           <Sparkles className="w-40 h-40 text-gold" />
         </div>

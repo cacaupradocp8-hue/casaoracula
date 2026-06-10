@@ -433,6 +433,7 @@ export default function ClubeRotaPremium() {
                     texto={estacao.fechamento_texto || ''}
                     audioUrl={estacao.fechamento_audio_url}
                     proximaEstacaoNome={estacao.fechamento_botao_proxima}
+                    backgroundImage={slug === 'clareira-do-chamado' ? '/clareira-fechamento.png' : undefined}
                     onFinish={handleNext}
                   />
                 )}
