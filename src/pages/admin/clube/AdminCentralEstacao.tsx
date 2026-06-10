@@ -186,7 +186,14 @@ export default function AdminCentralEstacao() {
     audio_abertura_url: '',
     audio_floresta_url: '',
     audio_voz_clareira_url: '',
-    spotify_playlists: [] as any[]
+    spotify_playlists: [] as any[],
+    conto_titulo: '',
+    conto_sintese: '',
+    conto_texto: '',
+    conto_audio_url: '',
+    conto_imagem_url: '',
+    conto_erro_comum: '',
+    conto_sussurro_guardia: ''
   });
 
   // 1. Fetch Estação
@@ -237,7 +244,14 @@ export default function AdminCentralEstacao() {
         audio_abertura_url: estacao.audio_abertura_url || '',
         audio_floresta_url: estacao.audio_floresta_url || '',
         audio_voz_clareira_url: estacao.audio_voz_clareira_url || '',
-        spotify_playlists: (estacao.spotify_playlists as any[]) || []
+        spotify_playlists: (estacao.spotify_playlists as any[]) || [],
+        conto_titulo: estacao.conto_titulo || '',
+        conto_sintese: estacao.conto_sintese || '',
+        conto_texto: estacao.conto_texto || '',
+        conto_audio_url: estacao.conto_audio_url || '',
+        conto_imagem_url: estacao.conto_imagem_url || '',
+        conto_erro_comum: estacao.conto_erro_comum || '',
+        conto_sussurro_guardia: estacao.conto_sussurro_guardia || ''
       });
     }
   }, [estacao]);
@@ -269,7 +283,14 @@ export default function AdminCentralEstacao() {
           audio_abertura_url: data.audio_abertura_url,
           audio_floresta_url: data.audio_floresta_url,
           audio_voz_clareira_url: data.audio_voz_clareira_url,
-          spotify_playlists: data.spotify_playlists
+          spotify_playlists: data.spotify_playlists,
+          conto_titulo: data.conto_titulo,
+          conto_sintese: data.conto_sintese,
+          conto_texto: data.conto_texto,
+          conto_audio_url: data.conto_audio_url,
+          conto_imagem_url: data.conto_imagem_url,
+          conto_erro_comum: data.conto_erro_comum,
+          conto_sussurro_guardia: data.conto_sussurro_guardia
         })
         .eq('id', estacaoId);
       if (error) throw error;
