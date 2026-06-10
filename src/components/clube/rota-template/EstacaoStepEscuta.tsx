@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Headphones, Sparkles, BookOpen, Music, ChevronRight } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Headphones, Sparkles, BookOpen, Music, ChevronRight, TreePine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { RotaLivroBanner } from './RotaLivroBanner';
