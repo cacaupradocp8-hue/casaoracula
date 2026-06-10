@@ -217,7 +217,11 @@ export default function AdminCentralEstacao() {
     desafio_pergunta: '',
     desafio_alternativas: [] as any[],
     desafio_leitura_modelo: '',
-    desafio_cuidado_etico: ''
+    desafio_cuidado_etico: '',
+    ferramenta_nome: '',
+    ferramenta_descricao: '',
+    ferramenta_eixos: [] as any[],
+    ferramenta_resultados: [] as any[]
   });
 
   // 1. Fetch Estação
