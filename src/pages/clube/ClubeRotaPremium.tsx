@@ -282,7 +282,7 @@ export default function ClubeRotaPremium() {
                       titulo: estacao.conto_titulo || 'Conto da Estação',
                       sintese: estacao.conto_sintese || 'Síntese do conto...',
                       texto: estacao.conto_texto || '',
-                      audioUrl: (slug === 'casa-da-boneca-interior' && currentStep === 3) 
+                      audioUrl: (slug === 'clareira-do-chamado' && currentStep === 3) 
                         ? 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1781206510506.ogg' 
                         : (estacao.conto_audio_url || ''),
                       imagemUrl: estacao.conto_imagem_url || '',
