@@ -131,32 +131,53 @@ export function MandalaFinal({ estados }: Props) {
   // Calcula se há algum território aceso para efeitos globais
   const hasAceso = Object.values(estados).some(e => e === 'Aceso');
 
+  // Gera o background de "holofotes" para territórios acesos
+  const spotlightBackground = useMemo(() => {
+    const spotlights = TERRITORIOS.map(t => {
+      const estado = estados[t.id];
+      if (estado === 'Aceso') {
+        return `radial-gradient(circle at ${t.pos.left} ${t.pos.top}, rgba(212, 175, 55, 0.3) 0%, transparent 25%)`;
+      }
+      return null;
+    }).filter(Boolean);
+    
+    return spotlights.length > 0 ? spotlights.join(', ') : 'none';
+  }, [estados]);
+
   return (
     <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-black/40 rounded-full shadow-[0_0_100px_rgba(0,0,0,0.5)] backdrop-blur-sm">
+      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-[#050505] rounded-full shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
         
-        {/* Glow de Fundo Global */}
-        <div className={cn(
-          "absolute inset-0 rounded-full transition-opacity duration-1000",
-          hasAceso ? "opacity-30" : "opacity-10"
-        )} style={{
-          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)'
-        }} />
+        {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
+        <div 
+          className="absolute inset-0 z-0 transition-all duration-1000 opacity-60"
+          style={{ background: spotlightBackground }}
+        />
 
         {/* Imagem de Fundo (A Mandala Oficial) */}
-        <img 
-          src={mandalaArte} 
-          alt="Mandala do Instinto Soterrado" 
-          width={1024}
-          height={1024}
-          loading="lazy"
-          className={cn(
-            "w-full h-full object-contain pointer-events-none select-none relative z-10 transition-all duration-1000",
-            hasAceso ? "brightness-110 contrast-110" : "brightness-75 contrast-90 grayscale-[0.2]"
-          )}
-        />
+        <div className="relative w-full h-full z-10">
+          <img 
+            src={mandalaArte} 
+            alt="Mandala do Instinto Soterrado" 
+            width={1024}
+            height={1024}
+            loading="lazy"
+            className={cn(
+              "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
+              hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
+            )}
+          />
+          
+          {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
+          <div 
+            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-50"
+            style={{ 
+              background: `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}` 
+            }}
+          />
+        </div>
 
         {/* Hotspots e Efeitos Visuais sobre a Arte */}
         {TERRITORIOS.map((t) => {
