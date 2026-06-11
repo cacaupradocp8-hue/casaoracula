@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ImageOff } from 'lucide-react';
@@ -6,16 +6,18 @@ import { ImageOff } from 'lucide-react';
 interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   fallback?: React.ReactNode;
   containerClassName?: string;
+  priority?: boolean;
 }
 
 /**
  * World-Class Optimized Image Component
  * Features:
- * - Native Lazy Loading
+ * - Native Lazy Loading (configurable via priority)
  * - Async Decoding (off-main-thread)
  * - Skeleton support during load
  * - Elegant Error handling
  * - Responsive aspect-ratio preservation
+ * - Preconnect/Preload hint support
  */
 export function OptimizedImage({
   src,
@@ -24,16 +26,39 @@ export function OptimizedImage({
   containerClassName,
   fallback,
   loading = 'lazy',
+  priority = false,
   ...props
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     // Reset state when src changes
     setIsLoaded(false);
     setHasError(false);
+
+    if (src && priority) {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
+      link.href = src;
+      document.head.appendChild(link);
+      return () => {
+        document.head.removeChild(link);
+      };
+    }
+  }, [src, priority]);
+
+  // Check if image is already cached
+  useEffect(() => {
+    if (imgRef.current?.complete) {
+      setIsLoaded(true);
+    }
   }, [src]);
+
+  const finalLoading = priority ? 'eager' : loading;
+  const fetchPriority = priority ? 'high' : 'auto';
 
   return (
     <div className={cn("relative overflow-hidden bg-muted/20", containerClassName)}>
@@ -47,9 +72,10 @@ export function OptimizedImage({
         </div>
       ) : (
         <img
+          ref={imgRef}
           src={src}
           alt={alt}
-          loading={loading}
+          loading={finalLoading}
           decoding="async"
           onLoad={() => setIsLoaded(true)}
           onError={() => setHasError(true)}
@@ -58,6 +84,8 @@ export function OptimizedImage({
             isLoaded ? "opacity-100" : "opacity-0",
             className
           )}
+          /* @ts-ignore - fetchpriority is relatively new */
+          fetchpriority={fetchPriority}
           {...props}
         />
       )}

@@ -13,15 +13,22 @@ import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play } from 'lucid
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
 import { motion } from 'framer-motion';
+import { OptimizedImage } from "@/components/shared/OptimizedImage";
+import mandalaHome from "@/assets/mandala-home.jpg";
 
 /* ─── Shared immersive background ─── */
 const ImmersiveBg = () => (
   <>
     <div className="fixed inset-0 bg-background" />
-    <div className="fixed inset-0 pointer-events-none">
+    <div className="fixed inset-0 pointer-events-none overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_30%,hsl(var(--gold)/0.08),transparent_70%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_80%_at_20%_70%,hsl(var(--accent)/0.06),transparent_60%)]" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
+      
+      {/* Background mandala for faster visual feedback */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] scale-150">
+        <OptimizedImage src={mandalaHome} alt="" priority containerClassName="bg-transparent" />
+      </div>
     </div>
   </>
 );
