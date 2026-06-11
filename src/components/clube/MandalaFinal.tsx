@@ -14,7 +14,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'intuicao', 
     nome: 'Intuição', 
-    pos: { top: '10.5%', left: '50%' },
+    pos: { top: '10.5%', left: '50.1%' },
     narrativa: {
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
       Oscilante: "Há um sussurro que oscila, esperando o silêncio necessário para se tornar clareza.",
