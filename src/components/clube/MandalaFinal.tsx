@@ -155,7 +155,7 @@ export function MandalaFinal({ estados }: Props) {
     <div className="flex flex-col items-center w-full justify-center py-8 relative min-h-[600px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[850px] aspect-square mx-auto group bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] overflow-hidden border border-white/5">
+      <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5">
         
         {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
         <div 
@@ -164,7 +164,7 @@ export function MandalaFinal({ estados }: Props) {
         />
 
         {/* Imagem de Fundo (A Mandala Oficial) */}
-        <div className="relative w-full h-full z-10">
+        <div className="absolute inset-0 z-10">
           <img 
             src={mandalaArte} 
             alt="Mandala do Instinto Soterrado" 
@@ -182,11 +182,14 @@ export function MandalaFinal({ estados }: Props) {
             className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60"
             style={{ 
               background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 30%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
-                : `radial-gradient(circle, transparent 30%, #000 85%)`
+                ? `radial-gradient(circle, transparent 35%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 35%, #000 85%)`
             }}
           />
         </div>
+
+        {/* Elementos da UI (Sobre a Imagem) */}
+        <div className="absolute inset-0 z-20 overflow-hidden rounded-full">
 
         {/* A LOBA (Centro) */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
