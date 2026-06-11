@@ -170,13 +170,10 @@ export function EscutaPremium({
                   </div>
                 )}
                 
-                {/* Inner Hole - Matches Disk Color with Highlight */}
+                {/* Inner Hole - Integrated into the disk */}
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gold/40 shadow-[inset_0_0_4px_rgba(212,175,55,0.5)] z-40 relative flex items-center justify-center">
-                    <div className={cn(
-                      "w-1.5 h-1.5 rounded-full transition-all duration-1000",
-                      isPlaying ? "bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" : "bg-gold/40"
-                    )} />
+                  <div className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gold/40 shadow-[inset_0_0_4px_rgba(212,175,55,0.3)] z-40 relative flex items-center justify-center">
+                    {/* Inner dot removed as per user request */}
                   </div>
                 </div>
               </div>
