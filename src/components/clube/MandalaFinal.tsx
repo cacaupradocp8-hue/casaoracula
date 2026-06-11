@@ -176,17 +176,27 @@ export function MandalaFinal({ estados }: Props) {
                 aria-label={t.nome}
               />
 
-              {/* Efeito de Brilho/Pulsar sobre o Território */}
-              <motion.div
-                animate={style.animation}
-                transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute w-[80%] h-[80%] rounded-full pointer-events-none z-10"
-                style={{ 
-                  backgroundColor: style.glow,
-                  filter: 'blur(20px)',
-                  boxShadow: estado === 'Aceso' ? `0 0 30px ${style.glow}` : 'none'
-                }}
-              />
+              {/* Efeito de Brilho/Pulsar sobre o Território (Aceso) */}
+              {estado === 'Aceso' && (
+                <motion.div
+                  animate={style.animation}
+                  transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute w-[120%] h-[120%] rounded-full pointer-events-none z-20"
+                  style={{ 
+                    backgroundColor: style.glow,
+                    filter: 'blur(30px)',
+                    boxShadow: `0 0 50px ${style.glow}`
+                  }}
+                />
+              )}
+
+              {/* Efeito de "Apagado" (Soterrado/Exausto) */}
+              {(estado === 'Soterrado' || estado === 'Exausto') && (
+                <div 
+                  className="absolute w-[110%] h-[110%] rounded-full pointer-events-none z-20 bg-black/40 backdrop-grayscale-[0.5]"
+                  style={{ filter: 'blur(15px)' }}
+                />
+              )}
               
               {/* Partículas sutis para estado Aceso */}
               {estado === 'Aceso' && (
