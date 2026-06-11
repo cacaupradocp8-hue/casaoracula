@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { TERRITORIOS } from './MandalaFinal';
+import { WolfPawStepsLoop } from './WolfPawSteps';
 
 interface MapaInstintoSoterradoProps {
   estacaoId: string;
@@ -244,8 +245,9 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             key="resultado"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-3xl mx-auto py-20 space-y-24"
+            className="max-w-3xl mx-auto py-20 space-y-24 relative"
           >
+            <WolfPawStepsLoop />
             {/* Header Editorial */}
             <header className="text-center space-y-6">
               <div className="space-y-4">
