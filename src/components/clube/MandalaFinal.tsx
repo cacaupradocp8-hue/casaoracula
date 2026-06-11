@@ -6,6 +6,7 @@ import mandalaArte from '@/assets/mandala-instinto-soterrado.png';
 export interface Territorio {
   id: string;
   nome: string;
+  icon: string;
   narrativa: Record<'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto', string>;
   // Coordenadas em % (top, left) relativas ao container da imagem
   pos: { top: string; left: string };
