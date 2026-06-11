@@ -119,7 +119,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
             </div>
             
             <div className="bg-white/[0.02] border border-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[32px] space-y-6 max-w-3xl mx-auto">
-              <p className="text-white/80 text-lg leading-relaxed font-serif italic">
+              <p className="space-y-4">
                 <span className="text-white/80 text-base md:text-lg leading-relaxed font-serif italic block">
                   Nesta etapa, traduzimos os símbolos de <strong>{contoOrigem}</strong> para a cartografia da psique e do ofício. 
                   Não buscamos diagnósticos, mas padrões de observação e movimentos da alma.
