@@ -184,7 +184,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
-            <h2 className="text-4xl md:text-6xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
             <p className="text-white/60 font-serif italic max-w-xl mx-auto">Uma cartografia simbólica para identificar quais territórios da sua natureza pedem seu retorno nesta estação.</p>
           </motion.div>
           <Button onClick={() => setView('perguntas')} className="bg-gold text-midnight px-12 py-7 rounded-full font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
