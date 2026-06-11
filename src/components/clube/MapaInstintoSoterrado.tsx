@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map, BookOpen, PenTool, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Compass, ChevronRight } from 'lucide-react';
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
+import { TERRITORIOS } from './MandalaFinal';
 
 interface MapaInstintoSoterradoProps {
   estacaoId: string;
@@ -62,15 +61,6 @@ const OPCOES = [
   { label: 'O sinal parece silenciado sob camadas de cansaço ou distância.', score: 0, estado: 'Exausto' as Estado }
 ];
 
-const TRILHAS_FINAIS: Record<string, string> = {
-  corpo: "A Clareira do Chamado convida você a observar os sinais físicos que costuma minimizar antes mesmo de escutá-los.",
-  intuicao: "O rastro pede que você silencie as explicações externas para voltar a escutar o que o seu primeiro sentir já sabe.",
-  desejo: "A trilha aponta para o resgate do que é autêntico, separando o fogo sagrado do seu querer do ruído das expectativas.",
-  limites: "É tempo de fortalecer os seus contornos, reconhecendo que a sua energia é um território sagrado.",
-  criatividade: "A próxima etapa convida a sua loba a brincar novamente com as possibilidades, sem o peso da utilidade.",
-  vitalidade: "O caminho foca na recuperação da sua força vital, podando o que drena para que o entusiasmo possa brotar."
-};
-
 export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstintoSoterradoProps) {
   const { user } = useAuth();
   const [view, setView] = useState<'intro' | 'perguntas' | 'resultado'>('intro');
@@ -82,7 +72,6 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const saveMutation = useMutation({
     mutationFn: async (finalEstados: Record<string, Estado>) => {
       if (!user) return;
-      
       const territorioMaisAceso = Object.entries(finalEstados).find(([_, e]) => e === 'Aceso')?.[0] || 'Nenhum';
       const territorioMaisSoterrado = Object.entries(finalEstados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
 
@@ -100,11 +89,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const handleSelect = (score: number) => {
     const tId = PERGUNTAS[currentTerritorioIdx].id;
     const eId = EIXOS[currentEixoIdx].id;
-    
-    setRespostas(prev => ({
-      ...prev,
-      [tId]: { ...prev[tId], [eId]: score }
-    }));
+    setRespostas(prev => ({ ...prev, [tId]: { ...prev[tId], [eId]: score } }));
 
     if (currentEixoIdx < EIXOS.length - 1) {
       setCurrentEixoIdx(prev => prev + 1);
@@ -117,7 +102,6 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
         const tResponses = (t.id === tId) ? { ...respostas[t.id], [eId]: score } : (respostas[t.id] || {});
         const currentSum = Object.values(tResponses).reduce((a, b) => a + b, 0);
         const avg = currentSum / 3;
-        
         if (avg >= 2.5) finalEstados[t.id] = 'Aceso';
         else if (avg >= 1.5) finalEstados[t.id] = 'Oscilante';
         else if (avg >= 0.5) finalEstados[t.id] = 'Soterrado';
@@ -129,16 +113,12 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     }
   };
 
-  const currentT = PERGUNTAS[currentTerritorioIdx];
   const acesoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Aceso');
   const soterradoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Soterrado' || estados[t.id] === 'Exausto');
-  const maisSoterradoId = Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
+  const maisSoterrado = soterradoTerritorios[0] || TERRITORIOS.find(t => t.id === 'vitalidade');
 
   return (
-    <div className="w-full max-w-5xl mx-auto min-h-screen pb-20 pt-10 px-4 relative">
-      {/* Background Texture Overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
-
+    <div className="w-full max-w-4xl mx-auto min-h-screen pb-20 pt-10 px-6 relative bg-transparent font-serif selection:bg-gold/20">
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
@@ -146,21 +126,20 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-20 text-center space-y-10"
+            className="flex flex-col items-center justify-center py-24 text-center space-y-12"
           >
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl font-serif text-white italic tracking-tight">Mapa do Instinto Soterrado™</h1>
-              <p className="text-gold/60 font-serif italic text-lg max-w-2xl mx-auto leading-relaxed">
+            <div className="space-y-6">
+              <h1 className="text-5xl md:text-7xl text-white italic tracking-tight">Mapa do Instinto Soterrado™</h1>
+              <p className="text-gold/60 italic text-xl max-w-2xl mx-auto leading-relaxed">
                 Uma cartografia mística para identificar quais territórios da sua natureza pedem seu retorno nesta estação. Entre no silêncio do seu rastro.
               </p>
             </div>
-            
             <button 
               onClick={() => setView('perguntas')}
-              className="group relative px-12 py-4 font-serif italic text-gold border border-gold/30 hover:border-gold/60 transition-all rounded-full overflow-hidden"
+              className="group relative px-14 py-5 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden"
             >
               <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
-              <span className="relative z-10 tracking-[0.2em] uppercase text-sm">Entrar no Mapa</span>
+              <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Entrar no Mapa</span>
             </button>
           </motion.div>
         )}
@@ -171,57 +150,49 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col items-center py-10 space-y-16"
+            className="flex flex-col items-center py-12 space-y-20"
           >
-            {/* Header Ritualístico */}
-            <div className="flex flex-col items-center gap-6">
-              <div className="flex items-center gap-4 text-gold/40">
-                <div className="h-[1px] w-12 bg-current" />
-                <span className="text-2xl">{currentT.icon}</span>
-                <span className="font-serif italic text-xl tracking-widest uppercase">{currentT.nome}</span>
-                <div className="h-[1px] w-12 bg-current" />
+            <div className="flex flex-col items-center gap-8">
+              <div className="flex items-center gap-6 text-gold/30">
+                <div className="h-[0.5px] w-16 bg-current" />
+                <span className="italic text-lg tracking-[0.4em] uppercase">{PERGUNTAS[currentTerritorioIdx].nome}</span>
+                <div className="h-[0.5px] w-16 bg-current" />
               </div>
-              
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 {PERGUNTAS.map((_, i) => (
                   <div 
                     key={i} 
                     className={cn(
-                      "w-1 h-1 rounded-full transition-all duration-700",
-                      i === currentTerritorioIdx ? "bg-gold scale-[2] shadow-[0_0_8px_gold]" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
+                      "w-1 h-1 rounded-full transition-all duration-1000",
+                      i === currentTerritorioIdx ? "bg-gold scale-[2] shadow-[0_0_10px_gold]" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
                     )} 
                   />
                 ))}
               </div>
             </div>
 
-            {/* Pergunta Narrativa */}
-            <div className="max-w-3xl w-full space-y-16">
-              <h2 className="text-3xl md:text-5xl font-serif text-white italic text-center leading-tight">
-                {currentT.perguntas[currentEixoIdx]}
+            <div className="max-w-2xl w-full space-y-20">
+              <h2 className="text-3xl md:text-5xl text-white italic text-center leading-tight">
+                {PERGUNTAS[currentTerritorioIdx].perguntas[currentEixoIdx]}
               </h2>
-
               <div className="grid grid-cols-1 gap-6">
                 {OPCOES.map((opt, i) => (
                   <button
                     key={i}
                     onClick={() => handleSelect(opt.score)}
-                    className="group relative w-full text-left p-8 border border-white/5 hover:border-gold/30 bg-black/20 backdrop-blur-sm transition-all duration-500 rounded-lg"
+                    className="group relative w-full text-left p-10 border border-white/5 hover:border-gold/20 bg-white/[0.01] backdrop-blur-sm transition-all duration-700 rounded-2xl"
                   >
                     <div className="relative z-10 flex items-center justify-between">
-                      <span className="text-white/70 group-hover:text-white font-serif italic text-xl md:text-2xl transition-colors pr-8">
+                      <span className="text-white/60 group-hover:text-white italic text-xl md:text-2xl transition-colors pr-12">
                         {opt.label}
                       </span>
-                      <ChevronRight className="w-6 h-6 text-gold/0 group-hover:text-gold/50 transition-all transform translate-x-[-10px] group-hover:translate-x-0" />
+                      <ChevronRight className="w-5 h-5 text-gold/0 group-hover:text-gold/40 transition-all transform -translate-x-4 group-hover:translate-x-0" />
                     </div>
-                    {/* Hover Effect Light */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-gold/0 to-gold/0 group-hover:from-gold/[0.02] group-hover:to-transparent transition-all" />
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Navegação Sutil */}
             <button 
               onClick={() => {
                 if (currentEixoIdx > 0) setCurrentEixoIdx(prev => prev - 1);
@@ -231,7 +202,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 }
               }}
               disabled={currentTerritorioIdx === 0 && currentEixoIdx === 0}
-              className="text-white/20 hover:text-white/40 font-serif italic text-sm tracking-widest uppercase transition-colors disabled:opacity-0"
+              className="text-white/10 hover:text-white/30 italic text-[10px] tracking-[0.4em] uppercase transition-colors disabled:opacity-0"
             >
               Voltar ao rastro anterior
             </button>
@@ -243,62 +214,89 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             key="resultado"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex flex-col items-center pt-10"
+            className="max-w-3xl mx-auto py-20 space-y-24"
           >
-            <div className="text-center space-y-4 mb-10">
-              <h3 className="text-gold uppercase tracking-[0.5em] font-serif text-[12px] opacity-60">Sua Cartografia Ritualística</h3>
-              <h2 className="text-4xl md:text-6xl font-serif italic text-white leading-tight">A Mandala do Instinto</h2>
-            </div>
-
-            {/* Mandala Protagonista */}
-            <div className="w-full flex justify-center py-10 relative z-50">
-              <MandalaFinal estados={estados} />
-            </div>
-
-            {/* Legenda Narrativa Inferior */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 w-full max-w-5xl border-t border-white/5 pt-12">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_8px_gold]" />
-                  <h4 className="text-gold/80 font-serif italic uppercase tracking-[0.3em] text-[11px]">Pegadas Encontradas</h4>
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                  {acesoTerritorios.length > 0 ? (
-                    acesoTerritorios.map(t => (
-                      <span key={t.id} className="text-white/90 font-serif italic text-lg">{t.nome}</span>
-                    ))
-                  ) : (
-                    <span className="text-white/20 italic font-serif">Aguardando despertar...</span>
-                  )}
-                </div>
+            {/* Header Editorial */}
+            <header className="text-center space-y-6">
+              <div className="space-y-2">
+                <h1 className="text-5xl md:text-7xl text-white italic tracking-tight">Sua Cartografia Instintiva</h1>
+                <p className="text-gold/60 italic text-xl">A loba continua deixando sinais.</p>
               </div>
+              <div className="h-[0.5px] w-24 bg-gold/20 mx-auto" />
+            </header>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                  <h4 className="text-white/40 font-serif italic uppercase tracking-[0.3em] text-[11px]">Pegadas Quase Apagadas</h4>
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-2">
-                  {soterradoTerritorios.length > 0 ? (
-                    soterradoTerritorios.map(t => (
-                      <span key={t.id} className="text-white/40 font-serif italic text-lg">{t.nome}</span>
-                    ))
-                  ) : (
-                    <span className="text-white/20 italic font-serif">Caminhos visíveis...</span>
-                  )}
-                </div>
+            {/* Seção 1: Pegadas Encontradas */}
+            <section className="space-y-8">
+              <div className="flex flex-col items-center gap-3">
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Pegadas Encontradas</h2>
+                <div className="h-[1px] w-12 bg-gold/20" />
               </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {acesoTerritorios.length > 0 ? (
+                  acesoTerritorios.slice(0, 2).map(t => (
+                    <div key={t.id} className="text-center p-8 rounded-3xl border border-white/5 bg-white/[0.02]">
+                      <span className="text-gold italic text-2xl md:text-3xl block mb-2">{t.nome}</span>
+                      <p className="text-white/40 italic text-sm leading-relaxed">
+                        São os lugares onde sua natureza instintiva continua encontrando caminhos para se expressar.
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="col-span-2 text-center text-white/20 italic">Aguardando novos despertares...</p>
+                )}
+              </div>
+            </section>
 
+            {/* Seção 2: Pegadas Quase Apagadas */}
+            <section className="space-y-8">
+              <div className="flex flex-col items-center gap-3">
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Pegadas Quase Apagadas</h2>
+                <div className="h-[1px] w-12 bg-white/10" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {soterradoTerritorios.length > 0 ? (
+                  soterradoTerritorios.slice(0, 2).map(t => (
+                    <div key={t.id} className="text-center p-8 rounded-3xl border border-white/5 bg-white/[0.01]">
+                      <span className="text-white/50 italic text-2xl md:text-3xl block mb-2">{t.nome}</span>
+                      <p className="text-white/30 italic text-sm leading-relaxed">
+                        Os rastros continuam presentes, mas estão mais difíceis de perceber no meio do ruído e dos automatismos.
+                      </p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="col-span-2 text-center text-white/20 italic">Os caminhos estão limpos.</p>
+                )}
+              </div>
+            </section>
+
+            {/* Seção 3: A Próxima Trilha */}
+            <section className="text-center space-y-8 py-16 border-y border-white/5">
+              <div className="flex flex-col items-center gap-3">
+                <Compass className="w-6 h-6 text-gold/20" />
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">A Próxima Trilha</h2>
+              </div>
+              <p className="text-xl md:text-2xl text-gold/70 italic max-w-2xl mx-auto leading-relaxed">
+                "Nesta estação, o convite não é agir mais. É observar melhor os sinais que costumam ser descartados antes mesmo de serem escutados."
+              </p>
+            </section>
+
+            {/* Seção 4: Primeiro Gesto */}
+            <section className="text-center space-y-10">
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Compass className="w-4 h-4 text-gold/30" />
-                  <h4 className="text-gold/50 font-serif italic uppercase tracking-[0.3em] text-[11px]">Próxima Trilha</h4>
-                </div>
-                <p className="text-white/80 text-lg font-serif italic leading-relaxed">
-                  "{TRILHAS_FINAIS[maisSoterradoId]}"
+                <h3 className="text-gold/40 italic text-sm tracking-[0.4em] uppercase">Primeiro Gesto</h3>
+                <p className="text-2xl md:text-4xl text-white italic leading-tight max-w-xl mx-auto">
+                  "{maisSoterrado ? `Qual necessidade do seu ${maisSoterrado.nome.toLowerCase()} você vem traduzindo como obrigação?` : 'Qual sinal você tem ignorado por medo de ser livre?'}"
                 </p>
               </div>
-            </div>
+              
+              <button 
+                onClick={onNext}
+                className="group relative px-14 py-5 text-gold border border-gold/10 hover:border-gold/30 transition-all rounded-full overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
+                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Continuar Travessia</span>
+              </button>
+            </section>
           </motion.div>
         )}
       </AnimatePresence>
