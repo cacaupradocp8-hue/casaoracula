@@ -148,7 +148,7 @@ export function MandalaFinal({ estados }: Props) {
           return (
             <div 
               key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[20%] h-[20%]"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
               style={{ top: t.pos.top, left: t.pos.left }}
             >
               {/* Hotspot de Interação (Invisível mas clicável) */}
