@@ -103,27 +103,30 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Compass className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+              <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
                   Tradução Oracular
                 </span>
               </h2>
-              <p className="text-gold/60 text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
+
+              <p className="text-gold/60 text-base md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
                 “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
               </p>
+
             </div>
             
-            <div className="bg-white/[0.02] border border-white/5 p-10 rounded-[32px] space-y-6 max-w-3xl mx-auto">
+            <div className="bg-white/[0.02] border border-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[32px] space-y-6 max-w-3xl mx-auto">
               <p className="text-white/80 text-lg leading-relaxed font-serif italic">
                 Nesta etapa, traduzimos os símbolos de <strong>{contoOrigem}</strong> para a cartografia da psique e do ofício. 
                 Não buscamos diagnósticos, mas padrões de observação e movimentos da alma.
               </p>
               <Button 
                 onClick={() => setView('cartografia')}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest transition-all shadow-2xl shadow-gold/20 hover:scale-105"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-12 py-6 md:py-7 rounded-full text-[10px] md:text-xs uppercase tracking-widest transition-all shadow-2xl shadow-gold/20 hover:scale-105 w-full md:w-auto"
               >
                 Mapear Símbolos
               </Button>
+
             </div>
           </motion.div>
         )}
@@ -143,36 +146,38 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Territórios */}
-              <Card className="bg-white/[0.03] border-white/10 p-10 rounded-[32px] space-y-6 relative overflow-hidden group">
+              <Card className="bg-white/[0.03] border-white/10 p-6 md:p-10 rounded-[2rem] md:rounded-[32px] space-y-6 relative overflow-hidden group">
+
                 <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                   <Map className="w-24 h-24 text-gold" />
                 </div>
                 <div className="space-y-6 relative z-10">
                   <div className="space-y-1">
                     <span className="text-[10px] uppercase tracking-widest text-gold/60 font-black">Território Principal</span>
-                    <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioPrincipal}</h4>
+                    <h4 className="text-2xl md:text-3xl font-serif text-white italic">{traducaoData.territorioPrincipal}</h4>
                   </div>
                   <div className="w-16 h-px bg-gold/30" />
                   <TextCarousel 
                     text={traducaoData.justificativaPrincipal} 
-                    className="text-white/60 font-serif italic text-lg"
+                    className="text-white/60 font-serif italic text-base md:text-lg"
+
                   />
                 </div>
               </Card>
 
-              <Card className="bg-white/[0.03] border-white/10 p-10 rounded-[32px] space-y-6 relative overflow-hidden group">
+              <Card className="bg-white/[0.03] border-white/10 p-6 md:p-10 rounded-[2rem] md:rounded-[32px] space-y-6 relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
                   <Map className="w-24 h-24 text-gold" />
                 </div>
                 <div className="space-y-6 relative z-10">
                   <div className="space-y-1">
                     <span className="text-[10px] uppercase tracking-widest text-gold/60 font-black">Território Secundário</span>
-                    <h4 className="text-3xl font-serif text-white italic">{traducaoData.territorioSecundario}</h4>
+                    <h4 className="text-2xl md:text-3xl font-serif text-white italic">{traducaoData.territorioSecundario}</h4>
                   </div>
                   <div className="w-16 h-px bg-gold/30" />
                   <TextCarousel 
                     text={traducaoData.justificativaSecundaria} 
-                    className="text-white/60 font-serif italic text-lg"
+                    className="text-white/60 font-serif italic text-base md:text-lg"
                   />
                 </div>
               </Card>
@@ -180,21 +185,23 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
 
             {/* Elementos da Casa */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+              <div className="bg-white/[0.02] border border-white/5 p-6 md:p-8 rounded-3xl space-y-4 text-center">
+
                 <DoorOpen className="w-8 h-8 text-gold/40 mx-auto" />
                 <div className="space-y-1">
                   <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Porta Ativada</span>
                   <p className="text-white/80 font-serif italic">{traducaoData.porta}</p>
                 </div>
               </div>
-              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+              <div className="bg-white/[0.02] border border-white/5 p-6 md:p-8 rounded-3xl space-y-4 text-center">
+
                 <TowerControl className="w-8 h-8 text-gold/40 mx-auto" />
                 <div className="space-y-1">
                   <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Torre Relacionada</span>
                   <p className="text-white/80 font-serif italic">{traducaoData.torre}</p>
                 </div>
               </div>
-              <div className="bg-white/[0.02] border border-white/5 p-8 rounded-3xl space-y-4 text-center">
+              <div className="bg-white/[0.02] border border-white/5 p-6 md:p-8 rounded-3xl space-y-4 text-center">
                 <GitBranch className="w-8 h-8 text-gold/40 mx-auto" />
                 <div className="space-y-1">
                   <span className="text-[9px] uppercase tracking-widest text-white/30 font-bold">Labirinto Observado</span>
@@ -204,7 +211,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
             </div>
 
             {/* Ferramenta */}
-            <div className="bg-gold/5 border border-gold/10 p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="bg-gold/5 border border-gold/10 p-6 md:p-8 rounded-3xl flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-6">
                 <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center border border-gold/20">
                   <Wrench className="w-6 h-6 text-gold" />
@@ -222,7 +229,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setView('pergunta')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 md:px-12 py-6 md:py-7 rounded-full text-[10px] md:text-xs uppercase tracking-widest w-full md:w-auto"
               >
                 Prosseguir para Integração
               </Button>
@@ -244,12 +251,12 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                   <Sparkles className="w-6 h-6" />
                   <h4 className="text-xl font-serif italic tracking-wide">Integração Pessoal</h4>
                 </div>
-                <p className="text-white/90 font-serif italic text-2xl leading-relaxed">{traducaoData.perguntaPessoal}</p>
+                <p className="text-white/90 font-serif italic text-xl sm:text-2xl leading-relaxed px-4">{traducaoData.perguntaPessoal}</p>
                 <Textarea 
                   value={respostaPessoal}
                   onChange={(e) => setRespostaPessoal(e.target.value)}
                   placeholder="Sua percepção interna..."
-                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-[2rem] p-8 focus:ring-gold/30 text-white font-serif italic text-xl shadow-inner resize-none"
+                  className="bg-white/[0.03] border-white/10 min-h-[120px] md:min-h-[150px] rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 focus:ring-gold/30 text-white font-serif italic text-lg md:text-xl shadow-inner resize-none"
                 />
               </div>
 
@@ -258,12 +265,12 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                   <FlaskConical className="w-6 h-6" />
                   <h4 className="text-xl font-serif italic tracking-wide">Olhar Profissional</h4>
                 </div>
-                <p className="text-white/90 font-serif italic text-2xl leading-relaxed">{traducaoData.perguntaProfissional}</p>
+                <p className="text-white/90 font-serif italic text-xl sm:text-2xl leading-relaxed px-4">{traducaoData.perguntaProfissional}</p>
                 <Textarea 
                   value={respostaProfissional}
                   onChange={(e) => setRespostaProfissional(e.target.value)}
                   placeholder="Observação da prática..."
-                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-[2rem] p-8 focus:ring-emerald-500/30 text-white font-serif italic text-xl shadow-inner resize-none"
+                  className="bg-white/[0.03] border-white/10 min-h-[120px] md:min-h-[150px] rounded-[1.5rem] md:rounded-[2rem] p-6 md:p-8 focus:ring-emerald-500/30 text-white font-serif italic text-lg md:text-xl shadow-inner resize-none"
                 />
               </div>
             </div>
@@ -272,7 +279,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
               <Button 
                 disabled={!respostaPessoal || !respostaProfissional || saveMutation.isPending}
                 onClick={() => saveMutation.mutate()}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-20 rounded-full text-xs uppercase tracking-widest shadow-2xl shadow-gold/20 transition-all hover:scale-105"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-16 h-16 md:h-20 rounded-full text-[10px] md:text-xs uppercase tracking-widest shadow-2xl shadow-gold/20 transition-all hover:scale-105 w-full md:w-auto"
               >
                 {saveMutation.isPending ? (
                   <span className="flex items-center gap-3">

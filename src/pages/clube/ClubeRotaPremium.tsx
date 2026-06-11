@@ -183,7 +183,7 @@ export default function ClubeRotaPremium() {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="mb-8 p-6 bg-gold/10 border border-gold/20 rounded-2xl flex items-center justify-between gap-4 backdrop-blur-xl"
+                className="mb-8 p-4 md:p-6 bg-gold/10 border border-gold/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-xl"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
@@ -194,20 +194,20 @@ export default function ClubeRotaPremium() {
                     <p className="text-sm font-serif italic text-white">Você parou em: <span className="text-gold">{steps[currentStep].title}</span></p>
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full md:w-auto">
                   <Button 
                     variant="ghost" 
                     onClick={() => {
                       setCurrentStep(0);
                       saveProgress(0);
                     }}
-                    className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white"
+                    className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex-1 md:flex-none"
                   >
                     Recomeçar
                   </Button>
                   <Button 
                     onClick={() => setIsInitialLoading(null as any)} // Apenas remove o banner
-                    className="bg-gold text-midnight text-[10px] uppercase tracking-widest font-bold h-10 rounded-full"
+                    className="bg-gold text-midnight text-[10px] uppercase tracking-widest font-bold h-10 rounded-full flex-1 md:flex-none"
                   >
                     Continuar
                   </Button>
