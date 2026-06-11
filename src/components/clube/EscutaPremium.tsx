@@ -101,7 +101,7 @@ export function EscutaPremium({
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
           {/* External Golden Glow & Pulsating Light Effect */}
-          <div className="absolute -inset-8 bg-gold/10 rounded-full blur-[60px] z-0 opacity-40 group-hover:opacity-60 transition-opacity" />
+          <div className="absolute -inset-12 bg-gold/30 rounded-full blur-[70px] z-0 opacity-60 group-hover:opacity-80 transition-opacity" />
           
           {isPlaying && (
             <>
@@ -142,7 +142,7 @@ export function EscutaPremium({
             </>
           )}
           
-          {/* Static Halo (Always visible but glows more when playing) */}
+          <div className="absolute -inset-10 bg-gold/20 rounded-full blur-[60px] z-0 opacity-70" />
           <div className="absolute -inset-6 bg-gold/15 rounded-full blur-[50px] z-0 opacity-50" />
           
           <motion.div
