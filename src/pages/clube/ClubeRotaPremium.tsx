@@ -347,11 +347,13 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 7 && (slug === 'clareira-do-chamado' ? (
-                  <MapaInstintoSoterrado 
-                    estacaoId={estacao.id}
-                    rotaId={estacao.clube_rotas.id}
-                    onNext={handleNext}
-                  />
+                  <div className="w-full min-h-[600px] flex items-center justify-center">
+                    <MapaInstintoSoterrado 
+                      estacaoId={estacao.id}
+                      rotaId={estacao.clube_rotas.id}
+                      onNext={handleNext}
+                    />
+                  </div>
                 ) : (
                   <EstacaoStepFerramentaOracular 
                     estacaoId={estacao.id}
