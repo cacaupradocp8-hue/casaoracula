@@ -101,49 +101,49 @@ export function EscutaPremium({
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
           {/* External Golden Glow & Pulsating Light Effect */}
-          <div className="absolute -inset-12 bg-gold/30 rounded-full blur-[70px] z-0 opacity-60 group-hover:opacity-80 transition-opacity" />
+          <div className="absolute -inset-16 bg-gold/40 rounded-full blur-[80px] z-0 opacity-80 group-hover:opacity-100 transition-opacity" />
           
           {isPlaying && (
             <>
               <motion.div
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ 
-                  scale: [1, 1.4, 1],
-                  opacity: [0.1, 0.4, 0.1],
+                  scale: [1, 1.5, 1],
+                  opacity: [0.2, 0.6, 0.2],
                 }}
                 transition={{ 
-                  duration: 2, 
+                  duration: 2.5, 
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="absolute -inset-16 bg-gold/40 rounded-full blur-[120px] z-0 pointer-events-none"
+                className="absolute -inset-24 bg-gold/50 rounded-full blur-[130px] z-0 pointer-events-none"
               />
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ 
-                  scale: [1, 1.3, 1],
-                  opacity: [0.3, 0.7, 0.3],
+                  scale: [1, 1.4, 1],
+                  opacity: [0.4, 0.8, 0.4],
                 }}
                 transition={{ 
-                  duration: 1.5, 
+                  duration: 1.8, 
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="absolute -inset-12 bg-gold/25 rounded-full blur-[80px] z-0 pointer-events-none"
+                className="absolute -inset-16 bg-gold/30 rounded-full blur-[90px] z-0 pointer-events-none"
               />
               {/* Extra Bright Halo */}
               <motion.div
                 animate={{ 
-                  opacity: [0.4, 0.8, 0.4],
+                  opacity: [0.5, 0.9, 0.5],
                 }}
                 transition={{ duration: 3, repeat: Infinity }}
-                className="absolute -inset-4 bg-gold/20 rounded-full blur-[40px] z-0"
+                className="absolute -inset-6 bg-gold/25 rounded-full blur-[50px] z-0"
               />
             </>
           )}
           
-          <div className="absolute -inset-10 bg-gold/20 rounded-full blur-[60px] z-0 opacity-70" />
-          <div className="absolute -inset-6 bg-gold/15 rounded-full blur-[50px] z-0 opacity-50" />
+          <div className="absolute -inset-12 bg-gold/30 rounded-full blur-[70px] z-0 opacity-80" />
+          <div className="absolute -inset-8 bg-gold/20 rounded-full blur-[60px] z-0 opacity-60" />
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
