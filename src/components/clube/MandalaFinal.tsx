@@ -6,6 +6,7 @@ import mandalaArte from '@/assets/mandala-instinto-soterrado.png';
 export interface Territorio {
   id: string;
   nome: string;
+  icon: string;
   narrativa: Record<'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto', string>;
   // Coordenadas em % (top, left) relativas ao container da imagem
   pos: { top: string; left: string };
@@ -15,6 +16,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'intuicao', 
     nome: 'Intuição', 
+    icon: '🌙',
     pos: { top: '10.5%', left: '50.1%' },
     narrativa: {
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
@@ -26,6 +28,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'desejo', 
     nome: 'Desejo', 
+    icon: '🔥',
     pos: { top: '27.4%', left: '81.2%' },
     narrativa: {
       Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
@@ -37,6 +40,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'limites', 
     nome: 'Limites', 
+    icon: '🛡️',
     pos: { top: '61.6%', left: '81.2%' },
     narrativa: {
       Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
@@ -48,6 +52,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'corpo', 
     nome: 'Corpo', 
+    icon: '🤍',
     pos: { top: '78.5%', left: '50.1%' },
     narrativa: {
       Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
@@ -59,6 +64,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'criatividade', 
     nome: 'Criatividade', 
+    icon: '🌿',
     pos: { top: '61.6%', left: '18.9%' },
     narrativa: {
       Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
@@ -70,6 +76,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'vitalidade', 
     nome: 'Vitalidade', 
+    icon: '🐾',
     pos: { top: '27.4%', left: '18.9%' },
     narrativa: {
       Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
@@ -145,10 +152,10 @@ export function MandalaFinal({ estados }: Props) {
   }, [estados]);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
+    <div className="flex flex-col items-center w-full justify-center py-8 relative min-h-[600px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-[#050505] rounded-full shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative w-full max-w-[850px] aspect-square mx-auto group bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] overflow-hidden border border-white/5">
         
         {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
         <div 
@@ -172,13 +179,21 @@ export function MandalaFinal({ estados }: Props) {
           
           {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
           <div 
-            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-50"
+            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60"
             style={{ 
               background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
-                : `radial-gradient(circle, transparent 20%, #000 70%)`
+                ? `radial-gradient(circle, transparent 30%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 30%, #000 85%)`
             }}
           />
+        </div>
+
+        {/* A LOBA (Centro) */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
+          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gold/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+            <span className="text-4xl md:text-5xl">🐺</span>
+          </div>
+          <h4 className="mt-2 text-[10px] md:text-xs text-gold/80 font-serif uppercase tracking-[0.4em] font-bold">A Loba</h4>
         </div>
 
         {/* Hotspots e Efeitos Visuais sobre a Arte */}
@@ -189,55 +204,74 @@ export function MandalaFinal({ estados }: Props) {
           return (
             <div 
               key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-[25%] h-[25%]"
               style={{ top: t.pos.top, left: t.pos.left }}
             >
-              {/* Hotspot de Interação (Invisível mas clicável) */}
-              <button
-                onClick={() => setSelectedTerritorio(t)}
-                className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none"
-                aria-label={t.nome}
-              />
+              {/* Círculo com Ícone e Estado */}
+              <div className="relative flex flex-col items-center group">
+                {/* Hotspot de Interação (Invisível mas clicável) */}
+                <button
+                  onClick={() => setSelectedTerritorio(t)}
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full z-50 cursor-pointer focus:outline-none relative"
+                  aria-label={t.nome}
+                >
+                  <div className={cn(
+                    "absolute inset-0 rounded-full border-2 transition-all duration-500 flex items-center justify-center bg-black/40 backdrop-blur-sm",
+                    estado === 'Aceso' ? "border-[#d4af37] shadow-[0_0_20px_#d4af37]" : 
+                    estado === 'Oscilante' ? "border-[#c5a059] opacity-80" : 
+                    "border-white/20 opacity-40 grayscale"
+                  )}>
+                    <span className="text-2xl md:text-3xl">{t.icon}</span>
+                  </div>
+                </button>
 
-              {/* Efeito de Brilho/Pulsar sobre o Território (Aceso) */}
-              {estado === 'Aceso' && (
-                <motion.div
-                  animate={style.animation}
-                  transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute w-[120%] h-[120%] rounded-full pointer-events-none z-20"
-                  style={{ 
-                    backgroundColor: style.glow,
-                    filter: 'blur(30px)',
-                    boxShadow: `0 0 50px ${style.glow}`
-                  }}
-                />
-              )}
+                {/* Nome e Estado do Território (Fiel à imagem) */}
+                <div className="mt-2 text-center pointer-events-none z-30">
+                  <h4 className={cn(
+                    "text-[10px] md:text-xs font-serif uppercase tracking-[0.2em] transition-colors duration-500",
+                    estado === 'Aceso' ? "text-[#d4af37] font-bold" : "text-white/60"
+                  )}>
+                    {t.nome}
+                  </h4>
+                  <div className="flex items-center justify-center gap-1 mt-0.5">
+                    <div className={cn("w-1 h-1 rounded-full", style.dot)} />
+                    <span className="text-[8px] md:text-[9px] text-white/40 uppercase tracking-widest font-bold italic">
+                      {estado}
+                    </span>
+                  </div>
+                </div>
 
-              {/* Efeito de "Apagado" (Soterrado/Exausto) */}
-              {(estado === 'Soterrado' || estado === 'Exausto') && (
-                <div 
-                  className="absolute w-[110%] h-[110%] rounded-full pointer-events-none z-20 bg-black/40 backdrop-grayscale-[0.5]"
-                  style={{ filter: 'blur(15px)' }}
-                />
-              )}
+                {/* Efeito de Brilho/Pulsar (Apenas Aceso) */}
+                {estado === 'Aceso' && (
+                  <motion.div
+                    animate={style.animation}
+                    transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-2 w-20 h-20 md:w-24 md:h-24 rounded-full pointer-events-none z-10"
+                    style={{ 
+                      backgroundColor: style.glow,
+                      filter: 'blur(30px)',
+                    }}
+                  />
+                )}
+              </div>
               
-              {/* Partículas sutis para estado Aceso */}
+              {/* Partículas para estado Aceso */}
               {estado === 'Aceso' && (
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(4)].map((_, i) => (
+                <div className="absolute inset-0 pointer-events-none overflow-visible">
+                  {[...Array(6)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute w-1 h-1 bg-gold rounded-full"
+                      className="absolute left-1/2 top-1/2 w-1 h-1 bg-gold rounded-full"
                       animate={{ 
-                        y: [-10, -30],
-                        x: [(i - 2) * 5, (i - 2) * 8],
+                        y: [-20, -60],
+                        x: [(i - 3) * 10, (i - 3) * 15],
                         opacity: [0, 0.8, 0],
                         scale: [0.5, 1, 0.5]
                       }}
                       transition={{ 
-                        duration: 2 + Math.random(), 
+                        duration: 3 + Math.random(), 
                         repeat: Infinity, 
-                        delay: i * 0.5 
+                        delay: i * 0.4 
                       }}
                     />
                   ))}
