@@ -2,7 +2,7 @@ import React from 'react';
 import { TreePine, Ghost, Sparkles, Map, Music, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 interface EstacaoStepEntradaProps {
@@ -35,17 +35,22 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
       {/* Header Info - Minimalist */}
-      <div className="space-y-4 pt-4">
-        <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.4em] font-bold flex items-center justify-center gap-3">
-          <span className="w-8 h-px bg-gold/30" />
+      <div className="space-y-6 pt-8">
+        <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.5em] font-black flex items-center justify-center gap-4">
+          <span className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
           {obraRegente || "Obra Regente"}
-          <span className="w-8 h-px bg-gold/30" />
+          <span className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
         </h4>
-        <h1 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block group">
-          <span className="bg-gradient-to-b from-white via-[#e2c186] to-[#b89555] bg-clip-text text-transparent drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] filter contrast-[1.1]">
+        <h1 className="text-6xl md:text-8xl font-display font-black text-white tracking-[0.15em] leading-[1.1] uppercase relative inline-block group">
+          <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
             {titulo.replace('Estação', '').replace('—', '').trim()}
           </span>
-          <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 w-32 h-px bg-gradient-to-r from-transparent via-[#b89555] to-transparent opacity-50" />
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: 160 }}
+            transition={{ delay: 0.5, duration: 1 }}
+            className="absolute -bottom-6 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-transparent via-gold/60 to-transparent" 
+          />
         </h1>
       </div>
 

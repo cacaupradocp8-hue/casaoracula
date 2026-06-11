@@ -111,7 +111,11 @@ export const EstacaoStepMissaoCampo: React.FC<MissaoCampoProps> = ({
               </div>
               <div className="space-y-2">
                 <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-black">Missão de Campo</span>
-                <h2 className="text-3xl md:text-5xl font-serif text-white italic">{titulo}</h2>
+                <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+                  <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
+                    {titulo}
+                  </span>
+                </h2>
               </div>
             </div>
 

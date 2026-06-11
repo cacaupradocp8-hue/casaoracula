@@ -116,7 +116,7 @@ export function EscutaPremium({
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="absolute -inset-24 bg-gold/50 rounded-full blur-[130px] z-0 pointer-events-none"
+                className="absolute -inset-32 bg-gold/50 rounded-full blur-[150px] z-0 pointer-events-none"
               />
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
@@ -149,9 +149,9 @@ export function EscutaPremium({
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
-              "w-64 h-64 md:w-[22rem] md:h-[22rem] rounded-full p-1 relative z-10",
-              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_40px_rgba(212,175,55,0.25)] overflow-hidden",
-              "border-[8px] border-[#1a1a1a]"
+              "w-64 h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
+              "bg-[#0a0a0a] shadow-[0_0_120px_rgba(0,0,0,1),0_0_60px_rgba(212,175,55,0.4)] overflow-hidden",
+              "border-[12px] border-[#1a1a1a] ring-2 ring-gold/20"
             )}
           >
             {/* Vinil Texture Effect - Fine lines */}
@@ -193,12 +193,12 @@ export function EscutaPremium({
         </div>
 
         {/* Playback Status */}
-        <div className="text-center space-y-2">
-          <div className="flex items-center justify-center gap-2 text-gold/60 text-[10px] uppercase tracking-[0.4em] font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse shadow-[0_0_8px_rgba(212,175,55,0.8)]" />
+        <div className="text-center space-y-4 pt-6">
+          <div className="flex items-center justify-center gap-4 text-gold text-[10px] uppercase tracking-[0.5em] font-black">
+            <span className="w-2 h-2 rounded-full bg-gold animate-ping shadow-[0_0_12px_rgba(212,175,55,1)]" />
             REPRODUZINDO AGORA
           </div>
-          <h3 className="text-white font-serif italic text-xl md:text-2xl opacity-90 leading-tight">
+          <h3 className="text-white font-display font-black tracking-widest text-3xl md:text-5xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent">
             {titulo || "Travessia guiada em áudio"}
           </h3>
         </div>

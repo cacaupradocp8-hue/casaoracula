@@ -97,8 +97,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             className="space-y-8"
           >
             <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Conto Central</span>
-              <h2 className="text-4xl md:text-5xl font-serif text-white italic">{contoData.titulo}</h2>
+              <span className="text-[10px] text-gold uppercase tracking-[0.5em] font-black">Conto Central</span>
+              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block">
+                <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
+                  {contoData.titulo}
+                </span>
+              </h2>
             </div>
 
             {contoData.imagemUrl && (
@@ -180,12 +184,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'chamado', q: "O que começa a chamar?" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <label className="text-xl text-white font-serif italic block">{item.q}</label>
+                  <label className="text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30">{item.q}</label>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
                     placeholder="Sua percepção..."
-                    className="bg-white/[0.03] border-white/10 min-h-[100px] rounded-2xl p-6 font-serif italic text-lg"
+                    className="bg-white/[0.03] border-white/10 min-h-[120px] rounded-[1.5rem] p-8 font-serif italic text-lg focus:bg-white/[0.05] focus:border-gold/30 transition-all resize-none shadow-inner"
                   />
                 </div>
               ))}

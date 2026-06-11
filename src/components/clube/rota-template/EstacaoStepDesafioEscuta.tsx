@@ -104,7 +104,11 @@ export const EstacaoStepDesafioEscuta: React.FC<DesafioEscutaProps> = ({
         <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
           <Brain className="w-8 h-8 text-gold" />
         </div>
-        <h2 className="text-3xl md:text-5xl font-serif text-white italic">Laboratório de Escuta</h2>
+        <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+          <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
+            Laboratório de Escuta
+          </span>
+        </h2>
         <p className="text-gold/60 text-lg max-w-2xl mx-auto font-serif italic leading-relaxed">
           “Agora observe o caso sem pressa. O objetivo não é acertar uma resposta clínica. É perceber qual camada simbólica se apresenta primeiro.”
         </p>
