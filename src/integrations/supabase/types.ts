@@ -5753,6 +5753,63 @@ export type Database = {
         }
         Relationships: []
       }
+      clube_mapa_instinto_registros: {
+        Row: {
+          corpo: string
+          created_at: string | null
+          criatividade: string
+          desejo: string
+          distrito_cidadela_impactado: string | null
+          estacao_id: string | null
+          id: string
+          intuicao: string
+          limites: string
+          rota_id: string | null
+          status: string | null
+          territorio_mais_aceso: string | null
+          territorio_mais_soterrado: string | null
+          updated_at: string | null
+          user_id: string
+          vitalidade: string
+        }
+        Insert: {
+          corpo?: string
+          created_at?: string | null
+          criatividade?: string
+          desejo?: string
+          distrito_cidadela_impactado?: string | null
+          estacao_id?: string | null
+          id?: string
+          intuicao?: string
+          limites?: string
+          rota_id?: string | null
+          status?: string | null
+          territorio_mais_aceso?: string | null
+          territorio_mais_soterrado?: string | null
+          updated_at?: string | null
+          user_id: string
+          vitalidade?: string
+        }
+        Update: {
+          corpo?: string
+          created_at?: string | null
+          criatividade?: string
+          desejo?: string
+          distrito_cidadela_impactado?: string | null
+          estacao_id?: string | null
+          id?: string
+          intuicao?: string
+          limites?: string
+          rota_id?: string | null
+          status?: string | null
+          territorio_mais_aceso?: string | null
+          territorio_mais_soterrado?: string | null
+          updated_at?: string | null
+          user_id?: string
+          vitalidade?: string
+        }
+        Relationships: []
+      }
       clube_missao_campo_registros: {
         Row: {
           checklist_concluido: Json | null
