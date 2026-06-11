@@ -61,7 +61,11 @@ export const EstacaoStepJardim: React.FC<JardimStepProps> = ({
         <div className="space-y-6">
           <div className="space-y-4">
             <h3 className="text-2xl md:text-3xl font-serif text-white italic leading-relaxed">
-              {pergunta}
+              {estacaoId === 'clareira-do-chamado' ? (
+                isPsique 
+                  ? "Qual foi o primeiro sinal de vida que reconheci em mim hoje?" 
+                  : "Como diferenciar um desejo autêntico de uma reação ao desconforto?"
+              ) : pergunta}
             </h3>
             
             {subperguntas && subperguntas.length > 0 && (

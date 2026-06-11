@@ -12,6 +12,7 @@ import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/Esta
 import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/EstacaoStepCasoSimbolico';
 import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
+import { MapaInstintoSoterrado } from '@/components/clube/MapaInstintoSoterrado';
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
 import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
 import { EstacaoStepOraculo } from '@/components/clube/rota-template/EstacaoStepOraculo';
@@ -343,17 +344,23 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
-                {currentStep === 7 && (
+                {currentStep === 7 && (slug === 'clareira-do-chamado' ? (
+                  <MapaInstintoSoterrado 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    onNext={handleNext}
+                  />
+                ) : (
                   <EstacaoStepFerramentaOracular 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
-                    nome={estacao.ferramenta_nome || 'Mapa do Instinto Soterrado'}
+                    nome={estacao.ferramenta_nome || 'Ferramenta Oracular'}
                     descricao={estacao.ferramenta_descricao || ''}
                     eixos={estacao.ferramenta_eixos || []}
                     resultados={estacao.ferramenta_resultados || []}
                     onNext={handleNext}
                   />
-                )}
+                ))}
 
                 {currentStep === 8 && (
                   <EstacaoStepJardim 
@@ -413,14 +420,14 @@ export default function ClubeRotaPremium() {
                   <EstacaoStepCartografiaLoba 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
-                    estacaoNome={estacao.nome}
-                    rastroNome={estacao.cartografia_rastro_nome || 'O Chamado Foi Escutado'}
-                    ferramentaDesbloqueada={estacao.cartografia_ferramenta_desbloqueada || 'Mapa do Instinto Soterrado'}
-                    distritoImpactado={estacao.cartografia_distrito_impactado || 'Bosque dos Arquétipos'}
-                    distritoSecundario={estacao.cartografia_distrito_secundario || 'Portão da Chegada'}
-                    competenciaDesenvolvida={estacao.cartografia_competencia || ''}
-                    proximaTravessia={estacao.cartografia_proxima_travessia || ''}
-                    mensagemConclusao={estacao.cartografia_mensagem_conclusao || ''}
+                    estacaoNome={estacao.titulo || estacao.nome}
+                    rastroNome={slug === 'clareira-do-chamado' ? "Instinto Reconhecido" : (estacao.cartografia_rastro_nome || 'O Chamado Foi Escutado')}
+                    ferramentaDesbloqueada={estacao.ferramenta_nome || estacao.cartografia_ferramenta_desbloqueada || 'Mapa do Instinto Soterrado'}
+                    distritoImpactado={slug === 'clareira-do-chamado' ? "Portal da Chegada" : (estacao.cartografia_distrito_impactado || 'Bosque dos Arquétipos')}
+                    distritoSecundario={slug === 'clareira-do-chamado' ? "Jardim da Heroína" : (estacao.cartografia_distrito_secundario || 'Portão da Chegada')}
+                    competenciaDesenvolvida={estacao.cartografia_competencia || 'Escuta Atenta'}
+                    proximaTravessia={estacao.cartografia_proxima_travessia || 'Casa da Boa Menina'}
+                    mensagemConclusao={slug === 'clareira-do-chamado' ? "Rastro guardado. O instinto não desapareceu — apenas pediu escuta." : (estacao.cartografia_mensagem_conclusao || 'A travessia desta estação foi concluída.')}
                     onNext={handleNext}
                   />
                 )}
