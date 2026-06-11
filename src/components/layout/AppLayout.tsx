@@ -16,8 +16,9 @@ export function AppLayout({ children }: AppLayoutProps) {
   }, []);
   return (
     <div className="min-h-screen bg-background relative flex flex-col overflow-x-hidden selection:bg-gold/30 selection:text-white pb-[env(safe-area-inset-bottom)]">
-      {/* Subtle ambient texture */}
+      {/* Subtle ambient texture and dark overlays */}
       <div className="fixed inset-0 pattern-geometric opacity-[0.03] pointer-events-none z-0" />
+      <div className="fixed inset-0 bg-black/40 pointer-events-none z-0" /> {/* Dark overlay to improve text contrast */}
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_top,hsl(var(--gold)/0.05),transparent_60%)] pointer-events-none z-0" />
       <div className="fixed inset-0 bg-hero-radial pointer-events-none z-0" />
 

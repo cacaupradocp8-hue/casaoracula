@@ -26,9 +26,12 @@ const ImmersiveBg = () => (
       <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background/80" />
       
       {/* Background mandala for faster visual feedback */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] scale-150">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.02] scale-150">
         <OptimizedImage src={mandalaHome} alt="" priority containerClassName="bg-transparent" />
       </div>
+      
+      {/* Dark overlay for better text contrast */}
+      <div className="absolute inset-0 bg-black/40" />
     </div>
   </>
 );
