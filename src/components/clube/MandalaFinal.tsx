@@ -155,7 +155,7 @@ export function MandalaFinal({ estados }: Props) {
     <div className="flex flex-col items-center w-full justify-center py-8 relative min-h-[600px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5">
+      <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden">
         
         {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
         <div 
@@ -189,100 +189,100 @@ export function MandalaFinal({ estados }: Props) {
         </div>
 
         {/* Elementos da UI (Sobre a Imagem) */}
-        <div className="absolute inset-0 z-20 overflow-hidden rounded-full">
-
-        {/* A LOBA (Centro) */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
-          <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gold/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-            <span className="text-4xl md:text-5xl">🐺</span>
+        <div className="absolute inset-0 z-20">
+          {/* A LOBA (Centro) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
+            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gold/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+              <span className="text-4xl md:text-5xl">🐺</span>
+            </div>
+            <h4 className="mt-2 text-[10px] md:text-xs text-gold/80 font-serif uppercase tracking-[0.4em] font-bold">A Loba</h4>
           </div>
-          <h4 className="mt-2 text-[10px] md:text-xs text-gold/80 font-serif uppercase tracking-[0.4em] font-bold">A Loba</h4>
-        </div>
 
-        {/* Hotspots e Efeitos Visuais sobre a Arte */}
-        {TERRITORIOS.map((t) => {
-          const estado = estados[t.id] || 'Soterrado';
-          const style = ESTADOS_STYLE[estado];
-          
-          return (
-            <div 
-              key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-[25%] h-[25%]"
-              style={{ top: t.pos.top, left: t.pos.left }}
-            >
-              {/* Círculo com Ícone e Estado */}
-              <div className="relative flex flex-col items-center group">
-                {/* Hotspot de Interação (Invisível mas clicável) */}
-                <button
-                  onClick={() => setSelectedTerritorio(t)}
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full z-50 cursor-pointer focus:outline-none relative"
-                  aria-label={t.nome}
-                >
-                  <div className={cn(
-                    "absolute inset-0 rounded-full border-2 transition-all duration-500 flex items-center justify-center bg-black/40 backdrop-blur-sm",
-                    estado === 'Aceso' ? "border-[#d4af37] shadow-[0_0_20px_#d4af37]" : 
-                    estado === 'Oscilante' ? "border-[#c5a059] opacity-80" : 
-                    "border-white/20 opacity-40 grayscale"
-                  )}>
-                    <span className="text-2xl md:text-3xl">{t.icon}</span>
+          {/* Hotspots e Efeitos Visuais sobre a Arte */}
+          {TERRITORIOS.map((t) => {
+            const estado = estados[t.id] || 'Soterrado';
+            const style = ESTADOS_STYLE[estado];
+            
+            return (
+              <div 
+                key={t.id}
+                className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-[25%] h-[25%]"
+                style={{ top: t.pos.top, left: t.pos.left }}
+              >
+                {/* Círculo com Ícone e Estado */}
+                <div className="relative flex flex-col items-center group">
+                  {/* Hotspot de Interação (Invisível mas clicável) */}
+                  <button
+                    onClick={() => setSelectedTerritorio(t)}
+                    className="w-16 h-16 md:w-20 md:h-20 rounded-full z-50 cursor-pointer focus:outline-none relative"
+                    aria-label={t.nome}
+                  >
+                    <div className={cn(
+                      "absolute inset-0 rounded-full border-2 transition-all duration-500 flex items-center justify-center bg-black/40 backdrop-blur-sm",
+                      estado === 'Aceso' ? "border-[#d4af37] shadow-[0_0_20px_#d4af37]" : 
+                      estado === 'Oscilante' ? "border-[#c5a059] opacity-80" : 
+                      "border-white/20 opacity-40 grayscale"
+                    )}>
+                      <span className="text-2xl md:text-3xl">{t.icon}</span>
+                    </div>
+                  </button>
+
+                  {/* Nome e Estado do Território (Fiel à imagem) */}
+                  <div className="mt-2 text-center pointer-events-none z-30">
+                    <h4 className={cn(
+                      "text-[10px] md:text-xs font-serif uppercase tracking-[0.2em] transition-colors duration-500",
+                      estado === 'Aceso' ? "text-[#d4af37] font-bold" : "text-white/60"
+                    )}>
+                      {t.nome}
+                    </h4>
+                    <div className="flex items-center justify-center gap-1 mt-0.5">
+                      <div className={cn("w-1 h-1 rounded-full", style.dot)} />
+                      <span className="text-[8px] md:text-[9px] text-white/40 uppercase tracking-widest font-bold italic">
+                        {estado}
+                      </span>
+                    </div>
                   </div>
-                </button>
 
-                {/* Nome e Estado do Território (Fiel à imagem) */}
-                <div className="mt-2 text-center pointer-events-none z-30">
-                  <h4 className={cn(
-                    "text-[10px] md:text-xs font-serif uppercase tracking-[0.2em] transition-colors duration-500",
-                    estado === 'Aceso' ? "text-[#d4af37] font-bold" : "text-white/60"
-                  )}>
-                    {t.nome}
-                  </h4>
-                  <div className="flex items-center justify-center gap-1 mt-0.5">
-                    <div className={cn("w-1 h-1 rounded-full", style.dot)} />
-                    <span className="text-[8px] md:text-[9px] text-white/40 uppercase tracking-widest font-bold italic">
-                      {estado}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Efeito de Brilho/Pulsar (Apenas Aceso) */}
-                {estado === 'Aceso' && (
-                  <motion.div
-                    animate={style.animation}
-                    transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute -top-2 w-20 h-20 md:w-24 md:h-24 rounded-full pointer-events-none z-10"
-                    style={{ 
-                      backgroundColor: style.glow,
-                      filter: 'blur(30px)',
-                    }}
-                  />
-                )}
-              </div>
-              
-              {/* Partículas para estado Aceso */}
-              {estado === 'Aceso' && (
-                <div className="absolute inset-0 pointer-events-none overflow-visible">
-                  {[...Array(6)].map((_, i) => (
+                  {/* Efeito de Brilho/Pulsar (Apenas Aceso) */}
+                  {estado === 'Aceso' && (
                     <motion.div
-                      key={i}
-                      className="absolute left-1/2 top-1/2 w-1 h-1 bg-gold rounded-full"
-                      animate={{ 
-                        y: [-20, -60],
-                        x: [(i - 3) * 10, (i - 3) * 15],
-                        opacity: [0, 0.8, 0],
-                        scale: [0.5, 1, 0.5]
-                      }}
-                      transition={{ 
-                        duration: 3 + Math.random(), 
-                        repeat: Infinity, 
-                        delay: i * 0.4 
+                      animate={style.animation}
+                      transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute -top-2 w-20 h-20 md:w-24 md:h-24 rounded-full pointer-events-none z-10"
+                      style={{ 
+                        backgroundColor: style.glow,
+                        filter: 'blur(30px)',
                       }}
                     />
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
-          );
-        })}
+                
+                {/* Partículas para estado Aceso */}
+                {estado === 'Aceso' && (
+                  <div className="absolute inset-0 pointer-events-none overflow-visible">
+                    {[...Array(6)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute left-1/2 top-1/2 w-1 h-1 bg-gold rounded-full"
+                        animate={{ 
+                          y: [-20, -60],
+                          x: [(i - 3) * 10, (i - 3) * 15],
+                          opacity: [0, 0.8, 0],
+                          scale: [0.5, 1, 0.5]
+                        }}
+                        transition={{ 
+                          duration: 3 + Math.random(), 
+                          repeat: Infinity, 
+                          delay: i * 0.4 
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
 
         {/* Painel Flutuante Narrativo */}
         <AnimatePresence>
