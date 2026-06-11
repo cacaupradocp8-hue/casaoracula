@@ -152,10 +152,10 @@ export function MandalaFinal({ estados }: Props) {
   }, [estados]);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
+    <div className="flex flex-col items-center w-full justify-center py-8 relative min-h-[600px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-[#050505] rounded-full shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
+      <div className="relative w-full max-w-[850px] aspect-square mx-auto group bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] overflow-hidden border border-white/5">
         
         {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
         <div 
