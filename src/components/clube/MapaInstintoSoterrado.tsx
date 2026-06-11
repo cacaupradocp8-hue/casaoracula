@@ -236,11 +236,42 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                     key={i} 
                     variant="ghost" 
                     onClick={() => handleSelect(opt.score)} 
-                    className="h-auto py-6 px-8 text-center font-serif italic text-lg border border-white/5 bg-white/5 hover:border-gold/30 hover:bg-white/10 transition-all rounded-2xl leading-relaxed"
+                    className="h-auto py-5 px-8 flex items-center justify-between text-left font-serif italic text-lg border border-white/10 bg-[#121214] hover:border-gold/30 hover:bg-white/5 transition-all rounded-xl leading-relaxed group"
                   >
-                    {opt.label}
+                    <div className="flex items-center gap-4">
+                      <span className="text-gold/40 group-hover:text-gold transition-colors italic">🌱</span>
+                      <span className="text-white/80 group-hover:text-white transition-colors">{opt.label}</span>
+                    </div>
+                    <div className="w-5 h-5 rounded-full border border-gold/20 flex items-center justify-center group-hover:border-gold/50">
+                      <div className="w-2.5 h-2.5 rounded-full bg-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
                   </Button>
                 ))}
+              </div>
+              
+              <div className="flex justify-between items-center max-w-2xl mx-auto pt-6">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => {
+                    if (currentEixoIdx > 0) setCurrentEixoIdx(prev => prev - 1);
+                    else if (currentTerritorioIdx > 0) {
+                      setCurrentTerritorioIdx(prev => prev - 1);
+                      setCurrentEixoIdx(EIXOS.length - 1);
+                    }
+                  }}
+                  disabled={currentTerritorioIdx === 0 && currentEixoIdx === 0}
+                  className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
+                >
+                  <ChevronRight className="w-4 h-4 rotate-180" />
+                  Voltar
+                </Button>
+                <Button 
+                  disabled
+                  className="bg-gold/20 text-gold border border-gold/20 px-8 py-2 rounded-lg text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
+                >
+                  Próximo
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
             </motion.div>
           </AnimatePresence>
