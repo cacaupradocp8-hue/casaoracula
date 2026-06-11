@@ -28,25 +28,28 @@ export const EstacaoStepJardim: React.FC<JardimStepProps> = ({
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
-      <div className="text-center space-y-6">
+      <div className="text-center space-y-8">
         <div className={cn(
-          "w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 border transition-colors duration-500",
+          "w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 border-2 transition-all duration-700 shadow-2xl relative group",
           isPsique 
-            ? "bg-gold/10 border-gold/20 text-gold" 
-            : "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+            ? "bg-gold/10 border-gold/30 text-gold shadow-gold/10" 
+            : "bg-emerald-500/10 border-emerald-500/30 text-emerald-400 shadow-emerald-500/10"
         )}>
-          {isPsique ? <Flower2 className="w-8 h-8" /> : <Sparkles className="w-8 h-8" />}
+          <div className="absolute inset-0 rounded-full animate-pulse opacity-20 bg-current" />
+          {isPsique ? <Flower2 className="w-10 h-10" /> : <Sparkles className="w-10 h-10" />}
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-4">
           <span className={cn(
-            "text-[10px] uppercase tracking-[0.4em] font-black",
-            isPsique ? "text-gold/60" : "text-emerald-400/60"
+            "text-[10px] uppercase tracking-[0.5em] font-black px-4 py-1 rounded-full border border-current/20 bg-current/5",
+            isPsique ? "text-gold" : "text-emerald-400"
           )}>
             Rastro de Integração — Jardim {isPsique ? 'da Psique' : 'do Ofício'}
           </span>
-          <h2 className="text-3xl md:text-5xl font-serif text-white italic">
-            {isPsique ? 'Integração Pessoal' : 'Integração do Ofício'}
+          <h2 className="text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+            <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
+              {isPsique ? 'Integração Pessoal' : 'Integração do Ofício'}
+            </span>
           </h2>
         </div>
 
