@@ -24,69 +24,121 @@ interface Props {
 
 export function MandalaFinal({ estados }: Props) {
   return (
-    <div className="relative w-full aspect-square max-w-[420px] mx-auto flex items-center justify-center py-10">
-      {/* Mandala Background Rings */}
-      <div className="absolute inset-0 rounded-full border border-gold/5 scale-100" />
-      <div className="absolute inset-0 rounded-full border border-gold/10 scale-90" />
-      <div className="absolute inset-0 rounded-full border border-gold/20 scale-75" />
-      
-      {/* Center Glow */}
-      <div className="absolute w-24 h-24 bg-gold/10 blur-[60px] rounded-full" />
+    <div className="relative w-full aspect-square max-w-[500px] mx-auto flex items-center justify-center py-20">
+      {/* Background Cartography Lines */}
+      <svg className="absolute inset-0 w-full h-full opacity-20 pointer-events-none" viewBox="0 0 500 500">
+        <defs>
+          <radialGradient id="lineGradient" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="rgba(212,175,55,0.4)" />
+            <stop offset="100%" stopColor="rgba(212,175,55,0)" />
+          </radialGradient>
+        </defs>
+        {TERRITORIOS.map((_, i) => {
+          const angle = (i * 60 - 90) * (Math.PI / 180);
+          const x2 = 250 + Math.cos(angle) * 180;
+          const y2 = 250 + Math.sin(angle) * 180;
+          return (
+            <motion.line
+              key={`line-${i}`}
+              x1="250" y1="250" x2={x2} y2={y2}
+              stroke="url(#lineGradient)"
+              strokeWidth="1"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 2, delay: i * 0.2 }}
+            />
+          );
+        })}
+        <motion.circle
+          cx="250" cy="250" r="180"
+          stroke="rgba(212,175,55,0.1)"
+          fill="none"
+          strokeWidth="1"
+          strokeDasharray="4 8"
+          initial={{ rotate: 0 }}
+          animate={{ rotate: 360 }}
+          transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
+        />
+      </svg>
+
+      {/* Center: A Loba */}
+      <motion.div 
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="relative z-20 w-32 h-32 rounded-full bg-midnight/80 border-2 border-gold/30 backdrop-blur-xl flex flex-col items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.2)]"
+      >
+        <span className="text-4xl filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">🐺</span>
+        <span className="text-[10px] uppercase tracking-[0.3em] font-black text-gold mt-2">A Loba</span>
+        
+        {/* Pulsing Core */}
+        <motion.div 
+          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
+          transition={{ duration: 4, repeat: Infinity }}
+          className="absolute inset-0 rounded-full bg-gold"
+        />
+      </motion.div>
       
       {TERRITORIOS.map((t, i) => {
-        const angle = (i * 60 - 90) * (Math.PI / 180); // Start from top (-90 deg)
-        const radius = 135;
+        const angle = (i * 60 - 90) * (Math.PI / 180);
+        const radius = 180;
         const x = Math.cos(angle) * radius;
         const y = Math.sin(angle) * radius;
         const estado = estados[t.id] || 'Oscilante';
 
+        const isAceso = estado === 'Aceso';
+        const isSoterrado = estado === 'Soterrado' || estado === 'Exausto';
+
         return (
           <motion.div
             key={t.id}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: i * 0.1, duration: 0.8, ease: "easeOut" }}
+            initial={{ opacity: 0, x: 0, y: 0 }}
+            animate={{ opacity: 1, x, y }}
+            transition={{ delay: i * 0.15, duration: 1.2, ease: "circOut" }}
             className="absolute z-10"
-            style={{ x, y }}
           >
-            <div className="flex flex-col items-center group">
-              <div className={cn(
-                "w-20 h-20 rounded-full flex flex-col items-center justify-center p-2 text-center transition-all duration-700 relative",
-                "bg-midnight/90 border-2 backdrop-blur-sm",
-                
-                estado === 'Aceso' && "border-gold shadow-[0_0_30px_rgba(212,175,55,0.6)] ring-1 ring-gold/50",
-                estado === 'Oscilante' && "border-gold/40 shadow-[0_0_15px_rgba(212,175,55,0.2)] animate-pulse",
-                estado === 'Soterrado' && "border-white/10 opacity-60 grayscale-[0.5]",
-                estado === 'Exausto' && "border-white/5 opacity-40 grayscale"
-              )}>
-                {/* Visual state indicator */}
-                {estado === 'Aceso' && (
+            <div className="flex flex-col items-center group relative">
+              <motion.div 
+                whileHover={{ scale: 1.1 }}
+                className={cn(
+                  "w-20 h-20 rounded-2xl flex flex-col items-center justify-center p-3 text-center transition-all duration-700 relative overflow-hidden",
+                  "bg-midnight/60 border backdrop-blur-md",
+                  isAceso ? "border-gold shadow-[0_0_30px_rgba(212,175,55,0.4)]" : "border-white/5",
+                  isSoterrado && "opacity-40 grayscale"
+                )}
+              >
+                {/* Territory Glow/Aura */}
+                {isAceso && (
                   <motion.div 
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
+                    animate={{ opacity: [0.2, 0.5, 0.2] }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute inset-0 rounded-full bg-gold/10" 
+                    className="absolute inset-0 bg-gold/10"
                   />
                 )}
                 
                 <span className={cn(
-                  "text-2xl mb-1 transition-transform duration-500",
-                  estado === 'Aceso' && "scale-110",
-                  estado === 'Exausto' && "scale-90"
+                  "text-2xl mb-1 relative z-10",
+                  isAceso && "scale-110",
+                  isSoterrado && "opacity-50"
                 )}>{t.icon}</span>
-              </div>
-              
-              <div className="mt-2 text-center">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.2em] text-white/90 leading-none">{t.nome}</span>
+                
                 <span className={cn(
-                  "text-[8px] uppercase tracking-widest font-black mt-1 block",
-                  estado === 'Aceso' && "text-gold",
-                  estado === 'Oscilante' && "text-gold/60",
-                  estado === 'Soterrado' && "text-white/40",
-                  estado === 'Exausto' && "text-white/20"
-                )}>
-                  {estado}
-                </span>
-              </div>
+                  "text-[8px] font-black uppercase tracking-[0.2em] relative z-10",
+                  isAceso ? "text-gold" : "text-white/40"
+                )}>{t.nome}</span>
+              </motion.div>
+
+              {/* Status Label (Mini) */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.5 + i * 0.1 }}
+                className={cn(
+                  "mt-2 px-3 py-1 rounded-full border text-[7px] uppercase tracking-widest font-black",
+                  isAceso ? "bg-gold/10 border-gold/20 text-gold" : "bg-white/5 border-white/5 text-white/30"
+                )}
+              >
+                {estado}
+              </motion.div>
             </div>
           </motion.div>
         );
@@ -94,3 +146,4 @@ export function MandalaFinal({ estados }: Props) {
     </div>
   );
 }
+
