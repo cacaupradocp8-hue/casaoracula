@@ -158,7 +158,10 @@ export function MandalaFinal({ estados }: Props) {
   }, [estados]);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-8 relative min-h-[600px]">
+    <div className={cn(
+      "flex flex-col items-center w-full justify-center py-8 relative min-h-[600px] transition-opacity duration-1000",
+      mounted ? "opacity-100" : "opacity-0"
+    )}>
       
       {/* Container da Arte Oficial */}
       <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden">
