@@ -251,7 +251,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             </div>
 
             {/* Mandala Protagonista */}
-            <div className="w-full flex justify-center py-10">
+            <div className="w-full flex justify-center py-10 relative z-50">
               <MandalaFinal estados={estados} />
             </div>
 
