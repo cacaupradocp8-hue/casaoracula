@@ -144,22 +144,24 @@ export default function ClubeRotaPremium() {
 
   return (
     <AppLayout>
-      <div className="bg-[#020617] min-h-screen text-white relative overflow-hidden">
+      <div className="bg-transparent min-h-screen text-white relative overflow-hidden">
         {/* Background Image Container */}
         <div className="fixed inset-0 z-0">
           <img 
             src={slug === 'clareira-do-chamado' 
-              ? "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206950341.jpg"
-              : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")
+              ? "/clareira-fundo.png"
+              : (estacao.banner_url?.replace('pviznbfwtjqmpeiqqzk', 'pvjiznbfwtjqmpeiqqzk') || "/clareira-fundo.png")
             } 
+
             alt="" 
             className={cn(
               "w-full h-full object-cover transition-opacity duration-1000",
-              slug === 'clareira-do-chamado' ? "opacity-60 grayscale-[0.3] brightness-[0.4]" : "opacity-80"
+              slug === 'clareira-do-chamado' ? "opacity-40 grayscale-[0.2] brightness-[0.7]" : "opacity-80"
             )}
           />
-          <div className="absolute inset-0 bg-[#020617]/40" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/60 via-[#020617]/20 to-[#020617]" />
+          <div className="absolute inset-0 bg-[#020617]/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-transparent to-[#020617]/80" />
+
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
@@ -281,6 +283,7 @@ export default function ClubeRotaPremium() {
                   <EstacaoStepSussurrosConto 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
+                    livroCapaUrl={estacao.clube_rotas.livro_capa_url}
                     contoData={{
                       titulo: estacao.conto_titulo || 'Conto da Estação',
                       sintese: estacao.conto_sintese || 'Síntese do conto...',
@@ -297,6 +300,7 @@ export default function ClubeRotaPremium() {
                     onNext={handleNext}
                   />
                 )}
+
 
                 {currentStep === 4 && (
                   <EstacaoStepTraducaoOracular 

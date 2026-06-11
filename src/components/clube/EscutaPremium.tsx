@@ -149,11 +149,12 @@ export function EscutaPremium({
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
-              "w-64 h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
+              "w-56 h-56 sm:w-64 sm:h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
               "bg-[#0a0a0a] shadow-[0_0_120px_rgba(0,0,0,1),0_0_60px_rgba(212,175,55,0.4)] overflow-hidden",
               "border-[12px] border-[#1a1a1a] ring-2 ring-gold/20"
             )}
           >
+
             {/* Vinil Texture Effect - Fine lines */}
             <div className="absolute inset-0 rounded-full pointer-events-none z-20 opacity-30" style={{ 
               backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)' 
@@ -165,9 +166,11 @@ export function EscutaPremium({
 
             <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950 flex items-center justify-center">
               {/* Shine/Reflection */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent,rgba(212,175,55,0.1),transparent)] z-10 pointer-events-none animate-[spin_10s_linear_infinite]" />
               
               {/* The Central Art (Station Image) - Improved Centralization */}
+
               <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl flex items-center justify-center">
                 {imagemEscuta ? (
                   <img 
