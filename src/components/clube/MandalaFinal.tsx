@@ -143,7 +143,8 @@ export function MandalaFinal({ estados }: Props) {
     const spotlights = TERRITORIOS.map(t => {
       const estado = estados[t.id];
       if (estado === 'Aceso') {
-        return `radial-gradient(circle at ${t.pos.left} ${t.pos.top}, rgba(212, 175, 55, 0.3) 0%, transparent 25%)`;
+        // Ajuste fino das coordenadas para alinhar com o object-contain da imagem (p-5%)
+        return `radial-gradient(circle at ${t.pos.left} ${t.pos.top}, rgba(212, 175, 55, 0.35) 0%, transparent 22%)`;
       }
       return null;
     }).filter(Boolean);
