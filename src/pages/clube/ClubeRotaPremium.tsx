@@ -12,6 +12,7 @@ import { EstacaoStepSussurrosConto } from '@/components/clube/rota-template/Esta
 import { EstacaoStepCasoSimbolico } from '@/components/clube/rota-template/EstacaoStepCasoSimbolico';
 import { EstacaoStepDesafioEscuta } from '@/components/clube/rota-template/EstacaoStepDesafioEscuta';
 import { EstacaoStepFerramentaOracular } from '@/components/clube/rota-template/EstacaoStepFerramentaOracular';
+import { MapaInstintoSoterrado } from '@/components/clube/MapaInstintoSoterrado';
 import { EstacaoStepJardim } from '@/components/clube/rota-template/EstacaoStepJardim';
 import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/EstacaoStepMissaoCampo';
 import { EstacaoStepOraculo } from '@/components/clube/rota-template/EstacaoStepOraculo';
