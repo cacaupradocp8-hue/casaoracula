@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppSettings } from '@/hooks/useAppSettings';
+import { OptimizedImage } from '@/components/shared/OptimizedImage';
 import mandalaHome from '@/assets/mandala-home.jpg';
 
 const fadeUp = {
@@ -37,7 +38,12 @@ export function VisitorHomePage() {
               transition={{ duration: 2.5, ease: 'easeOut' }}
               className="w-[500px] h-[500px] md:w-[700px] md:h-[700px]"
             >
-              <img src={mandalaHome} alt="" className="w-full h-full object-contain animate-ritual-breathe" />
+              <OptimizedImage 
+                src={mandalaHome} 
+                alt="" 
+                priority 
+                className="w-full h-full object-contain animate-ritual-breathe" 
+              />
             </motion.div>
           </div>
 
