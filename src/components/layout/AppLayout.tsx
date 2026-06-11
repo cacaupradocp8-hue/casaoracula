@@ -58,7 +58,6 @@ export function AppLayout({ children }: AppLayoutProps) {
         </div>
       </div>
     </div>
-    </div>
   );
 }
 
