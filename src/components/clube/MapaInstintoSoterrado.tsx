@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map, BookOpen, PenTool } from 'lucide-react';
+import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map, BookOpen, PenTool, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useMutation } from '@tanstack/react-query';
@@ -26,32 +26,32 @@ const EIXOS = [
 ];
 
 const PERGUNTAS = [
-  { id: 'corpo', label: 'Corpo', perguntas: [
+  { id: 'corpo', label: 'Corpo', nome: 'Corpo', icon: '❤️', perguntas: [
     'Quando o cansaço atravessa sua jornada, de que forma seu corpo costuma sinalizar que o passo precisa mudar?',
     'Ao fechar os olhos por um instante, você consegue distinguir onde termina a sua energia e onde começa a expectativa do mundo sobre seus movimentos?',
     'Nas últimas travessias, com que frequência você percebeu que seu corpo só foi ouvido quando a dor precisou gritar?'
   ]},
-  { id: 'intuicao', label: 'Intuição', perguntas: [
+  { id: 'intuicao', label: 'Intuição', nome: 'Intuição', icon: '🌙', perguntas: [
     'Quando uma percepção surge antes de qualquer explicação lógica, que destino você costuma dar a esse sinal?',
     'No silêncio das suas decisões, quanto espaço existe para a sua voz interna sem que ela precise de provas para ser real?',
     'Ao revisitar rastros antigos, quantos deles revelam que a sua primeira percepção já sabia o caminho, mesmo antes de você aceitá-lo?'
   ]},
-  { id: 'desejo', label: 'Desejo', perguntas: [
+  { id: 'desejo', label: 'Desejo', nome: 'Desejo', icon: '🔥', perguntas: [
     'Quando um interesse genuíno acende uma faísca em você, qual o movimento natural que essa chama costuma seguir?',
     'Você consegue identificar quando um querer nasce da sua própria natureza ou quando ele é apenas um eco do que os outros esperam?',
     'Como fica a paisagem interna quando um desejo autêntico é deixado para trás em nome de uma necessidade que não é sua?'
   ]},
-  { id: 'limites', label: 'Limites', perguntas: [
+  { id: 'limites', label: 'Limites', nome: 'Limites', icon: '🛡', perguntas: [
     'Ao perceber que um espaço ou energia sua está sendo ocupada por algo externo, como seus contornos costumam reagir?',
     'Existe um sensor interno que aponta o momento exato em que um "sim" começa a corroer a sua própria integridade?',
     'Quanto do peso que você carrega hoje pertence ao seu próprio caminho e quanto foi absorvido de trilhas alheias?'
   ]},
-  { id: 'criatividade', label: 'Criatividade', perguntas: [
+  { id: 'criatividade', label: 'Criatividade', nome: 'Criatividade', icon: '🌿', perguntas: [
     'Quando uma nova possibilidade se apresenta à sua mente, qual o primeiro gesto que você costuma oferecer a ela?',
     'Há uma clareira em sua rotina onde as ideias podem brincar e ser inúteis, sem a cobrança de gerar um resultado imediato?',
     'Como as cores e soluções novas têm chegado até você: como um fluxo livre ou como algo que precisa ser arrancado da exaustão?'
   ]},
-  { id: 'vitalidade', label: 'Vitalidade', perguntas: [
+  { id: 'vitalidade', label: 'Vitalidade', nome: 'Vitalidade', icon: '🐺', perguntas: [
     'Ao despertar para um novo ciclo, com que intensidade a loba em você sente que a vida vale o esforço de ser vivida?',
     'Você consegue mapear com clareza quais encontros e tarefas devolvem a sua presença e quais apenas drenam o seu rastro?',
     'Quanto da sua energia vital tem sido investida naquilo que realmente faz o seu sangue pulsar com entusiasmo?'
@@ -184,7 +184,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             animate={{ opacity: 1, y: 0 }}
             className="space-y-4"
           >
-            <h2 className="text-4xl md:text-6xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
+            <h2 className="text-4xl md:text-5xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
             <p className="text-white/60 font-serif italic max-w-xl mx-auto">Uma cartografia simbólica para identificar quais territórios da sua natureza pedem seu retorno nesta estação.</p>
           </motion.div>
           <Button onClick={() => setView('perguntas')} className="bg-gold text-midnight px-12 py-7 rounded-full font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
@@ -199,9 +199,23 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             <Compass className="w-32 h-32" />
           </div>
           
-          <div className="flex justify-between items-center relative z-10">
-            <div className="text-gold uppercase tracking-[0.3em] font-black text-[9px]">{currentT.label} • {currentE.label}</div>
-            <div className="text-white/20 text-[9px] font-black">{currentTerritorioIdx + 1}/{PERGUNTAS.length}</div>
+          <div className="flex flex-col items-center gap-4 relative z-10">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{currentT.icon}</span>
+              <div className="text-white font-serif italic text-lg">Território: {currentT.nome}</div>
+            </div>
+            {/* Progress Dots */}
+            <div className="flex gap-2">
+              {PERGUNTAS.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    i === currentTerritorioIdx ? "bg-gold scale-125" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
+                  )} 
+                />
+              ))}
+            </div>
           </div>
           
           <AnimatePresence mode="wait">
@@ -222,11 +236,42 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                     key={i} 
                     variant="ghost" 
                     onClick={() => handleSelect(opt.score)} 
-                    className="h-auto py-6 px-8 text-center font-serif italic text-lg border border-white/5 bg-white/5 hover:border-gold/30 hover:bg-white/10 transition-all rounded-2xl leading-relaxed"
+                    className="h-auto py-5 px-8 flex items-center justify-between text-left font-serif italic text-lg border border-white/10 bg-[#121214] hover:border-gold/30 hover:bg-white/5 transition-all rounded-xl leading-relaxed group"
                   >
-                    {opt.label}
+                    <div className="flex items-center gap-4">
+                      <span className="text-gold/40 group-hover:text-gold transition-colors italic">🌱</span>
+                      <span className="text-white/80 group-hover:text-white transition-colors">{opt.label}</span>
+                    </div>
+                    <div className="w-5 h-5 rounded-full border border-gold/20 flex items-center justify-center group-hover:border-gold/50">
+                      <div className="w-2.5 h-2.5 rounded-full bg-gold opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
                   </Button>
                 ))}
+              </div>
+              
+              <div className="flex justify-between items-center max-w-2xl mx-auto pt-6">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => {
+                    if (currentEixoIdx > 0) setCurrentEixoIdx(prev => prev - 1);
+                    else if (currentTerritorioIdx > 0) {
+                      setCurrentTerritorioIdx(prev => prev - 1);
+                      setCurrentEixoIdx(EIXOS.length - 1);
+                    }
+                  }}
+                  disabled={currentTerritorioIdx === 0 && currentEixoIdx === 0}
+                  className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
+                >
+                  <ChevronRight className="w-4 h-4 rotate-180" />
+                  Voltar
+                </Button>
+                <Button 
+                  disabled
+                  className="bg-gold/20 text-gold border border-gold/20 px-8 py-2 rounded-lg text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
+                >
+                  Próximo
+                  <ChevronRight className="w-4 h-4" />
+                </Button>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -235,63 +280,101 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
       {view === 'resultado' && (
         <div className="space-y-20 animate-in fade-in duration-1000">
-          <div className="text-center space-y-6">
-            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[11px]">Cartografia Concluída</h3>
-            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Os rastros da sua natureza</h2>
+          <div className="text-center space-y-4">
+            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[10px]">Mapa do Instinto Soterrado™</h3>
+            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Sua mandala instintiva</h2>
+            <p className="text-white/40 text-[13px] font-serif italic">A Loba continua deixando rastros.</p>
           </div>
 
           <MandalaFinal estados={estados} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4">
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Aceso</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c5a059] opacity-60" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Oscilante</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Soterrado</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Exaustão</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-gold" />
-                </div>
-                <h4 className="text-gold font-bold uppercase tracking-widest text-[10px]">Pegadas Encontradas</h4>
+                <Sparkles className="w-4 h-4 text-gold" />
+                <h4 className="text-gold font-bold uppercase tracking-widest text-[9px]">Pegadas Encontradas</h4>
               </div>
-              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
-                A loba continua deixando sinais em:
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">A loba continua deixando sinais em:</p>
+              <div className="space-y-2">
                 {acesoTerritorios.map(t => (
-                  <span key={t.id} className="bg-gold/10 text-gold px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-gold/10">
-                    {t.nome}
-                  </span>
+                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                    <span>{t.icon}</span>
+                    <span>{t.nome}</span>
+                  </div>
                 ))}
-                {acesoTerritorios.length === 0 && <span className="text-white/20 italic">Buscando novos sinais...</span>}
               </div>
             </Card>
 
-            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <Compass className="w-4 h-4 text-white/60" />
-                </div>
-                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Pegadas Quase Apagadas</h4>
+                <Compass className="w-4 h-4 text-orange-400" />
+                <h4 className="text-orange-400 font-bold uppercase tracking-widest text-[9px]">Pegadas Quase Apagadas</h4>
               </div>
-              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
-                Os rastros estão mais difíceis de perceber em:
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Os rastros estão mais difíceis de perceber em:</p>
+              <div className="space-y-2">
                 {soterradoTerritorios.map(t => (
-                  <span key={t.id} className="bg-white/10 text-white/60 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/5">
-                    {t.nome}
-                  </span>
+                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                    <span>{t.icon}</span>
+                    <span>{t.nome}</span>
+                  </div>
                 ))}
+              </div>
+            </Card>
+
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
+              <div className="flex items-center gap-3">
+                <Shield className="w-4 h-4 text-white/60" />
+                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[9px]">Pegadas que precisam de cuidado</h4>
+              </div>
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Áreas que pedem respeito antes de qualquer ação:</p>
+              <div className="space-y-2">
+                {Object.entries(estados).filter(([_, e]) => e === 'Exausto').map(([id]) => {
+                  const t = TERRITORIOS.find(tt => tt.id === id);
+                  return t && (
+                    <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                      <span>{t.icon}</span>
+                      <span>{t.nome}</span>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
           </div>
 
-          <div className="bg-gold/5 p-12 rounded-[40px] border border-gold/10 space-y-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/5 blur-[80px] rounded-full" />
+          <div className="bg-transparent p-12 rounded-[40px] space-y-8 text-center relative overflow-hidden">
             <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[10px] relative z-10">Próxima Trilha</h4>
-            <p className="text-2xl md:text-3xl font-serif italic text-white/90 leading-relaxed max-w-2xl mx-auto relative z-10">
-              "{TRILHAS_FINAIS[maisSoterradoId]}"
+            <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed max-w-2xl mx-auto relative z-10">
+              {TRILHAS_FINAIS[maisSoterradoId]}
             </p>
-            <div className="pt-8 border-t border-gold/10 max-w-md mx-auto relative z-10">
-              <p className="text-gold/60 text-[10px] uppercase tracking-[0.2em] font-black mb-4">Gesto de Retorno</p>
-              <p className="text-white/80 font-serif italic text-lg">{GESTOS_SIMBOLICOS[maisSoterradoId]}</p>
+            
+            <div className="flex justify-center py-4 opacity-40">
+              <img 
+                src="https://lovable-project.s3.amazonaws.com/loba-landscape.png" 
+                alt="Landscape" 
+                className="w-full max-w-lg object-contain"
+                onError={(e) => {
+                   (e.target as HTMLImageElement).src = "/src/assets/rota-dos-lobos-bg.png";
+                }}
+              />
             </div>
           </div>
 
@@ -330,9 +413,18 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             </div>
           </div>
 
-          <div className="pt-10">
-            <Button onClick={onNext} className="w-full h-16 bg-gradient-to-r from-gold via-gold/90 to-[#c5a059] text-midnight font-black uppercase tracking-widest text-[11px] rounded-full hover:shadow-[0_10px_40px_rgba(212,175,55,0.3)] transition-all active:scale-95 border-none">
+          <div className="pt-10 flex flex-col items-center gap-6">
+            <Button onClick={onNext} className="w-full h-16 bg-[#c5a059] text-midnight font-bold uppercase tracking-[0.2em] text-[11px] rounded-xl hover:shadow-[0_10px_40px_rgba(212,175,55,0.2)] transition-all active:scale-95 border-none">
+              <Sparkles className="w-4 h-4 mr-2" />
               Guardar Rastro e Continuar
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              onClick={() => setView('intro')}
+              className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black"
+            >
+              ← Voltar à Clareira do Chamado
             </Button>
           </div>
         </div>
@@ -340,4 +432,5 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     </div>
   );
 }
+
 

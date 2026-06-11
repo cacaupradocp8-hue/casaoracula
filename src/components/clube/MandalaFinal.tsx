@@ -65,17 +65,24 @@ export function MandalaFinal({ estados }: Props) {
       <motion.div 
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className="relative z-20 w-32 h-32 rounded-full bg-midnight/80 border-2 border-gold/30 backdrop-blur-xl flex flex-col items-center justify-center shadow-[0_0_50px_rgba(212,175,55,0.2)]"
+        className="relative z-20 w-32 h-32 rounded-full bg-midnight/80 border border-gold/40 backdrop-blur-xl flex flex-col items-center justify-center shadow-[0_0_60px_rgba(212,175,55,0.15)]"
       >
-        <span className="text-4xl filter drop-shadow-[0_0_8px_rgba(212,175,55,0.5)]">🐺</span>
-        <span className="text-[10px] uppercase tracking-[0.3em] font-black text-gold mt-2">A Loba</span>
+        <div className="relative">
+          <img 
+            src="/src/assets/logo-casa-icon-new.png" 
+            alt="Loba" 
+            className="w-16 h-16 object-contain filter drop-shadow-[0_0_12px_rgba(212,175,55,0.6)]"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = "https://lovable-project.s3.amazonaws.com/loba-icon.png";
+            }}
+          />
+        </div>
+        <span className="text-[10px] uppercase tracking-[0.3em] font-black text-gold mt-3">A Loba</span>
         
-        {/* Pulsing Core */}
-        <motion.div 
-          animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.3, 0.1] }}
-          transition={{ duration: 4, repeat: Infinity }}
-          className="absolute inset-0 rounded-full bg-gold"
-        />
+        <svg className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none overflow-visible">
+          <circle cx="64" cy="64" r="70" fill="none" stroke="rgba(212,175,55,0.1)" strokeWidth="0.5" />
+          <circle cx="64" cy="64" r="85" fill="none" stroke="rgba(212,175,55,0.05)" strokeWidth="0.5" />
+        </svg>
       </motion.div>
       
       {TERRITORIOS.map((t, i) => {
@@ -100,44 +107,31 @@ export function MandalaFinal({ estados }: Props) {
               <motion.div 
                 whileHover={{ scale: 1.1 }}
                 className={cn(
-                  "w-20 h-20 rounded-2xl flex flex-col items-center justify-center p-3 text-center transition-all duration-700 relative overflow-hidden",
-                  "bg-midnight/60 border backdrop-blur-md",
-                  isAceso ? "border-gold shadow-[0_0_30px_rgba(212,175,55,0.4)]" : "border-white/5",
-                  isSoterrado && "opacity-40 grayscale"
+                  "w-24 h-24 rounded-full flex flex-col items-center justify-center p-3 text-center transition-all duration-700 relative overflow-hidden",
+                  "bg-midnight/40 border backdrop-blur-md",
+                  isAceso ? "border-gold/60 shadow-[0_0_40px_rgba(212,175,55,0.3)]" : "border-white/10",
+                  isSoterrado && "opacity-50 grayscale"
                 )}
               >
-                {/* Territory Glow/Aura */}
-                {isAceso && (
-                  <motion.div 
-                    animate={{ opacity: [0.2, 0.5, 0.2] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="absolute inset-0 bg-gold/10"
-                  />
-                )}
-                
-                <span className={cn(
-                  "text-2xl mb-1 relative z-10",
-                  isAceso && "scale-110",
-                  isSoterrado && "opacity-50"
-                )}>{t.icon}</span>
+                {/* Territory Icon with visual states */}
+                <div className="relative z-10 flex flex-col items-center">
+                  {t.id === 'corpo' && <span className={cn("text-2xl mb-1", isAceso ? "text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]" : "text-white/40")}>❤️</span>}
+                  {t.id === 'intuicao' && <span className={cn("text-2xl mb-1", isAceso ? "text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]" : "text-white/40")}>🌙</span>}
+                  {t.id === 'desejo' && <span className={cn("text-2xl mb-1", isAceso ? "text-orange-500 drop-shadow-[0_0_10px_rgba(249,115,22,0.8)]" : "text-white/40")}>🔥</span>}
+                  {t.id === 'limites' && <span className={cn("text-2xl mb-1", isAceso ? "text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]" : "text-white/40")}>🛡️</span>}
+                  {t.id === 'criatividade' && <span className={cn("text-2xl mb-1", isAceso ? "text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]" : "text-white/40")}>🌿</span>}
+                  {t.id === 'vitalidade' && <span className={cn("text-2xl mb-1", isAceso ? "text-gold drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]" : "text-white/40")}>🐾</span>}
+                </div>
                 
                 <span className={cn(
                   "text-[8px] font-black uppercase tracking-[0.2em] relative z-10",
                   isAceso ? "text-gold" : "text-white/40"
                 )}>{t.nome}</span>
-              </motion.div>
-
-              {/* Status Label (Mini) */}
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5 + i * 0.1 }}
-                className={cn(
-                  "mt-2 px-3 py-1 rounded-full border text-[7px] uppercase tracking-widest font-black",
-                  isAceso ? "bg-gold/10 border-gold/20 text-gold" : "bg-white/5 border-white/5 text-white/30"
-                )}
-              >
-                {estado}
+                
+                <span className={cn(
+                  "text-[7px] uppercase tracking-[0.1em] font-black mt-1 relative z-10",
+                  isAceso ? "text-gold/60" : "text-white/20"
+                )}>• {estado}</span>
               </motion.div>
             </div>
           </motion.div>
