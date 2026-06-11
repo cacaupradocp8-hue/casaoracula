@@ -179,11 +179,11 @@ export function MandalaFinal({ estados }: Props) {
           
           {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
           <div 
-            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-50"
+            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60"
             style={{ 
               background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
-                : `radial-gradient(circle, transparent 20%, #000 70%)`
+                ? `radial-gradient(circle, transparent 30%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 30%, #000 85%)`
             }}
           />
         </div>
