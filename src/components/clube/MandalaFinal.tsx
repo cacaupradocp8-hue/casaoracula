@@ -174,7 +174,9 @@ export function MandalaFinal({ estados }: Props) {
           <div 
             className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-50"
             style={{ 
-              background: `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}` 
+              background: spotlightBackground !== 'none' 
+                ? `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 20%, #000 70%)`
             }}
           />
         </div>
