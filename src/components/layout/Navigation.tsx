@@ -171,8 +171,9 @@ export function Navigation() {
     <>
       <nav className={cn(
         "fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500 ease-in-out",
-        location.pathname === '/clube' 
+        location.pathname === '/clube' || location.pathname.startsWith('/clube/rotas/')
           ? "bg-[#000814]/80 border-blue-900/20 backdrop-blur-3xl" 
+
           : "border-white/5 bg-background/60 backdrop-blur-2xl shadow-[0_2px_20px_-10px_rgba(0,0,0,0.5)]"
       )}>
         <div className="w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10">
