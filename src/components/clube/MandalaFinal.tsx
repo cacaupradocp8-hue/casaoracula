@@ -25,7 +25,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'desejo', 
     nome: 'Desejo', 
-    pos: { top: '27.5%', left: '81%' },
+    pos: { top: '27.4%', left: '81.2%' },
     narrativa: {
       Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
       Oscilante: "Uma chama que vacila entre o que você realmente quer e o que acredita que deve querer.",
