@@ -152,7 +152,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                   <BookOpen className="w-8 h-8 text-gold/60" />
                 </div>
               </div>
-              <h1 className="text-5xl md:text-7xl text-white italic tracking-tight leading-tight">Mapa do Instinto Soterrado™</h1>
+              <h1 className="text-3xl xs:text-5xl md:text-7xl text-white italic tracking-tight leading-tight px-4 break-words">Mapa do Instinto Soterrado™</h1>
               <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
               <p className="text-white/70 italic text-xl max-w-2xl mx-auto leading-relaxed">
                 Esta não é uma avaliação. É uma travessia narrativa pelos territórios da sua natureza selvagem. <br/>
@@ -198,9 +198,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
             <div className="max-w-2xl w-full space-y-12">
               <div className="text-center space-y-6">
-                <h2 className="text-4xl md:text-5xl text-white italic leading-tight">
+                <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 break-words">
                   {TRAVESSIA_ETAPAS[currentIdx].titulo}
                 </h2>
+
                 <p className="text-white/60 text-lg md:text-xl italic leading-relaxed max-w-xl mx-auto font-light">
                   {TRAVESSIA_ETAPAS[currentIdx].intro}
                 </p>
@@ -254,7 +255,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 <div className="flex justify-center mb-2">
                   <Compass className="w-10 h-10 text-gold/20 animate-pulse" />
                 </div>
-                <h1 className="text-5xl md:text-7xl text-white italic tracking-tight">Sua Cartografia Instintiva</h1>
+                <h1 className="text-3xl xs:text-5xl md:text-7xl text-white italic tracking-tight px-4 break-words">Sua Cartografia Instintiva</h1>
                 <p className="text-gold/60 italic text-xl">A loba continua deixando sinais em sua trilha.</p>
               </div>
               <div className="h-px w-32 bg-gold/20 mx-auto" />
@@ -322,9 +323,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             <section className="text-center space-y-12">
               <div className="space-y-6">
                 <h3 className="text-gold/40 italic text-[10px] tracking-[0.4em] uppercase font-black">Primeiro Gesto de Retorno</h3>
-                <p className="text-3xl md:text-5xl text-white italic leading-tight max-w-2xl mx-auto font-light">
+                <p className="text-2xl xs:text-3xl md:text-5xl text-white italic leading-tight max-w-2xl mx-auto font-light px-4 break-words">
                   "{maisSoterrado ? `Qual necessidade do seu ${maisSoterrado.nome.toLowerCase()} você vem traduzindo apenas como uma obrigação?` : 'Qual sinal você tem ignorado por medo de ser livre?'}"
                 </p>
+
               </div>
               
               <button 
