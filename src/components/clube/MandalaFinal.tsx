@@ -164,28 +164,30 @@ export function MandalaFinal({ estados }: Props) {
         />
 
         {/* Imagem de Fundo (A Mandala Oficial) */}
-        <div className="absolute inset-0 z-10">
-          <img 
-            src={mandalaArte} 
-            alt="Mandala do Instinto Soterrado" 
-            width={1024}
-            height={1024}
-            loading="lazy"
-            className={cn(
-              "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
-              hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
-            )}
-          />
-          
-          {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
-          <div 
-            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60"
-            style={{ 
-              background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 35%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
-                : `radial-gradient(circle, transparent 35%, #000 85%)`
-            }}
-          />
+        <div className="absolute inset-0 z-10 flex items-center justify-center p-[5%]">
+          <div className="relative w-full h-full flex items-center justify-center">
+            <img 
+              src={mandalaArte} 
+              alt="Mandala do Instinto Soterrado" 
+              width={1024}
+              height={1024}
+              loading="lazy"
+              className={cn(
+                "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
+                hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
+              )}
+            />
+            
+            {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
+            <div 
+              className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60 rounded-full"
+              style={{ 
+                background: spotlightBackground !== 'none' 
+                  ? `radial-gradient(circle, transparent 35%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                  : `radial-gradient(circle, transparent 35%, #000 85%)`
+              }}
+            />
+          </div>
         </div>
 
         {/* Elementos da UI (Sobre a Imagem) */}
