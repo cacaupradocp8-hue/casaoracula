@@ -149,10 +149,11 @@ export function EscutaPremium({
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
-              "w-56 h-56 sm:w-64 sm:h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
-              "bg-[#0a0a0a] shadow-[0_0_120px_rgba(0,0,0,1),0_0_60px_rgba(212,175,55,0.4)] overflow-hidden",
-              "border-[12px] border-[#1a1a1a] ring-2 ring-gold/20"
+              "w-52 h-52 sm:w-64 sm:h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
+              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.8),0_0_40px_rgba(212,175,55,0.3)] md:shadow-[0_0_120px_rgba(0,0,0,1),0_0_60px_rgba(212,175,55,0.4)] overflow-hidden",
+              "border-[8px] md:border-[12px] border-[#1a1a1a] ring-1 md:ring-2 ring-gold/20"
             )}
+
           >
 
             {/* Vinil Texture Effect - Fine lines */}
@@ -197,10 +198,11 @@ export function EscutaPremium({
 
         {/* Playback Status */}
         <div className="text-center space-y-4 pt-6">
-          <div className="flex items-center justify-center gap-4 text-gold text-[10px] uppercase tracking-[0.5em] font-black">
-            <span className="w-2 h-2 rounded-full bg-gold animate-ping shadow-[0_0_12px_rgba(212,175,55,1)]" />
+          <div className="flex items-center justify-center gap-2 md:gap-4 text-gold text-[8px] md:text-[10px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-black">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-gold animate-ping shadow-[0_0_12px_rgba(212,175,55,1)]" />
             REPRODUZINDO AGORA
           </div>
+
           {titulo && (
             <h3 className="text-white font-display font-black tracking-widest text-3xl md:text-5xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent">
               {titulo}

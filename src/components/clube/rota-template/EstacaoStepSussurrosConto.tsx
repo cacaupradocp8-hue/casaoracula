@@ -102,33 +102,22 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
           >
             <div className="text-center space-y-4">
               <span className="text-[10px] text-gold uppercase tracking-[0.5em] font-black">Conto Central</span>
-              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block">
+              <h2 className="text-4xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase relative inline-block">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
                   {contoData.titulo}
                 </span>
               </h2>
             </div>
 
-            {contoData.imagemUrl && (
-              <div className="aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl relative">
-                <img 
-                  src={contoData.imagemUrl} 
-                  alt={contoData.titulo} 
-                  className="w-full h-full object-cover" 
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = "/clareira-fundo.png";
-                  }}
-                />
-              </div>
-            )}
 
 
-            <Card className="bg-white/[0.03] border-white/10 p-8 rounded-[2rem] space-y-6">
+            <Card className="bg-white/[0.03] border-white/10 p-4 md:p-8 rounded-[1.5rem] md:rounded-[2rem] space-y-6">
               <TextCarousel 
                 text={contoData.sintese} 
-                className="text-center italic"
+                className="text-center italic text-sm md:text-base"
               />
             </Card>
+
 
             {contoData.audioUrl && (
               <div className="py-8 border-y border-white/5 my-8">
@@ -168,9 +157,10 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('escuta_conto')}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs transition-all group"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs transition-all group w-full md:w-auto"
               >
                 Ouvir os Sussurros
+
                 <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
@@ -198,13 +188,14 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'chamado', q: "O que começa a chamar?" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <label className="text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30">{item.q}</label>
+                  <label className="text-lg md:text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30">{item.q}</label>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
                     placeholder="Sua percepção..."
-                    className="bg-white/[0.03] border-white/10 min-h-[120px] rounded-[1.5rem] p-8 font-serif italic text-lg focus:bg-white/[0.05] focus:border-gold/30 transition-all resize-none shadow-inner"
+                    className="bg-white/[0.03] border-white/10 min-h-[100px] md:min-h-[120px] rounded-[1.2rem] md:rounded-[1.5rem] p-4 md:p-8 font-serif italic text-base md:text-lg focus:bg-white/[0.05] focus:border-gold/30 transition-all resize-none shadow-inner"
                   />
+
                 </div>
               ))}
             </div>
