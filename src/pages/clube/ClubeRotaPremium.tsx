@@ -344,17 +344,23 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
-                {currentStep === 7 && (
+                {currentStep === 7 && (slug === 'clareira-do-chamado' ? (
+                  <MapaInstintoSoterrado 
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    onNext={handleNext}
+                  />
+                ) : (
                   <EstacaoStepFerramentaOracular 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
-                    nome={estacao.ferramenta_nome || 'Mapa do Instinto Soterrado'}
+                    nome={estacao.ferramenta_nome || 'Ferramenta Oracular'}
                     descricao={estacao.ferramenta_descricao || ''}
                     eixos={estacao.ferramenta_eixos || []}
                     resultados={estacao.ferramenta_resultados || []}
                     onNext={handleNext}
                   />
-                )}
+                ))}
 
                 {currentStep === 8 && (
                   <EstacaoStepJardim 
