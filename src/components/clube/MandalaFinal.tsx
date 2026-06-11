@@ -134,6 +134,11 @@ const ESTADOS_STYLE = {
 
 export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Calcula se há algum território aceso para efeitos globais
   const hasAceso = Object.values(estados).some(e => e === 'Aceso');
