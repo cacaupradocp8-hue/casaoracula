@@ -41,7 +41,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           {obraRegente || "Obra Regente"}
           <span className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
         </h4>
-        <h1 className="text-6xl md:text-8xl font-display font-black text-white tracking-[0.15em] leading-[1.1] uppercase relative inline-block group">
+        <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-black text-white tracking-[0.15em] leading-[1.1] uppercase relative inline-block group">
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
             {titulo.replace('Estação', '').replace('—', '').trim()}
           </span>
