@@ -282,7 +282,9 @@ export default function ClubeRotaPremium() {
                       titulo: estacao.conto_titulo || 'Conto da Estação',
                       sintese: estacao.conto_sintese || 'Síntese do conto...',
                       texto: estacao.conto_texto || '',
-                      audioUrl: estacao.conto_audio_url || '',
+                      audioUrl: (slug === 'casa-da-boneca-interior' && currentStep === 3) 
+                        ? 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1781206510506.ogg' 
+                        : (estacao.conto_audio_url || ''),
                       imagemUrl: estacao.conto_imagem_url || '',
                       erroComum: estacao.conto_erro_comum || 'Erro comum de leitura...',
                       sussurroGuardia: estacao.conto_sussurro_guardia || 'Sussurro da Guardiã...'
