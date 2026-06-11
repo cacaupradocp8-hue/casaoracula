@@ -30,8 +30,8 @@ export function ResponsiveContainer({
     <div
       className={cn(
         'w-full mx-auto px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 2xl:px-16 3xl:px-20',
-        // Intelligent fluid width: use viewport units for small screens, limit for large
-        'w-[min(100%,var(--container-width))]',
+        'min-w-0',
+
         sizeClasses[size],
         className
       )}

@@ -35,24 +35,25 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
       {/* Header Info - Minimalist */}
-      <div className="space-y-6 pt-8">
-        <h4 className="text-gold text-[10px] md:text-xs uppercase tracking-[0.5em] font-black flex items-center justify-center gap-4">
-          <span className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+      <div className="space-y-4 md:space-y-6 pt-4 md:pt-8">
+        <h4 className="text-gold text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-black flex items-center justify-center gap-2 md:gap-4">
+          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
           {obraRegente || "Obra Regente"}
-          <span className="w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
         </h4>
-        <h1 className="text-4xl sm:text-6xl md:text-8xl font-display font-black text-white tracking-[0.15em] leading-[1.1] uppercase relative inline-block group">
+        <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-[1.1] uppercase relative inline-block group px-4">
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
             {titulo.replace('Estação', '').replace('—', '').trim()}
           </span>
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: 160 }}
+            animate={{ width: '60%' }}
             transition={{ delay: 0.5, duration: 1 }}
-            className="absolute -bottom-6 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-transparent via-gold/60 to-transparent" 
+            className="absolute -bottom-4 md:-bottom-6 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-transparent via-gold/60 to-transparent" 
           />
         </h1>
       </div>
+
 
       {/* Main Player */}
       <div className="relative">
