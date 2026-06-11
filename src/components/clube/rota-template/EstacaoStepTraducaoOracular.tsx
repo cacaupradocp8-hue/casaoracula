@@ -103,11 +103,12 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Compass className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4">
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
                   Tradução Oracular
                 </span>
               </h2>
+
 
               <p className="text-gold/60 text-base md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
                 “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
