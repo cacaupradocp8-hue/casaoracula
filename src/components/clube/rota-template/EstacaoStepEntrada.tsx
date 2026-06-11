@@ -54,7 +54,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
         <EscutaPremium 
           audioUrl={audioAberturaUrl} 
           titulo="Abertura da Estação" 
-          imagemEscuta="/clareira-disco.png"
+          imagemEscuta="https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"
           className="py-0"
         />
       </div>

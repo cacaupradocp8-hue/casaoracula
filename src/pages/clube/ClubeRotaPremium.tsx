@@ -154,12 +154,12 @@ export default function ClubeRotaPremium() {
             } 
             alt="" 
             className={cn(
-              "w-full h-full object-cover",
-              slug === 'clareira-do-chamado' ? "opacity-40 grayscale brightness-[0.2]" : "opacity-80"
+              "w-full h-full object-cover transition-opacity duration-1000",
+              slug === 'clareira-do-chamado' ? "opacity-60 grayscale-[0.3] brightness-[0.4]" : "opacity-80"
             )}
           />
-          <div className="absolute inset-0 bg-[#020617]/20" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/10 to-[#020617]" />
+          <div className="absolute inset-0 bg-[#020617]/40" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/60 via-[#020617]/20 to-[#020617]" />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
