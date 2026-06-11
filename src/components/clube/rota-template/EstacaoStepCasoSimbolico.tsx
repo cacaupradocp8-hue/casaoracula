@@ -94,11 +94,12 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <User className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-                  Caso Simbólico
+                  Caso <br className="xs:hidden" /> Simbólico
                 </span>
               </h2>
+
               <p className="text-gold/60 text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
                 “Onde o conto encontra a vida real.”
               </p>
