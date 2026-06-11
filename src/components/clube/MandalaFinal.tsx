@@ -61,7 +61,54 @@ const ESTADOS_MAP = {
 export function MandalaFinal({ estados }: Props) {
   return (
     <div className="flex flex-col items-center w-full min-h-[800px] justify-center overflow-visible">
-      <div className="relative w-full aspect-square max-w-[700px] mx-auto flex items-center justify-center bg-transparent scale-90 sm:scale-100">
+      <div className="relative w-full aspect-square max-w-[750px] mx-auto flex items-center justify-center bg-transparent scale-90 sm:scale-100 p-8">
+        
+        {/* Organic Flowing Lines / Ribbons to give "cara de mandala" */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          <svg className="w-full h-full" viewBox="0 0 800 800">
+            <defs>
+              <linearGradient id="gold-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#d4af37" stopOpacity="0" />
+                <stop offset="50%" stopColor="#d4af37" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="#d4af37" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            {[...Array(3)].map((_, i) => (
+              <motion.circle
+                key={`orb-${i}`}
+                cx="400" cy="400"
+                r={280 + i * 40}
+                stroke="url(#gold-grad)"
+                strokeWidth="1.5"
+                fill="none"
+                animate={{ 
+                  rotate: 360,
+                  scale: [1, 1.05, 1],
+                  opacity: [0.1, 0.3, 0.1]
+                }}
+                transition={{ 
+                  rotate: { duration: 40 + i * 20, repeat: Infinity, ease: "linear" },
+                  scale: { duration: 10 + i * 2, repeat: Infinity, ease: "easeInOut" },
+                  opacity: { duration: 10 + i * 2, repeat: Infinity, ease: "easeInOut" }
+                }}
+              />
+            ))}
+            {/* Wave paths */}
+            {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+              <motion.path
+                key={`wave-${i}`}
+                d="M400,400 Q450,300 500,400 T600,400"
+                stroke="#d4af37"
+                strokeWidth="0.5"
+                fill="none"
+                className="opacity-10"
+                style={{ originX: "400px", originY: "400px" }}
+                animate={{ rotate: angle, scale: [1, 1.1, 1] }}
+                transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+              />
+            ))}
+          </svg>
+        </div>
         
         {/* Background Decorative Element (Leaves/Branches) as seen in the model */}
         <div className="absolute inset-0 opacity-40 pointer-events-none overflow-visible flex items-center justify-center">
@@ -133,12 +180,23 @@ export function MandalaFinal({ estados }: Props) {
           style={{ background: 'radial-gradient(circle, rgba(15,15,20,0.98) 0%, rgba(5,5,10,0.9) 100%)' }}
         >
           <div className="relative flex flex-col items-center">
-            {/* The Wolf Icon from the model */}
-            <img 
-              src="https://lovable-project.s3.amazonaws.com/loba-icon.png" 
-              alt="A Loba" 
-              className="w-16 h-16 md:w-20 md:h-20 object-contain filter brightness-125 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
-            />
+            {/* The Wolf Icon - Using a more reliable path or SVG directly if image fails */}
+            <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+              <img 
+                src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/loba-icon.png" 
+                alt="A Loba" 
+                className="w-full h-full object-contain filter brightness-125 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
+                onError={(e) => {
+                  // Fallback to PawPrint if image fails
+                  e.currentTarget.style.display = 'none';
+                  const fallback = e.currentTarget.parentElement?.querySelector('.fallback-icon') as HTMLElement;
+                  if (fallback) fallback.style.display = 'block';
+                }}
+              />
+              <div className="fallback-icon hidden">
+                <PawPrint className="w-12 h-12 text-[#d4af37] animate-pulse" />
+              </div>
+            </div>
             <span className="text-[12px] md:text-[14px] uppercase tracking-[0.5em] font-black text-[#d4af37] mt-3">A Loba</span>
           </div>
           
