@@ -69,7 +69,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'vitalidade', 
     nome: 'Vitalidade', 
-    pos: { top: '27.5%', left: '19%' },
+    pos: { top: '27.4%', left: '18.9%' },
     narrativa: {
       Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
       Oscilante: "A energia sobe e desce, num ritmo que ainda não encontrou seu centro de repouso.",
