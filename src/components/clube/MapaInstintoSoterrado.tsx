@@ -288,43 +288,74 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
           <MandalaFinal estados={estados} />
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4">
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-gold" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Aceso</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-[#c5a059] opacity-60" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Oscilante</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Soterrado</span>
+            </div>
+            <div className="flex items-center gap-2 justify-center">
+              <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
+              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Exaustão</span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4 text-gold" />
-                </div>
-                <h4 className="text-gold font-bold uppercase tracking-widest text-[10px]">Pegadas Encontradas</h4>
+                <Sparkles className="w-4 h-4 text-gold" />
+                <h4 className="text-gold font-bold uppercase tracking-widest text-[9px]">Pegadas Encontradas</h4>
               </div>
-              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
-                A loba continua deixando sinais em:
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">A loba continua deixando sinais em:</p>
+              <div className="space-y-2">
                 {acesoTerritorios.map(t => (
-                  <span key={t.id} className="bg-gold/10 text-gold px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-gold/10">
-                    {t.nome}
-                  </span>
+                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                    <span>{t.icon}</span>
+                    <span>{t.nome}</span>
+                  </div>
                 ))}
-                {acesoTerritorios.length === 0 && <span className="text-white/20 italic">Buscando novos sinais...</span>}
               </div>
             </Card>
 
-            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                  <Compass className="w-4 h-4 text-white/60" />
-                </div>
-                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Pegadas Quase Apagadas</h4>
+                <Compass className="w-4 h-4 text-orange-400" />
+                <h4 className="text-orange-400 font-bold uppercase tracking-widest text-[9px]">Pegadas Quase Apagadas</h4>
               </div>
-              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
-                Os rastros estão mais difíceis de perceber em:
-              </p>
-              <div className="flex flex-wrap gap-2">
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Os rastros estão mais difíceis de perceber em:</p>
+              <div className="space-y-2">
                 {soterradoTerritorios.map(t => (
-                  <span key={t.id} className="bg-white/10 text-white/60 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/5">
-                    {t.nome}
-                  </span>
+                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                    <span>{t.icon}</span>
+                    <span>{t.nome}</span>
+                  </div>
                 ))}
+              </div>
+            </Card>
+
+            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
+              <div className="flex items-center gap-3">
+                <Shield className="w-4 h-4 text-white/60" />
+                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[9px]">Pegadas que precisam de cuidado</h4>
+              </div>
+              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Áreas que pedem respeito antes de qualquer ação:</p>
+              <div className="space-y-2">
+                {Object.entries(estados).filter(([_, e]) => e === 'Exausto').map(([id]) => {
+                  const t = TERRITORIOS.find(tt => tt.id === id);
+                  return t && (
+                    <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
+                      <span>{t.icon}</span>
+                      <span>{t.nome}</span>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
           </div>
