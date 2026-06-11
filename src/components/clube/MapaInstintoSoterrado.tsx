@@ -26,32 +26,32 @@ const EIXOS = [
 ];
 
 const PERGUNTAS = [
-  { id: 'corpo', label: 'Corpo', perguntas: [
+  { id: 'corpo', label: 'Corpo', nome: 'Corpo', icon: '❤️', perguntas: [
     'Quando o cansaço atravessa sua jornada, de que forma seu corpo costuma sinalizar que o passo precisa mudar?',
     'Ao fechar os olhos por um instante, você consegue distinguir onde termina a sua energia e onde começa a expectativa do mundo sobre seus movimentos?',
     'Nas últimas travessias, com que frequência você percebeu que seu corpo só foi ouvido quando a dor precisou gritar?'
   ]},
-  { id: 'intuicao', label: 'Intuição', perguntas: [
+  { id: 'intuicao', label: 'Intuição', nome: 'Intuição', icon: '🌙', perguntas: [
     'Quando uma percepção surge antes de qualquer explicação lógica, que destino você costuma dar a esse sinal?',
     'No silêncio das suas decisões, quanto espaço existe para a sua voz interna sem que ela precise de provas para ser real?',
     'Ao revisitar rastros antigos, quantos deles revelam que a sua primeira percepção já sabia o caminho, mesmo antes de você aceitá-lo?'
   ]},
-  { id: 'desejo', label: 'Desejo', perguntas: [
+  { id: 'desejo', label: 'Desejo', nome: 'Desejo', icon: '🔥', perguntas: [
     'Quando um interesse genuíno acende uma faísca em você, qual o movimento natural que essa chama costuma seguir?',
     'Você consegue identificar quando um querer nasce da sua própria natureza ou quando ele é apenas um eco do que os outros esperam?',
     'Como fica a paisagem interna quando um desejo autêntico é deixado para trás em nome de uma necessidade que não é sua?'
   ]},
-  { id: 'limites', label: 'Limites', perguntas: [
+  { id: 'limites', label: 'Limites', nome: 'Limites', icon: '🛡', perguntas: [
     'Ao perceber que um espaço ou energia sua está sendo ocupada por algo externo, como seus contornos costumam reagir?',
     'Existe um sensor interno que aponta o momento exato em que um "sim" começa a corroer a sua própria integridade?',
     'Quanto do peso que você carrega hoje pertence ao seu próprio caminho e quanto foi absorvido de trilhas alheias?'
   ]},
-  { id: 'criatividade', label: 'Criatividade', perguntas: [
+  { id: 'criatividade', label: 'Criatividade', nome: 'Criatividade', icon: '🌿', perguntas: [
     'Quando uma nova possibilidade se apresenta à sua mente, qual o primeiro gesto que você costuma oferecer a ela?',
     'Há uma clareira em sua rotina onde as ideias podem brincar e ser inúteis, sem a cobrança de gerar um resultado imediato?',
     'Como as cores e soluções novas têm chegado até você: como um fluxo livre ou como algo que precisa ser arrancado da exaustão?'
   ]},
-  { id: 'vitalidade', label: 'Vitalidade', perguntas: [
+  { id: 'vitalidade', label: 'Vitalidade', nome: 'Vitalidade', icon: '🐺', perguntas: [
     'Ao despertar para um novo ciclo, com que intensidade a loba em você sente que a vida vale o esforço de ser vivida?',
     'Você consegue mapear com clareza quais encontros e tarefas devolvem a sua presença e quais apenas drenam o seu rastro?',
     'Quanto da sua energia vital tem sido investida naquilo que realmente faz o seu sangue pulsar com entusiasmo?'
