@@ -22,7 +22,7 @@ export const TERRITORIOS: Territorio[] = [
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
       Oscilante: "Há um sussurro que oscila, esperando o silêncio necessário para se tornar clareza.",
       Soterrado: "A voz interna está abafada por camadas de certezas externas que precisam ser removidas.",
-      Exausto: "O rastro da intuição está quase invisível sob o peso da exaustão mental."
+      Exausto: "O rastro da intuição está quase invisível sem o peso da exaustão mental."
     }
   },
   { 
@@ -140,15 +140,12 @@ export function MandalaFinal({ estados }: Props) {
     setMounted(true);
   }, []);
 
-  // Calcula se há algum território aceso para efeitos globais
   const hasAceso = Object.values(estados).some(e => e === 'Aceso');
 
-  // Gera o background de "holofotes" para territórios acesos
   const spotlightBackground = useMemo(() => {
     const spotlights = TERRITORIOS.map(t => {
       const estado = estados[t.id];
       if (estado === 'Aceso') {
-        // Ajuste fino das coordenadas para alinhar com o object-contain da imagem (p-5%)
         return `radial-gradient(circle at ${t.pos.left} ${t.pos.top}, rgba(212, 175, 55, 0.35) 0%, transparent 22%)`;
       }
       return null;
@@ -163,44 +160,41 @@ export function MandalaFinal({ estados }: Props) {
       mounted ? "opacity-100" : "opacity-0"
     )}>
       
-      {/* Container da Arte Oficial */}
+      {/* Container Principal com Proporção Fixa */}
       <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden">
         
-        {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
+        {/* 1. Camada de Fundo (Spotlights) */}
         <div 
           className="absolute inset-0 z-0 transition-all duration-1000 opacity-60"
           style={{ background: spotlightBackground }}
         />
 
-        {/* Imagem de Fundo (A Mandala Oficial) */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center p-[5%]">
-          <div className="relative w-full h-full flex items-center justify-center">
-            <img 
-              src={mandalaArte} 
-              alt="Mandala do Instinto Soterrado" 
-              width={1024}
-              height={1024}
-              loading="lazy"
-              className={cn(
-                "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
-                hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
-              )}
-            />
-            
-            {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
-            <div 
-              className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-60 rounded-full"
-              style={{ 
-                background: spotlightBackground !== 'none' 
-                  ? `radial-gradient(circle, transparent 35%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
-                  : `radial-gradient(circle, transparent 35%, #000 85%)`
-              }}
-            />
-          </div>
+        {/* 2. Camada da Imagem (Mandala) */}
+        <div className="absolute inset-0 z-10 p-[5%] flex items-center justify-center">
+          <img 
+            src={mandalaArte} 
+            alt="Mandala do Instinto Soterrado" 
+            className={cn(
+              "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
+              hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
+            )}
+          />
         </div>
 
-        {/* Elementos da UI (Sobre a Imagem) */}
-        <div className="absolute inset-0 z-20 p-[5%]">
+        {/* 3. Camada de Overlay (Sombra/Grades) */}
+        <div className="absolute inset-0 z-20 p-[5%] flex items-center justify-center pointer-events-none">
+          <div 
+            className="w-full h-full mix-blend-multiply opacity-60 rounded-full"
+            style={{ 
+              background: spotlightBackground !== 'none' 
+                ? `radial-gradient(circle, transparent 35%, #000 85%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 35%, #000 85%)`
+            }}
+          />
+        </div>
+
+        {/* 4. Camada de Elementos Interativos (UI) */}
+        <div className="absolute inset-0 z-30 p-[5%]">
           {/* A LOBA (Centro) */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gold/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
@@ -209,7 +203,7 @@ export function MandalaFinal({ estados }: Props) {
             <h4 className="mt-2 text-[10px] md:text-xs text-gold/80 font-serif uppercase tracking-[0.4em] font-bold">A Loba</h4>
           </div>
 
-          {/* Hotspots e Efeitos Visuais sobre a Arte */}
+          {/* Territórios */}
           {TERRITORIOS.map((t) => {
             const estado = estados[t.id] || 'Soterrado';
             const style = ESTADOS_STYLE[estado];
@@ -220,9 +214,8 @@ export function MandalaFinal({ estados }: Props) {
                 className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-[25%] h-[25%]"
                 style={{ top: t.pos.top, left: t.pos.left }}
               >
-                {/* Círculo com Ícone e Estado */}
+                {/* Elemento Visual do Território */}
                 <div className="relative flex flex-col items-center group">
-                  {/* Hotspot de Interação (Invisível mas clicável) */}
                   <button
                     onClick={() => setSelectedTerritorio(t)}
                     className="w-16 h-16 md:w-20 md:h-20 rounded-full z-50 cursor-pointer focus:outline-none relative"
@@ -238,7 +231,7 @@ export function MandalaFinal({ estados }: Props) {
                     </div>
                   </button>
 
-                  {/* Nome e Estado do Território (Fiel à imagem) */}
+                  {/* Nome e Estado */}
                   <div className="mt-2 text-center pointer-events-none z-30">
                     <h4 className={cn(
                       "text-[10px] md:text-xs font-serif uppercase tracking-[0.2em] transition-colors duration-500",
@@ -254,7 +247,7 @@ export function MandalaFinal({ estados }: Props) {
                     </div>
                   </div>
 
-                  {/* Efeito de Brilho/Pulsar (Apenas Aceso) */}
+                  {/* Efeito de Brilho */}
                   {estado === 'Aceso' && (
                     <motion.div
                       animate={style.animation}
@@ -268,7 +261,7 @@ export function MandalaFinal({ estados }: Props) {
                   )}
                 </div>
                 
-                {/* Partículas para estado Aceso */}
+                {/* Partículas */}
                 {estado === 'Aceso' && (
                   <div className="absolute inset-0 pointer-events-none overflow-visible">
                     {[...Array(6)].map((_, i) => (
@@ -295,7 +288,7 @@ export function MandalaFinal({ estados }: Props) {
           })}
         </div>
 
-        {/* Painel Flutuante Narrativo */}
+        {/* 5. Camada Superior (Modal/Narrativa) */}
         <AnimatePresence>
           {selectedTerritorio && (
             <motion.div
@@ -331,8 +324,8 @@ export function MandalaFinal({ estados }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Legenda de Estados - Fiel à Referência */}
-      <div className="mt-12 w-full max-w-[600px] px-6 py-4 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
+      {/* Legenda */}
+      <div className="mt-12 w-full max-w-[600px] px-6 py-4 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12 z-50">
         {Object.entries(ESTADOS_STYLE).map(([nome, config]) => (
           <div key={nome} className="flex items-center gap-2">
             <div className={cn("w-2 h-2 rounded-full", config.dot)} />
