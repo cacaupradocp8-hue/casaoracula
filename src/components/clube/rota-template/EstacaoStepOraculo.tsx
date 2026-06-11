@@ -80,14 +80,15 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
                   Oráculo da Estação
                 </span>
               </h2>
-              <p className="text-gold/60 text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
+              <p className="text-gold/60 text-base md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
                 “A imagem que sela a travessia.”
               </p>
+
             </div>
 
             <div className="relative group perspective-1000 mx-auto max-w-sm">
