@@ -192,7 +192,7 @@ export function MandalaFinal({ estados }: Props) {
         </div>
 
         {/* Elementos da UI (Sobre a Imagem) */}
-        <div className="absolute inset-0 z-20">
+        <div className="absolute inset-0 z-20 p-[5%]">
           {/* A LOBA (Centro) */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center z-40">
             <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-gold/40 flex items-center justify-center bg-black/60 backdrop-blur-md shadow-[0_0_30px_rgba(212,175,55,0.2)]">
