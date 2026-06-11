@@ -148,7 +148,10 @@ export default function ClubeRotaPremium() {
         {/* Background Image Container */}
         <div className="fixed inset-0 z-0">
           <img 
-            src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
+            src={slug === 'clareira-do-chamado' 
+              ? "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206950341.jpg"
+              : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")
+            } 
             alt="" 
             className={cn(
               "w-full h-full object-cover",
@@ -286,7 +289,7 @@ export default function ClubeRotaPremium() {
                         ? 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1781206510506.ogg' 
                         : (estacao.conto_audio_url || ''),
                       imagemUrl: (slug === 'clareira-do-chamado' && currentStep === 3)
-                        ? 'https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg'
+                        ? 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206890341.jpg'
                         : (estacao.conto_imagem_url || ''),
                       erroComum: estacao.conto_erro_comum || 'Erro comum de leitura...',
                       sussurroGuardia: estacao.conto_sussurro_guardia || 'Sussurro da Guardiã...'
