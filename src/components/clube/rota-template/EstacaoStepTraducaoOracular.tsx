@@ -114,6 +114,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                 “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
               </p>
 
+
             </div>
             
             <div className="bg-white/[0.02] border border-white/5 p-6 md:p-10 rounded-[2rem] md:rounded-[32px] space-y-6 max-w-3xl mx-auto">
