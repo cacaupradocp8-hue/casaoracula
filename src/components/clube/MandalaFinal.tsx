@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 import { cn } from '@/lib/utils';
 import { Moon, Flame, Shield, Heart, Leaf, PawPrint } from 'lucide-react';
 
@@ -27,91 +26,102 @@ interface Props {
 const ESTADOS_MAP = {
   Aceso: { 
     color: 'text-[#d4af37]', 
-    shadow: 'shadow-[0_0_40px_rgba(212,175,55,0.4)]', 
-    border: 'border-[#d4af37]/60', 
+    shadow: 'shadow-[0_0_50px_rgba(212,175,55,0.6)]', 
+    border: 'border-[#d4af37]/80', 
     iconColor: 'text-[#d4af37]',
-    dotColor: 'bg-[#d4af37]'
+    dotColor: 'bg-[#d4af37]',
+    glowIntensity: '0.8'
   },
   Oscilante: { 
     color: 'text-[#c5a059]', 
-    shadow: 'shadow-[0_0_30px_rgba(197,160,89,0.3)]', 
-    border: 'border-[#c5a059]/40', 
+    shadow: 'shadow-[0_0_30px_rgba(197,160,89,0.4)]', 
+    border: 'border-[#c5a059]/50', 
     iconColor: 'text-[#c5a059]',
-    dotColor: 'bg-[#c5a059]/60'
+    dotColor: 'bg-[#c5a059]',
+    glowIntensity: '0.4'
   },
   Soterrado: { 
     color: 'text-white/40', 
     shadow: 'shadow-none', 
-    border: 'border-white/10', 
-    iconColor: 'text-white/20',
-    dotColor: 'bg-white/20'
+    border: 'border-white/20', 
+    iconColor: 'text-white/30',
+    dotColor: 'bg-white/30',
+    glowIntensity: '0'
   },
   Exausto: { 
     color: 'text-white/20', 
     shadow: 'shadow-none', 
-    border: 'border-white/5', 
-    iconColor: 'text-white/10',
-    dotColor: 'bg-white/10'
+    border: 'border-white/10', 
+    iconColor: 'text-white/20',
+    dotColor: 'bg-white/10',
+    glowIntensity: '0'
   },
 };
 
 export function MandalaFinal({ estados }: Props) {
   return (
-    <div className="flex flex-col items-center w-full">
-      <div className="relative w-full aspect-square max-w-[650px] mx-auto flex items-center justify-center py-24 bg-transparent scale-90 sm:scale-100">
+    <div className="flex flex-col items-center w-full min-h-[800px] justify-center overflow-visible">
+      <div className="relative w-full aspect-square max-w-[700px] mx-auto flex items-center justify-center bg-transparent scale-90 sm:scale-100">
         
-        {/* Decorative Nature Background (Leaves/Branches simulation) */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none overflow-visible">
-          <svg className="w-full h-full" viewBox="0 0 500 500">
-            {[0, 60, 120, 180, 240, 300].map((angle, i) => (
-              <g key={`branch-${i}`} transform={`rotate(${angle} 250 250)`}>
-                <path 
-                  d="M250,250 C250,200 240,150 250,70 M250,150 L230,130 M250,120 L270,100" 
-                  stroke="#d4af37" 
-                  strokeWidth="0.5" 
-                  fill="none" 
-                  className="opacity-40"
-                />
-              </g>
-            ))}
-          </svg>
+        {/* Background Decorative Element (Leaves/Branches) as seen in the model */}
+        <div className="absolute inset-0 opacity-40 pointer-events-none overflow-visible flex items-center justify-center">
+          <div className="relative w-[500px] h-[500px]">
+             {/* Branch Circle */}
+             <svg className="absolute inset-0 w-full h-full rotate-45 scale-125" viewBox="0 0 500 500">
+               <circle cx="250" cy="250" r="220" stroke="#d4af37" fill="none" strokeWidth="1" className="opacity-10" />
+               <path 
+                 d="M250,30 A220,220 0 0,1 470,250 A220,220 0 0,1 250,470 A220,220 0 0,1 30,250 A220,220 0 0,1 250,30" 
+                 stroke="#d4af37" fill="none" strokeWidth="2" strokeDasharray="5,15" className="opacity-20"
+               />
+               {[0, 60, 120, 180, 240, 300].map((angle, i) => (
+                 <g key={`leaf-${i}`} transform={`rotate(${angle} 250 250)`}>
+                   <path 
+                     d="M250,30 L260,10 L250,5 L240,10 Z" 
+                     fill="#d4af37" 
+                     className="opacity-40"
+                   />
+                 </g>
+               ))}
+             </svg>
+          </div>
         </div>
 
-        {/* Background Geometric Lines */}
+        {/* Background Geometric Lines - Sacred Geometry Pattern */}
         <svg className="absolute inset-0 w-full h-full opacity-30 pointer-events-none" viewBox="0 0 500 500">
-          <circle cx="250" cy="250" r="180" stroke="#d4af37" fill="none" strokeWidth="0.5" className="opacity-40" />
           <circle cx="250" cy="250" r="140" stroke="#d4af37" fill="none" strokeWidth="0.5" className="opacity-20" />
           
-          {/* Main Axis Lines */}
+          {/* Main Axis Lines Connecting Center to Territorios */}
           {[0, 60, 120, 180, 240, 300].map((angle, i) => {
             const rad = (angle - 90) * (Math.PI / 180);
-            const x = 250 + Math.cos(rad) * 180;
-            const y = 250 + Math.sin(rad) * 180;
+            const x = 250 + Math.cos(rad) * 200;
+            const y = 250 + Math.sin(rad) * 200;
             return (
               <line 
                 key={i} 
                 x1="250" y1="250" x2={x} y2={y} 
                 stroke="#d4af37" 
-                strokeWidth="0.5" 
-                className="opacity-30"
+                strokeWidth="1" 
+                className="opacity-20"
               />
             );
           })}
           
-          {/* Geometric Inner Star Pattern */}
+          {/* Inner Hexagon Pattern */}
           <path 
-            d="M250,70 L300,200 L430,250 L300,300 L250,430 L200,300 L70,250 L200,200 Z" 
-            fill="none" 
-            stroke="#d4af37" 
-            strokeWidth="0.3" 
-            className="opacity-10" 
-          />
-          <path 
-            d="M250,70 L406,160 L406,340 L250,430 L94,340 L94,160 Z" 
+            d="M250,110 L371,180 L371,320 L250,390 L129,320 L129,180 Z" 
             fill="none" 
             stroke="#d4af37" 
             strokeWidth="0.5" 
-            className="opacity-20"
+            className="opacity-15"
+          />
+          
+          {/* Outer Connection Lines */}
+          <path 
+            d="M250,50 L423,150 L423,350 L250,450 L77,350 L77,150 Z" 
+            fill="none" 
+            stroke="#d4af37" 
+            strokeWidth="0.5" 
+            className="opacity-10"
           />
         </svg>
 
@@ -119,32 +129,34 @@ export function MandalaFinal({ estados }: Props) {
         <motion.div 
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="relative z-20 w-32 h-32 md:w-40 md:h-40 rounded-full border border-[#d4af37]/40 flex flex-col items-center justify-center p-4"
-          style={{ background: 'radial-gradient(circle, rgba(10,10,12,0.95) 0%, rgba(5,5,7,0.85) 100%)' }}
+          className="relative z-30 w-36 h-36 md:w-44 md:h-44 rounded-full border border-[#d4af37]/60 flex flex-col items-center justify-center p-4 shadow-[0_0_60px_rgba(212,175,55,0.3)]"
+          style={{ background: 'radial-gradient(circle, rgba(15,15,20,0.98) 0%, rgba(5,5,10,0.9) 100%)' }}
         >
           <div className="relative flex flex-col items-center">
+            {/* The Wolf Icon from the model */}
             <img 
-              src="/src/assets/logo-casa-icon-new.png" 
-              alt="Loba" 
-              className="w-16 h-16 md:w-20 md:h-20 object-contain filter brightness-110 drop-shadow-[0_0_15px_rgba(212,175,55,0.4)]"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = "https://lovable-project.s3.amazonaws.com/loba-icon.png";
-              }}
+              src="https://lovable-project.s3.amazonaws.com/loba-icon.png" 
+              alt="A Loba" 
+              className="w-16 h-16 md:w-20 md:h-20 object-contain filter brightness-125 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
             />
-            <span className="text-[11px] md:text-[12px] uppercase tracking-[0.4em] font-black text-[#d4af37] mt-3">A Loba</span>
+            <span className="text-[12px] md:text-[14px] uppercase tracking-[0.5em] font-black text-[#d4af37] mt-3">A Loba</span>
           </div>
           
-          {/* Decorative Halo */}
-          <div className="absolute inset-[-10px] rounded-full border border-[#d4af37]/10 animate-pulse" />
-          <div className="absolute inset-[-20px] rounded-full border border-[#d4af37]/5" />
+          {/* Decorative Halo - Pulsing */}
+          <motion.div 
+            animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute inset-[-15px] rounded-full border border-[#d4af37]/20" 
+          />
+          <div className="absolute inset-[-30px] rounded-full border border-[#d4af37]/5" />
         </motion.div>
         
         {TERRITORIOS.map((t, i) => {
           const angle = (i * 60 - 90) * (Math.PI / 180);
-          const radius = 200; // Increased radius for better spacing
+          const radius = 230; 
           const x = Math.cos(angle) * radius;
           const y = Math.sin(angle) * radius;
-          const estado = estados[t.id] || 'Oscilante';
+          const estado = estados[t.id] || 'Soterrado';
           const config = ESTADOS_MAP[estado];
 
           return (
@@ -152,10 +164,10 @@ export function MandalaFinal({ estados }: Props) {
               key={t.id}
               initial={{ opacity: 0, x: 0, y: 0 }}
               animate={{ opacity: 1, x, y }}
-              transition={{ delay: i * 0.1, duration: 1.2, ease: "easeOut" }}
-              className="absolute z-10"
+              transition={{ delay: i * 0.1, duration: 1.5, ease: "easeOut" }}
+              className="absolute z-20"
             >
-              <div className="flex flex-col items-center gap-3">
+              <div className="flex flex-col items-center gap-4">
                 <AnimatePresence mode="wait">
                   <motion.div 
                     key={estado}
@@ -163,38 +175,37 @@ export function MandalaFinal({ estados }: Props) {
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                     className={cn(
-                      "w-24 h-24 md:w-28 md:h-28 rounded-full border flex flex-col items-center justify-center p-2 text-center transition-all duration-1000 relative",
+                      "w-28 h-28 md:w-32 md:h-32 rounded-full border flex flex-col items-center justify-center p-2 text-center transition-all duration-1000 relative",
                       config.border,
                       config.shadow,
-                      "bg-[#0a0a0c]/90 backdrop-blur-md"
+                      "bg-[#050507]/90 backdrop-blur-xl"
                     )}
                   >
                     <div className={cn("transition-colors duration-1000", config.iconColor)}>
                       {t.icon}
                     </div>
                     
-                    {/* Subtle highlight ring for aceso/oscilante */}
+                    {/* Pulsing Light Aura for Aceso/Oscilante */}
                     {(estado === 'Aceso' || estado === 'Oscilante') && (
                       <motion.div 
-                        initial={{ opacity: 0, scale: 1 }}
-                        animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.05, 1] }}
-                        transition={{ duration: 4, repeat: Infinity }}
-                        className={cn("absolute inset-0 rounded-full border border-current", config.iconColor)} 
+                        animate={{ opacity: [0.1, 0.4, 0.1], scale: [1, 1.15, 1] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                        className={cn("absolute inset-0 rounded-full border-2 border-current", config.iconColor)} 
                       />
                     )}
                   </motion.div>
                 </AnimatePresence>
 
-                
-                <div className="flex flex-col items-center">
-                  <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-white/90">
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-[12px] md:text-[14px] font-black uppercase tracking-[0.4em] text-[#e5e7eb] drop-shadow-sm">
                     {t.nome}
                   </span>
                   <span className={cn(
-                    "text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold mt-1 opacity-80",
+                    "text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-bold mt-1.5 flex items-center gap-1.5",
                     config.color
                   )}>
-                    • {estado.toUpperCase()}
+                    <span className={cn("w-1.5 h-1.5 rounded-full", config.dotColor)} />
+                    {estado.toUpperCase()}
                   </span>
                 </div>
               </div>
@@ -203,12 +214,16 @@ export function MandalaFinal({ estados }: Props) {
         })}
       </div>
 
-      {/* Legend - Centered at bottom */}
-      <div className="mt-16 flex flex-wrap justify-center gap-8 px-8 py-4 rounded-full border border-white/5 bg-white/2 backdrop-blur-md">
+      {/* Legend Box - Styled as per model */}
+      <div className="mt-24 px-10 py-5 rounded-full border border-white/10 bg-[#050507]/60 backdrop-blur-xl flex flex-wrap justify-center gap-10">
         {Object.entries(ESTADOS_MAP).map(([nome, config]) => (
-          <div key={nome} className="flex items-center gap-3">
-            <div className={cn("w-2 h-2 rounded-full", config.dotColor)} />
-            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-white/50">
+          <div key={nome} className="flex items-center gap-3 group cursor-default">
+            <motion.div 
+              animate={nome === 'Aceso' ? { scale: [1, 1.3, 1], opacity: [0.6, 1, 0.6] } : {}}
+              transition={{ duration: 2, repeat: Infinity }}
+              className={cn("w-2.5 h-2.5 rounded-full shadow-sm", config.dotColor)} 
+            />
+            <span className="text-[11px] uppercase tracking-[0.3em] font-bold text-white/50 group-hover:text-white/80 transition-colors">
               {nome.toUpperCase()}
             </span>
           </div>
@@ -217,3 +232,4 @@ export function MandalaFinal({ estados }: Props) {
     </div>
   );
 }
+
