@@ -36,7 +36,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'limites', 
     nome: 'Limites', 
-    pos: { top: '61.5%', left: '81%' },
+    pos: { top: '61.6%', left: '81.2%' },
     narrativa: {
       Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
       Oscilante: "Suas fronteiras são porosas, por vezes firmes, por vezes cedendo ao peso do mundo.",
