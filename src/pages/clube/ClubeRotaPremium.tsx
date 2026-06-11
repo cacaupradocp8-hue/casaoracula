@@ -151,8 +151,9 @@ export default function ClubeRotaPremium() {
             alt="" 
             className={`w-full h-full object-cover opacity-80 ${slug === 'clareira-do-chamado' ? 'object-top' : ''}`}
           />
-          <div className="absolute inset-0 bg-[#020617]/40" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/60 via-[#020617]/30 to-[#020617]" />
+          <div className="absolute inset-0 bg-[#020617]/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/10 to-[#020617]" />
+
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
