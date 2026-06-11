@@ -15,6 +15,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'intuicao', 
     nome: 'Intuição', 
+    icon: '🌙',
     pos: { top: '10.5%', left: '50.1%' },
     narrativa: {
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
@@ -26,6 +27,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'desejo', 
     nome: 'Desejo', 
+    icon: '🔥',
     pos: { top: '27.4%', left: '81.2%' },
     narrativa: {
       Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
@@ -37,6 +39,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'limites', 
     nome: 'Limites', 
+    icon: '🛡️',
     pos: { top: '61.6%', left: '81.2%' },
     narrativa: {
       Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
@@ -48,6 +51,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'corpo', 
     nome: 'Corpo', 
+    icon: '🤍',
     pos: { top: '78.5%', left: '50.1%' },
     narrativa: {
       Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
@@ -59,6 +63,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'criatividade', 
     nome: 'Criatividade', 
+    icon: '🌿',
     pos: { top: '61.6%', left: '18.9%' },
     narrativa: {
       Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
@@ -70,6 +75,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'vitalidade', 
     nome: 'Vitalidade', 
+    icon: '🐾',
     pos: { top: '27.4%', left: '18.9%' },
     narrativa: {
       Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
