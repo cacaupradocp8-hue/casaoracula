@@ -128,12 +128,23 @@ const ESTADOS_STYLE = {
 export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
+  // Calcula se há algum território aceso para efeitos globais
+  const hasAceso = Object.values(estados).some(e => e === 'Aceso');
+
   return (
     <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[800px] aspect-square mx-auto group">
+      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-black/40 rounded-full shadow-[0_0_100px_rgba(0,0,0,0.5)] backdrop-blur-sm">
         
+        {/* Glow de Fundo Global */}
+        <div className={cn(
+          "absolute inset-0 rounded-full transition-opacity duration-1000",
+          hasAceso ? "opacity-30" : "opacity-10"
+        )} style={{
+          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.15) 0%, transparent 70%)'
+        }} />
+
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
           src={mandalaArte} 
@@ -141,7 +152,10 @@ export function MandalaFinal({ estados }: Props) {
           width={1024}
           height={1024}
           loading="lazy"
-          className="w-full h-full object-contain pointer-events-none select-none relative z-0"
+          className={cn(
+            "w-full h-full object-contain pointer-events-none select-none relative z-10 transition-all duration-1000",
+            hasAceso ? "brightness-110 contrast-110" : "brightness-75 contrast-90 grayscale-[0.2]"
+          )}
         />
 
         {/* Hotspots e Efeitos Visuais sobre a Arte */}
