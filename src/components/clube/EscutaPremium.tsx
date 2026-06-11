@@ -149,10 +149,11 @@ export function EscutaPremium({
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
-              "w-64 h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
+              "w-60 h-60 xs:w-64 xs:h-64 md:w-[26rem] md:h-[26rem] rounded-full p-1 relative z-10",
               "bg-[#0a0a0a] shadow-[0_0_120px_rgba(0,0,0,1),0_0_60px_rgba(212,175,55,0.4)] overflow-hidden",
               "border-[12px] border-[#1a1a1a] ring-2 ring-gold/20"
             )}
+
           >
             {/* Vinil Texture Effect - Fine lines */}
             <div className="absolute inset-0 rounded-full pointer-events-none z-20 opacity-30" style={{ 

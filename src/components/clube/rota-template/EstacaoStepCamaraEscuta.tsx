@@ -540,7 +540,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                     <EscutaPremium 
                       audioUrl={currentObra.url}
                       titulo={currentObra.titulo}
-                      imagemEscuta="/clareira-disco.png"
+                      imagemEscuta={currentObra?.capa_url || "/clareira-disco.png"}
                     />
                   )}
 

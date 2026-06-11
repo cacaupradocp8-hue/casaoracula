@@ -144,14 +144,15 @@ export default function ClubeRotaPremium() {
 
   return (
     <AppLayout>
-      <div className="bg-[#020617] min-h-screen text-white relative overflow-hidden">
+      <div className="bg-transparent min-h-screen text-white relative overflow-hidden">
         {/* Background Image Container */}
         <div className="fixed inset-0 z-0">
           <img 
             src={slug === 'clareira-do-chamado' 
-              ? "https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206950341.jpg"
-              : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")
+              ? "/clareira-fundo.png"
+              : (estacao.banner_url?.replace('pviznbfwtjqmpeiqqzk', 'pvjiznbfwtjqmpeiqqzk') || "/clareira-fundo.png")
             } 
+
             alt="" 
             className={cn(
               "w-full h-full object-cover transition-opacity duration-1000",
@@ -281,6 +282,7 @@ export default function ClubeRotaPremium() {
                   <EstacaoStepSussurrosConto 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
+                    livroCapaUrl={estacao.clube_rotas.livro_capa_url}
                     contoData={{
                       titulo: estacao.conto_titulo || 'Conto da Estação',
                       sintese: estacao.conto_sintese || 'Síntese do conto...',
@@ -297,6 +299,7 @@ export default function ClubeRotaPremium() {
                     onNext={handleNext}
                   />
                 )}
+
 
                 {currentStep === 4 && (
                   <EstacaoStepTraducaoOracular 

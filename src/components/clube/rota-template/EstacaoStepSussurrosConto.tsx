@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 interface SussurrosContoProps {
   estacaoId: string;
   rotaId: string;
+  livroCapaUrl?: string;
   contoData: {
     titulo: string;
     sintese: string;
@@ -28,14 +29,17 @@ interface SussurrosContoProps {
   onNext: () => void;
 }
 
+
 type Step = 'conto' | 'escuta_conto' | 'escuta_personagem' | 'aplicacao' | 'conclusao';
 
 export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
   estacaoId,
   rotaId,
+  livroCapaUrl,
   contoData,
   onNext
 }) => {
+
   const { user } = useAuth();
   const [activeStep, setActiveStep] = useState<Step>('conto');
   const [isSaving, setIsSaving] = useState(false);
@@ -127,8 +131,9 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 <EscutaPremium 
                   audioUrl={contoData.audioUrl} 
                   titulo={`${contoData.titulo} — Narração`}
-                  imagemEscuta="https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"
+                  imagemEscuta={livroCapaUrl || contoData.imagemUrl || "/clareira-disco.png"}
                 />
+
               </div>
             )}
 
