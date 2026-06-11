@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Headphones, Play, Pause, ChevronRight, Sparkles, Footprints, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Headphones, Play, Pause, ChevronRight, Sparkles, Footprints, ArrowRight, Loader2, RotateCcw, RotateCw, Gauge } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useMutation } from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { TextCarousel } from '@/components/clube/TextCarousel';
+import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { cn } from '@/lib/utils';
 
 interface FechamentoStepProps {
@@ -34,8 +35,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
   onFinish
 }) => {
   const { user } = useAuth();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [audio] = useState(audioUrl ? new Audio(audioUrl) : null);
+
 
   const conclusionMutation = useMutation({
     mutationFn: async () => {
@@ -65,24 +65,6 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
     }
   });
 
-  const toggleAudio = () => {
-    if (!audio) return;
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  React.useEffect(() => {
-    return () => {
-      if (audio) {
-        audio.pause();
-        audio.currentTime = 0;
-      }
-    };
-  }, [audio]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-32 px-4">
@@ -124,21 +106,13 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
           </div>
 
           {audioUrl && (
-            <div className="flex justify-center pt-6">
-              <Button
-                onClick={toggleAudio}
-                className={cn(
-                  "h-20 px-10 rounded-full gap-4 transition-all duration-500",
-                  isPlaying 
-                    ? "bg-gold text-midnight shadow-[0_0_40px_rgba(212,175,55,0.3)]" 
-                    : "bg-white/5 hover:bg-white/10 text-white/80 border border-white/10"
-                )}
-              >
-                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 fill-current" />}
-                <div className="text-center">
-                  <span className="text-sm font-serif italic">Sussurro de Fechamento</span>
-                </div>
-              </Button>
+            <div className="pt-8 border-t border-white/5 mt-8">
+              <EscutaPremium 
+                audioUrl={audioUrl} 
+                titulo="Sussurro de Fechamento"
+                imagemEscuta="/clareira-disco.png"
+                className="py-0"
+              />
             </div>
           )}
         </div>
