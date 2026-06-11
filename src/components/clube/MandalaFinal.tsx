@@ -128,7 +128,7 @@ export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative">
+    <div className="flex flex-col items-center w-full justify-center py-4 relative bg-black/5 min-h-[400px]">
       
       {/* Container da Arte Oficial */}
       <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group">
