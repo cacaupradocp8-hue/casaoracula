@@ -201,9 +201,12 @@ export function EscutaPremium({
             <span className="w-2 h-2 rounded-full bg-gold animate-ping shadow-[0_0_12px_rgba(212,175,55,1)]" />
             REPRODUZINDO AGORA
           </div>
-          <h3 className="text-white font-display font-black tracking-widest text-3xl md:text-5xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent">
-            {titulo || "Travessia guiada em áudio"}
-          </h3>
+          {titulo && (
+            <h3 className="text-white font-display font-black tracking-widest text-3xl md:text-5xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent">
+              {titulo}
+            </h3>
+          )}
+
         </div>
 
         {/* Progress Slider */}

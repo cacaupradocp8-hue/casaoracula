@@ -110,10 +110,18 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             </div>
 
             {contoData.imagemUrl && (
-              <div className="aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
-                <img src={contoData.imagemUrl} alt={contoData.titulo} className="w-full h-full object-cover" />
+              <div className="aspect-video rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl relative">
+                <img 
+                  src={contoData.imagemUrl} 
+                  alt={contoData.titulo} 
+                  className="w-full h-full object-cover" 
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "/clareira-fundo.png";
+                  }}
+                />
               </div>
             )}
+
 
             <Card className="bg-white/[0.03] border-white/10 p-8 rounded-[2rem] space-y-6">
               <TextCarousel 
@@ -130,9 +138,10 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 </div>
                 <EscutaPremium 
                   audioUrl={contoData.audioUrl} 
-                  titulo={`${contoData.titulo} — Narração`}
+                  titulo=""
                   imagemEscuta={livroCapaUrl || contoData.imagemUrl || "/clareira-disco.png"}
                 />
+
 
               </div>
             )}
