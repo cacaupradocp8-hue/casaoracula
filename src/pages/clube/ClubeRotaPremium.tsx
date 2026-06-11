@@ -152,7 +152,7 @@ export default function ClubeRotaPremium() {
             alt="" 
             className={cn(
               "w-full h-full object-cover",
-              slug === 'clareira-do-chamado' ? "opacity-20 grayscale brightness-[0.3]" : "opacity-80"
+              slug === 'clareira-do-chamado' ? "opacity-30 grayscale brightness-[0.2]" : "opacity-80"
             )}
           />
           <div className="absolute inset-0 bg-[#020617]/20" />
@@ -285,7 +285,9 @@ export default function ClubeRotaPremium() {
                       audioUrl: (slug === 'clareira-do-chamado' && currentStep === 3) 
                         ? 'https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/audios/uploads/1781206510506.ogg' 
                         : (estacao.conto_audio_url || ''),
-                      imagemUrl: estacao.conto_imagem_url || '',
+                      imagemUrl: (slug === 'clareira-do-chamado' && currentStep === 3)
+                        ? 'https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg'
+                        : (estacao.conto_imagem_url || ''),
                       erroComum: estacao.conto_erro_comum || 'Erro comum de leitura...',
                       sussurroGuardia: estacao.conto_sussurro_guardia || 'Sussurro da Guardiã...'
                     }}

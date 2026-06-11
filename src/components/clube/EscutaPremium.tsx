@@ -116,23 +116,34 @@ export function EscutaPremium({
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="absolute -inset-16 bg-gold/30 rounded-full blur-[100px] z-0 pointer-events-none"
+                className="absolute -inset-16 bg-gold/40 rounded-full blur-[120px] z-0 pointer-events-none"
               />
               <motion.div
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ 
-                  scale: [1, 1.2, 1],
-                  opacity: [0.2, 0.6, 0.2],
+                  scale: [1, 1.3, 1],
+                  opacity: [0.3, 0.7, 0.3],
                 }}
                 transition={{ 
                   duration: 1.5, 
                   repeat: Infinity, 
                   ease: "easeInOut" 
                 }}
-                className="absolute -inset-8 bg-gold/20 rounded-full blur-[60px] z-0 pointer-events-none"
+                className="absolute -inset-12 bg-gold/25 rounded-full blur-[80px] z-0 pointer-events-none"
+              />
+              {/* Extra Bright Halo */}
+              <motion.div
+                animate={{ 
+                  opacity: [0.4, 0.8, 0.4],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+                className="absolute -inset-4 bg-gold/20 rounded-full blur-[40px] z-0"
               />
             </>
           )}
+          
+          {/* Static Halo (Always visible but glows more when playing) */}
+          <div className="absolute -inset-6 bg-gold/15 rounded-full blur-[50px] z-0 opacity-50" />
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
