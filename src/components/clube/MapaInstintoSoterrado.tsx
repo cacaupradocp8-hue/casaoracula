@@ -118,18 +118,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const maisSoterrado = soterradoTerritorios[0] || TERRITORIOS.find(t => t.id === 'vitalidade');
 
   return (
-    <div className="w-full max-w-4xl mx-auto min-h-screen pb-20 pt-10 px-6 relative bg-transparent font-serif selection:bg-gold/20 overflow-hidden">
-      {/* Background Image para Clareira do Chamado */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
-        <img 
-          src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg" 
-          alt="" 
-          className="w-full h-full object-cover opacity-15 md:opacity-10 grayscale brightness-[0.3]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#020617] via-transparent to-[#020617]" />
-        <div className="absolute inset-0 bg-[#020617]/40" />
-      </div>
-
+    <div className="w-full max-w-4xl mx-auto min-h-screen pb-20 pt-10 px-6 relative bg-transparent font-serif selection:bg-gold/20">
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
