@@ -82,15 +82,15 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
         </motion.div>
       </div>
 
-      <Card className="bg-[#0A0A0B]/60 backdrop-blur-xl border-white/5 p-6 md:p-12 rounded-[32px] md:rounded-[48px] space-y-10 relative overflow-hidden">
+      <Card className="bg-[#0A0A0B]/80 backdrop-blur-3xl border border-white/10 p-6 md:p-12 rounded-[32px] md:rounded-[48px] space-y-10 relative overflow-hidden shadow-2xl shadow-black/50">
         {backgroundImage && (
           <div className="absolute inset-0 z-0">
             <img 
               src={backgroundImage} 
               alt="" 
-              className="w-full h-full object-cover opacity-20"
+              className="w-full h-full object-cover opacity-10"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/80 via-transparent to-[#0A0A0B]/80" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0A0A0B]/90 via-transparent to-[#0A0A0B]/90" />
           </div>
         )}
         <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
@@ -98,11 +98,14 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
         </div>
 
         <div className="relative z-10 space-y-8">
-          <div className="max-w-3xl mx-auto">
-            <TextCarousel 
-              text={texto} 
-              className="text-center italic"
-            />
+          <div className="max-w-3xl mx-auto py-8">
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-center text-white font-serif italic text-lg md:text-2xl leading-relaxed"
+            >
+              {texto}
+            </motion.p>
           </div>
 
           {audioUrl && (
