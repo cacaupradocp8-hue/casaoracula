@@ -47,7 +47,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'corpo', 
     nome: 'Corpo', 
-    pos: { top: '78.5%', left: '50%' },
+    pos: { top: '78.5%', left: '50.1%' },
     narrativa: {
       Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
       Oscilante: "O corpo envia sinais intermitentes de cansaço e força, pedindo uma escuta mais atenta.",
