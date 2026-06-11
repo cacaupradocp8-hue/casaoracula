@@ -280,103 +280,61 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
       {view === 'resultado' && (
         <div className="space-y-20 animate-in fade-in duration-1000">
-          <div className="text-center space-y-4">
-            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[10px]">Mapa do Instinto Soterrado™</h3>
-            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Sua mandala instintiva</h2>
-            <p className="text-white/40 text-[13px] font-serif italic">A Loba continua deixando rastros.</p>
+          <div className="text-center space-y-2 mt-10">
+            <h3 className="text-gold uppercase tracking-[0.5em] font-black text-[11px]">Mapa do Instinto Soterrado™</h3>
+            <h2 className="text-4xl md:text-6xl font-serif italic text-white leading-tight">Sua mandala instintiva</h2>
+            <p className="text-white/50 text-[14px] font-serif italic">A Loba continua deixando rastros.</p>
           </div>
 
           <MandalaFinal estados={estados} />
-          
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 px-4">
-            <div className="flex items-center gap-2 justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-gold" />
-              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Aceso</span>
-            </div>
-            <div className="flex items-center gap-2 justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-[#c5a059] opacity-60" />
-              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Oscilante</span>
-            </div>
-            <div className="flex items-center gap-2 justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Soterrado</span>
-            </div>
-            <div className="flex items-center gap-2 justify-center">
-              <div className="w-1.5 h-1.5 rounded-full bg-white/10" />
-              <span className="text-[9px] uppercase tracking-widest text-white/60 font-black">Exaustão</span>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-10">
+            <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <Sparkles className="w-4 h-4 text-gold" />
-                <h4 className="text-gold font-bold uppercase tracking-widest text-[9px]">Pegadas Encontradas</h4>
+                <Sparkles className="w-5 h-5 text-gold" />
+                <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[11px]">Pegadas Encontradas</h4>
               </div>
-              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">A loba continua deixando sinais em:</p>
-              <div className="space-y-2">
+              <p className="text-white/50 text-[13px] font-serif italic">A loba continua deixando sinais em:</p>
+              <div className="space-y-4">
                 {acesoTerritorios.map(t => (
-                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
-                    <span>{t.icon}</span>
+                  <div key={t.id} className="flex items-center gap-3 text-white/90 font-serif italic text-lg group">
+                    <span className="text-gold opacity-50 group-hover:opacity-100 transition-opacity">🌙</span>
                     <span>{t.nome}</span>
                   </div>
                 ))}
+                {acesoTerritorios.length === 0 && (
+                   <p className="text-white/20 text-sm italic">Nenhuma pegada clara no momento...</p>
+                )}
               </div>
-            </Card>
+            </div>
 
-            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
+            <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <Compass className="w-4 h-4 text-orange-400" />
-                <h4 className="text-orange-400 font-bold uppercase tracking-widest text-[9px]">Pegadas Quase Apagadas</h4>
+                <Compass className="w-5 h-5 text-[#c5a059]" />
+                <h4 className="text-[#c5a059] font-bold uppercase tracking-[0.4em] text-[11px]">Pegadas Quase Apagadas</h4>
               </div>
-              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Os rastros estão mais difíceis de perceber em:</p>
-              <div className="space-y-2">
+              <p className="text-white/50 text-[13px] font-serif italic">Os rastros estão mais difíceis de perceber em:</p>
+              <div className="space-y-4">
                 {soterradoTerritorios.map(t => (
-                  <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
-                    <span>{t.icon}</span>
+                  <div key={t.id} className="flex items-center gap-3 text-white/90 font-serif italic text-lg group">
+                    <span className="text-[#c5a059] opacity-50 group-hover:opacity-100 transition-opacity">🐾</span>
                     <span>{t.nome}</span>
                   </div>
                 ))}
               </div>
-            </Card>
+            </div>
 
-            <Card className="bg-white/2 border-white/5 p-6 rounded-[24px] space-y-4">
+            <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <Shield className="w-4 h-4 text-white/60" />
-                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[9px]">Pegadas que precisam de cuidado</h4>
+                <Shield className="w-5 h-5 text-white/30" />
+                <h4 className="text-white/30 font-bold uppercase tracking-[0.4em] text-[11px]">Próxima Trilha</h4>
               </div>
-              <p className="text-white/40 text-[10px] font-serif italic uppercase tracking-widest">Áreas que pedem respeito antes de qualquer ação:</p>
-              <div className="space-y-2">
-                {Object.entries(estados).filter(([_, e]) => e === 'Exausto').map(([id]) => {
-                  const t = TERRITORIOS.find(tt => tt.id === id);
-                  return t && (
-                    <div key={t.id} className="flex items-center gap-2 text-white/80 font-serif italic text-sm">
-                      <span>{t.icon}</span>
-                      <span>{t.nome}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </div>
-
-          <div className="bg-transparent p-12 rounded-[40px] space-y-8 text-center relative overflow-hidden">
-            <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[10px] relative z-10">Próxima Trilha</h4>
-            <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed max-w-2xl mx-auto relative z-10">
-              {TRILHAS_FINAIS[maisSoterradoId]}
-            </p>
-            
-            <div className="flex justify-center py-4 opacity-40">
-              <img 
-                src="https://lovable-project.s3.amazonaws.com/loba-landscape.png" 
-                alt="Landscape" 
-                className="w-full max-w-lg object-contain"
-                onError={(e) => {
-                   (e.target as HTMLImageElement).src = "/src/assets/rota-dos-lobos-bg.png";
-                }}
-              />
+              <p className="text-white/80 text-[16px] md:text-[18px] font-serif italic leading-relaxed">
+                "{TRILHAS_FINAIS[maisSoterradoId]}"
+              </p>
             </div>
           </div>
+
 
           <div className="space-y-12">
             <div className="text-center space-y-4">
