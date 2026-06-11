@@ -136,8 +136,11 @@ export function MandalaFinal({ estados }: Props) {
         
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
-          src="https://lovable-uploads.s3.us-west-2.amazonaws.com/9de110b3-d024-4145-bfef-20701699f967.png" 
+          src={mandalaArte} 
           alt="Mandala do Instinto Soterrado" 
+          width={1024}
+          height={1024}
+          loading="lazy"
           className="w-full h-full object-contain pointer-events-none select-none relative z-0"
         />
 
