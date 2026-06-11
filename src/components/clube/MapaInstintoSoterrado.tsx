@@ -360,15 +360,21 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             </Card>
           </div>
 
-          <div className="bg-gold/5 p-12 rounded-[40px] border border-gold/10 space-y-8 text-center relative overflow-hidden">
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/5 blur-[80px] rounded-full" />
+          <div className="bg-transparent p-12 rounded-[40px] space-y-8 text-center relative overflow-hidden">
             <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[10px] relative z-10">Próxima Trilha</h4>
-            <p className="text-2xl md:text-3xl font-serif italic text-white/90 leading-relaxed max-w-2xl mx-auto relative z-10">
-              "{TRILHAS_FINAIS[maisSoterradoId]}"
+            <p className="text-xl md:text-2xl font-serif italic text-white/80 leading-relaxed max-w-2xl mx-auto relative z-10">
+              {TRILHAS_FINAIS[maisSoterradoId]}
             </p>
-            <div className="pt-8 border-t border-gold/10 max-w-md mx-auto relative z-10">
-              <p className="text-gold/60 text-[10px] uppercase tracking-[0.2em] font-black mb-4">Gesto de Retorno</p>
-              <p className="text-white/80 font-serif italic text-lg">{GESTOS_SIMBOLICOS[maisSoterradoId]}</p>
+            
+            <div className="flex justify-center py-4 opacity-40">
+              <img 
+                src="https://lovable-project.s3.amazonaws.com/loba-landscape.png" 
+                alt="Landscape" 
+                className="w-full max-w-lg object-contain"
+                onError={(e) => {
+                   (e.target as HTMLImageElement).src = "/src/assets/rota-dos-lobos-bg.png";
+                }}
+              />
             </div>
           </div>
 
