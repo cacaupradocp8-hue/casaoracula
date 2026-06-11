@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map, BookOpen, PenTool, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
-import { JardimInput } from './JardimInput';
 
 interface MapaInstintoSoterradoProps {
   estacaoId: string;
@@ -26,11 +23,6 @@ const EIXOS = [
 ];
 
 const PERGUNTAS = [
-  { id: 'corpo', label: 'Corpo', nome: 'Corpo', icon: '❤️', perguntas: [
-    'Quando o cansaço atravessa sua jornada, de que forma seu corpo costuma sinalizar que o passo precisa mudar?',
-    'Ao fechar os olhos por um instante, você consegue distinguir onde termina a sua energia e onde começa a expectativa do mundo sobre seus movimentos?',
-    'Nas últimas travessias, com que frequência você percebeu que seu corpo só foi ouvido quando a dor precisou gritar?'
-  ]},
   { id: 'intuicao', label: 'Intuição', nome: 'Intuição', icon: '🌙', perguntas: [
     'Quando uma percepção surge antes de qualquer explicação lógica, que destino você costuma dar a esse sinal?',
     'No silêncio das suas decisões, quanto espaço existe para a sua voz interna sem que ela precise de provas para ser real?',
@@ -45,6 +37,11 @@ const PERGUNTAS = [
     'Ao perceber que um espaço ou energia sua está sendo ocupada por algo externo, como seus contornos costumam reagir?',
     'Existe um sensor interno que aponta o momento exato em que um "sim" começa a corroer a sua própria integridade?',
     'Quanto do peso que você carrega hoje pertence ao seu próprio caminho e quanto foi absorvido de trilhas alheias?'
+  ]},
+  { id: 'corpo', label: 'Corpo', nome: 'Corpo', icon: '❤️', perguntas: [
+    'Quando o cansaço atravessa sua jornada, de que forma seu corpo costuma sinalizar que o passo precisa mudar?',
+    'Ao fechar os olhos por um instante, você consegue distinguir onde termina a sua energia e onde começa a expectativa do mundo sobre seus movimentos?',
+    'Nas últimas travessias, com que frequência você percebeu que seu corpo só foi ouvido quando a dor precisou gritar?'
   ]},
   { id: 'criatividade', label: 'Criatividade', nome: 'Criatividade', icon: '🌿', perguntas: [
     'Quando uma nova possibilidade se apresenta à sua mente, qual o primeiro gesto que você costuma oferecer a ela?',
@@ -65,49 +62,13 @@ const OPCOES = [
   { label: 'O sinal parece silenciado sob camadas de cansaço ou distância.', score: 0, estado: 'Exausto' as Estado }
 ];
 
-const PROMPTS_JARDIM: Record<string, { psique: string, oficio: string }> = {
-  corpo: {
-    psique: "Reflita sobre como o seu corpo tem pedido retorno. O que ele sussurra quando você pausa?",
-    oficio: "Como o ritmo do seu trabalho respeita ou ignora os sinais de vitalidade do seu corpo físico?"
-  },
-  intuicao: {
-    psique: "Qual foi o último sinal intuitivo que você minimizou? Como seria dar um lugar de honra a ele hoje?",
-    oficio: "De que forma a sua percepção imediata poderia guiar uma decisão profissional que parece puramente lógica?"
-  },
-  desejo: {
-    psique: "Resgate um desejo que ficou soterrado. O que ele revela sobre a sua natureza mais autêntica?",
-    oficio: "Como o seu trabalho pode se tornar um solo mais fértil para aquilo que você genuinamente deseja criar?"
-  },
-  limites: {
-    psique: "Onde seus contornos estão mais diluídos? Qual 'não' gentil você precisa plantar hoje?",
-    oficio: "Mapeie as invasões de tempo e energia no seu ofício. Como reconstruir as torres de proteção?"
-  },
-  criatividade: {
-    psique: "Pense em uma ideia 'inútil' que você teve recentemente. O que ela diz sobre o seu direito de brincar com a vida?",
-    oficio: "Onde a produtividade está matando a inovação no seu trabalho? Como abrir espaço para o lúdico?"
-  },
-  vitalidade: {
-    psique: "O que devolve a sua sensação de estar viva agora? Como cultivar essa presença mais vezes?",
-    oficio: "Quais projetos profissionais drenam seu rastro e quais devolvem entusiasmo? O que precisa ser podado?"
-  }
-};
-
 const TRILHAS_FINAIS: Record<string, string> = {
-  corpo: "Nesta estação, a Clareira do Chamado convida você a observar os sinais físicos que costuma minimizar antes mesmo de escutá-los.",
-  intuicao: "O rastro agora pede que você silencie as explicações externas para voltar a escutar o que o seu primeiro sentir já sabe.",
-  desejo: "A trilha aponta para o resgate do que é autêntico, separando o fogo sagrado do seu querer do ruído das expectativas alheias.",
-  limites: "É tempo de fortalecer os seus contornos, reconhecendo que a sua energia é um território sagrado que exige proteção.",
-  criatividade: "A próxima etapa convida a sua loba a brincar novamente com as possibilidades, sem o peso da utilidade imediata.",
-  vitalidade: "O caminho agora foca na recuperação da sua força vital, podando o que drena para que o entusiasmo possa voltar a brotar."
-};
-
-const GESTOS_SIMBOLICOS: Record<string, string> = {
-  corpo: "Oferecer 5 minutos de silêncio ao corpo antes de aceitar qualquer nova demanda física.",
-  intuicao: "Registrar uma percepção 'sem sentido' logo ao acordar, dando a ela um lugar no papel.",
-  desejo: "Nomear um pequeno querer pessoal hoje, sem precisar explicar o motivo a ninguém.",
-  limites: "Praticar um 'não' gentil para algo que sutilmente invade o seu tempo de descanso.",
-  criatividade: "Brincar com um material ou ideia nova por 10 minutos, sem intenção de terminar ou mostrar.",
-  vitalidade: "Identificar uma ação que te devolva presença e realizá-la com intenção total hoje."
+  corpo: "A Clareira do Chamado convida você a observar os sinais físicos que costuma minimizar antes mesmo de escutá-los.",
+  intuicao: "O rastro pede que você silencie as explicações externas para voltar a escutar o que o seu primeiro sentir já sabe.",
+  desejo: "A trilha aponta para o resgate do que é autêntico, separando o fogo sagrado do seu querer do ruído das expectativas.",
+  limites: "É tempo de fortalecer os seus contornos, reconhecendo que a sua energia é um território sagrado.",
+  criatividade: "A próxima etapa convida a sua loba a brincar novamente com as possibilidades, sem o peso da utilidade.",
+  vitalidade: "O caminho foca na recuperação da sua força vital, podando o que drena para que o entusiasmo possa brotar."
 };
 
 export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstintoSoterradoProps) {
@@ -153,8 +114,8 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     } else {
       const finalEstados: Record<string, Estado> = {};
       PERGUNTAS.forEach(t => {
-        const tResponses = respostas[t.id] || {};
-        const currentSum = Object.values(tResponses).reduce((a, b) => a + b, 0) + (t.id === tId ? score : 0);
+        const tResponses = (t.id === tId) ? { ...respostas[t.id], [eId]: score } : (respostas[t.id] || {});
+        const currentSum = Object.values(tResponses).reduce((a, b) => a + b, 0);
         const avg = currentSum / 3;
         
         if (avg >= 2.5) finalEstados[t.id] = 'Aceso';
@@ -169,226 +130,171 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   };
 
   const currentT = PERGUNTAS[currentTerritorioIdx];
-  const currentE = EIXOS[currentEixoIdx];
-
   const acesoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Aceso');
   const soterradoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Soterrado' || estados[t.id] === 'Exausto');
   const maisSoterradoId = Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
 
   return (
-    <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
-      {view === 'intro' && (
-        <div className="text-center space-y-8 py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="space-y-4"
+    <div className="w-full max-w-5xl mx-auto min-h-screen pb-20 pt-10 px-4 relative">
+      {/* Background Texture Overlay */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] bg-[url('https://www.transparenttextures.com/patterns/natural-paper.png')]" />
+
+      <AnimatePresence mode="wait">
+        {view === 'intro' && (
+          <motion.div 
+            key="intro"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center justify-center py-20 text-center space-y-10"
           >
-            <h2 className="text-4xl md:text-5xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
-            <p className="text-white/60 font-serif italic max-w-xl mx-auto">Uma cartografia simbólica para identificar quais territórios da sua natureza pedem seu retorno nesta estação.</p>
-          </motion.div>
-          <Button onClick={() => setView('perguntas')} className="bg-gold text-midnight px-12 py-7 rounded-full font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
-            Iniciar Cartografia
-          </Button>
-        </div>
-      )}
-
-      {view === 'perguntas' && (
-        <Card className="bg-midnight/40 p-6 md:p-12 rounded-[40px] space-y-10 border-white/5 backdrop-blur-md relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-5">
-            <Compass className="w-32 h-32" />
-          </div>
-          
-          <div className="flex flex-col items-center gap-4 relative z-10">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{currentT.icon}</span>
-              <div className="text-white font-serif italic text-lg">Território: {currentT.nome}</div>
-            </div>
-            {/* Progress Dots */}
-            <div className="flex gap-2">
-              {PERGUNTAS.map((_, i) => (
-                <div 
-                  key={i} 
-                  className={cn(
-                    "w-2 h-2 rounded-full transition-all duration-500",
-                    i === currentTerritorioIdx ? "bg-gold scale-125" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
-                  )} 
-                />
-              ))}
-            </div>
-          </div>
-          
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${currentTerritorioIdx}-${currentEixoIdx}`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-12 relative z-10"
-            >
-              <h4 className="text-2xl md:text-4xl font-serif text-white italic text-center leading-tight">
-                {currentT.perguntas[currentEixoIdx]}
-              </h4>
-              
-              <div className="grid grid-cols-1 gap-4 max-w-2xl mx-auto">
-                {OPCOES.map((opt, i) => (
-                  <Button 
-                    key={i} 
-                    variant="ghost" 
-                    onClick={() => handleSelect(opt.score)} 
-                    className="h-auto py-5 px-8 flex items-center justify-between text-left font-serif italic text-lg border border-white/10 bg-[#121214] hover:border-gold/30 hover:bg-white/5 transition-all rounded-xl leading-relaxed group"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-gold/40 group-hover:text-gold transition-colors italic">🌱</span>
-                      <span className="text-white/80 group-hover:text-white transition-colors">{opt.label}</span>
-                    </div>
-                    <div className="w-5 h-5 rounded-full border border-gold/20 flex items-center justify-center group-hover:border-gold/50">
-                      <div className="w-2.5 h-2.5 rounded-full bg-gold opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </Button>
-                ))}
-              </div>
-              
-              <div className="flex justify-between items-center max-w-2xl mx-auto pt-6">
-                <Button 
-                  variant="ghost" 
-                  onClick={() => {
-                    if (currentEixoIdx > 0) setCurrentEixoIdx(prev => prev - 1);
-                    else if (currentTerritorioIdx > 0) {
-                      setCurrentTerritorioIdx(prev => prev - 1);
-                      setCurrentEixoIdx(EIXOS.length - 1);
-                    }
-                  }}
-                  disabled={currentTerritorioIdx === 0 && currentEixoIdx === 0}
-                  className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
-                >
-                  <ChevronRight className="w-4 h-4 rotate-180" />
-                  Voltar
-                </Button>
-                <Button 
-                  disabled
-                  className="bg-gold/20 text-gold border border-gold/20 px-8 py-2 rounded-lg text-[10px] uppercase tracking-widest font-black flex items-center gap-2"
-                >
-                  Próximo
-                  <ChevronRight className="w-4 h-4" />
-                </Button>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </Card>
-      )}
-
-      {view === 'resultado' && (
-        <div className="space-y-20 animate-in fade-in duration-1000">
-          <div className="text-center space-y-2 mt-10">
-            <h3 className="text-gold uppercase tracking-[0.5em] font-black text-[11px]">Mapa do Instinto Soterrado™</h3>
-            <h2 className="text-4xl md:text-6xl font-serif italic text-white leading-tight">Sua mandala instintiva</h2>
-            <p className="text-white/50 text-[14px] font-serif italic">A Loba continua deixando rastros.</p>
-          </div>
-
-          <MandalaFinal estados={estados} />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-10">
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Sparkles className="w-5 h-5 text-gold" />
-                <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[11px]">Pegadas Encontradas</h4>
-              </div>
-              <p className="text-white/50 text-[13px] font-serif italic">A loba continua deixando sinais em:</p>
-              <div className="space-y-4">
-                {acesoTerritorios.map(t => (
-                  <div key={t.id} className="flex items-center gap-3 text-white/90 font-serif italic text-lg group">
-                    <span className="text-gold opacity-50 group-hover:opacity-100 transition-opacity">🌙</span>
-                    <span>{t.nome}</span>
-                  </div>
-                ))}
-                {acesoTerritorios.length === 0 && (
-                   <p className="text-white/20 text-sm italic">Nenhuma pegada clara no momento...</p>
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Compass className="w-5 h-5 text-[#c5a059]" />
-                <h4 className="text-[#c5a059] font-bold uppercase tracking-[0.4em] text-[11px]">Pegadas Quase Apagadas</h4>
-              </div>
-              <p className="text-white/50 text-[13px] font-serif italic">Os rastros estão mais difíceis de perceber em:</p>
-              <div className="space-y-4">
-                {soterradoTerritorios.map(t => (
-                  <div key={t.id} className="flex items-center gap-3 text-white/90 font-serif italic text-lg group">
-                    <span className="text-[#c5a059] opacity-50 group-hover:opacity-100 transition-opacity">🐾</span>
-                    <span>{t.nome}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <div className="flex items-center gap-3">
-                <Shield className="w-5 h-5 text-white/30" />
-                <h4 className="text-white/30 font-bold uppercase tracking-[0.4em] text-[11px]">Próxima Trilha</h4>
-              </div>
-              <p className="text-white/80 text-[16px] md:text-[18px] font-serif italic leading-relaxed">
-                "{TRILHAS_FINAIS[maisSoterradoId]}"
+            <div className="space-y-4">
+              <h1 className="text-5xl md:text-7xl font-serif text-white italic tracking-tight">Mapa do Instinto Soterrado™</h1>
+              <p className="text-gold/60 font-serif italic text-lg max-w-2xl mx-auto leading-relaxed">
+                Uma cartografia mística para identificar quais territórios da sua natureza pedem seu retorno nesta estação. Entre no silêncio do seu rastro.
               </p>
             </div>
-          </div>
-
-
-          <div className="space-y-12">
-            <div className="text-center space-y-4">
-              <h3 className="text-gold uppercase tracking-[0.3em] font-black text-[10px]">Cultivo nos Jardins</h3>
-              <p className="text-white/60 font-serif italic">Use os rastros encontrados para nutrir seus espaços de reflexão.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 px-4">
-                  <BookOpen className="w-5 h-5 text-gold" />
-                  <h4 className="text-white font-serif italic text-xl">Jardim da Psique</h4>
-                </div>
-                <JardimInput 
-                  type="psique" 
-                  pontoId={estacaoId} 
-                  sourceTitle="Mapa do Instinto Soterrado"
-                  pergunta={PROMPTS_JARDIM[maisSoterradoId].psique}
-                />
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 px-4">
-                  <PenTool className="w-5 h-5 text-emerald-500" />
-                  <h4 className="text-white font-serif italic text-xl">Jardim do Ofício</h4>
-                </div>
-                <JardimInput 
-                  type="oficio" 
-                  pontoId={estacaoId} 
-                  sourceTitle="Mapa do Instinto Soterrado"
-                  pergunta={PROMPTS_JARDIM[maisSoterradoId].oficio}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="pt-10 flex flex-col items-center gap-6">
-            <Button onClick={onNext} className="w-full h-16 bg-[#c5a059] text-midnight font-bold uppercase tracking-[0.2em] text-[11px] rounded-xl hover:shadow-[0_10px_40px_rgba(212,175,55,0.2)] transition-all active:scale-95 border-none">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Guardar Rastro e Continuar
-            </Button>
             
-            <Button 
-              variant="ghost" 
-              onClick={() => setView('intro')}
-              className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black"
+            <button 
+              onClick={() => setView('perguntas')}
+              className="group relative px-12 py-4 font-serif italic text-gold border border-gold/30 hover:border-gold/60 transition-all rounded-full overflow-hidden"
             >
-              ← Voltar à Clareira do Chamado
-            </Button>
-          </div>
-        </div>
-      )}
+              <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
+              <span className="relative z-10 tracking-[0.2em] uppercase text-sm">Entrar no Mapa</span>
+            </button>
+          </motion.div>
+        )}
+
+        {view === 'perguntas' && (
+          <motion.div 
+            key="perguntas"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="flex flex-col items-center py-10 space-y-16"
+          >
+            {/* Header Ritualístico */}
+            <div className="flex flex-col items-center gap-6">
+              <div className="flex items-center gap-4 text-gold/40">
+                <div className="h-[1px] w-12 bg-current" />
+                <span className="text-2xl">{currentT.icon}</span>
+                <span className="font-serif italic text-xl tracking-widest uppercase">{currentT.nome}</span>
+                <div className="h-[1px] w-12 bg-current" />
+              </div>
+              
+              <div className="flex gap-2">
+                {PERGUNTAS.map((_, i) => (
+                  <div 
+                    key={i} 
+                    className={cn(
+                      "w-1 h-1 rounded-full transition-all duration-700",
+                      i === currentTerritorioIdx ? "bg-gold scale-[2] shadow-[0_0_8px_gold]" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
+                    )} 
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Pergunta Narrativa */}
+            <div className="max-w-3xl w-full space-y-16">
+              <h2 className="text-3xl md:text-5xl font-serif text-white italic text-center leading-tight">
+                {currentT.perguntas[currentEixoIdx]}
+              </h2>
+
+              <div className="grid grid-cols-1 gap-6">
+                {OPCOES.map((opt, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSelect(opt.score)}
+                    className="group relative w-full text-left p-8 border border-white/5 hover:border-gold/30 bg-black/20 backdrop-blur-sm transition-all duration-500 rounded-lg"
+                  >
+                    <div className="relative z-10 flex items-center justify-between">
+                      <span className="text-white/70 group-hover:text-white font-serif italic text-xl md:text-2xl transition-colors pr-8">
+                        {opt.label}
+                      </span>
+                      <ChevronRight className="w-6 h-6 text-gold/0 group-hover:text-gold/50 transition-all transform translate-x-[-10px] group-hover:translate-x-0" />
+                    </div>
+                    {/* Hover Effect Light */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-gold/0 to-gold/0 group-hover:from-gold/[0.02] group-hover:to-transparent transition-all" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Navegação Sutil */}
+            <button 
+              onClick={() => {
+                if (currentEixoIdx > 0) setCurrentEixoIdx(prev => prev - 1);
+                else if (currentTerritorioIdx > 0) {
+                  setCurrentTerritorioIdx(prev => prev - 1);
+                  setCurrentEixoIdx(EIXOS.length - 1);
+                }
+              }}
+              disabled={currentTerritorioIdx === 0 && currentEixoIdx === 0}
+              className="text-white/20 hover:text-white/40 font-serif italic text-sm tracking-widest uppercase transition-colors disabled:opacity-0"
+            >
+              Voltar ao rastro anterior
+            </button>
+          </motion.div>
+        )}
+
+        {view === 'resultado' && (
+          <motion.div 
+            key="resultado"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center pt-10"
+          >
+            <div className="text-center space-y-4 mb-10">
+              <h3 className="text-gold uppercase tracking-[0.5em] font-serif text-[12px] opacity-60">Sua Cartografia Ritualística</h3>
+              <h2 className="text-4xl md:text-6xl font-serif italic text-white leading-tight">A Mandala do Instinto</h2>
+            </div>
+
+            {/* Mandala Protagonista */}
+            <div className="w-full flex justify-center py-10">
+              <MandalaFinal estados={estados} />
+            </div>
+
+            {/* Legenda Narrativa Inferior */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mt-20 w-full max-w-4xl border-t border-white/5 pt-16">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_8px_gold]" />
+                  <h4 className="text-gold/80 font-serif italic uppercase tracking-[0.3em] text-[12px]">Pegadas Encontradas</h4>
+                </div>
+                <div className="flex flex-wrap gap-x-6 gap-y-3">
+                  {acesoTerritorios.map(t => (
+                    <span key={t.id} className="text-white/90 font-serif italic text-lg">{t.nome}</span>
+                  ))}
+                  {acesoTerritorios.length === 0 && <span className="text-white/20 italic">Rastros sutis...</span>}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
+                  <h4 className="text-white/40 font-serif italic uppercase tracking-[0.3em] text-[12px]">Pegadas Apagadas</h4>
+                </div>
+                <div className="flex flex-wrap gap-x-6 gap-y-3">
+                  {soterradoTerritorios.map(t => (
+                    <span key={t.id} className="text-white/40 font-serif italic text-lg">{t.nome}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-3">
+                  <Compass className="w-4 h-4 text-gold/30" />
+                  <h4 className="text-gold/50 font-serif italic uppercase tracking-[0.3em] text-[12px]">Próxima Trilha</h4>
+                </div>
+                <p className="text-white/80 text-xl font-serif italic leading-relaxed">
+                  "{TRILHAS_FINAIS[maisSoterradoId]}"
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
-

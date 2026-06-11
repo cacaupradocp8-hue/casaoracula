@@ -190,23 +190,23 @@ export function MandalaFinal({ estados }: Props) {
                 {/* Aura de Brilho */}
                 {(isAceso || isOscilante) && (
                    <motion.div 
-                      animate={{ opacity: [0.2, 0.4, 0.2], scale: [1, 1.2, 1] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-0 rounded-full blur-2xl"
+                      animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.3, 1] }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-[-40px] rounded-full blur-3xl"
                       style={{ backgroundColor: config.glow }}
                    />
                 )}
                 
-                {/* Círculo do Território */}
+                {/* Território - Sem círculos rígidos SaaS */}
                 <div className={cn(
-                  "w-24 h-24 md:w-32 md:h-32 rounded-full border flex flex-col items-center justify-center p-4 transition-all duration-1000",
-                  isAceso ? "border-gold shadow-[0_0_30px_rgba(212,175,55,0.4)]" : 
-                  isOscilante ? "border-[#c5a059]/40 shadow-[0_0_15px_rgba(197,160,89,0.2)]" : 
-                  "border-white/10 opacity-60",
-                  "bg-black/80 backdrop-blur-xl"
+                  "w-24 h-24 md:w-28 md:h-28 flex flex-col items-center justify-center transition-all duration-1000 relative",
+                  isAceso ? "opacity-100" : isOscilante ? "opacity-70" : "opacity-30"
                 )}>
-                  <div className={cn("transition-all duration-1000", config.color)}>
-                    {t.icon}
+                  {/* Fundo Orgânico Sutil (Filtro de névoa) */}
+                  <div className="absolute inset-0 bg-gold/5 rounded-full blur-md" />
+                  
+                  <div className={cn("relative z-10 transition-all duration-1000 filter drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]", config.color)}>
+                    {React.cloneElement(t.icon as React.ReactElement, { className: "w-10 h-10 md:w-12 md:h-12" })}
                   </div>
                 </div>
               </div>
