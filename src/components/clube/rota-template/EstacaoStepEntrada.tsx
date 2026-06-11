@@ -2,7 +2,7 @@ import React from 'react';
 import { TreePine, Ghost, Sparkles, Map, Music, Headphones } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-
+import { motion } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 
 interface EstacaoStepEntradaProps {
