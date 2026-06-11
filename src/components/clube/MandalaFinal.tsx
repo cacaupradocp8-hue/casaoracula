@@ -128,10 +128,10 @@ export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[400px]">
+    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group">
+      <div className="relative w-full max-w-[800px] aspect-square mx-auto group">
         
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
@@ -148,13 +148,13 @@ export function MandalaFinal({ estados }: Props) {
           return (
             <div 
               key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[20%] h-[20%]"
               style={{ top: t.pos.top, left: t.pos.left }}
             >
               {/* Hotspot de Interação (Invisível mas clicável) */}
               <button
                 onClick={() => setSelectedTerritorio(t)}
-                className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full z-50 cursor-pointer focus:outline-none"
+                className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none"
                 aria-label={t.nome}
               />
 
@@ -162,7 +162,7 @@ export function MandalaFinal({ estados }: Props) {
               <motion.div
                 animate={style.animation}
                 transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-full pointer-events-none z-10"
+                className="absolute w-[80%] h-[80%] rounded-full pointer-events-none z-10"
                 style={{ 
                   backgroundColor: style.glow,
                   filter: 'blur(20px)',
@@ -178,8 +178,8 @@ export function MandalaFinal({ estados }: Props) {
                       key={i}
                       className="absolute w-1 h-1 bg-gold rounded-full"
                       animate={{ 
-                        y: [-20, -60],
-                        x: [(i - 2) * 10, (i - 2) * 15],
+                        y: [-10, -30],
+                        x: [(i - 2) * 5, (i - 2) * 8],
                         opacity: [0, 0.8, 0],
                         scale: [0.5, 1, 0.5]
                       }}
@@ -203,11 +203,11 @@ export function MandalaFinal({ estados }: Props) {
               initial={{ opacity: 0, scale: 0.9, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 10 }}
-              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[300px] bg-black/80 backdrop-blur-xl border border-gold/30 p-6 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[320px] bg-[#0A0A0B]/95 backdrop-blur-xl border border-gold/30 p-6 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9)]"
             >
               <div className="text-center space-y-4">
                 <div className="space-y-1">
-                  <h4 className="text-gold font-serif text-2xl uppercase tracking-widest">{selectedTerritorio.nome}</h4>
+                  <h4 className="text-gold font-serif text-2xl uppercase tracking-widest leading-none">{selectedTerritorio.nome}</h4>
                   <div className="flex items-center justify-center gap-2">
                     <div className={cn("w-1.5 h-1.5 rounded-full", ESTADOS_STYLE[estados[selectedTerritorio.id] || 'Soterrado'].dot)} />
                     <span className="text-[10px] text-white/50 tracking-[0.2em] font-bold uppercase">
@@ -222,7 +222,7 @@ export function MandalaFinal({ estados }: Props) {
 
                 <button 
                   onClick={() => setSelectedTerritorio(null)}
-                  className="mt-4 text-[10px] text-gold/40 hover:text-gold uppercase tracking-widest transition-colors"
+                  className="mt-2 py-2 px-4 text-[10px] text-gold/60 hover:text-gold uppercase tracking-[0.3em] transition-all border border-gold/10 rounded-full hover:bg-gold/5"
                 >
                   Fechar rastro
                 </button>
@@ -233,7 +233,7 @@ export function MandalaFinal({ estados }: Props) {
       </div>
 
       {/* Legenda de Estados - Fiel à Referência */}
-      <div className="mt-8 md:mt-12 w-full max-w-[600px] px-4 py-3 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
+      <div className="mt-12 w-full max-w-[600px] px-6 py-4 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
         {Object.entries(ESTADOS_STYLE).map(([nome, config]) => (
           <div key={nome} className="flex items-center gap-2">
             <div className={cn("w-2 h-2 rounded-full", config.dot)} />
