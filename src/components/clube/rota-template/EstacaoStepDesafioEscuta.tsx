@@ -121,7 +121,7 @@ export const EstacaoStepDesafioEscuta: React.FC<DesafioEscutaProps> = ({
             <Target className="w-6 h-6" />
             <span className="text-[10px] uppercase tracking-widest font-black">Investigação Ativa</span>
           </div>
-          <h3 className="text-2xl md:text-3xl font-serif text-white italic">{pergunta}</h3>
+          <h3 className="text-xl xs:text-2xl md:text-3xl font-serif text-white italic break-words">{pergunta}</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

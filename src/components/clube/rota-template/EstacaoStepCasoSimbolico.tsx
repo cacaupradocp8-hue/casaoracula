@@ -115,7 +115,7 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
                     <span className="text-gold font-serif text-xl">{casoData.nomeFicticio.charAt(0)}</span>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-serif text-white italic">{casoData.nomeFicticio}, {casoData.idade}</h3>
+                    <h3 className="text-xl md:text-2xl font-serif text-white italic">{casoData.nomeFicticio}, {casoData.idade}</h3>
                     <p className="text-[10px] uppercase tracking-widest text-gold/60 font-black">Identificação Narrativa</p>
                   </div>
                 </div>
@@ -125,7 +125,7 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
                   className="text-white/80 text-lg leading-relaxed font-serif italic border-l-2 border-gold/30 pl-6"
                 />
 
-                <div className="bg-gold/5 border border-gold/10 p-6 rounded-2xl italic text-gold text-xl font-serif text-center">
+                <div className="bg-gold/5 border border-gold/10 p-4 md:p-6 rounded-2xl italic text-gold text-lg md:text-xl font-serif text-center break-words">
                   "{casoData.fraseCentral}"
                 </div>
               </div>

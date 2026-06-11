@@ -81,9 +81,10 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
             </span>
           </h2>
 
-          <p className="text-gold/60 text-xl md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed">
+          <p className="text-gold/60 text-lg md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed px-4 break-words">
             “{subtitulo}”
           </p>
+
         </motion.div>
       </div>
 
@@ -131,7 +132,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
               variant="outline"
               disabled={conclusionMutation.isPending}
               onClick={() => conclusionMutation.mutate()}
-              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-xs uppercase tracking-widest transition-all group"
+              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-[10px] md:text-xs uppercase tracking-widest transition-all group"
             >
               Entrar na Próxima Travessia
               <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
