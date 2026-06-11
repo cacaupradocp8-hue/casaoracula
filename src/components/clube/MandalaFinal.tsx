@@ -176,37 +176,44 @@ export function MandalaFinal({ estados }: Props) {
         <motion.div 
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          className="relative z-30 w-36 h-36 md:w-44 md:h-44 rounded-full border border-[#d4af37]/60 flex flex-col items-center justify-center p-4 shadow-[0_0_60px_rgba(212,175,55,0.3)]"
-          style={{ background: 'radial-gradient(circle, rgba(15,15,20,0.98) 0%, rgba(5,5,10,0.9) 100%)' }}
+          className="relative z-30 w-36 h-36 md:w-44 md:h-44 rounded-full border border-[#d4af37]/60 flex flex-col items-center justify-center p-4 shadow-[0_0_60px_rgba(212,175,55,0.4)]"
+          style={{ background: 'radial-gradient(circle, rgba(15,15,20,1) 0%, rgba(5,5,10,0.95) 100%)' }}
         >
-          <div className="relative flex flex-col items-center">
-            {/* The Wolf Icon - Using a more reliable path or SVG directly if image fails */}
-            <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+          <div className="relative flex flex-col items-center w-full h-full justify-center">
+            {/* The Wolf Icon - Integrated into the circular center */}
+            <div className="w-20 h-20 md:w-28 md:h-28 flex items-center justify-center relative">
               <img 
                 src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/loba-icon.png" 
                 alt="A Loba" 
-                className="w-full h-full object-contain filter brightness-125 drop-shadow-[0_0_20px_rgba(212,175,55,0.6)]"
+                className="w-full h-full object-contain filter brightness-110 drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10"
                 onError={(e) => {
-                  // Fallback to PawPrint if image fails
                   e.currentTarget.style.display = 'none';
                   const fallback = e.currentTarget.parentElement?.querySelector('.fallback-icon') as HTMLElement;
                   if (fallback) fallback.style.display = 'block';
                 }}
               />
-              <div className="fallback-icon hidden">
+              <div className="fallback-icon hidden z-10">
                 <PawPrint className="w-12 h-12 text-[#d4af37] animate-pulse" />
               </div>
+              
+              {/* Background Glow within the center */}
+              <div className="absolute inset-0 bg-[#d4af37]/5 blur-2xl rounded-full" />
             </div>
-            <span className="text-[12px] md:text-[14px] uppercase tracking-[0.5em] font-black text-[#d4af37] mt-3">A Loba</span>
+            <span className="text-[10px] md:text-[12px] uppercase tracking-[0.6em] font-black text-[#d4af37] mt-1 relative z-10 drop-shadow-md">A Loba</span>
           </div>
           
-          {/* Decorative Halo - Pulsing */}
+          {/* Sacred Halos - Pulsing */}
           <motion.div 
-            animate={{ scale: [1, 1.05, 1], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 4, repeat: Infinity }}
-            className="absolute inset-[-15px] rounded-full border border-[#d4af37]/20" 
+            animate={{ scale: [1, 1.08, 1], opacity: [0.1, 0.25, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-12px] rounded-full border border-[#d4af37]/30" 
           />
-          <div className="absolute inset-[-30px] rounded-full border border-[#d4af37]/5" />
+          <motion.div 
+            animate={{ scale: [1.1, 1, 1.1], opacity: [0.05, 0.15, 0.05] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-[-25px] rounded-full border border-[#d4af37]/10" 
+          />
+          <div className="absolute inset-[-40px] rounded-full border border-[#d4af37]/5" />
         </motion.div>
         
         {TERRITORIOS.map((t, i) => {
