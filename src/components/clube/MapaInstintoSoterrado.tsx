@@ -280,9 +280,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
       {view === 'resultado' && (
         <div className="space-y-20 animate-in fade-in duration-1000">
-          <div className="text-center space-y-6">
-            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[11px]">Cartografia Concluída</h3>
-            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Os rastros da sua natureza</h2>
+          <div className="text-center space-y-4">
+            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[10px]">Mapa do Instinto Soterrado™</h3>
+            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Sua mandala instintiva</h2>
+            <p className="text-white/40 text-[13px] font-serif italic">A Loba continua deixando rastros.</p>
           </div>
 
           <MandalaFinal estados={estados} />
