@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import mandalaArte from '@/assets/mandala-instinto-soterrado.png';
@@ -128,21 +128,58 @@ const ESTADOS_STYLE = {
 export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
+  // Calcula se há algum território aceso para efeitos globais
+  const hasAceso = Object.values(estados).some(e => e === 'Aceso');
+
+  // Gera o background de "holofotes" para territórios acesos
+  const spotlightBackground = useMemo(() => {
+    const spotlights = TERRITORIOS.map(t => {
+      const estado = estados[t.id];
+      if (estado === 'Aceso') {
+        return `radial-gradient(circle at ${t.pos.left} ${t.pos.top}, rgba(212, 175, 55, 0.3) 0%, transparent 25%)`;
+      }
+      return null;
+    }).filter(Boolean);
+    
+    return spotlights.length > 0 ? spotlights.join(', ') : 'none';
+  }, [estados]);
+
   return (
     <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full max-w-[800px] aspect-square mx-auto group">
+      <div className="relative w-full max-w-[800px] aspect-square mx-auto group bg-[#050505] rounded-full shadow-[0_0_100px_rgba(0,0,0,0.8)] overflow-hidden">
         
-        {/* Imagem de Fundo (A Mandala Oficial) */}
-        <img 
-          src={mandalaArte} 
-          alt="Mandala do Instinto Soterrado" 
-          width={1024}
-          height={1024}
-          loading="lazy"
-          className="w-full h-full object-contain pointer-events-none select-none relative z-0"
+        {/* Camada de Holofotes Dinâmicos (Atrás da Imagem) */}
+        <div 
+          className="absolute inset-0 z-0 transition-all duration-1000 opacity-60"
+          style={{ background: spotlightBackground }}
         />
+
+        {/* Imagem de Fundo (A Mandala Oficial) */}
+        <div className="relative w-full h-full z-10">
+          <img 
+            src={mandalaArte} 
+            alt="Mandala do Instinto Soterrado" 
+            width={1024}
+            height={1024}
+            loading="lazy"
+            className={cn(
+              "w-full h-full object-contain pointer-events-none select-none transition-all duration-1000",
+              hasAceso ? "brightness-105 contrast-105" : "brightness-50 contrast-75 grayscale-[0.3]"
+            )}
+          />
+          
+          {/* Overlay Escuro para territórios não acesos (Sobre a imagem) */}
+          <div 
+            className="absolute inset-0 pointer-events-none mix-blend-multiply opacity-50"
+            style={{ 
+              background: spotlightBackground !== 'none' 
+                ? `radial-gradient(circle, transparent 20%, #000 70%), ${spotlightBackground.replace(/0.3/g, '0.0')}`
+                : `radial-gradient(circle, transparent 20%, #000 70%)`
+            }}
+          />
+        </div>
 
         {/* Hotspots e Efeitos Visuais sobre a Arte */}
         {TERRITORIOS.map((t) => {
@@ -162,17 +199,27 @@ export function MandalaFinal({ estados }: Props) {
                 aria-label={t.nome}
               />
 
-              {/* Efeito de Brilho/Pulsar sobre o Território */}
-              <motion.div
-                animate={style.animation}
-                transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute w-[80%] h-[80%] rounded-full pointer-events-none z-10"
-                style={{ 
-                  backgroundColor: style.glow,
-                  filter: 'blur(20px)',
-                  boxShadow: estado === 'Aceso' ? `0 0 30px ${style.glow}` : 'none'
-                }}
-              />
+              {/* Efeito de Brilho/Pulsar sobre o Território (Aceso) */}
+              {estado === 'Aceso' && (
+                <motion.div
+                  animate={style.animation}
+                  transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute w-[120%] h-[120%] rounded-full pointer-events-none z-20"
+                  style={{ 
+                    backgroundColor: style.glow,
+                    filter: 'blur(30px)',
+                    boxShadow: `0 0 50px ${style.glow}`
+                  }}
+                />
+              )}
+
+              {/* Efeito de "Apagado" (Soterrado/Exausto) */}
+              {(estado === 'Soterrado' || estado === 'Exausto') && (
+                <div 
+                  className="absolute w-[110%] h-[110%] rounded-full pointer-events-none z-20 bg-black/40 backdrop-grayscale-[0.5]"
+                  style={{ filter: 'blur(15px)' }}
+                />
+              )}
               
               {/* Partículas sutis para estado Aceso */}
               {estado === 'Aceso' && (
