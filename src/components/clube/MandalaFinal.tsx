@@ -14,7 +14,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'intuicao', 
     nome: 'Intuição', 
-    pos: { top: '10.5%', left: '50%' },
+    pos: { top: '10.5%', left: '50.1%' },
     narrativa: {
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
       Oscilante: "Há um sussurro que oscila, esperando o silêncio necessário para se tornar clareza.",
@@ -25,7 +25,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'desejo', 
     nome: 'Desejo', 
-    pos: { top: '27.5%', left: '81%' },
+    pos: { top: '27.4%', left: '81.2%' },
     narrativa: {
       Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
       Oscilante: "Uma chama que vacila entre o que você realmente quer e o que acredita que deve querer.",
@@ -36,7 +36,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'limites', 
     nome: 'Limites', 
-    pos: { top: '61.5%', left: '81%' },
+    pos: { top: '61.6%', left: '81.2%' },
     narrativa: {
       Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
       Oscilante: "Suas fronteiras são porosas, por vezes firmes, por vezes cedendo ao peso do mundo.",
@@ -47,7 +47,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'corpo', 
     nome: 'Corpo', 
-    pos: { top: '78.5%', left: '50%' },
+    pos: { top: '78.5%', left: '50.1%' },
     narrativa: {
       Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
       Oscilante: "O corpo envia sinais intermitentes de cansaço e força, pedindo uma escuta mais atenta.",
@@ -58,7 +58,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'criatividade', 
     nome: 'Criatividade', 
-    pos: { top: '61.5%', left: '19%' },
+    pos: { top: '61.6%', left: '18.9%' },
     narrativa: {
       Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
       Oscilante: "Ideias surgem mas perdem o fôlego antes de ganharem corpo na realidade.",
@@ -69,7 +69,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'vitalidade', 
     nome: 'Vitalidade', 
-    pos: { top: '27.5%', left: '19%' },
+    pos: { top: '27.4%', left: '18.9%' },
     narrativa: {
       Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
       Oscilante: "A energia sobe e desce, num ritmo que ainda não encontrou seu centro de repouso.",
@@ -128,10 +128,10 @@ export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[400px]">
+    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[500px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group">
+      <div className="relative w-full max-w-[800px] aspect-square mx-auto group">
         
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
@@ -148,13 +148,13 @@ export function MandalaFinal({ estados }: Props) {
           return (
             <div 
               key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
               style={{ top: t.pos.top, left: t.pos.left }}
             >
               {/* Hotspot de Interação (Invisível mas clicável) */}
               <button
                 onClick={() => setSelectedTerritorio(t)}
-                className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full z-50 cursor-pointer focus:outline-none"
+                className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none"
                 aria-label={t.nome}
               />
 
@@ -162,7 +162,7 @@ export function MandalaFinal({ estados }: Props) {
               <motion.div
                 animate={style.animation}
                 transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-full pointer-events-none z-10"
+                className="absolute w-[80%] h-[80%] rounded-full pointer-events-none z-10"
                 style={{ 
                   backgroundColor: style.glow,
                   filter: 'blur(20px)',
@@ -178,8 +178,8 @@ export function MandalaFinal({ estados }: Props) {
                       key={i}
                       className="absolute w-1 h-1 bg-gold rounded-full"
                       animate={{ 
-                        y: [-20, -60],
-                        x: [(i - 2) * 10, (i - 2) * 15],
+                        y: [-10, -30],
+                        x: [(i - 2) * 5, (i - 2) * 8],
                         opacity: [0, 0.8, 0],
                         scale: [0.5, 1, 0.5]
                       }}
@@ -203,11 +203,11 @@ export function MandalaFinal({ estados }: Props) {
               initial={{ opacity: 0, scale: 0.9, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 10 }}
-              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[300px] bg-black/80 backdrop-blur-xl border border-gold/30 p-6 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[320px] bg-[#0A0A0B]/95 backdrop-blur-xl border border-gold/30 p-6 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.9)]"
             >
               <div className="text-center space-y-4">
                 <div className="space-y-1">
-                  <h4 className="text-gold font-serif text-2xl uppercase tracking-widest">{selectedTerritorio.nome}</h4>
+                  <h4 className="text-gold font-serif text-2xl uppercase tracking-widest leading-none">{selectedTerritorio.nome}</h4>
                   <div className="flex items-center justify-center gap-2">
                     <div className={cn("w-1.5 h-1.5 rounded-full", ESTADOS_STYLE[estados[selectedTerritorio.id] || 'Soterrado'].dot)} />
                     <span className="text-[10px] text-white/50 tracking-[0.2em] font-bold uppercase">
@@ -222,7 +222,7 @@ export function MandalaFinal({ estados }: Props) {
 
                 <button 
                   onClick={() => setSelectedTerritorio(null)}
-                  className="mt-4 text-[10px] text-gold/40 hover:text-gold uppercase tracking-widest transition-colors"
+                  className="mt-2 py-2 px-4 text-[10px] text-gold/60 hover:text-gold uppercase tracking-[0.3em] transition-all border border-gold/10 rounded-full hover:bg-gold/5"
                 >
                   Fechar rastro
                 </button>
@@ -233,7 +233,7 @@ export function MandalaFinal({ estados }: Props) {
       </div>
 
       {/* Legenda de Estados - Fiel à Referência */}
-      <div className="mt-8 md:mt-12 w-full max-w-[600px] px-4 py-3 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
+      <div className="mt-12 w-full max-w-[600px] px-6 py-4 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
         {Object.entries(ESTADOS_STYLE).map(([nome, config]) => (
           <div key={nome} className="flex items-center gap-2">
             <div className={cn("w-2 h-2 rounded-full", config.dot)} />
