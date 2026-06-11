@@ -56,11 +56,12 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
           {/* Main Title - Compacted for better mobile flow */}
           <div className="space-y-6 py-8">
             <div className="flex flex-col items-center gap-2 group">
-              <h1 className="text-5xl md:text-8xl font-display font-black text-white tracking-[0.15em] leading-tight uppercase relative inline-block">
+              <h1 className="text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight uppercase relative inline-block px-4">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
                   Escuta Ritual
                 </span>
               </h1>
+
             </div>
           </div>
           
@@ -68,7 +69,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="max-w-2xl mx-auto p-12 rounded-[3rem] bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-2xl relative group overflow-hidden"
+              className="max-w-2xl mx-auto p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-2xl relative group overflow-hidden"
             >
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
               <p className="text-base md:text-lg font-serif italic text-white/80 leading-relaxed whitespace-pre-line relative z-10">
