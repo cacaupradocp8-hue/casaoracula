@@ -196,55 +196,74 @@ export function MandalaFinal({ estados }: Props) {
           return (
             <div 
               key={t.id}
-              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center w-[25%] h-[25%]"
               style={{ top: t.pos.top, left: t.pos.left }}
             >
-              {/* Hotspot de Interação (Invisível mas clicável) */}
-              <button
-                onClick={() => setSelectedTerritorio(t)}
-                className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none"
-                aria-label={t.nome}
-              />
+              {/* Círculo com Ícone e Estado */}
+              <div className="relative flex flex-col items-center group">
+                {/* Hotspot de Interação (Invisível mas clicável) */}
+                <button
+                  onClick={() => setSelectedTerritorio(t)}
+                  className="w-16 h-16 md:w-20 md:h-20 rounded-full z-50 cursor-pointer focus:outline-none relative"
+                  aria-label={t.nome}
+                >
+                  <div className={cn(
+                    "absolute inset-0 rounded-full border-2 transition-all duration-500 flex items-center justify-center bg-black/40 backdrop-blur-sm",
+                    estado === 'Aceso' ? "border-[#d4af37] shadow-[0_0_20px_#d4af37]" : 
+                    estado === 'Oscilante' ? "border-[#c5a059] opacity-80" : 
+                    "border-white/20 opacity-40 grayscale"
+                  )}>
+                    <span className="text-2xl md:text-3xl">{t.icon}</span>
+                  </div>
+                </button>
 
-              {/* Efeito de Brilho/Pulsar sobre o Território (Aceso) */}
-              {estado === 'Aceso' && (
-                <motion.div
-                  animate={style.animation}
-                  transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
-                  className="absolute w-[120%] h-[120%] rounded-full pointer-events-none z-20"
-                  style={{ 
-                    backgroundColor: style.glow,
-                    filter: 'blur(30px)',
-                    boxShadow: `0 0 50px ${style.glow}`
-                  }}
-                />
-              )}
+                {/* Nome e Estado do Território (Fiel à imagem) */}
+                <div className="mt-2 text-center pointer-events-none z-30">
+                  <h4 className={cn(
+                    "text-[10px] md:text-xs font-serif uppercase tracking-[0.2em] transition-colors duration-500",
+                    estado === 'Aceso' ? "text-[#d4af37] font-bold" : "text-white/60"
+                  )}>
+                    {t.nome}
+                  </h4>
+                  <div className="flex items-center justify-center gap-1 mt-0.5">
+                    <div className={cn("w-1 h-1 rounded-full", style.dot)} />
+                    <span className="text-[8px] md:text-[9px] text-white/40 uppercase tracking-widest font-bold italic">
+                      {estado}
+                    </span>
+                  </div>
+                </div>
 
-              {/* Efeito de "Apagado" (Soterrado/Exausto) */}
-              {(estado === 'Soterrado' || estado === 'Exausto') && (
-                <div 
-                  className="absolute w-[110%] h-[110%] rounded-full pointer-events-none z-20 bg-black/40 backdrop-grayscale-[0.5]"
-                  style={{ filter: 'blur(15px)' }}
-                />
-              )}
+                {/* Efeito de Brilho/Pulsar (Apenas Aceso) */}
+                {estado === 'Aceso' && (
+                  <motion.div
+                    animate={style.animation}
+                    transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute -top-2 w-20 h-20 md:w-24 md:h-24 rounded-full pointer-events-none z-10"
+                    style={{ 
+                      backgroundColor: style.glow,
+                      filter: 'blur(30px)',
+                    }}
+                  />
+                )}
+              </div>
               
-              {/* Partículas sutis para estado Aceso */}
+              {/* Partículas para estado Aceso */}
               {estado === 'Aceso' && (
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(4)].map((_, i) => (
+                <div className="absolute inset-0 pointer-events-none overflow-visible">
+                  {[...Array(6)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute w-1 h-1 bg-gold rounded-full"
+                      className="absolute left-1/2 top-1/2 w-1 h-1 bg-gold rounded-full"
                       animate={{ 
-                        y: [-10, -30],
-                        x: [(i - 2) * 5, (i - 2) * 8],
+                        y: [-20, -60],
+                        x: [(i - 3) * 10, (i - 3) * 15],
                         opacity: [0, 0.8, 0],
                         scale: [0.5, 1, 0.5]
                       }}
                       transition={{ 
-                        duration: 2 + Math.random(), 
+                        duration: 3 + Math.random(), 
                         repeat: Infinity, 
-                        delay: i * 0.5 
+                        delay: i * 0.4 
                       }}
                     />
                   ))}
