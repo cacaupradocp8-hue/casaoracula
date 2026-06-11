@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useEstacaoConteudo } from '@/hooks/useClubeTemplate';
 import { EstacaoProgressHeader } from '@/components/clube/rota-template/EstacaoProgressHeader';
