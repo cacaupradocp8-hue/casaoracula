@@ -413,8 +413,20 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             </div>
           </div>
 
-          <div className="pt-10">
-            <Button onClick={onNext} className="w-full h-16 bg-gradient-to-r from-gold via-gold/90 to-[#c5a059] text-midnight font-black uppercase tracking-widest text-[11px] rounded-full hover:shadow-[0_10px_40px_rgba(212,175,55,0.3)] transition-all active:scale-95 border-none">
+          <div className="pt-10 flex flex-col items-center gap-6">
+            <Button onClick={onNext} className="w-full h-16 bg-[#c5a059] text-midnight font-bold uppercase tracking-[0.2em] text-[11px] rounded-xl hover:shadow-[0_10px_40px_rgba(212,175,55,0.2)] transition-all active:scale-95 border-none">
+              <Sparkles className="w-4 h-4 mr-2" />
+              Guardar Rastro e Continuar
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              onClick={() => setView('intro')}
+              className="text-white/40 hover:text-white text-[10px] uppercase tracking-widest font-black"
+            >
+              ← Voltar à Clareira do Chamado
+            </Button>
+          </div>
               Guardar Rastro e Continuar
             </Button>
           </div>
