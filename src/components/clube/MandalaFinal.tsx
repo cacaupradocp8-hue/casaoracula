@@ -128,16 +128,16 @@ export function MandalaFinal({ estados }: Props) {
   const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
 
   return (
-    <div className="flex flex-col items-center w-full justify-center py-4 relative bg-black/5 min-h-[400px]">
+    <div className="flex flex-col items-center w-full justify-center py-4 relative min-h-[400px]">
       
       {/* Container da Arte Oficial */}
-      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group bg-black/20 rounded-full border border-white/5">
+      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group bg-black/40 rounded-full border border-white/10 shadow-2xl">
         
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
           src="https://lovable-uploads.s3.us-west-2.amazonaws.com/9de110b3-d024-4145-bfef-20701699f967.png" 
           alt="Mandala do Instinto Soterrado" 
-          className="w-full h-full object-contain pointer-events-none select-none opacity-100"
+          className="w-full h-full object-contain pointer-events-none select-none relative z-0"
           onLoad={() => console.log('Mandala Image Loaded')}
           onError={(e) => console.error('Mandala Image Load Error', e)}
         />
