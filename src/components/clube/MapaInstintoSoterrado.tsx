@@ -427,12 +427,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               ← Voltar à Clareira do Chamado
             </Button>
           </div>
-              Guardar Rastro e Continuar
-            </Button>
-          </div>
         </div>
       )}
     </div>
   );
 }
+
 
