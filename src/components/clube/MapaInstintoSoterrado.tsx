@@ -199,9 +199,23 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             <Compass className="w-32 h-32" />
           </div>
           
-          <div className="flex justify-between items-center relative z-10">
-            <div className="text-gold uppercase tracking-[0.3em] font-black text-[9px]">{currentT.label} • {currentE.label}</div>
-            <div className="text-white/20 text-[9px] font-black">{currentTerritorioIdx + 1}/{PERGUNTAS.length}</div>
+          <div className="flex flex-col items-center gap-4 relative z-10">
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{currentT.icon}</span>
+              <div className="text-white font-serif italic text-lg">Território: {currentT.nome}</div>
+            </div>
+            {/* Progress Dots */}
+            <div className="flex gap-2">
+              {PERGUNTAS.map((_, i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "w-2 h-2 rounded-full transition-all duration-500",
+                    i === currentTerritorioIdx ? "bg-gold scale-125" : i < currentTerritorioIdx ? "bg-gold/40" : "bg-white/10"
+                  )} 
+                />
+              ))}
+            </div>
           </div>
           
           <AnimatePresence mode="wait">
