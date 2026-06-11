@@ -144,18 +144,19 @@ export default function ClubeRotaPremium() {
   return (
     <AppLayout>
       <div className="bg-[#020617] min-h-screen text-white relative overflow-hidden">
-        {/* Background Image Container - Hidden for Rastro 8 (clareira-do-chamado) */}
-        {slug !== 'clareira-do-chamado' && (
-          <div className="fixed inset-0 z-0">
-            <img 
-              src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
-              alt="" 
-              className="w-full h-full object-cover opacity-80"
-            />
-            <div className="absolute inset-0 bg-[#020617]/20" />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/10 to-[#020617]" />
-          </div>
-        )}
+        {/* Background Image Container */}
+        <div className="fixed inset-0 z-0">
+          <img 
+            src={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"} 
+            alt="" 
+            className={cn(
+              "w-full h-full object-cover",
+              slug === 'clareira-do-chamado' ? "opacity-20 grayscale brightness-[0.3]" : "opacity-80"
+            )}
+          />
+          <div className="absolute inset-0 bg-[#020617]/20" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/10 to-[#020617]" />
+        </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
           <EstacaoProgressHeader 
