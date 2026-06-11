@@ -104,19 +104,34 @@ export function EscutaPremium({
           <div className="absolute -inset-8 bg-gold/10 rounded-full blur-[60px] z-0 opacity-40 group-hover:opacity-60 transition-opacity" />
           
           {isPlaying && (
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ 
-                scale: [1, 1.2, 1],
-                opacity: [0.2, 0.5, 0.2],
-              }}
-              transition={{ 
-                duration: 3, 
-                repeat: Infinity, 
-                ease: "easeInOut" 
-              }}
-              className="absolute -inset-12 bg-gold/20 rounded-full blur-[80px] z-0 pointer-events-none"
-            />
+            <>
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ 
+                  scale: [1, 1.4, 1],
+                  opacity: [0.1, 0.4, 0.1],
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="absolute -inset-16 bg-gold/30 rounded-full blur-[100px] z-0 pointer-events-none"
+              />
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  opacity: [0.2, 0.6, 0.2],
+                }}
+                transition={{ 
+                  duration: 1.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="absolute -inset-8 bg-gold/20 rounded-full blur-[60px] z-0 pointer-events-none"
+              />
+            </>
           )}
           
           <motion.div
@@ -124,7 +139,7 @@ export function EscutaPremium({
             transition={isPlaying ? { duration: 15, repeat: Infinity, ease: "linear" } : { duration: 1.2, ease: "easeOut" }}
             className={cn(
               "w-64 h-64 md:w-[22rem] md:h-[22rem] rounded-full p-1 relative z-10",
-              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_30px_rgba(212,175,55,0.15)] overflow-hidden",
+              "bg-[#0a0a0a] shadow-[0_0_80px_rgba(0,0,0,0.9),0_0_40px_rgba(212,175,55,0.25)] overflow-hidden",
               "border-[8px] border-[#1a1a1a]"
             )}
           >
@@ -137,28 +152,31 @@ export function EscutaPremium({
             <div className="absolute inset-0 rounded-full border-[1px] border-gold/40 z-20 pointer-events-none shadow-[inset_0_0_20px_rgba(212,175,55,0.2)]" />
             <div className="absolute inset-2 rounded-full border-[0.5px] border-white/5 z-20 pointer-events-none" />
 
-            <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950">
+            <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950 flex items-center justify-center">
               {/* Shine/Reflection */}
               <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-10 pointer-events-none" />
               
-              {/* The Central Art (Station Image) */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl">
-                  {imagemEscuta ? (
-                    <img 
-                      src={imagemEscuta} 
-                      alt="" 
-                      className="w-full h-full object-cover opacity-90 scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-gold/20 to-[#020617] flex items-center justify-center">
-                      <Headphones className="w-8 h-8 text-gold/30" />
-                    </div>
-                  )}
-                  {/* Inner Hole - Subtle and Deep (No white spot) */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-4 h-4 rounded-full bg-black border border-white/5 shadow-inner z-40" />
-                    {/* Removed the central dot that was appearing as a white spot */}
+              {/* The Central Art (Station Image) - Improved Centralization */}
+              <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl flex items-center justify-center">
+                {imagemEscuta ? (
+                  <img 
+                    src={imagemEscuta} 
+                    alt="" 
+                    className="w-full h-full object-cover opacity-90"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-gold/20 to-[#020617] flex items-center justify-center">
+                    <Headphones className="w-8 h-8 text-gold/30" />
+                  </div>
+                )}
+                
+                {/* Inner Hole - Matches Disk Color with Highlight */}
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="w-4 h-4 rounded-full bg-black border border-gold/40 shadow-[inset_0_0_4px_rgba(212,175,55,0.5)] z-40 relative flex items-center justify-center">
+                    <div className={cn(
+                      "w-1.5 h-1.5 rounded-full transition-all duration-1000",
+                      isPlaying ? "bg-gold shadow-[0_0_8px_rgba(212,175,55,0.8)]" : "bg-gold/40"
+                    )} />
                   </div>
                 </div>
               </div>
