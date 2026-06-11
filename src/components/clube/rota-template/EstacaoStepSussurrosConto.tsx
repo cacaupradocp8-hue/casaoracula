@@ -123,7 +123,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 <EscutaPremium 
                   audioUrl={contoData.audioUrl} 
                   titulo={`${contoData.titulo} — Narração`}
-                  imagemEscuta="/clareira-disco.png"
+                  imagemEscuta="https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"
                 />
               </div>
             )}
