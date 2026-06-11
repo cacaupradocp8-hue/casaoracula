@@ -90,11 +90,12 @@ export const EstacaoStepCartografiaLoba: React.FC<CartografiaLobaProps> = ({
         
         <div className="space-y-2">
           <span className="text-[10px] uppercase tracking-[0.4em] text-gold/60 font-black">Cartografia da Loba</span>
-          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.05em] sm:tracking-[0.1em] leading-tight uppercase relative inline-block px-4">
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.05em] sm:tracking-[0.1em] leading-tight uppercase relative inline-block px-4 break-words">
             <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-              Rastro Registrado
+              Rastro <br className="xs:hidden" /> Registrado
             </span>
           </h2>
+
 
         </div>
       </div>

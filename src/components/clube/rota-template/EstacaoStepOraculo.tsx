@@ -80,11 +80,12 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Sparkles className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.05em] sm:tracking-[0.1em] leading-tight uppercase px-4">
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.05em] sm:tracking-[0.1em] leading-tight uppercase px-4 break-words">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-                  Oráculo da Estação
+                  Oráculo <br className="xs:hidden" /> da Estação
                 </span>
               </h2>
+
 
               <p className="text-gold/60 text-base md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
                 “A imagem que sela a travessia.”
@@ -196,11 +197,12 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
               >
                 <div className="space-y-2">
                   <div className="text-[11px] tracking-[0.5em] text-gold/50 uppercase font-black text-center">CARTA 01</div>
-                  <h3 className="text-4xl sm:text-5xl md:text-7xl font-serif text-white tracking-tight flex items-center justify-center gap-4 md:gap-6 px-4">
+                  <h3 className="text-3xl sm:text-5xl md:text-7xl font-serif text-white tracking-tight flex items-center justify-center gap-4 md:gap-6 px-4 break-words leading-tight">
                     <span className="h-px w-4 md:w-8 bg-gold/20 hidden sm:block" />
                     {nomeCarta}
                     <span className="h-px w-4 md:w-8 bg-gold/20 hidden sm:block" />
                   </h3>
+
 
                   <div className="text-sm tracking-[0.3em] text-gold uppercase font-light text-center">A ARQUITETA DO CHAMADO</div>
                 </div>
