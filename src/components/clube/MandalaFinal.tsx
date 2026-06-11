@@ -135,9 +135,11 @@ export function MandalaFinal({ estados }: Props) {
         
         {/* Imagem de Fundo (A Mandala Oficial) */}
         <img 
-          src="/assets/mandala/mandala-oficial.png" 
+          src="https://lovable-uploads.s3.us-west-2.amazonaws.com/9de110b3-d024-4145-bfef-20701699f967.png" 
           alt="Mandala do Instinto Soterrado" 
-          className="w-full h-full object-contain pointer-events-none select-none"
+          className="w-full h-full object-contain pointer-events-none select-none opacity-100"
+          onLoad={() => console.log('Mandala Image Loaded')}
+          onError={(e) => console.error('Mandala Image Load Error', e)}
         />
 
         {/* Hotspots e Efeitos Visuais sobre a Arte */}
