@@ -104,11 +104,12 @@ export const EstacaoStepDesafioEscuta: React.FC<DesafioEscutaProps> = ({
         <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
           <Brain className="w-8 h-8 text-gold" />
         </div>
-        <h2 className="text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+        <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-            Laboratório de Escuta
+            Laboratório <br className="xs:hidden" /> de Escuta
           </span>
         </h2>
+
         <p className="text-gold/60 text-lg max-w-2xl mx-auto font-serif italic leading-relaxed">
           “Agora observe o caso sem pressa. O objetivo não é acertar uma resposta clínica. É perceber qual camada simbólica se apresenta primeiro.”
         </p>
@@ -120,7 +121,7 @@ export const EstacaoStepDesafioEscuta: React.FC<DesafioEscutaProps> = ({
             <Target className="w-6 h-6" />
             <span className="text-[10px] uppercase tracking-widest font-black">Investigação Ativa</span>
           </div>
-          <h3 className="text-2xl md:text-3xl font-serif text-white italic">{pergunta}</h3>
+          <h3 className="text-xl xs:text-2xl md:text-3xl font-serif text-white italic break-words">{pergunta}</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

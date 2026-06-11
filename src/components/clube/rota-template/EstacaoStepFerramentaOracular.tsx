@@ -136,7 +136,7 @@ export const EstacaoStepFerramentaOracular: React.FC<FerramentaOracularProps> = 
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Compass className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-4xl md:text-5xl font-serif text-white italic">{nome}</h2>
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-serif text-white italic px-4 break-words leading-tight">{nome}</h2>
               <p className="text-gold/60 text-xl max-w-2xl mx-auto font-serif italic leading-relaxed">
                 “Mapeando o que foi abafado pela adaptação.”
               </p>
@@ -266,7 +266,7 @@ export const EstacaoStepFerramentaOracular: React.FC<FerramentaOracularProps> = 
                 <CheckCircle2 className="w-10 h-10 text-emerald-400" />
               </div>
               <h2 className="text-sm uppercase tracking-[0.4em] text-gold font-bold">Mapeamento Concluído</h2>
-              <h3 className="text-4xl md:text-5xl font-serif text-white italic">Seu Resultado Simbólico</h3>
+              <h3 className="text-3xl sm:text-4xl md:text-5xl font-serif text-white italic px-4 break-words leading-tight">Seu Resultado Simbólico</h3>
             </div>
 
             <Card className="bg-white/[0.03] border-white/10 p-12 rounded-[48px] relative overflow-hidden group">

@@ -103,16 +103,18 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
               <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6">
                 <Compass className="w-10 h-10 text-gold" />
               </div>
-              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4">
+              <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-                  Tradução Oracular
+                  Tradução <br className="xs:hidden" /> Oracular
                 </span>
               </h2>
 
 
-              <p className="text-gold/60 text-sm md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
+
+              <p className="text-gold/60 text-sm md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6 break-words">
                 “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
               </p>
+
 
 
 
@@ -258,7 +260,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                   <Sparkles className="w-6 h-6" />
                   <h4 className="text-xl font-serif italic tracking-wide">Integração Pessoal</h4>
                 </div>
-                <p className="text-white/90 font-serif italic text-xl sm:text-2xl leading-relaxed px-4">{traducaoData.perguntaPessoal}</p>
+                <p className="text-white/90 font-serif italic text-lg sm:text-2xl leading-relaxed px-4 break-words">{traducaoData.perguntaPessoal}</p>
                 <Textarea 
                   value={respostaPessoal}
                   onChange={(e) => setRespostaPessoal(e.target.value)}
@@ -272,7 +274,7 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
                   <FlaskConical className="w-6 h-6" />
                   <h4 className="text-xl font-serif italic tracking-wide">Olhar Profissional</h4>
                 </div>
-                <p className="text-white/90 font-serif italic text-xl sm:text-2xl leading-relaxed px-4">{traducaoData.perguntaProfissional}</p>
+                <p className="text-white/90 font-serif italic text-lg sm:text-2xl leading-relaxed px-4 break-words">{traducaoData.perguntaProfissional}</p>
                 <Textarea 
                   value={respostaProfissional}
                   onChange={(e) => setRespostaProfissional(e.target.value)}

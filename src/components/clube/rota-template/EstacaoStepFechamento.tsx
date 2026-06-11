@@ -75,14 +75,16 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
           className="space-y-4"
         >
           <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Essência 80/20</span>
-          <h2 className="text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
             <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-              {titulo}
+              {titulo.split(' ').length > 2 ? titulo : <>{titulo.split(' ')[0]} <br className="xs:hidden" /> {titulo.split(' ').slice(1).join(' ')}</>}
             </span>
           </h2>
-          <p className="text-gold/60 text-xl md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed">
+
+          <p className="text-gold/60 text-lg md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed px-4 break-words">
             “{subtitulo}”
           </p>
+
         </motion.div>
       </div>
 
@@ -130,7 +132,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
               variant="outline"
               disabled={conclusionMutation.isPending}
               onClick={() => conclusionMutation.mutate()}
-              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-xs uppercase tracking-widest transition-all group"
+              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-[10px] md:text-xs uppercase tracking-widest transition-all group"
             >
               Entrar na Próxima Travessia
               <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
