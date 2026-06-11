@@ -195,25 +195,27 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
               >
                 <div className="space-y-2">
                   <div className="text-[11px] tracking-[0.5em] text-gold/50 uppercase font-black text-center">CARTA 01</div>
-                  <h3 className="text-5xl md:text-7xl font-serif text-white tracking-tight flex items-center justify-center gap-6">
-                    <span className="h-px w-8 bg-gold/20 hidden md:block" />
+                  <h3 className="text-4xl sm:text-5xl md:text-7xl font-serif text-white tracking-tight flex items-center justify-center gap-4 md:gap-6 px-4">
+                    <span className="h-px w-4 md:w-8 bg-gold/20 hidden sm:block" />
                     {nomeCarta}
-                    <span className="h-px w-8 bg-gold/20 hidden md:block" />
+                    <span className="h-px w-4 md:w-8 bg-gold/20 hidden sm:block" />
                   </h3>
+
                   <div className="text-sm tracking-[0.3em] text-gold uppercase font-light text-center">A ARQUITETA DO CHAMADO</div>
                 </div>
 
                 {/* Palavras-Chave */}
                 <div className="space-y-4 text-center">
                    <div className="text-[10px] tracking-[0.4em] text-gold/40 uppercase font-bold">Palavras-Chave</div>
-                   <div className="text-white/80 font-serif italic text-xl">
+                    <div className="text-white/80 font-serif italic text-lg md:text-xl px-4">
                       {integracaoTexto.split('•').map((word, i, arr) => (
-                        <span key={i}>
+                        <span key={i} className="inline-block">
                           {word.trim()}
-                          {i < arr.length - 1 && <span className="mx-3 text-gold/40">•</span>}
+                          {i < arr.length - 1 && <span className="mx-2 md:mx-3 text-gold/40">•</span>}
                         </span>
                       ))}
-                   </div>
+                    </div>
+
                    <div className="h-px w-full bg-white/5" />
                 </div>
 
@@ -221,7 +223,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                 <div className="space-y-6 text-center">
                   <div className="text-[10px] tracking-[0.4em] text-gold/40 uppercase font-bold">Mensagem da Estação</div>
                   <div className="relative max-w-2xl mx-auto">
-                    <p className="text-white/90 text-xl md:text-2xl font-serif italic leading-relaxed">
+                    <p className="text-white/90 text-lg sm:text-xl md:text-2xl font-serif italic leading-relaxed px-4">
                       {mensagem.split('\n').map((line, i) => (
                         <React.Fragment key={i}>
                           {line}<br />
@@ -233,7 +235,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                 </div>
 
                 {/* Grid de Trindade (Porta, Torre, Labirinto) */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 text-left px-4">
                   {[
                     { title: 'A PORTA', subtitle: 'CLAREIRA DO CHAMADO', text: traducaoPorta || 'Você está diante do limiar entre a vida adaptada e o retorno à sua natureza.', icon: '⛩️' },
                     { title: 'A TORRE', subtitle: 'A ADAPTAÇÃO', text: traducaoTorre || 'Você aprendeu a ser aceita, mas se afastou daquilo que te torna verdadeiramente viva.', icon: '🏰' },
@@ -255,7 +257,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                 {/* Pergunta Oracular */}
                 <div className="space-y-6 text-center pt-4">
                   <div className="text-[10px] tracking-[0.4em] text-gold uppercase font-bold">Pergunta Oracular</div>
-                  <p className="text-white text-2xl md:text-3xl font-serif italic leading-tight max-w-2xl mx-auto">
+                  <p className="text-white text-xl sm:text-2xl md:text-3xl font-serif italic leading-tight max-w-2xl mx-auto px-4">
                     “{pergunta}”
                   </p>
                   <div className="flex items-center justify-center gap-2 text-gold/40">
@@ -267,7 +269,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                   <Button 
                     onClick={() => saveMutation.mutate()}
                     disabled={saveMutation.isPending}
-                    className="w-full bg-transparent hover:bg-gold/10 text-gold border border-gold/40 font-bold h-16 rounded-full text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105"
+                    className="w-full bg-transparent hover:bg-gold/10 text-gold border border-gold/40 font-bold h-14 md:h-16 rounded-full text-[10px] md:text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105"
                   >
                     {saveMutation.isPending ? 'Integrando...' : 'Integrar este Oráculo ao Rastro'}
                   </Button>
@@ -295,7 +297,7 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
             </div>
             <Button 
               onClick={onNext}
-              className="bg-white/10 hover:bg-white/20 text-white font-bold px-16 h-16 rounded-full text-[10px] uppercase tracking-[0.3em] flex items-center gap-2 mx-auto"
+              className="bg-white/10 hover:bg-white/20 text-white font-bold px-10 md:px-16 h-14 md:h-16 rounded-full text-[9px] md:text-[10px] uppercase tracking-[0.2em] md:tracking-[0.3em] flex items-center gap-2 mx-auto"
             >
               <span>Ver Cartografia da Loba</span>
               <ChevronRight className="w-4 h-4" />

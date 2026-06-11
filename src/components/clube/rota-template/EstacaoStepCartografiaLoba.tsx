@@ -101,7 +101,7 @@ export const EstacaoStepCartografiaLoba: React.FC<CartografiaLobaProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8">
-          <Card className="bg-white/[0.02] border-white/10 p-10 rounded-[48px] relative overflow-hidden group">
+          <Card className="bg-white/[0.02] border-white/10 p-6 sm:p-10 rounded-[2rem] sm:rounded-[48px] relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:opacity-10 transition-opacity">
               <Map className="w-32 h-32 text-gold" />
             </div>
@@ -138,7 +138,7 @@ export const EstacaoStepCartografiaLoba: React.FC<CartografiaLobaProps> = ({
             </div>
           </Card>
 
-          <Card className="bg-gold/5 border border-gold/10 p-8 rounded-[32px] flex items-center justify-between group cursor-pointer hover:bg-gold/10 transition-all">
+          <Card className="bg-gold/5 border border-gold/10 p-6 md:p-8 rounded-[2rem] md:rounded-[32px] flex items-center justify-between group cursor-pointer hover:bg-gold/10 transition-all">
             <div className="flex items-center gap-6">
               <div className="w-14 h-14 rounded-2xl bg-midnight border border-gold/20 flex items-center justify-center">
                 <Target className="w-6 h-6 text-gold" />
@@ -153,7 +153,7 @@ export const EstacaoStepCartografiaLoba: React.FC<CartografiaLobaProps> = ({
         </div>
 
         <div className="space-y-6">
-          <div className="bg-white/[0.03] border border-white/10 p-8 rounded-[40px] space-y-8">
+          <div className="bg-white/[0.03] border border-white/10 p-6 md:p-8 rounded-[2rem] md:rounded-[40px] space-y-8">
             <div className="text-center space-y-2">
               <Compass className="w-8 h-8 text-gold/40 mx-auto" />
               <span className="text-[10px] uppercase tracking-widest text-white/40 font-black block">Impacto na CidadELA</span>
@@ -196,7 +196,7 @@ export const EstacaoStepCartografiaLoba: React.FC<CartografiaLobaProps> = ({
       <div className="flex justify-center pt-8">
         <Button
           onClick={onNext}
-          className="bg-white text-midnight hover:bg-white/90 font-bold px-16 h-20 rounded-full text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105"
+          className="bg-white text-midnight hover:bg-white/90 font-bold px-8 md:px-16 h-16 md:h-20 rounded-full text-[10px] md:text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105 w-full md:w-auto"
         >
           Continuar para Fechamento 80/20
         </Button>
