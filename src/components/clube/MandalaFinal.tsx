@@ -53,10 +53,10 @@ const ESTADOS_MAP = {
 
 export function MandalaFinal({ estados }: Props) {
   return (
-    <div className="flex flex-col items-center w-full min-h-[700px] justify-center overflow-visible py-10 relative">
+    <div className="flex flex-col items-center w-full min-h-[500px] md:min-h-[700px] justify-center overflow-visible py-4 md:py-10 relative">
       
       {/* Container Principal da Mandala */}
-      <div className="relative w-full aspect-square max-w-[700px] mx-auto flex items-center justify-center p-4">
+      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[450px] md:max-w-[700px] mx-auto flex items-center justify-center p-2 md:p-4">
         
         {/* Camadas de Fundo da Mandala (Geometria Sagrada) */}
         <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
@@ -132,31 +132,31 @@ export function MandalaFinal({ estados }: Props) {
 
         {/* Centro: A Loba */}
         <motion.div 
-          className="relative z-30 w-48 h-48 md:w-56 md:h-56 flex flex-col items-center justify-center p-4"
+          className="relative z-30 w-24 h-24 sm:w-36 sm:h-36 md:w-56 md:h-56 flex flex-col items-center justify-center p-2 md:p-4"
         >
           {/* Altar Central Halo */}
           <motion.div 
             animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.05, 1] }}
             transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full border border-gold/30 bg-gold/5 blur-xl"
+            className="absolute inset-0 rounded-full border border-gold/30 bg-gold/5 blur-lg md:blur-xl"
           />
           
           <div className="relative flex flex-col items-center w-full h-full justify-center">
-             <div className="w-24 h-24 md:w-32 md:h-32 flex items-center justify-center relative">
+             <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-32 md:h-32 flex items-center justify-center relative">
                <img 
                  src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/loba-icon.png" 
                  alt="A Loba" 
                  className="w-full h-full object-contain filter brightness-125 drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10"
                />
              </div>
-             <span className="text-[12px] md:text-[14px] uppercase tracking-[0.5em] font-serif text-gold/90 mt-3 relative z-10">A Loba</span>
+             <span className="text-[8px] sm:text-[10px] md:text-[14px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-serif text-gold/90 mt-1 md:mt-3 relative z-10">A Loba</span>
           </div>
           
           {/* Subtle Rotating Ring */}
           <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-2 border border-gold/10 rounded-full border-dashed"
+            className="absolute inset-1 md:inset-2 border border-gold/10 rounded-full border-dashed"
           />
         </motion.div>
         
@@ -171,7 +171,12 @@ export function MandalaFinal({ estados }: Props) {
           // 5: Left Top (Vitalidade) - 210 deg
           const angles = [-90, -30, 30, 90, 150, 210];
           const angleRad = (angles[i]) * (Math.PI / 180);
-          const radius = 230; 
+          
+          // Responsive radius
+          const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+          const isSmallMobile = typeof window !== 'undefined' && window.innerWidth < 480;
+          const radius = isSmallMobile ? 110 : isMobile ? 160 : 230; 
+
           const x = Math.cos(angleRad) * radius;
           const y = Math.sin(angleRad) * radius;
           
@@ -199,14 +204,14 @@ export function MandalaFinal({ estados }: Props) {
                 
                 {/* Território - Sem círculos rígidos SaaS */}
                 <div className={cn(
-                  "w-24 h-24 md:w-28 md:h-28 flex flex-col items-center justify-center transition-all duration-1000 relative",
+                  "w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 flex flex-col items-center justify-center transition-all duration-1000 relative",
                   isAceso ? "opacity-100" : isOscilante ? "opacity-70" : "opacity-30"
                 )}>
                   {/* Fundo Orgânico Sutil (Filtro de névoa) */}
                   <div className="absolute inset-0 bg-gold/5 rounded-full blur-md" />
                   
                   <div className={cn("relative z-10 transition-all duration-1000 filter drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]", config.color)}>
-                    {React.cloneElement(t.icon as React.ReactElement, { className: "w-10 h-10 md:w-12 md:h-12" })}
+                    {React.cloneElement(t.icon as React.ReactElement, { className: "w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12" })}
                   </div>
                 </div>
               </div>
@@ -229,11 +234,11 @@ export function MandalaFinal({ estados }: Props) {
       </div>
 
       {/* Legenda de Estados - Fiel à Referência */}
-      <div className="mt-16 w-full max-w-[600px] px-8 py-4 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex justify-center gap-8 md:gap-16">
+      <div className="mt-8 md:mt-16 w-full max-w-[600px] px-4 md:px-8 py-3 md:py-4 rounded-2xl md:rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-4 md:gap-16">
         {Object.entries(ESTADOS_MAP).map(([nome, config]) => (
-          <div key={nome} className="flex items-center gap-2">
-            <div className={cn("w-2 h-2 rounded-full shadow-lg", config.dotColor)} />
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">
+          <div key={nome} className="flex items-center gap-1.5 md:gap-2">
+            <div className={cn("w-1.5 md:w-2 h-1.5 md:h-2 rounded-full shadow-lg", config.dotColor)} />
+            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] font-bold text-white/50">
               {config.label}
             </span>
           </div>

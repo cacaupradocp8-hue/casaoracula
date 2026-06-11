@@ -28,9 +28,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         </BootSafeBoundary>
       </div>
 
-      <main className="relative flex-grow z-10 pt-[var(--header-height)] pb-28 lg:pb-12 min-w-0">
+      <main className="relative flex-grow z-10 pt-20 lg:pt-24 pb-32 lg:pb-12 min-w-0">
         <ResponsiveContainer>
-          <div className="">
+          <div className="w-full">
             <BootSafeBoundary label="AccessExpirationBanner" compact>
               <AccessExpirationBanner />
             </BootSafeBoundary>
@@ -38,23 +38,26 @@ export function AppLayout({ children }: AppLayoutProps) {
         </ResponsiveContainer>
 
         <BootSafeBoundary label="Conteúdo principal">
-          {children}
+          <div className="w-full h-full">
+            {children}
+          </div>
         </BootSafeBoundary>
       </main>
 
-      <div className="relative z-20 pb-20 lg:pb-0">
+      <div className="relative z-20 pb-24 lg:pb-6">
         <BootSafeBoundary label="EthicalNotice" compact>
           <EthicalNotice />
         </BootSafeBoundary>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none lg:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-50 pointer-events-none lg:hidden safe-area-inset-bottom">
         <div className="pointer-events-auto">
           <BootSafeBoundary label="BottomNav" compact>
             <BottomNavPreview />
           </BootSafeBoundary>
         </div>
       </div>
+    </div>
     </div>
   );
 }

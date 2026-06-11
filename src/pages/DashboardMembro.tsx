@@ -60,7 +60,7 @@ export default function DashboardMembro() {
 
   return (
     <AppLayout>
-      <ResponsiveContainer size="wide" className="py-6 md:py-8 pb-24">
+      <ResponsiveContainer size="wide" className="py-6 md:py-10 pb-32">
         {/* Banner de boas-vindas (pós-compra) */}
         <AnimatePresence>
           {showBanner && (
@@ -74,53 +74,71 @@ export default function DashboardMembro() {
 
         {/* 1. SE TEM CARTOGRAFIA: REVELAÇÃO COMPLETA (VERSÃO ROTAS) */}
         {bussola.temCartografia ? (
-          <div className="space-y-20">
-            <div className="text-center space-y-4 md:space-y-6 pt-8 md:pt-12">
-               <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif text-white tracking-tight leading-tight">Sua <span className="text-gold italic">CidadELA</span> está viva</h1>
-               <p className="text-lg md:text-xl lg:text-2xl text-white/50 font-serif italic max-w-2xl mx-auto px-4">
+          <div className="space-y-12 md:space-y-24">
+            <div className="text-center space-y-4 md:space-y-8 pt-4 md:pt-16 max-w-4xl mx-auto px-4">
+               <motion.h1 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-serif text-white tracking-tight leading-[1.1]"
+               >
+                 Sua <span className="text-gold italic">CidadELA</span> está viva
+               </motion.h1>
+               <motion.p 
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.2 }}
+                 className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/50 font-serif italic max-w-2xl mx-auto"
+               >
                  Este é o centro da sua travessia. Aqui a Casa reúne os rastros que você deixou nas rotas, nos Jardins e nas ferramentas.
-               </p>
+               </motion.p>
             </div>
 
-            <CidadelaRotasView bussola={bussola} />
+            <div className="w-full overflow-hidden">
+              <CidadelaRotasView bussola={bussola} />
+            </div>
 
-            <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 pt-12 pb-24">
-              <div className="space-y-8">
-                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/60 font-bold">Próximo passo recomendado</h3>
-                <div className="p-10 rounded-[3rem] border border-white/10 bg-white/[0.02] space-y-8 group hover:border-gold/20 transition-all duration-700">
-                   <div className="space-y-4">
-                     <h4 className="text-3xl font-serif text-white group-hover:text-gold transition-colors">Rota dos Lobos</h4>
-                     <p className="text-lg text-white/50 italic font-serif">O retorno da mulher que sabe. Sua cartografia revelou este caminho.</p>
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 pt-8 md:pt-20 pb-16">
+              <div className="space-y-6 md:space-y-10">
+                <h3 className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-gold/60 font-bold px-1">Próximo passo recomendado</h3>
+                <motion.div 
+                  whileHover={{ y: -5 }}
+                  className="p-6 md:p-12 rounded-[2rem] md:rounded-[3.5rem] border border-white/10 bg-white/[0.02] space-y-6 md:space-y-10 group hover:border-gold/30 transition-all duration-700"
+                >
+                   <div className="space-y-3 md:space-y-5">
+                     <h4 className="text-2xl md:text-4xl font-serif text-white group-hover:text-gold transition-colors">Rota dos Lobos</h4>
+                     <p className="text-base md:text-xl text-white/50 italic font-serif leading-relaxed">O retorno da mulher que sabe. Sua cartografia revelou este caminho.</p>
                    </div>
                    <Button 
                      variant="gold" 
                      size="xl" 
-                     className="w-full h-16 shadow-premium-glow rounded-full"
+                     className="w-full h-14 md:h-20 shadow-premium-glow rounded-full text-base md:text-lg group-hover:scale-[1.02] transition-transform"
                      onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
                    >
                      Continuar Travessia
-                     <ArrowRight className="ml-2 w-5 h-5" />
+                     <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
                    </Button>
-                </div>
+                </motion.div>
               </div>
 
-              <div className="space-y-8">
-                <h3 className="text-xs uppercase tracking-[0.3em] text-gold/60 font-bold">Rastros nos Jardins</h3>
-                <div className="grid gap-4">
-                   <button 
+              <div className="space-y-6 md:space-y-10">
+                <h3 className="text-[10px] md:text-xs uppercase tracking-[0.3em] text-gold/60 font-bold px-1">Rastros nos Jardins</h3>
+                <div className="grid grid-cols-1 gap-4 md:gap-6">
+                   <motion.button 
+                     whileHover={{ x: 5 }}
                      onClick={() => navigate('/jardim-da-psique')}
-                     className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all"
+                     className="p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all flex flex-col gap-2"
                    >
-                     <p className="text-[10px] uppercase tracking-widest text-gold/40 mb-2">Jardim da Psique</p>
-                     <p className="text-white/60 italic font-serif">Ver últimos registros do inconsciente...</p>
-                   </button>
-                   <button 
+                     <p className="text-[9px] md:text-[10px] uppercase tracking-widest text-gold/50 font-semibold">Jardim da Psique</p>
+                     <p className="text-white/70 text-sm md:text-lg italic font-serif">Ver últimos registros do inconsciente...</p>
+                   </motion.button>
+                   <motion.button 
+                     whileHover={{ x: 5 }}
                      onClick={() => navigate('/casa-das-maquinas/jardim-oficio')}
-                     className="p-6 rounded-2xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all"
+                     className="p-6 md:p-8 rounded-2xl md:rounded-3xl border border-white/5 bg-white/[0.01] hover:bg-white/5 text-left transition-all flex flex-col gap-2"
                    >
-                     <p className="text-[10px] uppercase tracking-widest text-gold/40 mb-2">Jardim do Ofício</p>
-                     <p className="text-white/60 italic font-serif">Ver últimos rastros da prática profissional...</p>
-                   </button>
+                     <p className="text-[9px] md:text-[10px] uppercase tracking-widest text-gold/50 font-semibold">Jardim do Ofício</p>
+                     <p className="text-white/70 text-sm md:text-lg italic font-serif">Ver últimos rastros da prática profissional...</p>
+                   </motion.button>
                 </div>
               </div>
             </div>
