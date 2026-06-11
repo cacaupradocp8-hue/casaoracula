@@ -156,23 +156,35 @@ export function MandalaFinal({ estados }: Props) {
               className="absolute z-10"
             >
               <div className="flex flex-col items-center gap-3">
-                <motion.div 
-                  className={cn(
-                    "w-24 h-24 md:w-28 md:h-28 rounded-full border flex flex-col items-center justify-center p-2 text-center transition-all duration-1000 relative",
-                    config.border,
-                    config.shadow,
-                    "bg-[#0a0a0c]/90 backdrop-blur-md"
-                  )}
-                >
-                  <div className={cn("transition-colors duration-1000", config.iconColor)}>
-                    {t.icon}
-                  </div>
-                  
-                  {/* Subtle highlight ring for aceso/oscilante */}
-                  {(estado === 'Aceso' || estado === 'Oscilante') && (
-                    <div className={cn("absolute inset-0 rounded-full border border-current opacity-20 scale-105 animate-pulse", config.iconColor)} />
-                  )}
-                </motion.div>
+                <AnimatePresence mode="wait">
+                  <motion.div 
+                    key={estado}
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className={cn(
+                      "w-24 h-24 md:w-28 md:h-28 rounded-full border flex flex-col items-center justify-center p-2 text-center transition-all duration-1000 relative",
+                      config.border,
+                      config.shadow,
+                      "bg-[#0a0a0c]/90 backdrop-blur-md"
+                    )}
+                  >
+                    <div className={cn("transition-colors duration-1000", config.iconColor)}>
+                      {t.icon}
+                    </div>
+                    
+                    {/* Subtle highlight ring for aceso/oscilante */}
+                    {(estado === 'Aceso' || estado === 'Oscilante') && (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 1 }}
+                        animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.05, 1] }}
+                        transition={{ duration: 4, repeat: Infinity }}
+                        className={cn("absolute inset-0 rounded-full border border-current", config.iconColor)} 
+                      />
+                    )}
+                  </motion.div>
+                </AnimatePresence>
+
                 
                 <div className="flex flex-col items-center">
                   <span className="text-[10px] md:text-[11px] font-black uppercase tracking-[0.3em] text-white/90">
