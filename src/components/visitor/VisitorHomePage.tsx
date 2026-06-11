@@ -34,7 +34,7 @@ export function VisitorHomePage() {
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 0.08, scale: 1 }}
+              animate={{ opacity: 0.05, scale: 1 }}
               transition={{ duration: 2.5, ease: 'easeOut' }}
               className="w-[500px] h-[500px] md:w-[700px] md:h-[700px]"
             >
