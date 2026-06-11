@@ -166,9 +166,11 @@ export function EscutaPremium({
 
             <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950 flex items-center justify-center">
               {/* Shine/Reflection */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-white/10 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 z-10 pointer-events-none" />
+              <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent,rgba(212,175,55,0.1),transparent)] z-10 pointer-events-none animate-[spin_10s_linear_infinite]" />
               
               {/* The Central Art (Station Image) - Improved Centralization */}
+
               <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl flex items-center justify-center">
                 {imagemEscuta ? (
                   <img 
