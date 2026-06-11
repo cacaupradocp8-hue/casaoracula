@@ -1,244 +1,243 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { Moon, Flame, Shield, Heart, Leaf, PawPrint } from 'lucide-react';
 
 export interface Territorio {
   id: string;
   nome: string;
-  icon: React.ReactNode;
-  distrito: string;
+  narrativa: Record<'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto', string>;
+  // Coordenadas em % (top, left) relativas ao container da imagem
+  pos: { top: string; left: string };
 }
 
-// Fixed order according to reference image starting from Top and going clockwise
 export const TERRITORIOS: Territorio[] = [
-  { id: 'intuicao', nome: 'Intuição', icon: <Moon className="w-10 h-10" />, distrito: 'Conselho Interior' }, // Top
-  { id: 'desejo', nome: 'Desejo', icon: <Flame className="w-10 h-10" />, distrito: 'Portal de Renascimento' }, // Right Top
-  { id: 'limites', nome: 'Limites', icon: <Shield className="w-10 h-10" />, distrito: 'Torres' }, // Right Bottom
-  { id: 'corpo', nome: 'Corpo', icon: <Heart className="w-10 h-10" />, distrito: 'Jardim da Heroína' }, // Bottom
-  { id: 'criatividade', nome: 'Criatividade', icon: <Leaf className="w-10 h-10" />, distrito: 'Bosque dos Arquétipos' }, // Left Bottom
-  { id: 'vitalidade', nome: 'Vitalidade', icon: <PawPrint className="w-10 h-10" />, distrito: 'Coração da CidadELA' }, // Left Top
+  { 
+    id: 'intuicao', 
+    nome: 'Intuição', 
+    pos: { top: '10.5%', left: '50%' },
+    narrativa: {
+      Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
+      Oscilante: "Há um sussurro que oscila, esperando o silêncio necessário para se tornar clareza.",
+      Soterrado: "A voz interna está abafada por camadas de certezas externas que precisam ser removidas.",
+      Exausto: "O rastro da intuição está quase invisível sob o peso da exaustão mental."
+    }
+  },
+  { 
+    id: 'desejo', 
+    nome: 'Desejo', 
+    pos: { top: '27.5%', left: '81%' },
+    narrativa: {
+      Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
+      Oscilante: "Uma chama que vacila entre o que você realmente quer e o que acredita que deve querer.",
+      Soterrado: "Seus desejos autênticos foram cobertos por cinzas de obrigações alheias.",
+      Exausto: "A força do querer está desbotada, pedindo descanso para que a brasa volte a brilhar."
+    }
+  },
+  { 
+    id: 'limites', 
+    nome: 'Limites', 
+    pos: { top: '61.5%', left: '81%' },
+    narrativa: {
+      Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
+      Oscilante: "Suas fronteiras são porosas, por vezes firmes, por vezes cedendo ao peso do mundo.",
+      Soterrado: "Seus limites foram soterrados por invasões que você ainda não aprendeu a nomear.",
+      Exausto: "O escudo está caído, deixando seu território vulnerável ao que não lhe pertence."
+    }
+  },
+  { 
+    id: 'corpo', 
+    nome: 'Corpo', 
+    pos: { top: '78.5%', left: '50%' },
+    narrativa: {
+      Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
+      Oscilante: "O corpo envia sinais intermitentes de cansaço e força, pedindo uma escuta mais atenta.",
+      Soterrado: "A conexão com a matéria está silenciada, tratando o corpo apenas como um transporte.",
+      Exausto: "O corpo grita através do silêncio ou da dor, implorando pela sua presença ritualística."
+    }
+  },
+  { 
+    id: 'criatividade', 
+    nome: 'Criatividade', 
+    pos: { top: '61.5%', left: '19%' },
+    narrativa: {
+      Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
+      Oscilante: "Ideias surgem mas perdem o fôlego antes de ganharem corpo na realidade.",
+      Soterrado: "A semente da criação está enterrada sob o solo árido da utilidade excessiva.",
+      Exausto: "A fonte secou temporariamente, pedindo que a loba volte a brincar sem propósito."
+    }
+  },
+  { 
+    id: 'vitalidade', 
+    nome: 'Vitalidade', 
+    pos: { top: '27.5%', left: '19%' },
+    narrativa: {
+      Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
+      Oscilante: "A energia sobe e desce, num ritmo que ainda não encontrou seu centro de repouso.",
+      Soterrado: "O entusiasmo está oculto sob camadas de rotinas que drenam sua força essencial.",
+      Exausto: "A energia está no limite, pedindo um recolhimento profundo para não se apagar."
+    }
+  },
 ];
 
 interface Props {
   estados: Record<string, 'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto'>;
 }
 
-const ESTADOS_MAP = {
+const ESTADOS_STYLE = {
   Aceso: { 
-    color: 'text-[#d4af37]', 
-    dotColor: 'bg-[#d4af37]',
+    dot: 'bg-[#d4af37]',
+    glow: 'rgba(212, 175, 55, 0.6)',
     label: 'ACESO',
-    glow: 'rgba(212, 175, 55, 0.4)'
+    animation: {
+      opacity: [0.4, 0.8, 0.4],
+      scale: [1, 1.15, 1],
+    },
+    duration: 3
   },
   Oscilante: { 
-    color: 'text-[#c5a059]', 
-    dotColor: 'bg-[#c5a059]',
+    dot: 'bg-[#c5a059]',
+    glow: 'rgba(197, 160, 89, 0.3)',
     label: 'OSCILANTE',
-    glow: 'rgba(197, 160, 89, 0.2)'
+    animation: {
+      opacity: [0.2, 0.5, 0.2],
+      scale: [1, 1.05, 1],
+    },
+    duration: 5
   },
   Soterrado: { 
-    color: 'text-white/40', 
-    dotColor: 'bg-white/30',
+    dot: 'bg-white/30',
+    glow: 'rgba(255, 255, 255, 0.05)',
     label: 'SOTERRADO',
-    glow: 'transparent'
+    animation: {
+      opacity: [0.1, 0.2, 0.1],
+    },
+    duration: 8
   },
   Exausto: { 
-    color: 'text-white/20', 
-    dotColor: 'bg-white/10',
+    dot: 'bg-white/10',
+    glow: 'transparent',
     label: 'EXAUSTO',
-    glow: 'transparent'
+    animation: {
+      opacity: [0.05, 0.1, 0.05],
+    },
+    duration: 10
   },
 };
 
 export function MandalaFinal({ estados }: Props) {
+  const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
+
   return (
-    <div className="flex flex-col items-center w-full min-h-[500px] md:min-h-[700px] justify-center overflow-visible py-4 md:py-10 relative">
+    <div className="flex flex-col items-center w-full justify-center py-4 relative">
       
-      {/* Container Principal da Mandala */}
-      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[450px] md:max-w-[700px] mx-auto flex items-center justify-center p-2 md:p-4">
+      {/* Container da Arte Oficial */}
+      <div className="relative w-full aspect-square max-w-[320px] sm:max-w-[500px] md:max-w-[800px] mx-auto group">
         
-        {/* Camadas de Fundo da Mandala (Geometria Sagrada) */}
-        <div className="absolute inset-0 pointer-events-none flex items-center justify-center">
-          <svg className="w-full h-full opacity-30" viewBox="0 0 800 800">
-            <defs>
-              <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#d4af37" stopOpacity="0.2" />
-                <stop offset="100%" stopColor="#d4af37" stopOpacity="0" />
-              </radialGradient>
-              
-              <filter id="mist" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur in="SourceGraphic" stdDeviation="15" />
-              </filter>
-            </defs>
-            
-            {/* Center Glow Background */}
-            <circle cx="400" cy="400" r="300" fill="url(#centerGlow)" />
+        {/* Imagem de Fundo (A Mandala Oficial) */}
+        <img 
+          src="/assets/mandala/mandala-oficial.png" 
+          alt="Mandala do Instinto Soterrado" 
+          className="w-full h-full object-contain pointer-events-none select-none"
+        />
 
-            {/* Geometry Lines (Faint) */}
-            <g stroke="#d4af37" strokeWidth="0.5" fill="none" className="opacity-40">
-              <circle cx="400" cy="400" r="230" strokeDasharray="4 8" />
-              <circle cx="400" cy="400" r="180" opacity="0.5" />
-              <path d="M400,170 L600,285 L600,515 L400,630 L200,515 L200,285 Z" strokeDasharray="2 4" />
-              <path d="M400,100 L700,400 L400,700 L100,400 Z" opacity="0.2" />
-            </g>
-
-            {/* The Outer Vine Ring (Branches) */}
-            <g className="opacity-40">
-              <circle cx="400" cy="400" r="230" stroke="#3d2b1f" strokeWidth="12" fill="none" />
-              <circle cx="400" cy="400" r="230" stroke="#d4af37" strokeWidth="1" fill="none" className="opacity-30" />
-            </g>
-
-            {/* Connecting Branches (Spokes) */}
-            {[0, 60, 120, 180, 240, 300].map((angle, i) => {
-              const rad = (angle - 90) * (Math.PI / 180);
-              const x2 = 400 + Math.cos(rad) * 230;
-              const y2 = 400 + Math.sin(rad) * 230;
-              return (
-                <line 
-                  key={`spoke-${i}`}
-                  x1="400" y1="400" x2={x2} y2={y2}
-                  stroke="#3d2b1f" strokeWidth="6"
-                  className="opacity-60"
-                />
-              );
-            })}
-          </svg>
-        </div>
-
-        {/* Partículas Lentas no Fundo */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-gold/30 rounded-full"
-              initial={{ 
-                x: Math.random() * 800, 
-                y: Math.random() * 800,
-                opacity: 0
-              }}
-              animate={{ 
-                y: [null, -100],
-                opacity: [0, 1, 0]
-              }}
-              transition={{ 
-                duration: 5 + Math.random() * 5, 
-                repeat: Infinity, 
-                delay: Math.random() * 10 
-              }}
-            />
-          ))}
-        </div>
-
-        {/* Centro: A Loba */}
-        <motion.div 
-          className="relative z-30 w-24 h-24 sm:w-36 sm:h-36 md:w-56 md:h-56 flex flex-col items-center justify-center p-2 md:p-4"
-        >
-          {/* Altar Central Halo */}
-          <motion.div 
-            animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.05, 1] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute inset-0 rounded-full border border-gold/30 bg-gold/5 blur-lg md:blur-xl"
-          />
-          
-          <div className="relative flex flex-col items-center w-full h-full justify-center">
-             <div className="w-12 h-12 sm:w-20 sm:h-20 md:w-32 md:h-32 flex items-center justify-center relative">
-               <img 
-                 src="https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/loba-icon.png" 
-                 alt="A Loba" 
-                 className="w-full h-full object-contain filter brightness-125 drop-shadow-[0_0_15px_rgba(212,175,55,0.8)] z-10"
-               />
-             </div>
-             <span className="text-[8px] sm:text-[10px] md:text-[14px] uppercase tracking-[0.3em] md:tracking-[0.5em] font-serif text-gold/90 mt-1 md:mt-3 relative z-10">A Loba</span>
-          </div>
-          
-          {/* Subtle Rotating Ring */}
-          <motion.div 
-            animate={{ rotate: 360 }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="absolute inset-1 md:inset-2 border border-gold/10 rounded-full border-dashed"
-          />
-        </motion.div>
-        
-        {/* Renderização dos Territórios em Posições 1:1 com Referência */}
-        {TERRITORIOS.map((t, i) => {
-          // Angle mapping to match positions:
-          // 0: Top (Intuicao) - 270 deg
-          // 1: Right Top (Desejo) - 330 deg
-          // 2: Right Bottom (Limites) - 30 deg
-          // 3: Bottom (Corpo) - 90 deg
-          // 4: Left Bottom (Criatividade) - 150 deg
-          // 5: Left Top (Vitalidade) - 210 deg
-          const angles = [-90, -30, 30, 90, 150, 210];
-          const angleRad = (angles[i]) * (Math.PI / 180);
-          
-          // Responsive radius
-          const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-          const isSmallMobile = typeof window !== 'undefined' && window.innerWidth < 480;
-          const radius = isSmallMobile ? 110 : isMobile ? 160 : 230; 
-
-          const x = Math.cos(angleRad) * radius;
-          const y = Math.sin(angleRad) * radius;
-          
+        {/* Hotspots e Efeitos Visuais sobre a Arte */}
+        {TERRITORIOS.map((t) => {
           const estado = estados[t.id] || 'Soterrado';
-          const config = ESTADOS_MAP[estado];
-          const isAceso = estado === 'Aceso';
-          const isOscilante = estado === 'Oscilante';
-
+          const style = ESTADOS_STYLE[estado];
+          
           return (
-            <motion.div
+            <div 
               key={t.id}
-              style={{ x, y }}
-              className="absolute z-40 flex flex-col items-center"
+              className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center"
+              style={{ top: t.pos.top, left: t.pos.left }}
             >
-              <div className="relative group">
-                {/* Aura de Brilho */}
-                {(isAceso || isOscilante) && (
-                   <motion.div 
-                      animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.3, 1] }}
-                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-[-40px] rounded-full blur-3xl"
-                      style={{ backgroundColor: config.glow }}
-                   />
-                )}
-                
-                {/* Território - Sem círculos rígidos SaaS */}
-                <div className={cn(
-                  "w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 flex flex-col items-center justify-center transition-all duration-1000 relative",
-                  isAceso ? "opacity-100" : isOscilante ? "opacity-70" : "opacity-30"
-                )}>
-                  {/* Fundo Orgânico Sutil (Filtro de névoa) */}
-                  <div className="absolute inset-0 bg-gold/5 rounded-full blur-md" />
-                  
-                  <div className={cn("relative z-10 transition-all duration-1000 filter drop-shadow-[0_0_8px_rgba(212,175,55,0.3)]", config.color)}>
-                    {React.cloneElement(t.icon as React.ReactElement, { className: "w-6 h-6 sm:w-8 sm:h-8 md:w-12 md:h-12" })}
-                  </div>
-                </div>
-              </div>
+              {/* Hotspot de Interação (Invisível mas clicável) */}
+              <button
+                onClick={() => setSelectedTerritorio(t)}
+                className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full z-50 cursor-pointer focus:outline-none"
+                aria-label={t.nome}
+              />
 
-              {/* Informações do Território (Fiel à Referência) */}
-              <div className="flex flex-col items-center text-center mt-4">
-                <span className="text-[11px] md:text-[13px] font-serif uppercase tracking-[0.3em] text-white/90">
-                  {t.nome}
-                </span>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className={cn("w-1.5 h-1.5 rounded-full", config.dotColor)} />
-                  <span className={cn("text-[9px] md:text-[10px] uppercase tracking-widest font-bold", config.color)}>
-                    {config.label}
-                  </span>
+              {/* Efeito de Brilho/Pulsar sobre o Território */}
+              <motion.div
+                animate={style.animation}
+                transition={{ duration: style.duration, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute w-12 h-12 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-full pointer-events-none z-10"
+                style={{ 
+                  backgroundColor: style.glow,
+                  filter: 'blur(20px)',
+                  boxShadow: estado === 'Aceso' ? `0 0 30px ${style.glow}` : 'none'
+                }}
+              />
+              
+              {/* Partículas sutis para estado Aceso */}
+              {estado === 'Aceso' && (
+                <div className="absolute inset-0 pointer-events-none">
+                  {[...Array(4)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-gold rounded-full"
+                      animate={{ 
+                        y: [-20, -60],
+                        x: [(i - 2) * 10, (i - 2) * 15],
+                        opacity: [0, 0.8, 0],
+                        scale: [0.5, 1, 0.5]
+                      }}
+                      transition={{ 
+                        duration: 2 + Math.random(), 
+                        repeat: Infinity, 
+                        delay: i * 0.5 
+                      }}
+                    />
+                  ))}
                 </div>
-              </div>
-            </motion.div>
+              )}
+            </div>
           );
         })}
+
+        {/* Painel Flutuante Narrativo */}
+        <AnimatePresence>
+          {selectedTerritorio && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 10 }}
+              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] max-w-[300px] bg-black/80 backdrop-blur-xl border border-gold/30 p-6 rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)]"
+            >
+              <div className="text-center space-y-4">
+                <div className="space-y-1">
+                  <h4 className="text-gold font-serif text-2xl uppercase tracking-widest">{selectedTerritorio.nome}</h4>
+                  <div className="flex items-center justify-center gap-2">
+                    <div className={cn("w-1.5 h-1.5 rounded-full", ESTADOS_STYLE[estados[selectedTerritorio.id] || 'Soterrado'].dot)} />
+                    <span className="text-[10px] text-white/50 tracking-[0.2em] font-bold uppercase">
+                      Estado: {estados[selectedTerritorio.id] || 'Soterrado'}
+                    </span>
+                  </div>
+                </div>
+                
+                <p className="text-white/80 font-serif italic text-sm leading-relaxed">
+                  "{selectedTerritorio.narrativa[estados[selectedTerritorio.id] || 'Soterrado']}"
+                </p>
+
+                <button 
+                  onClick={() => setSelectedTerritorio(null)}
+                  className="mt-4 text-[10px] text-gold/40 hover:text-gold uppercase tracking-widest transition-colors"
+                >
+                  Fechar rastro
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Legenda de Estados - Fiel à Referência */}
-      <div className="mt-8 md:mt-16 w-full max-w-[600px] px-4 md:px-8 py-3 md:py-4 rounded-2xl md:rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-4 md:gap-16">
-        {Object.entries(ESTADOS_MAP).map(([nome, config]) => (
-          <div key={nome} className="flex items-center gap-1.5 md:gap-2">
-            <div className={cn("w-1.5 md:w-2 h-1.5 md:h-2 rounded-full shadow-lg", config.dotColor)} />
-            <span className="text-[8px] md:text-[10px] uppercase tracking-[0.15em] md:tracking-[0.2em] font-bold text-white/50">
+      <div className="mt-8 md:mt-12 w-full max-w-[600px] px-4 py-3 rounded-full border border-white/5 bg-black/40 backdrop-blur-xl flex flex-wrap justify-center gap-6 md:gap-12">
+        {Object.entries(ESTADOS_STYLE).map(([nome, config]) => (
+          <div key={nome} className="flex items-center gap-2">
+            <div className={cn("w-2 h-2 rounded-full", config.dot)} />
+            <span className="text-[9px] md:text-[10px] uppercase tracking-[0.2em] font-bold text-white/50">
               {config.label}
             </span>
           </div>

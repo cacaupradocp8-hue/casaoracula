@@ -256,38 +256,45 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             </div>
 
             {/* Legenda Narrativa Inferior */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-16 mt-20 w-full max-w-4xl border-t border-white/5 pt-16">
-              <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-16 w-full max-w-5xl border-t border-white/5 pt-12">
+              <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-gold shadow-[0_0_8px_gold]" />
-                  <h4 className="text-gold/80 font-serif italic uppercase tracking-[0.3em] text-[12px]">Pegadas Encontradas</h4>
+                  <h4 className="text-gold/80 font-serif italic uppercase tracking-[0.3em] text-[11px]">Pegadas Encontradas</h4>
                 </div>
-                <div className="flex flex-wrap gap-x-6 gap-y-3">
-                  {acesoTerritorios.map(t => (
-                    <span key={t.id} className="text-white/90 font-serif italic text-lg">{t.nome}</span>
-                  ))}
-                  {acesoTerritorios.length === 0 && <span className="text-white/20 italic">Rastros sutis...</span>}
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {acesoTerritorios.length > 0 ? (
+                    acesoTerritorios.map(t => (
+                      <span key={t.id} className="text-white/90 font-serif italic text-lg">{t.nome}</span>
+                    ))
+                  ) : (
+                    <span className="text-white/20 italic font-serif">Aguardando despertar...</span>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-white/20" />
-                  <h4 className="text-white/40 font-serif italic uppercase tracking-[0.3em] text-[12px]">Pegadas Apagadas</h4>
+                  <h4 className="text-white/40 font-serif italic uppercase tracking-[0.3em] text-[11px]">Pegadas Quase Apagadas</h4>
                 </div>
-                <div className="flex flex-wrap gap-x-6 gap-y-3">
-                  {soterradoTerritorios.map(t => (
-                    <span key={t.id} className="text-white/40 font-serif italic text-lg">{t.nome}</span>
-                  ))}
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {soterradoTerritorios.length > 0 ? (
+                    soterradoTerritorios.map(t => (
+                      <span key={t.id} className="text-white/40 font-serif italic text-lg">{t.nome}</span>
+                    ))
+                  ) : (
+                    <span className="text-white/20 italic font-serif">Caminhos visíveis...</span>
+                  )}
                 </div>
               </div>
 
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <Compass className="w-4 h-4 text-gold/30" />
-                  <h4 className="text-gold/50 font-serif italic uppercase tracking-[0.3em] text-[12px]">Próxima Trilha</h4>
+                  <h4 className="text-gold/50 font-serif italic uppercase tracking-[0.3em] text-[11px]">Próxima Trilha</h4>
                 </div>
-                <p className="text-white/80 text-xl font-serif italic leading-relaxed">
+                <p className="text-white/80 text-lg font-serif italic leading-relaxed">
                   "{TRILHAS_FINAIS[maisSoterradoId]}"
                 </p>
               </div>
