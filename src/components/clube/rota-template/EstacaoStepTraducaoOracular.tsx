@@ -110,9 +110,10 @@ export const EstacaoStepTraducaoOracular: React.FC<TraducaoOracularProps> = ({
               </h2>
 
 
-              <p className="text-gold/60 text-base md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
+              <p className="text-gold/60 text-sm md:text-xl max-w-2xl mx-auto font-serif italic leading-relaxed px-6">
                 “Agora que você escutou o conto, vamos traduzi-lo para a linguagem da Casa Orácula.”
               </p>
+
 
 
             </div>
