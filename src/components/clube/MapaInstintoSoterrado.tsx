@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map } from 'lucide-react';
+import { Compass, Sparkles, Send, CheckCircle2, ChevronRight, Info, Target, Map, BookOpen, PenTool } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useMutation } from '@tanstack/react-query';
@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
+import { JardimInput } from './JardimInput';
 
 interface MapaInstintoSoterradoProps {
   estacaoId: string;
@@ -19,97 +20,94 @@ interface MapaInstintoSoterradoProps {
 type Estado = 'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto';
 
 const EIXOS = [
-  { id: 'comportamento', label: 'Comportamento' },
-  { id: 'percepcao', label: 'Percepção' },
-  { id: 'consequencia', label: 'Consequência' }
+  { id: 'comportamento', label: 'Observação' },
+  { id: 'percepcao', label: 'Sentido' },
+  { id: 'consequencia', label: 'Rastro' }
 ];
 
 const PERGUNTAS = [
   { id: 'corpo', label: 'Corpo', perguntas: [
-    'Diante de um desconforto físico ou cansaço, minha primeira reação é...',
-    'Consigo identificar as mensagens sutis do meu corpo enquanto elas ainda são pequenas?',
-    'Com que frequência sinto que meu corpo gritou por não ter sido ouvido antes?'
+    'Quando o cansaço atravessa sua jornada, de que forma seu corpo costuma sinalizar que o passo precisa mudar?',
+    'Ao fechar os olhos por um instante, você consegue distinguir onde termina a sua energia e onde começa a expectativa do mundo sobre seus movimentos?',
+    'Nas últimas travessias, com que frequência você percebeu que seu corpo só foi ouvido quando a dor precisou gritar?'
   ]},
   { id: 'intuicao', label: 'Intuição', perguntas: [
-    'Quando tenho um pressentimento ou frio na barriga sobre algo, eu costumo...',
-    'O quanto confio na minha voz interna sem precisar de uma explicação lógica imediata?',
-    'Olhando para trás, quantas vezes ignorei um sinal intuitivo e me arrependi?'
+    'Quando uma percepção surge antes de qualquer explicação lógica, que destino você costuma dar a esse sinal?',
+    'No silêncio das suas decisões, quanto espaço existe para a sua voz interna sem que ela precise de provas para ser real?',
+    'Ao revisitar rastros antigos, quantos deles revelam que a sua primeira percepção já sabia o caminho, mesmo antes de você aceitá-lo?'
   ]},
   { id: 'desejo', label: 'Desejo', perguntas: [
-    'Quando algo desperta meu interesse genuíno, eu me permito...',
-    'Consigo diferenciar o que eu realmente quero do que esperam que eu queira?',
-    'Como me sinto após adiar ou ignorar um desejo autêntico por muito tempo?'
+    'Quando um interesse genuíno acende uma faísca em você, qual o movimento natural que essa chama costuma seguir?',
+    'Você consegue identificar quando um querer nasce da sua própria natureza ou quando ele é apenas um eco do que os outros esperam?',
+    'Como fica a paisagem interna quando um desejo autêntico é deixado para trás em nome de uma necessidade que não é sua?'
   ]},
   { id: 'limites', label: 'Limites', perguntas: [
-    'Ao perceber que algo está invadindo meu espaço ou energia, eu...',
-    'Consigo sentir o momento exato em que meu sim deveria ser um não?',
-    'Qual o nível de desgaste emocional que sinto por carregar pesos que não são meus?'
+    'Ao perceber que um espaço ou energia sua está sendo ocupada por algo externo, como seus contornos costumam reagir?',
+    'Existe um sensor interno que aponta o momento exato em que um "sim" começa a corroer a sua própria integridade?',
+    'Quanto do peso que você carrega hoje pertence ao seu próprio caminho e quanto foi absorvido de trilhas alheias?'
   ]},
   { id: 'criatividade', label: 'Criatividade', perguntas: [
-    'Quando uma ideia nova aparece, meu movimento natural é...',
-    'Sinto que tenho um espaço interno seguro para criar sem me julgar?',
-    'Como percebo o fluxo de novas soluções e cores na minha rotina?'
+    'Quando uma nova possibilidade se apresenta à sua mente, qual o primeiro gesto que você costuma oferecer a ela?',
+    'Há uma clareira em sua rotina onde as ideias podem brincar e ser inúteis, sem a cobrança de gerar um resultado imediato?',
+    'Como as cores e soluções novas têm chegado até você: como um fluxo livre ou como algo que precisa ser arrancado da exaustão?'
   ]},
   { id: 'vitalidade', label: 'Vitalidade', perguntas: [
-    'Ao iniciar minha semana, meu nível de engajamento com a vida é...',
-    'Consigo identificar o que me nutre e o que me drena de forma clara?',
-    'Nos últimos meses, quanto da minha energia foi investido em coisas que me fazem sentir viva?'
+    'Ao despertar para um novo ciclo, com que intensidade a loba em você sente que a vida vale o esforço de ser vivida?',
+    'Você consegue mapear com clareza quais encontros e tarefas devolvem a sua presença e quais apenas drenam o seu rastro?',
+    'Quanto da sua energia vital tem sido investida naquilo que realmente faz o seu sangue pulsar com entusiasmo?'
   ]}
 ];
 
 const OPCOES = [
-  { label: 'Escutar / Investigar / Aproximar / Nomear / Espaço / Entusiasmo', score: 3, estado: 'Aceso' as Estado },
-  { label: 'Perceber depois / Buscar confirmação / Observar / Ajustar / Registrar / Instável', score: 2, estado: 'Oscilante' as Estado },
-  { label: 'Ignorar / Duvidar / Adiar / Tolerar / Adiar / Pouca presença', score: 1, estado: 'Soterrado' as Estado },
-  { label: 'Limite / Ignorar / Convencer / Desgaste / Abandonar / Distante', score: 0, estado: 'Exausto' as Estado }
+  { label: 'O sinal é acolhido e integrado ao movimento.', score: 3, estado: 'Aceso' as Estado },
+  { label: 'O sinal é percebido, mas ainda hesita antes de se tornar ação.', score: 2, estado: 'Oscilante' as Estado },
+  { label: 'O sinal é sentido apenas como um ruído que costumo minimizar.', score: 1, estado: 'Soterrado' as Estado },
+  { label: 'O sinal parece silenciado sob camadas de cansaço ou distância.', score: 0, estado: 'Exausto' as Estado }
 ];
 
-const DEVOLUTIVAS: Record<string, Record<string, string>> = {
+const PROMPTS_JARDIM: Record<string, { psique: string, oficio: string }> = {
   corpo: {
-    Aceso: "Seu corpo é um aliado claro e você escuta seus limites com respeito.",
-    Oscilante: "Você percebe os sinais físicos, mas às vezes hesita em agir sobre eles.",
-    Soterrado: "Seu corpo parece emitir sinais, mas eles só são reconhecidos quando o desgaste já está avançado.",
-    Exausto: "A conexão física está silenciada; o corpo apenas cumpre funções sem ser sentido."
+    psique: "Reflita sobre como o seu corpo tem pedido retorno. O que ele sussurra quando você pausa?",
+    oficio: "Como o ritmo do seu trabalho respeita ou ignora os sinais de vitalidade do seu corpo físico?"
   },
   intuicao: {
-    Aceso: "Sua voz interna é seu guia principal e você confia no que ela sopra.",
-    Oscilante: "Sua percepção aparece, mas ainda encontra dúvida antes de virar confiança.",
-    Soterrado: "A intuição está enterrada sob camadas de lógica e necessidade de explicação.",
-    Exausto: "O silêncio intuitivo é profundo; a voz interna foi trocada por barulho externo."
+    psique: "Qual foi o último sinal intuitivo que você minimizou? Como seria dar um lugar de honra a ele hoje?",
+    oficio: "De que forma a sua percepção imediata poderia guiar uma decisão profissional que parece puramente lógica?"
   },
   desejo: {
-    Aceso: "Seu fogo interno arde com clareza e você sabe o que quer.",
-    Oscilante: "O desejo pulsa, mas muitas vezes é filtrado pelo que é 'possível'.",
-    Soterrado: "O que você quer ficou esquecido atrás do que você 'precisa' fazer.",
-    Exausto: "O desejo parece ter sido colocado em segundo plano por tempo demais."
+    psique: "Resgate um desejo que ficou soterrado. O que ele revela sobre a sua natureza mais autêntica?",
+    oficio: "Como o seu trabalho pode se tornar um solo mais fértil para aquilo que você genuinamente deseja criar?"
   },
   limites: {
-    Aceso: "Seus contornos são firmes e você protege seu território com naturalidade.",
-    Oscilante: "Seus limites oscilam conforme a pessoa ou a situação, gerando instabilidade.",
-    Soterrado: "O 'não' é uma palavra difícil e o seu espaço é frequentemente invadido.",
-    Exausto: "A barreira de proteção caiu; você está absorvendo pesos que não são seus."
+    psique: "Onde seus contornos estão mais diluídos? Qual 'não' gentil você precisa plantar hoje?",
+    oficio: "Mapeie as invasões de tempo e energia no seu ofício. Como reconstruir as torres de proteção?"
   },
   criatividade: {
-    Aceso: "O fluxo de criação é livre e você se permite brincar com a realidade.",
-    Oscilante: "Existem lampejos de ideias, mas o julgamento as trava antes de nascerem.",
-    Soterrado: "A criatividade está presa em um ciclo de utilitarismo e produtividade.",
-    Exausto: "A fonte parece seca; não há espaço para o novo ou para o lúdico."
+    psique: "Pense em uma ideia 'inútil' que você teve recentemente. O que ela diz sobre o seu direito de brincar com a vida?",
+    oficio: "Onde a produtividade está matando a inovação no seu trabalho? Como abrir espaço para o lúdico?"
   },
   vitalidade: {
-    Aceso: "Sua energia flui com presença e você se sente engajada com a vida.",
-    Oscilante: "Existem picos de energia seguidos de vales de desânimo sem causa aparente.",
-    Soterrado: "A vida parece um conjunto de tarefas a cumprir, com pouca alegria real.",
-    Exausto: "O cansaço é crônico e a sensação de 'vazio' tomou o lugar do entusiasmo."
+    psique: "O que devolve a sua sensação de estar viva agora? Como cultivar essa presença mais vezes?",
+    oficio: "Quais projetos profissionais drenam seu rastro e quais devolvem entusiasmo? O que precisa ser podado?"
   }
 };
 
-const GESTOS: Record<string, string> = {
-  corpo: "Pausar por 5 minutos antes de responder a qualquer demanda externa.",
-  intuicao: "Anotar a sua primeira percepção sobre um problema antes de pedir a opinião de alguém.",
-  desejo: "Nomear um pequeno desejo pessoal hoje, sem precisar justificar por que o quer.",
-  limites: "Dizer um 'não' pequeno e gentil para algo que não te nutre.",
-  criatividade: "Registrar uma ideia nova no papel sem se preocupar com utilidade ou cobrança.",
-  vitalidade: "Buscar uma ação física que te devolva a sensação de estar presente no seu próprio corpo."
+const TRILHAS_FINAIS: Record<string, string> = {
+  corpo: "Nesta estação, a Clareira do Chamado convida você a observar os sinais físicos que costuma minimizar antes mesmo de escutá-los.",
+  intuicao: "O rastro agora pede que você silencie as explicações externas para voltar a escutar o que o seu primeiro sentir já sabe.",
+  desejo: "A trilha aponta para o resgate do que é autêntico, separando o fogo sagrado do seu querer do ruído das expectativas alheias.",
+  limites: "É tempo de fortalecer os seus contornos, reconhecendo que a sua energia é um território sagrado que exige proteção.",
+  criatividade: "A próxima etapa convida a sua loba a brincar novamente com as possibilidades, sem o peso da utilidade imediata.",
+  vitalidade: "O caminho agora foca na recuperação da sua força vital, podando o que drena para que o entusiasmo possa voltar a brotar."
+};
+
+const GESTOS_SIMBOLICOS: Record<string, string> = {
+  corpo: "Oferecer 5 minutos de silêncio ao corpo antes de aceitar qualquer nova demanda física.",
+  intuicao: "Registrar uma percepção 'sem sentido' logo ao acordar, dando a ela um lugar no papel.",
+  desejo: "Nomear um pequeno querer pessoal hoje, sem precisar explicar o motivo a ninguém.",
+  limites: "Praticar um 'não' gentil para algo que sutilmente invade o seu tempo de descanso.",
+  criatividade: "Brincar com um material ou ideia nova por 10 minutos, sem intenção de terminar ou mostrar.",
+  vitalidade: "Identificar uma ação que te devolva presença e realizá-la com intenção total hoje."
 };
 
 export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstintoSoterradoProps) {
@@ -126,7 +124,6 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
       
       const territorioMaisAceso = Object.entries(finalEstados).find(([_, e]) => e === 'Aceso')?.[0] || 'Nenhum';
       const territorioMaisSoterrado = Object.entries(finalEstados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
-      const distritoImpactado = TERRITORIOS.find(t => t.id === territorioMaisSoterrado)?.distrito || 'Coração da CidadELA';
 
       await supabase.from('clube_mapa_instinto_registros').insert({
         user_id: user.id,
@@ -134,8 +131,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
         estacao_id: estacaoId,
         ...finalEstados,
         territorio_mais_aceso: territorioMaisAceso,
-        territorio_mais_soterrado: territorioMaisSoterrado,
-        distrito_cidadela_impactado: distritoImpactado
+        territorio_mais_soterrado: territorioMaisSoterrado
       });
     }
   });
@@ -158,7 +154,6 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
       const finalEstados: Record<string, Estado> = {};
       PERGUNTAS.forEach(t => {
         const tResponses = respostas[t.id] || {};
-        // Add the current selection because state hasn't updated yet for the last one
         const currentSum = Object.values(tResponses).reduce((a, b) => a + b, 0) + (t.id === tId ? score : 0);
         const avg = currentSum / 3;
         
@@ -176,11 +171,9 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const currentT = PERGUNTAS[currentTerritorioIdx];
   const currentE = EIXOS[currentEixoIdx];
 
-  const groupedTerritorios = {
-    sinais: TERRITORIOS.filter(t => estados[t.id] === 'Aceso' || estados[t.id] === 'Oscilante'),
-    retorno: TERRITORIOS.filter(t => estados[t.id] === 'Soterrado'),
-    cuidado: TERRITORIOS.filter(t => estados[t.id] === 'Exausto')
-  };
+  const acesoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Aceso');
+  const soterradoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Soterrado' || estados[t.id] === 'Exausto');
+  const maisSoterradoId = Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
@@ -192,19 +185,23 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             className="space-y-4"
           >
             <h2 className="text-4xl md:text-6xl font-serif text-white italic">Mapa do Instinto Soterrado™</h2>
-            <p className="text-white/60 font-serif italic max-w-xl mx-auto">Uma cartografia simbólica para identificar quais territórios da sua natureza instintiva pedem seu retorno.</p>
+            <p className="text-white/60 font-serif italic max-w-xl mx-auto">Uma cartografia simbólica para identificar quais territórios da sua natureza pedem seu retorno nesta estação.</p>
           </motion.div>
-          <Button onClick={() => setView('perguntas')} className="bg-gold text-midnight px-12 py-7 rounded-full font-black uppercase tracking-widest text-xs hover:scale-105 transition-transform">
+          <Button onClick={() => setView('perguntas')} className="bg-gold text-midnight px-12 py-7 rounded-full font-black uppercase tracking-widest text-[10px] hover:scale-105 transition-transform">
             Iniciar Cartografia
           </Button>
         </div>
       )}
 
       {view === 'perguntas' && (
-        <Card className="bg-midnight/40 p-6 md:p-12 rounded-[40px] space-y-10 border-white/5 backdrop-blur-md">
-          <div className="flex justify-between items-center">
-            <div className="text-gold uppercase tracking-[0.3em] font-black text-[10px]">{currentT.label} — {currentE.label}</div>
-            <div className="text-white/20 text-[10px] font-black">{currentTerritorioIdx + 1}/{PERGUNTAS.length}</div>
+        <Card className="bg-midnight/40 p-6 md:p-12 rounded-[40px] space-y-10 border-white/5 backdrop-blur-md relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-8 opacity-5">
+            <Compass className="w-32 h-32" />
+          </div>
+          
+          <div className="flex justify-between items-center relative z-10">
+            <div className="text-gold uppercase tracking-[0.3em] font-black text-[9px]">{currentT.label} • {currentE.label}</div>
+            <div className="text-white/20 text-[9px] font-black">{currentTerritorioIdx + 1}/{PERGUNTAS.length}</div>
           </div>
           
           <AnimatePresence mode="wait">
@@ -213,19 +210,19 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-8"
+              className="space-y-12 relative z-10"
             >
-              <h4 className="text-2xl md:text-3xl font-serif text-white italic text-center leading-relaxed">
+              <h4 className="text-2xl md:text-4xl font-serif text-white italic text-center leading-tight">
                 {currentT.perguntas[currentEixoIdx]}
               </h4>
               
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-1 gap-4 max-w-2xl mx-auto">
                 {OPCOES.map((opt, i) => (
                   <Button 
                     key={i} 
                     variant="ghost" 
                     onClick={() => handleSelect(opt.score)} 
-                    className="h-auto py-6 px-8 text-center md:text-left font-serif italic text-lg border border-white/5 bg-white/5 hover:border-gold/50 hover:bg-white/10 transition-all rounded-2xl"
+                    className="h-auto py-6 px-8 text-center font-serif italic text-lg border border-white/5 bg-white/5 hover:border-gold/30 hover:bg-white/10 transition-all rounded-2xl leading-relaxed"
                   >
                     {opt.label}
                   </Button>
@@ -237,89 +234,104 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
       )}
 
       {view === 'resultado' && (
-        <div className="space-y-16 animate-in fade-in duration-1000">
+        <div className="space-y-20 animate-in fade-in duration-1000">
+          <div className="text-center space-y-6">
+            <h3 className="text-gold uppercase tracking-[0.4em] font-black text-[11px]">Cartografia Concluída</h3>
+            <h2 className="text-3xl md:text-5xl font-serif italic text-white leading-tight">Os rastros da sua natureza</h2>
+          </div>
+
           <MandalaFinal estados={estados} />
           
-          <div className="text-center space-y-4">
-            <h3 className="text-2xl md:text-3xl font-serif italic text-white/90 px-4 leading-relaxed">
-              {(() => {
-                const acesoCount = Object.values(estados).filter(e => e === 'Aceso').length;
-                const soterradoCount = Object.values(estados).filter(e => e === 'Soterrado' || e === 'Exausto').length;
-                const maisAcesoId = Object.entries(estados).find(([_, e]) => e === 'Aceso')?.[0];
-                const maisSoterradoId = Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0];
-                
-                const maisAcesoNome = TERRITORIOS.find(t => t.id === maisAcesoId)?.nome.toLowerCase() || 'intuição';
-                const maisSoterradoNome = TERRITORIOS.find(t => t.id === maisSoterradoId)?.nome.toLowerCase() || 'corpo';
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
+                  <Sparkles className="w-4 h-4 text-gold" />
+                </div>
+                <h4 className="text-gold font-bold uppercase tracking-widest text-[10px]">Pegadas Encontradas</h4>
+              </div>
+              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
+                A loba continua deixando sinais em:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {acesoTerritorios.map(t => (
+                  <span key={t.id} className="bg-gold/10 text-gold px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-gold/10">
+                    {t.nome}
+                  </span>
+                ))}
+                {acesoTerritorios.length === 0 && <span className="text-white/20 italic">Buscando novos sinais...</span>}
+              </div>
+            </Card>
 
-                if (acesoCount >= 4) return "Seu instinto está vibrante e pronto para novos caminhos.";
-                if (soterradoCount >= 4) return "Há sinais vivos, mas a adaptação ainda cobre territórios essenciais.";
-                if (maisAcesoId && maisSoterradoId) return `Sua loba ainda canta pela ${maisAcesoNome}, mas o ${maisSoterradoNome} pede retorno.`;
-                return "Seu instinto não desapareceu; ele está fragmentado entre sinais vivos e áreas exaustas.";
-              })()}
-            </h3>
+            <Card className="bg-white/5 border-white/5 p-8 rounded-[32px] space-y-6">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                  <Compass className="w-4 h-4 text-white/60" />
+                </div>
+                <h4 className="text-white/60 font-bold uppercase tracking-widest text-[10px]">Pegadas Quase Apagadas</h4>
+              </div>
+              <p className="text-white/40 text-xs font-serif italic uppercase tracking-widest leading-relaxed">
+                Os rastros estão mais difíceis de perceber em:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {soterradoTerritorios.map(t => (
+                  <span key={t.id} className="bg-white/10 text-white/60 px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-white/5">
+                    {t.nome}
+                  </span>
+                ))}
+              </div>
+            </Card>
           </div>
 
-          <div className="space-y-12">
-            {groupedTerritorios.sinais.length > 0 && (
-              <div className="space-y-6">
-                <h4 className="text-gold/60 uppercase tracking-[0.2em] font-black text-[10px] px-4">Territórios que ainda enviam sinais</h4>
-                <div className="grid gap-4 px-4 md:px-0">
-                  {groupedTerritorios.sinais.map(t => (
-                    <div key={t.id} className="bg-white/5 p-8 rounded-[32px] border border-white/5 space-y-2 backdrop-blur-sm">
-                      <span className="text-gold font-bold uppercase text-[10px] tracking-[0.2em]">{t.nome} — {estados[t.id]}</span>
-                      <p className="text-white/80 font-serif italic text-lg leading-relaxed">{DEVOLUTIVAS[t.id][estados[t.id]]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {groupedTerritorios.retorno.length > 0 && (
-              <div className="space-y-6">
-                <h4 className="text-gold/60 uppercase tracking-[0.2em] font-black text-[10px] px-4">Territórios que pedem retorno</h4>
-                <div className="grid gap-4 px-4 md:px-0">
-                  {groupedTerritorios.retorno.map(t => (
-                    <div key={t.id} className="bg-white/5 p-8 rounded-[32px] border border-white/10 space-y-2 backdrop-blur-sm">
-                      <span className="text-gold font-bold uppercase text-[10px] tracking-[0.2em]">{t.nome} — {estados[t.id]}</span>
-                      <p className="text-white/80 font-serif italic text-lg leading-relaxed">{DEVOLUTIVAS[t.id][estados[t.id]]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {groupedTerritorios.cuidado.length > 0 && (
-              <div className="space-y-6">
-                <h4 className="text-gold/60 uppercase tracking-[0.2em] font-black text-[10px] px-4">Territórios que precisam de cuidado antes de ação</h4>
-                <div className="grid gap-4 px-4 md:px-0">
-                  {groupedTerritorios.cuidado.map(t => (
-                    <div key={t.id} className="bg-white/5 p-8 rounded-[32px] border border-white/5 space-y-2 backdrop-blur-sm">
-                      <span className="text-gold font-bold uppercase text-[10px] tracking-[0.2em]">{t.nome} — {estados[t.id]}</span>
-                      <p className="text-white/80 font-serif italic text-lg leading-relaxed">{DEVOLUTIVAS[t.id][estados[t.id]]}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="bg-gold/5 p-8 rounded-[32px] border border-gold/20 space-y-6 mx-4 md:mx-0">
-            <h4 className="text-gold font-serif text-2xl italic">Primeiro gesto possível</h4>
-            <p className="text-white/80 text-lg leading-relaxed">
-              {(() => {
-                const maisSoterradoId = Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade';
-                return GESTOS[maisSoterradoId];
-              })()}
+          <div className="bg-gold/5 p-12 rounded-[40px] border border-gold/10 space-y-8 text-center relative overflow-hidden">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gold/5 blur-[80px] rounded-full" />
+            <h4 className="text-gold font-bold uppercase tracking-[0.4em] text-[10px] relative z-10">Próxima Trilha</h4>
+            <p className="text-2xl md:text-3xl font-serif italic text-white/90 leading-relaxed max-w-2xl mx-auto relative z-10">
+              "{TRILHAS_FINAIS[maisSoterradoId]}"
             </p>
-            <div className="pt-6 border-t border-gold/10">
-              <span className="text-gold/60 text-[10px] uppercase tracking-[0.2em] font-bold">
-                Distrito impactado na CidadELA Interior: {TERRITORIOS.find(t => t.id === (Object.entries(estados).find(([_, e]) => e === 'Soterrado' || e === 'Exausto')?.[0] || 'vitalidade'))?.distrito}
-              </span>
+            <div className="pt-8 border-t border-gold/10 max-w-md mx-auto relative z-10">
+              <p className="text-gold/60 text-[10px] uppercase tracking-[0.2em] font-black mb-4">Gesto de Retorno</p>
+              <p className="text-white/80 font-serif italic text-lg">{GESTOS_SIMBOLICOS[maisSoterradoId]}</p>
             </div>
           </div>
 
-          <div className="px-4 md:px-0">
-            <Button onClick={onNext} className="w-full h-16 bg-gradient-to-r from-gold via-gold/90 to-[#c5a059] text-midnight font-black uppercase tracking-widest text-[11px] rounded-full hover:opacity-90 shadow-[0_10px_30px_rgba(212,175,55,0.2)] transition-all active:scale-95 border-none">
+          <div className="space-y-12">
+            <div className="text-center space-y-4">
+              <h3 className="text-gold uppercase tracking-[0.3em] font-black text-[10px]">Cultivo nos Jardins</h3>
+              <p className="text-white/60 font-serif italic">Use os rastros encontrados para nutrir seus espaços de reflexão.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 px-4">
+                  <BookOpen className="w-5 h-5 text-gold" />
+                  <h4 className="text-white font-serif italic text-xl">Jardim da Psique</h4>
+                </div>
+                <JardimInput 
+                  type="psique" 
+                  pontoId={estacaoId} 
+                  sourceTitle="Mapa do Instinto Soterrado"
+                  pergunta={PROMPTS_JARDIM[maisSoterradoId].psique}
+                />
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 px-4">
+                  <PenTool className="w-5 h-5 text-emerald-500" />
+                  <h4 className="text-white font-serif italic text-xl">Jardim do Ofício</h4>
+                </div>
+                <JardimInput 
+                  type="oficio" 
+                  pontoId={estacaoId} 
+                  sourceTitle="Mapa do Instinto Soterrado"
+                  pergunta={PROMPTS_JARDIM[maisSoterradoId].oficio}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="pt-10">
+            <Button onClick={onNext} className="w-full h-16 bg-gradient-to-r from-gold via-gold/90 to-[#c5a059] text-midnight font-black uppercase tracking-widest text-[11px] rounded-full hover:shadow-[0_10px_40px_rgba(212,175,55,0.3)] transition-all active:scale-95 border-none">
               Guardar Rastro e Continuar
             </Button>
           </div>
@@ -328,3 +340,4 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     </div>
   );
 }
+
