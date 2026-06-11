@@ -58,7 +58,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'criatividade', 
     nome: 'Criatividade', 
-    pos: { top: '61.5%', left: '19%' },
+    pos: { top: '61.6%', left: '18.9%' },
     narrativa: {
       Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
       Oscilante: "Ideias surgem mas perdem o fôlego antes de ganharem corpo na realidade.",
