@@ -23,7 +23,7 @@ interface EscutaPremiumProps {
 }
 
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
-const DISCO_CASA_ORACULA_URL = "/__l5e/assets-v1/036d36bd-ef2f-4640-b204-a71e6044a671/disco-casa-oracula.png";
+const DISCO_CASA_ORACULA_URL = "/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png";
 
 export function EscutaPremium({
   audioUrl,
