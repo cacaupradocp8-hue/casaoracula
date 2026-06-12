@@ -88,11 +88,12 @@ export function AdminEscutaRitualTab() {
     if (!audioUrl) return toast.error('Envie o arquivo de áudio');
 
     setSaving(true);
-    const { error } = await supabase.from('clube_v3_station_audios').insert({
+    const { error } = await (supabase as any).from('clube_v3_station_audios').insert({
       title: titulo.trim(),
       audio_url: audioUrl,
       station_id: estacaoId,
       display_order: ordem,
+      destino,
       status: 'published',
     });
     setSaving(false);
