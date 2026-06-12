@@ -38,16 +38,17 @@ export function AdminEscutaRitualTab() {
 
   const fetchAll = async () => {
     setLoading(true);
+    const client = supabase as any;
     const [r, e, a] = await Promise.all([
-      supabase.from('clube_v3_routes').select('id,title').order('display_order', { ascending: true }),
-      supabase.from('clube_v3_stations').select('id,title,route_id').order('display_order', { ascending: true }),
-      supabase.from('clube_v3_station_audios').select('*').order('created_at', { ascending: false }),
+      client.from('clube_rotas').select('id,titulo').order('ordem', { ascending: true }),
+      client.from('clube_estacoes').select('id,titulo,rota_id').order('ordem', { ascending: true }),
+      client.from('clube_v3_station_audios').select('*').order('created_at', { ascending: false }),
     ]);
     if (r.error) toast.error('Erro ao carregar rotas');
     if (e.error) toast.error('Erro ao carregar estações');
     if (a.error) toast.error('Erro ao carregar áudios');
-    setRotas((r.data ?? []) as Rota[]);
-    setEstacoes((e.data ?? []) as Estacao[]);
+    setRotas(((r.data ?? []) as any[]).map(x => ({ id: x.id, title: x.titulo })));
+    setEstacoes(((e.data ?? []) as any[]).map(x => ({ id: x.id, title: x.titulo, route_id: x.rota_id })));
     setAudios((a.data ?? []) as EscutaAudio[]);
     setLoading(false);
   };

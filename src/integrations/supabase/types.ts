@@ -6950,15 +6950,7 @@ export type Database = {
           title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "clube_v3_station_audios_station_id_fkey"
-            columns: ["station_id"]
-            isOneToOne: false
-            referencedRelation: "clube_v3_stations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       clube_v3_station_content: {
         Row: {
