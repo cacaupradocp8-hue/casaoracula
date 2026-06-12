@@ -240,7 +240,7 @@ export function VisitorSalaContent() {
         <FounderInviteModal 
           open={inviteModalOpen} 
           onOpenChange={setInviteModalOpen}
-          onSuccess={() => navigate('/clube/rotas')}
+          onSuccess={() => navigate('/clube/rotas/rota-dos-lobos')}
         />
       </motion.section>
 
