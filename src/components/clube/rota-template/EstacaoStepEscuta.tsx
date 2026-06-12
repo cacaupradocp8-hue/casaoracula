@@ -54,12 +54,12 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   }, [estacaoId]);
 
   // Audio Playlist Logic — ordem fixa:
-  // 1) A Clareira onde tudo começou  2) Abertura  3-6) Rastros (admin)
+  // 1) Abertura da Estação  2) A Clareira onde tudo começou  3-6) Rastros (admin)
   // 7) Voz da Floresta  8+) Demais áudios (admin / treinamento)
   const audioPlaylist = useMemo(() => {
     const list: Array<{ url: string; title: string; type: string; icon: any }> = [];
-    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Clareira onde tudo começou", type: "content", icon: Headphones });
     if (audioAberturaUrl) list.push({ url: audioAberturaUrl, title: "Abertura da Estação", type: "intro", icon: Music });
+    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Clareira onde tudo começou", type: "content", icon: Headphones });
     const rastros = adminAudios.filter(a => /rastro/i.test(a.title));
     const outros = adminAudios.filter(a => !/rastro/i.test(a.title));
     rastros.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
