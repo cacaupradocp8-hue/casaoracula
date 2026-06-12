@@ -1,19 +1,23 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Lock, BookOpen, GraduationCap, ArrowRight } from 'lucide-react';
+import { Lock, KeyRound, BookOpen, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { FounderInviteModal } from '@/components/visitor/FounderInviteModal';
 
 interface LockedForVisitorProps {
   featureName?: string;
 }
 
 /**
- * LockedForVisitor - Explanatory gating page for users without access.
- * Shows what this space is, who it's for, and CTAs to upgrade.
+ * LockedForVisitor — Página de gating para visitantes sem acesso.
+ * Oferece duas portas: Convite Fundadora ou Conhecer Planos.
+ * Nunca redireciona automaticamente para /planos.
  */
 export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
   const navigate = useNavigate();
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   return (
     <AppLayout>
@@ -22,14 +26,11 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
         animate={{ opacity: 1 }}
         className="min-h-[80vh] flex flex-col items-center justify-center p-6"
       >
-        {/* Content */}
         <div className="text-center max-w-lg mx-auto space-y-8">
-          {/* Lock Icon */}
           <div className="w-16 h-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
             <Lock className="w-7 h-7 text-primary/60" />
           </div>
 
-          {/* Message */}
           <div className="space-y-3">
             {featureName && (
               <p className="text-xs uppercase tracking-[0.2em] text-primary/50">
@@ -42,37 +43,34 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
             </h1>
 
             <p className="text-muted-foreground leading-relaxed">
-              Para acessar este conteúdo, você precisa fazer parte do ecossistema da Casa Orácula
-              — seja pelas Rotas da Casa ou pela Formação Orácula.
+              Você pode entrar de duas formas: com um <span className="text-primary/80">Convite Fundadora</span>{' '}
+              ou conhecendo as Rotas da Casa.
             </p>
           </div>
 
-          {/* CTAs */}
           <div className="grid gap-3 max-w-sm mx-auto">
             <Button
               variant="gold"
               size="lg"
               className="gap-2 w-full"
-              onClick={() => navigate('/planos')}
+              onClick={() => setInviteModalOpen(true)}
             >
-              <BookOpen className="w-4 h-4" />
-              Rotas da Casa
-              <ArrowRight className="w-4 h-4" />
+              <KeyRound className="w-4 h-4" />
+              Tenho um Convite Fundadora
             </Button>
 
             <Button
               variant="outline"
               size="lg"
               className="gap-2 w-full"
-              onClick={() => navigate('/oracula')}
+              onClick={() => navigate('/planos')}
             >
-              <GraduationCap className="w-4 h-4" />
-              Formação Orácula
+              <BookOpen className="w-4 h-4" />
+              Conhecer Planos
               <ArrowRight className="w-4 h-4" />
             </Button>
           </div>
 
-          {/* Explore */}
           <p className="text-sm text-muted-foreground/60">
             Ou{' '}
             <button
@@ -80,11 +78,17 @@ export function LockedForVisitor({ featureName }: LockedForVisitorProps) {
               onClick={() => navigate('/sala-da-visitante')}
               className="text-primary/70 hover:text-primary underline underline-offset-2 transition-colors"
             >
-              explore a Sala da Visitante
-            </button>{' '}
-            para conhecer tudo que a Casa oferece.
+              volte para a Sala da Visitante
+            </button>
+            .
           </p>
         </div>
+
+        <FounderInviteModal
+          open={inviteModalOpen}
+          onOpenChange={setInviteModalOpen}
+          onSuccess={() => navigate('/clube/rotas/rota-dos-lobos')}
+        />
       </motion.div>
     </AppLayout>
   );
