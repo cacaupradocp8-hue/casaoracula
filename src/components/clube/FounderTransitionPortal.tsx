@@ -58,7 +58,7 @@ export function FounderTransitionPortal() {
         >
           <div className="absolute -inset-4 bg-gold/5 blur-2xl rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
           
-          <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0A0A0B]/60 backdrop-blur-xl p-1">
+          <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0A0A0B]/60 backdrop-blur-xl p-1 shadow-2xl">
             <div className="relative aspect-[16/10] overflow-hidden rounded-[30px]">
               <img 
                 src="https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206890341.jpg" 
@@ -68,10 +68,10 @@ export function FounderTransitionPortal() {
               <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
                   <Lock className="w-5 h-5 text-gold" />
                 </div>
-                <span className="text-xs font-bold tracking-[0.3em] text-gold uppercase">🔒 Casa da Boa Menina</span>
+                <span className="text-xs font-bold tracking-[0.3em] text-gold uppercase drop-shadow-md">🔒 Casa da Boa Menina</span>
               </div>
             </div>
 
