@@ -1,47 +1,27 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Sparkles, KeyRound } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
-import { FounderInviteModal } from '@/components/visitor/FounderInviteModal';
-import { useFounderAccess } from '@/hooks/useFounderAccess';
-import { Badge } from '@/components/ui/badge';
-import { format } from 'date-fns';
-import { ptBR } from 'date-fns/locale';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
- * 
- * Experiência sensorial de chegada:
- * 1. Logo da Casa — Identidade e limpeza visual
- * 2. Texto como porta — curto, profundo, claro (refinado)
- * 3. Primeira Leitura — O novo limiar público
  */
 export function VisitorSalaContent() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const { isActive: isFounderActive, dataExpira } = useFounderAccess();
-
-  useEffect(() => {
-    if (searchParams.get('convite') === '1') {
-      setInviteModalOpen(true);
-    }
-  }, [searchParams]);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
     isCloudflareVideoId(videoUrl) ? videoUrl : extractVideoId(videoUrl)
   ) : null;
-
 
   const handleStartFirstReading = useCallback(() => {
     setIsTransitioning(true);
