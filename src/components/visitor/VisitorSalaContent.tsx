@@ -24,11 +24,18 @@ import { ptBR } from 'date-fns/locale';
  */
 export function VisitorSalaContent() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const { isActive: isFounderActive, dataExpira } = useFounderAccess();
+
+  useEffect(() => {
+    if (searchParams.get('convite') === '1') {
+      setInviteModalOpen(true);
+    }
+  }, [searchParams]);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
