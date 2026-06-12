@@ -468,10 +468,10 @@ function AppRoutes() {
       <Route path="/relatorio-auditoria-botoes" element={<ProtectedRoute minPortal="admin"><RelatorioAuditoriaBotoes /></ProtectedRoute>} />
 
       {/* Sala de Treinamento */}
-      <Route path="/sala-de-treinamento" element={<ProtectedRoute><SalaDeTreinamentoPage /></ProtectedRoute>} />
-      <Route path="/sala-de-treinamento/clinica-dos-contos" element={<ProtectedRoute><ClinicaDosContosPage /></ProtectedRoute>} />
-      <Route path="/sala-de-treinamento/casos-simulados" element={<ProtectedRoute><CasosSimuladosPage /></ProtectedRoute>} />
-      <Route path="/sala-de-treinamento/formulacao-guiada" element={<ProtectedRoute><FormulacaoGuiadaPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento" element={<ProtectedRoute minPortal="aluna"><SalaDeTreinamentoPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento/clinica-dos-contos" element={<ProtectedRoute minPortal="aluna"><ClinicaDosContosPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento/casos-simulados" element={<ProtectedRoute minPortal="aluna"><CasosSimuladosPage /></ProtectedRoute>} />
+      <Route path="/sala-de-treinamento/formulacao-guiada" element={<ProtectedRoute minPortal="aluna"><FormulacaoGuiadaPage /></ProtectedRoute>} />
 
       {/* Método */}
       <Route path="/metodo/portas" element={<ProtectedRoute minPortal="mentorada"><AsPortas /></ProtectedRoute>} />
@@ -561,7 +561,7 @@ function AppRoutes() {
 
 
       {/* Dynamic Tool Route - MUST be after all static /ferramentas/ routes */}
-      <Route path="/ferramentas/:slug" element={<ProtectedRoute><FerramentaDinamica /></ProtectedRoute>} />
+      <Route path="/ferramentas/:slug" element={<ProtectedRoute minPortal="aluna"><FerramentaDinamica /></ProtectedRoute>} />
 
       {/* Catch-all */}
       <Route path="*" element={<NotFound />} />
