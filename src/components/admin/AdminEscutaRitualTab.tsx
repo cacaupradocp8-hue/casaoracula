@@ -20,8 +20,16 @@ interface EscutaAudio {
   station_id: string | null;
   display_order: number | null;
   status: string | null;
+  destino: string | null;
   created_at: string;
 }
+
+const DESTINOS = [
+  { value: 'escuta_ritual', label: 'Escuta Ritual (passo Escuta)' },
+  { value: 'entrada', label: 'Entrada da Estação' },
+  { value: 'camara_escuta', label: 'Câmara de Escuta' },
+  { value: 'fechamento', label: 'Fechamento' },
+];
 
 export function AdminEscutaRitualTab() {
   const [rotas, setRotas] = useState<Rota[]>([]);
@@ -32,6 +40,7 @@ export function AdminEscutaRitualTab() {
 
   const [rotaId, setRotaId] = useState<string>('');
   const [estacaoId, setEstacaoId] = useState<string>('');
+  const [destino, setDestino] = useState<string>('escuta_ritual');
   const [titulo, setTitulo] = useState('');
   const [audioUrl, setAudioUrl] = useState('');
   const [ordem, setOrdem] = useState<number>(1);
@@ -79,11 +88,12 @@ export function AdminEscutaRitualTab() {
     if (!audioUrl) return toast.error('Envie o arquivo de áudio');
 
     setSaving(true);
-    const { error } = await supabase.from('clube_v3_station_audios').insert({
+    const { error } = await (supabase as any).from('clube_v3_station_audios').insert({
       title: titulo.trim(),
       audio_url: audioUrl,
       station_id: estacaoId,
       display_order: ordem,
+      destino,
       status: 'published',
     });
     setSaving(false);
@@ -150,6 +160,16 @@ export function AdminEscutaRitualTab() {
           </div>
 
           <div className="space-y-2 md:col-span-2">
+            <Label>Destino (página/aba onde o áudio aparecerá) *</Label>
+            <Select value={destino} onValueChange={setDestino}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {DESTINOS.map(d => <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
             <Label>Título *</Label>
             <Input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Ex.: Escuta de Abertura" />
           </div>
@@ -186,7 +206,7 @@ export function AdminEscutaRitualTab() {
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{a.title}</div>
                     <div className="text-xs text-muted-foreground">
-                      {rot?.title ?? '— sem rota'} › {est?.title ?? '— sem estação'} · ordem {a.display_order ?? '—'}
+                      {rot?.title ?? '— sem rota'} › {est?.title ?? '— sem estação'} · destino <strong>{a.destino ?? 'escuta_ritual'}</strong> · ordem {a.display_order ?? '—'}
                     </div>
                     <audio src={a.audio_url} controls className="mt-2 w-full max-w-md" preload="none" />
                   </div>
