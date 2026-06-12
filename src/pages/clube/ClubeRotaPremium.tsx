@@ -181,8 +181,8 @@ export default function ClubeRotaPremium() {
         <div className="fixed inset-0 z-0">
           <img 
             src={slug === 'clareira-do-chamado' 
-              ? "/clareira-fundo.png"
-              : (estacao.banner_url?.replace('pviznbfwtjqmpeiqqzk', 'pvjiznbfwtjqmpeiqqzk') || "/clareira-fundo.png")
+              ? "/clareira-fundo-1600.webp"
+              : (estacao.banner_url?.replace('pviznbfwtjqmpeiqqzk', 'pvjiznbfwtjqmpeiqqzk') || "/clareira-fundo-1600.webp")
             } 
 
             alt="" 
@@ -492,7 +492,7 @@ export default function ClubeRotaPremium() {
                     texto={estacao.fechamento_texto || ''}
                     audioUrl={estacao.fechamento_audio_url}
                     proximaEstacaoNome={estacao.fechamento_botao_proxima}
-                    backgroundImage={slug === 'clareira-do-chamado' ? '/clareira-fechamento.png' : undefined}
+                    backgroundImage={slug === 'clareira-do-chamado' ? '/clareira-fechamento-1600.webp' : undefined}
                     onFinish={handleNext}
                   />
                 )}

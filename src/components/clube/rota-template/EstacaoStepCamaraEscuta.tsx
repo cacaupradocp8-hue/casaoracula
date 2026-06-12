@@ -542,7 +542,7 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
                     <EscutaPremium 
                       audioUrl={currentObra.url}
                       titulo={currentObra.titulo}
-                      imagemEscuta="/clareira-disco.png"
+                      imagemEscuta="/clareira-disco-800.webp"
                     />
                   )}
 
@@ -713,11 +713,11 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             }}
             className="md:col-span-2 lg:col-span-3 group relative overflow-hidden border rounded-[48px] p-12 text-left transition-all flex flex-col md:flex-row items-center gap-12 shadow-3xl bg-gradient-to-br from-emerald-500/10 via-background to-gold/5 border-emerald-500/20 hover:border-emerald-500/40"
           >
-            <div className="absolute inset-0 bg-[url('/clareira-disco.png')] opacity-5 bg-cover bg-center" />
+            <div className="absolute inset-0 bg-[url('/clareira-disco-800.webp')] opacity-5 bg-cover bg-center" />
             
             <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden flex-shrink-0 border-2 border-emerald-500/20 group-hover:border-emerald-500/40 transition-colors">
               <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
-              <img src="/clareira-disco.png" className="w-full h-full object-cover relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" alt="Playlist" />
+              <img src="/clareira-disco-800.webp" className="w-full h-full object-cover relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" alt="Playlist" />
               <div className="absolute inset-0 flex items-center justify-center z-20">
               </div>
             </div>
