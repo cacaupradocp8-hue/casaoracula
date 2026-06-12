@@ -100,50 +100,26 @@ export function EscutaPremium({
       <div className="flex flex-col items-center space-y-8">
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
-          {/* External Golden Glow & Pulsating Light Effect */}
-          <div className="absolute -inset-16 bg-gold/40 rounded-full blur-[80px] z-0 opacity-80 group-hover:opacity-100 transition-opacity" />
+          {/* External Golden Glow & Pulsating Light Effect — suavizado */}
+          <div className="absolute -inset-10 bg-gold/10 rounded-full blur-[60px] z-0 opacity-50 group-hover:opacity-60 transition-opacity" />
           
           {isPlaying && (
-            <>
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  opacity: [0.2, 0.6, 0.2],
-                }}
-                transition={{ 
-                  duration: 2.5, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="absolute -inset-32 bg-gold/50 rounded-full blur-[150px] z-0 pointer-events-none"
-              />
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ 
-                  scale: [1, 1.4, 1],
-                  opacity: [0.4, 0.8, 0.4],
-                }}
-                transition={{ 
-                  duration: 1.8, 
-                  repeat: Infinity, 
-                  ease: "easeInOut" 
-                }}
-                className="absolute -inset-16 bg-gold/30 rounded-full blur-[90px] z-0 pointer-events-none"
-              />
-              {/* Extra Bright Halo */}
-              <motion.div
-                animate={{ 
-                  opacity: [0.5, 0.9, 0.5],
-                }}
-                transition={{ duration: 3, repeat: Infinity }}
-                className="absolute -inset-6 bg-gold/25 rounded-full blur-[50px] z-0"
-              />
-            </>
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ 
+                scale: [1, 1.15, 1],
+                opacity: [0.08, 0.2, 0.08],
+              }}
+              transition={{ 
+                duration: 3.5, 
+                repeat: Infinity, 
+                ease: "easeInOut" 
+              }}
+              className="absolute -inset-16 bg-gold/15 rounded-full blur-[100px] z-0 pointer-events-none"
+            />
           )}
           
-          <div className="absolute -inset-12 bg-gold/30 rounded-full blur-[70px] z-0 opacity-80" />
-          <div className="absolute -inset-8 bg-gold/20 rounded-full blur-[60px] z-0 opacity-60" />
+          <div className="absolute -inset-6 bg-gold/8 rounded-full blur-[50px] z-0 opacity-40" />
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
