@@ -83,7 +83,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <div className="flex flex-col items-center gap-2 group">
               <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight uppercase relative inline-block px-4 break-words">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-                  Escuta Ritual
+                  Voz da Clareira
                 </span>
               </h1>
             </div>
