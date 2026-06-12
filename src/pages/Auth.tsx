@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play, KeyRound } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
 import { motion } from 'framer-motion';
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import mandalaHome from "@/assets/mandala-home.jpg";
+import { FounderInviteModal, PENDING_FOUNDER_CODE_KEY } from '@/components/visitor/FounderInviteModal';
 
 /* ─── Shared immersive background ─── */
 const ImmersiveBg = () => (
@@ -69,11 +70,42 @@ export default function Auth() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
-  
+  const [founderModalOpen, setFounderModalOpen] = useState(false);
+
   const { login, signup } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { getCopyByKey } = useCopy();
+
+  // Tenta ativar um Convite Fundadora pendente (guardado antes do login).
+  const tryActivatePendingFounderInvite = async (): Promise<boolean> => {
+    let code: string | null = null;
+    try { code = localStorage.getItem(PENDING_FOUNDER_CODE_KEY); } catch { /* ignore */ }
+    if (!code) return false;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return false;
+      const { data, error } = await supabase.rpc('validar_e_ativar_convite', {
+        p_user_id: user.id,
+        p_codigo: code,
+      });
+      try { localStorage.removeItem(PENDING_FOUNDER_CODE_KEY); } catch { /* ignore */ }
+      if (error) {
+        toast({ title: 'Convite Fundadora', description: 'Este convite não foi encontrado ou já expirou.', variant: 'destructive' });
+        return false;
+      }
+      const result = data as { success: boolean; error?: string };
+      if (result?.success) {
+        toast({ title: 'Convite Fundadora', description: 'Convite ativado. A Clareira está aberta para você.' });
+        navigate('/clube/rotas/rota-dos-lobos', { replace: true });
+        return true;
+      }
+      toast({ title: 'Convite Fundadora', description: result?.error || 'Este convite não foi encontrado ou já expirou.', variant: 'destructive' });
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
 
   useEffect(() => {
     console.info('[DEBUG_UI] Página Auth montada');
@@ -105,8 +137,11 @@ export default function Auth() {
 
     if (result.success) {
       toast({ title: 'Bem-vinda de volta', description: 'A Casa ORÁCULA te recebe.' });
-      const redirectParam = new URLSearchParams(window.location.search).get('redirect');
-      navigate(redirectParam || '/', { replace: true });
+      const activated = await tryActivatePendingFounderInvite();
+      if (!activated) {
+        const redirectParam = new URLSearchParams(window.location.search).get('redirect');
+        navigate(redirectParam || '/', { replace: true });
+      }
 
     } else {
       toast({ title: 'Erro ao entrar', description: result.error, variant: 'destructive' });
@@ -130,7 +165,8 @@ export default function Auth() {
         body: { email: signupEmail, userName: signupName, includeWaitingListLink: true },
       }).then(({ error }) => { if (error) console.error('Error sending welcome email:', error); });
       toast({ title: 'Conta criada', description: 'Seja bem-vinda à Casa ORÁCULA.' });
-      navigate('/clube');
+      const activated = await tryActivatePendingFounderInvite();
+      if (!activated) navigate('/clube');
     } else {
       toast({ title: 'Erro ao criar conta', description: result.error, variant: 'destructive' });
     }
@@ -453,13 +489,14 @@ export default function Auth() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-6 flex flex-col items-center justify-center gap-4 text-xs text-muted-foreground/50"
         >
-          <Link
-            to="/sala-da-visitante?convite=1"
+          <button
+            type="button"
+            onClick={() => setFounderModalOpen(true)}
             className="inline-flex items-center gap-2 px-5 h-9 rounded-full border border-gold/20 text-gold/80 hover:text-gold hover:border-gold/40 hover:bg-gold/5 uppercase tracking-widest transition-colors"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <KeyRound className="w-3.5 h-3.5" />
             Tenho um Convite Fundadora
-          </Link>
+          </button>
           <div className="flex items-center justify-center gap-6">
             <Link to="/tour" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
               <Play className="w-3 h-3" />
@@ -478,6 +515,13 @@ export default function Auth() {
           </div>
         </motion.div>
       </div>
+
+      <FounderInviteModal
+        open={founderModalOpen}
+        onOpenChange={setFounderModalOpen}
+        allowPendingActivation
+        onSuccess={() => navigate('/clube/rotas/rota-dos-lobos', { replace: true })}
+      />
     </div>
   );
 }
