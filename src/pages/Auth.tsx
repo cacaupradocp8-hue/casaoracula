@@ -9,12 +9,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Loader2, Sparkles, BookOpen, Play, KeyRound } from 'lucide-react';
 import { loginSchema, signupSchema, forgotPasswordSchema, getValidationError } from '@/lib/validations';
 import { useCopy } from '@/hooks/useCopy';
 import { motion } from 'framer-motion';
 import { OptimizedImage } from "@/components/shared/OptimizedImage";
 import mandalaHome from "@/assets/mandala-home.jpg";
+import { FounderInviteModal, PENDING_FOUNDER_CODE_KEY } from '@/components/visitor/FounderInviteModal';
 
 /* ─── Shared immersive background ─── */
 const ImmersiveBg = () => (
