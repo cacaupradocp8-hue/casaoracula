@@ -17,6 +17,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 import { BootLoadingScreen } from "@/components/shared/BootLoadingScreen";
 import { useRouteGuard } from "@/hooks/auth/useRouteGuard";
+import { useFounderAccess } from "@/hooks/useFounderAccess";
 import { useEffectivePortal } from "@/hooks/useEffectivePortal";
 const RotaDosLobos = React.lazy(() => import("./pages/clube/RotaDosLobos"));
 const ClubeRotaHub = React.lazy(() => import("./pages/clube/ClubeRotaHub"));
