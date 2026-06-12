@@ -27,6 +27,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { FounderTransitionPortal } from '@/components/clube/FounderTransitionPortal';
+import { ColheitaRastrosExperience } from '@/components/clube/ColheitaRastrosExperience';
 import { toast } from 'sonner';
 
 export default function ClubeRotaPremium() {
@@ -38,6 +39,7 @@ export default function ClubeRotaPremium() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [showTransitionPortal, setShowTransitionPortal] = useState(false);
+  const [showColheita, setShowColheita] = useState(false);
 
   const steps = [
     { id: 'entrada', title: 'Entrada' },
@@ -130,7 +132,7 @@ export default function ClubeRotaPremium() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       if (isFounder && slug === 'clareira-do-chamado') {
-        setShowTransitionPortal(true);
+        setShowColheita(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
@@ -150,6 +152,13 @@ export default function ClubeRotaPremium() {
   };
 
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+
+  if (showColheita) {
+    return <ColheitaRastrosExperience onComplete={() => {
+      setShowColheita(false);
+      setShowTransitionPortal(true);
+    }} />;
+  }
 
   if (showTransitionPortal) {
     return <FounderTransitionPortal />;
