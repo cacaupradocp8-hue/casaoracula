@@ -20,14 +20,15 @@ const VISITOR_KEYS = ['inicio', 'clube'];
 export function BottomNavPreview() {
   const [mounted, setMounted] = useState(false);
   const { isActive: isFounderActive } = useFounderAccess();
-  const { isAuthenticated, isAuthReady } = useAuth();
+  const { isAuthenticated, isAuthReady, isLoading, user } = useAuth();
   
   useEffect(() => { setMounted(true); }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const displayedItems = !isAuthenticated
+  const isVisitor = user?.portal === 'visitante';
+  const displayedItems = isVisitor
     ? NAV_ITEMS.filter(item => VISITOR_KEYS.includes(item.key))
     : isFounderActive 
       ? NAV_ITEMS.filter(item => ['inicio', 'clube', 'jardim'].includes(item.key))
@@ -40,8 +41,8 @@ export function BottomNavPreview() {
   
   const currentIndex = activeIndex >= 0 ? activeIndex : 0;
 
-  if (!mounted) return null;
-  if (isAuthReady && !isAuthenticated) return null;
+  if (!mounted || !isAuthReady || isLoading) return null;
+  if (!isAuthenticated) return null;
 
 
   const itemWidth = 100 / displayedItems.length;
