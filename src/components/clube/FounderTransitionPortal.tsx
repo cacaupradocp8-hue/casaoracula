@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 
-export function FounderTransitionPortal() {
+export function FounderTransitionPortal({ onContinue }: { onContinue?: () => void }) {
   const navigate = useNavigate();
 
   return (
@@ -123,7 +123,7 @@ export function FounderTransitionPortal() {
             
             <Button
               variant="ghost"
-              onClick={() => navigate('/sala-da-visitante')}
+              onClick={onContinue}
               className="text-white/30 hover:text-white text-[9px] uppercase tracking-[0.3em] font-black transition-colors"
             >
               Continuar explorando a Casa
