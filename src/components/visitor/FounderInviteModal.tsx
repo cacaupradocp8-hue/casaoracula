@@ -10,8 +10,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Loader2, KeyRound, Sparkles } from 'lucide-react';
-import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface FounderInviteModalProps {
@@ -19,9 +19,9 @@ interface FounderInviteModalProps {
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
   /**
-   * Se true, e o usuário não estiver autenticado, armazena o código em localStorage
-   * e instrui a usuária a fazer login/cadastro. Após autenticar, o Auth page
-   * detecta o código pendente e ativa automaticamente.
+   * Se true, e o usuário não estiver autenticado, armazena o código em
+   * localStorage e instrui a usuária a fazer login/cadastro. Após autenticar,
+   * o Auth page detecta o código pendente e ativa automaticamente.
    */
   allowPendingActivation?: boolean;
 }
@@ -36,8 +36,7 @@ export function FounderInviteModal({
 }: FounderInviteModalProps) {
   const [inviteCode, setInviteCode] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { validateAndActivateInvite } = useFounderAccess();
-  const { user } = useAuth();
+  const { user: ctxUser } = useAuth();
 
   const handleActivate = async () => {
     const code = inviteCode.trim().toUpperCase();
@@ -46,36 +45,65 @@ export function FounderInviteModal({
       return;
     }
 
+    setIsSubmitting(true);
+
+    // Fonte de verdade: sessão real do Supabase Auth (evita race do contexto).
+    let sessionUserId: string | null = ctxUser?.id ?? null;
+    try {
+      const { data: { user: sessionUser } } = await supabase.auth.getUser();
+      if (sessionUser?.id) sessionUserId = sessionUser.id;
+    } catch {
+      /* ignore — usa fallback do contexto se houver */
+    }
+
     // Caso 1: não autenticada e o modal permite ativação pendente (página /auth)
-    if (!user && allowPendingActivation) {
+    if (!sessionUserId && allowPendingActivation) {
       try {
         localStorage.setItem(PENDING_FOUNDER_CODE_KEY, code);
-      } catch (_) {
+      } catch {
         /* ignore */
       }
       toast.info('Entre ou crie sua conta para ativar seu Convite Fundadora.');
+      setIsSubmitting(false);
       onOpenChange(false);
       return;
     }
 
     // Caso 2: não autenticada e sem suporte a pendente — erro claro
-    if (!user) {
+    if (!sessionUserId) {
       toast.error('Entre ou crie sua conta para ativar seu Convite Fundadora.');
+      setIsSubmitting(false);
       return;
     }
 
-    setIsSubmitting(true);
-    const result = await validateAndActivateInvite(code);
-    setIsSubmitting(false);
+    // Ativa o convite usando a sessão real do Supabase. Não exige assinatura
+    // nem perfil premium: qualquer usuária autenticada (inclusive visitante)
+    // com código válido recebe os 7 dias de degustação.
+    try {
+      const { data, error } = await supabase.rpc('validar_e_ativar_convite', {
+        p_user_id: sessionUserId,
+        p_codigo: code,
+      });
 
-    if (result.success) {
-      toast.success('Convite ativado. A Clareira está aberta para você.');
-      onOpenChange(false);
-      if (onSuccess) onSuccess();
-    } else {
-      toast.error(result.error || 'Este convite não foi encontrado ou já expirou.');
+      if (error) throw error;
+
+      const result = data as { success: boolean; error?: string };
+      if (result?.success) {
+        toast.success('Convite ativado. A Clareira está aberta para você.');
+        onOpenChange(false);
+        if (onSuccess) onSuccess();
+      } else {
+        toast.error(result?.error || 'Este convite não foi encontrado ou já expirou.');
+      }
+    } catch (err: any) {
+      console.error('[FounderInviteModal] erro ao ativar convite:', err);
+      toast.error('Ocorreu um erro ao validar seu código. Tente novamente.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
+  const isAuthenticated = !!ctxUser;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -88,7 +116,7 @@ export function FounderInviteModal({
             Convite Fundadora
           </DialogTitle>
           <DialogDescription className="text-center mt-2">
-            {user
+            {isAuthenticated
               ? 'Insira seu código de convite para liberar 7 dias de degustação da Rota dos Lobos.'
               : 'Insira seu código abaixo. Depois entre ou crie sua conta para que o acesso seja liberado.'}
           </DialogDescription>
@@ -118,7 +146,7 @@ export function FounderInviteModal({
             ) : (
               <>
                 <Sparkles className="w-4 h-4" />
-                {user ? 'Ativar Convite' : 'Guardar e continuar'}
+                {isAuthenticated ? 'Ativar Convite' : 'Guardar e continuar'}
               </>
             )}
           </Button>
