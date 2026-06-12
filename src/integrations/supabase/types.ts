@@ -24694,6 +24694,10 @@ export type Database = {
         Args: { required_portal: Database["public"]["Enums"]["portal_type"] }
         Returns: boolean
       }
+      validar_e_ativar_convite: {
+        Args: { p_codigo: string; p_user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
       agente_status: "ativo" | "inativo"
