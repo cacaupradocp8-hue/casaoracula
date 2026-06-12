@@ -23,6 +23,7 @@ interface EscutaPremiumProps {
 }
 
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+const DISCO_CASA_ORACULA_URL = "/__l5e/assets-v1/036d36bd-ef2f-4640-b204-a71e6044a671/disco-casa-oracula.png";
 
 export function EscutaPremium({
   audioUrl,
@@ -34,6 +35,7 @@ export function EscutaPremium({
   className,
 }: EscutaPremiumProps) {
   const [playbackRate, setPlaybackRate] = useState(1);
+  const discoImageUrl = imagemEscuta || DISCO_CASA_ORACULA_URL;
   const {
     audioRef,
     isPlaying,
@@ -115,40 +117,31 @@ export function EscutaPremium({
 
           >
 
+            <img
+              src={discoImageUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full rounded-full object-cover z-0"
+            />
+            <div className="absolute inset-0 rounded-full bg-black/10 z-10 pointer-events-none" />
+            
             {/* Vinil Texture Effect - Fine lines */}
-            <div className="absolute inset-0 rounded-full pointer-events-none z-20 opacity-30" style={{ 
-              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 1px, rgba(255,255,255,0.05) 1px, rgba(255,255,255,0.05) 2px)' 
+            <div className="absolute inset-0 rounded-full pointer-events-none z-20 opacity-15" style={{ 
+              backgroundImage: 'repeating-radial-gradient(circle, transparent 0, transparent 2px, rgba(255,255,255,0.04) 2px, rgba(255,255,255,0.04) 3px)' 
             }} />
             
             {/* Golden Rim Internal - Dynamic reflection */}
             <div className="absolute inset-0 rounded-full border-[1px] border-gold/40 z-20 pointer-events-none shadow-[inset_0_0_20px_rgba(212,175,55,0.2)]" />
             <div className="absolute inset-2 rounded-full border-[0.5px] border-white/5 z-20 pointer-events-none" />
 
-            <div className="w-full h-full rounded-full overflow-hidden relative bg-zinc-950 flex items-center justify-center">
+            <div className="w-full h-full rounded-full overflow-hidden relative flex items-center justify-center">
               {/* Shine/Reflection */}
               <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 z-10 pointer-events-none" />
               <div className="absolute inset-0 bg-[conic-gradient(from_0deg,transparent,rgba(212,175,55,0.1),transparent)] z-10 pointer-events-none animate-[spin_10s_linear_infinite]" />
-              
-              {/* The Central Art (Station Image) - Improved Centralization */}
 
-              <div className="w-[48%] h-[48%] rounded-full overflow-hidden border border-gold/30 z-30 bg-[#020617] relative shadow-2xl flex items-center justify-center">
-                {imagemEscuta ? (
-                  <img 
-                    src={imagemEscuta} 
-                    alt="" 
-                    className="w-full h-full object-cover opacity-90"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-gold/20 to-[#020617] flex items-center justify-center">
-                    <Headphones className="w-8 h-8 text-gold/30" />
-                  </div>
-                )}
-                
-                {/* Inner Hole - Integrated into the disk */}
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gold/40 shadow-[inset_0_0_4px_rgba(212,175,55,0.3)] z-40 relative flex items-center justify-center">
-                    {/* Inner dot removed as per user request */}
-                  </div>
+              {/* Inner Hole - Integrated into the disk */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-30">
+                <div className="w-4 h-4 rounded-full bg-[#1a1a1a] border border-gold/40 shadow-[inset_0_0_4px_rgba(212,175,55,0.3)] relative flex items-center justify-center">
+                  {/* Inner dot removed as per user request */}
                 </div>
               </div>
             </div>
