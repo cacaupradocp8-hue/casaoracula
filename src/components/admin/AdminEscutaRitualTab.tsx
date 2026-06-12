@@ -206,7 +206,7 @@ export function AdminEscutaRitualTab() {
                   <div className="flex-1 min-w-0">
                     <div className="font-medium truncate">{a.title}</div>
                     <div className="text-xs text-muted-foreground">
-                      {rot?.title ?? '— sem rota'} › {est?.title ?? '— sem estação'} · ordem {a.display_order ?? '—'}
+                      {rot?.title ?? '— sem rota'} › {est?.title ?? '— sem estação'} · destino <strong>{a.destino ?? 'escuta_ritual'}</strong> · ordem {a.display_order ?? '—'}
                     </div>
                     <audio src={a.audio_url} controls className="mt-2 w-full max-w-md" preload="none" />
                   </div>
