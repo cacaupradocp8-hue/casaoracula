@@ -121,6 +121,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
                   titulo={audioPlaylist[activeAudioIndex]?.title} 
                   imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
                   className="py-0"
+                  autoPlay
+                  onEnded={() => setActiveAudioIndex((i) => Math.min(i + 1, audioPlaylist.length - 1))}
                 />
               </div>
 
