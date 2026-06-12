@@ -1,13 +1,18 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkles, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
+import { FounderInviteModal } from '@/components/visitor/FounderInviteModal';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
+import { Badge } from '@/components/ui/badge';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
@@ -22,6 +27,8 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [inviteModalOpen, setInviteModalOpen] = useState(false);
+  const { isActive: isFounderActive, dataExpira } = useFounderAccess();
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
@@ -192,6 +199,42 @@ export function VisitorSalaContent() {
             </Button>
           </div>
         </div>
+
+        {/* Founder Invitation Button */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 3, duration: 1 }}
+          className="mt-8"
+        >
+          {isFounderActive && dataExpira ? (
+            <div className="flex flex-col items-center gap-2">
+              <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-1">
+                <Sparkles className="w-3 h-3 mr-2" />
+                Degustação Fundadora Ativa
+              </Badge>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
+                Expira em {format(dataExpira, "d 'de' MMMM", { locale: ptBR })}
+              </p>
+            </div>
+          ) : (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setInviteModalOpen(true)}
+              className="text-primary/60 hover:text-primary hover:bg-primary/5 gap-2 text-xs uppercase tracking-widest h-10 px-6 rounded-full border border-primary/10"
+            >
+              <KeyRound className="w-3.5 h-3.5" />
+              Tenho um Convite Fundadora
+            </Button>
+          )}
+        </motion.div>
+
+        <FounderInviteModal 
+          open={inviteModalOpen} 
+          onOpenChange={setInviteModalOpen}
+          onSuccess={() => navigate('/clube/rotas')}
+        />
       </motion.section>
 
 
