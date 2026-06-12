@@ -83,6 +83,7 @@ const UpsellMachinePanel = lazy(() => import('@/components/admin/UpsellMachinePa
 const AdminFounderDashboardTab = lazy(() => import('@/domains/painel-mestre').then(m => ({ default: m.FounderDashboard })));
 const AdminRocktyMonitorTab = lazy(() => import('@/components/admin/AdminRocktyMonitorTab').then(m => ({ default: m.AdminRocktyMonitorTab })));
 const AdminDocumentosTab = lazy(() => import('@/components/admin/AdminDocumentosTab').then(m => ({ default: m.AdminDocumentosTab })));
+const AdminEscutaRitualTab = lazy(() => import('@/components/admin/AdminEscutaRitualTab').then(m => ({ default: m.AdminEscutaRitualTab })));
 
 
 
@@ -115,6 +116,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-carrosseis-insights': AdminCarrosseisInsights,
   'clube-treinamento': AdminTreinamentoTab,
   'clube-editorial': AdminClubeEditorialTab,
+  'escuta-ritual': AdminEscutaRitualTab,
 
   
   // FORMAÇÃO
