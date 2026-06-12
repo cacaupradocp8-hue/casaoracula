@@ -114,7 +114,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
                   key={audioPlaylist[activeAudioIndex]?.url}
                   audioUrl={audioPlaylist[activeAudioIndex]?.url} 
                   titulo={audioPlaylist[activeAudioIndex]?.title} 
-                  imagemEscuta={audioPlaylist[activeAudioIndex]?.type === 'ambient' ? "/__l5e/assets-v1/036d36bd-ef2f-4640-b204-a71e6044a671/disco-casa-oracula.png" : livroCapaUrl}
+                  imagemEscuta="/__l5e/assets-v1/036d36bd-ef2f-4640-b204-a71e6044a671/disco-casa-oracula.png"
                   className="py-0"
                 />
               </div>
