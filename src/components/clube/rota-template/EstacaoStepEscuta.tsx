@@ -23,6 +23,7 @@ interface EstacaoStepEscutaProps {
 }
 
 export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
+  estacaoId,
   obraRegente,
   livroCapaUrl,
   audioVozClareiraUrl,
