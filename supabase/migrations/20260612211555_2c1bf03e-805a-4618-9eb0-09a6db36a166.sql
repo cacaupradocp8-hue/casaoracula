@@ -1,0 +1,1 @@
+ALTER TABLE public.clube_v3_station_audios DROP CONSTRAINT IF EXISTS clube_v3_station_audios_station_id_fkey;
