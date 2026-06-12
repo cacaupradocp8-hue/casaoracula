@@ -339,8 +339,8 @@ function AppRoutes() {
       <Route path="/casa-tecelas/interior" element={<ProtectedRoute minPortal="oracula"><CasaTecelaInterior /></ProtectedRoute>} />
       <Route path="/circulo-oracular" element={<ProtectedRoute minPortal="assinante"><CirculoOracularPage /></ProtectedRoute>} />
       
-      <Route path="/meu-jardim" element={<ProtectedRoute><JardimHeroinaClientePage /></ProtectedRoute>} />
-      <Route path="/jardim" element={<ProtectedRoute><JardimHeroina /></ProtectedRoute>} />
+      <Route path="/meu-jardim" element={<ProtectedRoute minPortal="aluna"><JardimHeroinaClientePage /></ProtectedRoute>} />
+      <Route path="/jardim" element={<ProtectedRoute minPortal="aluna"><JardimHeroina /></ProtectedRoute>} />
       <Route path="/sala-das-maquinas/cabine" element={<ProtectedRoute minPortal="oracula"><CabineTerapeuta /></ProtectedRoute>} />
       <Route path="/mapa-vivo" element={<ProtectedRoute minPortal="assinante"><CoMapaVivoPage /></ProtectedRoute>} />
       
@@ -502,8 +502,8 @@ function AppRoutes() {
       <Route path="/academia" element={<ProtectedRoute minPortal="aluna_formacao"><AcademiaFormacaoPage /></ProtectedRoute>} />
 
       {/* Jardim da Psique */}
-      <Route path="/jardim-da-psique" element={<ProtectedRoute><JardimPsique /></ProtectedRoute>} />
-      <Route path="/jardim-da-psique/:id" element={<ProtectedRoute><JardimPsiqueDetalhe /></ProtectedRoute>} />
+      <Route path="/jardim-da-psique" element={<ProtectedRoute minPortal="aluna"><JardimPsique /></ProtectedRoute>} />
+      <Route path="/jardim-da-psique/:id" element={<ProtectedRoute minPortal="aluna"><JardimPsiqueDetalhe /></ProtectedRoute>} />
 
       {/* Canteiro */}
       
@@ -518,10 +518,10 @@ function AppRoutes() {
 
 
       {/* Cursos */}
-      <Route path="/cursos" element={<ProtectedRoute><Cursos /></ProtectedRoute>} />
-      <Route path="/cursos/:id" element={<ProtectedRoute><CursoDetalhe /></ProtectedRoute>} />
-      <Route path="/cursos/:courseId/aula/:lessonId" element={<ProtectedRoute><CursoAula /></ProtectedRoute>} />
-      <Route path="/cursos/:courseId/modulo/:moduleId" element={<ProtectedRoute><CursoModulo /></ProtectedRoute>} />
+      <Route path="/cursos" element={<ProtectedRoute minPortal="aluna"><Cursos /></ProtectedRoute>} />
+      <Route path="/cursos/:id" element={<ProtectedRoute minPortal="aluna"><CursoDetalhe /></ProtectedRoute>} />
+      <Route path="/cursos/:courseId/aula/:lessonId" element={<ProtectedRoute minPortal="aluna"><CursoAula /></ProtectedRoute>} />
+      <Route path="/cursos/:courseId/modulo/:moduleId" element={<ProtectedRoute minPortal="aluna"><CursoModulo /></ProtectedRoute>} />
 
       {/* Formação */}
       <Route path="/formacao-metodo" element={<ProtectedRoute minPortal="mentorada"><FormacaoMetodoPage /></ProtectedRoute>} />
