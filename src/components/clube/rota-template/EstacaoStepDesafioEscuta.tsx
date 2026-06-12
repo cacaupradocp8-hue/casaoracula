@@ -104,7 +104,7 @@ export const EstacaoStepDesafioEscuta: React.FC<DesafioEscutaProps> = ({
         <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-4">
           <Brain className="w-8 h-8 text-gold" />
         </div>
-        <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
+        <h2 className="text-2xl xs:text-3xl sm:text-5xl md:text-7xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
             Laboratório <br className="xs:hidden" /> de Escuta
           </span>

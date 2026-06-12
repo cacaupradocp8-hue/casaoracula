@@ -46,7 +46,7 @@ export const EstacaoStepJardim: React.FC<JardimStepProps> = ({
           )}>
             Rastro de Integração — Jardim {isPsique ? 'da Psique' : 'do Ofício'}
           </span>
-          <h2 className="text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
+          <h2 className="text-3xl xs:text-4xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase">
             <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
               {isPsique ? 'Integração Pessoal' : 'Integração do Ofício'}
             </span>
