@@ -515,6 +515,13 @@ export default function Auth() {
           </div>
         </motion.div>
       </div>
+
+      <FounderInviteModal
+        open={founderModalOpen}
+        onOpenChange={setFounderModalOpen}
+        allowPendingActivation
+        onSuccess={() => navigate('/clube/rotas/rota-dos-lobos', { replace: true })}
+      />
     </div>
   );
 }
