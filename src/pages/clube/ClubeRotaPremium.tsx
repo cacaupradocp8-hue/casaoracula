@@ -25,15 +25,19 @@ import { Card } from '@/components/ui/card';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
+import { FounderTransitionPortal } from '@/components/clube/FounderTransitionPortal';
 import { toast } from 'sonner';
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isActive: isFounder } = useFounderAccess();
   const { data: estacao, isLoading, error } = useEstacaoConteudo(slug || '');
   const [currentStep, setCurrentStep] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showTransitionPortal, setShowTransitionPortal] = useState(false);
 
   const steps = [
     { id: 'entrada', title: 'Entrada' },
@@ -125,7 +129,12 @@ export default function ClubeRotaPremium() {
       saveProgress(nextStep);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
+      if (isFounder && slug === 'clareira-do-chamado') {
+        setShowTransitionPortal(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
+      }
     }
   };
 
@@ -141,6 +150,10 @@ export default function ClubeRotaPremium() {
   };
 
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+
+  if (showTransitionPortal) {
+    return <FounderTransitionPortal />;
+  }
 
   return (
     <AppLayout>
