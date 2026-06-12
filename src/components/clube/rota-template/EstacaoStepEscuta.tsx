@@ -34,15 +34,33 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   onNext
 }) => {
   const [activePlaylistIndex, setActivePlaylistIndex] = useState(0);
-  
+  const [adminAudios, setAdminAudios] = useState<Array<{ url: string; title: string }>>([]);
+
+  useEffect(() => {
+    if (!estacaoId) return;
+    (async () => {
+      const { data, error } = await (supabase as any)
+        .from('clube_v3_station_audios')
+        .select('audio_url,title,display_order,destino,status')
+        .eq('station_id', estacaoId)
+        .eq('destino', 'escuta_ritual')
+        .eq('status', 'published')
+        .order('display_order', { ascending: true });
+      if (!error && data) {
+        setAdminAudios(data.map((a: any) => ({ url: a.audio_url, title: a.title })));
+      }
+    })();
+  }, [estacaoId]);
+
   // Audio Playlist Logic
   const audioPlaylist = useMemo(() => {
-    const list = [];
+    const list: Array<{ url: string; title: string; type: string; icon: any }> = [];
     if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Voz da Clareira", type: "content", icon: Headphones });
     if (audioAberturaUrl) list.push({ url: audioAberturaUrl, title: "Abertura da Estação", type: "intro", icon: Music });
     if (audioFlorestaUrl) list.push({ url: audioFlorestaUrl, title: "Voz da Floresta", type: "ambient", icon: TreePine });
+    adminAudios.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
     return list;
-  }, [audioVozClareiraUrl, audioAberturaUrl, audioFlorestaUrl]);
+  }, [audioVozClareiraUrl, audioAberturaUrl, audioFlorestaUrl, adminAudios]);
 
   const [activeAudioIndex, setActiveAudioIndex] = useState(0);
 
