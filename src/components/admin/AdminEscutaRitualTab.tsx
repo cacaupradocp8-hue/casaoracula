@@ -160,6 +160,16 @@ export function AdminEscutaRitualTab() {
           </div>
 
           <div className="space-y-2 md:col-span-2">
+            <Label>Destino (página/aba onde o áudio aparecerá) *</Label>
+            <Select value={destino} onValueChange={setDestino}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                {DESTINOS.map(d => <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>)}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
             <Label>Título *</Label>
             <Input value={titulo} onChange={e => setTitulo(e.target.value)} placeholder="Ex.: Escuta de Abertura" />
           </div>
