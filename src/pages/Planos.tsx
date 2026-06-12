@@ -51,6 +51,7 @@ export default function Planos() {
   return (
     <AppLayout>
       <div className="min-h-screen bg-background">
+        {!isAuthenticated && <VisitorEscapeNav />}
         {/* 1. Abertura sofisticada */}
         <PlanosHero />
 
