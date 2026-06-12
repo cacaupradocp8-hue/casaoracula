@@ -17,6 +17,7 @@ import { useOnboarding } from "@/hooks/useOnboarding";
 import { LockedForVisitor } from "@/components/shared/LockedForVisitor";
 import { BootLoadingScreen } from "@/components/shared/BootLoadingScreen";
 import { useRouteGuard } from "@/hooks/auth/useRouteGuard";
+import { useFounderAccess } from "@/hooks/useFounderAccess";
 import { useEffectivePortal } from "@/hooks/useEffectivePortal";
 const RotaDosLobos = React.lazy(() => import("./pages/clube/RotaDosLobos"));
 const ClubeRotaHub = React.lazy(() => import("./pages/clube/ClubeRotaHub"));
@@ -245,10 +246,19 @@ class RootErrorBoundary extends React.Component<{ children: React.ReactNode }, R
 
 function ProtectedRoute({ children, minPortal = "visitante" }: { children: React.ReactNode; minPortal?: string }) {
   const result = useRouteGuard(minPortal as PortalType);
+  const { isActive: isFounderActive, isLoading: isFounderLoading } = useFounderAccess();
+  const location = useLocation();
   if (result.status === 'loading') return <AuthLoading />;
   if (result.status === 'error') return <AppRouteError title="Erro na autenticação" message={result.errorMessage} />;
   if (result.status === 'redirect') return <Navigate to={result.to} replace />;
-  if (result.status === 'locked-visitor') return <LockedForVisitor />;
+  if (result.status === 'locked-visitor') {
+    if (isFounderLoading) return <AuthLoading />;
+    // Fundadora ativa: libera acesso às rotas do Clube (Clareira/Rota dos Lobos)
+    if (isFounderActive && location.pathname.startsWith('/clube')) {
+      return <>{children}</>;
+    }
+    return <LockedForVisitor />;
+  }
   return <>{children}</>;
 }
 
