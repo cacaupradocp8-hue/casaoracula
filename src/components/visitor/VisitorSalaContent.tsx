@@ -106,7 +106,7 @@ export function VisitorSalaContent() {
               initial={{ opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.4, duration: 0.8 }}
-              className="text-foreground/90 text-base md:text-lg font-display tracking-wide px-4"
+              className="text-foreground/90 text-base md:text-lg font-display tracking-wide px-4 leading-relaxed"
             >
               Nem toda terapeuta escuta uma história da mesma forma.
             </motion.p>

@@ -179,8 +179,7 @@ export function Navigation() {
         <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-2 sm:gap-4 h-16 lg:h-20">
             <Link to={user ? (activeDomain === 'profissional' ? '/casa-das-maquinas' : '/dashboard-membro') : '/'} className="h-full flex items-center py-2 shrink-0 max-w-[120px] xs:max-w-[140px] sm:max-w-none">
-
-              <Logo variant="horizontal" className={cn("transition-all h-7 lg:h-10", location.pathname === '/clube' ? "brightness-125" : "")} />
+              <Logo variant="horizontal" className={cn("transition-all h-6 xs:h-7 lg:h-10", location.pathname === '/clube' ? "brightness-125" : "")} />
             </Link>
 
             {/* Desktop menu — icon-only at lg, full at xl */}
