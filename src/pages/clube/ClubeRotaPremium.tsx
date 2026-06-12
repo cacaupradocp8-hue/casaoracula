@@ -132,7 +132,7 @@ export default function ClubeRotaPremium() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       if (isFounder && slug === 'clareira-do-chamado') {
-        setShowColheita(true);
+        setShowTransitionPortal(true);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
         navigate(`/clube/rotas/${estacao.clube_rotas.slug}`);
@@ -153,15 +153,25 @@ export default function ClubeRotaPremium() {
 
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
 
-  if (showColheita) {
-    return <ColheitaRastrosExperience onComplete={() => {
-      setShowColheita(false);
-      setShowTransitionPortal(true);
-    }} />;
+  if (showTransitionPortal) {
+    return (
+      <FounderTransitionPortal 
+        onContinue={() => {
+          setShowTransitionPortal(false);
+          setShowColheita(true);
+        }} 
+      />
+    );
   }
 
-  if (showTransitionPortal) {
-    return <FounderTransitionPortal />;
+  if (showColheita) {
+    return (
+      <ColheitaRastrosExperience 
+        onComplete={() => {
+          navigate('/sala-da-visitante');
+        }} 
+      />
+    );
   }
 
   return (
