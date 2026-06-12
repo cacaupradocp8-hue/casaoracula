@@ -384,7 +384,7 @@ function AppRoutes() {
       <Route path="/laboratorio-leitura" element={<ProtectedRoute minPortal="mentorada"><LaboratorioLeitura /></ProtectedRoute>} />
       <Route path="/agentes" element={<ProtectedRoute minPortal="mentorada"><Agentes /></ProtectedRoute>} />
       
-      <Route path="/ferramentas" element={<ProtectedRoute><FerramentasHub /></ProtectedRoute>} />
+      <Route path="/ferramentas" element={<ProtectedRoute minPortal="aluna"><FerramentasHub /></ProtectedRoute>} />
       
 
       {/* Session Room */}
