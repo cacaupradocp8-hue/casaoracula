@@ -20,8 +20,16 @@ interface EscutaAudio {
   station_id: string | null;
   display_order: number | null;
   status: string | null;
+  destino: string | null;
   created_at: string;
 }
+
+const DESTINOS = [
+  { value: 'escuta_ritual', label: 'Escuta Ritual (passo Escuta)' },
+  { value: 'entrada', label: 'Entrada da Estação' },
+  { value: 'camara_escuta', label: 'Câmara de Escuta' },
+  { value: 'fechamento', label: 'Fechamento' },
+];
 
 export function AdminEscutaRitualTab() {
   const [rotas, setRotas] = useState<Rota[]>([]);
