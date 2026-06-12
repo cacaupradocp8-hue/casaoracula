@@ -10,6 +10,7 @@ import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
 import mentoriaImg from '@/assets/formacao/mentoria01-new.png';
 import { ParticleField } from '@/components/sales/ParticleField';
+import { VisitorEscapeNav } from '@/components/visitor/VisitorEscapeNav';
 
 /* ─── PRIMITIVES ─── */
 
