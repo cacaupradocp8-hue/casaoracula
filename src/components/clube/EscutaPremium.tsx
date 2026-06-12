@@ -20,6 +20,8 @@ interface EscutaPremiumProps {
   duracao?: string;
   imagemEscuta?: string;
   className?: string;
+  autoPlay?: boolean;
+  onEnded?: () => void;
 }
 
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
