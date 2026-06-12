@@ -9,6 +9,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessExpiration } from '@/hooks/useAccessExpiration';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { useNotificationPreferences } from '@/hooks/useNotificationPreferences';
 import { canAccessFeature } from '@/types/portal';
 import { supabase } from '@/integrations/supabase/client';
@@ -37,7 +38,8 @@ import {
 export default function MinhaConta() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const { accessExpiresAt, subscriptionStatus, hasActiveSubscription } = useAccessExpiration();
+  const { accessExpiresAt, subscriptionStatus } = useAccessExpiration();
+  const { isActive: isFounder, dataExpira: founderExpiresAt } = useFounderAccess();
   const { preferences, updatePreference } = useNotificationPreferences();
   const [resetLoading, setResetLoading] = useState(false);
 
@@ -84,6 +86,13 @@ export default function MinhaConta() {
               <h2 className="text-xl font-display font-bold">{user.name || 'Sem nome'}</h2>
               <p className="text-sm text-muted-foreground">{user.email}</p>
             </div>
+
+            {isFounder && (
+              <Badge className="bg-primary/20 text-primary border-primary/30 py-1.5 px-4 rounded-full mt-2">
+                <Sparkles className="w-3.5 h-3.5 mr-2" />
+                Fundadora Convidada
+              </Badge>
+            )}
 
           </CardContent>
         </Card>
@@ -164,6 +173,23 @@ export default function MinhaConta() {
                      </Link>
                    </Button>
                 </div>
+              </div>
+            )}
+
+            {isFounder && !isAssinante && (
+              <div className="pt-4 border-t border-primary/10 space-y-3">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5" />
+                    Acesso Temporário
+                  </span>
+                  <span className="font-medium text-primary">
+                    Expira em {founderExpiresAt ? format(founderExpiresAt, "d 'de' MMM", { locale: ptBR }) : '—'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed italic">
+                  Você está explorando a Casa Orácula como nossa convidada. Aproveite este tempo para conhecer a Rota dos Lobos.
+                </p>
               </div>
             )}
           </CardContent>

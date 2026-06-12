@@ -24,6 +24,14 @@ import {
   DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuSub,
   DropdownMenuSubTrigger, DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
+
+// ── FUNDADORA CONVIDADA (MENU REDUZIDO) ──────────────────────────────────────
+const fundadoraMenuGroups = () => [
+  { key: 'visitante', label: 'Sala da Visitante', icon: Home, path: '/sala-da-visitante', subitems: [] },
+  { key: 'clube', label: 'Rotas', icon: BookOpen, path: '/clube/rotas', subitems: [] },
+  { key: 'jardim', label: 'Jardins', icon: Flower2, path: '/jardim-da-psique', subitems: [] },
+];
 
 // ── VISITANTE / GRATUITO ─────────────────────────────────────────────────────
 const visitanteMenuGroups = () => [
@@ -98,6 +106,7 @@ export function Navigation() {
   const [ritualSaidaOpen, setRitualSaidaOpen] = useState(false);
   const [mobileExpandedGroup, setMobileExpandedGroup] = useState<string | null>(null);
   const [ritualAudioPlayback, setRitualAudioPlayback] = useState<RitualSaidaAudioPlayback | null>(null);
+  const { isActive: isFounderActive } = useFounderAccess();
   const ritualAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const isAdmin = user?.portal === 'admin';
@@ -109,6 +118,7 @@ export function Navigation() {
   // Profile-based menu selection
   const getMenuForProfile = () => {
     if (activeDomain === 'profissional') return profissionalMenuGroups(isAdmin, isMentorada);
+    if (isFounderActive) return fundadoraMenuGroups();
     if (isAdmin || hasOracula) return alunaMenuGroups(); // Aluna de formação
     const isAssinante = user ? canAccessFeature(user.portal, 'assinante') : false;
     const isAluna = user ? canAccessFeature(user.portal, 'aluna') : false;

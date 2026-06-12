@@ -25,6 +25,7 @@ const AdminSalasTab = lazy(() => import('@/components/admin/AdminSalasTab').then
 const AdminConteudosTab = lazy(() => import('@/components/admin/AdminConteudosTab').then(m => ({ default: m.AdminConteudosTab })));
 const AdminMatriculasTab = lazy(() => import('@/components/admin/AdminMatriculasTab').then(m => ({ default: m.AdminMatriculasTab })));
 const AdminSettingsTab = lazy(() => import('@/components/admin/AdminSettingsTab').then(m => ({ default: m.AdminSettingsTab })));
+const AdminFounderInvitesTab = lazy(() => import('@/components/admin/AdminFounderInvitesTab').then(m => ({ default: m.AdminFounderInvitesTab })));
 const AdminAssinaturasTab = lazy(() => import('@/components/admin/AdminAssinaturasTab').then(m => ({ default: m.AdminAssinaturasTab })));
 const AdminLeiturasTab = lazy(() => import('@/components/admin/AdminLeiturasTab').then(m => ({ default: m.AdminLeiturasTab })));
 const AdminQuizTab = lazy(() => import('@/components/admin/AdminQuizTab').then(m => ({ default: m.AdminQuizTab })));
@@ -149,6 +150,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'grupos': AdminGruposTab,
   
   // SISTEMA
+  'founder-invites': AdminFounderInvitesTab,
   'users': AdminUsersTab,
   'assinaturas': AdminAssinaturasTab,
   'planos-clube': AdminPlanosClubTab,

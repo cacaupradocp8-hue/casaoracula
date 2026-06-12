@@ -7,7 +7,7 @@ import {
   Headphones, PenLine, FileText, LayoutGrid, ImageIcon as GalleryIcon,
   Flame, MessageSquare, Users, Sparkles,
   UserCheck, TrendingUp, Gift, RefreshCw, Map as MapIcon,
-  Settings, CreditCard, Wrench, ClipboardList, Bot, Brain, Layers, Library, Megaphone, FolderOpen, Video, Cog, ShieldCheck
+  Settings, CreditCard, Wrench, ClipboardList, Bot, Brain, Layers, Library, Megaphone, FolderOpen, Video, Cog, ShieldCheck, Clock
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -101,6 +101,16 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'comunicacao', label: 'Comunicação', icon: MessageSquare },
       { key: 'narroterapia', label: 'Narroterapia', icon: BookOpen },
       { key: 'grupos', label: 'Grupos & Tribos', icon: Users },
+    ],
+  },
+  {
+    key: 'programas-acesso',
+    label: 'Programas de Acesso',
+    emoji: '🎟️',
+    icon: Gift,
+    items: [
+      { key: 'founder-invites', label: 'Convites Fundadora', icon: Gift },
+      { key: 'degustacao', label: 'Degustação (24h)', icon: Clock },
     ],
   },
   {
