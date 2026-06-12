@@ -45,12 +45,6 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
             {titulo.replace('Estação', '').replace('—', '').trim()}
           </span>
-          <motion.div 
-            initial={{ width: 0 }}
-            animate={{ width: '60%' }}
-            transition={{ delay: 0.5, duration: 1 }}
-            className="absolute -bottom-4 md:-bottom-6 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-transparent via-gold/60 to-transparent" 
-          />
         </h1>
       </div>
 
