@@ -66,7 +66,16 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
       </div>
 
       <div className="flex flex-col items-center gap-8">
+        <div className="space-y-3 max-w-2xl text-center">
+          <h2 className="text-2xl md:text-4xl font-display text-white tracking-wide">
+            O Retorno da Mulher que Sabe
+          </h2>
+          <p className="text-gold/70 font-cormorant italic text-base md:text-lg">
+            Uma introdução à Rota dos Lobos e à linguagem da mulher selvagem.
+          </p>
+        </div>
         <div className="space-y-4 max-w-xl">
+
           <p className="text-white/80 font-cormorant text-xl leading-relaxed italic">
             "{fraseAbertura}"
           </p>
