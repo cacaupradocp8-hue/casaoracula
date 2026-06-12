@@ -27,7 +27,8 @@ interface ConviteFundadora {
   limite_uso: number;
   usos_realizados: number;
   ativo: boolean;
-  expira_em: string | null;
+  expira_em?: string | null;
+  dias_acesso?: number;
   created_at: string;
 }
 
