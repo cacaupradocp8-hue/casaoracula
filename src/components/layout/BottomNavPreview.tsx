@@ -20,15 +20,19 @@ const VISITOR_KEYS = ['inicio', 'clube'];
 export function BottomNavPreview() {
   const [mounted, setMounted] = useState(false);
   const { isActive: isFounderActive } = useFounderAccess();
+  const { isAuthenticated, isAuthReady } = useAuth();
   
   useEffect(() => { setMounted(true); }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const displayedItems = isFounderActive 
-    ? NAV_ITEMS.filter(item => ['inicio', 'clube', 'jardim'].includes(item.key))
-    : NAV_ITEMS;
+  const displayedItems = !isAuthenticated
+    ? NAV_ITEMS.filter(item => VISITOR_KEYS.includes(item.key))
+    : isFounderActive 
+      ? NAV_ITEMS.filter(item => ['inicio', 'clube', 'jardim'].includes(item.key))
+      : NAV_ITEMS;
+
 
   const activeIndex = displayedItems.findIndex(
     (item) => location.pathname === item.path || location.pathname.startsWith(item.path + '/')
