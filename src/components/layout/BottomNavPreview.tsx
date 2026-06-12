@@ -4,6 +4,7 @@ import { Home, BookOpen, Wrench, Flower2, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { useFounderAccess } from '@/hooks/useFounderAccess';
+import { useAuth } from '@/contexts/AuthContext';
 
 const NAV_ITEMS = [
   { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
@@ -12,6 +13,9 @@ const NAV_ITEMS = [
   { key: 'jardim', icon: Flower2, label: 'Jardim', path: '/jardim-da-psique' },
   { key: 'formacao', icon: GraduationCap, label: 'Formação', path: '/cursos' },
 ];
+
+const VISITOR_KEYS = ['inicio', 'clube'];
+
 
 export function BottomNavPreview() {
   const [mounted, setMounted] = useState(false);
