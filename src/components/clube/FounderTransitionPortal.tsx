@@ -33,15 +33,15 @@ export function FounderTransitionPortal() {
             </motion.div>
           </div>
           
-          <h2 className="text-3xl md:text-5xl font-serif text-white leading-tight">
+          <h2 className="text-3xl md:text-5xl font-serif text-white leading-tight uppercase tracking-widest">
             Você chegou à primeira <br />
-            <span className="text-gold italic font-light">porta da floresta</span>.
+            <span className="text-gold italic font-light lowercase">porta da floresta</span>.
           </h2>
 
           <div className="space-y-6 text-white/70 text-base md:text-lg font-serif italic leading-relaxed max-w-lg mx-auto">
             <p>A Clareira do Chamado foi apenas o início.</p>
             <p>Agora a trilha conduz para um território mais profundo.</p>
-            <p className="text-white">A Casa da Boa Menina.</p>
+            <p className="text-white text-xl md:text-2xl not-italic uppercase tracking-[0.2em] font-black">A Casa da Boa Menina.</p>
             <p>
               Um lugar onde muitas mulheres aprenderam a desaparecer para continuar pertencendo.
               E onde começam a descobrir o custo dessa adaptação.
@@ -71,7 +71,7 @@ export function FounderTransitionPortal() {
                 <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
                   <Lock className="w-5 h-5 text-gold" />
                 </div>
-                <span className="text-xs font-bold tracking-[0.3em] text-gold uppercase drop-shadow-md">🔒 Casa da Boa Menina</span>
+                <span className="text-[10px] font-bold tracking-[0.4em] text-gold uppercase drop-shadow-md">🔒 Casa da Boa Menina</span>
               </div>
             </div>
 
@@ -81,13 +81,13 @@ export function FounderTransitionPortal() {
               </p>
               
               <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center gap-2 text-white/30">
+                <div className="flex items-center gap-2 text-white/20">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span className="text-[10px] uppercase tracking-widest font-bold">Ferramenta Bloqueada</span>
+                  <span className="text-[9px] uppercase tracking-widest font-black">Ferramenta Bloqueada</span>
                 </div>
-                <div className="flex items-center gap-2 text-white/30">
+                <div className="flex items-center gap-2 text-white/20">
                   <Headphones className="w-3.5 h-3.5" />
-                  <span className="text-[10px] uppercase tracking-widest font-bold">Áudio Bloqueado</span>
+                  <span className="text-[9px] uppercase tracking-widest font-black">Áudio Bloqueado</span>
                 </div>
               </div>
             </div>
@@ -99,19 +99,23 @@ export function FounderTransitionPortal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5, duration: 1 }}
-          className="space-y-10"
+          className="space-y-12"
         >
-          <p className="text-white/40 text-sm font-serif italic">
-            Você recebeu acesso de fundadora para conhecer a floresta.<br />
-            Agora pode escolher permanecer.
-          </p>
+          <div className="space-y-2">
+            <p className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-black italic">
+              Você recebeu acesso de fundadora para conhecer a floresta.
+            </p>
+            <p className="text-gold/60 text-sm font-serif italic">
+              Agora pode escolher permanecer.
+            </p>
+          </div>
 
-          <div className="flex flex-col gap-4 max-w-xs mx-auto">
+          <div className="flex flex-col gap-6 max-w-xs mx-auto">
             <Button
               variant="gold"
               size="lg"
               onClick={() => navigate('/planos')}
-              className="h-16 rounded-full bg-gold text-[#08090B] font-bold uppercase tracking-widest text-xs shadow-[0_0_30px_rgba(212,175,55,0.2)] group"
+              className="h-20 rounded-full bg-gold text-[#08090B] font-black uppercase tracking-[0.2em] text-[10px] shadow-[0_0_40px_rgba(212,175,55,0.2)] group hover:scale-105 transition-all"
             >
               <span>Entrar na Casa da Boa Menina</span>
               <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
@@ -120,7 +124,7 @@ export function FounderTransitionPortal() {
             <Button
               variant="ghost"
               onClick={() => navigate('/sala-da-visitante')}
-              className="text-white/40 hover:text-white text-[10px] uppercase tracking-[0.2em]"
+              className="text-white/30 hover:text-white text-[9px] uppercase tracking-[0.3em] font-black transition-colors"
             >
               Continuar explorando a Casa
             </Button>
