@@ -10,6 +10,7 @@ import img03 from '@/assets/formacao/imagem03-new.png';
 import img04 from '@/assets/formacao/imagem04-new.png';
 import mentoriaImg from '@/assets/formacao/mentoria01-new.png';
 import { ParticleField } from '@/components/sales/ParticleField';
+import { VisitorEscapeNav } from '@/components/visitor/VisitorEscapeNav';
 
 /* ─── PRIMITIVES ─── */
 
@@ -177,6 +178,7 @@ export default function OraculaSalesPage() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
 
+      <VisitorEscapeNav />
       <ParticleField density={28} color="216,255,62" />
 
       {/* ═══════════════════════════════

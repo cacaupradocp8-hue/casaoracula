@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowRight, Sparkles, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
@@ -24,11 +24,18 @@ import { ptBR } from 'date-fns/locale';
  */
 export function VisitorSalaContent() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const { isActive: isFounderActive, dataExpira } = useFounderAccess();
+
+  useEffect(() => {
+    if (searchParams.get('convite') === '1') {
+      setInviteModalOpen(true);
+    }
+  }, [searchParams]);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
@@ -233,7 +240,7 @@ export function VisitorSalaContent() {
         <FounderInviteModal 
           open={inviteModalOpen} 
           onOpenChange={setInviteModalOpen}
-          onSuccess={() => navigate('/clube/rotas')}
+          onSuccess={() => navigate('/clube/rotas/rota-dos-lobos')}
         />
       </motion.section>
 

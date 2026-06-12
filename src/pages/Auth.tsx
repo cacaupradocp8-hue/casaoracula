@@ -451,22 +451,31 @@ export default function Auth() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.5 }}
-          className="mt-6 flex items-center justify-center gap-6 text-xs text-muted-foreground/50"
+          className="mt-6 flex flex-col items-center justify-center gap-4 text-xs text-muted-foreground/50"
         >
-          <Link to="/tour" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
-            <Play className="w-3 h-3" />
-            Tour
+          <Link
+            to="/sala-da-visitante?convite=1"
+            className="inline-flex items-center gap-2 px-5 h-9 rounded-full border border-gold/20 text-gold/80 hover:text-gold hover:border-gold/40 hover:bg-gold/5 uppercase tracking-widest transition-colors"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            Tenho um Convite Fundadora
           </Link>
-          <span className="w-px h-3 bg-border/30" />
-          <Link to="/experiencia-gratuita" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
-            <Sparkles className="w-3 h-3" />
-            Experiência
-          </Link>
-          <span className="w-px h-3 bg-border/30" />
-          <Link to="/clube-livro" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
-            <BookOpen className="w-3 h-3" />
-            Clube
-          </Link>
+          <div className="flex items-center justify-center gap-6">
+            <Link to="/tour" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
+              <Play className="w-3 h-3" />
+              Tour
+            </Link>
+            <span className="w-px h-3 bg-border/30" />
+            <Link to="/experiencia-gratuita" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
+              <Sparkles className="w-3 h-3" />
+              Experiência
+            </Link>
+            <span className="w-px h-3 bg-border/30" />
+            <Link to="/clube-livro" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
+              <BookOpen className="w-3 h-3" />
+              Clube
+            </Link>
+          </div>
         </motion.div>
       </div>
     </div>
