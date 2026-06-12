@@ -187,42 +187,6 @@ export function VisitorSalaContent() {
           </div>
         </div>
 
-        {/* Founder Invitation Button */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 3, duration: 1 }}
-          className="mt-8"
-        >
-          {isFounderActive && dataExpira ? (
-            <div className="flex flex-col items-center gap-2">
-              <Badge className="bg-primary/20 text-primary border-primary/30 px-4 py-1">
-                <Sparkles className="w-3 h-3 mr-2" />
-                Degustação Fundadora Ativa
-              </Badge>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-                Expira em {format(dataExpira, "d 'de' MMMM", { locale: ptBR })}
-              </p>
-            </div>
-          ) : (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setInviteModalOpen(true)}
-              className="text-primary/60 hover:text-primary hover:bg-primary/5 gap-2 text-xs uppercase tracking-widest h-10 px-6 rounded-full border border-primary/10"
-            >
-              <KeyRound className="w-3.5 h-3.5" />
-              Tenho um Convite Fundadora
-            </Button>
-          )}
-        </motion.div>
-
-        <FounderInviteModal 
-          open={inviteModalOpen} 
-          onOpenChange={setInviteModalOpen}
-          onSuccess={() => navigate('/clube/rotas/rota-dos-lobos')}
-        />
-      </motion.section>
 
 
         {/* SECTION 5 — Caminho simbólico (discreto) */}
