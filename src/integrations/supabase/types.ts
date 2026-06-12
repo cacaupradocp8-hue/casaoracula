@@ -6923,6 +6923,7 @@ export type Database = {
         Row: {
           audio_url: string
           created_at: string
+          destino: string
           display_order: number | null
           id: string
           station_id: string | null
@@ -6933,6 +6934,7 @@ export type Database = {
         Insert: {
           audio_url: string
           created_at?: string
+          destino?: string
           display_order?: number | null
           id?: string
           station_id?: string | null
@@ -6943,6 +6945,7 @@ export type Database = {
         Update: {
           audio_url?: string
           created_at?: string
+          destino?: string
           display_order?: number | null
           id?: string
           station_id?: string | null
