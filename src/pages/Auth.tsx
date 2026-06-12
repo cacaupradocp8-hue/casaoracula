@@ -70,11 +70,42 @@ export default function Auth() {
   const [forgotPasswordEmail, setForgotPasswordEmail] = useState('');
   const [forgotPasswordLoading, setForgotPasswordLoading] = useState(false);
   const [forgotPasswordSent, setForgotPasswordSent] = useState(false);
-  
+  const [founderModalOpen, setFounderModalOpen] = useState(false);
+
   const { login, signup } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { getCopyByKey } = useCopy();
+
+  // Tenta ativar um Convite Fundadora pendente (guardado antes do login).
+  const tryActivatePendingFounderInvite = async (): Promise<boolean> => {
+    let code: string | null = null;
+    try { code = localStorage.getItem(PENDING_FOUNDER_CODE_KEY); } catch { /* ignore */ }
+    if (!code) return false;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return false;
+      const { data, error } = await supabase.rpc('validar_e_ativar_convite', {
+        p_user_id: user.id,
+        p_codigo: code,
+      });
+      try { localStorage.removeItem(PENDING_FOUNDER_CODE_KEY); } catch { /* ignore */ }
+      if (error) {
+        toast({ title: 'Convite Fundadora', description: 'Este convite não foi encontrado ou já expirou.', variant: 'destructive' });
+        return false;
+      }
+      const result = data as { success: boolean; error?: string };
+      if (result?.success) {
+        toast({ title: 'Convite Fundadora', description: 'Convite ativado. A Clareira está aberta para você.' });
+        navigate('/clube/rotas/rota-dos-lobos', { replace: true });
+        return true;
+      }
+      toast({ title: 'Convite Fundadora', description: result?.error || 'Este convite não foi encontrado ou já expirou.', variant: 'destructive' });
+      return false;
+    } catch (e) {
+      return false;
+    }
+  };
 
   useEffect(() => {
     console.info('[DEBUG_UI] Página Auth montada');
