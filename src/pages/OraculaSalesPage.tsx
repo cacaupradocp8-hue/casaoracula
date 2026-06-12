@@ -178,6 +178,7 @@ export default function OraculaSalesPage() {
   return (
     <div className="min-h-screen bg-[#0B0B0F] text-[#F3EFE7] overflow-x-hidden selection:bg-[#C6A96B]/30">
 
+      <VisitorEscapeNav />
       <ParticleField density={28} color="216,255,62" />
 
       {/* ═══════════════════════════════
