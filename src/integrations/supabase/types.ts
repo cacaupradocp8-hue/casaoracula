@@ -404,6 +404,44 @@ export type Database = {
           },
         ]
       }
+      acessos_fundadora: {
+        Row: {
+          codigo_id: string
+          created_at: string
+          data_ativacao: string
+          data_expiracao: string
+          id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          codigo_id: string
+          created_at?: string
+          data_ativacao?: string
+          data_expiracao: string
+          id?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          codigo_id?: string
+          created_at?: string
+          data_ativacao?: string
+          data_expiracao?: string
+          id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "acessos_fundadora_codigo_id_fkey"
+            columns: ["codigo_id"]
+            isOneToOne: false
+            referencedRelation: "convites_fundadora"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       admin_action_history: {
         Row: {
           action_reason_at_action: string | null
@@ -10158,6 +10196,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      convites_fundadora: {
+        Row: {
+          ativo: boolean
+          codigo: string
+          created_at: string
+          dias_acesso: number
+          id: string
+          limite_uso: number
+          updated_at: string
+          usos_realizados: number
+        }
+        Insert: {
+          ativo?: boolean
+          codigo: string
+          created_at?: string
+          dias_acesso?: number
+          id?: string
+          limite_uso?: number
+          updated_at?: string
+          usos_realizados?: number
+        }
+        Update: {
+          ativo?: boolean
+          codigo?: string
+          created_at?: string
+          dias_acesso?: number
+          id?: string
+          limite_uso?: number
+          updated_at?: string
+          usos_realizados?: number
+        }
+        Relationships: []
       }
       corpo_inconsciente: {
         Row: {
