@@ -407,6 +407,7 @@ export type Database = {
       acessos_fundadora: {
         Row: {
           codigo_id: string
+          codigo_utilizado: string | null
           created_at: string
           data_ativacao: string
           data_expiracao: string
@@ -416,6 +417,7 @@ export type Database = {
         }
         Insert: {
           codigo_id: string
+          codigo_utilizado?: string | null
           created_at?: string
           data_ativacao?: string
           data_expiracao: string
@@ -425,6 +427,7 @@ export type Database = {
         }
         Update: {
           codigo_id?: string
+          codigo_utilizado?: string | null
           created_at?: string
           data_ativacao?: string
           data_expiracao?: string

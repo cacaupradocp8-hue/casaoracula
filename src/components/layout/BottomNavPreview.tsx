@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Home, BookOpen, Wrench, Flower2, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 
 const NAV_ITEMS = [
   { key: 'inicio', icon: Home, label: 'Início', path: '/dashboard-membro' },
@@ -15,6 +16,7 @@ const NAV_ITEMS = [
 export function BottomNavPreview() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
+  const { isActive: isFounderActive } = useFounderAccess();
 
   const navigate = useNavigate();
   const location = useLocation();
