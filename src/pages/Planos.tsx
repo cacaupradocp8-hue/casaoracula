@@ -12,6 +12,7 @@ import { PlanosRotasDetalhes } from '@/components/planos/PlanosRotasDetalhes';
 import { PlanosFormacao } from '@/components/planos/PlanosFormacao';
 import { PlanosFooter } from '@/components/planos/PlanosFooter';
 import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
+import { VisitorEscapeNav } from '@/components/visitor/VisitorEscapeNav';
 
 export default function Planos() {
   const navigate = useNavigate();
