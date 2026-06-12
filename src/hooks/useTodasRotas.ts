@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 
 export type EstacaoStatusUI = 'completed' | 'in_progress' | 'available' | 'locked';
 
@@ -35,6 +36,7 @@ export interface EstacaoCatalogo {
  */
 export function useTodasRotas(opts?: { isAdmin?: boolean }) {
   const { user } = useAuth();
+  const { isActive: isFounderActive } = useFounderAccess();
   const isAdmin = !!opts?.isAdmin;
 
   return useQuery({
@@ -126,6 +128,14 @@ export function useTodasRotas(opts?: { isAdmin?: boolean }) {
       // Admin vê tudo desbloqueado.
       if (!isAdmin) {
         for (let i = 0; i < result.length; i++) {
+          // Lógica para Fundadora: apenas estação 1 disponível, as outras bloqueadas
+          if (isFounderActive) {
+            if (result[i].numero !== 1) {
+              result[i].status = 'locked';
+            }
+            continue;
+          }
+
           if (i === 0) continue;
           const prev = result[i - 1];
           if (prev.status !== 'completed') {

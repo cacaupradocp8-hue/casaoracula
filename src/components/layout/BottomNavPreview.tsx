@@ -15,18 +15,26 @@ const NAV_ITEMS = [
 
 export function BottomNavPreview() {
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { setMounted(true); }, []);
   const { isActive: isFounderActive } = useFounderAccess();
+  
+  useEffect(() => { setMounted(true); }, []);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  const activeIndex = NAV_ITEMS.findIndex(
+  const displayedItems = isFounderActive 
+    ? NAV_ITEMS.filter(item => ['inicio', 'clube', 'jardim'].includes(item.key))
+    : NAV_ITEMS;
+
+  const activeIndex = displayedItems.findIndex(
     (item) => location.pathname === item.path || location.pathname.startsWith(item.path + '/')
   );
+  
   const currentIndex = activeIndex >= 0 ? activeIndex : 0;
 
   if (!mounted) return null;
+
+  const itemWidth = 100 / displayedItems.length;
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden pointer-events-auto pb-[env(safe-area-inset-bottom,0.5rem)]">
@@ -39,8 +47,9 @@ export function BottomNavPreview() {
       )}>
         {/* Indicador animado */}
         <motion.div
-          className="absolute -top-[22px] w-[20%] h-[64px] flex items-center justify-center pointer-events-none"
-          animate={{ left: `${currentIndex * 20}%` }}
+          className="absolute -top-[22px] flex items-center justify-center pointer-events-none"
+          style={{ width: `${itemWidth}%` }}
+          animate={{ left: `${currentIndex * itemWidth}%` }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         >
           <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-full bg-primary border-[4px] xs:border-[5px] border-background shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
@@ -48,7 +57,7 @@ export function BottomNavPreview() {
 
         {/* Botões */}
         <ul className="flex w-full h-full">
-          {NAV_ITEMS.map((item, i) => {
+          {displayedItems.map((item, i) => {
             const Icon = item.icon;
             const isActive = i === currentIndex;
 

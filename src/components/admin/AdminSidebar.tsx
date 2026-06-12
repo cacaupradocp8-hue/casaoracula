@@ -104,6 +104,16 @@ export const adminNavGroups: AdminNavGroup[] = [
     ],
   },
   {
+    key: 'programas-acesso',
+    label: 'Programas de Acesso',
+    emoji: '🎟️',
+    icon: Gift,
+    items: [
+      { key: 'founder-invites', label: 'Convites Fundadora', icon: Gift },
+      { key: 'degustacao', label: 'Degustação (24h)', icon: Clock },
+    ],
+  },
+  {
     key: 'sistema',
     label: 'Casa do Sistema',
     emoji: '⚙️',
