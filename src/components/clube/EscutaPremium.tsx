@@ -20,6 +20,8 @@ interface EscutaPremiumProps {
   duracao?: string;
   imagemEscuta?: string;
   className?: string;
+  autoPlay?: boolean;
+  onEnded?: () => void;
 }
 
 const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
@@ -33,6 +35,8 @@ export function EscutaPremium({
   duracao,
   imagemEscuta,
   className,
+  autoPlay,
+  onEnded,
 }: EscutaPremiumProps) {
   const [playbackRate, setPlaybackRate] = useState(1);
   const discoImageUrl = imagemEscuta || DISCO_CASA_ORACULA_URL;
@@ -47,6 +51,23 @@ export function EscutaPremium({
     togglePlay,
     handleSeek
   } = useAudioPlayer({ audioUrl });
+
+  React.useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !onEnded) return;
+    audio.addEventListener('ended', onEnded);
+    return () => audio.removeEventListener('ended', onEnded);
+  }, [onEnded, resolvedUrl]);
+
+  React.useEffect(() => {
+    if (!autoPlay || !resolvedUrl) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+    const tryPlay = () => audio.play().catch(() => {});
+    if (audio.readyState >= 2) tryPlay();
+    else audio.addEventListener('loadeddata', tryPlay, { once: true });
+    return () => audio.removeEventListener('loadeddata', tryPlay);
+  }, [autoPlay, resolvedUrl]);
 
   const skipForward = useCallback(() => {
     if (audioRef.current) {

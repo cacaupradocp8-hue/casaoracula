@@ -53,13 +53,18 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
     })();
   }, [estacaoId]);
 
-  // Audio Playlist Logic
+  // Audio Playlist Logic — ordem fixa:
+  // 1) A Clareira onde tudo começou  2) Abertura  3-6) Rastros (admin)
+  // 7) Voz da Floresta  8+) Demais áudios (admin / treinamento)
   const audioPlaylist = useMemo(() => {
     const list: Array<{ url: string; title: string; type: string; icon: any }> = [];
-    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Voz da Clareira", type: "content", icon: Headphones });
+    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Clareira onde tudo começou", type: "content", icon: Headphones });
     if (audioAberturaUrl) list.push({ url: audioAberturaUrl, title: "Abertura da Estação", type: "intro", icon: Music });
-    if (audioFlorestaUrl) list.push({ url: audioFlorestaUrl, title: "Voz da Floresta", type: "ambient", icon: TreePine });
-    adminAudios.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
+    const rastros = adminAudios.filter(a => /rastro/i.test(a.title));
+    const outros = adminAudios.filter(a => !/rastro/i.test(a.title));
+    rastros.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
+    if (audioFlorestaUrl) list.push({ url: audioFlorestaUrl, title: "A Voz da Floresta", type: "ambient", icon: TreePine });
+    outros.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
     return list;
   }, [audioVozClareiraUrl, audioAberturaUrl, audioFlorestaUrl, adminAudios]);
 
@@ -78,7 +83,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             <div className="flex flex-col items-center gap-2 group">
               <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight uppercase relative inline-block px-4 break-words">
                 <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-                  Escuta Ritual
+                  Voz da Clareira
                 </span>
               </h1>
             </div>
@@ -116,6 +121,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
                   titulo={audioPlaylist[activeAudioIndex]?.title} 
                   imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
                   className="py-0"
+                  autoPlay
+                  onEnded={() => setActiveAudioIndex((i) => Math.min(i + 1, audioPlaylist.length - 1))}
                 />
               </div>
 
