@@ -100,8 +100,9 @@ export function EscutaPremium({
       <div className="flex flex-col items-center space-y-8">
         {/* Vinyl Record */}
         <div className="relative group cursor-pointer" onClick={togglePlay}>
-          {/* Anel luminoso sutil — apenas para destacar o disco do fundo escuro */}
-          <div className="absolute inset-0 rounded-full ring-1 ring-gold/15 shadow-[0_0_40px_rgba(212,175,55,0.12)] pointer-events-none z-0" />
+          {/* Anel luminoso sutil — destaca o disco do fundo escuro */}
+          <div className="absolute -inset-2 rounded-full ring-1 ring-gold/25 shadow-[0_0_30px_rgba(212,175,55,0.18)] pointer-events-none z-0" />
+          <div className="absolute -inset-8 rounded-full bg-gold/5 blur-2xl pointer-events-none z-0" />
           
           <motion.div
             animate={isPlaying ? { rotate: 360 } : { rotate: 0 }}
