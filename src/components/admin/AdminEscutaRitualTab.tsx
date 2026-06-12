@@ -40,6 +40,7 @@ export function AdminEscutaRitualTab() {
 
   const [rotaId, setRotaId] = useState<string>('');
   const [estacaoId, setEstacaoId] = useState<string>('');
+  const [destino, setDestino] = useState<string>('escuta_ritual');
   const [titulo, setTitulo] = useState('');
   const [audioUrl, setAudioUrl] = useState('');
   const [ordem, setOrdem] = useState<number>(1);
