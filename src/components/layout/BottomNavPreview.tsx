@@ -41,6 +41,8 @@ export function BottomNavPreview() {
   const currentIndex = activeIndex >= 0 ? activeIndex : 0;
 
   if (!mounted) return null;
+  if (isAuthReady && !isAuthenticated) return null;
+
 
   const itemWidth = 100 / displayedItems.length;
 
