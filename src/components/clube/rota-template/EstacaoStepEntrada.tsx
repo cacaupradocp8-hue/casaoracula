@@ -36,12 +36,12 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
       {/* Header Info - Minimalist */}
       <div className="space-y-4 md:space-y-6 pt-4 md:pt-8">
-        <h4 className="text-gold text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-black flex items-center justify-center gap-2 md:gap-4">
-          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
-          {obraRegente || "Obra Regente"}
-          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent" />
+        <h4 className="text-gold text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-black flex items-center justify-center gap-2 md:gap-4 px-2">
+          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent shrink-0" />
+          <span className="truncate">{obraRegente || "Obra Regente"}</span>
+          <span className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent shrink-0" />
         </h4>
-        <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-[1.1] uppercase relative inline-block group px-4 break-words">
+        <h1 className="text-2xl xs:text-3xl sm:text-6xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-[1.1] uppercase relative inline-block group px-4 break-words">
           <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
             {titulo.replace('Estação', '').replace('—', '').trim()}
           </span>

@@ -27,10 +27,10 @@ export function BottomNavPreview() {
   if (!mounted) return null;
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden pointer-events-auto pb-[env(safe-area-inset-bottom,1rem)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden pointer-events-auto pb-[env(safe-area-inset-bottom,0.5rem)]">
       <div className="flex justify-center w-full px-4">
         <div className={cn(
-          "relative h-[68px] w-full max-w-[460px] backdrop-blur-2xl rounded-2xl border shadow-[0_12px_40px_rgba(0,0,0,0.5)] pointer-events-auto",
+          "relative h-[64px] xs:h-[68px] w-full max-w-[460px] backdrop-blur-2xl rounded-2xl border shadow-[0_12px_40px_rgba(0,0,0,0.5)] pointer-events-auto",
         location.pathname.startsWith('/clube/rotas') 
           ? "bg-blue-950/40 border-blue-400/20" 
           : "bg-card/95 border-border/40"
@@ -41,7 +41,7 @@ export function BottomNavPreview() {
           animate={{ left: `${currentIndex * 20}%` }}
           transition={{ type: 'spring', stiffness: 350, damping: 30 }}
         >
-          <div className="w-14 h-14 rounded-full bg-primary border-[5px] border-background shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
+          <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-full bg-primary border-[4px] xs:border-[5px] border-background shadow-[0_0_20px_hsl(var(--primary)/0.4)]" />
         </motion.div>
 
         {/* Botões */}
