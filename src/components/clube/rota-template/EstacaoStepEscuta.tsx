@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Headphones, Sparkles, BookOpen, Music, ChevronRight, TreePine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
 import { RotaLivroBanner } from './RotaLivroBanner';
 import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 interface EstacaoStepEscutaProps {
