@@ -24,18 +24,17 @@ export const EstacaoProgressHeader: React.FC<EstacaoProgressHeaderProps> = ({
 
   return (
     <div className="mb-8 md:mb-12 space-y-4 relative z-[100]">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3 md:gap-6 w-full sm:w-auto overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+      <div className="flex flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
           {currentStep > 0 && (
             <button 
               onClick={onBack}
               className="group flex items-center gap-2 text-[9px] md:text-[10px] text-white/40 uppercase tracking-[0.2em] font-bold hover:text-gold transition-colors shrink-0"
             >
               <ChevronLeft className="w-3 h-3 group-hover:-translate-x-1 transition-transform" />
-              <span>Voltar</span>
+              <span className="hidden xs:inline">Voltar</span>
             </button>
           )}
-
 
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -49,8 +48,8 @@ export const EstacaoProgressHeader: React.FC<EstacaoProgressHeaderProps> = ({
           </button>
         </div>
         
-        <div className="text-[9px] md:text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1.5 rounded-full border border-gold/10 whitespace-nowrap self-end sm:self-auto">
-          Rastro {currentStep + 1} de {totalSteps}
+        <div className="text-[9px] md:text-[10px] text-gold uppercase tracking-[0.3em] font-bold bg-gold/5 px-3 py-1.5 rounded-full border border-gold/10 whitespace-nowrap shrink-0">
+          {currentStep + 1} / {totalSteps}
         </div>
       </div>
 
