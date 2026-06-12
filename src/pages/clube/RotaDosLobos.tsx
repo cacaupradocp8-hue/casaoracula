@@ -77,10 +77,18 @@ export default function RotaDosLobos() {
               {/* Hero com Imagem de Fundo e Texto Sobreposto */}
               <div className="relative min-h-[520px] overflow-hidden">
                 <img
-                  src="/lobo-fundo.png"
+                  src="/lobo-fundo-800.webp"
+                  srcSet="/lobo-fundo-800.webp 800w, /lobo-fundo-1600.webp 1600w"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   alt="Rota dos Lobos"
+                  width={800}
+                  height={1000}
+                  fetchPriority="high"
+                  decoding="async"
                   className="absolute inset-0 w-full h-full object-cover object-center"
+                  style={{ willChange: 'transform' }}
                 />
+                <div className="absolute inset-0 bg-gradient-to-br from-[#0A0A0B] to-[#020617] -z-10" />
                 
                 {/* Overlays de Gradiente e Blur para Fusão Perfeita */}
                 <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/20 to-[#020617]" />
@@ -213,9 +221,17 @@ export default function RotaDosLobos() {
               {/* Coluna Direita: Imagem Desktop (Hero) */}
               <div className="relative flex items-center justify-center bg-[#0A0A0B] min-h-full overflow-hidden">
                 <img 
-                  src="/lobo-fundo.png" 
+                  src="/lobo-fundo-1600.webp" 
+                  srcSet="/lobo-fundo-800.webp 800w, /lobo-fundo-1600.webp 1600w"
+                  sizes="50vw"
                   alt="Lobo da Rota dos Lobos" 
+                  width={1600}
+                  height={2000}
+                  fetchPriority="high"
+                  decoding="async"
+                  loading="eager"
                   className="w-full h-full object-cover object-center lg:object-right"
+                  style={{ willChange: 'transform' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-[#0A0A0B]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-60" />

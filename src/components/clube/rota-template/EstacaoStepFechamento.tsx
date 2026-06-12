@@ -109,7 +109,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
               <EscutaPremium 
                 audioUrl={audioUrl} 
                 titulo="Sussurro de Fechamento"
-                imagemEscuta="/clareira-disco.png"
+                imagemEscuta="/clareira-disco-800.webp"
                 className="py-0"
               />
             </div>
