@@ -489,13 +489,14 @@ export default function Auth() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="mt-6 flex flex-col items-center justify-center gap-4 text-xs text-muted-foreground/50"
         >
-          <Link
-            to="/sala-da-visitante?convite=1"
+          <button
+            type="button"
+            onClick={() => setFounderModalOpen(true)}
             className="inline-flex items-center gap-2 px-5 h-9 rounded-full border border-gold/20 text-gold/80 hover:text-gold hover:border-gold/40 hover:bg-gold/5 uppercase tracking-widest transition-colors"
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            <KeyRound className="w-3.5 h-3.5" />
             Tenho um Convite Fundadora
-          </Link>
+          </button>
           <div className="flex items-center justify-center gap-6">
             <Link to="/tour" className="flex items-center gap-1.5 hover:text-gold/70 transition-colors">
               <Play className="w-3 h-3" />
