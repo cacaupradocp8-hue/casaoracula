@@ -149,7 +149,7 @@ export function MandalaFinal({ estados }: Props) {
 
   return (
     <div className={cn(
-      "flex flex-col items-center w-full justify-center py-8 relative min-h-[600px] transition-opacity duration-1000",
+      "flex flex-col items-center w-full justify-center py-4 relative transition-opacity duration-1000",
       mounted ? "opacity-100" : "opacity-0"
     )}>
       

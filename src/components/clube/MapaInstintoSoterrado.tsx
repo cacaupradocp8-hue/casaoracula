@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { TERRITORIOS } from './MandalaFinal';
+import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
 import { WolfPawStepsLoop } from './WolfPawSteps';
 
 interface MapaInstintoSoterradoProps {
@@ -97,6 +97,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const [currentIdx, setCurrentIdx] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [estados, setEstados] = useState<Record<string, Estado>>({});
+  const mandalaEstados = TERRITORIOS.reduce<Record<string, Estado>>((acc, territorio) => {
+    acc[territorio.id] = estados[territorio.id] || (territorio.id === TRAVESSIA_ETAPAS[currentIdx]?.id ? 'Oscilante' : 'Soterrado');
+    return acc;
+  }, {});
 
   const saveMutation = useMutation({
     mutationFn: async (finalEstados: Record<string, Estado>) => {
@@ -136,7 +140,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const maisSoterrado = soterradoTerritorios[0] || TERRITORIOS.find(t => t.id === 'vitalidade');
 
   return (
-    <div className="w-full max-w-4xl mx-auto min-h-screen pb-20 pt-10 px-6 relative bg-transparent font-serif selection:bg-gold/20">
+    <div className="w-full max-w-7xl mx-auto min-h-screen pb-20 pt-6 px-6 relative bg-transparent font-serif selection:bg-gold/20">
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
@@ -144,28 +148,31 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-24 text-center space-y-12"
+            className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,1.1fr)] items-center gap-8 lg:gap-12 py-6 lg:py-8"
           >
-            <div className="space-y-6">
+            <div className="space-y-6 text-center lg:text-left">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
                   <BookOpen className="w-8 h-8 text-gold/60" />
                 </div>
               </div>
-              <h1 className="text-3xl xs:text-5xl md:text-7xl text-white italic tracking-tight leading-tight px-4 break-words">Mapa do Instinto Soterrado™</h1>
-              <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
-              <p className="text-white/70 italic text-xl max-w-2xl mx-auto leading-relaxed">
+              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 lg:px-0 max-w-[11ch] mx-auto lg:mx-0">Mapa do Instinto Soterrado™</h1>
+              <div className="h-px w-24 bg-gold/30 mx-auto lg:mx-0 my-8" />
+              <p className="text-white/70 italic text-lg xl:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Esta não é uma avaliação. É uma travessia narrativa pelos territórios da sua natureza selvagem. <br/>
                 Siga as pistas, observe os rastros e sinta qual caminho sua alma percorre hoje.
               </p>
+              <button 
+                onClick={() => setView('travessia')}
+                className="group relative px-10 md:px-14 py-5 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
+                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Iniciar Travessia</span>
+              </button>
             </div>
-            <button 
-              onClick={() => setView('travessia')}
-              className="group relative px-14 py-5 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
-              <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Iniciar Travessia</span>
-            </button>
+            <div className="w-full max-w-2xl mx-auto lg:max-w-none">
+              <MandalaFinal estados={mandalaEstados} />
+            </div>
           </motion.div>
         )}
 
@@ -196,7 +203,12 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               </div>
             </div>
 
-            <div className="max-w-2xl w-full space-y-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-10 lg:gap-12 items-center w-full max-w-6xl">
+              <div className="w-full lg:sticky lg:top-24">
+                <MandalaFinal estados={mandalaEstados} />
+              </div>
+
+              <div className="w-full space-y-12">
               <div className="text-center space-y-6">
                 <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 break-words">
                   {TRAVESSIA_ETAPAS[currentIdx].titulo}
@@ -226,6 +238,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                     </div>
                   </button>
                 ))}
+              </div>
               </div>
             </div>
 
@@ -260,6 +273,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               </div>
               <div className="h-px w-32 bg-gold/20 mx-auto" />
             </header>
+
+            <section className="w-full max-w-3xl mx-auto">
+              <MandalaFinal estados={mandalaEstados} />
+            </section>
 
             {/* Seção 1: Pegadas Encontradas */}
             <section className="space-y-8">
