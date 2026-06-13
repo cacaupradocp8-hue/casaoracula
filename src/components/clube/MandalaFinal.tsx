@@ -172,7 +172,7 @@ export function MandalaFinal({ estados }: Props) {
             alt="Mandala do Instinto Soterrado" 
             className={cn(
               "w-full h-full object-contain transition-all duration-1000",
-              hasAceso ? "brightness-115 contrast-110 saturate-125" : "brightness-95 contrast-105 saturate-110"
+              hasAceso ? "brightness-[1.15] contrast-[1.1] saturate-[1.25]" : "brightness-100 contrast-[1.05] saturate-[1.1]"
             )}
           />
           
