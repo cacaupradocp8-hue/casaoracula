@@ -403,289 +403,342 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
   if (activeObra || inPlaylistMode) {
     const currentObra = activeObra || faixasObras[0];
     const specificFromDb = currentObra?.metadata || {};
-    
+    const extra = (currentObra as any) || {};
+
     const displayData = {
-      oQueEscutar: (currentObra?.guia_escuta && currentObra.guia_escuta.length > 0) ? currentObra.guia_escuta : (specificFromDb.oQueEscutar || []),
-      oQueEvitar: (currentObra?.guia_evitar && currentObra.guia_evitar.length > 0) ? currentObra.guia_evitar : (specificFromDb.oQueEvitar || []),
-      rastroSimbolo: currentObra?.rastro_simbolo || specificFromDb.rastroSimbolo,
       perguntaPsique: currentObra?.pergunta_psique || specificFromDb.perguntaPsique,
       perguntaOficio: currentObra?.pergunta_oficio || specificFromDb.perguntaOficio,
-      territorioImpactado: currentObra?.territorio_principal || specificFromDb.territorioImpactado
+      territorioImpactado: currentObra?.territorio_principal || specificFromDb.territorioImpactado,
+      rastroSimbolo: currentObra?.rastro_simbolo || specificFromDb.rastroSimbolo,
+      textoAntes: extra.texto_antes_escuta as string | undefined,
+      perguntaDurante: extra.pergunta_durante_escuta as string | undefined,
+      textoLeitura: extra.texto_leitura_simbolica as string | undefined,
+      mensagemConclusao: extra.mensagem_conclusao as string | undefined,
     };
 
+    const isUltima = faixasObras.indexOf(currentObra!) === faixasObras.length - 1;
+    const totalAtos = 5;
+
+    const podeAvancar = (() => {
+      if (ato === 3) return !!primeiraImpressaoTipo && !!primeiraImpressaoTexto.trim();
+      if (ato === 4) return !!simbolo.trim();
+      if (ato === 5) return !!reflexaoPsique.trim() && !!reflexaoOficio.trim();
+      return true;
+    })();
+
+    const impressoes = [
+      { id: 'imagem', label: 'Uma imagem' },
+      { id: 'emocao', label: 'Uma emoção' },
+      { id: 'memoria', label: 'Uma memória' },
+      { id: 'frase', label: 'Uma frase' },
+      { id: 'corpo', label: 'Uma sensação no corpo' },
+    ];
+
+    const tituloAto: Record<number, string> = {
+      1: 'Antes da escuta',
+      2: 'Durante a escuta',
+      3: 'O que chegou primeiro?',
+      4: 'Leitura simbólica',
+      5: 'Integração',
+    };
 
     return (
-      <motion.div 
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        className="space-y-12 max-w-6xl mx-auto pb-20"
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-3xl mx-auto pb-20 px-4"
       >
-        <button 
-          onClick={() => {
-            setActiveObra(null);
-            setInPlaylistMode(false);
-          }}
-          className="flex items-center gap-3 text-[10px] text-white/40 uppercase tracking-widest font-bold hover:text-gold transition-all group"
-        >
-          <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/30">
-            <ArrowLeft className="w-3 h-3" />
-          </div>
-          Voltar à Câmara da Escuta Simbólica
-        </button>
-
-        {inPlaylistMode && playlistObra && (
-          <div className="space-y-8">
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Imersão Sonora</span>
-              <h3 className="text-4xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h3>
+        {/* Header minimal */}
+        <div className="flex items-center justify-between mb-10">
+          <button
+            onClick={() => { setActiveObra(null); setInPlaylistMode(false); }}
+            className="flex items-center gap-3 text-[10px] text-white/40 uppercase tracking-widest font-bold hover:text-gold transition-all group"
+          >
+            <div className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center group-hover:border-gold/30">
+              <ArrowLeft className="w-3 h-3" />
             </div>
-            <SpotifyPlaylistEmbed url={playlistObra.url} />
-          </div>
-        )}
+            Voltar
+          </button>
 
-        <div className="grid lg:grid-cols-12 gap-12 items-start">
-          <div className="lg:col-span-4 space-y-8 sticky top-12">
-            {inPlaylistMode ? (
-              <div className="bg-white/[0.02] border border-white/5 p-6 rounded-[32px] space-y-4">
-                <span className="text-[9px] text-gold uppercase tracking-[0.3em] font-bold opacity-40 block">Obras da Sequência</span>
-                <div className="space-y-2">
-                  {faixasObras.map((f, i) => (
-                    <button
-                      key={f.id}
-                      onClick={() => setActiveObra(f)}
-                      className={cn(
-                        "w-full text-left p-4 rounded-2xl transition-all border font-serif italic text-sm",
-                        currentObra?.id === f.id
-                          ? "bg-gold/10 border-gold/30 text-gold"
-                          : "bg-transparent border-transparent text-white/40 hover:text-white/60"
-                      )}
-                    >
-                      {i + 1}. {f.titulo}
-                    </button>
-                  ))}
+          {/* Progress dots */}
+          <div className="flex items-center gap-2">
+            {Array.from({ length: totalAtos }).map((_, i) => (
+              <div
+                key={i}
+                className={cn(
+                  "h-1 rounded-full transition-all",
+                  i + 1 === ato ? "bg-gold w-8" : i + 1 < ato ? "bg-gold/40 w-4" : "bg-white/10 w-4"
+                )}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Obra title */}
+        <div className="text-center space-y-2 mb-12">
+          <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">
+            Câmara da Escuta · Ato {ato} de {totalAtos}
+          </span>
+          <h2 className="text-3xl md:text-4xl font-serif text-white italic leading-tight">
+            {currentObra?.titulo}
+          </h2>
+          <p className="text-xs uppercase tracking-widest text-white/30 font-bold">
+            {tituloAto[ato]}
+          </p>
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`ato-${ato}-${currentObra?.id}`}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.5 }}
+            className="space-y-10"
+          >
+            {/* ATO 1 — ANTES DA ESCUTA */}
+            {ato === 1 && (
+              <div className="space-y-10 text-center">
+                <div className="bg-white/[0.02] border border-white/5 rounded-[32px] p-10 md:p-14 space-y-6">
+                  <Headphones className="w-8 h-8 text-gold/60 mx-auto" />
+                  <div className="text-lg md:text-xl text-white/85 font-serif italic leading-relaxed whitespace-pre-line max-w-xl mx-auto">
+                    {displayData.textoAntes ||
+                      'Antes de ouvir, não procure a história literal da obra. Escute como a arte dá corpo a uma experiência humana. Permita que imagens, emoções, memórias e sensações cheguem antes de qualquer explicação.'}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold opacity-60">Guia de Percepção</span>
-                <h3 className="text-4xl font-serif text-white italic leading-tight">{currentObra?.titulo}</h3>
-                <p className="text-gold/80 font-serif italic text-lg border-l-2 border-gold/20 pl-6 py-2">
-                  {currentObra?.funcao_escuta}
-                </p>
+                <Button
+                  onClick={() => setAto(2)}
+                  className="bg-gold hover:bg-gold/90 text-midnight font-bold px-12 h-14 rounded-full uppercase tracking-[0.2em] text-xs"
+                >
+                  Começar Escuta
+                </Button>
               </div>
             )}
 
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={currentObra?.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="space-y-8"
-              >
-                {displayData.oQueEscutar && displayData.oQueEscutar.length > 0 && (
-                  <div className="bg-white/[0.02] border border-white/5 p-8 rounded-[32px] space-y-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3 text-gold/60">
-                        <Headphones className="w-4 h-4" />
-                        <h4 className="text-[10px] uppercase tracking-widest font-bold">O que escutar</h4>
-                      </div>
-                      <ul className="space-y-3">
-                        {displayData.oQueEscutar.map((item: string, i: number) => (
-                          <li key={i} className="text-sm text-white/70 font-serif italic leading-relaxed">
-                            • {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {displayData.oQueEvitar && displayData.oQueEvitar.length > 0 && (
-                      <div className="space-y-4 pt-6 border-t border-white/5">
-                        <div className="flex items-center gap-3 text-red-400/60">
-                          <X className="w-4 h-4" />
-                          <h4 className="text-[10px] uppercase tracking-widest font-bold">O que evitar</h4>
-                        </div>
-                        <ul className="space-y-3">
-                          {displayData.oQueEvitar.map((item: string, i: number) => (
-                            <li key={i} className="text-sm text-white/50 font-serif italic leading-relaxed">
-                              • {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
+            {/* ATO 2 — DURANTE A ESCUTA */}
+            {ato === 2 && (
+              <div className="space-y-10">
+                {currentObra && (
+                  <EscutaPremium
+                    audioUrl={currentObra.url}
+                    titulo={currentObra.titulo}
+                    imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
+                  />
                 )}
+                <div className="bg-gold/5 border border-gold/10 rounded-[32px] p-8 text-center">
+                  <span className="text-[10px] text-gold/60 uppercase tracking-widest font-bold block mb-3">
+                    Pergunta-guia
+                  </span>
+                  <p className="text-white/85 font-serif italic text-lg leading-relaxed max-w-xl mx-auto">
+                    {displayData.perguntaDurante ||
+                      'Enquanto escuta, observe: qual imagem, emoção ou sensação a obra acende em você?'}
+                  </p>
+                </div>
+                <div className="flex justify-center pt-2">
+                  <Button
+                    onClick={() => setAto(3)}
+                    variant="outline"
+                    className="border-gold/40 text-gold hover:bg-gold/10 px-10 h-12 rounded-full uppercase tracking-[0.2em] text-[11px]"
+                  >
+                    Terminei a escuta
+                  </Button>
+                </div>
+              </div>
+            )}
 
-                <div className="bg-gold/5 border border-gold/10 p-8 rounded-[32px] space-y-4">
-                  <div className="flex items-center gap-3 text-gold/60">
-                    <MapPin className="w-4 h-4" />
-                    <h4 className="text-[10px] uppercase tracking-widest font-bold">Impacto na Cartografia</h4>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="space-y-1">
-                      <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Símbolo</span>
-                      <p className="text-gold font-serif italic">{displayData.rastroSimbolo || "Observado no rastro"}</p>
-                    </div>
-                    <div className="space-y-1">
-                      <span className="text-[9px] text-white/30 uppercase tracking-widest font-bold block">Território</span>
-                      <p className="text-white/80 font-serif italic">{displayData.territorioImpactado || currentObra?.territorio_principal}</p>
-                    </div>
+            {/* ATO 3 — PRIMEIRA IMPRESSÃO */}
+            {ato === 3 && (
+              <div className="space-y-8">
+                <div className="space-y-4">
+                  <Label className="text-base text-white/70 font-serif italic block text-center">
+                    O que chegou primeiro?
+                  </Label>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                    {impressoes.map((i) => (
+                      <button
+                        key={i.id}
+                        onClick={() => setPrimeiraImpressaoTipo(i.id)}
+                        className={cn(
+                          "px-3 py-3 rounded-2xl border text-xs font-serif italic transition-all text-center",
+                          primeiraImpressaoTipo === i.id
+                            ? "bg-gold/10 border-gold/50 text-gold"
+                            : "bg-white/[0.02] border-white/10 text-white/50 hover:text-white/80 hover:border-white/20"
+                        )}
+                      >
+                        {i.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
-              </motion.div>
-            </AnimatePresence>
-          </div>
 
-          <div className="lg:col-span-8 space-y-8">
-            <div className="bg-[#050505]/40 backdrop-blur-md border border-white/5 p-10 rounded-[40px] shadow-2xl relative overflow-hidden group">
-              <AnimatePresence mode="wait">
-                <motion.div 
-                  key={currentObra?.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="relative z-10 space-y-12"
-                >
-                  {currentObra && !inPlaylistMode && (
-                    <EscutaPremium 
-                      audioUrl={currentObra.url}
-                      titulo={currentObra.titulo}
-                      imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
-                    />
-                  )}
+                <div className="space-y-3">
+                  <Textarea
+                    value={primeiraImpressaoTexto}
+                    onChange={(e) => setPrimeiraImpressaoTexto(e.target.value)}
+                    placeholder="Escreva sem explicar."
+                    className="bg-white/[0.03] border-white/10 min-h-[120px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-5 font-serif italic text-base resize-none"
+                  />
+                  <p className="text-[10px] uppercase tracking-widest text-white/30 text-center">
+                    Capture a percepção antes da interpretação.
+                  </p>
+                </div>
+              </div>
+            )}
 
-                  <div className={cn("space-y-12", !inPlaylistMode && "pt-10 border-t border-white/10")}>
-                    <div className="space-y-12">
-                      {/* BLOCO 1 — JARDIM DA PSIQUE */}
-                      <div className="space-y-6">
-                        <div className="flex items-center gap-3 text-gold/80">
-                          <Heart className="w-5 h-5" />
-                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim da Psique</h4>
-                        </div>
-                        <div className="space-y-4">
-                          <Label className="text-xl text-white font-serif italic block">
-                            {displayData.perguntaPsique || "O que esta obra revelou sobre você?"}
-                          </Label>
-                          <Textarea 
-                            value={reflexaoPsique}
-                            onChange={(e) => setReflexaoPsique(e.target.value)}
-                            placeholder="Escreva livremente o que surgiu durante a escuta."
-                            className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      {/* BLOCO 2 — JARDIM DO OFÍCIO */}
-                      <div className="space-y-6 pt-8 border-t border-white/5">
-                        <div className="flex items-center gap-3 text-emerald-400/80">
-                          <BookOpen className="w-5 h-5" />
-                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Jardim do Ofício</h4>
-                        </div>
-                        <div className="space-y-4">
-                          <Label className="text-xl text-white font-serif italic block">
-                            {displayData.perguntaOficio || "O que esta obra revelou sobre sua escuta profissional?"}
-                          </Label>
-                          <Textarea 
-                            value={reflexaoOficio}
-                            onChange={(e) => setReflexaoOficio(e.target.value)}
-                            placeholder="Que movimentos, padrões ou narrativas você reconhece nas mulheres que acompanha?"
-                            className="bg-white/[0.03] border-white/10 min-h-[150px] text-white/90 placeholder:text-white/20 focus:border-emerald-500/30 focus:ring-0 rounded-2xl p-6 leading-relaxed font-serif italic text-lg shadow-inner resize-none transition-all"
-                          />
-                        </div>
-                      </div>
-
-                      {/* BLOCO 3 — SÍMBOLO OBSERVADO */}
-                      <div className="space-y-6 pt-8 border-t border-white/5">
-                        <div className="flex items-center gap-3 text-blue-400/80">
-                          <Sparkles className="w-5 h-5" />
-                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Símbolo Observado</h4>
-                        </div>
-                        <div className="space-y-4">
-                          <Label className="text-xl text-white font-serif italic block">
-                            Qual símbolo permaneceu ecoando?
-                          </Label>
-                          <div className="space-y-4">
-                            <Input 
-                              value={simbolo}
-                              onChange={(e) => setSimbolo(e.target.value)}
-                              placeholder="Escreva o símbolo principal (ex: floresta, ponte, casa...)"
-                              className="bg-white/[0.03] border-white/10 h-14 text-white placeholder:text-white/20 focus:border-blue-400/30 rounded-full px-8 text-lg font-serif italic"
-                            />
-                            <div className="flex flex-wrap gap-2 px-2">
-                              {["floresta", "ponte", "casa", "ferida", "lobo", "mar", "porta", "espelho", "ossos"].map(s => (
-                                <button 
-                                  key={s}
-                                  onClick={() => setSimbolo(s)}
-                                  className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-gold hover:border-gold/30 transition-all"
-                                >
-                                  {s}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* BLOCO 4 — INTENSIDADE DA ESCUTA */}
-                      <div className="space-y-6 pt-8 border-t border-white/5">
-                        <div className="flex items-center gap-3 text-purple-400/80">
-                          <Music className="w-5 h-5" />
-                          <h4 className="text-sm uppercase tracking-widest font-bold font-serif">Intensidade da Escuta</h4>
-                        </div>
-                        <div className="space-y-6">
-                          <Label className="text-xl text-white font-serif italic block">
-                            Como esta obra impactou sua percepção?
-                          </Label>
-                          <RadioGroup 
-                            value={intensidade} 
-                            onValueChange={setIntensidade}
-                            className="grid grid-cols-2 md:grid-cols-4 gap-4"
-                          >
-                            {["Leve", "Moderada", "Profunda", "Transformadora"].map((opt) => (
-                              <div key={opt} className="relative">
-                                <RadioGroupItem value={opt} id={opt} className="peer sr-only" />
-                                <Label
-                                  htmlFor={opt}
-                                  className="flex flex-col items-center justify-center p-4 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] peer-data-[state=checked]:border-gold/50 peer-data-[state=checked]:bg-gold/5 transition-all cursor-pointer text-center group"
-                                >
-                                  <span className="text-xs uppercase tracking-widest font-bold text-white/40 peer-data-[state=checked]:text-gold group-hover:text-white/60 transition-colors">
-                                    {opt}
-                                  </span>
-                                </Label>
-                              </div>
-                            ))}
-                          </RadioGroup>
-                        </div>
-                      </div>
-                    </div>
+            {/* ATO 4 — LEITURA SIMBÓLICA */}
+            {ato === 4 && (
+              <div className="space-y-8">
+                <div className="bg-white/[0.02] border border-white/5 rounded-[32px] p-8 md:p-10 space-y-4">
+                  <div className="flex items-center gap-3 text-gold/60">
+                    <Sparkles className="w-4 h-4" />
+                    <h4 className="text-[10px] uppercase tracking-widest font-bold">Leitura Simbólica</h4>
                   </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
+                  <div className="text-base md:text-lg text-white/80 font-serif italic leading-relaxed whitespace-pre-line">
+                    {displayData.textoLeitura ||
+                      'A leitura simbólica não pergunta: sobre quem é essa obra?\n\nEla pergunta: que experiência humana esta obra tornou visível? Nesta obra, observe o símbolo central que permanece quando a história já passou.'}
+                  </div>
+                </div>
 
-            <div className="flex justify-center pt-8">
-               <Button 
+                <div className="space-y-4">
+                  <Label className="text-base text-white/70 font-serif italic block">
+                    Qual símbolo permaneceu?
+                  </Label>
+                  <Input
+                    value={simbolo}
+                    onChange={(e) => setSimbolo(e.target.value)}
+                    placeholder="Ex: ferida, casa, ponte, abandono, estrada, lobo, mar, porta, ossos."
+                    className="bg-white/[0.03] border-white/10 h-14 text-white placeholder:text-white/20 focus:border-gold/30 rounded-full px-6 text-base font-serif italic"
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    {["ferida", "casa", "ponte", "abandono", "estrada", "lobo", "mar", "porta", "ossos"].map((s) => (
+                      <button
+                        key={s}
+                        onClick={() => setSimbolo(s)}
+                        className="text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/40 hover:text-gold hover:border-gold/30 transition-all"
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ATO 5 — INTEGRAÇÃO */}
+            {ato === 5 && (
+              <div className="space-y-6">
+                <Tabs defaultValue="psique" className="w-full">
+                  <TabsList className="grid grid-cols-2 bg-white/[0.03] border border-white/5 rounded-full p-1 h-12">
+                    <TabsTrigger value="psique" className="rounded-full text-xs uppercase tracking-widest font-bold data-[state=active]:bg-gold/10 data-[state=active]:text-gold">
+                      <Heart className="w-3 h-3 mr-2" /> Eu · Psique
+                    </TabsTrigger>
+                    <TabsTrigger value="oficio" className="rounded-full text-xs uppercase tracking-widest font-bold data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400">
+                      <BookOpen className="w-3 h-3 mr-2" /> Ofício
+                    </TabsTrigger>
+                  </TabsList>
+
+                  <TabsContent value="psique" className="mt-6 space-y-4">
+                    <div className="bg-white/[0.02] border border-gold/10 rounded-[28px] p-8 space-y-4">
+                      <span className="text-[10px] text-gold/60 uppercase tracking-widest font-bold block">
+                        Jardim da Psique
+                      </span>
+                      <Label className="text-lg text-white font-serif italic block leading-relaxed">
+                        {displayData.perguntaPsique || 'Onde minha dor deixou de ser experiência e passou a ser identidade?'}
+                      </Label>
+                      <Textarea
+                        value={reflexaoPsique}
+                        onChange={(e) => setReflexaoPsique(e.target.value)}
+                        placeholder="Escreva livremente."
+                        className="bg-white/[0.03] border-white/10 min-h-[140px] text-white/90 placeholder:text-white/20 focus:border-gold/30 focus:ring-0 rounded-2xl p-5 font-serif italic text-base resize-none"
+                      />
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="oficio" className="mt-6 space-y-4">
+                    <div className="bg-white/[0.02] border border-emerald-500/10 rounded-[28px] p-8 space-y-4">
+                      <span className="text-[10px] text-emerald-400/70 uppercase tracking-widest font-bold block">
+                        Jardim do Ofício
+                      </span>
+                      <Label className="text-lg text-white font-serif italic block leading-relaxed">
+                        {displayData.perguntaOficio || 'Como reconheço quando uma mulher organiza sua narrativa em torno da própria ferida?'}
+                      </Label>
+                      <Textarea
+                        value={reflexaoOficio}
+                        onChange={(e) => setReflexaoOficio(e.target.value)}
+                        placeholder="Reflexão profissional."
+                        className="bg-white/[0.03] border-white/10 min-h-[140px] text-white/90 placeholder:text-white/20 focus:border-emerald-500/30 focus:ring-0 rounded-2xl p-5 font-serif italic text-base resize-none"
+                      />
+                    </div>
+                  </TabsContent>
+                </Tabs>
+
+                {/* Intensidade (compacto) */}
+                <div className="bg-white/[0.02] border border-white/5 rounded-[24px] p-5 space-y-3">
+                  <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold block">
+                    Intensidade da escuta
+                  </span>
+                  <RadioGroup
+                    value={intensidade}
+                    onValueChange={setIntensidade}
+                    className="grid grid-cols-4 gap-2"
+                  >
+                    {["Leve", "Moderada", "Profunda", "Transformadora"].map((opt) => (
+                      <div key={opt} className="relative">
+                        <RadioGroupItem value={opt} id={`int-${opt}`} className="peer sr-only" />
+                        <Label
+                          htmlFor={`int-${opt}`}
+                          className="flex items-center justify-center p-2.5 rounded-full border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] peer-data-[state=checked]:border-gold/50 peer-data-[state=checked]:bg-gold/5 transition-all cursor-pointer text-[10px] uppercase tracking-widest font-bold text-white/40 peer-data-[state=checked]:text-gold"
+                        >
+                          {opt}
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Navegação inferior */}
+        {ato !== 1 && (
+          <div className="flex items-center justify-between gap-4 pt-12 mt-12 border-t border-white/5">
+            <Button
+              variant="ghost"
+              onClick={() => setAto((ato - 1) as any)}
+              className="text-white/40 hover:text-white text-[11px] uppercase tracking-widest font-bold"
+            >
+              <ArrowLeft className="w-3 h-3 mr-2" /> Voltar
+            </Button>
+
+            {ato < 5 ? (
+              <Button
+                onClick={() => podeAvancar && setAto((ato + 1) as any)}
+                disabled={!podeAvancar}
+                className="bg-gold hover:bg-gold/90 text-midnight font-bold px-10 h-12 rounded-full uppercase tracking-[0.2em] text-[11px] disabled:opacity-30"
+              >
+                Continuar <ArrowRight className="w-3 h-3 ml-2" />
+              </Button>
+            ) : (
+              <Button
                 onClick={handleConcluirObra}
-                disabled={isSaving}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-20 rounded-full uppercase tracking-[0.2em] text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:hover:scale-100"
+                disabled={isSaving || !podeAvancar}
+                className="bg-gold hover:bg-gold/90 text-midnight font-bold px-10 h-12 rounded-full uppercase tracking-[0.2em] text-[11px] disabled:opacity-30"
               >
                 {isSaving ? (
-                  <Loader2 className="w-5 h-5 animate-spin mr-3" />
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
                 ) : (
-                  <Save className="w-5 h-5 mr-3" />
+                  <Save className="w-4 h-4 mr-2" />
                 )}
-                {faixasObras.indexOf(currentObra!) === faixasObras.length - 1 
-                  ? "Finalizar Sequência de Escuta" 
-                  : "Concluir Escuta e Próxima Obra"}
+                {isUltima ? 'Registrar Rastro da Escuta' : 'Registrar e próxima obra'}
               </Button>
-            </div>
-
+            )}
           </div>
-        </div>
+        )}
       </motion.div>
     );
   }
+
 
   return (
     <div className="space-y-16 max-w-5xl mx-auto py-12">
