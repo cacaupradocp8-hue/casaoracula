@@ -17,76 +17,70 @@ interface MapaInstintoSoterradoProps {
 type Estado = 'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto';
 
 const TRAVESSIA_ETAPAS = [
-  { 
-    id: 'corpo', 
-    titulo: 'O Corpo que Chama', 
-    intro: 'A primeira casa da alma manifesta-se em ritmos, pesos e temperaturas. Escutar o corpo não é um ato técnico, é um retorno ao templo que nunca mente.',
-    icon: 'corpo',
+  {
+    id: 'corpo',
+    titulo: 'Jardim do Corpo',
+    intro: 'A Loba pisa devagar entre raízes úmidas. O ar é morno e cheira a terra recente. Em algum lugar do peito, um tambor lento insiste em ser ouvido. Ela se ajoelha junto a uma pegada fresca na lama.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Aproximo-me da pegada e respiro fundo, escutando o tambor.', estado: 'Aceso' as Estado, score: 3, resposta: 'A Loba percebe um movimento claro no território do Corpo. A trilha brilha sob a lua.' },
+      { label: 'Olho a pegada de longe, sem saber se devo seguir.', estado: 'Oscilante' as Estado, score: 2, resposta: 'A brasa do Corpo oscila, ainda viva, ainda escutável.' },
+      { label: 'Cubro a pegada com folhas e sigo adiante.', estado: 'Soterrado' as Estado, score: 1, resposta: 'Os rastros do Corpo ficam difíceis de encontrar. A Loba registra o silêncio.' },
+      { label: 'Continuo andando mesmo sentindo o tambor doer.', estado: 'Exausto' as Estado, score: 0, resposta: 'A Loba reconhece o cansaço antigo. Há uma fonte esquecida neste território.' }
     ]
   },
-  { 
-    id: 'intuicao', 
-    titulo: 'A Voz que Pressente', 
-    intro: 'Há uma percepção que surge antes da lógica, um sussurro que conhece os atalhos da floresta psíquica. O pressentimento é a bússola da natureza selvagem.',
-    icon: 'intuicao',
+  {
+    id: 'intuicao',
+    titulo: 'Clareira da Escuta',
+    intro: 'A floresta abre-se em uma clareira de luz pálida. Antes de qualquer pensamento, algo dentro da Loba já sabe por onde ir. Um vento curto cruza sua nuca, como um sussurro vindo de um lugar sem nome.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Sigo o vento sem precisar entendê-lo.', estado: 'Aceso' as Estado, score: 3, resposta: 'A Voz que Pressente está acordada. A Loba caminha como quem já conhece o atalho.' },
+      { label: 'Escuto o sussurro, mas peço uma segunda confirmação.', estado: 'Oscilante' as Estado, score: 2, resposta: 'A intuição vacila, espera ser legitimada. A clareira aguarda.' },
+      { label: 'Penso que é só o vento e ignoro.', estado: 'Soterrado' as Estado, score: 1, resposta: 'O sussurro recua. A Loba anota: aqui a escuta foi adiada.' },
+      { label: 'Forço a razão a decidir por mim, ainda que algo proteste.', estado: 'Exausto' as Estado, score: 0, resposta: 'A clareira fica em sombra. A intuição se retira sem ressentimento, mas em silêncio.' }
     ]
   },
-  { 
-    id: 'desejo', 
-    titulo: 'O Fogo que Deseja', 
-    intro: 'O desejo autêntico é o combustível da vida. Ele não é capricho, é a faísca que indica para onde sua vitalidade quer se expandir agora.',
-    icon: 'desejo',
+  {
+    id: 'desejo',
+    titulo: 'Fogueira do Desejo',
+    intro: 'No centro de uma rocha lisa, restos de uma fogueira ainda guardam calor. Uma única brasa pulsa sob as cinzas, teimosa. A Loba sente o cheiro doce de algo que um dia foi vivo e quer voltar a arder.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Sopro a brasa devagar e deixo o fogo subir.', estado: 'Aceso' as Estado, score: 3, resposta: 'Uma brasa volta a acender-se no território do Desejo. A noite fica mais quente.' },
+      { label: 'Aproximo as mãos, sinto o calor, mas não sopro ainda.', estado: 'Oscilante' as Estado, score: 2, resposta: 'O Desejo respira em ritmo curto. A Loba reconhece a hesitação antiga.' },
+      { label: 'Cubro a brasa com cinzas para não me distrair.', estado: 'Soterrado' as Estado, score: 1, resposta: 'A fogueira esfria. O território do Desejo guarda silêncio sob as cinzas.' },
+      { label: 'Apago a brasa com o pé e sigo, dizendo que não é hora.', estado: 'Exausto' as Estado, score: 0, resposta: 'A Loba sente um vazio quente onde o fogo morava. O Desejo ficou para depois mais uma vez.' }
     ]
   },
-  { 
-    id: 'limites', 
-    titulo: 'O Território que Protege', 
-    intro: 'Saber onde você termina e o outro começa é a base da integridade. O limite não é um muro, é a pele que protege sua essência.',
-    icon: 'limites',
+  {
+    id: 'limites',
+    titulo: 'Vale dos Limites',
+    intro: 'O caminho estreita-se entre dois paredões de pedra. Pegadas de outros viajantes invadem a trilha em todas as direções. A Loba precisa decidir onde termina o seu território e onde começa o ruído alheio.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Marco a pedra com a minha pata e sigo o meu ritmo.', estado: 'Aceso' as Estado, score: 3, resposta: 'A Loba reconhece a própria fronteira. O Vale dos Limites devolve eco firme.' },
+      { label: 'Hesito, marco baixinho, deixo passagem para os outros.', estado: 'Oscilante' as Estado, score: 2, resposta: 'A fronteira está em rascunho. Ainda é possível redesenhar.' },
+      { label: 'Apago a minha marca para não desagradar ninguém.', estado: 'Soterrado' as Estado, score: 1, resposta: 'Os Limites ficam invisíveis. A Loba registra uma trilha sem dono.' },
+      { label: 'Sigo o trajeto dos outros mesmo sentindo as pedras ferirem as patas.', estado: 'Exausto' as Estado, score: 0, resposta: 'O Vale absorve o cansaço silencioso. Os Limites pedem reparo, sem pressa, mas pedem.' }
     ]
   },
-  { 
-    id: 'criatividade', 
-    titulo: 'A Semente que Cria', 
-    intro: 'O gesto criativo é o nascimento de algo novo através de você. É o jogo livre da psique que encontra soluções onde antes só havia cansaço.',
-    icon: 'criatividade',
+  {
+    id: 'criatividade',
+    titulo: 'Trilha da Criatividade',
+    intro: 'Uma trilha lateral aparece, coberta de musgo, sem placas. Não leva a lugar nenhum prometido. Ali, galhos, pedras e penas parecem esperar para serem reorganizados em algo que ainda não existe.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Entro na trilha sem destino e começo a brincar com o que encontro.', estado: 'Aceso' as Estado, score: 3, resposta: 'A semente germina. A Trilha da Criatividade reconhece a Loba como sua.' },
+      { label: 'Espio a trilha, mas volto para o caminho principal.', estado: 'Oscilante' as Estado, score: 2, resposta: 'A criação fica em suspenso, esperando uma noite mais livre.' },
+      { label: 'Acho que não é hora de me dispersar e sigo direto.', estado: 'Soterrado' as Estado, score: 1, resposta: 'O musgo recobre o convite. O território da Criatividade adormece.' },
+      { label: 'Olho a trilha com culpa, lembrando de tudo que ainda preciso resolver.', estado: 'Exausto' as Estado, score: 0, resposta: 'A Loba sente um peso seco. A Criatividade fica esperando do outro lado da urgência.' }
     ]
   },
-  { 
-    id: 'vitalidade', 
-    titulo: 'A Força que Sustenta', 
-    intro: 'A vitalidade é o sangue pulsando com entusiasmo. É a energia que permite atravessar as invernias e celebrar as colheitas com a mesma presença.',
-    icon: 'vitalidade',
+  {
+    id: 'vitalidade',
+    titulo: 'Montanha da Vitalidade',
+    intro: 'O caminho começa a subir. O ar fica mais fino, o coração mais alto. Ao longe, uma fonte de água viva escorre entre as pedras. A Loba mede o próprio fôlego antes de decidir como subir.',
     caminhos: [
-      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Subo no meu ritmo, paro para beber, e continuo.', estado: 'Aceso' as Estado, score: 3, resposta: 'A Loba reconhece a força que sustenta. A montanha responde com vento limpo.' },
+      { label: 'Subo rápido, mas começo a sentir o fôlego curto.', estado: 'Oscilante' as Estado, score: 2, resposta: 'A Vitalidade pisca como uma lanterna pedindo descanso.' },
+      { label: 'Sigo subindo sem beber, dizendo que paro mais tarde.', estado: 'Soterrado' as Estado, score: 1, resposta: 'A fonte fica para trás. A Montanha guarda silêncio sobre o atraso.' },
+      { label: 'Subo arrastando as patas, contando só os passos que faltam.', estado: 'Exausto' as Estado, score: 0, resposta: 'A Loba reconhece a exaustão antiga. A Vitalidade precisa de retorno, não de mais subida.' }
     ]
   }
 ];
