@@ -100,7 +100,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'vitalidade',
     titulo: 'Montanha da Vitalidade',
-    intro: 'Há um fôlego que sustenta os dias. Ele se renova com descanso, água, ritmo próprio. Quando é ignorado por muito tempo, começa a pedir atenção de outras formas.',
+    intro: 'É quarta-feira. Você tem três atendimentos pela manhã, uma reunião à tarde, e à noite ainda precisa responder o orçamento que ficou pendente desde segunda. Toma o segundo café às 10h. Pula o almoço, come uma fruta entre uma sessão e outra. Quando finalmente senta no sofá, às 22h, abre o telefone para "descansar um pouco" — e duas horas se passam sem que você lembre de uma única coisa que viu na tela.',
     pergunta: 'Quando o fôlego começa a faltar, o que costuma acontecer?',
     rastro: 'O território começou a falar.',
     caminhos: [
