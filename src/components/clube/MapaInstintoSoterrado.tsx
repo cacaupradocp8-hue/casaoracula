@@ -156,7 +156,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                   <BookOpen className="w-8 h-8 text-gold/60" />
                 </div>
               </div>
-              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 lg:px-0 break-words">Mapa do Instinto Soterrado™</h1>
+              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 lg:px-0 max-w-[11ch] mx-auto lg:mx-0">Mapa do Instinto Soterrado™</h1>
               <div className="h-px w-24 bg-gold/30 mx-auto lg:mx-0 my-8" />
               <p className="text-white/70 italic text-lg xl:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Esta não é uma avaliação. É uma travessia narrativa pelos territórios da sua natureza selvagem. <br/>
