@@ -1,6 +1,8 @@
 project_id = "munuccwcupigaubfuxdm"
 
 [functions]
+  [functions.admin-upload-audio]
+    verify_jwt = false
   [functions.ai-chat]
     verify_jwt = false
   [functions.auth-email-hook]
