@@ -365,11 +365,26 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
         const { error } = await supabase.from('clube_rota_itens').insert(payload);
         if (error) throw error;
       }
+
+      // Sync: passo de entrada espelha audios[0].url -> clube_estacoes.audio_abertura_url
+      // (player de entrada toca esse campo da estação, não o metadata do passo)
+      if (form.tipo_passo === 'entrada' && estacaoId) {
+        const primeiroAudio = (form.audios || []).find((a: AudioMeta) => a?.url && a.url.trim().length > 8);
+        if (primeiroAudio?.url) {
+          const { error: estErr } = await supabase
+            .from('clube_estacoes')
+            .update({ audio_abertura_url: primeiroAudio.url.trim() })
+            .eq('id', estacaoId);
+          if (estErr) throw estErr;
+        }
+      }
     },
     onSuccess: () => {
       toast.success(passo ? 'Passo atualizado' : 'Passo criado');
       qc.invalidateQueries({ queryKey: ['admin-clube-passos'] });
       qc.invalidateQueries({ queryKey: ['rota-oracular'] });
+      qc.invalidateQueries({ queryKey: ['estacao-conteudo'] });
+      qc.invalidateQueries({ queryKey: ['rota-hub'] });
       onClose();
     },
     onError: (e: any) => toast.error('Erro ao salvar', { description: e.message }),
