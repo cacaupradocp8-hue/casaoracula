@@ -123,6 +123,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const { user } = useAuth();
   const [view, setView] = useState<'intro' | 'travessia' | 'resultado'>('intro');
   const [currentIdx, setCurrentIdx] = useState(0);
+  const [fase, setFase] = useState<'cena' | 'observacao' | 'caminhos'>('cena');
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [estados, setEstados] = useState<Record<string, Estado>>({});
   const [rastroAtual, setRastroAtual] = useState<string | null>(null);
@@ -158,12 +159,8 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     setRespostas(novasRespostas);
     setEstados(novosEstados);
     const rastrosPool = [
-      'A clareira guardou esse sinal.',
+      'A clareira guardou este sinal.',
       'Uma marca permaneceu no caminho.',
-      'O território registrou sua passagem.',
-      'Um rastro tornou-se visível.',
-      'A névoa se move entre as árvores.',
-      'Outro território aguarda observação.',
     ];
     setRastroAtual(rastrosPool[Math.floor(Math.random() * rastrosPool.length)]);
 
@@ -171,11 +168,12 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
       setRastroAtual(null);
       if (currentIdx < TRAVESSIA_ETAPAS.length - 1) {
         setCurrentIdx(prev => prev + 1);
+        setFase('cena');
       } else {
         saveMutation.mutate(novosEstados);
         setView('resultado');
       }
-    }, 2200);
+    }, 2600);
   };
 
   const acesosOscilantes = TERRITORIOS.filter(t => estados[t.id] === 'Aceso' || estados[t.id] === 'Oscilante');
