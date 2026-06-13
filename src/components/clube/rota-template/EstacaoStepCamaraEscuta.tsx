@@ -518,12 +518,17 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             {/* ATO 2 — DURANTE A ESCUTA */}
             {ato === 2 && (
               <div className="space-y-10">
-                {currentObra && (
+                {currentObra && (currentObra.url?.includes('spotify.com') || currentObra.url?.includes('spotify:')) ? (
+                  <SpotifyPlaylistEmbed url={currentObra.url} territorio={currentObra.titulo} />
+                ) : currentObra ? (
                   <EscutaPremium
                     audioUrl={currentObra.url}
                     titulo={currentObra.titulo}
                     imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
                   />
+                ) : null}
+                {playlistObra && currentObra?.id !== playlistObra.id && (
+                  <SpotifyPlaylistEmbed url={playlistObra.url} territorio={playlistObra.titulo} />
                 )}
                 <div className="bg-gold/5 border border-gold/10 rounded-[32px] p-8 text-center">
                   <span className="text-[10px] text-gold/60 uppercase tracking-widest font-bold block mb-3">
