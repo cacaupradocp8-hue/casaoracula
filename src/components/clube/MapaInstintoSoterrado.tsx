@@ -217,22 +217,35 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               </aside>
 
               <section className="w-full space-y-5 lg:border-l lg:border-gold/10 lg:pl-10">
-                <p className="text-[9px] text-gold/45 uppercase tracking-[0.3em] text-center lg:text-left mb-2 font-black">Qual destas experiências descreve o seu agora?</p>
-                {TRAVESSIA_ETAPAS[currentIdx].caminhos.map((caminho, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleSelectCaminho(caminho.score, caminho.estado)}
-                    className="group relative w-full text-left p-7 md:p-8 border border-white/10 hover:border-gold/40 bg-background/35 hover:bg-gold/[0.04] backdrop-blur-xl transition-all duration-500 rounded-[1.5rem] overflow-hidden"
+                <p className="text-[9px] text-gold/45 uppercase tracking-[0.3em] text-center lg:text-left mb-2 font-black">Que caminho a Loba escolhe agora?</p>
+                {respostaLoba ? (
+                  <motion.div
+                    key={respostaLoba}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="p-10 border border-gold/25 bg-background/45 backdrop-blur-xl rounded-[1.5rem] text-center"
                   >
-                    <div className="absolute inset-y-0 left-0 w-1 bg-gold/0 group-hover:bg-gold/50 transition-all" />
-                    <div className="relative z-10 flex items-center justify-between gap-6">
-                      <span className="text-white/75 group-hover:text-white italic text-lg md:text-xl transition-colors">
-                        {caminho.label}
-                      </span>
-                      <ChevronRight className="w-5 h-5 text-gold/20 group-hover:text-gold/70 transition-all transform -translate-x-2 group-hover:translate-x-0 shrink-0" />
-                    </div>
-                  </button>
-                ))}
+                    <span className="text-[10px] text-gold/60 uppercase tracking-[0.4em] block mb-5">Sinal da Loba</span>
+                    <p className="text-white/85 italic text-xl md:text-2xl leading-relaxed">{respostaLoba}</p>
+                  </motion.div>
+                ) : (
+                  TRAVESSIA_ETAPAS[currentIdx].caminhos.map((caminho, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSelectCaminho(caminho.score, caminho.estado, caminho.resposta)}
+                      className="group relative w-full text-left p-7 md:p-8 border border-white/10 hover:border-gold/40 bg-background/35 hover:bg-gold/[0.04] backdrop-blur-xl transition-all duration-500 rounded-[1.5rem] overflow-hidden"
+                    >
+                      <div className="absolute inset-y-0 left-0 w-1 bg-gold/0 group-hover:bg-gold/50 transition-all" />
+                      <div className="relative z-10 flex items-center justify-between gap-6">
+                        <span className="text-white/75 group-hover:text-white italic text-lg md:text-xl transition-colors">
+                          {caminho.label}
+                        </span>
+                        <ChevronRight className="w-5 h-5 text-gold/20 group-hover:text-gold/70 transition-all transform -translate-x-2 group-hover:translate-x-0 shrink-0" />
+                      </div>
+                    </button>
+                  ))
+                )}
               </section>
             </div>
           </motion.div>
