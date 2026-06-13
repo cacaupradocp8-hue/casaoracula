@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import mandalaArte from '@/assets/mandala-instinto.png';
 
@@ -245,45 +245,6 @@ export function MandalaFinal({ estados }: Props) {
           })}
         </div>
 
-        {/* 4. Modal de Narrativa (High-End) */}
-        <AnimatePresence>
-          {selectedTerritorio && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[320px] bg-[#050505]/90 backdrop-blur-3xl border border-gold/30 p-8 rounded-3xl shadow-[0_0_80px_rgba(0,0,0,1)] text-center"
-            >
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h4 className="text-gold font-serif text-3xl italic tracking-widest leading-none">
-                    {selectedTerritorio.nome}
-                  </h4>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor]", ESTADOS_STYLE[estados[selectedTerritorio.id] || 'Soterrado'].dot.replace('bg-', 'text-'))} />
-                    <span className="text-[10px] text-white/40 tracking-[0.3em] font-bold uppercase italic">
-                      {estados[selectedTerritorio.id] || 'Soterrado'}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="h-[1px] w-12 bg-gold/20 mx-auto" />
-
-                <p className="text-white/80 font-serif italic text-lg leading-relaxed px-2">
-                  "{selectedTerritorio.narrativa[estados[selectedTerritorio.id] || 'Soterrado']}"
-                </p>
-
-                <button 
-                  onClick={() => setSelectedTerritorio(null)}
-                  className="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-serif italic text-gold/60 transition-all duration-300 rounded-full border border-gold/10 hover:border-gold/30 hover:text-gold"
-                >
-                  <span className="relative z-10 text-[10px] uppercase tracking-[0.4em]">Fechar rastro</span>
-                  <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Legenda de Estados (Minimalista) */}
