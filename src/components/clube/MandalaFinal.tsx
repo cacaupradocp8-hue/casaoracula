@@ -153,7 +153,7 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-background/80 shadow-[0_0_90px_hsl(var(--gold)/0.18),0_0_180px_rgba(0,0,0,0.95)] border border-gold/15 overflow-hidden rounded-[2rem]">
+      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-gradient-to-b from-[#1a1208]/60 via-[#2a1a08]/40 to-[#0d0904]/70 shadow-[0_0_120px_hsl(var(--gold)/0.35),0_0_240px_hsl(var(--gold)/0.15)] border border-gold/30 overflow-hidden rounded-[2rem]">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
@@ -161,7 +161,7 @@ export function MandalaFinal({ estados }: Props) {
           style={{
             background: spotlightBackground !== 'none'
               ? spotlightBackground
-              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.16) 0%, transparent 42%)'
+              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.32) 0%, transparent 55%)'
           }}
         />
 
