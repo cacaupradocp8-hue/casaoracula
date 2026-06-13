@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { TERRITORIOS } from './MandalaFinal';
+import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
 import { WolfPawStepsLoop } from './WolfPawSteps';
 
 interface MapaInstintoSoterradoProps {
@@ -97,6 +97,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const [currentIdx, setCurrentIdx] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [estados, setEstados] = useState<Record<string, Estado>>({});
+  const mandalaEstados = TERRITORIOS.reduce<Record<string, Estado>>((acc, territorio) => {
+    acc[territorio.id] = estados[territorio.id] || (territorio.id === TRAVESSIA_ETAPAS[currentIdx]?.id ? 'Oscilante' : 'Soterrado');
+    return acc;
+  }, {});
 
   const saveMutation = useMutation({
     mutationFn: async (finalEstados: Record<string, Estado>) => {
@@ -144,7 +148,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center py-24 text-center space-y-12"
+            className="flex flex-col items-center justify-center py-16 text-center space-y-10"
           >
             <div className="space-y-6">
               <div className="flex justify-center mb-4">
@@ -158,6 +162,9 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 Esta não é uma avaliação. É uma travessia narrativa pelos territórios da sua natureza selvagem. <br/>
                 Siga as pistas, observe os rastros e sinta qual caminho sua alma percorre hoje.
               </p>
+            </div>
+            <div className="w-full max-w-2xl mx-auto">
+              <MandalaFinal estados={mandalaEstados} />
             </div>
             <button 
               onClick={() => setView('travessia')}
@@ -196,7 +203,12 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               </div>
             </div>
 
-            <div className="max-w-2xl w-full space-y-12">
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-10 lg:gap-12 items-center w-full max-w-6xl">
+              <div className="w-full lg:sticky lg:top-24">
+                <MandalaFinal estados={mandalaEstados} />
+              </div>
+
+              <div className="w-full space-y-12">
               <div className="text-center space-y-6">
                 <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 break-words">
                   {TRAVESSIA_ETAPAS[currentIdx].titulo}
@@ -226,6 +238,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                     </div>
                   </button>
                 ))}
+              </div>
               </div>
             </div>
 
@@ -260,6 +273,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               </div>
               <div className="h-px w-32 bg-gold/20 mx-auto" />
             </header>
+
+            <section className="w-full max-w-3xl mx-auto">
+              <MandalaFinal estados={mandalaEstados} />
+            </section>
 
             {/* Seção 1: Pegadas Encontradas */}
             <section className="space-y-8">
