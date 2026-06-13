@@ -4232,8 +4232,10 @@ export type Database = {
           guia_escuta: string[] | null
           guia_evitar: string[] | null
           id: string
+          mensagem_conclusao: string | null
           metadata: Json | null
           ordem: number | null
+          pergunta_durante_escuta: string | null
           pergunta_oficio: string
           pergunta_psique: string
           rastro_simbolo: string | null
@@ -4242,6 +4244,8 @@ export type Database = {
           territorio_principal: string
           territorio_secundario_1: string | null
           territorio_secundario_2: string | null
+          texto_antes_escuta: string | null
+          texto_leitura_simbolica: string | null
           tipo: string
           titulo: string
           updated_at: string | null
@@ -4257,8 +4261,10 @@ export type Database = {
           guia_escuta?: string[] | null
           guia_evitar?: string[] | null
           id?: string
+          mensagem_conclusao?: string | null
           metadata?: Json | null
           ordem?: number | null
+          pergunta_durante_escuta?: string | null
           pergunta_oficio: string
           pergunta_psique: string
           rastro_simbolo?: string | null
@@ -4267,6 +4273,8 @@ export type Database = {
           territorio_principal: string
           territorio_secundario_1?: string | null
           territorio_secundario_2?: string | null
+          texto_antes_escuta?: string | null
+          texto_leitura_simbolica?: string | null
           tipo: string
           titulo: string
           updated_at?: string | null
@@ -4282,8 +4290,10 @@ export type Database = {
           guia_escuta?: string[] | null
           guia_evitar?: string[] | null
           id?: string
+          mensagem_conclusao?: string | null
           metadata?: Json | null
           ordem?: number | null
+          pergunta_durante_escuta?: string | null
           pergunta_oficio?: string
           pergunta_psique?: string
           rastro_simbolo?: string | null
@@ -4292,6 +4302,8 @@ export type Database = {
           territorio_principal?: string
           territorio_secundario_1?: string | null
           territorio_secundario_2?: string | null
+          texto_antes_escuta?: string | null
+          texto_leitura_simbolica?: string | null
           tipo?: string
           titulo?: string
           updated_at?: string | null
@@ -4323,6 +4335,8 @@ export type Database = {
           id: string
           intensidade_escuta: string | null
           obra_id: string
+          primeira_impressao_texto: string | null
+          primeira_impressao_tipo: string | null
           registro_oficio: string | null
           registro_psique: string | null
           rota_id: string | null
@@ -4338,6 +4352,8 @@ export type Database = {
           id?: string
           intensidade_escuta?: string | null
           obra_id: string
+          primeira_impressao_texto?: string | null
+          primeira_impressao_tipo?: string | null
           registro_oficio?: string | null
           registro_psique?: string | null
           rota_id?: string | null
@@ -4353,6 +4369,8 @@ export type Database = {
           id?: string
           intensidade_escuta?: string | null
           obra_id?: string
+          primeira_impressao_texto?: string | null
+          primeira_impressao_tipo?: string | null
           registro_oficio?: string | null
           registro_psique?: string | null
           rota_id?: string | null
