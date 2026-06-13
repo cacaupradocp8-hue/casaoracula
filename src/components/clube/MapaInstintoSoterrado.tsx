@@ -193,11 +193,13 @@ function AmbienciaClareira() {
   return (
     <button
       onClick={toggle}
-      className="fixed z-[100] bottom-4 right-4 md:bottom-6 md:right-6 inline-flex items-center justify-center w-9 h-9 rounded-full bg-background/50 backdrop-blur-md border border-gold/20 text-gold/60 hover:text-gold hover:border-gold/50 hover:bg-background/70 transition-colors"
+      className="fixed z-[9999] top-24 right-5 md:top-28 md:right-8 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-black/90 border-2 border-gold/70 text-gold hover:bg-black hover:border-gold transition-colors shadow-2xl"
+      style={{ boxShadow: '0 0 20px rgba(212,175,55,0.35)' }}
       aria-label={on ? 'Desativar ambiência' : 'Ativar ambiência'}
       title={on ? 'Ambiência ligada' : 'Ambiência desligada'}
     >
-      {on ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+      {on ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+      <span className="text-[10px] uppercase tracking-[0.25em] font-semibold">Ambiência</span>
     </button>
   );
 }
