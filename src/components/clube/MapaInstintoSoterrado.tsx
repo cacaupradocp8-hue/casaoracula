@@ -1,6 +1,71 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, ChevronRight, BookOpen, Scroll } from 'lucide-react';
+import { Compass, ChevronRight, BookOpen, Scroll, Volume2, VolumeX } from 'lucide-react';
+
+// Ambiência discreta de clareira: ruído filtrado (vento) + ruído fino (folhas)
+function AmbienciaClareira() {
+  const [on, setOn] = useState(false);
+  const ctxRef = useRef<AudioContext | null>(null);
+  const nodesRef = useRef<AudioNode[]>([]);
+
+  useEffect(() => () => {
+    try { ctxRef.current?.close(); } catch {}
+  }, []);
+
+  const toggle = async () => {
+    if (on) {
+      nodesRef.current.forEach((n: any) => { try { n.stop?.(); n.disconnect?.(); } catch {} });
+      nodesRef.current = [];
+      try { await ctxRef.current?.close(); } catch {}
+      ctxRef.current = null;
+      setOn(false);
+      return;
+    }
+    const Ctx = (window.AudioContext || (window as any).webkitAudioContext);
+    const ctx = new Ctx();
+    ctxRef.current = ctx;
+
+    // Buffer de ruído rosa-ish (2s) para loop
+    const bufferSize = ctx.sampleRate * 2;
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+
+    // Vento: lowpass profundo + LFO no cutoff
+    const wind = ctx.createBufferSource();
+    wind.buffer = buffer; wind.loop = true;
+    const windFilter = ctx.createBiquadFilter();
+    windFilter.type = 'lowpass'; windFilter.frequency.value = 380; windFilter.Q.value = 0.6;
+    const windGain = ctx.createGain(); windGain.gain.value = 0.07;
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08;
+    const lfoGain = ctx.createGain(); lfoGain.gain.value = 180;
+    lfo.connect(lfoGain).connect(windFilter.frequency);
+    wind.connect(windFilter).connect(windGain).connect(ctx.destination);
+
+    // Folhas: highpass leve, volume mínimo
+    const leaves = ctx.createBufferSource();
+    leaves.buffer = buffer; leaves.loop = true;
+    const leavesFilter = ctx.createBiquadFilter();
+    leavesFilter.type = 'highpass'; leavesFilter.frequency.value = 2200;
+    const leavesGain = ctx.createGain(); leavesGain.gain.value = 0.015;
+    leaves.connect(leavesFilter).connect(leavesGain).connect(ctx.destination);
+
+    wind.start(); leaves.start(); lfo.start();
+    nodesRef.current = [wind, leaves, lfo, windFilter, leavesFilter, windGain, leavesGain, lfoGain];
+    setOn(true);
+  };
+
+  return (
+    <button
+      onClick={toggle}
+      className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-white/40 hover:text-gold/70 transition-colors"
+      aria-label={on ? 'Desativar ambiência' : 'Ativar ambiência'}
+    >
+      {on ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+      <span>{on ? 'Ambiência ativa' : 'Ativar Ambiência'}</span>
+    </button>
+  );
+}
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
