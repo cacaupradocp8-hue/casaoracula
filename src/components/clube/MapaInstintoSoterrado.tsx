@@ -381,7 +381,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             {/* SEÇÃO 3 — Lugares que Responderam */}
             <section className="space-y-8">
               <div className="flex flex-col items-center gap-3">
-                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Lugares que Responderam</h2>
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Rastros mais visíveis</h2>
                 <div className="h-px w-12 bg-gold/30" />
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
