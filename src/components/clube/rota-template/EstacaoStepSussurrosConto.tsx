@@ -175,12 +175,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Escuta do Conto</span>
-              <h3 className="text-3xl font-serif text-white italic">O que o conto revela?</h3>
+            <div className="text-center space-y-4 px-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Escuta do Conto</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-white italic break-words">O que o conto revela?</h3>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-10 md:space-y-12">
               {[
                 { id: 'revelacao', q: "O que este conto está tentando revelar?" },
                 { id: 'soterrado', q: "O que foi perdido, soterrado ou esquecido?" },
@@ -189,7 +189,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'chamado', q: "O que começa a chamar?" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <label className="text-lg md:text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30">{item.q}</label>
+                  <label className="text-base sm:text-lg md:text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30 break-words">{item.q}</label>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
@@ -204,7 +204,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('escuta_personagem')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs w-full md:w-auto"
               >
                 Observar as Personagens
               </Button>
