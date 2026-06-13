@@ -314,105 +314,145 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             key="resultado"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-6xl mx-auto py-14 md:py-20 space-y-20 md:space-y-24 relative"
+            className="max-w-5xl mx-auto py-10 md:py-16 space-y-20 md:space-y-28 relative"
           >
-            <WolfPawStepsLoop />
-
-            <header className="text-center space-y-6">
-              <div className="flex justify-center mb-2">
-                <Compass className="w-10 h-10 text-gold/20 animate-pulse" />
+            {/* SEÇÃO 1 — HERO com mandala oficial */}
+            <section className="relative w-full flex items-center justify-center px-2 sm:px-6">
+              {/* glow dourado */}
+              <div
+                className="absolute inset-0 -z-10 pointer-events-none"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at center, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.06) 35%, transparent 70%)',
+                  filter: 'blur(40px)',
+                }}
+              />
+              {/* partículas discretas */}
+              <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
+                {Array.from({ length: 18 }).map((_, i) => (
+                  <motion.span
+                    key={i}
+                    className="absolute w-[2px] h-[2px] rounded-full bg-gold/40"
+                    style={{
+                      top: `${(i * 53) % 100}%`,
+                      left: `${(i * 37) % 100}%`,
+                    }}
+                    animate={{ opacity: [0.1, 0.6, 0.1] }}
+                    transition={{ duration: 4 + (i % 5), repeat: Infinity, delay: i * 0.3 }}
+                  />
+                ))}
               </div>
-              <h1 className="text-3xl xs:text-5xl md:text-7xl text-white italic tracking-tight px-4 break-words">
-                Cartografia da Clareira
-              </h1>
-              <p className="text-gold/60 italic text-lg md:text-xl max-w-2xl mx-auto">
-                Uma observação dos lugares onde a sua vida continua tentando falar.
-              </p>
-              <div className="h-px w-32 bg-gold/20 mx-auto" />
-            </header>
-
-            <section className="w-full max-w-4xl mx-auto">
-              <MandalaFinal estados={mandalaEstados} />
+              <motion.img
+                src={mandalaOficial.url}
+                alt="Mapa do Instinto Soterrado — A Loba e os seis territórios"
+                className="w-full max-w-[820px] h-auto select-none"
+                draggable={false}
+                animate={{ scale: [1, 1.012, 1], opacity: [0.96, 1, 0.96] }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ filter: 'drop-shadow(0 0 60px rgba(212,175,55,0.15))' }}
+              />
             </section>
 
-            {/* Lugares que Responderam */}
+            {/* SEÇÃO 2 — Título */}
+            <header className="text-center space-y-5 px-4">
+              <h1 className="text-3xl xs:text-5xl md:text-7xl text-white italic tracking-tight break-words">
+                Cartografia da Clareira
+              </h1>
+              <div className="h-px w-24 bg-gold/30 mx-auto" />
+              <p className="text-white/75 italic text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+                Os rastros apareceram.
+                <br />
+                Agora é possível observar os lugares onde a vida continua tentando falar.
+              </p>
+            </header>
+
+            {/* SEÇÃO 3 — Lugares que Responderam */}
             <section className="space-y-8">
               <div className="flex flex-col items-center gap-3">
                 <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Lugares que Responderam</h2>
-                <div className="h-[1px] w-12 bg-gold/20" />
+                <div className="h-px w-12 bg-gold/30" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {acesosOscilantes.length > 0 ? (
-                  acesosOscilantes.slice(0, 4).map(t => (
-                    <div key={t.id} className="text-left p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.03] shadow-2xl backdrop-blur-md">
+                  acesosOscilantes.slice(0, 3).map(t => (
+                    <div key={t.id} className="p-8 md:p-10 rounded-[2rem] border border-gold/20 bg-white/[0.03] backdrop-blur-md">
                       <span className="text-gold italic text-2xl md:text-3xl block mb-4">{t.nome}</span>
-                      <p className="text-white/65 italic text-base leading-relaxed">
+                      <p className="text-white/75 italic text-base md:text-lg leading-relaxed">
                         {textoLugarResponde(t.id)}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="col-span-2 text-center text-white/30 italic py-10">Os territórios ainda estão em silêncio.</p>
+                  <p className="col-span-2 text-center text-white/40 italic py-10">Os territórios ainda estão em silêncio.</p>
                 )}
               </div>
             </section>
 
-            {/* Lugares que Pedem Escuta */}
+            {/* SEÇÃO 4 — Lugares que Pedem Escuta */}
             <section className="space-y-8">
               <div className="flex flex-col items-center gap-3">
                 <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Lugares que Pedem Escuta</h2>
-                <div className="h-[1px] w-12 bg-white/10" />
+                <div className="h-px w-12 bg-white/15" />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {soterradoTerritorios.length > 0 ? (
-                  soterradoTerritorios.slice(0, 4).map(t => (
-                    <div key={t.id} className="text-left p-10 rounded-[2.5rem] border border-white/10 bg-white/[0.02]">
-                      <span className="text-white/70 italic text-2xl md:text-3xl block mb-4">{t.nome}</span>
-                      <p className="text-white/55 italic text-base leading-relaxed">
+                  soterradoTerritorios.slice(0, 3).map(t => (
+                    <div key={t.id} className="p-8 md:p-10 rounded-[2rem] border border-white/10 bg-white/[0.02]">
+                      <span className="text-white/80 italic text-2xl md:text-3xl block mb-4">{t.nome}</span>
+                      <p className="text-white/65 italic text-base md:text-lg leading-relaxed">
                         {textoLugarPedeEscuta(t.id)}
                       </p>
                     </div>
                   ))
                 ) : (
-                  <p className="col-span-2 text-center text-white/30 italic py-10">Nenhum território pede retorno agora.</p>
+                  <p className="col-span-2 text-center text-white/40 italic py-10">Nenhum território pede retorno agora.</p>
                 )}
               </div>
             </section>
 
-            {/* Próxima Trilha */}
-            <section className="text-center space-y-8 py-20 border-y border-white/5 relative">
-              <div className="absolute inset-0 bg-gold/[0.02] -z-10" />
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-12 h-12 rounded-full border border-gold/10 flex items-center justify-center">
-                  <Compass className="w-6 h-6 text-gold/40" />
-                </div>
-                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Próxima Trilha</h2>
-              </div>
-              <p className="text-xl md:text-2xl text-white/80 italic max-w-2xl mx-auto leading-relaxed font-light">
-                O convite desta travessia não é agir mais.
-                <br />
-                É aprender a reconhecer os sinais antes de descartá-los.
-              </p>
-            </section>
-
-            {/* Síntese da Loba */}
-            <section className="text-center space-y-8 max-w-3xl mx-auto">
-              <h3 className="text-gold/50 italic text-[10px] tracking-[0.4em] uppercase font-black">Síntese da Loba</h3>
-              <p className="text-2xl md:text-3xl text-white italic leading-relaxed font-light px-4">
+            {/* SEÇÃO 5 — Síntese da Loba */}
+            <section className="text-center space-y-6 max-w-3xl mx-auto px-4">
+              <h3 className="text-gold/60 italic text-[10px] tracking-[0.4em] uppercase">Síntese da Loba</h3>
+              <p className="text-2xl md:text-3xl text-white italic leading-relaxed font-light">
                 Você não parece distante da vida.
                 <br />
-                Parece distante de alguns lugares onde a sua própria vida continua tentando florescer
-                {maisSoterrado ? `, em especial no território de ${maisSoterrado.nome}.` : '.'}
+                Parece distante de alguns lugares
+                <br />
+                onde a própria vida continua tentando chamá-la
+                {maisSoterrado ? `, sobretudo em ${maisSoterrado.nome}.` : '.'}
               </p>
             </section>
 
-            <section className="text-center">
+            {/* SEÇÃO 6 — Primeiro Gesto */}
+            <section className="max-w-2xl mx-auto px-4 space-y-6 text-center">
+              <h3 className="text-gold/60 italic text-[10px] tracking-[0.4em] uppercase">Primeiro Gesto</h3>
+              <p className="text-xl md:text-2xl text-white/90 italic leading-relaxed font-light">
+                O que você vem descartando antes mesmo de escutar?
+              </p>
+              <textarea
+                placeholder="Registrar no Jardim da Psique (opcional)"
+                className="w-full min-h-[120px] p-5 rounded-2xl bg-white/[0.03] border border-white/10 focus:border-gold/40 focus:outline-none text-white/80 italic placeholder:text-white/30 resize-none transition-colors"
+              />
+            </section>
+
+            {/* SEÇÃO 7 — Rastros na CidadELA */}
+            <section className="text-center max-w-xl mx-auto px-4">
+              <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full border border-gold/20 bg-gold/[0.04]">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
+                <p className="text-gold/80 italic text-sm md:text-base">
+                  Uma nova marca apareceu na trilha da CidadELA.
+                </p>
+              </div>
+            </section>
+
+            {/* SEÇÃO 8 — Botão Final */}
+            <section className="text-center pt-4">
               <button 
                 onClick={onNext}
-                className="group relative px-16 py-6 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden shadow-2xl shadow-gold/10"
+                className="group relative px-12 md:px-16 py-5 md:py-6 text-gold border border-gold/30 hover:border-gold/60 transition-all rounded-full overflow-hidden shadow-2xl shadow-gold/10"
               >
-                <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
-                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Guardar Rastros e Continuar</span>
+                <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/15 transition-colors" />
+                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Guardar Rastro e Continuar</span>
               </button>
             </section>
           </motion.div>
