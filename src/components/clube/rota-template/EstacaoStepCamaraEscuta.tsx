@@ -137,13 +137,15 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
           rota_id: activeObra.rota_id,
           estacao_id: activeObra.estacao_id,
           simbolo_observado: simbolo,
-          emocao_predominante: '', // Adicionando campo obrigatório conforme tipos
+          emocao_predominante: '',
           intensidade_escuta: intensidade,
           territorio_impactado: specific.territorioImpactado || activeObra.territorio_principal || '',
           registro_psique: reflexaoPsique,
           registro_oficio: reflexaoOficio,
+          primeira_impressao_tipo: primeiraImpressaoTipo || null,
+          primeira_impressao_texto: primeiraImpressaoTexto || null,
           data_escuta: new Date().toISOString()
-        }]);
+        } as any]);
 
       if (regError) throw regError;
 
