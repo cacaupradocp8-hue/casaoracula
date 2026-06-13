@@ -383,6 +383,8 @@ export function PassoEditor({ estacaoId, passo, open, onClose, proximaOrdem }: P
       toast.success(passo ? 'Passo atualizado' : 'Passo criado');
       qc.invalidateQueries({ queryKey: ['admin-clube-passos'] });
       qc.invalidateQueries({ queryKey: ['rota-oracular'] });
+      qc.invalidateQueries({ queryKey: ['estacao-conteudo'] });
+      qc.invalidateQueries({ queryKey: ['rota-hub'] });
       onClose();
     },
     onError: (e: any) => toast.error('Erro ao salvar', { description: e.message }),
