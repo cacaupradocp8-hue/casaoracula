@@ -219,12 +219,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Escuta da Personagem</span>
-              <h3 className="text-3xl font-serif text-white italic">Quem habita este cenário?</h3>
+            <div className="text-center space-y-4 px-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Escuta da Personagem</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-white italic break-words">Quem habita este cenário?</h3>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-10 md:space-y-12">
               {[
                 { id: 'ferida', q: "Quem carrega a ferida central?", icon: "🩸" },
                 { id: 'protege', q: "Quem protege?", icon: "🛡️" },
@@ -233,15 +233,15 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'transformacao', q: "Quem atravessa a transformação?", icon: "🦋" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{item.icon}</span>
-                    <label className="text-xl text-white font-serif italic block">{item.q}</label>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl md:text-2xl shrink-0">{item.icon}</span>
+                    <label className="text-base sm:text-lg md:text-xl text-white font-serif italic block break-words">{item.q}</label>
                   </div>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
                     placeholder="Identifique no conto..."
-                    className="bg-white/[0.03] border-white/10 min-h-[100px] rounded-2xl p-6 font-serif italic text-lg"
+                    className="bg-white/[0.03] border-white/10 min-h-[100px] rounded-2xl p-4 md:p-6 font-serif italic text-base md:text-lg"
                   />
                 </div>
               ))}
@@ -250,7 +250,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('aplicacao')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs w-full md:w-auto"
               >
                 Aplicação no Ofício
               </Button>
