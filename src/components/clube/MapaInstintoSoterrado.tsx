@@ -74,7 +74,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'limites',
     titulo: 'Vale dos Limites',
-    intro: 'Há lugares onde termina o seu espaço e começa o ruído alheio. Pedidos, expectativas, urgências de outros costumam atravessar essa fronteira sem aviso.',
+    intro: 'É domingo à noite. O telefone toca. Você sabe quem é antes de olhar. Sabe também o que será pedido. E sente, no ombro, aquele peso familiar de quando a resposta "sim" sai antes da pergunta terminar.',
     pergunta: 'Quando esta fronteira é atravessada, o que costuma acontecer?',
     rastro: 'Os rastros permanecem difíceis de encontrar junto aos Limites.',
     caminhos: [
