@@ -272,6 +272,8 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
   return (
     <div className="w-full max-w-7xl mx-auto min-h-screen pb-20 pt-6 px-6 relative bg-transparent font-serif selection:bg-gold/20">
+      <AmbienciaClareira />
+
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
