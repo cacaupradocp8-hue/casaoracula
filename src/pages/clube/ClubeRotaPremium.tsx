@@ -153,6 +153,12 @@ export default function ClubeRotaPremium() {
   };
 
   const progressPercentage = ((currentStep + 1) / steps.length) * 100;
+  const isMapaInstintoSoterrado = [
+    slug,
+    estacao.ferramenta_nome,
+    estacao.ferramenta_descricao,
+    estacao.cartografia_ferramenta_desbloqueada,
+  ].some((value) => value?.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').includes('instinto soterrado'));
 
   if (showTransitionPortal) {
     return (
@@ -398,7 +404,7 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
-                {currentStep === 7 && (slug === 'clareira-do-chamado' ? (
+                {currentStep === 7 && (isMapaInstintoSoterrado ? (
                   <div className="w-full min-h-[600px] flex items-center justify-center">
                     <MapaInstintoSoterrado 
                       estacaoId={estacao.id}
