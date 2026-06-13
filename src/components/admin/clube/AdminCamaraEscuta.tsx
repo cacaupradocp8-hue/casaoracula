@@ -228,15 +228,59 @@ export function AdminCamaraEscuta({ estacaoId }: AdminCamaraEscutaProps) {
 
             <div className="space-y-2 md:col-span-2 border-t border-primary/5 pt-4">
               <h4 className="text-xs uppercase tracking-widest text-gold font-bold mb-2 flex items-center gap-2">
-                <Sparkles className="w-3 h-3" /> Registros no Jardim
+                <Sparkles className="w-3 h-3" /> Experiência em 5 Atos
+              </h4>
+              <div className="grid grid-cols-1 gap-4">
+                <div className="space-y-2">
+                  <Label>Ato 1 — Texto "Antes da Escuta" (preparação da percepção)</Label>
+                  <Textarea
+                    value={editingObra?.texto_antes_escuta || ''}
+                    onChange={e => setEditingObra({ ...editingObra, texto_antes_escuta: e.target.value })}
+                    placeholder="Máx. 2 parágrafos. Ex: 'Antes de ouvir, não procure a história literal da canção...'"
+                    className="h-28"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ato 2 — Pergunta-guia "Durante a Escuta"</Label>
+                  <Textarea
+                    value={editingObra?.pergunta_durante_escuta || ''}
+                    onChange={e => setEditingObra({ ...editingObra, pergunta_durante_escuta: e.target.value })}
+                    placeholder="Ex: 'Enquanto escuta, observe: onde a voz parece cuidar da ferida e onde parece morar nela?'"
+                    className="h-20"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Ato 4 — Texto educativo da "Leitura Simbólica"</Label>
+                  <Textarea
+                    value={editingObra?.texto_leitura_simbolica || ''}
+                    onChange={e => setEditingObra({ ...editingObra, texto_leitura_simbolica: e.target.value })}
+                    placeholder="Ex: 'Em Fera Ferida, o símbolo central não é apenas a dor. É a ferida quando começa a organizar a identidade.'"
+                    className="h-28"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Conclusão — Mensagem final da escuta</Label>
+                  <Textarea
+                    value={editingObra?.mensagem_conclusao || ''}
+                    onChange={e => setEditingObra({ ...editingObra, mensagem_conclusao: e.target.value })}
+                    placeholder="Ex: 'Sua escuta foi registrada. A Praça do Abalo recebeu um rastro: A Ferida Habitável.'"
+                    className="h-20"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2 md:col-span-2 border-t border-primary/5 pt-4">
+              <h4 className="text-xs uppercase tracking-widest text-gold font-bold mb-2 flex items-center gap-2">
+                <Sparkles className="w-3 h-3" /> Ato 5 — Registros no Jardim
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label>Pergunta - Jardim da Psique</Label>
+                  <Label>Pergunta — Jardim da Psique (Eu)</Label>
                   <Textarea value={editingObra?.pergunta_psique} onChange={e => setEditingObra({...editingObra, pergunta_psique: e.target.value})} className="h-20" />
                 </div>
                 <div className="space-y-2">
-                  <Label>Pergunta - Jardim do Ofício</Label>
+                  <Label>Pergunta — Jardim do Ofício</Label>
                   <Textarea value={editingObra?.pergunta_oficio} onChange={e => setEditingObra({...editingObra, pergunta_oficio: e.target.value})} className="h-20" />
                 </div>
               </div>
