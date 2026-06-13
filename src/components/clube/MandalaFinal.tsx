@@ -172,17 +172,15 @@ export function MandalaFinal({ estados }: Props) {
             alt="Mandala do Instinto Soterrado" 
             className={cn(
               "w-full h-full object-contain transition-all duration-1000",
-              hasAceso ? "brightness-[1.15] contrast-[1.1] saturate-[1.25]" : "brightness-100 contrast-[1.05] saturate-[1.1]"
+              hasAceso ? "brightness-[1.35] contrast-[1.15] saturate-[1.4]" : "brightness-[1.2] contrast-[1.08] saturate-[1.2]"
             )}
           />
           
-          {/* Overlay de Sombra sobre a imagem para destacar os acesos */}
+          {/* Vinheta suave para foco, sem escurecer demais */}
           <div 
-            className="absolute inset-0 mix-blend-multiply opacity-25 rounded-full"
+            className="absolute inset-0 pointer-events-none"
             style={{ 
-              background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 58%, #000 96%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
-                : `radial-gradient(circle, transparent 62%, #000 98%)`
+              background: `radial-gradient(circle, transparent 70%, rgba(0,0,0,0.5) 100%)`
             }}
           />
         </div>
