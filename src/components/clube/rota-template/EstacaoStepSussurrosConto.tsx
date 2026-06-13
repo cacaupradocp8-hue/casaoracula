@@ -175,12 +175,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Escuta do Conto</span>
-              <h3 className="text-3xl font-serif text-white italic">O que o conto revela?</h3>
+            <div className="text-center space-y-4 px-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Escuta do Conto</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-white italic break-words">O que o conto revela?</h3>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-10 md:space-y-12">
               {[
                 { id: 'revelacao', q: "O que este conto está tentando revelar?" },
                 { id: 'soterrado', q: "O que foi perdido, soterrado ou esquecido?" },
@@ -189,7 +189,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'chamado', q: "O que começa a chamar?" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <label className="text-lg md:text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30">{item.q}</label>
+                  <label className="text-base sm:text-lg md:text-xl text-white font-serif italic block pl-2 border-l-2 border-gold/30 break-words">{item.q}</label>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
@@ -204,7 +204,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('escuta_personagem')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs w-full md:w-auto"
               >
                 Observar as Personagens
               </Button>
@@ -219,12 +219,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Escuta da Personagem</span>
-              <h3 className="text-3xl font-serif text-white italic">Quem habita este cenário?</h3>
+            <div className="text-center space-y-4 px-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Escuta da Personagem</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-white italic break-words">Quem habita este cenário?</h3>
             </div>
 
-            <div className="space-y-12">
+            <div className="space-y-10 md:space-y-12">
               {[
                 { id: 'ferida', q: "Quem carrega a ferida central?", icon: "🩸" },
                 { id: 'protege', q: "Quem protege?", icon: "🛡️" },
@@ -233,15 +233,15 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
                 { id: 'transformacao', q: "Quem atravessa a transformação?", icon: "🦋" }
               ].map((item) => (
                 <div key={item.id} className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <span className="text-2xl">{item.icon}</span>
-                    <label className="text-xl text-white font-serif italic block">{item.q}</label>
+                  <div className="flex items-start gap-3">
+                    <span className="text-xl md:text-2xl shrink-0">{item.icon}</span>
+                    <label className="text-base sm:text-lg md:text-xl text-white font-serif italic block break-words">{item.q}</label>
                   </div>
                   <Textarea 
                     value={respostas[item.id as keyof typeof respostas]}
                     onChange={(e) => handleInputChange(item.id as keyof typeof respostas, e.target.value)}
                     placeholder="Identifique no conto..."
-                    className="bg-white/[0.03] border-white/10 min-h-[100px] rounded-2xl p-6 font-serif italic text-lg"
+                    className="bg-white/[0.03] border-white/10 min-h-[100px] rounded-2xl p-4 md:p-6 font-serif italic text-base md:text-lg"
                   />
                 </div>
               ))}
@@ -250,7 +250,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('aplicacao')}
-                className="bg-white/10 hover:bg-white/20 text-white font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs"
+                className="bg-white/10 hover:bg-white/20 text-white font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs w-full md:w-auto"
               >
                 Aplicação no Ofício
               </Button>
@@ -265,30 +265,30 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ opacity: 1, x: 0 }}
             className="space-y-10"
           >
-            <div className="text-center space-y-4">
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Aplicação Profissional</span>
-              <h3 className="text-3xl font-serif text-white italic">O Espelho no Outro</h3>
+            <div className="text-center space-y-4 px-2">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Aplicação Profissional</span>
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-serif text-white italic break-words">O Espelho no Outro</h3>
             </div>
 
             <div className="space-y-8">
               <div className="space-y-4">
-                <label className="text-xl text-white font-serif italic block">
+                <label className="text-base sm:text-lg md:text-xl text-white font-serif italic block break-words">
                   Onde esse padrão aparece nas mulheres que acompanho?
                 </label>
                 <Textarea 
                   value={respostas.aplicacaoProfissional}
                   onChange={(e) => handleInputChange('aplicacaoProfissional', e.target.value)}
                   placeholder="Relacione o conto com sua prática..."
-                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-2xl p-6 font-serif italic text-lg"
+                  className="bg-white/[0.03] border-white/10 min-h-[150px] rounded-2xl p-4 md:p-6 font-serif italic text-base md:text-lg"
                 />
               </div>
 
-              <div className="bg-red-500/5 border border-red-500/20 p-8 rounded-[2rem] space-y-4">
+              <div className="bg-red-500/5 border border-red-500/20 p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] space-y-4">
                 <div className="flex items-center gap-3 text-red-400">
-                  <AlertTriangle className="w-5 h-5" />
+                  <AlertTriangle className="w-5 h-5 shrink-0" />
                   <h4 className="text-[10px] uppercase tracking-widest font-black">Erro comum de leitura</h4>
                 </div>
-                <p className="text-white/80 font-serif italic text-lg leading-relaxed">
+                <p className="text-white/80 font-serif italic text-base md:text-lg leading-relaxed break-words">
                   {contoData.erroComum}
                 </p>
               </div>
@@ -297,7 +297,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             <div className="flex justify-center pt-8">
               <Button 
                 onClick={() => setActiveStep('conclusao')}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-16 rounded-full uppercase tracking-widest text-xs"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-12 h-14 md:h-16 rounded-full uppercase tracking-widest text-[10px] md:text-xs w-full md:w-auto"
               >
                 Ouvir a Guardiã
               </Button>
@@ -312,12 +312,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ scale: 1, opacity: 1 }}
             className="text-center space-y-12 py-10"
           >
-            <div className="space-y-6">
-              <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
-                <ScrollText className="w-10 h-10 text-gold" />
+            <div className="space-y-6 px-2">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6 md:mb-8">
+                <ScrollText className="w-8 h-8 md:w-10 md:h-10 text-gold" />
               </div>
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Sussurro da Guardiã</span>
-              <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight max-w-2xl mx-auto">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Sussurro da Guardiã</span>
+              <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-serif text-white italic leading-tight max-w-2xl mx-auto break-words">
                 "{contoData.sussurroGuardia}"
               </h2>
             </div>
@@ -326,7 +326,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
               <Button 
                 onClick={handleFinalize}
                 disabled={isSaving}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-20 rounded-full uppercase tracking-[0.2em] text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-16 h-14 md:h-20 rounded-full uppercase tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105 w-full md:w-auto"
               >
                 {isSaving ? (
                   <Loader2 className="w-5 h-5 animate-spin mr-3" />
