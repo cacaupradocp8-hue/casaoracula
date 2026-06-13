@@ -157,7 +157,15 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
     setRespostas(novasRespostas);
     setEstados(novosEstados);
-    setRastroAtual(etapa.rastro);
+    const rastrosPool = [
+      'A clareira guardou esse sinal.',
+      'Uma marca permaneceu no caminho.',
+      'O território registrou sua passagem.',
+      'Um rastro tornou-se visível.',
+      'A névoa se move entre as árvores.',
+      'Outro território aguarda observação.',
+    ];
+    setRastroAtual(rastrosPool[Math.floor(Math.random() * rastrosPool.length)]);
 
     window.setTimeout(() => {
       setRastroAtual(null);
