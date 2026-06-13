@@ -19,74 +19,74 @@ type Estado = 'Aceso' | 'Oscilante' | 'Soterrado' | 'Exausto';
 const TRAVESSIA_ETAPAS = [
   { 
     id: 'corpo', 
-    titulo: '❤️ O Corpo que Chama', 
+    titulo: 'O Corpo que Chama', 
     intro: 'A primeira casa da alma manifesta-se em ritmos, pesos e temperaturas. Escutar o corpo não é um ato técnico, é um retorno ao templo que nunca mente.',
-    icon: '❤️',
+    icon: 'corpo',
     caminhos: [
-      { label: '❤️ Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   },
   { 
     id: 'intuicao', 
-    titulo: '🌙 A Voz que Pressente', 
+    titulo: 'A Voz que Pressente', 
     intro: 'Há uma percepção que surge antes da lógica, um sussurro que conhece os atalhos da floresta psíquica. O pressentimento é a bússola da natureza selvagem.',
-    icon: '🌙',
+    icon: 'intuicao',
     caminhos: [
-      { label: '❤️ Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   },
   { 
     id: 'desejo', 
-    titulo: '🔥 O Fogo que Deseja', 
+    titulo: 'O Fogo que Deseja', 
     intro: 'O desejo autêntico é o combustível da vida. Ele não é capricho, é a faísca que indica para onde sua vitalidade quer se expandir agora.',
-    icon: '🔥',
+    icon: 'desejo',
     caminhos: [
-      { label: '❤️ Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   },
   { 
     id: 'limites', 
-    titulo: '🛡 O Território que Protege', 
+    titulo: 'O Território que Protege', 
     intro: 'Saber onde você termina e o outro começa é a base da integridade. O limite não é um muro, é a pele que protege sua essência.',
-    icon: '🛡',
+    icon: 'limites',
     caminhos: [
-      { label: '❤️ Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   },
   { 
     id: 'criatividade', 
-    titulo: '🌿 A Semente que Cria', 
+    titulo: 'A Semente que Cria', 
     intro: 'O gesto criativo é o nascimento de algo novo através de você. É o jogo livre da psique que encontra soluções onde antes só havia cansaço.',
-    icon: '🌿',
+    icon: 'criatividade',
     caminhos: [
-      { label: '❤️ Costumo escutar ese sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   },
   { 
     id: 'vitalidade', 
-    titulo: '🐺 A Força que Sustenta', 
+    titulo: 'A Força que Sustenta', 
     intro: 'A vitalidade é o sangue pulsando com entusiasmo. É a energia que permite atravessar as invernias e celebrar as colheitas com a mesma presença.',
-    icon: '🐺',
+    icon: 'vitalidade',
     caminhos: [
-      { label: '❤️ Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
-      { label: '🌙 Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
-      { label: '🍂 Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
-      { label: '🪨 Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
+      { label: 'Costumo escutar esse sinal.', score: 3, estado: 'Aceso' as Estado },
+      { label: 'Percebo o sinal, mas nem sempre sigo sua direção.', score: 2, estado: 'Oscilante' as Estado },
+      { label: 'Frequentemente minimizo esse chamado.', score: 1, estado: 'Soterrado' as Estado },
+      { label: 'Costumo continuar mesmo quando ele insiste.', score: 0, estado: 'Exausto' as Estado }
     ]
   }
 ];
@@ -148,16 +148,16 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(420px,1.1fr)] items-center gap-8 lg:gap-12 py-6 lg:py-8"
+            className="min-h-[68vh] flex items-center justify-center py-8 lg:py-12"
           >
-            <div className="space-y-6 text-center lg:text-left">
+            <div className="space-y-7 text-center max-w-3xl mx-auto">
               <div className="flex justify-center mb-4">
                 <div className="w-16 h-16 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
                   <BookOpen className="w-8 h-8 text-gold/60" />
                 </div>
               </div>
-              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 lg:px-0 max-w-[11ch] mx-auto lg:mx-0">Mapa do Instinto Soterrado™</h1>
-              <div className="h-px w-24 bg-gold/30 mx-auto lg:mx-0 my-8" />
+              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 max-w-[12ch] mx-auto">Mapa do Instinto Soterrado™</h1>
+              <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
               <p className="text-white/70 italic text-lg xl:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed">
                 Esta não é uma avaliação. É uma travessia narrativa pelos territórios da sua natureza selvagem. <br/>
                 Siga as pistas, observe os rastros e sinta qual caminho sua alma percorre hoje.
@@ -170,9 +170,6 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Iniciar Travessia</span>
               </button>
             </div>
-            <div className="w-full max-w-2xl mx-auto lg:max-w-none">
-              <MandalaFinal estados={mandalaEstados} />
-            </div>
           </motion.div>
         )}
 
@@ -182,75 +179,63 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex flex-col items-center py-12 space-y-16"
+            className="py-10 lg:py-14"
           >
-            {/* Atlas Progress Header */}
-            <div className="w-full max-w-2xl flex flex-col items-center gap-6">
-              <div className="flex items-center gap-4 text-gold/40">
-                <Scroll className="w-4 h-4" />
-                <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Território {currentIdx + 1} de {TRAVESSIA_ETAPAS.length}</span>
-              </div>
-              <div className="flex gap-2 w-full justify-center">
-                {TRAVESSIA_ETAPAS.map((_, i) => (
-                  <div 
-                    key={i} 
-                    className={cn(
-                      "h-0.5 transition-all duration-700 rounded-full",
-                      i === currentIdx ? "w-12 bg-gold shadow-[0_0_8px_rgba(212,175,55,0.4)]" : i < currentIdx ? "w-4 bg-gold/30" : "w-4 bg-white/5"
-                    )} 
-                  />
-                ))}
-              </div>
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-[minmax(280px,0.78fr)_minmax(0,1.22fr)] gap-10 lg:gap-14 items-start w-full max-w-6xl mx-auto">
+              <aside className="lg:sticky lg:top-28 space-y-8 text-center lg:text-left">
+                <div className="flex items-center justify-center lg:justify-start gap-4 text-gold/50">
+                  <Scroll className="w-4 h-4" />
+                  <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Território {currentIdx + 1} de {TRAVESSIA_ETAPAS.length}</span>
+                </div>
+                <div className="flex gap-2 w-full justify-center lg:justify-start">
+                  {TRAVESSIA_ETAPAS.map((_, i) => (
+                    <div 
+                      key={i} 
+                      className={cn(
+                        "h-0.5 transition-all duration-700 rounded-full",
+                        i === currentIdx ? "w-12 bg-gold shadow-[0_0_8px_hsl(var(--gold)/0.4)]" : i < currentIdx ? "w-4 bg-gold/30" : "w-4 bg-white/10"
+                      )} 
+                    />
+                  ))}
+                </div>
+                <div className="space-y-6">
+                  <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 lg:px-0 break-words">
+                    {TRAVESSIA_ETAPAS[currentIdx].titulo}
+                  </h2>
+                  <p className="text-white/65 text-lg md:text-xl italic leading-relaxed max-w-xl mx-auto lg:mx-0 font-light">
+                    {TRAVESSIA_ETAPAS[currentIdx].intro}
+                  </p>
+                </div>
+                <button 
+                  onClick={() => {
+                    if (currentIdx > 0) setCurrentIdx(prev => prev - 1);
+                  }}
+                  disabled={currentIdx === 0}
+                  className="text-white/20 hover:text-white/45 italic text-[10px] tracking-[0.4em] uppercase transition-colors disabled:opacity-0"
+                >
+                  Voltar ao território anterior
+                </button>
+              </aside>
 
-            <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)] gap-10 lg:gap-12 items-center w-full max-w-6xl">
-              <div className="w-full lg:sticky lg:top-24">
-                <MandalaFinal estados={mandalaEstados} />
-              </div>
-
-              <div className="w-full space-y-12">
-              <div className="text-center space-y-6">
-                <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 break-words">
-                  {TRAVESSIA_ETAPAS[currentIdx].titulo}
-                </h2>
-
-                <p className="text-white/60 text-lg md:text-xl italic leading-relaxed max-w-xl mx-auto font-light">
-                  {TRAVESSIA_ETAPAS[currentIdx].intro}
-                </p>
-              </div>
-
-              <div className="h-px w-16 bg-white/10 mx-auto" />
-
-              <div className="grid grid-cols-1 gap-4">
-                <p className="text-[9px] text-white/30 uppercase tracking-[0.3em] text-center mb-2 font-black">Qual destas experiências descreve o seu agora?</p>
+              <section className="w-full space-y-5 lg:border-l lg:border-gold/10 lg:pl-10">
+                <p className="text-[9px] text-gold/45 uppercase tracking-[0.3em] text-center lg:text-left mb-2 font-black">Qual destas experiências descreve o seu agora?</p>
                 {TRAVESSIA_ETAPAS[currentIdx].caminhos.map((caminho, i) => (
                   <button
                     key={i}
                     onClick={() => handleSelectCaminho(caminho.score, caminho.estado)}
-                    className="group relative w-full text-left p-8 border border-white/5 hover:border-gold/30 bg-white/[0.01] hover:bg-gold/[0.02] backdrop-blur-sm transition-all duration-500 rounded-3xl overflow-hidden"
+                    className="group relative w-full text-left p-7 md:p-8 border border-white/10 hover:border-gold/40 bg-background/35 hover:bg-gold/[0.04] backdrop-blur-xl transition-all duration-500 rounded-[1.5rem] overflow-hidden"
                   >
-                    <div className="absolute inset-y-0 left-0 w-1 bg-gold/0 group-hover:bg-gold/40 transition-all" />
-                    <div className="relative z-10 flex items-center justify-between">
-                      <span className="text-white/70 group-hover:text-white italic text-lg md:text-xl transition-colors pr-8">
+                    <div className="absolute inset-y-0 left-0 w-1 bg-gold/0 group-hover:bg-gold/50 transition-all" />
+                    <div className="relative z-10 flex items-center justify-between gap-6">
+                      <span className="text-white/75 group-hover:text-white italic text-lg md:text-xl transition-colors">
                         {caminho.label}
                       </span>
-                      <ChevronRight className="w-5 h-5 text-gold/0 group-hover:text-gold/40 transition-all transform -translate-x-4 group-hover:translate-x-0" />
+                      <ChevronRight className="w-5 h-5 text-gold/20 group-hover:text-gold/70 transition-all transform -translate-x-2 group-hover:translate-x-0 shrink-0" />
                     </div>
                   </button>
                 ))}
-              </div>
-              </div>
+              </section>
             </div>
-
-            <button 
-              onClick={() => {
-                if (currentIdx > 0) setCurrentIdx(prev => prev - 1);
-              }}
-              disabled={currentIdx === 0}
-              className="text-white/10 hover:text-white/30 italic text-[10px] tracking-[0.4em] uppercase transition-colors disabled:opacity-0"
-            >
-              Voltar ao território anterior
-            </button>
           </motion.div>
         )}
 
@@ -259,7 +244,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             key="resultado"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="max-w-3xl mx-auto py-20 space-y-24 relative"
+            className="max-w-6xl mx-auto py-14 md:py-20 space-y-20 md:space-y-24 relative"
           >
             <WolfPawStepsLoop />
             {/* Header Editorial */}
@@ -274,7 +259,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
               <div className="h-px w-32 bg-gold/20 mx-auto" />
             </header>
 
-            <section className="w-full max-w-3xl mx-auto">
+            <section className="w-full max-w-4xl mx-auto">
               <MandalaFinal estados={mandalaEstados} />
             </section>
 
@@ -329,11 +314,28 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 <div className="w-12 h-12 rounded-full border border-gold/10 flex items-center justify-center">
                   <Compass className="w-6 h-6 text-gold/40" />
                 </div>
-                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">O Convite da Estação</h2>
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Próxima Trilha</h2>
               </div>
               <p className="text-2xl md:text-3xl text-gold/80 italic max-w-2xl mx-auto leading-relaxed font-light">
                 "Não se trata de agir mais. Trata-se de observar melhor os sinais que costumam ser descartados antes de serem escutados."
               </p>
+            </section>
+
+            <section className="space-y-8">
+              <div className="flex flex-col items-center gap-3 text-center">
+                <h2 className="text-2xl md:text-3xl text-white/90 italic tracking-wide">Jardins</h2>
+                <div className="h-[1px] w-12 bg-gold/20" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-8 border border-gold/15 bg-background/45 backdrop-blur-xl rounded-[1.5rem]">
+                  <h3 className="text-gold/80 italic text-2xl mb-3">Jardim da Psique</h3>
+                  <p className="text-white/55 italic leading-relaxed">Guardar o rastro como pergunta íntima, sem transformar o símbolo em resposta fechada.</p>
+                </div>
+                <div className="p-8 border border-white/10 bg-background/35 backdrop-blur-xl rounded-[1.5rem]">
+                  <h3 className="text-white/80 italic text-2xl mb-3">Jardim do Ofício</h3>
+                  <p className="text-white/50 italic leading-relaxed">Observar como este território aparece na escuta profissional e nas conduções de campo.</p>
+                </div>
+              </div>
             </section>
 
             {/* Seção 4: Primeiro Gesto */}
@@ -351,7 +353,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 className="group relative px-16 py-6 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden shadow-2xl shadow-gold/10"
               >
                 <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
-                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Continuar Travessia</span>
+                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Guardar Rastro e Continuar</span>
               </button>
             </section>
           </motion.div>
