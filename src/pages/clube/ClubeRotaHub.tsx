@@ -6,6 +6,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { RotaHubHero } from '@/components/clube/rota-template/RotaHubHero';
 import { RotaLivroBanner } from '@/components/clube/rota-template/RotaLivroBanner';
 import { RotaEstacoesGrid } from '@/components/clube/rota-template/RotaEstacoesGrid';
+import { RotaPropositoTese } from '@/components/clube/rota-template/RotaPropositoTese';
 import { Loader2 } from 'lucide-react';
 
 export default function ClubeRotaHub() {
@@ -67,6 +68,8 @@ export default function ClubeRotaHub() {
               onAction={irParaEstacao1}
             />
           </div>
+
+          <RotaPropositoTese />
 
           <div className="space-y-12 pt-8">
             <div className="text-center space-y-4">
