@@ -5,8 +5,8 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { MandalaFinal, TERRITORIOS } from './MandalaFinal';
-import { WolfPawStepsLoop } from './WolfPawSteps';
+import { TERRITORIOS } from './MandalaFinal';
+import mandalaOficial from '@/assets/mandala-instinto-oficial.png.asset.json';
 
 interface MapaInstintoSoterradoProps {
   estacaoId: string;
