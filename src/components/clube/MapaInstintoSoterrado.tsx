@@ -58,11 +58,12 @@ function AmbienciaClareira() {
   return (
     <button
       onClick={toggle}
-      className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-white/40 hover:text-gold/70 transition-colors"
+      className="fixed z-50 top-3 right-3 md:top-5 md:right-5 inline-flex items-center gap-2 px-3 py-2 rounded-full bg-background/40 backdrop-blur-sm border border-gold/15 text-[10px] uppercase tracking-[0.3em] text-white/50 hover:text-gold/80 hover:border-gold/40 transition-colors"
       aria-label={on ? 'Desativar ambiência' : 'Ativar ambiência'}
+      title={on ? 'Ambiência ligada' : 'Ambiência desligada'}
     >
       {on ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-      <span>{on ? 'Ambiência ativa' : 'Ativar Ambiência'}</span>
+      <span className="hidden md:inline">{on ? 'Ambiência' : 'Ambiência'}</span>
     </button>
   );
 }
@@ -271,6 +272,8 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
 
   return (
     <div className="w-full max-w-7xl mx-auto min-h-screen pb-20 pt-6 px-6 relative bg-transparent font-serif selection:bg-gold/20">
+      <AmbienciaClareira />
+
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div 
@@ -290,15 +293,13 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 A Clareira do Chamado
               </h1>
               <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
-              <div className="space-y-5 text-white/75 italic text-lg xl:text-xl max-w-2xl mx-auto leading-relaxed font-cormorant">
-                <p>Há momentos em que a vida fala mais baixo.</p>
-                <p>Não porque desapareceu.</p>
-                <p>Mas porque outras vozes ficaram altas demais.</p>
-                <p className="pt-2">Nesta travessia você não será convidada a responder quem é.</p>
-                <p>Será convidada a observar os sinais que ainda insistem em aparecer.</p>
+              <div className="space-y-4 text-white/75 italic text-base md:text-lg xl:text-xl max-w-xl mx-auto leading-relaxed font-cormorant">
+                <p>A vida nem sempre chama alto.</p>
+                <p>Às vezes aparece como cansaço, inquietação ou desejo pequeno demais para ser explicado.</p>
+                <p>Nesta travessia, observe os sinais que ainda insistem em aparecer.</p>
               </div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 pt-4">
-                Duração aproximada · 5 a 10 minutos
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 pt-2">
+                Duração · 5 a 10 minutos
               </p>
               <button 
                 onClick={() => setView('travessia')}
@@ -307,12 +308,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
                 <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Entrar na Clareira</span>
               </button>
-              <div className="pt-6">
-                <AmbienciaClareira />
-              </div>
             </div>
           </motion.div>
         )}
+
 
         {view === 'travessia' && (
           <motion.div 
