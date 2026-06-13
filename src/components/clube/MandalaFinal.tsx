@@ -126,7 +126,6 @@ const ESTADOS_STYLE = {
 };
 
 export function MandalaFinal({ estados }: Props) {
-  const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -154,12 +153,16 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[850px] aspect-[575/525] mx-auto bg-[#020202] shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden rounded-3xl">
+      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-background/80 shadow-[0_0_90px_hsl(var(--gold)/0.18),0_0_180px_rgba(0,0,0,0.95)] border border-gold/15 overflow-hidden rounded-[2rem]">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
-          className="absolute inset-0 z-0 transition-all duration-1000 opacity-70"
-          style={{ background: spotlightBackground }}
+          className="absolute inset-0 z-0 transition-all duration-1000 opacity-100"
+          style={{
+            background: spotlightBackground !== 'none'
+              ? spotlightBackground
+              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.16) 0%, transparent 42%)'
+          }}
         />
 
         {/* 2. Camada da Imagem Real e Oficial (Centro absoluto) */}
@@ -169,17 +172,17 @@ export function MandalaFinal({ estados }: Props) {
             alt="Mandala do Instinto Soterrado" 
             className={cn(
               "w-full h-full object-contain transition-all duration-1000",
-              hasAceso ? "brightness-110 contrast-105" : "brightness-50 contrast-75 grayscale-[0.2]"
+              hasAceso ? "brightness-115 contrast-110 saturate-125" : "brightness-95 contrast-105 saturate-110"
             )}
           />
           
           {/* Overlay de Sombra sobre a imagem para destacar os acesos */}
           <div 
-            className="absolute inset-0 mix-blend-multiply opacity-60 rounded-full"
+            className="absolute inset-0 mix-blend-multiply opacity-25 rounded-full"
             style={{ 
               background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 40%, #000 90%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
-                : `radial-gradient(circle, transparent 40%, #000 90%)`
+                ? `radial-gradient(circle, transparent 58%, #000 96%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
+                : `radial-gradient(circle, transparent 62%, #000 98%)`
             }}
           />
         </div>
@@ -196,10 +199,9 @@ export function MandalaFinal({ estados }: Props) {
                 className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
                 style={{ top: t.pos.top, left: t.pos.left }}
               >
-                {/* Hotspot de Interação (Completamente Invisível) */}
-                <button
-                  onClick={() => setSelectedTerritorio(t)}
-                  className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none relative group"
+                {/* Marcador discreto sobre a arte oficial, sem popup bloqueante */}
+                <div
+                  className="w-full h-full rounded-full z-50 relative pointer-events-none"
                   aria-label={t.nome}
                 />
 
