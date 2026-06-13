@@ -316,6 +316,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
             animate={{ opacity: 1 }}
             className="max-w-5xl mx-auto py-10 md:py-16 space-y-20 md:space-y-28 relative"
           >
+            <p className="text-center text-gold/70 italic text-sm md:text-base tracking-[0.25em] uppercase">
+              La Loba não procura respostas. Procura rastros.
+            </p>
+
             {/* SEÇÃO 1 — HERO com mandala oficial */}
             <section className="relative w-full flex items-center justify-center px-2 sm:px-6">
               {/* glow dourado */}
