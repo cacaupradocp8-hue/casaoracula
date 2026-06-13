@@ -153,7 +153,7 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-background/80 shadow-[0_0_90px_hsl(var(--gold)/0.18),0_0_180px_rgba(0,0,0,0.95)] border border-gold/15 overflow-hidden rounded-[2rem]">
+      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-gradient-to-b from-[#1a1208]/60 via-[#2a1a08]/40 to-[#0d0904]/70 shadow-[0_0_120px_hsl(var(--gold)/0.35),0_0_240px_hsl(var(--gold)/0.15)] border border-gold/30 overflow-hidden rounded-[2rem]">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
@@ -161,7 +161,7 @@ export function MandalaFinal({ estados }: Props) {
           style={{
             background: spotlightBackground !== 'none'
               ? spotlightBackground
-              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.16) 0%, transparent 42%)'
+              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.32) 0%, transparent 55%)'
           }}
         />
 
@@ -172,17 +172,15 @@ export function MandalaFinal({ estados }: Props) {
             alt="Mandala do Instinto Soterrado" 
             className={cn(
               "w-full h-full object-contain transition-all duration-1000",
-              hasAceso ? "brightness-[1.15] contrast-[1.1] saturate-[1.25]" : "brightness-100 contrast-[1.05] saturate-[1.1]"
+              hasAceso ? "brightness-[1.35] contrast-[1.15] saturate-[1.4]" : "brightness-[1.2] contrast-[1.08] saturate-[1.2]"
             )}
           />
           
-          {/* Overlay de Sombra sobre a imagem para destacar os acesos */}
+          {/* Vinheta suave para foco, sem escurecer demais */}
           <div 
-            className="absolute inset-0 mix-blend-multiply opacity-25 rounded-full"
+            className="absolute inset-0 pointer-events-none"
             style={{ 
-              background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 58%, #000 96%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
-                : `radial-gradient(circle, transparent 62%, #000 98%)`
+              background: `radial-gradient(circle, transparent 70%, rgba(0,0,0,0.5) 100%)`
             }}
           />
         </div>

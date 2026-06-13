@@ -39,6 +39,7 @@ export default function ClubeRotaPremium() {
   const { data: estacao, isLoading, error } = useEstacaoConteudo(slug || '');
   const [currentStep, setCurrentStep] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showResumeBanner, setShowResumeBanner] = useState(false);
   const [showTransitionPortal, setShowTransitionPortal] = useState(false);
   const [showColheita, setShowColheita] = useState(false);
 
@@ -74,6 +75,7 @@ export default function ClubeRotaPremium() {
           
         if (data && data.ultimo_passo !== undefined) {
           setCurrentStep(data.ultimo_passo);
+          if (data.ultimo_passo > 0) setShowResumeBanner(true);
         }
       } catch (err) {
         console.error('Erro ao carregar progresso:', err);
@@ -222,7 +224,7 @@ export default function ClubeRotaPremium() {
           />
 
           <AnimatePresence>
-            {currentStep > 0 && isInitialLoading === false && !(isMapaInstintoSoterrado && currentStep === 7) && (
+            {showResumeBanner && currentStep > 0 && !(isMapaInstintoSoterrado && currentStep === 7) && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -244,13 +246,14 @@ export default function ClubeRotaPremium() {
                     onClick={() => {
                       setCurrentStep(0);
                       saveProgress(0);
+                      setShowResumeBanner(false);
                     }}
                     className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex-1 md:flex-none"
                   >
                     Recomeçar
                   </Button>
                   <Button 
-                    onClick={() => setIsInitialLoading(null as any)} // Apenas remove o banner
+                    onClick={() => setShowResumeBanner(false)}
                     className="bg-gold text-midnight text-[10px] uppercase tracking-widest font-bold h-10 rounded-full flex-1 md:flex-none"
                   >
                     Continuar
