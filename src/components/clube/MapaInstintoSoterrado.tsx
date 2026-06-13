@@ -2,68 +2,202 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Compass, ChevronRight, BookOpen, Scroll, Volume2, VolumeX } from 'lucide-react';
 
-// Ambiência discreta de clareira: ruído filtrado (vento) + ruído fino (folhas)
+// Ambiência dinâmica de clareira: camadas sintetizadas que se alternam suavemente
+// Camadas: vento, chuva leve, pássaros distantes, folhas, fogueira, textura de floresta
 function AmbienciaClareira() {
   const [on, setOn] = useState(false);
   const ctxRef = useRef<AudioContext | null>(null);
-  const nodesRef = useRef<AudioNode[]>([]);
+  const cleanupRef = useRef<(() => void) | null>(null);
 
   useEffect(() => () => {
+    try { cleanupRef.current?.(); } catch {}
     try { ctxRef.current?.close(); } catch {}
   }, []);
 
-  const toggle = async () => {
-    if (on) {
-      nodesRef.current.forEach((n: any) => { try { n.stop?.(); n.disconnect?.(); } catch {} });
-      nodesRef.current = [];
-      try { await ctxRef.current?.close(); } catch {}
-      ctxRef.current = null;
-      setOn(false);
-      return;
-    }
+  const stop = () => {
+    try { cleanupRef.current?.(); } catch {}
+    cleanupRef.current = null;
+    try { ctxRef.current?.close(); } catch {}
+    ctxRef.current = null;
+    setOn(false);
+  };
+
+  const start = () => {
     const Ctx = (window.AudioContext || (window as any).webkitAudioContext);
     const ctx = new Ctx();
     ctxRef.current = ctx;
+    const master = ctx.createGain();
+    master.gain.value = 0;
+    master.connect(ctx.destination);
+    master.gain.linearRampToValueAtTime(0.9, ctx.currentTime + 2.5);
 
-    // Buffer de ruído rosa-ish (2s) para loop
-    const bufferSize = ctx.sampleRate * 2;
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-    const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.5;
+    // Buffer de ruído (2s, loop)
+    const noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+    const nd = noiseBuf.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() * 2 - 1) * 0.5;
 
-    // Vento: lowpass profundo + LFO no cutoff
-    const wind = ctx.createBufferSource();
-    wind.buffer = buffer; wind.loop = true;
-    const windFilter = ctx.createBiquadFilter();
-    windFilter.type = 'lowpass'; windFilter.frequency.value = 380; windFilter.Q.value = 0.6;
-    const windGain = ctx.createGain(); windGain.gain.value = 0.07;
-    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08;
-    const lfoGain = ctx.createGain(); lfoGain.gain.value = 180;
-    lfo.connect(lfoGain).connect(windFilter.frequency);
-    wind.connect(windFilter).connect(windGain).connect(ctx.destination);
+    const sources: AudioScheduledSourceNode[] = [];
+    const timeouts: number[] = [];
 
-    // Folhas: highpass leve, volume mínimo
-    const leaves = ctx.createBufferSource();
-    leaves.buffer = buffer; leaves.loop = true;
-    const leavesFilter = ctx.createBiquadFilter();
-    leavesFilter.type = 'highpass'; leavesFilter.frequency.value = 2200;
-    const leavesGain = ctx.createGain(); leavesGain.gain.value = 0.015;
-    leaves.connect(leavesFilter).connect(leavesGain).connect(ctx.destination);
+    const makeNoise = () => {
+      const s = ctx.createBufferSource();
+      s.buffer = noiseBuf; s.loop = true; s.start();
+      sources.push(s);
+      return s;
+    };
 
-    wind.start(); leaves.start(); lfo.start();
-    nodesRef.current = [wind, leaves, lfo, windFilter, leavesFilter, windGain, leavesGain, lfoGain];
-    setOn(true);
+    // === Camada base: vento contínuo (sempre presente, muito baixo) ===
+    const wind = makeNoise();
+    const wf = ctx.createBiquadFilter();
+    wf.type = 'lowpass'; wf.frequency.value = 360; wf.Q.value = 0.6;
+    const wg = ctx.createGain(); wg.gain.value = 0.05;
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.07;
+    const lfoG = ctx.createGain(); lfoG.gain.value = 160;
+    lfo.connect(lfoG).connect(wf.frequency); lfo.start();
+    sources.push(lfo);
+    wind.connect(wf).connect(wg).connect(master);
+
+    // === Camadas alternantes (cada uma com seu próprio gain controlável) ===
+    // 1. Chuva leve
+    const rain = makeNoise();
+    const rf = ctx.createBiquadFilter();
+    rf.type = 'bandpass'; rf.frequency.value = 2400; rf.Q.value = 0.4;
+    const rg = ctx.createGain(); rg.gain.value = 0;
+    rain.connect(rf).connect(rg).connect(master);
+
+    // 2. Folhas (highpass + LFO no gain para "rajadas")
+    const leaves = makeNoise();
+    const lf = ctx.createBiquadFilter();
+    lf.type = 'highpass'; lf.frequency.value = 2000;
+    const lg = ctx.createGain(); lg.gain.value = 0;
+    const leavesLfo = ctx.createOscillator(); leavesLfo.frequency.value = 0.15;
+    const leavesLfoG = ctx.createGain(); leavesLfoG.gain.value = 0.01;
+    leavesLfo.connect(leavesLfoG).connect(lg.gain); leavesLfo.start();
+    sources.push(leavesLfo);
+    leaves.connect(lf).connect(lg).connect(master);
+
+    // 3. Textura de floresta (lowpass médio, muito sutil)
+    const forest = makeNoise();
+    const ff = ctx.createBiquadFilter();
+    ff.type = 'lowpass'; ff.frequency.value = 800;
+    const fg = ctx.createGain(); fg.gain.value = 0;
+    forest.connect(ff).connect(fg).connect(master);
+
+    // 4. Fogueira — gain controla "presença"; estalos agendados separadamente
+    const fireRumble = makeNoise();
+    const frf = ctx.createBiquadFilter();
+    frf.type = 'lowpass'; frf.frequency.value = 220; frf.Q.value = 0.4;
+    const fireGain = ctx.createGain(); fireGain.gain.value = 0;
+    fireRumble.connect(frf).connect(fireGain).connect(master);
+
+    // Gerador de estalos de fogueira (curtos pops filtrados)
+    const scheduleCrackle = () => {
+      const ctxRefVal = ctxRef.current;
+      if (!ctxRefVal) return;
+      if (fireGain.gain.value > 0.005) {
+        const t = ctxRefVal.currentTime;
+        const crackBuf = ctxRefVal.createBuffer(1, ctxRefVal.sampleRate * 0.08, ctxRefVal.sampleRate);
+        const cd = crackBuf.getChannelData(0);
+        for (let i = 0; i < cd.length; i++) {
+          const env = Math.exp(-i / (ctxRefVal.sampleRate * 0.015));
+          cd[i] = (Math.random() * 2 - 1) * env;
+        }
+        const c = ctxRefVal.createBufferSource(); c.buffer = crackBuf;
+        const cf = ctxRefVal.createBiquadFilter(); cf.type = 'bandpass'; cf.frequency.value = 1200 + Math.random() * 1500; cf.Q.value = 2;
+        const cg = ctxRefVal.createGain(); cg.gain.value = 0.06 * fireGain.gain.value * 8;
+        c.connect(cf).connect(cg).connect(master);
+        c.start(t);
+        c.stop(t + 0.1);
+      }
+      const next = 200 + Math.random() * 1400;
+      timeouts.push(window.setTimeout(scheduleCrackle, next));
+    };
+    scheduleCrackle();
+
+    // 5. Pássaros distantes — pequenos chirps (sine sweeps) agendados
+    const scheduleBird = () => {
+      const ctxRefVal = ctxRef.current;
+      if (!ctxRefVal) return;
+      // só toca se a camada birds estiver "ativa" (usamos birdsGain abaixo)
+      if (birdsGain.gain.value > 0.01) {
+        const t = ctxRefVal.currentTime;
+        const osc = ctxRefVal.createOscillator(); osc.type = 'sine';
+        const base = 1800 + Math.random() * 1400;
+        osc.frequency.setValueAtTime(base, t);
+        osc.frequency.exponentialRampToValueAtTime(base * (1 + Math.random() * 0.4), t + 0.18);
+        const og = ctxRefVal.createGain();
+        og.gain.setValueAtTime(0, t);
+        og.gain.linearRampToValueAtTime(0.04 * birdsGain.gain.value * 10, t + 0.02);
+        og.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+        osc.connect(og).connect(master);
+        osc.start(t); osc.stop(t + 0.25);
+        // ocasionalmente um segundo chirp
+        if (Math.random() < 0.45) {
+          const t2 = t + 0.28;
+          const osc2 = ctxRefVal.createOscillator(); osc2.type = 'sine';
+          osc2.frequency.setValueAtTime(base * 0.95, t2);
+          osc2.frequency.exponentialRampToValueAtTime(base * 1.2, t2 + 0.15);
+          const og2 = ctxRefVal.createGain();
+          og2.gain.setValueAtTime(0, t2);
+          og2.gain.linearRampToValueAtTime(0.03 * birdsGain.gain.value * 10, t2 + 0.02);
+          og2.gain.exponentialRampToValueAtTime(0.0001, t2 + 0.18);
+          osc2.connect(og2).connect(master);
+          osc2.start(t2); osc2.stop(t2 + 0.2);
+        }
+      }
+      const next = 3000 + Math.random() * 7000;
+      timeouts.push(window.setTimeout(scheduleBird, next));
+    };
+    const birdsGain = ctx.createGain(); birdsGain.gain.value = 0; // gain "virtual" para controlar densidade
+    scheduleBird();
+
+    // === Orquestração: alternância lenta de camadas ===
+    const layers = [
+      { gain: rg, target: 0.018, name: 'rain' },
+      { gain: lg, target: 0.012, name: 'leaves' },
+      { gain: fg, target: 0.025, name: 'forest' },
+      { gain: fireGain, target: 0.015, name: 'fire' },
+      { gain: birdsGain, target: 0.08, name: 'birds' },
+    ];
+    let active = new Set<number>();
+
+    const rotate = () => {
+      const ctxRefVal = ctxRef.current;
+      if (!ctxRefVal) return;
+      const t = ctxRefVal.currentTime;
+      // escolher 2 camadas ativas aleatoriamente
+      const next = new Set<number>();
+      while (next.size < 2) next.add(Math.floor(Math.random() * layers.length));
+      layers.forEach((L, i) => {
+        const target = next.has(i) ? L.target : 0;
+        try {
+          L.gain.gain.cancelScheduledValues(t);
+          L.gain.gain.setValueAtTime(L.gain.gain.value, t);
+          L.gain.gain.linearRampToValueAtTime(target, t + 8); // fade longo
+        } catch {}
+      });
+      active = next;
+      timeouts.push(window.setTimeout(rotate, 22000 + Math.random() * 16000));
+    };
+    // primeira camada após pequeno delay
+    timeouts.push(window.setTimeout(rotate, 1500));
+
+    cleanupRef.current = () => {
+      timeouts.forEach(t => clearTimeout(t));
+      sources.forEach(s => { try { s.stop(); } catch {} try { (s as any).disconnect?.(); } catch {} });
+    };
   };
+
+  const toggle = () => { if (on) stop(); else { start(); setOn(true); } };
 
   return (
     <button
       onClick={toggle}
-      className="fixed z-[100] top-20 right-4 md:top-24 md:right-6 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-background/80 backdrop-blur-md border border-gold/40 text-[11px] uppercase tracking-[0.25em] text-gold/90 hover:text-gold hover:border-gold/70 hover:bg-background/90 transition-colors shadow-lg"
+      className="fixed z-[100] bottom-4 right-4 md:bottom-6 md:right-6 inline-flex items-center justify-center w-9 h-9 rounded-full bg-background/50 backdrop-blur-md border border-gold/20 text-gold/60 hover:text-gold hover:border-gold/50 hover:bg-background/70 transition-colors"
       aria-label={on ? 'Desativar ambiência' : 'Ativar ambiência'}
       title={on ? 'Ambiência ligada' : 'Ambiência desligada'}
     >
-      {on ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-      <span>Ambiência</span>
+      {on ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
     </button>
   );
 }
