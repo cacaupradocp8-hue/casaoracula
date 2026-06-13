@@ -273,43 +273,88 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                   <h2 className="text-3xl xs:text-4xl md:text-5xl text-white italic leading-tight px-4 lg:px-0 break-words">
                     {TRAVESSIA_ETAPAS[currentIdx].titulo}
                   </h2>
-                  <p className="text-white/65 text-lg md:text-xl italic leading-relaxed max-w-xl mx-auto lg:mx-0 font-light">
-                    {TRAVESSIA_ETAPAS[currentIdx].intro}
-                  </p>
                 </div>
               </aside>
 
-              <section className="w-full space-y-2 lg:border-l lg:border-gold/10 lg:pl-10">
-                <p className="text-white/70 italic text-base md:text-lg mb-8 text-center lg:text-left font-light">
-                  Durante esta travessia, qual destas cenas parece mais familiar?
-                </p>
-                {rastroAtual ? (
-                  <motion.div
-                    key={rastroAtual}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="py-16 text-center space-y-6"
-                  >
-                    <p className="text-white/80 italic text-xl md:text-2xl leading-relaxed font-light">{rastroAtual}</p>
-                    <div className="h-px w-16 bg-gold/30 mx-auto" />
-                    <p className="text-gold/50 italic text-sm tracking-[0.25em] uppercase">A trilha continua</p>
-                  </motion.div>
-                ) : (
-                  <div className="divide-y divide-white/5">
-                    {TRAVESSIA_ETAPAS[currentIdx].caminhos.map((caminho, i) => (
+              <section className="w-full space-y-2 lg:border-l lg:border-gold/10 lg:pl-10 min-h-[40vh]">
+                <AnimatePresence mode="wait">
+                  {rastroAtual ? (
+                    <motion.div
+                      key={`rastro-${currentIdx}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, transition: { duration: 0.8 } }}
+                      transition={{ duration: 1.2, ease: 'easeOut' }}
+                      className="py-20 text-center space-y-6"
+                    >
+                      <p className="text-white/80 italic text-xl md:text-2xl leading-relaxed font-light">{rastroAtual}</p>
+                      <div className="h-px w-16 bg-gold/30 mx-auto" />
+                    </motion.div>
+                  ) : fase === 'cena' ? (
+                    <motion.div
+                      key={`cena-${currentIdx}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                      className="py-10 space-y-10"
+                    >
+                      <p className="text-white/75 italic text-xl md:text-2xl leading-relaxed font-light max-w-2xl">
+                        {TRAVESSIA_ETAPAS[currentIdx].intro}
+                      </p>
                       <button
-                        key={i}
-                        onClick={() => handleSelectCaminho(caminho)}
-                        className="group w-full text-left py-7 md:py-9 px-2 hover:bg-gold/[0.02] transition-colors duration-700"
+                        onClick={() => setFase('observacao')}
+                        className="text-gold/70 hover:text-gold tracking-[0.3em] uppercase text-xs font-bold border-b border-gold/20 hover:border-gold/60 pb-2 transition-all"
                       >
-                        <p className="text-white/70 group-hover:text-white italic text-lg md:text-xl leading-relaxed font-light transition-colors max-w-xl">
-                          {caminho.label}
-                        </p>
+                        Continuar
                       </button>
-                    ))}
-                  </div>
-                )}
+                    </motion.div>
+                  ) : fase === 'observacao' ? (
+                    <motion.div
+                      key={`obs-${currentIdx}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                      className="py-10 space-y-10"
+                    >
+                      <p className="text-white/70 italic text-lg md:text-xl leading-relaxed font-light max-w-2xl">
+                        {TRAVESSIA_ETAPAS[currentIdx].pergunta}
+                      </p>
+                      <button
+                        onClick={() => setFase('caminhos')}
+                        className="text-gold/70 hover:text-gold tracking-[0.3em] uppercase text-xs font-bold border-b border-gold/20 hover:border-gold/60 pb-2 transition-all"
+                      >
+                        Continuar Observação
+                      </button>
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key={`caminhos-${currentIdx}`}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 1, ease: 'easeOut' }}
+                    >
+                      <p className="text-white/60 italic text-base md:text-lg mb-8 font-light">
+                        Qual destes caminhos parece mais familiar?
+                      </p>
+                      <div className="divide-y divide-white/5">
+                        {TRAVESSIA_ETAPAS[currentIdx].caminhos.map((caminho, i) => (
+                          <button
+                            key={i}
+                            onClick={() => handleSelectCaminho(caminho)}
+                            className="group w-full text-left py-7 md:py-9 px-2 hover:bg-gold/[0.02] transition-colors duration-700"
+                          >
+                            <p className="text-white/70 group-hover:text-white italic text-lg md:text-xl leading-relaxed font-light transition-colors max-w-xl">
+                              {caminho.label}
+                            </p>
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </section>
             </div>
           </motion.div>
