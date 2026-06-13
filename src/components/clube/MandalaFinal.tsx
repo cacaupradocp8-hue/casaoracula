@@ -154,7 +154,7 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[850px] aspect-square mx-auto bg-[#020202] rounded-full shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden">
+      <div className="relative w-full max-w-[850px] aspect-[575/525] mx-auto bg-[#020202] shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden rounded-3xl">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
