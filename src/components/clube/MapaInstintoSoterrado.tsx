@@ -35,7 +35,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'corpo',
     titulo: 'Jardim do Corpo',
-    intro: 'O corpo costuma falar antes da mente. Nem sempre através da dor. Às vezes através do cansaço, da irritação, da falta de entusiasmo. Ou daquela sensação persistente de que algo pede atenção.',
+    intro: 'São 22h47. Você prometeu a si mesma que hoje iria descansar. Mas ainda existem mensagens para responder. Ainda existem decisões pendentes. O corpo pede pausa. A mente responde: "mais um pouco."',
     pergunta: 'Quando estes sinais aparecem, o que costuma acontecer?',
     rastro: 'O território do Corpo respondeu.',
     caminhos: [
@@ -48,7 +48,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'intuicao',
     titulo: 'Clareira da Escuta',
-    intro: 'Existem percepções que chegam antes do pensamento. Uma certeza curta. Um aviso silencioso. Algo que sabe, mesmo sem explicação.',
+    intro: 'Você está numa reunião marcada há semanas. A proposta é boa no papel — números fecham, prazos cabem, a pessoa do outro lado sorri no tom certo. Mas há algo no jeito como ela desvia o olhar quando você pergunta sobre prazos que faz o seu estômago apertar de leve. Quando desliga, abre a planilha de novo. Tudo continua fazendo sentido. Só você é que já sabe que não vai aceitar.',
     pergunta: 'Quando estas percepções aparecem, o que costuma acontecer?',
     rastro: 'Um sinal tornou-se visível.',
     caminhos: [
@@ -61,7 +61,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'desejo',
     titulo: 'Fogueira do Desejo',
-    intro: 'Existem desejos que pedem passagem. Nem todos chegam como grandes sonhos. Alguns chegam apenas como um incómodo silencioso. Uma vontade recorrente. Uma pergunta que continua voltando.',
+    intro: 'É uma terça à tarde. Entre uma tarefa e outra, surge de novo aquela ideia. A mesma que voltou semana passada. E no mês anterior. Você sorri por dentro, anota num canto e volta para a lista do dia. O desejo não vai embora. Apenas espera.',
     pergunta: 'Quando um desejo insiste em aparecer, o que costuma acontecer?',
     rastro: 'Uma brasa voltou a acender-se no território do Desejo.',
     caminhos: [
@@ -74,7 +74,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'limites',
     titulo: 'Vale dos Limites',
-    intro: 'Há lugares onde termina o seu espaço e começa o ruído alheio. Pedidos, expectativas, urgências de outros costumam atravessar essa fronteira sem aviso.',
+    intro: 'É domingo à noite. O telefone toca. Você sabe quem é antes de olhar. Sabe também o que será pedido. E sente, no ombro, aquele peso familiar de quando a resposta "sim" sai antes da pergunta terminar.',
     pergunta: 'Quando esta fronteira é atravessada, o que costuma acontecer?',
     rastro: 'Os rastros permanecem difíceis de encontrar junto aos Limites.',
     caminhos: [
@@ -87,7 +87,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'criatividade',
     titulo: 'Trilha da Criatividade',
-    intro: 'Há ideias, gestos, pequenas formas que pedem para existir. Nem todas têm utilidade imediata. Algumas chegam só como um convite para brincar com o que está à mão.',
+    intro: 'São 6h47 da manhã. Você ainda está de pijama, esperando a água do café ferver. Sem aviso, vem a frase inteira — o título de um workshop, a estrutura de um encontro, o nome de algo que andava rondando há meses sem forma. Você procura um papel. Anota no verso de um envelope. Depois o dia começa: mensagens, agenda, filha pedindo a mochila. O envelope fica ali, em cima da bancada, esperando.',
     pergunta: 'Quando este convite aparece, o que costuma acontecer?',
     rastro: 'Algo continua tentando ganhar forma.',
     caminhos: [
@@ -100,7 +100,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'vitalidade',
     titulo: 'Montanha da Vitalidade',
-    intro: 'Há um fôlego que sustenta os dias. Ele se renova com descanso, água, ritmo próprio. Quando é ignorado por muito tempo, começa a pedir atenção de outras formas.',
+    intro: 'É quarta-feira. Você tem três atendimentos pela manhã, uma reunião à tarde, e à noite ainda precisa responder o orçamento que ficou pendente desde segunda. Toma o segundo café às 10h. Pula o almoço, come uma fruta entre uma sessão e outra. Quando finalmente senta no sofá, às 22h, abre o telefone para "descansar um pouco" — e duas horas se passam sem que você lembre de uma única coisa que viu na tela.',
     pergunta: 'Quando o fôlego começa a faltar, o que costuma acontecer?',
     rastro: 'O território começou a falar.',
     caminhos: [
