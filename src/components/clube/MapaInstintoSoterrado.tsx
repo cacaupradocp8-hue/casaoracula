@@ -61,7 +61,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'desejo',
     titulo: 'Fogueira do Desejo',
-    intro: 'Existem desejos que pedem passagem. Nem todos chegam como grandes sonhos. Alguns chegam apenas como um incómodo silencioso. Uma vontade recorrente. Uma pergunta que continua voltando.',
+    intro: 'É uma terça à tarde. Entre uma tarefa e outra, surge de novo aquela ideia. A mesma que voltou semana passada. E no mês anterior. Você sorri por dentro, anota num canto e volta para a lista do dia. O desejo não vai embora. Apenas espera.',
     pergunta: 'Quando um desejo insiste em aparecer, o que costuma acontecer?',
     rastro: 'Uma brasa voltou a acender-se no território do Desejo.',
     caminhos: [
