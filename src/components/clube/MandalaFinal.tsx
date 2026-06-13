@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import mandalaArte from '@/assets/mandala-instinto.png';
 
@@ -126,7 +126,6 @@ const ESTADOS_STYLE = {
 };
 
 export function MandalaFinal({ estados }: Props) {
-  const [selectedTerritorio, setSelectedTerritorio] = useState<Territorio | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -154,12 +153,16 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[850px] aspect-[575/525] mx-auto bg-[#020202] shadow-[0_0_120px_rgba(0,0,0,1)] border border-white/5 overflow-hidden rounded-3xl">
+      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-background/80 shadow-[0_0_90px_hsl(var(--gold)/0.18),0_0_180px_rgba(0,0,0,0.95)] border border-gold/15 overflow-hidden rounded-[2rem]">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
-          className="absolute inset-0 z-0 transition-all duration-1000 opacity-70"
-          style={{ background: spotlightBackground }}
+          className="absolute inset-0 z-0 transition-all duration-1000 opacity-100"
+          style={{
+            background: spotlightBackground !== 'none'
+              ? spotlightBackground
+              : 'radial-gradient(circle at 50% 48%, hsl(var(--gold) / 0.16) 0%, transparent 42%)'
+          }}
         />
 
         {/* 2. Camada da Imagem Real e Oficial (Centro absoluto) */}
@@ -169,17 +172,17 @@ export function MandalaFinal({ estados }: Props) {
             alt="Mandala do Instinto Soterrado" 
             className={cn(
               "w-full h-full object-contain transition-all duration-1000",
-              hasAceso ? "brightness-110 contrast-105" : "brightness-50 contrast-75 grayscale-[0.2]"
+              hasAceso ? "brightness-[1.15] contrast-[1.1] saturate-[1.25]" : "brightness-100 contrast-[1.05] saturate-[1.1]"
             )}
           />
           
           {/* Overlay de Sombra sobre a imagem para destacar os acesos */}
           <div 
-            className="absolute inset-0 mix-blend-multiply opacity-60 rounded-full"
+            className="absolute inset-0 mix-blend-multiply opacity-25 rounded-full"
             style={{ 
               background: spotlightBackground !== 'none' 
-                ? `radial-gradient(circle, transparent 40%, #000 90%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
-                : `radial-gradient(circle, transparent 40%, #000 90%)`
+                ? `radial-gradient(circle, transparent 58%, #000 96%), ${spotlightBackground.replace(/0.4/g, '0.0')}`
+                : `radial-gradient(circle, transparent 62%, #000 98%)`
             }}
           />
         </div>
@@ -196,10 +199,9 @@ export function MandalaFinal({ estados }: Props) {
                 className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
                 style={{ top: t.pos.top, left: t.pos.left }}
               >
-                {/* Hotspot de Interação (Completamente Invisível) */}
-                <button
-                  onClick={() => setSelectedTerritorio(t)}
-                  className="w-full h-full rounded-full z-50 cursor-pointer focus:outline-none relative group"
+                {/* Marcador discreto sobre a arte oficial, sem popup bloqueante */}
+                <div
+                  className="w-full h-full rounded-full z-50 relative pointer-events-none"
                   aria-label={t.nome}
                 />
 
@@ -243,45 +245,6 @@ export function MandalaFinal({ estados }: Props) {
           })}
         </div>
 
-        {/* 4. Modal de Narrativa (High-End) */}
-        <AnimatePresence>
-          {selectedTerritorio && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="absolute z-[100] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[320px] bg-[#050505]/90 backdrop-blur-3xl border border-gold/30 p-8 rounded-3xl shadow-[0_0_80px_rgba(0,0,0,1)] text-center"
-            >
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h4 className="text-gold font-serif text-3xl italic tracking-widest leading-none">
-                    {selectedTerritorio.nome}
-                  </h4>
-                  <div className="flex items-center justify-center gap-2">
-                    <div className={cn("w-1.5 h-1.5 rounded-full shadow-[0_0_8px_currentColor]", ESTADOS_STYLE[estados[selectedTerritorio.id] || 'Soterrado'].dot.replace('bg-', 'text-'))} />
-                    <span className="text-[10px] text-white/40 tracking-[0.3em] font-bold uppercase italic">
-                      {estados[selectedTerritorio.id] || 'Soterrado'}
-                    </span>
-                  </div>
-                </div>
-                
-                <div className="h-[1px] w-12 bg-gold/20 mx-auto" />
-
-                <p className="text-white/80 font-serif italic text-lg leading-relaxed px-2">
-                  "{selectedTerritorio.narrativa[estados[selectedTerritorio.id] || 'Soterrado']}"
-                </p>
-
-                <button 
-                  onClick={() => setSelectedTerritorio(null)}
-                  className="group relative inline-flex items-center justify-center px-8 py-3 overflow-hidden font-serif italic text-gold/60 transition-all duration-300 rounded-full border border-gold/10 hover:border-gold/30 hover:text-gold"
-                >
-                  <span className="relative z-10 text-[10px] uppercase tracking-[0.4em]">Fechar rastro</span>
-                  <div className="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
 
       {/* Legenda de Estados (Minimalista) */}

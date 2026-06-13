@@ -205,7 +205,10 @@ export default function ClubeRotaPremium() {
 
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col">
+        <div className={cn(
+          "relative z-10 mx-auto px-4 pt-12 pb-32 min-h-screen flex flex-col",
+          isMapaInstintoSoterrado && currentStep === 7 ? "max-w-7xl" : "max-w-4xl"
+        )}>
           <EstacaoProgressHeader 
             currentStep={currentStep}
             totalSteps={steps.length}
@@ -219,7 +222,7 @@ export default function ClubeRotaPremium() {
           />
 
           <AnimatePresence>
-            {currentStep > 0 && isInitialLoading === false && (
+            {currentStep > 0 && isInitialLoading === false && !(isMapaInstintoSoterrado && currentStep === 7) && (
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -405,7 +408,7 @@ export default function ClubeRotaPremium() {
                 )}
 
                 {currentStep === 7 && (isMapaInstintoSoterrado ? (
-                  <div className="w-full min-h-[600px] flex items-center justify-center">
+                  <div className="w-full flex items-center justify-center">
                     <MapaInstintoSoterrado 
                       estacaoId={estacao.id}
                       rotaId={estacao.clube_rotas.id}
