@@ -91,6 +91,7 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
   const [currentIdx, setCurrentIdx] = useState(0);
   const [respostas, setRespostas] = useState<Record<string, number>>({});
   const [estados, setEstados] = useState<Record<string, Estado>>({});
+  const [respostaLoba, setRespostaLoba] = useState<string | null>(null);
   const mandalaEstados = TERRITORIOS.reduce<Record<string, Estado>>((acc, territorio) => {
     acc[territorio.id] = estados[territorio.id] || (territorio.id === TRAVESSIA_ETAPAS[currentIdx]?.id ? 'Oscilante' : 'Soterrado');
     return acc;
@@ -113,20 +114,24 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
     }
   });
 
-  const handleSelectCaminho = (score: number, estado: Estado) => {
+  const handleSelectCaminho = (score: number, estado: Estado, resposta: string) => {
     const id = TRAVESSIA_ETAPAS[currentIdx].id;
     const novasRespostas = { ...respostas, [id]: score };
     const novosEstados = { ...estados, [id]: estado };
-    
+
     setRespostas(novasRespostas);
     setEstados(novosEstados);
+    setRespostaLoba(resposta);
 
-    if (currentIdx < TRAVESSIA_ETAPAS.length - 1) {
-      setCurrentIdx(prev => prev + 1);
-    } else {
-      saveMutation.mutate(novosEstados);
-      setView('resultado');
-    }
+    window.setTimeout(() => {
+      setRespostaLoba(null);
+      if (currentIdx < TRAVESSIA_ETAPAS.length - 1) {
+        setCurrentIdx(prev => prev + 1);
+      } else {
+        saveMutation.mutate(novosEstados);
+        setView('resultado');
+      }
+    }, 2600);
   };
 
   const acesoTerritorios = TERRITORIOS.filter(t => estados[t.id] === 'Aceso');
