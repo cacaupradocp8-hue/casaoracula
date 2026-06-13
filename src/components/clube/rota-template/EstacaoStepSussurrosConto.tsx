@@ -312,12 +312,12 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
             animate={{ scale: 1, opacity: 1 }}
             className="text-center space-y-12 py-10"
           >
-            <div className="space-y-6">
-              <div className="w-20 h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-8">
-                <ScrollText className="w-10 h-10 text-gold" />
+            <div className="space-y-6 px-2">
+              <div className="w-16 h-16 md:w-20 md:h-20 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center mx-auto mb-6 md:mb-8">
+                <ScrollText className="w-8 h-8 md:w-10 md:h-10 text-gold" />
               </div>
-              <span className="text-[10px] text-gold uppercase tracking-[0.4em] font-bold">Sussurro da Guardiã</span>
-              <h2 className="text-3xl md:text-5xl font-serif text-white italic leading-tight max-w-2xl mx-auto">
+              <span className="text-[10px] text-gold uppercase tracking-[0.3em] sm:tracking-[0.4em] font-bold">Sussurro da Guardiã</span>
+              <h2 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-serif text-white italic leading-tight max-w-2xl mx-auto break-words">
                 "{contoData.sussurroGuardia}"
               </h2>
             </div>
@@ -326,7 +326,7 @@ export const EstacaoStepSussurrosConto: React.FC<SussurrosContoProps> = ({
               <Button 
                 onClick={handleFinalize}
                 disabled={isSaving}
-                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-16 h-20 rounded-full uppercase tracking-[0.2em] text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105"
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-8 md:px-16 h-14 md:h-20 rounded-full uppercase tracking-[0.15em] md:tracking-[0.2em] text-[10px] md:text-xs transition-all shadow-2xl shadow-gold/20 hover:scale-105 w-full md:w-auto"
               >
                 {isSaving ? (
                   <Loader2 className="w-5 h-5 animate-spin mr-3" />
