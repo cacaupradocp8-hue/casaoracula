@@ -35,7 +35,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'corpo',
     titulo: 'Jardim do Corpo',
-    intro: 'O corpo costuma falar antes da mente. Nem sempre através da dor. Às vezes através do cansaço, da irritação, da falta de entusiasmo. Ou daquela sensação persistente de que algo pede atenção.',
+    intro: 'São 22h47. Você prometeu a si mesma que hoje iria descansar. Mas ainda existem mensagens para responder. Ainda existem decisões pendentes. O corpo pede pausa. A mente responde: "mais um pouco."',
     pergunta: 'Quando estes sinais aparecem, o que costuma acontecer?',
     rastro: 'O território do Corpo respondeu.',
     caminhos: [
