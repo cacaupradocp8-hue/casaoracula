@@ -127,12 +127,14 @@ const ESTADOS_STYLE = {
 
 export function MandalaFinal({ estados }: Props) {
   const [mounted, setMounted] = useState(false);
+  const [activeTerritorioId, setActiveTerritorioId] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const hasAceso = Object.values(estados).some(e => e === 'Aceso');
+  const activeTerritorio = activeTerritorioId ? TERRITORIOS.find(t => t.id === activeTerritorioId) : null;
 
   const spotlightBackground = useMemo(() => {
     const spotlights = TERRITORIOS.map(t => {
@@ -153,7 +155,7 @@ export function MandalaFinal({ estados }: Props) {
     )}>
       
       {/* Container Principal */}
-      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-gradient-to-b from-[#1a1208]/60 via-[#2a1a08]/40 to-[#0d0904]/70 shadow-[0_0_120px_hsl(var(--gold)/0.35),0_0_240px_hsl(var(--gold)/0.15)] border border-gold/30 overflow-hidden rounded-[2rem]">
+      <div className="relative w-full max-w-[900px] aspect-[575/525] mx-auto bg-gradient-to-b from-[#1a1208]/60 via-[#2a1a08]/40 to-[#0d0904]/70 shadow-[0_0_120px_hsl(var(--gold)/0.35),0_0_240px_hsl(var(--gold)/0.15)] border border-gold/30 overflow-visible rounded-[2rem]">
         
         {/* 1. Camada de Fundo (Spotlights) */}
         <div 
@@ -166,7 +168,7 @@ export function MandalaFinal({ estados }: Props) {
         />
 
         {/* 2. Camada da Imagem Real e Oficial (Centro absoluto) */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-[5%] z-10 flex items-center justify-center pointer-events-none">
           <img 
             src={mandalaArte} 
             alt="Mandala do Instinto Soterrado" 
@@ -180,16 +182,17 @@ export function MandalaFinal({ estados }: Props) {
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{ 
-              background: `radial-gradient(circle, transparent 70%, rgba(0,0,0,0.5) 100%)`
+              background: `radial-gradient(circle, transparent 78%, rgba(0,0,0,0.28) 100%)`
             }}
           />
         </div>
 
         {/* 3. Camada de Elementos Interativos (UI Invisível sobre a Arte) */}
-        <div className="absolute inset-0 z-30">
+        <div className="absolute inset-[5%] z-30">
           {TERRITORIOS.map((t) => {
             const estado = estados[t.id] || 'Soterrado';
             const style = ESTADOS_STYLE[estado];
+            const isActive = activeTerritorioId === t.id;
             
             return (
               <div 
@@ -197,11 +200,27 @@ export function MandalaFinal({ estados }: Props) {
                 className="absolute -translate-x-1/2 -translate-y-1/2 flex items-center justify-center w-[18%] h-[18%]"
                 style={{ top: t.pos.top, left: t.pos.left }}
               >
-                {/* Marcador discreto sobre a arte oficial, sem popup bloqueante */}
-                <div
-                  className="w-full h-full rounded-full z-50 relative pointer-events-none"
+                {/* Marcador discreto e interativo sobre a arte oficial, sem popup bloqueante */}
+                <button
+                  type="button"
+                  onMouseEnter={() => setActiveTerritorioId(t.id)}
+                  onFocus={() => setActiveTerritorioId(t.id)}
+                  onClick={() => setActiveTerritorioId(prev => prev === t.id ? null : t.id)}
+                  onMouseLeave={() => setActiveTerritorioId(prev => prev === t.id ? null : prev)}
+                  className={cn(
+                    "w-full h-full rounded-full z-50 relative cursor-pointer outline-none transition-all duration-500",
+                    "border border-gold/0 hover:border-gold/30 focus-visible:border-gold/60",
+                    isActive && "border-gold/45 shadow-[0_0_34px_hsl(var(--gold)/0.22)]"
+                  )}
                   aria-label={t.nome}
-                />
+                  title={t.nome}
+                >
+                  <span className={cn(
+                    "absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/25 transition-all duration-500",
+                    (estado === 'Aceso' || isActive) && "h-3 w-3 bg-gold/70 shadow-[0_0_18px_hsl(var(--gold)/0.55)]",
+                    estado === 'Exausto' && !isActive && "bg-white/10"
+                  )} />
+                </button>
 
                 {/* Aura de Luz Orgânica (Apenas Aceso ou Oscilante) */}
                 {(estado === 'Aceso' || estado === 'Oscilante') && (
@@ -256,6 +275,16 @@ export function MandalaFinal({ estados }: Props) {
           </div>
         ))}
       </div>
+
+      {activeTerritorio && (
+        <div className="mt-5 min-h-10 text-center z-50">
+          <span className="text-gold/80 italic text-lg">{activeTerritorio.nome}</span>
+          <span className="mx-3 text-white/15">—</span>
+          <span className="text-white/40 text-[10px] uppercase tracking-[0.32em] font-bold">
+            {ESTADOS_STYLE[estados[activeTerritorio.id] || 'Soterrado'].label}
+          </span>
+        </div>
+      )}
     </div>
   );
 }
