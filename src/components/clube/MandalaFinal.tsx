@@ -15,18 +15,18 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'intuicao', 
     nome: 'Intuição', 
-    pos: { top: '10.5%', left: '50.1%' },
+    pos: { top: '13%', left: '50%' },
     narrativa: {
       Aceso: "A loba continua a deixar sinais através dos pressentimentos que já não podem ser ignorados.",
       Oscilante: "Há um sussurro que oscila, esperando o silêncio necessário para se tornar clareza.",
       Soterrado: "A voz interna está abafada por camadas de certezas externas que precisam ser removidas.",
-      Exausto: "O rastro da intuição está quase invisível sem o peso da exaustão mental."
+      Exausto: "O rastro da intuição está quase invisível sob o peso da exaustão mental."
     }
   },
   { 
     id: 'desejo', 
     nome: 'Desejo', 
-    pos: { top: '27.4%', left: '81.2%' },
+    pos: { top: '28%', left: '78%' },
     narrativa: {
       Aceso: "O fogo sagrado do seu querer queima com nitidez, apontando o rumo da sua satisfação.",
       Oscilante: "Uma chama que vacila entre o que você realmente quer e o que acredita que deve querer.",
@@ -37,7 +37,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'limites', 
     nome: 'Limites', 
-    pos: { top: '61.6%', left: '81.2%' },
+    pos: { top: '64%', left: '78%' },
     narrativa: {
       Aceso: "Seus contornos estão firmes e protegidos, permitindo que apenas o que é seu ocupe seu espaço.",
       Oscilante: "Suas fronteiras são porosas, por vezes firmes, por vezes cedendo ao peso do mundo.",
@@ -48,7 +48,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'corpo', 
     nome: 'Corpo', 
-    pos: { top: '78.5%', left: '50.1%' },
+    pos: { top: '79%', left: '50%' },
     narrativa: {
       Aceso: "Seu templo físico vibra com presença, sendo o mastro fiel que sustenta sua jornada.",
       Oscilante: "O corpo envia sinais intermitentes de cansaço e força, pedindo uma escuta mais atenta.",
@@ -59,7 +59,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'criatividade', 
     nome: 'Criatividade', 
-    pos: { top: '61.6%', left: '18.9%' },
+    pos: { top: '64%', left: '22%' },
     narrativa: {
       Aceso: "O fluxo da criação transborda, transformando o rastro da vida em novas formas e cores.",
       Oscilante: "Ideias surgem mas perdem o fôlego antes de ganharem corpo na realidade.",
@@ -70,7 +70,7 @@ export const TERRITORIOS: Territorio[] = [
   { 
     id: 'vitalidade', 
     nome: 'Vitalidade', 
-    pos: { top: '27.4%', left: '18.9%' },
+    pos: { top: '28%', left: '22%' },
     narrativa: {
       Aceso: "A força vital pulsa com vigor, alimentando cada passo com o entusiasmo da loba.",
       Oscilante: "A energia sobe e desce, num ritmo que ainda não encontrou seu centro de repouso.",
