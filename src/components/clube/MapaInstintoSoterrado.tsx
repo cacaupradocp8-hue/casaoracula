@@ -87,7 +87,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'criatividade',
     titulo: 'Trilha da Criatividade',
-    intro: 'Há ideias, gestos, pequenas formas que pedem para existir. Nem todas têm utilidade imediata. Algumas chegam só como um convite para brincar com o que está à mão.',
+    intro: 'São 6h47 da manhã. Você ainda está de pijama, esperando a água do café ferver. Sem aviso, vem a frase inteira — o título de um workshop, a estrutura de um encontro, o nome de algo que andava rondando há meses sem forma. Você procura um papel. Anota no verso de um envelope. Depois o dia começa: mensagens, agenda, filha pedindo a mochila. O envelope fica ali, em cima da bancada, esperando.',
     pergunta: 'Quando este convite aparece, o que costuma acontecer?',
     rastro: 'Algo continua tentando ganhar forma.',
     caminhos: [
