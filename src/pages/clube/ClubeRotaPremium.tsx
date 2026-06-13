@@ -19,6 +19,7 @@ import { EstacaoStepMissaoCampo } from '@/components/clube/rota-template/Estacao
 import { EstacaoStepOraculo } from '@/components/clube/rota-template/EstacaoStepOraculo';
 import { EstacaoStepCartografiaLoba } from '@/components/clube/rota-template/EstacaoStepCartografiaLoba';
 import { EstacaoStepFechamento } from '@/components/clube/rota-template/EstacaoStepFechamento';
+import { MapaEstacaoClareira } from '@/components/clube/rota-template/MapaEstacaoClareira';
 import { Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -286,6 +287,10 @@ export default function ClubeRotaPremium() {
                       ]
                     }}
                   />
+                )}
+
+                {currentStep === 0 && slug === 'clareira-do-chamado' && (
+                  <MapaEstacaoClareira />
                 )}
 
                 {currentStep === 1 && (
