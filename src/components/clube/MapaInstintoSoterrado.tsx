@@ -286,25 +286,30 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                   <BookOpen className="w-8 h-8 text-gold/60" />
                 </div>
               </div>
-              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 max-w-[14ch] mx-auto">
-                Mapa do Instinto Soterrado™
+              <h1 className="text-3xl xs:text-5xl md:text-6xl text-white italic tracking-tight leading-tight px-4 max-w-[16ch] mx-auto">
+                A Clareira do Chamado
               </h1>
-              <p className="text-gold/70 italic text-base md:text-lg max-w-xl mx-auto">
-                Uma cartografia dos rastros de vida que continuam tentando aparecer.
-              </p>
               <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
-              <div className="space-y-4 text-white/70 italic text-lg xl:text-xl max-w-2xl mx-auto leading-relaxed">
-                <p>Esta não é uma avaliação.</p>
-                <p>Esta não é uma definição sobre quem você é.</p>
-                <p>É apenas uma observação dos lugares onde a vida continua tentando falar.</p>
+              <div className="space-y-5 text-white/75 italic text-lg xl:text-xl max-w-2xl mx-auto leading-relaxed font-cormorant">
+                <p>Há momentos em que a vida fala mais baixo.</p>
+                <p>Não porque desapareceu.</p>
+                <p>Mas porque outras vozes ficaram altas demais.</p>
+                <p className="pt-2">Nesta travessia você não será convidada a responder quem é.</p>
+                <p>Será convidada a observar os sinais que ainda insistem em aparecer.</p>
               </div>
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 pt-4">
+                Duração aproximada · 5 a 10 minutos
+              </p>
               <button 
                 onClick={() => setView('travessia')}
                 className="group relative px-10 md:px-14 py-5 text-gold border border-gold/20 hover:border-gold/50 transition-all rounded-full overflow-hidden mt-4"
               >
                 <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
-                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Iniciar Travessia</span>
+                <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Entrar na Clareira</span>
               </button>
+              <div className="pt-6">
+                <AmbienciaClareira />
+              </div>
             </div>
           </motion.div>
         )}
