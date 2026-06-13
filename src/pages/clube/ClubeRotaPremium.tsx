@@ -75,6 +75,7 @@ export default function ClubeRotaPremium() {
           
         if (data && data.ultimo_passo !== undefined) {
           setCurrentStep(data.ultimo_passo);
+          if (data.ultimo_passo > 0) setShowResumeBanner(true);
         }
       } catch (err) {
         console.error('Erro ao carregar progresso:', err);
