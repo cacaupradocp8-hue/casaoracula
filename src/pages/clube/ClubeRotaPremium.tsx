@@ -39,6 +39,7 @@ export default function ClubeRotaPremium() {
   const { data: estacao, isLoading, error } = useEstacaoConteudo(slug || '');
   const [currentStep, setCurrentStep] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [showResumeBanner, setShowResumeBanner] = useState(false);
   const [showTransitionPortal, setShowTransitionPortal] = useState(false);
   const [showColheita, setShowColheita] = useState(false);
 
