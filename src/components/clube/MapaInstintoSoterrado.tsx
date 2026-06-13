@@ -293,15 +293,13 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 A Clareira do Chamado
               </h1>
               <div className="h-px w-24 bg-gold/30 mx-auto my-8" />
-              <div className="space-y-5 text-white/75 italic text-lg xl:text-xl max-w-2xl mx-auto leading-relaxed font-cormorant">
-                <p>Há momentos em que a vida fala mais baixo.</p>
-                <p>Não porque desapareceu.</p>
-                <p>Mas porque outras vozes ficaram altas demais.</p>
-                <p className="pt-2">Nesta travessia você não será convidada a responder quem é.</p>
-                <p>Será convidada a observar os sinais que ainda insistem em aparecer.</p>
+              <div className="space-y-4 text-white/75 italic text-base md:text-lg xl:text-xl max-w-xl mx-auto leading-relaxed font-cormorant">
+                <p>A vida nem sempre chama alto.</p>
+                <p>Às vezes aparece como cansaço, inquietação ou desejo pequeno demais para ser explicado.</p>
+                <p>Nesta travessia, observe os sinais que ainda insistem em aparecer.</p>
               </div>
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 pt-4">
-                Duração aproximada · 5 a 10 minutos
+              <p className="text-[10px] uppercase tracking-[0.4em] text-white/30 pt-2">
+                Duração · 5 a 10 minutos
               </p>
               <button 
                 onClick={() => setView('travessia')}
@@ -310,12 +308,10 @@ export function MapaInstintoSoterrado({ estacaoId, rotaId, onNext }: MapaInstint
                 <div className="absolute inset-0 bg-gold/5 group-hover:bg-gold/10 transition-colors" />
                 <span className="relative z-10 tracking-[0.3em] uppercase text-xs font-bold">Entrar na Clareira</span>
               </button>
-              <div className="pt-6">
-                <AmbienciaClareira />
-              </div>
             </div>
           </motion.div>
         )}
+
 
         {view === 'travessia' && (
           <motion.div 
