@@ -94,6 +94,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
       setReflexaoOficio('');
       setSimbolo('');
       setIntensidade('Moderada');
+      setPrimeiraImpressaoTipo('');
+      setPrimeiraImpressaoTexto('');
+      setAto(1);
     }
   }, [activeObra?.id]);
 
