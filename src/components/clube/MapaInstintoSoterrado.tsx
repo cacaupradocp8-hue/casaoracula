@@ -48,7 +48,7 @@ const TRAVESSIA_ETAPAS: Territorio[] = [
   {
     id: 'intuicao',
     titulo: 'Clareira da Escuta',
-    intro: 'Existem percepções que chegam antes do pensamento. Uma certeza curta. Um aviso silencioso. Algo que sabe, mesmo sem explicação.',
+    intro: 'Você está numa reunião marcada há semanas. A proposta é boa no papel — números fecham, prazos cabem, a pessoa do outro lado sorri no tom certo. Mas há algo no jeito como ela desvia o olhar quando você pergunta sobre prazos que faz o seu estômago apertar de leve. Quando desliga, abre a planilha de novo. Tudo continua fazendo sentido. Só você é que já sabe que não vai aceitar.',
     pergunta: 'Quando estas percepções aparecem, o que costuma acontecer?',
     rastro: 'Um sinal tornou-se visível.',
     caminhos: [
