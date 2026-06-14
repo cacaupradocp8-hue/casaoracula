@@ -59,6 +59,7 @@ interface CamaraCaso {
   tema_emocional: string | null;
   ativo: boolean;
   ciclo_id: string | null;
+  categoria: string | null;
   created_at: string;
 }
 
