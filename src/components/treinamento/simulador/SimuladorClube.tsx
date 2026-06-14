@@ -162,6 +162,20 @@ export function SimuladorClube({ caso, onExit }: Props) {
                   </Card>
                 )}
 
+                {isSussurroSonoro && sonoroPlaylists.length > 0 && (
+                  <Card className="bg-white/[0.02] border-white/[0.06] rounded-2xl overflow-hidden">
+                    <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
+                      <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-gold/60">
+                        <Sparkles className="w-3 h-3" /> Sussurro Sonoro
+                      </div>
+                      <SpotifyPlaylistEmbed
+                        url={sonoroPlaylists[0].url}
+                        territorio={sonoroPlaylists[0].label}
+                      />
+                    </CardContent>
+                  </Card>
+                )}
+
                 {hasOptions ? (
                   <div className="space-y-3 md:space-y-4">
                     <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/40 text-center">Qual leitura aparece primeiro?</p>
