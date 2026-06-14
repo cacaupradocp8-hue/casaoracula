@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, MessageSquare, CheckCircle2,
@@ -10,6 +10,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { TrainingCase } from './types';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Props {
   caso: TrainingCase & { rawCamara?: any };
