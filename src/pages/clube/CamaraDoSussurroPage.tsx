@@ -102,7 +102,7 @@ export default function CamaraDoSussurroPage() {
               </div>
             ) : (
               <div className="grid gap-6">
-                {allCases.filter(c => c.nivel_produto === 'clube').map((caso) => {
+                {allCases.filter(c => c.nivel_produto === 'clube').filter(c => !isAprofundamento || matchesAprofundamento(c)).map((caso) => {
                   // Tentar encontrar o livro correspondente pelo título
                   const correspondingBook = books.find(b => b.title.toLowerCase().includes(caso.title.toLowerCase()) || caso.title.toLowerCase().includes(b.title.toLowerCase()));
                   
