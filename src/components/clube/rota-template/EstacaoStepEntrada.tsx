@@ -113,20 +113,36 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
       </div>
 
       {estacaoSlug === 'clareira-do-chamado' && (
-        <div className="pt-8 w-full max-w-xl mx-auto">
-          <button
-            onClick={() => navigate(`/clube/camara-do-sussurro?rota=${rotaSlug}&estacao=${estacaoSlug}&modo=aprofundamento`)}
-            className="group w-full rounded-2xl border border-gold/30 bg-gradient-to-b from-white/[0.03] to-white/[0.01] hover:border-gold/60 hover:from-gold/10 transition-all p-6 text-left flex items-center gap-5"
-          >
-            <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors">
-              <Ghost className="w-5 h-5 text-gold" />
+        <div className="pt-8 w-full max-w-2xl mx-auto">
+          <div className="relative overflow-hidden rounded-[2rem] border border-gold/30 bg-gradient-to-br from-white/[0.04] via-gold/[0.03] to-transparent backdrop-blur-sm p-8 md:p-10 text-left shadow-[0_20px_60px_-20px_rgba(212,175,55,0.25)]">
+            <div className="absolute top-0 right-0 w-1/2 h-full bg-gold/5 blur-[80px] -z-0" />
+            <div className="relative z-10 space-y-6">
+              <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/10">
+                <Ghost className="w-3 h-3 text-gold" />
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold">
+                  Camada de Aprofundamento
+                </span>
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-2xl md:text-3xl font-display text-white tracking-wide">
+                  Aprofundar na Câmara do Sussurro
+                </h3>
+                <p className="text-xs uppercase tracking-[0.25em] text-gold/70 font-bold">
+                  Treino de Observação Simbólica
+                </p>
+              </div>
+              <p className="text-base text-white/70 font-cormorant italic leading-relaxed max-w-xl">
+                Entre na Câmara para observar os sinais da Clareira em três campos: o conto, a vida cotidiana e a escuta sonora.
+              </p>
+              <Button
+                onClick={() => navigate(`/clube/camara-do-sussurro?rota=${rotaSlug}&estacao=${estacaoSlug}&modo=aprofundamento`)}
+                className="rounded-full bg-gold text-[#020617] font-bold px-8 h-12 hover:bg-gold/90 shadow-[0_10px_30px_rgba(212,175,55,0.3)] text-[10px] tracking-[0.25em] uppercase group"
+              >
+                <Ghost className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
+                Entrar na Câmara
+              </Button>
             </div>
-            <div className="flex-1 space-y-1">
-              <p className="text-[9px] text-gold/60 uppercase tracking-[0.3em] font-black">Camada de Aprofundamento</p>
-              <h4 className="text-lg font-display text-white">Aprofundar na Câmara do Sussurro</h4>
-              <p className="text-xs text-white/50 font-cormorant italic">Casos simbólicos da Clareira do Chamado.</p>
-            </div>
-          </button>
+          </div>
         </div>
       )}
     </div>
