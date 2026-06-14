@@ -340,12 +340,14 @@ export default function RotaDosLobos() {
                         isLocked ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer"
                       )}
                     >
-                      <div className={cn(
-                        "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-md flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
-                        isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
-                      )}>
-                        {i + 1}
-                      </div>
+                      {!isActive && (
+                        <div className={cn(
+                          "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-md flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
+                          "bg-white/10 text-white/40 border border-white/5"
+                        )}>
+                          {i + 1}
+                        </div>
+                      )}
 
                       {!isActive && (
                         <Lock className={cn("w-3 h-3 md:w-5 md:h-5 z-20", isLocked ? "text-white/20" : "text-gold/40")} />
