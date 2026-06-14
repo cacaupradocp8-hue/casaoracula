@@ -333,7 +333,7 @@ export default function RotaDosLobos() {
                       disabled={isLocked}
                       onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                       className={cn(
-                        "relative w-12 h-12 md:w-24 md:h-24 rounded-full flex items-center justify-center transition-all duration-700",
+                        "relative w-16 h-16 md:w-28 md:h-28 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-700 overflow-hidden",
                         isActive 
                           ? "bg-gold/10 border border-gold/80 shadow-[0_0_12px_rgba(233,167,88,0.16)] md:scale-110" 
                           : "bg-white/[0.03] border border-white/10 hover:border-gold/30",
@@ -341,26 +341,21 @@ export default function RotaDosLobos() {
                       )}
                     >
                       <div className={cn(
-                        "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
+                        "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-md flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
                         isActive ? "bg-gold text-black" : "bg-white/10 text-white/40 border border-white/5"
                       )}>
                         {i + 1}
                       </div>
 
-                      {isActive ? (
-                        <div className="relative z-20">
-                          <TreePine className="w-4 h-4 md:w-8 md:h-8 text-gold" />
-                          <div className="absolute inset-0 bg-gold/20 blur-lg rounded-full" />
-                        </div>
-                      ) : (
+                      {!isActive && (
                         <Lock className={cn("w-3 h-3 md:w-5 md:h-5 z-20", isLocked ? "text-white/20" : "text-gold/40")} />
                       )}
 
-                        <div className="absolute inset-0 rounded-full overflow-hidden z-10 opacity-100">
+                        <div className="absolute inset-0 overflow-hidden z-10 opacity-100">
                           <img 
                             src={slug === 'clareira-do-chamado' ? clareiraCapa.url : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")} 
                             alt="" 
-                            className="w-full h-full object-cover scale-110" 
+                            className="w-full h-full object-cover" 
                           />
                         </div>
                     </button>
