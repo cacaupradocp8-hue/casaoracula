@@ -64,6 +64,32 @@ export function SimuladorClube({ caso, onExit }: Props) {
   const hasOptions = rawOptions.length > 0;
   const options = rawOptions;
 
+  // Detecta "Sussurro Sonoro" e carrega playlist do Spotify
+  const isSussurroSonoro = useMemo(() => {
+    const cat = String(raw.categoria || '').toLowerCase();
+    const title = String(caso.title || '').toLowerCase();
+    const tema = String(caso.tema || '').toLowerCase();
+    return cat.includes('sussurro-sonoro') || cat.includes('escuta-sonora')
+      || title.includes('sussurro sonoro') || tema.includes('sonor');
+  }, [raw.categoria, caso.title, caso.tema]);
+
+  const [sonoroPlaylists, setSonoroPlaylists] = useState<Array<{ url: string; label?: string }>>([]);
+  useEffect(() => {
+    if (!isSussurroSonoro) return;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('clube_estacoes')
+        .select('spotify_playlists, spotify_playlist_url')
+        .eq('slug', 'clareira-do-chamado')
+        .maybeSingle();
+      if (!data) return;
+      const list = Array.isArray(data.spotify_playlists) && data.spotify_playlists.length > 0
+        ? data.spotify_playlists
+        : (data.spotify_playlist_url ? [{ url: data.spotify_playlist_url, label: 'Playlist' }] : []);
+      setSonoroPlaylists(list);
+    })();
+  }, [isSussurroSonoro]);
+
   const handleConfirm = () => {
     if (hasOptions && selectedOption) {
       setStep('feedback');
