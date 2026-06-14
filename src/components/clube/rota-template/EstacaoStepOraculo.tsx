@@ -7,6 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import laLobaFrente from '@/assets/la-loba-frente.png.asset.json';
+import laLobaVerso from '@/assets/la-loba-verso.png.asset.json';
 
 interface OraculoEstacaoProps {
   estacaoId: string;
@@ -38,6 +40,9 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
   const { user } = useAuth();
   const [view, setView] = useState<'carta' | 'revelacao' | 'concluido'>('carta');
   const [isFlipped, setIsFlipped] = useState(false);
+  const isLaLoba = /loba/i.test(nomeCarta);
+  const frenteUrl = isLaLoba ? laLobaFrente.url : imagemUrl;
+  const versoUrl = isLaLoba ? laLobaVerso.url : imagemUrl;
 
   const saveMutation = useMutation({
     mutationFn: async () => {
@@ -109,8 +114,8 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                   <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Toque para Revelar</span>
                 </div>
                 
-                {imagemUrl && (
-                  <img src={imagemUrl} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-luminosity grayscale group-hover:opacity-20 transition-opacity duration-700" />
+                {frenteUrl && (
+                  <img src={frenteUrl} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
                 )}
               </motion.div>
             </div>
@@ -142,14 +147,13 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                   <div className="absolute inset-0 backface-hidden">
                     <Card className="absolute inset-0 bg-[#0A0A0B] rounded-[38px] overflow-hidden border-[6px] border-[#0A0A0B] shadow-2xl">
                       <div className="relative h-full w-full">
-                        {imagemUrl && (
-                          <img 
-                            src={imagemUrl} 
-                            alt={nomeCarta} 
-                            className="w-full h-full object-cover object-left" 
+                        {frenteUrl && (
+                          <img
+                            src={frenteUrl}
+                            alt={nomeCarta}
+                            className="w-full h-full object-cover"
                           />
                         )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                       </div>
                     </Card>
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-4 py-1 rounded-full border border-gold/20 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
@@ -161,24 +165,13 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                   <div className="absolute inset-0 backface-hidden rotate-y-180">
                     <Card className="absolute inset-0 bg-[#0A0A0B] rounded-[38px] overflow-hidden border-[6px] border-[#0A0A0B] shadow-2xl">
                       <div className="relative h-full w-full">
-                        {imagemUrl && (
-                          <img 
-                            src={imagemUrl} 
-                            alt={`${nomeCarta} - Verso`} 
-                            className="w-full h-full object-cover object-left opacity-90 grayscale-[0.2]" 
+                        {versoUrl && (
+                          <img
+                            src={versoUrl}
+                            alt={`${nomeCarta} - Verso`}
+                            className="w-full h-full object-cover"
                           />
                         )}
-                        <div className="absolute inset-0 bg-black/40 backdrop-blur-[1px] pointer-events-none" />
-                        <div className="absolute inset-0 flex flex-col items-center justify-center p-8 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-gold/10 via-transparent to-transparent">
-                          <div className="w-24 h-24 rounded-full border border-gold/30 flex items-center justify-center p-2 mb-4 bg-black/40 backdrop-blur-md">
-                             <Sparkles className="w-10 h-10 text-gold/40" />
-                          </div>
-                          <div className="space-y-2 text-center bg-black/60 backdrop-blur-md p-4 rounded-xl border border-gold/20">
-                            <div className="text-[10px] tracking-[0.4em] text-gold/60 uppercase font-black">CASA ORÁCULA</div>
-                            <div className="h-px w-8 bg-gold/30 mx-auto" />
-                            <div className="text-[8px] tracking-[0.2em] text-gold/40 uppercase font-medium">Verso da Carta</div>
-                          </div>
-                        </div>
                       </div>
                     </Card>
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md px-4 py-1 rounded-full border border-gold/20 pointer-events-none">
