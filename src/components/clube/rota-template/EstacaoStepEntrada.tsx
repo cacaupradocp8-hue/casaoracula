@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import clareiraCapa from '@/assets/clareira-do-chamado-capa.png.asset.json';
 
 interface EstacaoStepEntradaProps {
   titulo: string;
@@ -38,6 +39,19 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
 
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
+      {estacaoSlug === 'clareira-do-chamado' && (
+        <div className="pt-4 md:pt-8">
+          <div className="relative mx-auto w-full max-w-2xl overflow-hidden rounded-[2rem] border border-gold/20 shadow-[0_30px_80px_-30px_rgba(212,175,55,0.4)]">
+            <img
+              src={clareiraCapa.url}
+              alt="Clareira do Chamado — Rota dos Lobos"
+              className="w-full h-auto object-cover"
+              loading="eager"
+            />
+          </div>
+        </div>
+      )}
+
       {/* Header Info - Minimalist */}
       <div className="space-y-4 md:space-y-6 pt-4 md:pt-8">
         <h4 className="text-gold text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-black flex items-center justify-center gap-2 md:gap-4 px-2">
