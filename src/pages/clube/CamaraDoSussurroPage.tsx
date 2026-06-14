@@ -32,6 +32,8 @@ export default function CamaraDoSussurroPage() {
 
   const matchesAprofundamento = (caso: TrainingCase) => {
     const raw: any = (caso as any).rawCamara || {};
+    const categoria = String(raw.categoria || '').toLowerCase();
+    if (categoria.includes('clareira-do-chamado') && categoria.includes('aprofundamento')) return true;
     const haystack = [
       raw.rota_slug, raw.estacao_slug, raw.modo, raw.tag, raw.tags,
       caso.tema, caso.title
