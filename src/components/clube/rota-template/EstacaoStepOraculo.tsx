@@ -40,6 +40,9 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
   const { user } = useAuth();
   const [view, setView] = useState<'carta' | 'revelacao' | 'concluido'>('carta');
   const [isFlipped, setIsFlipped] = useState(false);
+  const isLaLoba = /loba/i.test(nomeCarta);
+  const frenteUrl = isLaLoba ? laLobaFrente.url : imagemUrl;
+  const versoUrl = isLaLoba ? laLobaVerso.url : imagemUrl;
 
   const saveMutation = useMutation({
     mutationFn: async () => {
