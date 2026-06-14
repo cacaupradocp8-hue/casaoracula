@@ -289,6 +289,8 @@ export default function ClubeRotaPremium() {
                     audioFlorestaUrl={estacao.audio_floresta_url}
                     imagemEscuta={estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg"}
                     obraRegente={estacao.clube_rotas.obra_regente}
+                    estacaoSlug={slug}
+                    rotaSlug={estacao.clube_rotas.slug}
                     infoContent={{
                       distrito: estacao.distrito_cidadela,
                       tese: estacao.frase_voz_clareira,
