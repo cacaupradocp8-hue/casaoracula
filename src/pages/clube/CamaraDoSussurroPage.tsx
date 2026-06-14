@@ -12,7 +12,7 @@ import { SimuladorClube } from '@/components/treinamento/simulador/SimuladorClub
 import { TrainingCase } from '@/components/treinamento/simulador/types';
 import { cn } from '@/lib/utils';
 import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 
@@ -20,6 +20,24 @@ export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
   const { data: books = [] } = useAllBooks();
+  const [searchParams] = useSearchParams();
+
+  const rotaParam = searchParams.get('rota');
+  const estacaoParam = searchParams.get('estacao');
+  const modoParam = searchParams.get('modo');
+  const isAprofundamento =
+    rotaParam === 'rota-dos-lobos' &&
+    estacaoParam === 'clareira-do-chamado' &&
+    modoParam === 'aprofundamento';
+
+  const matchesAprofundamento = (caso: TrainingCase) => {
+    const raw: any = (caso as any).rawCamara || {};
+    const haystack = [
+      raw.rota_slug, raw.estacao_slug, raw.modo, raw.tag, raw.tags,
+      caso.tema, caso.title
+    ].filter(Boolean).join(' ').toLowerCase();
+    return haystack.includes('clareira-do-chamado') || haystack.includes('clareira do chamado');
+  };
 
   const handleBack = () => {
     if (activeCase) {
