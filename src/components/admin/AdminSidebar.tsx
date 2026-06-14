@@ -46,6 +46,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'central-rotas', label: 'Rotas da Casa', icon: Compass },
       { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
       { key: 'escuta-ritual', label: 'Escuta Ritual da Estação', icon: Headphones },
+      { key: 'clube-treinamento', label: 'Câmara do Sussurro', icon: Headphones },
     ],
   },
   {
