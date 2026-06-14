@@ -76,7 +76,7 @@ export default function CamaraDoSussurroPage() {
                 Câmara do <span className="text-primary italic">Sussurro</span>
               </h1>
               <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
-                Pratique a escuta imersiva com as obras do Clube do Livro.
+                {isAprofundamento ? 'Aprofundamento — Clareira do Chamado' : 'Pratique a escuta imersiva com as obras do Clube do Livro.'}
               </p>
             </div>
           </div>
