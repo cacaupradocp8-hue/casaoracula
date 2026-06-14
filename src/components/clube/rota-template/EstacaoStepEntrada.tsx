@@ -16,6 +16,8 @@ interface EstacaoStepEntradaProps {
   audioFlorestaUrl?: string;
   imagemEscuta?: string;
   obraRegente?: string;
+  estacaoSlug?: string;
+  rotaSlug?: string;
   infoContent?: {
     distrito: string;
     tese: string;
@@ -29,6 +31,8 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
   onNext,
   audioAberturaUrl,
   obraRegente,
+  estacaoSlug,
+  rotaSlug = 'rota-dos-lobos',
 }) => {
   const navigate = useNavigate();
 
