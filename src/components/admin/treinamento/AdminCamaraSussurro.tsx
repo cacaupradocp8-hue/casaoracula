@@ -59,6 +59,7 @@ interface CamaraCaso {
   tema_emocional: string | null;
   ativo: boolean;
   ciclo_id: string | null;
+  categoria: string | null;
   created_at: string;
 }
 
@@ -105,6 +106,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
     dificuldade: 'iniciante',
     tipo_cliente: '',
     tema_emocional: '',
+    categoria: '',
     ativo: true,
   });
 
@@ -149,6 +151,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
       dificuldade: 'iniciante',
       tipo_cliente: '',
       tema_emocional: '',
+      categoria: '',
       ativo: true,
     });
     setEditingCaso(null);
@@ -534,6 +537,21 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
                   className="bg-white/5 border-white/10"
                 />
               </div>
+            </div>
+
+            <div className="md:col-span-2 space-y-2 border-t border-white/10 pt-4">
+              <Label>Categoria / Marcador interno</Label>
+              <Input
+                value={form.categoria || ''}
+                onChange={e => setForm({ ...form, categoria: e.target.value })}
+                placeholder="rota-dos-lobos/clareira-do-chamado/modo-aprofundamento/sussurro-do-conto"
+                className="bg-white/5 border-white/10 font-mono text-sm"
+              />
+              <p className="text-xs text-white/50">
+                Use este campo para marcar rota, estação, modo e tipo de sussurro. Exemplo:
+                <br />
+                <span className="font-mono text-white/70">rota-dos-lobos/clareira-do-chamado/modo-aprofundamento/sussurro-da-vida</span>
+              </p>
             </div>
           </div>
 
