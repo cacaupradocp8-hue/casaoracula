@@ -10,6 +10,7 @@ import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useToda
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
 import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
+import clareiraCapa from '@/assets/clareira-do-chamado-capa.png.asset.json';
 
 interface DisplayEstacao extends Partial<EstacaoCatalogo> {
   id: string;
