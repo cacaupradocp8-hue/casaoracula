@@ -170,53 +170,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             </div>
           </div>
         )}
-          
-
-        {/* Spotify Playlists — Ressonâncias da Clareira */}
-        {playlists.length > 0 && (
-          <div className="space-y-6 pt-4">
-            <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
-              <Music className="w-3 h-3 text-gold" />
-              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">
-                Ressonâncias da Clareira
-              </span>
-            </div>
-            {playlists.length > 1 && (
-              <div className="flex flex-wrap justify-center gap-2">
-                {playlists.map((pl: any, idx: number) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActivePlaylistIndex(idx)}
-                    className={cn(
-                      "text-[10px] uppercase tracking-widest font-bold px-4 py-2 rounded-full border transition-all",
-                      activePlaylistIndex === idx
-                        ? "bg-gold/15 border-gold/40 text-gold"
-                        : "bg-white/5 border-white/10 text-white/50 hover:text-white/80"
-                    )}
-                  >
-                    {pl.label || `Playlist ${idx + 1}`}
-                  </button>
-                ))}
-              </div>
-            )}
-            <SpotifyPlaylistEmbed
-              url={playlists[activePlaylistIndex]?.url}
-              territorio={playlists[activePlaylistIndex]?.label}
-            />
-            {playlists[activePlaylistIndex]?.url && (
-              <div className="text-center pt-2">
-                <a
-                  href={playlists[activePlaylistIndex].url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-gold/70 hover:text-gold transition-colors"
-                >
-                  <Music className="w-3 h-3" /> Abrir playlist no Spotify
-                </a>
-              </div>
-            )}
-          </div>
-        )}
+        {/* Playlist movida para a Câmara do Sussurro — aba Sussurro Sonoro */}
       </div>
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
