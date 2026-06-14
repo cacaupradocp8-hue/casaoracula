@@ -119,29 +119,84 @@ export const EstacaoStepMissaoCampo: React.FC<MissaoCampoProps> = ({
               </div>
             </div>
 
-            <Card className="bg-white/[0.02] border-white/5 p-10 rounded-[40px] space-y-8 relative overflow-hidden">
-              <div className="space-y-6">
-                <div className="flex items-center gap-3 text-gold/80">
-                  <Calendar className="w-5 h-5" />
-                  <span className="text-[10px] uppercase tracking-widest font-black">Tempo de Observação: 3 dias</span>
-                </div>
-                
-                <div className="prose prose-invert prose-p:font-serif prose-p:italic prose-p:text-xl prose-p:text-white/80 prose-p:leading-relaxed">
-                  {texto.split('\n').map((line, i) => (
-                    <p key={i}>{line}</p>
+            <div className="flex items-center justify-center gap-3 text-gold/80">
+              <Calendar className="w-4 h-4" />
+              <span className="text-[10px] uppercase tracking-widest font-black">Tempo de Observação: 3 dias</span>
+            </div>
+
+            {(() => {
+              // Segmenta o texto em cards: cada bloco separado por linha em branco
+              // Título opcional: primeira linha em "## Título" ou "**Título**"
+              const blocos = texto
+                .split(/\n\s*\n/)
+                .map(b => b.trim())
+                .filter(Boolean);
+
+              const parseBloco = (bloco: string) => {
+                const linhas = bloco.split('\n');
+                const primeira = linhas[0].trim();
+                const matchH = primeira.match(/^##\s+(.+)$/);
+                const matchB = primeira.match(/^\*\*(.+)\*\*$/);
+                if (matchH || matchB) {
+                  return {
+                    titulo: (matchH?.[1] || matchB?.[1])!.trim(),
+                    corpo: linhas.slice(1).join('\n').trim(),
+                  };
+                }
+                return { titulo: null as string | null, corpo: bloco };
+              };
+
+              const cards = blocos.map(parseBloco);
+
+              return (
+                <div className={cn(
+                  'grid gap-6',
+                  cards.length === 1 ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'
+                )}>
+                  {cards.map((card, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.08 * i, duration: 0.5 }}
+                    >
+                      <Card className="bg-white/[0.03] border-white/10 p-8 md:p-10 rounded-[32px] h-full space-y-5">
+                        <div className="flex items-center gap-2 text-gold/60">
+                          <span className="text-[10px] font-black tracking-widest">
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span className="h-px flex-1 bg-gold/20" />
+                        </div>
+                        {card.titulo && (
+                          <h3 className="text-base md:text-lg font-display font-bold uppercase tracking-[0.2em] text-white/90">
+                            {card.titulo}
+                          </h3>
+                        )}
+                        <div className="space-y-3">
+                          {card.corpo.split('\n').filter(Boolean).map((linha, j) => (
+                            <p
+                              key={j}
+                              className="font-serif italic text-lg leading-relaxed text-white/80"
+                            >
+                              {linha}
+                            </p>
+                          ))}
+                        </div>
+                      </Card>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
+              );
+            })()}
 
-              <div className="flex justify-center pt-8 border-t border-white/5">
-                <Button 
-                  onClick={() => setView('registro')}
-                  className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest transition-all shadow-2xl shadow-gold/20 hover:scale-105"
-                >
-                  Registrar Observação
-                </Button>
-              </div>
-            </Card>
+            <div className="flex justify-center pt-4">
+              <Button
+                onClick={() => setView('registro')}
+                className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 py-7 rounded-full text-xs uppercase tracking-widest transition-all shadow-2xl shadow-gold/20 hover:scale-105"
+              >
+                Registrar Observação
+              </Button>
+            </div>
           </motion.div>
         )}
 
