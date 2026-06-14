@@ -88,7 +88,7 @@ export function SimuladorClube({ caso, onExit }: Props) {
       </nav>
 
       <main className="flex-1 overflow-y-auto">
-        <div className="mx-auto w-full max-w-2xl px-6 py-12 md:py-16">
+        <div className="mx-auto w-full max-w-xl md:max-w-2xl px-4 sm:px-6 py-6 md:py-12">
           <AnimatePresence mode="wait">
             {step === 'pergunta' ? (
               <motion.div
@@ -96,23 +96,25 @@ export function SimuladorClube({ caso, onExit }: Props) {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -16 }}
-                className="space-y-8"
+                className="space-y-5 md:space-y-8"
               >
-                <header className="space-y-3 text-center">
-                  <p className="text-[10px] uppercase tracking-[0.3em] text-gold/60">{raw.tema_emocional || 'Treino Simbólico'}</p>
-                  <h1 className="text-2xl md:text-[28px] font-serif text-white/95 leading-tight break-words">
-                    {caso.title}
+                <header className="space-y-2 md:space-y-3 text-center">
+                  <p className="text-[9px] md:text-[10px] uppercase tracking-[0.25em] text-gold/60 break-words">
+                    {clean(raw.tema_emocional) || 'Treino Simbólico'}
+                  </p>
+                  <h1 className="text-lg sm:text-xl md:text-[28px] font-serif text-white/95 leading-snug break-words px-1">
+                    {cleanTitle(caso.title)}
                   </h1>
-                  <p className="text-sm text-white/50 italic">O que você percebe neste sussurro?</p>
+                  <p className="text-xs md:text-sm text-white/50 italic">O que você percebe neste sussurro?</p>
                 </header>
 
                 {contexto && (
                   <Card className="bg-white/[0.02] border-white/[0.06] rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 md:p-7 space-y-3">
+                    <CardContent className="p-4 sm:p-5 md:p-7 space-y-2 md:space-y-3">
                       <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-white/40">
                         <BookOpen className="w-3 h-3" /> Contexto
                       </div>
-                      <p className="text-[15px] md:text-base text-white/75 font-light leading-[1.75] break-words">
+                      <p className="text-[13px] md:text-base text-white/75 font-light leading-relaxed break-words">
                         {contexto}
                       </p>
                     </CardContent>
@@ -121,11 +123,11 @@ export function SimuladorClube({ caso, onExit }: Props) {
 
                 {falaInicial && (
                   <Card className="bg-gradient-to-br from-gold/[0.04] to-white/[0.02] border-gold/10 rounded-2xl overflow-hidden">
-                    <CardContent className="p-6 md:p-7 space-y-3">
+                    <CardContent className="p-4 sm:p-5 md:p-7 space-y-2 md:space-y-3">
                       <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-gold/60">
                         <MessageSquare className="w-3 h-3" /> Fala do Cliente
                       </div>
-                      <p className="text-base md:text-lg text-white/85 font-serif italic leading-relaxed break-words">
+                      <p className="text-sm md:text-lg text-white/85 font-serif italic leading-relaxed break-words">
                         “{falaInicial}”
                       </p>
                     </CardContent>
@@ -133,36 +135,36 @@ export function SimuladorClube({ caso, onExit }: Props) {
                 )}
 
                 {hasOptions ? (
-                  <div className="space-y-4">
-                    <p className="text-xs uppercase tracking-[0.25em] text-white/40 text-center">Qual leitura aparece primeiro?</p>
-                    <div className="space-y-3">
+                  <div className="space-y-3 md:space-y-4">
+                    <p className="text-[10px] md:text-xs uppercase tracking-[0.25em] text-white/40 text-center">Qual leitura aparece primeiro?</p>
+                    <div className="space-y-2 md:space-y-3">
                       {options.map((option) => (
                         <button
                           key={option.id}
                           onClick={() => setSelectedOption(option.id)}
                           className={cn(
-                            "w-full p-5 rounded-xl border text-left transition-all duration-300 flex items-start gap-4 group",
+                            "w-full p-3 md:p-5 rounded-xl border text-left transition-all duration-300 flex items-start gap-3 md:gap-4 group",
                             selectedOption === option.id
                               ? "bg-gold/10 border-gold/60 text-white"
                               : "bg-white/[0.02] border-white/5 text-white/60 hover:border-white/15 hover:bg-white/[0.04]"
                           )}
                         >
                           <div className={cn(
-                            "w-5 h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 transition-colors",
+                            "w-4 h-4 md:w-5 md:h-5 rounded-full border flex items-center justify-center shrink-0 mt-0.5 transition-colors",
                             selectedOption === option.id ? "border-gold bg-gold" : "border-white/20"
                           )}>
-                            {selectedOption === option.id && <div className="w-2 h-2 rounded-full bg-black" />}
+                            {selectedOption === option.id && <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-black" />}
                           </div>
-                          <span className="text-sm md:text-[15px] leading-relaxed break-words">{option.texto}</span>
+                          <span className="text-[13px] md:text-[15px] leading-relaxed break-words">{clean(option.texto)}</span>
                         </button>
                       ))}
                     </div>
                   </div>
                 ) : (
                   <Card className="bg-white/[0.02] border-dashed border-white/10 rounded-2xl">
-                    <CardContent className="p-6 text-center space-y-2">
+                    <CardContent className="p-4 md:p-6 text-center space-y-2">
                       <Sparkles className="w-5 h-5 text-gold/60 mx-auto" />
-                      <p className="text-sm text-white/60 leading-relaxed">
+                      <p className="text-xs md:text-sm text-white/60 leading-relaxed">
                         Respire. Deixe a fala ressoar. Quando estiver pronta, revele a leitura simbólica.
                       </p>
                     </CardContent>
@@ -172,7 +174,7 @@ export function SimuladorClube({ caso, onExit }: Props) {
                 <Button
                   onClick={handleConfirm}
                   disabled={hasOptions && !selectedOption}
-                  className="w-full rounded-full h-14 text-sm md:text-base bg-gold hover:bg-gold/90 text-black font-semibold gap-2 shadow-[0_0_30px_rgba(201,169,110,0.15)] tracking-wide"
+                  className="w-full rounded-full h-12 md:h-14 text-xs md:text-base bg-gold hover:bg-gold/90 text-black font-semibold gap-2 shadow-[0_0_30px_rgba(201,169,110,0.15)] tracking-wide"
                 >
                   {hasOptions ? 'Confirmar Percepção' : 'Revelar Leitura Simbólica'}
                   <ArrowRight className="w-4 h-4" />
