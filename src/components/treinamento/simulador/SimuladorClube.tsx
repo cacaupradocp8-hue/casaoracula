@@ -16,7 +16,7 @@ interface Props {
   onExit: () => void;
 }
 
-// Limpa rótulos vazados, aspas duplicadas e prefixos do banco
+// Limpa rótulos vazados, aspas duplicadas, travessões e prefixos do banco
 function clean(text: string | null | undefined): string {
   if (!text) return '';
   let t = text;
@@ -24,9 +24,19 @@ function clean(text: string | null | undefined): string {
   t = t.replace(/fala\s+do\s+cliente\s*:\s*/gi, '');
   // Aspas duplas duplicadas -> aspas tipográficas únicas
   t = t.replace(/""+/g, '"');
+  // Travessões longos viram ":" (quando entre palavras) ou " "
+  t = t.replace(/\s*—\s*/g, ': ');
+  t = t.replace(/\s*–\s*/g, ' - ');
+  // Colapsa travessões/hífens repetidos
+  t = t.replace(/(:\s*){2,}/g, ': ');
+  t = t.replace(/\s{2,}/g, ' ');
   // Trim
-  t = t.replace(/^["“\s]+|["”\s]+$/g, '');
+  t = t.replace(/^["“\s:]+|["”\s]+$/g, '');
   return t.trim();
+}
+
+function cleanTitle(text: string | null | undefined): string {
+  return clean(text).replace(/:\s*$/, '');
 }
 
 export function SimuladorClube({ caso, onExit }: Props) {
