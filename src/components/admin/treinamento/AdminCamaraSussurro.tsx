@@ -106,6 +106,7 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
     dificuldade: 'iniciante',
     tipo_cliente: '',
     tema_emocional: '',
+    categoria: '',
     ativo: true,
   });
 
