@@ -111,6 +111,24 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           ))}
         </div>
       </div>
+
+      {estacaoSlug === 'clareira-do-chamado' && (
+        <div className="pt-8 w-full max-w-xl mx-auto">
+          <button
+            onClick={() => navigate(`/clube/camara-do-sussurro?rota=${rotaSlug}&estacao=${estacaoSlug}&modo=aprofundamento`)}
+            className="group w-full rounded-2xl border border-gold/30 bg-gradient-to-b from-white/[0.03] to-white/[0.01] hover:border-gold/60 hover:from-gold/10 transition-all p-6 text-left flex items-center gap-5"
+          >
+            <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors">
+              <Ghost className="w-5 h-5 text-gold" />
+            </div>
+            <div className="flex-1 space-y-1">
+              <p className="text-[9px] text-gold/60 uppercase tracking-[0.3em] font-black">Camada de Aprofundamento</p>
+              <h4 className="text-lg font-display text-white">Aprofundar na Câmara do Sussurro</h4>
+              <p className="text-xs text-white/50 font-cormorant italic">Casos simbólicos da Clareira do Chamado.</p>
+            </div>
+          </button>
+        </div>
+      )}
     </div>
   );
 };
