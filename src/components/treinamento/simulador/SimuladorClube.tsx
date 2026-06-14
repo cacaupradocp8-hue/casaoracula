@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, MessageSquare, CheckCircle2,
@@ -10,6 +10,8 @@ import { Card, CardContent } from '@/components/ui/card';
 import { TrainingCase } from './types';
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
+import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Props {
   caso: TrainingCase & { rawCamara?: any };
@@ -61,6 +63,32 @@ export function SimuladorClube({ caso, onExit }: Props) {
   const rawOptions = Array.isArray(caso.opcoes_leitura) ? caso.opcoes_leitura : [];
   const hasOptions = rawOptions.length > 0;
   const options = rawOptions;
+
+  // Detecta "Sussurro Sonoro" e carrega playlist do Spotify
+  const isSussurroSonoro = useMemo(() => {
+    const cat = String(raw.categoria || '').toLowerCase();
+    const title = String(caso.title || '').toLowerCase();
+    const tema = String(caso.tema || '').toLowerCase();
+    return cat.includes('sussurro-sonoro') || cat.includes('escuta-sonora')
+      || title.includes('sussurro sonoro') || tema.includes('sonor');
+  }, [raw.categoria, caso.title, caso.tema]);
+
+  const [sonoroPlaylists, setSonoroPlaylists] = useState<Array<{ url: string; label?: string }>>([]);
+  useEffect(() => {
+    if (!isSussurroSonoro) return;
+    (async () => {
+      const { data } = await (supabase as any)
+        .from('clube_estacoes')
+        .select('spotify_playlists, spotify_playlist_url')
+        .eq('slug', 'clareira-do-chamado')
+        .maybeSingle();
+      if (!data) return;
+      const list = Array.isArray(data.spotify_playlists) && data.spotify_playlists.length > 0
+        ? data.spotify_playlists
+        : (data.spotify_playlist_url ? [{ url: data.spotify_playlist_url, label: 'Playlist' }] : []);
+      setSonoroPlaylists(list);
+    })();
+  }, [isSussurroSonoro]);
 
   const handleConfirm = () => {
     if (hasOptions && selectedOption) {
@@ -130,6 +158,20 @@ export function SimuladorClube({ caso, onExit }: Props) {
                       <p className="text-sm md:text-lg text-white/85 font-serif italic leading-relaxed break-words">
                         “{falaInicial}”
                       </p>
+                    </CardContent>
+                  </Card>
+                )}
+
+                {isSussurroSonoro && sonoroPlaylists.length > 0 && (
+                  <Card className="bg-white/[0.02] border-white/[0.06] rounded-2xl overflow-hidden">
+                    <CardContent className="p-4 sm:p-5 md:p-6 space-y-3">
+                      <div className="flex items-center gap-2 text-[9px] font-semibold uppercase tracking-[0.25em] text-gold/60">
+                        <Sparkles className="w-3 h-3" /> Sussurro Sonoro
+                      </div>
+                      <SpotifyPlaylistEmbed
+                        url={sonoroPlaylists[0].url}
+                        territorio={sonoroPlaylists[0].label}
+                      />
                     </CardContent>
                   </Card>
                 )}
