@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import clareiraCapa from '@/assets/clareira-do-chamado-capa.png.asset.json';
 
 interface EstacaoStepEntradaProps {
   titulo: string;
