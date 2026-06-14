@@ -114,8 +114,8 @@ export const EstacaoStepOraculo: React.FC<OraculoEstacaoProps> = ({
                   <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Toque para Revelar</span>
                 </div>
                 
-                {imagemUrl && (
-                  <img src={imagemUrl} alt="" className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-luminosity grayscale group-hover:opacity-20 transition-opacity duration-700" />
+                {frenteUrl && (
+                  <img src={frenteUrl} alt="" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-700" />
                 )}
               </motion.div>
             </div>
