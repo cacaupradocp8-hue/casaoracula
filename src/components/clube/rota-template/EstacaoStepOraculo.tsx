@@ -7,6 +7,8 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import laLobaFrente from '@/assets/la-loba-frente.png.asset.json';
+import laLobaVerso from '@/assets/la-loba-verso.png.asset.json';
 
 interface OraculoEstacaoProps {
   estacaoId: string;
