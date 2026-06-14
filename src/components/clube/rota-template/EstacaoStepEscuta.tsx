@@ -203,6 +203,18 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
               url={playlists[activePlaylistIndex]?.url}
               territorio={playlists[activePlaylistIndex]?.label}
             />
+            {playlists[activePlaylistIndex]?.url && (
+              <div className="text-center pt-2">
+                <a
+                  href={playlists[activePlaylistIndex].url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-[10px] uppercase tracking-widest font-bold text-gold/70 hover:text-gold transition-colors"
+                >
+                  <Music className="w-3 h-3" /> Abrir playlist no Spotify
+                </a>
+              </div>
+            )}
           </div>
         )}
       </div>
