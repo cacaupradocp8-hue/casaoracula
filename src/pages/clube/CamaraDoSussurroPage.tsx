@@ -75,11 +75,11 @@ export default function CamaraDoSussurroPage() {
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar ao Clube
             </Button>
             <div className="space-y-1">
-              <h1 className="text-4xl md:text-5xl font-display tracking-wide text-foreground">
+              <h1 className="text-2xl md:text-3xl font-display tracking-wide text-foreground">
                 Câmara do <span className="text-primary italic">Sussurro</span>
               </h1>
-              <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
-                {isAprofundamento ? 'Aprofundamento — Clareira do Chamado' : 'Pratique a escuta imersiva com as obras do Clube do Livro.'}
+              <p className="text-muted-foreground text-xs tracking-widest uppercase font-medium">
+                {isAprofundamento ? 'Aprofundamento · Clareira do Chamado' : 'Pratique a escuta imersiva com as obras do Clube do Livro.'}
               </p>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function CamaraDoSussurroPage() {
                             <Clock className="w-3.5 h-3.5" /> 5-10 min
                           </span>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
+                        <h3 className="text-lg md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
                           {caso.title}
                         </h3>
 
@@ -136,10 +136,10 @@ export default function CamaraDoSussurroPage() {
                             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-primary/70 font-bold">
                               <Music className="w-3.5 h-3.5" /> Música desta escuta
                             </div>
-                            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                              <span className="text-lg font-display text-foreground">{raw.nome_musica || '—'}</span>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-base font-display text-foreground">{raw.nome_musica || '—'}</span>
                               {raw.artista && (
-                                <span className="text-sm text-muted-foreground italic">· {raw.artista}</span>
+                                <span className="text-xs text-muted-foreground italic">{raw.artista}</span>
                               )}
                             </div>
                             {raw.funcao_escuta && (
