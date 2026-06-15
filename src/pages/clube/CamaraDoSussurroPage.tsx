@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  ArrowLeft, Play, Clock, Trophy, Flame, 
-  Sparkles, Compass, MessageCircle, BookOpen, FlaskConical
+  ArrowLeft, Play, Clock, Trophy, Flame, Music,
+  Sparkles, Compass, MessageCircle, BookOpen, FlaskConical, ExternalLink
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -15,6 +15,7 @@ import { ConversaoCTA } from '@/components/treinamento/simulador/ConversaoCTA';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
+import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
 
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
