@@ -106,29 +106,86 @@ export default function CamaraDoSussurroPage() {
             ) : (
               <div className="grid gap-6">
                 {allCases.filter(c => c.nivel_produto === 'clube').filter(c => !isAprofundamento || matchesAprofundamento(c)).map((caso) => {
-                  // Tentar encontrar o livro correspondente pelo título
                   const correspondingBook = books.find(b => b.title.toLowerCase().includes(caso.title.toLowerCase()) || caso.title.toLowerCase().includes(b.title.toLowerCase()));
+                  const raw: any = (caso as any).rawCamara || {};
+                  const isSonoro = String(raw.categoria || '').toLowerCase().includes('sussurro-sonoro')
+                    || String(caso.title || '').toLowerCase().includes('sussurro sonoro');
                   
                   return (
                     <div 
                       key={caso.id}
-                      className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-center justify-between gap-6"
+                      className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-start justify-between gap-6"
                     >
                       <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
                       
-                      <div className="space-y-4 flex-1">
-                        <div className="flex items-center gap-3">
-                          <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold tracking-widest uppercase">OBRA DO CLUBE</Badge>
+                      <div className="space-y-4 flex-1 min-w-0">
+                        <div className="flex items-center gap-3 flex-wrap">
+                          <Badge className="bg-primary/10 text-primary border-primary/20 text-[9px] font-bold tracking-widest uppercase">
+                            {isSonoro ? 'Escuta Simbólica · Música' : 'OBRA DO CLUBE'}
+                          </Badge>
                           <span className="text-muted-foreground text-xs flex items-center gap-1.5 font-body">
                             <Clock className="w-3.5 h-3.5" /> 5-10 min
                           </span>
                         </div>
-                        <h3 className="text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
+                        <h3 className="text-2xl md:text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
                           {caso.title}
                         </h3>
-                        <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
-                          {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
-                        </p>
+
+                        {isSonoro && (
+                          <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-5 space-y-3">
+                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-primary/70 font-bold">
+                              <Music className="w-3.5 h-3.5" /> Música desta escuta
+                            </div>
+                            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                              <span className="text-lg font-display text-foreground">{raw.nome_musica || '—'}</span>
+                              {raw.artista && (
+                                <span className="text-sm text-muted-foreground italic">· {raw.artista}</span>
+                              )}
+                            </div>
+                            {raw.funcao_escuta && (
+                              <p className="text-sm text-muted-foreground leading-relaxed">
+                                <span className="text-foreground/70 font-medium">Função da escuta: </span>
+                                {raw.funcao_escuta}
+                              </p>
+                            )}
+                            {(raw.embed_url || raw.spotify_url) && (
+                              <div className="pt-2">
+                                {raw.embed_url ? (
+                                  <SpotifyPlaylistEmbed url={raw.embed_url} />
+                                ) : (
+                                  <SpotifyPlaylistEmbed url={raw.spotify_url} />
+                                )}
+                              </div>
+                            )}
+                            {raw.spotify_url && (
+                              <a
+                                href={raw.spotify_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                              >
+                                Abrir no Spotify <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                            <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
+                              {raw.distrito_dominante && (
+                                <div><span className="text-muted-foreground">Distrito: </span><span className="text-foreground/80">{raw.distrito_dominante}</span></div>
+                              )}
+                              {raw.torre_provavel && (
+                                <div><span className="text-muted-foreground">Torre: </span><span className="text-foreground/80">{raw.torre_provavel}</span></div>
+                              )}
+                              {raw.pergunta_ideal && (
+                                <div className="col-span-2"><span className="text-muted-foreground">Pergunta ideal: </span><span className="text-foreground/80 italic">"{raw.pergunta_ideal}"</span></div>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
+                        {!isSonoro && (
+                          <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
+                            {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
+                          </p>
+                        )}
                         
                         {correspondingBook && (
                           <div className="pt-2">
@@ -141,7 +198,7 @@ export default function CamaraDoSussurroPage() {
                       </div>
                       <Button 
                         onClick={() => setActiveCase(caso)}
-                        className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95"
+                        className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95 shrink-0"
                       >
                         <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
                       </Button>
