@@ -63,7 +63,7 @@ export default function CamaraDoSussurroPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <Button 
@@ -84,13 +84,13 @@ export default function CamaraDoSussurroPage() {
             </div>
           </div>
           
-          <div className="flex items-center gap-6 bg-card border border-border rounded-2xl px-6 py-4 shadow-soft">
+          <div className="flex items-center gap-4 bg-card border border-border rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-soft self-start">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <Trophy className="w-4 h-4" />
-                <span className="text-xs font-bold tracking-[0.2em] uppercase font-body">CLUBE</span>
+                <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase font-body">CLUBE</span>
               </div>
-              <Progress value={20} className="w-24 h-1.5 bg-muted" />
+              <Progress value={20} className="w-20 md:w-24 h-1.5 bg-muted" />
             </div>
           </div>
         </header>
@@ -114,7 +114,7 @@ export default function CamaraDoSussurroPage() {
                   return (
                     <div 
                       key={caso.id}
-                      className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-start justify-between gap-6"
+                      className="group relative overflow-hidden rounded-3xl md:rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-5 md:p-8 flex flex-col md:flex-row items-stretch md:items-start justify-between gap-5 md:gap-6"
                     >
                       <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
                       
@@ -127,21 +127,25 @@ export default function CamaraDoSussurroPage() {
                             <Clock className="w-3.5 h-3.5" /> 5-10 min
                           </span>
                         </div>
-                        <h3 className="text-lg md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
+                        <h3 className="text-base md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500 break-words">
                           {caso.title}
                         </h3>
 
                         {isSonoro && (
-                          <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-5 space-y-3">
-                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-primary/70 font-bold">
+                          <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-4 md:p-5 space-y-3">
+                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-primary/70 font-bold">
                               <Music className="w-3.5 h-3.5" /> Música desta escuta
                             </div>
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-base font-display text-foreground">{raw.nome_musica || '—'}</span>
-                              {raw.artista && (
-                                <span className="text-xs text-muted-foreground italic">{raw.artista}</span>
-                              )}
-                            </div>
+                            {(raw.nome_musica || raw.artista) && (
+                              <div className="flex flex-col gap-0.5">
+                                {raw.nome_musica && (
+                                  <span className="text-sm md:text-base font-display text-foreground break-words">{raw.nome_musica}</span>
+                                )}
+                                {raw.artista && (
+                                  <span className="text-xs text-muted-foreground italic break-words">{raw.artista}</span>
+                                )}
+                              </div>
+                            )}
                             {raw.funcao_escuta && (
                               <p className="text-sm text-muted-foreground leading-relaxed">
                                 <span className="text-foreground/70 font-medium">Função da escuta: </span>
@@ -198,7 +202,7 @@ export default function CamaraDoSussurroPage() {
                       </div>
                       <Button 
                         onClick={() => setActiveCase(caso)}
-                        className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95 shrink-0"
+                        className="w-full md:w-auto rounded-full px-6 md:px-10 py-5 md:py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-[1.02] active:scale-95 shrink-0"
                       >
                         <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
                       </Button>
