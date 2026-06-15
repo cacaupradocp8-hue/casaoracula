@@ -202,7 +202,7 @@ export default function CamaraDoSussurroPage() {
                       </div>
                       <Button 
                         onClick={() => setActiveCase(caso)}
-                        className="rounded-full px-10 py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-105 active:scale-95 shrink-0"
+                        className="w-full md:w-auto rounded-full px-6 md:px-10 py-5 md:py-7 bg-primary hover:bg-primary/90 text-primary-foreground font-bold gap-3 shadow-gold transition-all hover:scale-[1.02] active:scale-95 shrink-0"
                       >
                         <Play className="w-4 h-4 fill-current" /> Iniciar Escuta
                       </Button>
