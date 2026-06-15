@@ -170,80 +170,8 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             </div>
           </div>
         )}
+        {/* Playlist movida para a Câmara do Sussurro — aba Sussurro Sonoro */}
       </div>
-
-      {/* === Ressonâncias da Clareira === */}
-      {playlists.length > 0 && (
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="max-w-2xl mx-auto px-4 sm:px-6 mb-20"
-        >
-          <div className="rounded-[2rem] md:rounded-[2.5rem] bg-white/[0.025] border border-gold/15 backdrop-blur-md p-6 md:p-10 space-y-8 shadow-2xl">
-            <header className="text-center space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold/20 bg-gold/5">
-                <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Câmara da Escuta</span>
-              </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-light text-white tracking-wide">
-                Ressonâncias da Clareira
-              </h2>
-              <p className="text-[10px] sm:text-xs uppercase tracking-[0.3em] font-bold text-gold/60">
-                Playlist de Escuta Simbólica
-              </p>
-            </header>
-
-            <div className="text-sm md:text-base font-serif italic text-white/75 leading-relaxed space-y-3 text-center max-w-lg mx-auto">
-              <p>Ouça sem tentar entender rápido.</p>
-              <p>Deixe que a música revele imagens, emoções e memórias.</p>
-              <p>A escuta simbólica começa quando algo em você percebe antes de explicar.</p>
-              <p className="pt-2 text-white/60">
-                Nesta estação, a música não é trilha de fundo.<br />
-                Ela é uma porta de escuta.
-              </p>
-            </div>
-
-            {playlists.length > 1 && (
-              <div className="flex flex-wrap justify-center gap-2">
-                {playlists.map((pl: any, idx: number) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActivePlaylistIndex(idx)}
-                    className={cn(
-                      "px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.2em] font-bold border transition-all",
-                      activePlaylistIndex === idx
-                        ? "bg-gold/15 border-gold/40 text-gold"
-                        : "bg-white/5 border-white/10 text-white/50 hover:text-white/80"
-                    )}
-                  >
-                    {pl.label || `Playlist ${idx + 1}`}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            <SpotifyPlaylistEmbed
-              url={playlists[activePlaylistIndex]?.url}
-              territorio={playlists[activePlaylistIndex]?.label}
-            />
-
-            <div className="flex justify-center pt-2">
-              <Button
-                asChild
-                variant="outline"
-                className="border-gold/40 text-gold hover:bg-gold/10 hover:text-gold rounded-full px-8 h-12 uppercase tracking-[0.2em] text-[10px] font-bold"
-              >
-                <a href="/clube/camara-do-sussurro?rota=rota-dos-lobos&estacao=clareira-do-chamado&modo=aprofundamento">
-                  Ampliar escuta na Câmara do Sussurro
-                  <ChevronRight className="w-4 h-4 ml-2" />
-                </a>
-              </Button>
-            </div>
-          </div>
-        </motion.section>
-      )}
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
 
