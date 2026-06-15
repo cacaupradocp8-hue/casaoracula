@@ -128,7 +128,7 @@ export function useTodasRotas(opts?: { isAdmin?: boolean }) {
       // Admin vê tudo desbloqueado.
       if (!isAdmin) {
         for (let i = 0; i < result.length; i++) {
-          // Lógica para Fundadora: apenas estação 1 disponível, as outras bloqueadas
+          // Lógica para Fundadora (não-admin): apenas estação 1 disponível
           if (isFounderActive) {
             if (result[i].numero !== 1) {
               result[i].status = 'locked';
