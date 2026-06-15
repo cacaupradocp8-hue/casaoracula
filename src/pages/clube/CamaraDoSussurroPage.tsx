@@ -75,8 +75,23 @@ export default function CamaraDoSussurroPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
+    <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric relative">
+      {/* Fundo Clareira do Chamado — teste topo com blur de transição */}
+      {isAprofundamento && (
+        <div className="absolute inset-x-0 top-0 h-[70vh] md:h-[80vh] pointer-events-none overflow-hidden -z-0">
+          <img
+            src={clareiraCapa.url}
+            alt=""
+            aria-hidden="true"
+            className="w-full h-full object-cover object-top opacity-60"
+          />
+          {/* Gradient fade to disguise the division */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background" />
+          {/* Soft blur veil near the bottom edge */}
+          <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-md [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+        </div>
+      )}
+      <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <Button 
