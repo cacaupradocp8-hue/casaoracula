@@ -380,11 +380,13 @@ export default function ClubeRotaPremium() {
                   <EstacaoStepCasoSimbolico 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
+                    estacaoSlug={estacao.slug}
                     casoData={{
                       nomeFicticio: estacao.caso_nome_ficticio || 'Helena',
                       idade: estacao.caso_idade || '42 anos',
                       contexto: estacao.caso_contexto || '',
                       fraseCentral: estacao.caso_frase_central || '',
+                      fraseDestaque: (estacao as any).caso_frase_destaque || '',
                       campoSuperficie: estacao.caso_campo_superficie || '',
                       campoSimbolico: estacao.caso_campo_simbolico || '',
                       campoNaoConcluir: estacao.caso_campo_nao_concluir || '',
