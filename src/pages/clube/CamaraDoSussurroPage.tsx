@@ -171,17 +171,6 @@ export default function CamaraDoSussurroPage() {
                                 Abrir no Spotify <ExternalLink className="w-3 h-3" />
                               </a>
                             )}
-                            <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                              {raw.distrito_dominante && (
-                                <div><span className="text-muted-foreground">Distrito: </span><span className="text-foreground/80">{raw.distrito_dominante}</span></div>
-                              )}
-                              {raw.torre_provavel && (
-                                <div><span className="text-muted-foreground">Torre: </span><span className="text-foreground/80">{raw.torre_provavel}</span></div>
-                              )}
-                              {raw.pergunta_ideal && (
-                                <div className="col-span-2"><span className="text-muted-foreground">Pergunta ideal: </span><span className="text-foreground/80 italic">"{raw.pergunta_ideal}"</span></div>
-                              )}
-                            </div>
                           </div>
                         )}
 
