@@ -75,11 +75,11 @@ export default function CamaraDoSussurroPage() {
               <ArrowLeft className="w-4 h-4 mr-1" /> Voltar ao Clube
             </Button>
             <div className="space-y-1">
-              <h1 className="text-4xl md:text-5xl font-display tracking-wide text-foreground">
+              <h1 className="text-2xl md:text-3xl font-display tracking-wide text-foreground">
                 Câmara do <span className="text-primary italic">Sussurro</span>
               </h1>
-              <p className="text-muted-foreground text-sm tracking-widest uppercase font-medium">
-                {isAprofundamento ? 'Aprofundamento — Clareira do Chamado' : 'Pratique a escuta imersiva com as obras do Clube do Livro.'}
+              <p className="text-muted-foreground text-xs tracking-widest uppercase font-medium">
+                {isAprofundamento ? 'Aprofundamento · Clareira do Chamado' : 'Pratique a escuta imersiva com as obras do Clube do Livro.'}
               </p>
             </div>
           </div>
