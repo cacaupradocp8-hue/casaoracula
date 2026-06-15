@@ -63,7 +63,7 @@ export default function CamaraDoSussurroPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric">
-      <div className="max-w-6xl mx-auto px-6 py-12 space-y-10">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
             <Button 
