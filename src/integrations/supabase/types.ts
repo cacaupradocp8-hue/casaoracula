@@ -4773,6 +4773,7 @@ export type Database = {
           estacao_id: string
           id: string
           texto: string | null
+          tipo: string
           updated_at: string
           user_id: string
         }
@@ -4781,6 +4782,7 @@ export type Database = {
           estacao_id: string
           id?: string
           texto?: string | null
+          tipo?: string
           updated_at?: string
           user_id: string
         }
@@ -4789,6 +4791,7 @@ export type Database = {
           estacao_id?: string
           id?: string
           texto?: string | null
+          tipo?: string
           updated_at?: string
           user_id?: string
         }
@@ -4833,6 +4836,7 @@ export type Database = {
           caso_cautela_etica: string | null
           caso_contexto: string | null
           caso_frase_central: string | null
+          caso_frase_destaque: string | null
           caso_idade: string | null
           caso_nome_ficticio: string | null
           caso_pergunta_conducao: string | null
@@ -4949,6 +4953,7 @@ export type Database = {
           caso_cautela_etica?: string | null
           caso_contexto?: string | null
           caso_frase_central?: string | null
+          caso_frase_destaque?: string | null
           caso_idade?: string | null
           caso_nome_ficticio?: string | null
           caso_pergunta_conducao?: string | null
@@ -5065,6 +5070,7 @@ export type Database = {
           caso_cautela_etica?: string | null
           caso_contexto?: string | null
           caso_frase_central?: string | null
+          caso_frase_destaque?: string | null
           caso_idade?: string | null
           caso_nome_ficticio?: string | null
           caso_pergunta_conducao?: string | null
