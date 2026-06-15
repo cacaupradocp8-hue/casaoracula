@@ -128,7 +128,7 @@ export default function CamaraDoSussurroPage() {
                           </span>
                         </div>
                         <h3 className="text-base md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500 break-words">
-                          {caso.title}
+                          {prettifyTitle(caso.title)}
                         </h3>
 
                         {isSonoro && (
