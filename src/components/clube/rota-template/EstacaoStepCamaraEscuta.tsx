@@ -746,29 +746,9 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
 
 
   return (
-    <div className="space-y-16 max-w-5xl mx-auto py-12">
-      <div className="space-y-8 text-center max-w-3xl mx-auto">
-        <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center justify-center gap-3 text-gold/60">
-            <div className="h-px w-8 bg-gold/20" />
-            <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Câmara da Escuta</span>
-            <div className="h-px w-8 bg-gold/20" />
-          </div>
-          <h2 className="text-4xl md:text-6xl font-serif text-white italic leading-tight">Câmara da Escuta Simbólica</h2>
-        </div>
-        
-        <div className="space-y-6 px-4">
-          <p className="text-gold/80 text-xl font-serif italic leading-relaxed">
-            “Uma sequência sonora para treinar sua escuta simbólica antes de registrar seus rastros.”
-          </p>
-          <p className="text-white/40 font-serif italic text-base max-w-2xl mx-auto leading-relaxed">
-            “Ouça sem tentar interpretar rápido. Observe imagens, emoções, frases, memórias e incômodos que surgem. A escuta simbólica começa quando algo em nós percebe antes de explicar.”
-          </p>
-        </div>
-      </div>
-
+    <div className="space-y-12 max-w-5xl mx-auto py-12">
       {/* === Ressonâncias da Clareira — escuta leve + CTA Câmara do Sussurro === */}
-      {playlistObra && (
+      {playlistObra ? (
         <motion.section
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -816,138 +796,20 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
             </div>
           </div>
         </motion.section>
+      ) : (
+        <div className="max-w-2xl mx-auto py-20 text-center text-white/30 font-serif italic">
+          Aguardando o desabrochar da playlist desta estação...
+        </div>
       )}
 
-
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
-        {/* Card Principal da Playlist */}
-        {playlistObra && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            whileHover={{ y: -10, scale: 1.02 }}
-            onClick={() => {
-              setInPlaylistMode(true);
-              setActiveObra(faixasObras[0] || null);
-            }}
-            className="md:col-span-2 lg:col-span-3 group relative overflow-hidden border rounded-[48px] p-12 text-left transition-all flex flex-col md:flex-row items-center gap-12 shadow-3xl bg-gradient-to-br from-emerald-500/10 via-background to-gold/5 border-emerald-500/20 hover:border-emerald-500/40"
-          >
-            <div className="absolute inset-0 bg-[url('/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png')] opacity-5 bg-cover bg-center" />
-            
-            <div className="relative w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden flex-shrink-0 border-2 border-emerald-500/20 group-hover:border-emerald-500/40 transition-colors">
-              <div className="absolute inset-0 bg-emerald-500/10 animate-pulse" />
-              <img src="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png" className="w-full h-full object-cover relative z-10 opacity-60 group-hover:opacity-100 transition-opacity" alt="Playlist" />
-              <div className="absolute inset-0 flex items-center justify-center z-20">
-              </div>
-            </div>
-
-            <div className="relative flex-grow space-y-8 text-center md:text-left">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Sequência Recomendada</span>
-                </div>
-                <h4 className="text-4xl md:text-6xl font-serif text-white italic leading-tight group-hover:text-emerald-400 transition-colors">
-                  Câmara da Escuta Simbólica
-                </h4>
-                {playlistObra.funcao_escuta && (
-                  <p className="text-xl text-white/50 font-serif italic leading-relaxed max-w-2xl">
-                    {playlistObra.funcao_escuta}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-wrap items-center justify-center md:justify-start gap-8 pt-4">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-white/20 uppercase tracking-widest font-bold">Obras Integradas</span>
-                  <span className="text-emerald-400 font-serif italic text-lg">{faixasObras.length} faixas individuais</span>
-                </div>
-                <Button className="bg-emerald-500 hover:bg-emerald-400 text-midnight font-bold px-10 h-16 rounded-full uppercase tracking-widest text-xs shadow-2xl shadow-emerald-500/20 transition-all group/btn">
-                  Entrar na Câmara
-                  <ChevronRight className="w-5 h-5 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-                </Button>
-              </div>
-            </div>
-          </motion.button>
-        )}
-
-        {/* Fallback ou Lista complementar (apenas se NÃO houver playlist) */}
-        {!playlistObra && faixasObras.map((obra, index) => {
-          return (
-            <motion.button
-              key={obra.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              onClick={() => setActiveObra(obra)}
-              className="group relative overflow-hidden border rounded-[40px] p-10 text-left transition-all flex flex-col h-full shadow-2xl backdrop-blur-sm bg-white/[0.02] border-white/5 hover:bg-gold/[0.03] hover:border-gold/20"
-            >
-              <div className="absolute top-0 right-0 p-8 opacity-0 group-hover:opacity-10 transition-all duration-500 transform translate-x-4 group-hover:translate-x-0">
-                 <Music className="w-16 h-16 text-gold" />
-              </div>
-
-              <div className="flex-grow space-y-6">
-                <div className="flex items-center gap-4">
-                  <span className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center text-gold text-[10px] font-bold">
-                    {index + 1}
-                  </span>
-                  <span className="text-[9px] text-gold/40 uppercase tracking-[0.3em] font-black">
-                    {obra.tipo}
-                  </span>
-                </div>
-                
-                <div className="space-y-3">
-                  <h4 className="text-3xl font-serif text-white italic group-hover:text-gold transition-colors leading-tight">
-                    {obra.titulo}
-                  </h4>
-                  <div className="flex items-center gap-2 text-gold/60">
-                    <Info className="w-3.5 h-3.5" />
-                    <span className="text-[10px] uppercase tracking-widest font-bold">Função</span>
-                  </div>
-                  <p className="text-base text-white/50 font-serif italic leading-relaxed line-clamp-3">
-                    {obra.funcao_escuta}
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-10 flex items-center justify-between border-t border-white/5">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[9px] text-white/20 uppercase tracking-widest font-bold">Território</span>
-                  <span className="text-[10px] text-gold/60 uppercase tracking-widest font-bold">
-                    {obra.territorio_principal}
-                  </span>
-                </div>
-                <div className="w-12 h-12 rounded-full bg-gold/5 border border-gold/10 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-midnight transition-all duration-500 shadow-lg">
-                  <ChevronRight className="w-5 h-5" />
-                </div>
-              </div>
-            </motion.button>
-          );
-        })}
-
-        {(!obras || obras.length === 0) && (
-          <div className="col-span-full py-32 text-white/10 border-2 border-dashed border-white/5 rounded-[40px] font-serif italic text-2xl flex flex-col items-center gap-4">
-            <Sparkles className="w-8 h-8 opacity-20" />
-            Aguardando o desabrochar das obras...
-          </div>
-        )}
-      </div>
-
-      <div className="pt-16 flex flex-col items-center gap-8">
-        <Button 
-          variant="outline"
-          onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
-          className="border-white/10 text-white/40 hover:text-gold hover:border-gold/30 rounded-full px-10 h-14 uppercase tracking-widest text-[10px] font-bold"
+      <div className="pt-4 flex flex-col items-center gap-6">
+        <Button
+          onClick={onNext}
+          className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-14 rounded-full uppercase tracking-[0.2em] text-[10px] transition-all group"
         >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Voltar para a Rota dos Lobos
+          Próximo Passo
+          <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
         </Button>
-
-        <div className="flex items-center gap-4 px-8 py-3 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
-          <CheckCircle2 className="w-4 h-4 text-gold/40" />
-          <span className="text-[10px] text-white/30 uppercase tracking-[0.2em] font-bold">Treinamento de Percepção Simbólica</span>
-        </div>
       </div>
     </div>
   );
