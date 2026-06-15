@@ -17,6 +17,18 @@ import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
 
+
+function prettifyTitle(raw: string | null | undefined): string {
+  if (!raw) return 'Sussurro do Conto';
+  // Pick the most narrative segment when DB title comes as slug pipes
+  const segments = raw.split('|').map(s => s.trim()).filter(Boolean);
+  const pick = segments.find(s => /\s/.test(s) && !/[-_]/.test(s)) || segments[segments.length - 1] || raw;
+  return pick
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .trim();
+}
+
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
@@ -128,7 +140,7 @@ export default function CamaraDoSussurroPage() {
                           </span>
                         </div>
                         <h3 className="text-base md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500 break-words">
-                          {caso.title}
+                          {prettifyTitle(caso.title)}
                         </h3>
 
                         {isSonoro && (
@@ -171,23 +183,12 @@ export default function CamaraDoSussurroPage() {
                                 Abrir no Spotify <ExternalLink className="w-3 h-3" />
                               </a>
                             )}
-                            <div className="grid grid-cols-2 gap-3 pt-2 text-xs">
-                              {raw.distrito_dominante && (
-                                <div><span className="text-muted-foreground">Distrito: </span><span className="text-foreground/80">{raw.distrito_dominante}</span></div>
-                              )}
-                              {raw.torre_provavel && (
-                                <div><span className="text-muted-foreground">Torre: </span><span className="text-foreground/80">{raw.torre_provavel}</span></div>
-                              )}
-                              {raw.pergunta_ideal && (
-                                <div className="col-span-2"><span className="text-muted-foreground">Pergunta ideal: </span><span className="text-foreground/80 italic">"{raw.pergunta_ideal}"</span></div>
-                              )}
-                            </div>
                           </div>
                         )}
 
                         {!isSonoro && (
-                          <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
-                            {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
+                          <p className="text-muted-foreground text-sm line-clamp-3 font-body leading-relaxed max-w-2xl italic">
+                            Uma escuta simbólica do conto. Entre devagar — não há respostas a alcançar, apenas um rastro a recolher.
                           </p>
                         )}
                         
