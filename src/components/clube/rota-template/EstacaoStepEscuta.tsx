@@ -106,12 +106,10 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
   // Flatten in order, preserving category metadata per item
   const trilha = useMemo(() => {
     const list: { numero: string; categoriaLabel: string; categoriaIcon: any; categoriaDescricao: string; title: string; url: string; categoriaKey: string }[] = [];
-    let n = 0;
     categorias.forEach((cat) => {
       cat.items.forEach((it) => {
-        n += 1;
         list.push({
-          numero: String(n).padStart(2, '0'),
+          numero: '',
           categoriaLabel: cat.label,
           categoriaIcon: cat.icon,
           categoriaDescricao: cat.descricao,
@@ -121,7 +119,19 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
         });
       });
     });
-    return list;
+
+    // Override: promove o áudio da posição 8 para a posição 4 e renomeia para "A Clareira"
+    if (list.length >= 8) {
+      const [movido] = list.splice(7, 1);
+      movido.title = 'A Clareira';
+      list.splice(3, 0, movido);
+    }
+
+    // Renumera sequencialmente após o reordenamento
+    return list.map((item, idx) => ({
+      ...item,
+      numero: String(idx + 1).padStart(2, '0'),
+    }));
   }, [categorias]);
 
   const [openUrl, setOpenUrl] = useState<string | null>(null);
