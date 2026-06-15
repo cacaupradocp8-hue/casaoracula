@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useRotaHub } from '@/hooks/useClubeTemplate';
+import { useRotaProgresso } from '@/hooks/useRotaProgresso';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RotaHubHero } from '@/components/clube/rota-template/RotaHubHero';
@@ -13,9 +14,10 @@ export default function ClubeRotaHub() {
   const { rotaSlug = 'rota-dos-lobos' } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useRotaHub(rotaSlug);
-  
-  const { isPlaying, togglePlay } = useAudioPlayer({ 
-    audioUrl: data?.rota?.audio_acolhimento_url 
+  const { data: progresso } = useRotaProgresso(data?.rota?.id);
+
+  const { isPlaying, togglePlay } = useAudioPlayer({
+    audioUrl: data?.rota?.audio_acolhimento_url
   });
 
   if (isLoading) {
@@ -78,13 +80,32 @@ export default function ClubeRotaHub() {
             </div>
 
             <RotaEstacoesGrid 
-              estacoes={estacoes.map((e, idx) => ({
-                id: e.id,
-                nome: e.nome,
-                status: idx === 0 ? 'unlocked' : 'locked', // Mock for now, progress logic is out of scope
-                numero: idx + 1,
-                slug: e.slug
-              }))}
+              estacoes={estacoes.map((e, idx) => {
+                const concluidas = progresso?.concluidas ?? new Set<string>();
+                const isAdmin = progresso?.isAdmin ?? false;
+                const publicada = (e as any).publicada !== false && (e as any).ativa !== false;
+                const prevConcluida = idx === 0 || concluidas.has(estacoes[idx - 1].id);
+                const isConcluida = concluidas.has(e.id);
+
+                let status: 'locked' | 'unlocked' | 'completed';
+                if (isAdmin) {
+                  status = isConcluida ? 'completed' : 'unlocked';
+                } else if (!publicada) {
+                  status = 'locked';
+                } else if (prevConcluida) {
+                  status = isConcluida ? 'completed' : 'unlocked';
+                } else {
+                  status = 'locked';
+                }
+
+                return {
+                  id: e.id,
+                  nome: e.nome,
+                  status,
+                  numero: idx + 1,
+                  slug: e.slug
+                };
+              })}
               onSelect={(slug) => navigate(`/clube/rota/${slug}`)}
             />
           </div>
