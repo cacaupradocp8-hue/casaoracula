@@ -80,13 +80,32 @@ export default function ClubeRotaHub() {
             </div>
 
             <RotaEstacoesGrid 
-              estacoes={estacoes.map((e, idx) => ({
-                id: e.id,
-                nome: e.nome,
-                status: idx === 0 ? 'unlocked' : 'locked', // Mock for now, progress logic is out of scope
-                numero: idx + 1,
-                slug: e.slug
-              }))}
+              estacoes={estacoes.map((e, idx) => {
+                const concluidas = progresso?.concluidas ?? new Set<string>();
+                const isAdmin = progresso?.isAdmin ?? false;
+                const publicada = (e as any).publicada !== false && (e as any).ativa !== false;
+                const prevConcluida = idx === 0 || concluidas.has(estacoes[idx - 1].id);
+                const isConcluida = concluidas.has(e.id);
+
+                let status: 'locked' | 'unlocked' | 'completed';
+                if (isAdmin) {
+                  status = isConcluida ? 'completed' : 'unlocked';
+                } else if (!publicada) {
+                  status = 'locked';
+                } else if (prevConcluida) {
+                  status = isConcluida ? 'completed' : 'unlocked';
+                } else {
+                  status = 'locked';
+                }
+
+                return {
+                  id: e.id,
+                  nome: e.nome,
+                  status,
+                  numero: idx + 1,
+                  slug: e.slug
+                };
+              })}
               onSelect={(slug) => navigate(`/clube/rota/${slug}`)}
             />
           </div>
