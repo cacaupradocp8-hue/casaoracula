@@ -17,6 +17,18 @@ import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
 
+
+function prettifyTitle(raw: string | null | undefined): string {
+  if (!raw) return 'Sussurro do Conto';
+  // Pick the most narrative segment when DB title comes as slug pipes
+  const segments = raw.split('|').map(s => s.trim()).filter(Boolean);
+  const pick = segments.find(s => /\s/.test(s) && !/[-_]/.test(s)) || segments[segments.length - 1] || raw;
+  return pick
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .trim();
+}
+
 export default function CamaraDoSussurroPage() {
   const [activeCase, setActiveCase] = useState<TrainingCase | null>(null);
   const { data: allCases = [] } = useCamaraCases();
