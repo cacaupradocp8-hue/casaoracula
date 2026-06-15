@@ -61,6 +61,11 @@ interface CamaraCaso {
   ciclo_id: string | null;
   categoria: string | null;
   created_at: string;
+  nome_musica?: string | null;
+  artista?: string | null;
+  spotify_url?: string | null;
+  embed_url?: string | null;
+  funcao_escuta?: string | null;
 }
 
 const DISTRICT_OPTIONS = [
