@@ -132,6 +132,14 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
                 <div className="bg-gold/5 border border-gold/10 p-4 md:p-6 rounded-2xl italic text-gold text-lg md:text-xl font-serif text-center break-words">
                   "{casoData.fraseCentral}"
                 </div>
+
+                {casoData.fraseDestaque && (
+                  <div className="pt-2">
+                    <p className="text-gold/90 text-2xl md:text-3xl font-serif italic leading-snug text-center px-2 md:px-6">
+                      "{casoData.fraseDestaque}"
+                    </p>
+                  </div>
+                )}
               </div>
 
               <div className="flex justify-center pt-4">
