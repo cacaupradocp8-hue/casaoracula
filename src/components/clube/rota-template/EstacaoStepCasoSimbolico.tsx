@@ -38,6 +38,7 @@ interface CasoSimbolicoProps {
 export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
   estacaoId,
   rotaId,
+  estacaoSlug,
   casoData,
   onNext
 }) => {
