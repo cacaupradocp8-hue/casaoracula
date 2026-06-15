@@ -114,7 +114,7 @@ export default function CamaraDoSussurroPage() {
                   return (
                     <div 
                       key={caso.id}
-                      className="group relative overflow-hidden rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-8 flex flex-col md:flex-row items-start justify-between gap-6"
+                      className="group relative overflow-hidden rounded-3xl md:rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm transition-all duration-700 hover:border-primary/40 hover:shadow-glow p-5 md:p-8 flex flex-col md:flex-row items-stretch md:items-start justify-between gap-5 md:gap-6"
                     >
                       <div className="absolute top-0 right-0 w-1/3 h-full bg-primary/5 blur-[80px] -z-10 group-hover:bg-primary/10 transition-colors" />
                       
