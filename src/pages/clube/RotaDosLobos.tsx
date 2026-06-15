@@ -23,7 +23,8 @@ interface DisplayEstacao extends Partial<EstacaoCatalogo> {
 
 export default function RotaDosLobos() {
   const navigate = useNavigate();
-  const { data: estacoes } = useTodasRotas();
+  const { isAdmin } = useEffectivePortal();
+  const { data: estacoes } = useTodasRotas({ isAdmin });
   const { getSetting } = useAppSettings();
   
   const audioUrl = getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3');
