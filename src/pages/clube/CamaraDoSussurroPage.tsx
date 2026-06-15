@@ -84,13 +84,13 @@ export default function CamaraDoSussurroPage() {
             </div>
           </div>
           
-          <div className="flex items-center gap-6 bg-card border border-border rounded-2xl px-6 py-4 shadow-soft">
+          <div className="flex items-center gap-4 bg-card border border-border rounded-2xl px-4 md:px-6 py-3 md:py-4 shadow-soft self-start">
             <div className="flex flex-col items-center gap-2">
               <div className="flex items-center gap-2 text-primary">
                 <Trophy className="w-4 h-4" />
-                <span className="text-xs font-bold tracking-[0.2em] uppercase font-body">CLUBE</span>
+                <span className="text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase font-body">CLUBE</span>
               </div>
-              <Progress value={20} className="w-24 h-1.5 bg-muted" />
+              <Progress value={20} className="w-20 md:w-24 h-1.5 bg-muted" />
             </div>
           </div>
         </header>
