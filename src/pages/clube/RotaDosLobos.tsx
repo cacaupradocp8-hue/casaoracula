@@ -7,6 +7,7 @@ import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Button } from '@/components/ui/button';
 import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
 import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
@@ -22,7 +23,8 @@ interface DisplayEstacao extends Partial<EstacaoCatalogo> {
 
 export default function RotaDosLobos() {
   const navigate = useNavigate();
-  const { data: estacoes } = useTodasRotas();
+  const { isAdmin } = useEffectivePortal();
+  const { data: estacoes } = useTodasRotas({ isAdmin });
   const { getSetting } = useAppSettings();
   
   const audioUrl = getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3');
@@ -317,7 +319,7 @@ export default function RotaDosLobos() {
 
             <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-2 gap-y-6 md:gap-6 overflow-visible pb-8">
               {displayEstacoes.map((estacao, i) => {
-                const isLocked = estacao.status === 'locked' && i !== 0;
+                const isLocked = !isAdmin && estacao.status === 'locked' && i !== 0;
                 const isActive = (i === 0) || (estacao.banner_url !== null) || (estacao.status && estacao.status !== 'locked');
                 const slug = slugsReais[i];
 
