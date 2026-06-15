@@ -127,7 +127,7 @@ export default function CamaraDoSussurroPage() {
                             <Clock className="w-3.5 h-3.5" /> 5-10 min
                           </span>
                         </div>
-                        <h3 className="text-2xl md:text-3xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
+                        <h3 className="text-lg md:text-xl font-display text-foreground group-hover:text-primary transition-colors duration-500">
                           {caso.title}
                         </h3>
 
