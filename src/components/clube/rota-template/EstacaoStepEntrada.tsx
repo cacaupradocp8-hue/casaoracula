@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import casaBoaMeninaHero from '@/assets/casa-da-boa-menina-hero.png.asset.json';
 
 
 interface EstacaoStepEntradaProps {
@@ -39,6 +40,18 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
 
   return (
     <div className="space-y-12 text-center max-w-4xl mx-auto pb-20">
+      {estacaoSlug === 'casa-da-boa-menina' && (
+        <div className="relative w-full aspect-[4/3] md:aspect-[21/9] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl">
+          <img
+            src={casaBoaMeninaHero.url}
+            alt="Casa da Boa Menina"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent" />
+          <div className="absolute inset-0 backdrop-blur-[2px]" />
+        </div>
+      )}
+
       {/* Header Info - Minimalist */}
       <div className="space-y-4 md:space-y-6 pt-4 md:pt-8">
         <h4 className="text-gold text-[8px] sm:text-[10px] md:text-xs uppercase tracking-[0.3em] sm:tracking-[0.5em] font-black flex items-center justify-center gap-2 md:gap-4 px-2">
