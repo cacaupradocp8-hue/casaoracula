@@ -8,22 +8,25 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { TextCarousel } from '@/components/clube/TextCarousel';
+import { SombraDaTorre } from './SombraDaTorre';
+import { CasaDosNaosNuncaDitos } from './CasaDosNaosNuncaDitos';
 
 interface CasoSimbolicoProps {
   estacaoId: string;
   rotaId: string;
+  estacaoSlug?: string;
   casoData: {
     nomeFicticio: string;
     idade: string;
     contexto: string;
     fraseCentral: string;
+    fraseDestaque?: string;
     campoSuperficie: string;
     campoSimbolico: string;
     campoNaoConcluir: string;
     relacaoConto: string;
     perguntaConducao: string;
     cautelaEtica: string;
-    // Tradução oracular relacionada
     traducaoTerritorio?: string;
     traducaoPorta?: string;
     traducaoTorre?: string;
