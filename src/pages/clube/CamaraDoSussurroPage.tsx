@@ -16,6 +16,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Laboratorio8020Modal } from '@/components/clube/Laboratorio8020Modal';
 import { useAllBooks } from '@/hooks/useBooks';
 import { SpotifyPlaylistEmbed } from '@/components/clube/SpotifyPlaylistEmbed';
+import clareiraCapa from '@/assets/clareira-do-chamado-capa.png.asset.json';
 
 
 function prettifyTitle(raw: string | null | undefined): string {
