@@ -132,16 +132,20 @@ export default function CamaraDoSussurroPage() {
                         </h3>
 
                         {isSonoro && (
-                          <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-5 space-y-3">
-                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-primary/70 font-bold">
+                          <div className="rounded-2xl border border-primary/15 bg-primary/[0.04] p-4 md:p-5 space-y-3">
+                            <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-primary/70 font-bold">
                               <Music className="w-3.5 h-3.5" /> Música desta escuta
                             </div>
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-base font-display text-foreground">{raw.nome_musica || '—'}</span>
-                              {raw.artista && (
-                                <span className="text-xs text-muted-foreground italic">{raw.artista}</span>
-                              )}
-                            </div>
+                            {(raw.nome_musica || raw.artista) && (
+                              <div className="flex flex-col gap-0.5">
+                                {raw.nome_musica && (
+                                  <span className="text-sm md:text-base font-display text-foreground break-words">{raw.nome_musica}</span>
+                                )}
+                                {raw.artista && (
+                                  <span className="text-xs text-muted-foreground italic break-words">{raw.artista}</span>
+                                )}
+                              </div>
+                            )}
                             {raw.funcao_escuta && (
                               <p className="text-sm text-muted-foreground leading-relaxed">
                                 <span className="text-foreground/70 font-medium">Função da escuta: </span>
