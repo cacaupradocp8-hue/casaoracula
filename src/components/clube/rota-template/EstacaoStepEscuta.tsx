@@ -103,107 +103,130 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
 
   const totalAudios = categorias.reduce((s, c) => s + c.items.length, 0);
 
+  // Flatten in order, preserving category metadata per item
+  const trilha = useMemo(() => {
+    const list: { numero: string; categoriaLabel: string; categoriaIcon: any; categoriaDescricao: string; title: string; url: string; categoriaKey: string }[] = [];
+    let n = 0;
+    categorias.forEach((cat) => {
+      cat.items.forEach((it) => {
+        n += 1;
+        list.push({
+          numero: String(n).padStart(2, '0'),
+          categoriaLabel: cat.label,
+          categoriaIcon: cat.icon,
+          categoriaDescricao: cat.descricao,
+          categoriaKey: cat.key,
+          title: it.title,
+          url: it.url,
+        });
+      });
+    });
+    return list;
+  }, [categorias]);
+
+  const [openUrl, setOpenUrl] = useState<string | null>(null);
+
   return (
     <div className="pb-20">
-      <div className="space-y-8 text-center max-w-2xl mx-auto mb-20">
-        <div className="space-y-12">
-          {/* Main Title */}
-          <div className="space-y-6 py-8">
-            <div className="flex flex-col items-center gap-2 group">
-              <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight uppercase relative inline-block px-4 break-words">
-                <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent drop-shadow-[0_4px_8px_rgba(0,0,0,0.5)]">
-                  Voz da Clareira
-                </span>
-              </h1>
-            </div>
-          </div>
-
+      <div className="space-y-6 text-center max-w-2xl mx-auto mb-10">
+        <div className="space-y-4 py-4">
+          <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-[0.15em] uppercase">
+            <span className="bg-gradient-to-b from-white to-gold/70 bg-clip-text text-transparent">
+              Voz da Clareira
+            </span>
+          </h1>
           {vozClareiraTexto && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="max-w-2xl mx-auto p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-2xl relative group overflow-hidden"
-            >
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
-              <p className="text-base md:text-lg font-serif italic text-white/80 leading-relaxed whitespace-pre-line relative z-10">
-                {vozClareiraTexto}
-              </p>
-              <Sparkles className="absolute bottom-6 right-6 w-8 h-8 text-gold/10 group-hover:text-gold/20 transition-colors" />
-            </motion.div>
+            <p className="text-sm md:text-base font-serif italic text-white/70 leading-relaxed max-w-xl mx-auto">
+              {vozClareiraTexto}
+            </p>
           )}
         </div>
 
-        {/* Biblioteca de Áudios — Timeline Categorizada */}
-        {totalAudios > 0 && (
-          <div className="space-y-10 text-left">
-            <div className="text-center space-y-3">
-              <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
+        {/* Trilha vertical compacta */}
+        {trilha.length > 0 && (
+          <div className="text-left">
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-gold/20 bg-gold/5">
                 <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Biblioteca de Escuta</span>
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Trilha de Escuta</span>
               </div>
-              <p className="text-[11px] text-white/40 italic font-serif">
-                Siga a ordem das estações — toque cada áudio quando estiver pronta.
-              </p>
             </div>
 
-            <div className="relative pl-6 md:pl-8 space-y-12 border-l border-white/10">
-              {(() => {
-                let counter = 0;
-                return categorias.map((cat) => {
-                  const Icon = cat.icon;
-                  return (
-                    <section key={cat.key} className="relative space-y-5">
-                      <div className="absolute -left-[33px] md:-left-[41px] top-0 w-7 h-7 rounded-full bg-background border border-gold/30 flex items-center justify-center">
-                        <Icon className="w-3.5 h-3.5 text-gold/80" />
-                      </div>
-                      <header className="space-y-1">
-                        <span className="text-[9px] uppercase tracking-[0.3em] font-bold text-gold/60">
-                          Categoria
+            <ol className="relative space-y-3 md:space-y-4">
+              {/* Linha vertical da trilha */}
+              <div className="absolute left-5 top-2 bottom-2 w-px bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" aria-hidden />
+
+              {trilha.map((item) => {
+                const Icon = item.categoriaIcon;
+                const isOpen = openUrl === item.url;
+                return (
+                  <li key={item.url} className="relative pl-14">
+                    {/* Nó numerado */}
+                    <button
+                      type="button"
+                      onClick={() => setOpenUrl(isOpen ? null : item.url)}
+                      className={cn(
+                        "absolute left-0 top-1 w-10 h-10 rounded-full border flex items-center justify-center z-10 transition-all",
+                        isOpen
+                          ? "bg-gold text-midnight border-gold shadow-[0_0_20px_rgba(196,165,74,0.4)]"
+                          : "bg-background text-gold/70 border-gold/30 hover:border-gold/60"
+                      )}
+                      aria-label={`Abrir ${item.title}`}
+                    >
+                      <span className="text-[10px] font-mono font-bold tabular-nums">{item.numero}</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setOpenUrl(isOpen ? null : item.url)}
+                      className={cn(
+                        "w-full text-left p-3 md:p-4 rounded-2xl border transition-all",
+                        isOpen
+                          ? "bg-white/[0.04] border-gold/30"
+                          : "bg-white/[0.02] border-white/10 hover:border-white/20"
+                      )}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-3.5 h-3.5 text-gold/60 shrink-0" />
+                        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-gold/60 truncate">
+                          {item.categoriaLabel}
                         </span>
-                        <h2 className="font-display text-lg md:text-2xl text-white tracking-wide">
-                          {cat.label}
-                        </h2>
-                        <p className="text-xs md:text-sm text-white/40 italic font-serif">
-                          {cat.descricao}
-                        </p>
-                      </header>
+                      </div>
+                      <h3 className="mt-1 text-sm md:text-base font-serif text-white/90 leading-snug">
+                        {item.title}
+                      </h3>
+                    </button>
 
-                      <ol className="space-y-6">
-                        {cat.items.map((audio) => {
-                          counter += 1;
-                          const numero = String(counter).padStart(2, '0');
-                          return (
-                            <li key={audio.url} className="space-y-2">
-                              <div className="flex items-baseline gap-3">
-                                <span className="text-[10px] font-mono font-bold text-gold/50 tabular-nums">
-                                  {numero}
-                                </span>
-                                <span className="text-sm text-white/70 font-serif italic">
-                                  {audio.title}
-                                </span>
-                              </div>
-                              <EscutaPremium
-                                audioUrl={audio.url}
-                                titulo={audio.title}
-                                imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
-                                className="py-0"
-                              />
-                            </li>
-                          );
-                        })}
-                      </ol>
-                    </section>
-                  );
-                });
-              })()}
-            </div>
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pt-3">
+                            <EscutaPremium
+                              audioUrl={item.url}
+                              titulo={item.title}
+                              imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
+                              className="py-0"
+                            />
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </li>
+                );
+              })}
+            </ol>
           </div>
         )}
       </div>
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
-
-        <Button 
+        <Button
           onClick={onNext}
           className="bg-gold hover:bg-gold/80 text-midnight font-bold px-12 h-14 rounded-full uppercase tracking-[0.2em] text-[10px] transition-all group"
         >
