@@ -287,6 +287,13 @@ export const EstacaoStepCasoSimbolico: React.FC<CasoSimbolicoProps> = ({
               </p>
             </div>
 
+            {estacaoSlug === 'casa-da-boa-menina' && (
+              <div className="space-y-10 pt-4">
+                <SombraDaTorre estacaoId={estacaoId} />
+                <CasaDosNaosNuncaDitos estacaoId={estacaoId} />
+              </div>
+            )}
+
             <div className="flex justify-center pt-8">
               <Button 
                 disabled={saveMutation.isPending}
