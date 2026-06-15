@@ -62,6 +62,7 @@ export interface Estacao {
   caso_idade?: string;
   caso_contexto?: string;
   caso_frase_central?: string;
+  caso_frase_destaque?: string;
   caso_campo_superficie?: string;
   caso_campo_simbolico?: string;
   caso_campo_nao_concluir?: string;
