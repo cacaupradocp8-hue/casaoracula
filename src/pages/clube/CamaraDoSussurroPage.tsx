@@ -136,10 +136,10 @@ export default function CamaraDoSussurroPage() {
                             <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-primary/70 font-bold">
                               <Music className="w-3.5 h-3.5" /> Música desta escuta
                             </div>
-                            <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                              <span className="text-lg font-display text-foreground">{raw.nome_musica || '—'}</span>
+                            <div className="flex flex-col gap-0.5">
+                              <span className="text-base font-display text-foreground">{raw.nome_musica || '—'}</span>
                               {raw.artista && (
-                                <span className="text-sm text-muted-foreground italic">· {raw.artista}</span>
+                                <span className="text-xs text-muted-foreground italic">{raw.artista}</span>
                               )}
                             </div>
                             {raw.funcao_escuta && (
