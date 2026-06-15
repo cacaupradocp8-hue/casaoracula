@@ -7233,6 +7233,7 @@ export type Database = {
       }
       co_camara_sussurro_casos: {
         Row: {
+          artista: string | null
           ativo: boolean
           camadas_leitura: string | null
           categoria: string | null
@@ -7242,23 +7243,27 @@ export type Database = {
           dificuldade: string | null
           distrito_dominante: string | null
           distrito_esperado: string | null
+          embed_url: string | null
           erro_comum: string | null
           explicacao_leve: string | null
           explicacao_simples: string | null
           fala_inicial: string | null
           feedback_tecnico: string | null
           ferramenta_principal: string | null
+          funcao_escuta: string | null
           hipotese_esperada: string | null
           id: string
           idade: string | null
           leitura_simbolica: string | null
           nivel: string | null
           nivel_produto: string
+          nome_musica: string | null
           opcoes_leitura: Json | null
           pergunta_ideal: string | null
           proximo_treino_id: string | null
           resposta_correta: string | null
           risco_etico: string | null
+          spotify_url: string | null
           tema_emocional: string | null
           tipo_cliente: string | null
           titulo: string
@@ -7266,6 +7271,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          artista?: string | null
           ativo?: boolean
           camadas_leitura?: string | null
           categoria?: string | null
@@ -7275,23 +7281,27 @@ export type Database = {
           dificuldade?: string | null
           distrito_dominante?: string | null
           distrito_esperado?: string | null
+          embed_url?: string | null
           erro_comum?: string | null
           explicacao_leve?: string | null
           explicacao_simples?: string | null
           fala_inicial?: string | null
           feedback_tecnico?: string | null
           ferramenta_principal?: string | null
+          funcao_escuta?: string | null
           hipotese_esperada?: string | null
           id?: string
           idade?: string | null
           leitura_simbolica?: string | null
           nivel?: string | null
           nivel_produto?: string
+          nome_musica?: string | null
           opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
           proximo_treino_id?: string | null
           resposta_correta?: string | null
           risco_etico?: string | null
+          spotify_url?: string | null
           tema_emocional?: string | null
           tipo_cliente?: string | null
           titulo: string
@@ -7299,6 +7309,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          artista?: string | null
           ativo?: boolean
           camadas_leitura?: string | null
           categoria?: string | null
@@ -7308,23 +7319,27 @@ export type Database = {
           dificuldade?: string | null
           distrito_dominante?: string | null
           distrito_esperado?: string | null
+          embed_url?: string | null
           erro_comum?: string | null
           explicacao_leve?: string | null
           explicacao_simples?: string | null
           fala_inicial?: string | null
           feedback_tecnico?: string | null
           ferramenta_principal?: string | null
+          funcao_escuta?: string | null
           hipotese_esperada?: string | null
           id?: string
           idade?: string | null
           leitura_simbolica?: string | null
           nivel?: string | null
           nivel_produto?: string
+          nome_musica?: string | null
           opcoes_leitura?: Json | null
           pergunta_ideal?: string | null
           proximo_treino_id?: string | null
           resposta_correta?: string | null
           risco_etico?: string | null
+          spotify_url?: string | null
           tema_emocional?: string | null
           tipo_cliente?: string | null
           titulo?: string
