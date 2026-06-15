@@ -7,6 +7,7 @@ import { ResponsiveContainer } from '@/components/ui/ResponsiveContainer';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { Button } from '@/components/ui/button';
 import { useTodasRotas, EstacaoCatalogo, EstacaoStatusUI } from '@/hooks/useTodasRotas';
+import { useEffectivePortal } from '@/hooks/useEffectivePortal';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { cn } from '@/lib/utils';
 import rotaLobosBg from '@/assets/rota-dos-lobos-bg.png';
