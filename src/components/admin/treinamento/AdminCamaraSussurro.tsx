@@ -61,6 +61,11 @@ interface CamaraCaso {
   ciclo_id: string | null;
   categoria: string | null;
   created_at: string;
+  nome_musica?: string | null;
+  artista?: string | null;
+  spotify_url?: string | null;
+  embed_url?: string | null;
+  funcao_escuta?: string | null;
 }
 
 const DISTRICT_OPTIONS = [
@@ -107,6 +112,11 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
     tipo_cliente: '',
     tema_emocional: '',
     categoria: '',
+    nome_musica: '',
+    artista: '',
+    spotify_url: '',
+    embed_url: '',
+    funcao_escuta: '',
     ativo: true,
   });
 
@@ -152,6 +162,11 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
       tipo_cliente: '',
       tema_emocional: '',
       categoria: '',
+      nome_musica: '',
+      artista: '',
+      spotify_url: '',
+      embed_url: '',
+      funcao_escuta: '',
       ativo: true,
     });
     setEditingCaso(null);
@@ -553,7 +568,66 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
                 <span className="font-mono text-white/70">rota-dos-lobos/clareira-do-chamado/modo-aprofundamento/sussurro-da-vida</span>
               </p>
             </div>
+
+            {/* Sussurro Sonoro — campos da música (aparece sempre, mas é dedicado a sussurros sonoros) */}
+            <div className="md:col-span-2 space-y-3 border-t border-white/10 pt-4">
+              <div>
+                <Label className="text-gold">Sussurro Sonoro — Informações da Música</Label>
+                <p className="text-xs text-white/50 mt-1">
+                  Preencha quando a <span className="font-mono">categoria</span> contiver <span className="font-mono">sussurro-sonoro</span>.
+                  Esses campos aparecem para a aluna no card da Câmara.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Nome da música</Label>
+                  <Input
+                    value={form.nome_musica || ''}
+                    onChange={e => setForm({ ...form, nome_musica: e.target.value })}
+                    placeholder="Ex: Maria, Maria"
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Artista / Intérprete</Label>
+                  <Input
+                    value={form.artista || ''}
+                    onChange={e => setForm({ ...form, artista: e.target.value })}
+                    placeholder="Ex: Milton Nascimento"
+                    className="bg-white/5 border-white/10"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Link do Spotify</Label>
+                  <Input
+                    value={form.spotify_url || ''}
+                    onChange={e => setForm({ ...form, spotify_url: e.target.value })}
+                    placeholder="https://open.spotify.com/track/..."
+                    className="bg-white/5 border-white/10 font-mono text-xs"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>URL de embed (opcional)</Label>
+                  <Input
+                    value={form.embed_url || ''}
+                    onChange={e => setForm({ ...form, embed_url: e.target.value })}
+                    placeholder="https://open.spotify.com/embed/track/..."
+                    className="bg-white/5 border-white/10 font-mono text-xs"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Função da escuta</Label>
+                <Textarea
+                  value={form.funcao_escuta || ''}
+                  onChange={e => setForm({ ...form, funcao_escuta: e.target.value })}
+                  placeholder="Para que serve, simbolicamente, escutar esta música nesta estação?"
+                  className="bg-white/5 border-white/10 min-h-[80px]"
+                />
+              </div>
+            </div>
           </div>
+
 
           <DialogFooter className="border-t border-white/10 pt-4 mt-4">
             <Button variant="ghost" onClick={() => setDialogOpen(false)} className="text-white hover:bg-white/5">
