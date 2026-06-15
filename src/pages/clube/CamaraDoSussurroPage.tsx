@@ -78,17 +78,19 @@ export default function CamaraDoSussurroPage() {
     <div className="min-h-screen bg-background text-foreground pb-20 pattern-geometric relative">
       {/* Fundo Clareira do Chamado — teste topo com blur de transição */}
       {isAprofundamento && (
-        <div className="absolute inset-x-0 top-0 h-[70vh] md:h-[80vh] pointer-events-none overflow-hidden -z-0">
+        <div className="absolute inset-x-0 top-0 h-[95vh] md:h-screen pointer-events-none overflow-hidden -z-0">
           <img
             src={clareiraCapa.url}
             alt=""
             aria-hidden="true"
-            className="w-full h-full object-cover object-top opacity-60"
+            className="w-full h-full object-cover object-center opacity-80"
           />
-          {/* Gradient fade to disguise the division */}
-          <div className="absolute inset-0 bg-gradient-to-b from-background/30 via-background/70 to-background" />
-          {/* Soft blur veil near the bottom edge */}
-          <div className="absolute bottom-0 left-0 right-0 h-40 backdrop-blur-md [mask-image:linear-gradient(to_bottom,transparent,black)]" />
+          {/* Vinheta lateral pra integrar bordas */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,hsl(var(--background))_95%)]" />
+          {/* Fade vertical pra dissolver no conteúdo */}
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background" />
+          {/* Blur progressivo na base */}
+          <div className="absolute bottom-0 left-0 right-0 h-56 backdrop-blur-lg [mask-image:linear-gradient(to_bottom,transparent,black_60%)]" />
         </div>
       )}
       <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-6 py-8 md:py-12 space-y-8 md:space-y-10">
