@@ -53,32 +53,61 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
     })();
   }, [estacaoId]);
 
-  // Audio Playlist Logic — ordem fixa:
-  // 1) Abertura da Estação  2) A Clareira onde tudo começou  3-6) Rastros (admin)
-  // 7) Voz da Floresta  8+) Demais áudios (admin / treinamento)
-  const audioPlaylist = useMemo(() => {
-    const list: Array<{ url: string; title: string; type: string; icon: any }> = [];
-    if (audioAberturaUrl) list.push({ url: audioAberturaUrl, title: "Abertura da Estação", type: "intro", icon: Music });
-    if (audioVozClareiraUrl) list.push({ url: audioVozClareiraUrl, title: "A Clareira onde tudo começou", type: "content", icon: Headphones });
+  // Categorias fixas, na ordem de escuta
+  type AudioItem = { url: string; title: string };
+  type Categoria = { key: string; label: string; descricao: string; icon: any; items: AudioItem[] };
+
+  const categorias = useMemo<Categoria[]>(() => {
     const rastros = adminAudios.filter(a => /rastro/i.test(a.title));
-    const outros = adminAudios.filter(a => !/rastro/i.test(a.title));
-    rastros.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
-    if (audioFlorestaUrl) list.push({ url: audioFlorestaUrl, title: "A Voz da Floresta", type: "ambient", icon: TreePine });
-    outros.forEach(a => list.push({ url: a.url, title: a.title, type: "content", icon: Headphones }));
-    return list;
+    const treinamento = adminAudios.filter(a => /treinamento|treino/i.test(a.title));
+    const outros = adminAudios.filter(a => !/rastro|treinamento|treino/i.test(a.title));
+
+    return [
+      {
+        key: 'abertura',
+        label: 'Abertura da Estação',
+        descricao: 'Convite inicial — escute antes de prosseguir.',
+        icon: Music,
+        items: audioAberturaUrl ? [{ url: audioAberturaUrl, title: 'Abertura da Estação' }] : [],
+      },
+      {
+        key: 'clareira',
+        label: 'A Clareira Onde Tudo Começou',
+        descricao: 'O eixo simbólico desta travessia.',
+        icon: Headphones,
+        items: audioVozClareiraUrl ? [{ url: audioVozClareiraUrl, title: 'A Clareira onde tudo começou' }] : [],
+      },
+      {
+        key: 'floresta',
+        label: 'A Voz da Floresta',
+        descricao: 'Ambiência e silêncio guiado.',
+        icon: TreePine,
+        items: audioFlorestaUrl ? [{ url: audioFlorestaUrl, title: 'A Voz da Floresta' }] : [],
+      },
+      {
+        key: 'rastro',
+        label: 'Rastro',
+        descricao: 'Fragmentos para escuta contínua.',
+        icon: Headphones,
+        items: [...rastros, ...outros],
+      },
+      {
+        key: 'treinamento',
+        label: 'Áudio de Treinamento',
+        descricao: 'Material formativo de prática.',
+        icon: Sparkles,
+        items: treinamento,
+      },
+    ].filter(c => c.items.length > 0);
   }, [audioVozClareiraUrl, audioAberturaUrl, audioFlorestaUrl, adminAudios]);
 
-  const [activeAudioIndex, setActiveAudioIndex] = useState(0);
-
-  const playlists = spotifyPlaylists && spotifyPlaylists.length > 0 
-    ? spotifyPlaylists 
-    : (spotifyPlaylistUrl ? [{ url: spotifyPlaylistUrl, label: 'Playlist Principal' }] : []);
+  const totalAudios = categorias.reduce((s, c) => s + c.items.length, 0);
 
   return (
     <div className="pb-20">
       <div className="space-y-8 text-center max-w-2xl mx-auto mb-20">
         <div className="space-y-12">
-          {/* Main Title - Compacted for better mobile flow */}
+          {/* Main Title */}
           <div className="space-y-6 py-8">
             <div className="flex flex-col items-center gap-2 group">
               <h1 className="text-2xl xs:text-3xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] sm:tracking-[0.15em] leading-tight uppercase relative inline-block px-4 break-words">
@@ -88,9 +117,9 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
               </h1>
             </div>
           </div>
-          
+
           {vozClareiraTexto && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="max-w-2xl mx-auto p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-white/[0.03] border border-white/10 backdrop-blur-md shadow-2xl relative group overflow-hidden"
@@ -103,74 +132,73 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
             </motion.div>
           )}
         </div>
-        
-        {/* Unified Audio Playlist Section */}
-        {audioPlaylist.length > 0 && (
-          <div className="space-y-12">
-            <div className="space-y-6">
+
+        {/* Biblioteca de Áudios — Timeline Categorizada */}
+        {totalAudios > 0 && (
+          <div className="space-y-10 text-left">
+            <div className="text-center space-y-3">
               <div className="inline-flex items-center gap-3 px-4 py-1 rounded-full border border-gold/20 bg-gold/5">
                 <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
-                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Rastros Sonoros</span>
+                <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">Biblioteca de Escuta</span>
               </div>
-              
-              {/* Main Player for Active Audio */}
-              <div className="relative">
-                <EscutaPremium 
-                  key={audioPlaylist[activeAudioIndex]?.url}
-                  audioUrl={audioPlaylist[activeAudioIndex]?.url} 
-                  titulo={audioPlaylist[activeAudioIndex]?.title} 
-                  imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
-                  className="py-0"
-                  autoPlay
-                  onEnded={() => setActiveAudioIndex((i) => Math.min(i + 1, audioPlaylist.length - 1))}
-                />
-              </div>
+              <p className="text-[11px] text-white/40 italic font-serif">
+                Siga a ordem das estações — toque cada áudio quando estiver pronta.
+              </p>
+            </div>
 
-              {/* Selection List - Discreta e Sofisticada */}
-              <div className="flex flex-col gap-2 max-w-md mx-auto pt-4">
-                <p className="text-[9px] text-white/30 uppercase tracking-[0.3em] font-bold mb-2">Anexos desta Estação</p>
-                {audioPlaylist.map((audio, idx) => {
-                  const Icon = audio.icon;
+            <div className="relative pl-6 md:pl-8 space-y-12 border-l border-white/10">
+              {(() => {
+                let counter = 0;
+                return categorias.map((cat) => {
+                  const Icon = cat.icon;
                   return (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveAudioIndex(idx)}
-                      className={cn(
-                        "flex items-center justify-between p-4 rounded-2xl border transition-all duration-500 group",
-                        activeAudioIndex === idx 
-                          ? "bg-gold/10 border-gold/40 text-gold shadow-[0_0_20px_rgba(212,175,55,0.1)]" 
-                          : "bg-white/5 border-white/10 text-white/50 hover:bg-white/10 hover:border-white/20"
-                      )}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className={cn(
-                          "w-8 h-8 rounded-full flex items-center justify-center border transition-colors",
-                          activeAudioIndex === idx ? "border-gold/30 bg-gold/10" : "border-white/10 bg-white/5"
-                        )}>
-                          <Icon className={cn("w-4 h-4", activeAudioIndex === idx ? "text-gold" : "text-white/40")} />
-                        </div>
-                        <div className="text-left">
-                          <span className="text-xs font-serif italic block tracking-wide">{audio.title}</span>
-                          <span className="text-[8px] uppercase tracking-widest font-bold opacity-40">
-                            {audio.type === 'content' ? 'Conteúdo Principal' : audio.type === 'ambient' ? 'Ambiência' : 'Introdução'}
-                          </span>
-                        </div>
+                    <section key={cat.key} className="relative space-y-5">
+                      <div className="absolute -left-[33px] md:-left-[41px] top-0 w-7 h-7 rounded-full bg-background border border-gold/30 flex items-center justify-center">
+                        <Icon className="w-3.5 h-3.5 text-gold/80" />
                       </div>
-                      {activeAudioIndex === idx && (
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3].map(i => (
-                            <div key={i} className="w-0.5 h-3 bg-gold animate-pulse" style={{ animationDelay: `${i * 0.2}s` }} />
-                          ))}
-                        </div>
-                      )}
-                    </button>
+                      <header className="space-y-1">
+                        <span className="text-[9px] uppercase tracking-[0.3em] font-bold text-gold/60">
+                          Categoria
+                        </span>
+                        <h2 className="font-display text-lg md:text-2xl text-white tracking-wide">
+                          {cat.label}
+                        </h2>
+                        <p className="text-xs md:text-sm text-white/40 italic font-serif">
+                          {cat.descricao}
+                        </p>
+                      </header>
+
+                      <ol className="space-y-6">
+                        {cat.items.map((audio) => {
+                          counter += 1;
+                          const numero = String(counter).padStart(2, '0');
+                          return (
+                            <li key={audio.url} className="space-y-2">
+                              <div className="flex items-baseline gap-3">
+                                <span className="text-[10px] font-mono font-bold text-gold/50 tabular-nums">
+                                  {numero}
+                                </span>
+                                <span className="text-sm text-white/70 font-serif italic">
+                                  {audio.title}
+                                </span>
+                              </div>
+                              <EscutaPremium
+                                audioUrl={audio.url}
+                                titulo={audio.title}
+                                imagemEscuta="/__l5e/assets-v1/6890f537-199d-46e1-9f3c-0c52f74c483f/disco-vinil-premium.png"
+                                className="py-0"
+                              />
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    </section>
                   );
-                })}
-              </div>
+                });
+              })()}
             </div>
           </div>
         )}
-        {/* Playlist movida para a Câmara do Sussurro — aba Sussurro Sonoro */}
       </div>
 
       <div className="max-w-2xl mx-auto flex flex-col items-center gap-12 pt-8">
