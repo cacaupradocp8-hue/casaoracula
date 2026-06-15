@@ -175,8 +175,8 @@ export default function CamaraDoSussurroPage() {
                         )}
 
                         {!isSonoro && (
-                          <p className="text-muted-foreground text-sm line-clamp-2 font-body leading-relaxed max-w-2xl">
-                            {caso.tema || 'Prática de escuta ativa baseada nos conceitos da obra atual.'}
+                          <p className="text-muted-foreground text-sm line-clamp-3 font-body leading-relaxed max-w-2xl italic">
+                            Uma escuta simbólica do conto. Entre devagar — não há respostas a alcançar, apenas um rastro a recolher.
                           </p>
                         )}
                         
