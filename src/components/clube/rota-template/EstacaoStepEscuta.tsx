@@ -138,18 +138,32 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
 
   return (
     <div className="pb-20">
-      <div className="space-y-6 text-center max-w-2xl mx-auto mb-10">
-        <div className="space-y-4 py-4">
-          <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-[0.15em] uppercase">
+      <div className="space-y-8 text-center max-w-2xl mx-auto mb-10 px-1 sm:px-0">
+        <div className="space-y-5 py-4">
+          <h1 className="text-2xl md:text-4xl font-display font-black text-white tracking-[0.15em] uppercase leading-tight">
             <span className="bg-gradient-to-b from-white to-gold/70 bg-clip-text text-transparent">
               Voz da Clareira
             </span>
           </h1>
-          {vozClareiraTexto && (
-            <p className="text-sm md:text-base font-serif italic text-white/70 leading-relaxed max-w-xl mx-auto">
-              {vozClareiraTexto}
+
+          {/* Caixa: Orientação da Casa */}
+          <div className="mx-auto max-w-xl rounded-2xl border border-gold/15 bg-white/[0.03] backdrop-blur-md px-5 py-5 sm:px-7 sm:py-6 text-left space-y-3 shadow-lg">
+            <div className="flex items-center gap-2">
+              <span className="w-1 h-1 rounded-full bg-gold animate-pulse" />
+              <span className="text-[9px] uppercase tracking-[0.3em] font-black text-gold/80">
+                Orientação da Casa
+              </span>
+            </div>
+            {vozClareiraTexto && (
+              <p className="text-[15px] sm:text-base font-serif italic text-white/85 leading-[1.75] whitespace-pre-line break-words">
+                {vozClareiraTexto}
+              </p>
+            )}
+            <p className="text-xs sm:text-sm text-white/65 leading-relaxed border-t border-white/10 pt-3">
+              Escute os áudios <span className="text-gold/90 font-semibold">na ordem numerada</span> da trilha abaixo —
+              cada faixa prepara a seguinte. Toque um por vez, sem pular.
             </p>
-          )}
+          </div>
         </div>
 
         {/* Trilha vertical compacta */}
