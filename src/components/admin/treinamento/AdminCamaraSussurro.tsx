@@ -162,6 +162,11 @@ export function AdminCamaraSussurro({ cicloId }: { cicloId?: string }) {
       tipo_cliente: '',
       tema_emocional: '',
       categoria: '',
+      nome_musica: '',
+      artista: '',
+      spotify_url: '',
+      embed_url: '',
+      funcao_escuta: '',
       ativo: true,
     });
     setEditingCaso(null);
