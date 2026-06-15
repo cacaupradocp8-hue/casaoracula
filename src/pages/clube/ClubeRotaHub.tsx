@@ -14,9 +14,10 @@ export default function ClubeRotaHub() {
   const { rotaSlug = 'rota-dos-lobos' } = useParams();
   const navigate = useNavigate();
   const { data, isLoading, error } = useRotaHub(rotaSlug);
-  
-  const { isPlaying, togglePlay } = useAudioPlayer({ 
-    audioUrl: data?.rota?.audio_acolhimento_url 
+  const { data: progresso } = useRotaProgresso(data?.rota?.id);
+
+  const { isPlaying, togglePlay } = useAudioPlayer({
+    audioUrl: data?.rota?.audio_acolhimento_url
   });
 
   if (isLoading) {
