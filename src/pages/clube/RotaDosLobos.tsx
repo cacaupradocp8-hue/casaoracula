@@ -333,8 +333,7 @@ export default function RotaDosLobos() {
                   <motion.div
                     key={estacao.id}
                     initial={{ opacity: 0, y: 24 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: '-60px' }}
+                    animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.08 * i, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={!isLocked ? { y: -4 } : undefined}
                     onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
