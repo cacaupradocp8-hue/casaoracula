@@ -85,9 +85,13 @@ export const RotaHubHero: React.FC<RotaHubHeroProps> = ({
                 <Ghost className="w-3.5 h-3.5 mr-2" /> Câmara do Sussurro
               </Button>
             </div>
-            <Button onClick={onEnter} className="w-fit px-10 rounded-full h-14 bg-gold hover:bg-gold/90 text-midnight font-bold uppercase tracking-widest shadow-xl transition-all">
-              Entrar na Jornada
-            </Button>
+            <button
+              onClick={onEnter}
+              className="group relative w-fit px-12 py-4 rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_40px_-10px_rgba(212,175,55,0.55)]"
+            >
+              <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="relative text-[12px] font-bold tracking-[0.3em] uppercase text-gold">Entrar na Jornada</span>
+            </button>
           </div>
         </div>
         <div className="relative flex items-center justify-center bg-[#0A0A0B] overflow-hidden">
