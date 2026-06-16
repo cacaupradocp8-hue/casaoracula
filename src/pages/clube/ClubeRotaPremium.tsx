@@ -29,6 +29,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { FounderTransitionPortal } from '@/components/clube/FounderTransitionPortal';
 import { ColheitaRastrosExperience } from '@/components/clube/ColheitaRastrosExperience';
+import { ColheitaDosRastros } from '@/components/clube/ColheitaDosRastros';
+import { ConviteFundadoras } from '@/components/clube/ConviteFundadoras';
+import { useConviteFundadoraConfig } from '@/hooks/useColheitaRastros';
 import { toast } from 'sonner';
 
 export default function ClubeRotaPremium() {
@@ -43,22 +46,32 @@ export default function ClubeRotaPremium() {
   const [showTransitionPortal, setShowTransitionPortal] = useState(false);
   const [showColheita, setShowColheita] = useState(false);
 
-  const steps = [
-    { id: 'entrada', title: 'Entrada' },
-    { id: 'escuta_ritual', title: 'Escuta Ritual' },
-    { id: 'camara_escuta', title: 'Câmara da Escuta' },
-    { id: 'sussurros', title: 'Sussurros do Conto' },
-    { id: 'traducao_oracular', title: 'Tradução Oracular' },
-    { id: 'caso', title: 'Caso Simbólico' },
-    { id: 'desafio_escuta', title: 'Desafio de Escuta' },
-    { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
-    { id: 'jardim_psique', title: 'Jardim da Psique' },
-    { id: 'jardim_oficio', title: 'Jardim do Ofício' },
-    { id: 'missao_campo', title: 'Missão de Campo' },
-    { id: 'oraculo', title: 'Oráculo da Estação' },
-    { id: 'cartografia', title: 'Cartografia da Loba' },
-    { id: 'proximos_passos', title: 'Fechamento 80/20' }
-  ];
+  const { data: conviteCfg } = useConviteFundadoraConfig(estacao?.id);
+  const showConviteFundadoras = !!(isFounder && conviteCfg?.ativo);
+
+  const steps = useMemo(() => {
+    const base = [
+      { id: 'entrada', title: 'Entrada' },
+      { id: 'escuta_ritual', title: 'Escuta Ritual' },
+      { id: 'camara_escuta', title: 'Câmara da Escuta' },
+      { id: 'sussurros', title: 'Sussurros do Conto' },
+      { id: 'traducao_oracular', title: 'Tradução Oracular' },
+      { id: 'caso', title: 'Caso Simbólico' },
+      { id: 'desafio_escuta', title: 'Desafio de Escuta' },
+      { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
+      { id: 'jardim_psique', title: 'Jardim da Psique' },
+      { id: 'jardim_oficio', title: 'Jardim do Ofício' },
+      { id: 'missao_campo', title: 'Missão de Campo' },
+      { id: 'oraculo', title: 'Oráculo da Estação' },
+      { id: 'cartografia', title: 'Cartografia da Loba' },
+      { id: 'colheita_rastros', title: 'Colheita dos Rastros' },
+    ];
+    if (showConviteFundadoras) {
+      base.push({ id: 'convite_fundadoras', title: 'Conselho das Fundadoras' });
+    }
+    base.push({ id: 'proximos_passos', title: 'Fechamento 80/20' });
+    return base;
+  }, [showConviteFundadoras]);
 
   // Carregar progresso inicial
   useEffect(() => {
@@ -167,16 +180,6 @@ export default function ClubeRotaPremium() {
       <FounderTransitionPortal 
         onContinue={() => {
           setShowTransitionPortal(false);
-          setShowColheita(true);
-        }} 
-      />
-    );
-  }
-
-  if (showColheita) {
-    return (
-      <ColheitaRastrosExperience 
-        onComplete={() => {
           navigate('/sala-da-visitante');
         }} 
       />
@@ -506,7 +509,24 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
-                {currentStep === 13 && (
+                {steps[currentStep]?.id === 'colheita_rastros' && (
+                  <ColheitaDosRastros
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    estacaoNome={estacao.titulo || estacao.nome}
+                    onComplete={handleNext}
+                  />
+                )}
+
+                {steps[currentStep]?.id === 'convite_fundadoras' && (
+                  <ConviteFundadoras
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    onContinue={handleNext}
+                  />
+                )}
+
+                {steps[currentStep]?.id === 'proximos_passos' && (
                   <EstacaoStepFechamento 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
