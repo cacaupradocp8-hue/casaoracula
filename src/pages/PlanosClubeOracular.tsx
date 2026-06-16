@@ -106,11 +106,11 @@ export default function PlanosClubeOracular() {
     <AppLayout>
       <div className="min-h-screen bg-background">
         {/* Hero with image & effects */}
-        <section className="relative w-full h-[50vh] min-h-[340px] max-h-[480px] overflow-hidden -mt-16 md:-mt-20">
+        <section className="relative w-full h-[60vh] min-h-[380px] max-h-[560px] md:h-[55vh] md:min-h-[420px] md:max-h-[620px] overflow-hidden -mt-16 md:-mt-20">
           <img
             src={heroPlanos}
             alt="Clube de Leitura Simbólica"
-            className="absolute inset-0 w-full h-full object-cover object-top"
+            className="absolute inset-0 w-full h-full object-contain md:object-cover object-center bg-background"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent" />
