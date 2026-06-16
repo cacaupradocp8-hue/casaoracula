@@ -47,6 +47,7 @@ export const adminNavGroups: AdminNavGroup[] = [
       { key: 'central-rota-lobos', label: 'Rota dos Lobos', icon: Sparkles },
       { key: 'escuta-ritual', label: 'Escuta Ritual da Estação', icon: Headphones },
       { key: 'clube-treinamento', label: 'Câmara do Sussurro', icon: Headphones },
+      { key: 'clube-colheita', label: 'Colheita dos Rastros', icon: Flower2 },
     ],
   },
   {
