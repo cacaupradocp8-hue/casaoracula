@@ -72,6 +72,7 @@ const AdminTreinamentoTab = lazy(() => import('@/components/admin/treinamento/Ad
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
+const AdminColheitaRastros = lazy(() => import('@/pages/admin/clube/AdminColheitaRastros'));
 // AdminClubeLivroTab removed as it is legacy all-in-one component
 
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
