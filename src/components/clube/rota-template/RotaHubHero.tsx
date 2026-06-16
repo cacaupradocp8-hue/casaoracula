@@ -41,9 +41,13 @@ export const RotaHubHero: React.FC<RotaHubHeroProps> = ({
           </div>
         </div>
         <div className="px-6 pb-10 space-y-6 bg-[#020617]">
-          <Button onClick={onEnter} className="w-full bg-gold text-midnight font-bold uppercase tracking-widest h-11 rounded-full shadow-lg">
-            Entrar na Jornada
-          </Button>
+          <button
+            onClick={onEnter}
+            className="group relative w-full h-12 rounded-full border border-gold/40 bg-gold/5 backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_30px_-8px_rgba(212,175,55,0.5)]"
+          >
+            <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative text-[11px] font-bold tracking-[0.25em] uppercase text-gold">Entrar na Jornada</span>
+          </button>
           <div className="grid grid-cols-2 gap-3">
             <div onClick={onTogglePlay} className="flex items-center gap-2 p-3 rounded-2xl bg-white/[0.03] border border-white/5 cursor-pointer">
               <div className="w-8 h-8 rounded-full border border-gold/30 flex items-center justify-center bg-gold/5">
