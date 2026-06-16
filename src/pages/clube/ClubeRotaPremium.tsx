@@ -29,6 +29,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { FounderTransitionPortal } from '@/components/clube/FounderTransitionPortal';
 import { ColheitaRastrosExperience } from '@/components/clube/ColheitaRastrosExperience';
+import { ColheitaDosRastros } from '@/components/clube/ColheitaDosRastros';
+import { ConviteFundadoras } from '@/components/clube/ConviteFundadoras';
+import { useConviteFundadoraConfig } from '@/hooks/useColheitaRastros';
 import { toast } from 'sonner';
 
 export default function ClubeRotaPremium() {
