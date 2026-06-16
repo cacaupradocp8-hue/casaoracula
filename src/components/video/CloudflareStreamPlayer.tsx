@@ -109,10 +109,26 @@ export function CloudflareStreamPlayer({
     }
   }, [videoId, contextType, contextId, requiredPortal, onError, onLoad]);
 
-  // Fetch token on mount and when videoId changes
+  // Lazy: only fetch token once visible (or if autoPlay)
   useEffect(() => {
-    fetchToken();
-  }, [fetchToken]);
+    if (shouldLoad || !containerRef.current) return;
+    const el = containerRef.current;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    if (shouldLoad) fetchToken();
+  }, [shouldLoad, fetchToken]);
 
   // Initialize HLS player when manifestUrl is available
   useEffect(() => {
