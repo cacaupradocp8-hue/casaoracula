@@ -128,11 +128,12 @@ export default function RotaDosLobos() {
                 {/* CTA Principal Mobile */}
                 <button
                   type="button"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-full border border-gold/40 bg-gold text-[13px] font-bold uppercase tracking-widest text-[#08090B] shadow-[0_12px_24px_rgba(212,175,55,0.2)] transition-all active:scale-[0.97] hover:bg-gold/90"
+                  className="group relative inline-flex h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm transition-all active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_30px_-8px_rgba(212,175,55,0.5)]"
                   onClick={irParaEstacao1}
                 >
-                  <TreePine className="h-4 w-4" />
-                  <span>Entrar na Clareira</span>
+                  <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <TreePine className="relative h-4 w-4 text-gold" />
+                  <span className="relative text-[11px] font-bold uppercase tracking-[0.25em] text-gold">Entrar na Clareira</span>
                 </button>
 
                 {/* Obra Regente Mobile - Movida para baixo do CTA na próxima dobra */}
