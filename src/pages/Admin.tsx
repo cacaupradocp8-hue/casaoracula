@@ -72,6 +72,7 @@ const AdminTreinamentoTab = lazy(() => import('@/components/admin/treinamento/Ad
 
 
 const AdminCarrosseisInsights = lazy(() => import('@/pages/admin/clube/AdminCarrosseisInsights'));
+const AdminColheitaRastros = lazy(() => import('@/pages/admin/clube/AdminColheitaRastros'));
 // AdminClubeLivroTab removed as it is legacy all-in-one component
 
 const AdminPlanosClubTab = lazy(() => import('@/components/admin/AdminPlanosClubTab').then(m => ({ default: m.AdminPlanosClubTab })));
@@ -115,6 +116,7 @@ const TAB_COMPONENTS: Record<string, React.LazyExoticComponent<React.ComponentTy
   'clube-chat': AdminClubeHub,
   'clube-carrosseis-insights': AdminCarrosseisInsights,
   'clube-treinamento': AdminTreinamentoTab,
+  'clube-colheita': AdminColheitaRastros,
   'clube-editorial': AdminClubeEditorialTab,
   'escuta-ritual': AdminEscutaRitualTab,
 
@@ -184,6 +186,7 @@ export default function Admin() {
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path === '/admin/clube/laboratorio-8020') return 'clube-laboratorio-8020';
     if (path === '/admin/clube/carrosseis-insights') return 'clube-carrosseis-insights';
+    if (path === '/admin/clube/colheita-rastros') return 'clube-colheita';
     if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/') || path === '/admin/clube/rota-dos-lobos') {
       return 'clube-jornadas'; 
     }
