@@ -208,15 +208,16 @@ export default function RotaDosLobos() {
                   </div>
 
                   <div className="pt-8">
-                    <Button
-                      variant="gold"
-                      className="w-full sm:w-fit px-12 rounded-full h-16 text-base font-bold bg-gold hover:bg-gold/90 text-[#08090B] border border-white/20 group shadow-[0_0_30px_rgba(212,175,55,0.25)] transition-all active:scale-95 uppercase tracking-widest"
+                    <button
+                      type="button"
                       onClick={irParaEstacao1}
+                      className="group relative inline-flex items-center gap-3 px-12 py-4 rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_40px_-10px_rgba(212,175,55,0.55)]"
                     >
-                      <TreePine className="mr-3 w-6 h-6 flex-shrink-0" />
-                      <span>Entrar na Clareira</span>
-                      <ArrowRight className="ml-3 w-5 h-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all flex-shrink-0" />
-                    </Button>
+                      <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      <TreePine className="relative w-4 h-4 text-gold" />
+                      <span className="relative text-[12px] font-bold tracking-[0.3em] uppercase text-gold">Entrar na Clareira</span>
+                      <ArrowRight className="relative w-4 h-4 text-gold opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-500" />
+                    </button>
                   </div>
                 </div>
               </div>
