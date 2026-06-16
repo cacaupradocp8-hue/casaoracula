@@ -232,16 +232,18 @@ export function CloudflareStreamPlayer({
     return false;
   }, []);
 
-  // Loading state
-  if (isLoading) {
+  // Pre-load placeholder (before scrolled into view) or loading state
+  if (!shouldLoad || isLoading) {
     return (
-      <div className={`relative aspect-video ${className}`}>
+      <div ref={containerRef} className={`relative aspect-video ${className}`}>
         <Skeleton className="w-full h-full rounded-xl" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm">
-            Carregando vídeo...
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-pulse text-muted-foreground text-sm">
+              Carregando vídeo...
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
