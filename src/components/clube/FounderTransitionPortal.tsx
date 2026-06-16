@@ -60,21 +60,21 @@ export function FounderTransitionPortal({ onContinue }: { onContinue?: () => voi
           <div className="absolute -inset-4 bg-gold/5 blur-2xl rounded-[40px] opacity-0 group-hover:opacity-100 transition-opacity" />
           
           <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0A0A0B]/60 backdrop-blur-xl p-1 shadow-2xl">
-            <div className="relative aspect-[16/10] overflow-hidden rounded-[30px]">
+            <div className="relative aspect-square overflow-hidden rounded-[30px]">
               <img 
                 src={casaBoaMeninaAsset.url} 
                 alt="Casa da Boa Menina — Rota dos Lobos" 
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover object-center"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/30 to-transparent" />
-              
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
-                  <Lock className="w-5 h-5 text-gold" />
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#0A0A0B] to-transparent pointer-events-none" />
+
+              <div className="absolute top-4 right-4">
+                <div className="w-10 h-10 rounded-full bg-black/50 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
+                  <Lock className="w-4 h-4 text-gold" />
                 </div>
-                <span className="text-[10px] font-bold tracking-[0.4em] text-gold uppercase drop-shadow-md">🔒 Casa da Boa Menina</span>
               </div>
             </div>
+
 
             <div className="p-8 space-y-6 text-left">
               <p className="text-sm text-gold/90 font-serif italic border-l border-gold/30 pl-4">
