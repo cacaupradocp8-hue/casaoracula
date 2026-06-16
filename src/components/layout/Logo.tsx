@@ -1,10 +1,15 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import logoFull from '@/assets/logo-casa-oracula.png';
-import logoIcon from '@/assets/logo-casa-icon-new.png';
-import logoText from '@/assets/logo-casa-text-new.png';
+import logoFullAsset from '@/assets/logo-casa-oracula.png.asset.json';
+import logoIconAsset from '@/assets/logo-casa-icon-new.png.asset.json';
+import logoTextAsset from '@/assets/logo-casa-text-new.png.asset.json';
 import logoHorizontal from '@/assets/logo-horizontal.png';
-import logoVertical from '@/assets/logo-vertical.png';
+import logoVerticalAsset from '@/assets/logo-vertical.png.asset.json';
+
+const logoFull = logoFullAsset.url;
+const logoIcon = logoIconAsset.url;
+const logoText = logoTextAsset.url;
+const logoVertical = logoVerticalAsset.url;
 
 interface LogoProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: 'sm' | 'md' | 'lg' | 'xl';
