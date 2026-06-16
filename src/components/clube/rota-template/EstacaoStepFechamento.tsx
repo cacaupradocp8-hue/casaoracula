@@ -118,32 +118,37 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
       </Card>
 
       <div className="flex flex-col items-center gap-8 pt-8">
-        <div className="flex flex-col sm:flex-row gap-6 w-full max-w-2xl justify-center">
-          <Button
+        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl justify-center">
+          <button
             onClick={() => conclusionMutation.mutate()}
             disabled={conclusionMutation.isPending}
-            className="flex-1 bg-white text-midnight hover:bg-white/90 font-bold h-20 rounded-full text-xs uppercase tracking-widest shadow-2xl transition-all hover:scale-105"
+            className="group relative flex-1 px-10 py-5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm text-[11px] font-bold tracking-[0.25em] uppercase text-white/80 hover:text-white hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500 active:scale-[0.98] disabled:opacity-50"
           >
-            {conclusionMutation.isPending ? 'Finalizando...' : 'Concluir Estação'}
-          </Button>
-          
+            <span className="inline-flex items-center justify-center gap-3">
+              {conclusionMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
+              {conclusionMutation.isPending ? 'Finalizando…' : 'Concluir Estação'}
+            </span>
+          </button>
+
           {proximaEstacaoNome && (
-            <Button
-              variant="outline"
+            <button
               disabled={conclusionMutation.isPending}
               onClick={() => conclusionMutation.mutate()}
-              className="flex-1 border-gold/20 text-gold hover:bg-gold/5 font-bold h-20 rounded-full text-[10px] md:text-xs uppercase tracking-widest transition-all group"
+              className="group relative flex-1 px-10 py-5 rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_30px_-8px_rgba(212,175,55,0.45)] disabled:opacity-50"
             >
-              Entrar na Próxima Travessia
-              <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
-            </Button>
+              <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="relative inline-flex items-center justify-center gap-3 text-[11px] font-bold tracking-[0.25em] uppercase text-gold">
+                Entrar na Próxima Travessia
+                <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1.5 transition-transform duration-500" />
+              </span>
+            </button>
           )}
         </div>
-        
+
         {proximaEstacaoNome && (
           <div className="flex items-center gap-3 text-white/30">
-            <Footprints className="w-4 h-4" />
-            <span className="text-[10px] uppercase tracking-[0.3em] font-black italic">
+            <Footprints className="w-3.5 h-3.5" />
+            <span className="text-[10px] uppercase tracking-[0.3em] font-bold italic">
               Rumo à {proximaEstacaoNome}
             </span>
           </div>
