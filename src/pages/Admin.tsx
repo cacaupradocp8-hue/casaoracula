@@ -186,6 +186,7 @@ export default function Admin() {
     if (path === '/admin/clube/chat') return 'clube-chat';
     if (path === '/admin/clube/laboratorio-8020') return 'clube-laboratorio-8020';
     if (path === '/admin/clube/carrosseis-insights') return 'clube-carrosseis-insights';
+    if (path === '/admin/clube/colheita-rastros') return 'clube-colheita';
     if (path.startsWith('/admin/clube/central/') || path.startsWith('/admin/clube/rota/') || path === '/admin/clube/rota-dos-lobos') {
       return 'clube-jornadas'; 
     }
