@@ -69,7 +69,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           Promise.all([
             supabase
               .from('profiles')
-              .select('*')
+              .select('email, nome, avatar_url, created_at')
               .eq('id', userId)
               .maybeSingle(),
             supabase

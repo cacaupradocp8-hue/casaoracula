@@ -40,11 +40,13 @@ export function CloudflareStreamPlayer({
   onLoad,
 }: CloudflareStreamPlayerProps) {
   const [manifestUrl, setManifestUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
-  
+  const [shouldLoad, setShouldLoad] = useState(autoPlay);
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
@@ -107,10 +109,26 @@ export function CloudflareStreamPlayer({
     }
   }, [videoId, contextType, contextId, requiredPortal, onError, onLoad]);
 
-  // Fetch token on mount and when videoId changes
+  // Lazy: only fetch token once visible (or if autoPlay)
   useEffect(() => {
-    fetchToken();
-  }, [fetchToken]);
+    if (shouldLoad || !containerRef.current) return;
+    const el = containerRef.current;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shouldLoad]);
+
+  useEffect(() => {
+    if (shouldLoad) fetchToken();
+  }, [shouldLoad, fetchToken]);
 
   // Initialize HLS player when manifestUrl is available
   useEffect(() => {
@@ -214,16 +232,18 @@ export function CloudflareStreamPlayer({
     return false;
   }, []);
 
-  // Loading state
-  if (isLoading) {
+  // Pre-load placeholder (before scrolled into view) or loading state
+  if (!shouldLoad || isLoading) {
     return (
-      <div className={`relative aspect-video ${className}`}>
+      <div ref={containerRef} className={`relative aspect-video ${className}`}>
         <Skeleton className="w-full h-full rounded-xl" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="animate-pulse text-muted-foreground text-sm">
-            Carregando vídeo...
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="animate-pulse text-muted-foreground text-sm">
+              Carregando vídeo...
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
