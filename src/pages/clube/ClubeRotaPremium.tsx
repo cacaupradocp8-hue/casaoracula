@@ -194,18 +194,31 @@ export default function ClubeRotaPremium() {
           <img 
             src={slug === 'clareira-do-chamado' 
               ? "/clareira-fundo-1600.webp"
+              : slug === 'casa-da-boa-menina'
+              ? "/__l5e/assets-v1/40d6dfa7-6ce3-45e7-8332-f2884b2edce4/casa-boa-menina.png"
               : (estacao.banner_url?.replace('pviznbfwtjqmpeiqqzk', 'pvjiznbfwtjqmpeiqqzk') || "/clareira-fundo-1600.webp")
             } 
 
             alt="" 
             className={cn(
               "w-full h-full object-cover transition-opacity duration-1000",
-              slug === 'clareira-do-chamado' ? "opacity-60 grayscale-[0.1] brightness-[0.8]" : "opacity-80"
+              slug === 'clareira-do-chamado' ? "opacity-60 grayscale-[0.1] brightness-[0.8]" :
+              slug === 'casa-da-boa-menina' ? "opacity-70 brightness-[0.45]" :
+              "opacity-80"
             )}
 
           />
-          <div className="absolute inset-0 bg-[#020617]/10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/30 via-transparent to-[#020617]/70" />
+          {slug === 'casa-da-boa-menina' ? (
+            <>
+              <div className="absolute inset-0 bg-[#020617]/70" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-[#020617]/50 to-[#020617]/90" />
+            </>
+          ) : (
+            <>
+              <div className="absolute inset-0 bg-[#020617]/10" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/30 via-transparent to-[#020617]/70" />
+            </>
+          )}
 
 
         </div>
