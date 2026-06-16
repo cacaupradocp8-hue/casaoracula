@@ -40,11 +40,13 @@ export function CloudflareStreamPlayer({
   onLoad,
 }: CloudflareStreamPlayerProps) {
   const [manifestUrl, setManifestUrl] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
-  
+  const [shouldLoad, setShouldLoad] = useState(autoPlay);
+
+  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
 
