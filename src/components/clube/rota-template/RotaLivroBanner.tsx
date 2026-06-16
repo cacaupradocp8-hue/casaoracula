@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+
 
 interface RotaLivroBannerProps {
   obraRegente: string;
