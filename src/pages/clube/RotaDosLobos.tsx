@@ -319,59 +319,62 @@ export default function RotaDosLobos() {
               <div className="h-0.5 w-24 bg-gradient-to-r from-gold/60 to-transparent" />
             </div>
 
-            <div className="grid grid-cols-3 md:flex md:flex-wrap items-start justify-items-center md:justify-items-start md:justify-between gap-x-2 gap-y-6 md:gap-6 overflow-visible pb-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-8">
               {displayEstacoes.map((estacao, i) => {
                 const isLocked = !isAdmin && estacao.status === 'locked' && i !== 0;
-                const isActive = (i === 0) || (estacao.banner_url !== null) || (estacao.status && estacao.status !== 'locked');
                 const slug = slugsReais[i];
+                const imgSrc = slug === 'clareira-do-chamado'
+                  ? clareiraCapa.url
+                  : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg");
+                const numero = String(i + 1).padStart(2, '0');
+                const roman = ['I','II','III','IV','V','VI'][i] || 'I';
 
                 return (
                   <motion.div
                     key={estacao.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 + (i * 0.1) }}
-                    className="flex w-full min-w-0 flex-col items-center gap-2 md:gap-3 md:min-w-[130px] md:w-auto group"
+                    initial={{ opacity: 0, y: 24 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: '-60px' }}
+                    transition={{ delay: 0.08 * i, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+                    whileHover={!isLocked ? { y: -4 } : undefined}
+                    onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
+                    className={cn(
+                      "group relative w-full aspect-[3/4] rounded-2xl overflow-hidden border bg-black transition-all duration-500",
+                      isLocked
+                        ? "border-white/5 grayscale pointer-events-none opacity-60"
+                        : "border-white/10 hover:border-gold/40 cursor-pointer shadow-[0_10px_40px_-20px_rgba(0,0,0,0.8)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.25)]"
+                    )}
                   >
-                    <button
-                      disabled={isLocked}
-                      onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
-                      className={cn(
-                        "relative w-16 h-16 md:w-28 md:h-28 rounded-xl md:rounded-2xl flex items-center justify-center transition-all duration-700 overflow-hidden",
-                        isActive 
-                          ? "bg-gold/10 border border-gold/80 shadow-[0_0_12px_rgba(233,167,88,0.16)] md:scale-110" 
-                          : "bg-white/[0.03] border border-white/10 hover:border-gold/30",
-                        isLocked ? "cursor-not-allowed opacity-40 grayscale" : "cursor-pointer"
-                      )}
-                    >
-                      {!isActive && (
-                        <div className={cn(
-                          "absolute -top-0.5 -left-0.5 w-4 h-4 md:w-6 md:h-6 rounded-md flex items-center justify-center text-[7px] md:text-[10px] font-bold z-30 shadow-lg",
-                          "bg-white/10 text-white/40 border border-white/5"
-                        )}>
-                          {i + 1}
-                        </div>
-                      )}
+                    <img
+                      src={imgSrc}
+                      alt=""
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700 ease-out"
+                    />
 
-                      {!isActive && (
-                        <Lock className={cn("w-3 h-3 md:w-5 md:h-5 z-20", isLocked ? "text-white/20" : "text-gold/40")} />
-                      )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent" />
 
-                        <div className="absolute inset-0 overflow-hidden z-10 opacity-100">
-                          <img 
-                            src={slug === 'clareira-do-chamado' ? clareiraCapa.url : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg")} 
-                            alt="" 
-                            className="w-full h-full object-cover" 
-                          />
-                        </div>
-                    </button>
+                    <div className="pointer-events-none absolute inset-3 rounded-xl border-[0.5px] border-white/10 group-hover:border-gold/30 transition-colors duration-500" />
 
-                    <span className={cn(
-                      "text-[8px] md:text-[10px] text-center w-full max-w-[86px] md:max-w-[100px] leading-[1.15] font-medium uppercase tracking-[0.02em] break-words px-0.5",
-                      isActive ? "text-white" : isLocked ? "text-white/20" : "text-white/60"
-                    )}>
-                      {estacao.titulo}
-                    </span>
+                    <div className="pointer-events-none absolute top-5 left-5 w-3 h-3 border-t border-l border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="pointer-events-none absolute bottom-5 right-5 w-3 h-3 border-b border-r border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                    <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-start">
+                      <span className="text-[9px] font-bold tracking-[0.4em] text-gold/70 uppercase">
+                        {roman} · Estação {numero}
+                      </span>
+                      {isLocked && <Lock className="w-3.5 h-3.5 text-white/30" />}
+                    </div>
+
+                    <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end items-center text-center">
+                      <h3 className="font-serif text-xl md:text-2xl leading-tight text-white tracking-wide group-hover:text-gold transition-colors duration-500">
+                        {estacao.titulo}
+                      </h3>
+                      <div className="mt-4 h-px w-8 bg-gold/50 group-hover:w-20 transition-all duration-500 ease-out" />
+                      <span className="mt-4 text-[9px] tracking-[0.3em] uppercase font-bold text-gold/0 group-hover:text-gold/80 transition-colors duration-500">
+                        {isLocked ? 'Selada' : 'Atravessar'}
+                      </span>
+                    </div>
                   </motion.div>
                 );
               })}
