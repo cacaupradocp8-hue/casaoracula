@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface AppSetting {
@@ -8,43 +9,29 @@ export interface AppSetting {
   description: string | null;
 }
 
+/**
+ * Global app_settings — fetched ONCE per session, cached forever via React Query.
+ * Previously each mount triggered a fresh ~830ms request.
+ */
 export function useAppSettings() {
-  const [settings, setSettings] = useState<Record<string, string>>({});
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('app_settings')
-          .select('*');
-
-        if (error) throw error;
-
-        const settingsMap: Record<string, string> = {};
-        data?.forEach(setting => {
-          let val = setting.value;
-          // Try to clean up JSON stringified values if they have extra quotes
-          if (typeof val === 'string' && val.startsWith('"') && val.endsWith('"')) {
-            try {
-              val = JSON.parse(val);
-            } catch (e) {
-              // Fallback to removing quotes manually if JSON.parse fails
-              val = val.substring(1, val.length - 1);
-            }
-          }
-          settingsMap[setting.key] = val;
-        });
-        setSettings(settingsMap);
-      } catch (error) {
-        console.error('Error fetching app settings:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSettings();
-  }, []);
+  const { data: settings = {}, isLoading } = useQuery<Record<string, string>>({
+    queryKey: ['app-settings', 'kv'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('app_settings').select('key,value');
+      if (error) throw error;
+      const map: Record<string, string> = {};
+      data?.forEach((setting) => {
+        let val = setting.value as string;
+        if (typeof val === 'string' && val.startsWith('"') && val.endsWith('"')) {
+          try { val = JSON.parse(val); } catch { val = val.substring(1, val.length - 1); }
+        }
+        map[setting.key] = val;
+      });
+      return map;
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
   const getSetting = (key: string, fallback: string = ''): string => {
     return settings[key] ?? fallback;
