@@ -103,7 +103,8 @@ export default function ClubeRotaHub() {
                   nome: e.nome,
                   status,
                   numero: idx + 1,
-                  slug: e.slug
+                  slug: e.slug,
+                  imagemUrl: (e as any).imagem_destaque_url || (e as any).banner_url || (e as any).imagem_url || undefined,
                 };
               })}
               onSelect={(slug) => navigate(`/clube/rota/${slug}`)}
