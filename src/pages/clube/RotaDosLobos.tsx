@@ -338,7 +338,7 @@ export default function RotaDosLobos() {
                     whileHover={!isLocked ? { y: -4 } : undefined}
                     onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                     className={cn(
-                      "group relative w-full aspect-[3/4] rounded-2xl overflow-hidden border bg-black transition-all duration-500",
+                      "group relative w-full aspect-[4/5] rounded-2xl overflow-hidden border bg-black transition-all duration-500",
                       isLocked
                         ? "border-white/5 grayscale pointer-events-none opacity-60"
                         : "border-white/10 hover:border-gold/40 cursor-pointer shadow-[0_10px_40px_-20px_rgba(0,0,0,0.8)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.25)]"
@@ -348,10 +348,10 @@ export default function RotaDosLobos() {
                       src={imgSrc}
                       alt=""
                       loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-75 group-hover:scale-105 transition-all duration-700 ease-out"
+                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
                     />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/95 via-[#020617]/30 to-transparent" />
 
                     <div className="pointer-events-none absolute inset-3 rounded-xl border-[0.5px] border-white/10 group-hover:border-gold/30 transition-colors duration-500" />
 
