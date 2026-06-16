@@ -269,9 +269,9 @@ export function EscutaPremium({
           <div className="md:hidden mt-4">
              <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 text-white/40 hover:text-gold transition-colors px-3 py-1 rounded-full border border-white/10">
-                  <Gauge className="w-4 h-4" />
-                  <span className="text-[10px] font-bold uppercase tracking-widest">{playbackRate}x</span>
+                <button className="flex items-center gap-1.5 text-white/40 hover:text-gold transition-colors px-2.5 py-1 rounded-full border border-white/10 whitespace-nowrap shrink-0">
+                  <Gauge className="w-3.5 h-3.5 shrink-0" />
+                  <span className="text-[10px] font-bold uppercase tracking-wider leading-none">{playbackRate}x</span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="center" className="bg-[#0a0a0a] border-white/10 text-white min-w-[80px]">
