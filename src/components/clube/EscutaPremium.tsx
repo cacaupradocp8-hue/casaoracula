@@ -292,27 +292,6 @@ export function EscutaPremium({
           </div>
         </div>
 
-        {/* Info Card - Matching the image exactly */}
-        <div className="w-full max-w-sm bg-gradient-to-b from-white/10 to-transparent border border-white/10 rounded-2xl p-6 flex gap-5 items-start backdrop-blur-md shadow-2xl">
-          <div className="w-14 h-14 rounded-xl border border-gold/30 flex items-center justify-center shrink-0 bg-[#020617]/40 relative overflow-hidden group">
-            <div className="absolute inset-0 bg-gold/5 animate-pulse" />
-            <svg width="28" height="28" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-gold/70 z-10">
-              <path d="M20 5V10M20 30V35M5 20H10M30 20H35" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              <path d="M10 10L14 14M26 26L30 30M30 10L26 14M14 26L10 30" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-              <path d="M8 20C8 13.3726 13.3726 8 20 8C26.6274 8 32 13.3726 32 20C32 26.6274 26.6274 32 20 32C13.3726 32 8 26.6274 8 20Z" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M20 15V20H25" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </div>
-          <div className="space-y-1.5 pt-1">
-            <h4 className="text-gold text-[10px] uppercase tracking-[0.3em] font-bold flex items-center gap-2">
-              ORIENTAÇÃO DA CASA
-              <span className="w-10 h-px bg-gold/30" />
-            </h4>
-            <p className="text-white/80 text-xs font-serif leading-relaxed italic">
-              Ouça primeiro o áudio da estação. Depois, siga para a leitura simbólica e registre sua percepção no Jardim.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );
