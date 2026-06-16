@@ -357,16 +357,16 @@ export default function RotaDosLobos() {
                       {isLocked && <Lock className="w-3.5 h-3.5 text-white/40" />}
                     </div>
 
-                    {/* Área da imagem — ~62% superior, dentro da moldura */}
-                    <div className="relative h-[62%] w-full overflow-hidden">
+                    {/* Área da imagem — exibe a arte completa, incluindo texto */}
+                    <div className="relative h-[70%] w-full overflow-hidden bg-[#070710] flex items-center justify-center">
                       <img
                         src={imgSrc}
                         alt=""
                         loading="lazy"
-                        className="absolute inset-0 w-full h-full object-cover object-center opacity-95 group-hover:scale-105 transition-transform duration-700 ease-out"
+                        className="max-w-full max-h-full w-auto h-full object-contain object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
                       />
-                      {/* Desvanecimento para a faixa do título */}
-                      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent via-[#070710]/70 to-[#070710]" />
+                      {/* Suave desvanecimento apenas na borda inferior, sem cobrir o texto da imagem */}
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-[#070710]" />
                     </div>
 
                     {/* Faixa do título — sem concorrer com a imagem */}
