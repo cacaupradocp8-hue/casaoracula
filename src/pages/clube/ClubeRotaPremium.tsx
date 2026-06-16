@@ -519,7 +519,24 @@ export default function ClubeRotaPremium() {
                   />
                 )}
 
-                {currentStep === 13 && (
+                {steps[currentStep]?.id === 'colheita_rastros' && (
+                  <ColheitaDosRastros
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    estacaoNome={estacao.titulo || estacao.nome}
+                    onComplete={handleNext}
+                  />
+                )}
+
+                {steps[currentStep]?.id === 'convite_fundadoras' && (
+                  <ConviteFundadoras
+                    estacaoId={estacao.id}
+                    rotaId={estacao.clube_rotas.id}
+                    onContinue={handleNext}
+                  />
+                )}
+
+                {steps[currentStep]?.id === 'proximos_passos' && (
                   <EstacaoStepFechamento 
                     estacaoId={estacao.id}
                     rotaId={estacao.clube_rotas.id}
