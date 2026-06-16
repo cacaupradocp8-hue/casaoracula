@@ -51,7 +51,8 @@ export function useNotifications() {
       return data as Notification[];
     },
     enabled: !!user?.id,
-    refetchInterval: 60000,
+    staleTime: 5 * 60 * 1000,
+    // Realtime subscription below invalidates this query on insert — no polling needed.
   });
 
   // Realtime subscription

@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 type CopyScope = 'global' | 'travessia' | 'ferramenta' | 'sistema' | 'curso';
@@ -19,48 +20,39 @@ interface CopyOptions {
   scopeId?: string;
 }
 
+/**
+ * Cached globally via React Query so dozens of components don't each
+ * refetch text_models on mount.
+ */
 export function useCopy() {
-  const [copies, setCopies] = useState<CopyItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchCopies = async () => {
+  const { data: copies = [], isLoading } = useQuery<CopyItem[]>({
+    queryKey: ['text-models', 'copies-active'],
+    queryFn: async () => {
       const { data } = await supabase
         .from('text_models')
         .select('*')
         .eq('ativo', true);
-      
-      if (data) {
-        setCopies(data as CopyItem[]);
-      }
-      setIsLoading(false);
-    };
-
-    fetchCopies();
-  }, []);
+      return (data ?? []) as CopyItem[];
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  });
 
   const getCopy = useCallback((key: string, options?: CopyOptions, fallback: string = '') => {
-    // First try to find scoped copy
     if (options?.scope && options?.scopeId) {
       const scopedCopy = copies.find(
         c => c.chave === key && c.scope === options.scope && c.scope_id === options.scopeId
       );
       if (scopedCopy) return scopedCopy.conteudo;
     }
-
-    // Then try scope without scopeId
     if (options?.scope) {
       const scopeCopy = copies.find(
         c => c.chave === key && c.scope === options.scope && !c.scope_id
       );
       if (scopeCopy) return scopeCopy.conteudo;
     }
-
-    // Then try global
     const globalCopy = copies.find(c => c.chave === key && c.scope === 'global');
     if (globalCopy) return globalCopy.conteudo;
-
-    // Finally fallback
     return fallback;
   }, [copies]);
 
