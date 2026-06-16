@@ -203,15 +203,15 @@ export default function ClubeRotaPremium() {
             className={cn(
               "w-full h-full object-cover transition-opacity duration-1000",
               slug === 'clareira-do-chamado' ? "opacity-60 grayscale-[0.1] brightness-[0.8]" :
-              slug === 'casa-da-boa-menina' ? "opacity-70 brightness-[0.45]" :
+              slug === 'casa-da-boa-menina' ? "opacity-95 brightness-[0.8]" :
               "opacity-80"
             )}
 
           />
           {slug === 'casa-da-boa-menina' ? (
             <>
-              <div className="absolute inset-0 bg-[#020617]/70" />
-              <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/80 via-[#020617]/50 to-[#020617]/90" />
+              <div className="absolute inset-0 bg-[#020617]/25" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-[#020617]/15 to-[#020617]/70" />
             </>
           ) : (
             <>
