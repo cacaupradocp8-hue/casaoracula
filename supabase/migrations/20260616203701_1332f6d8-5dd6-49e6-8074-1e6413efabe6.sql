@@ -1,0 +1,14 @@
+REVOKE EXECUTE ON FUNCTION public.activate_subscription(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.activate_mentoria_plan(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.activate_fundadora_plan(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.cancel_subscription(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.check_and_expire_access() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.apply_pending_matricula() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.system_sync_profile_access(uuid, portal_type, text, timestamp with time zone, text) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.enqueue_email(text, jsonb) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.delete_email(text, bigint) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.move_to_dlq(text, text, bigint, jsonb) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.read_email_batch(text, integer, integer) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.dispatch_notification_channels() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.notify_admin_degustacao_request() FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.refresh_student_progress(uuid) FROM anon, authenticated;
