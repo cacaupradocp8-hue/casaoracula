@@ -107,6 +107,7 @@ export function CloudflareStreamPlayer({
       console.error('[CloudflareStreamPlayer] Error:', err);
       const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMsg);
+      setErrorKind('generic');
       onError?.(errorMsg);
     } finally {
       setIsLoading(false);
