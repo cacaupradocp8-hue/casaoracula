@@ -4,6 +4,7 @@ import { ArrowRight, Lock, TreePine, Headphones, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
+import casaBoaMeninaAsset from '@/assets/casa-da-boa-menina.png.asset.json';
 
 export function FounderTransitionPortal({ onContinue }: { onContinue?: () => void }) {
   const navigate = useNavigate();
