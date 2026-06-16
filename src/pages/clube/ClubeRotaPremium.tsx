@@ -46,22 +46,32 @@ export default function ClubeRotaPremium() {
   const [showTransitionPortal, setShowTransitionPortal] = useState(false);
   const [showColheita, setShowColheita] = useState(false);
 
-  const steps = [
-    { id: 'entrada', title: 'Entrada' },
-    { id: 'escuta_ritual', title: 'Escuta Ritual' },
-    { id: 'camara_escuta', title: 'Câmara da Escuta' },
-    { id: 'sussurros', title: 'Sussurros do Conto' },
-    { id: 'traducao_oracular', title: 'Tradução Oracular' },
-    { id: 'caso', title: 'Caso Simbólico' },
-    { id: 'desafio_escuta', title: 'Desafio de Escuta' },
-    { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
-    { id: 'jardim_psique', title: 'Jardim da Psique' },
-    { id: 'jardim_oficio', title: 'Jardim do Ofício' },
-    { id: 'missao_campo', title: 'Missão de Campo' },
-    { id: 'oraculo', title: 'Oráculo da Estação' },
-    { id: 'cartografia', title: 'Cartografia da Loba' },
-    { id: 'proximos_passos', title: 'Fechamento 80/20' }
-  ];
+  const { data: conviteCfg } = useConviteFundadoraConfig(estacao?.id);
+  const showConviteFundadoras = !!(isFounder && conviteCfg?.ativo);
+
+  const steps = useMemo(() => {
+    const base = [
+      { id: 'entrada', title: 'Entrada' },
+      { id: 'escuta_ritual', title: 'Escuta Ritual' },
+      { id: 'camara_escuta', title: 'Câmara da Escuta' },
+      { id: 'sussurros', title: 'Sussurros do Conto' },
+      { id: 'traducao_oracular', title: 'Tradução Oracular' },
+      { id: 'caso', title: 'Caso Simbólico' },
+      { id: 'desafio_escuta', title: 'Desafio de Escuta' },
+      { id: 'ferramenta_oracular', title: 'Ferramenta Oracular' },
+      { id: 'jardim_psique', title: 'Jardim da Psique' },
+      { id: 'jardim_oficio', title: 'Jardim do Ofício' },
+      { id: 'missao_campo', title: 'Missão de Campo' },
+      { id: 'oraculo', title: 'Oráculo da Estação' },
+      { id: 'cartografia', title: 'Cartografia da Loba' },
+      { id: 'colheita_rastros', title: 'Colheita dos Rastros' },
+    ];
+    if (showConviteFundadoras) {
+      base.push({ id: 'convite_fundadoras', title: 'Conselho das Fundadoras' });
+    }
+    base.push({ id: 'proximos_passos', title: 'Fechamento 80/20' });
+    return base;
+  }, [showConviteFundadoras]);
 
   // Carregar progresso inicial
   useEffect(() => {
