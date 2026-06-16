@@ -326,8 +326,6 @@ export default function RotaDosLobos() {
                 const slug = slugsReais[i];
                 const imgSrc = slug === 'clareira-do-chamado'
                   ? clareiraCapa.url
-                  : slug === 'casa-da-boa-menina'
-                  ? casaBoaMeninaCapa.url
                   : (estacao.banner_url || "https://pviznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781036067341-z7r4tq.jpg");
                 const numero = String(i + 1).padStart(2, '0');
                 const roman = ['I','II','III','IV','V','VI'][i] || 'I';
