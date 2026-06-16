@@ -42,6 +42,7 @@ export function CloudflareStreamPlayer({
   const [manifestUrl, setManifestUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<'unavailable' | 'generic' | null>(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [shouldLoad, setShouldLoad] = useState(autoPlay);
@@ -49,6 +50,7 @@ export function CloudflareStreamPlayer({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
+  const networkRetryRef = useRef(0);
 
   const fetchToken = useCallback(async () => {
     if (!videoId) {
