@@ -226,38 +226,40 @@ export default function ClubeRotaPremium() {
           <AnimatePresence>
             {showResumeBanner && currentStep > 0 && !(isMapaInstintoSoterrado && currentStep === 7) && (
               <motion.div
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -16 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="mb-8 p-4 md:p-6 bg-gold/10 border border-gold/20 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4 backdrop-blur-xl"
+                exit={{ opacity: 0, y: -16 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="mb-8 p-5 md:p-6 rounded-xl border border-white/5 bg-white/[0.02] backdrop-blur-xl shadow-2xl shadow-black/40 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-5 hover:bg-white/[0.04] transition-colors duration-500"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-gold" />
+                  <div className="w-10 h-10 rounded-full border border-gold/20 bg-gold/5 flex items-center justify-center shrink-0">
+                    <Sparkles className="w-4 h-4 text-gold" />
                   </div>
-                  <div>
-                    <p className="text-xs text-gold/60 uppercase tracking-widest font-black">Bem-vinda de volta</p>
-                    <p className="text-sm font-serif italic text-white">Você parou em: <span className="text-gold">{steps[currentStep].title}</span></p>
+                  <div className="min-w-0">
+                    <p className="text-[10px] tracking-[0.3em] uppercase text-gold/80 font-semibold">Retomar Jornada</p>
+                    <p className="text-sm text-white/85 font-medium font-serif italic mt-0.5 truncate">
+                      Você parou em: <span className="text-gold not-italic font-sans">{steps[currentStep].title}</span>
+                    </p>
                   </div>
                 </div>
-                <div className="flex gap-2 w-full md:w-auto">
-                  <Button 
-                    variant="ghost" 
+                <div className="flex items-center justify-end gap-2 md:gap-5">
+                  <button
                     onClick={() => {
                       setCurrentStep(0);
                       saveProgress(0);
                       setShowResumeBanner(false);
                     }}
-                    className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white flex-1 md:flex-none"
+                    className="text-[10px] tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors font-bold px-3 py-2"
                   >
                     Recomeçar
-                  </Button>
-                  <Button 
+                  </button>
+                  <button
                     onClick={() => setShowResumeBanner(false)}
-                    className="bg-gold text-midnight text-[10px] uppercase tracking-widest font-bold h-10 rounded-full flex-1 md:flex-none"
+                    className="px-6 py-2.5 bg-gold text-midnight text-[11px] font-bold tracking-[0.2em] uppercase rounded-full shadow-[0_4px_20px_rgba(212,175,55,0.2)] hover:shadow-[0_4px_28px_rgba(212,175,55,0.45)] active:scale-95 transition-all duration-300"
                   >
                     Continuar
-                  </Button>
+                  </button>
                 </div>
               </motion.div>
             )}
