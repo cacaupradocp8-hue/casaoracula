@@ -61,7 +61,9 @@ export function CloudflareStreamPlayer({
 
     setIsLoading(true);
     setError(null);
+    setErrorKind(null);
     setAccessDenied(false);
+    networkRetryRef.current = 0;
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke<TokenResponse>(
