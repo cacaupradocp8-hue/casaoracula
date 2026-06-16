@@ -75,13 +75,13 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
           className="space-y-4"
         >
           <span className="text-[10px] uppercase tracking-[0.5em] text-gold font-black">Essência 80/20</span>
-          <h2 className="text-2xl xs:text-3xl sm:text-5xl md:text-8xl font-display font-black text-white tracking-[0.1em] leading-tight uppercase px-4 break-words">
+          <h2 className="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-display font-black text-white tracking-[0.04em] sm:tracking-[0.08em] leading-[1.1] uppercase px-2 break-words">
             <span className="bg-gradient-to-b from-white via-white to-gold/70 bg-clip-text text-transparent">
-              {titulo.split(' ').length > 2 ? titulo : <>{titulo.split(' ')[0]} <br className="xs:hidden" /> {titulo.split(' ').slice(1).join(' ')}</>}
+              {titulo}
             </span>
           </h2>
 
-          <p className="text-gold/60 text-lg md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed px-4 break-words">
+          <p className="text-gold/60 text-base sm:text-lg md:text-2xl font-serif italic max-w-2xl mx-auto leading-relaxed px-4 break-words">
             “{subtitulo}”
           </p>
 
