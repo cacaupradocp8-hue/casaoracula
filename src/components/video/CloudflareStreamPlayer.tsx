@@ -288,6 +288,19 @@ export function CloudflareStreamPlayer({
 
   // Error state
   if (error) {
+    if (errorKind === 'unavailable') {
+      return (
+        <div className={`relative aspect-video rounded-xl overflow-hidden bg-muted/20 border border-border/60 flex flex-col items-center justify-center p-6 text-center ${className}`}>
+          <AlertCircle className="w-10 h-10 text-muted-foreground/50 mb-3" />
+          <p className="text-foreground/80 font-medium mb-1">
+            Vídeo temporariamente indisponível
+          </p>
+          <p className="text-muted-foreground text-sm max-w-sm">
+            Este conteúdo está sendo atualizado. Volte em instantes.
+          </p>
+        </div>
+      );
+    }
     return (
       <div className={`relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border flex flex-col items-center justify-center p-6 ${className}`}>
         <AlertCircle className="w-12 h-12 text-destructive/60 mb-4" />
