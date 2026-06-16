@@ -1,56 +1,24 @@
-## Diagnóstico
+# Mensagem amigável quando o vídeo está indisponível
 
-A estação **Casa da Boa Menina** existe corretamente no banco:
-- `slug: casa-da-boa-menina`, `numero: 2`, `ativa: true`, `publicada: true`, `rota_id` vinculado à Rota dos Lobos.
-- A rota direta `/clube/rota/casa-da-boa-menina` carrega a estação sem problema.
+## Problema confirmado
+Na `/sala-da-visitante`, o `cloudflare-video-token` responde 200, mas o manifest `videodelivery.net/.../video.m3u8` retorna **404** (vídeo não existe mais na conta Cloudflare). Hoje o `CloudflareStreamPlayer` trata isso como `NETWORK_ERROR` e fica em loop infinito de `hls.startLoad()` — o usuário vê apenas o spinner.
 
-O bug está em **`src/pages/clube/ClubeRotaHub.tsx`**, no grid de estações da Rota dos Lobos:
+## Solução (1 arquivo)
 
-```ts
-status: idx === 0 ? 'unlocked' : 'locked'
-```
+**`src/components/video/CloudflareStreamPlayer.tsx`**
 
-Esse mock força **toda estação a partir da nº 2 a ficar travada** (cinza, `pointer-events-none`), independente do que esteja no banco ou da progressão da aluna. Por isso a Casa da Boa Menina não fica clicável a partir do hub.
+1. Adicionar `retryCountRef` para limitar tentativas de recuperação de `NETWORK_ERROR` a **1 retry**. Após isso, marcar como erro fatal.
+2. Detectar especificamente `data.response?.code === 404` no handler de erro do HLS e exibir mensagem "Vídeo indisponível no momento".
+3. Customizar a tela de erro existente (linhas 267-280) para mostrar duas mensagens distintas:
+   - **Indisponível (404)**: "Este vídeo está temporariamente indisponível." — sem botão "Tentar novamente" (não vai ajudar).
+   - **Outros erros**: mensagem atual + botão de retry.
 
-## Plano de correção
+## Comportamento resultante
 
-Regra de desbloqueio aprovada: **admin destrava tudo; aluna segue desbloqueio sequencial conforme conclusão**.
+- Visitante na `/sala-da-visitante` vê um card discreto: ícone + "Este vídeo está temporariamente indisponível", em vez do spinner travado.
+- Resto da página (boas-vindas, CTA "Iniciar Primeira Leitura") continua funcionando normalmente.
+- Quando você subir um novo vídeo no Cloudflare e atualizar o ID no admin, volta a funcionar sem nenhuma mudança de código.
 
-### 1. Hook de progresso por rota
-Criar `src/hooks/useRotaProgresso.ts`:
-- Lê `clube_conclusao_estacoes` (já existe) para o `user_id` atual, filtrando pelas estações da rota.
-- Retorna um `Set<string>` com os `estacao_id` concluídos.
-- Também expõe `isAdmin` consultando `has_role(auth.uid(), 'admin')` via RPC já existente no projeto (reutilizar helper `useUserRole` se houver; senão consulta direta a `user_roles`).
-
-### 2. Função de status por estação
-Em `ClubeRotaHub.tsx`, substituir o mock por:
-
-```text
-ordem ascendente das estações (já vem ordenada)
-para cada estação i:
-  if admin              -> 'unlocked' (ou 'completed' se concluída)
-  else if i === 0       -> concluída ? 'completed' : 'unlocked'
-  else if estação i-1 concluída -> concluída(i) ? 'completed' : 'unlocked'
-  else                  -> 'locked'
-```
-
-Estações sem `publicada/ativa = true` continuam `locked` mesmo para aluna (admin ainda enxerga aberto, conforme regra "admin bypassa").
-
-### 3. Passar status correto ao `RotaEstacoesGrid`
-Sem mudanças estruturais no componente — ele já suporta os três estados `locked | unlocked | completed`.
-
-### 4. Garantir clique na Casa da Boa Menina hoje
-Validação manual após o fix:
-- Admin: card da Casa da Boa Menina aparece destravado e abre `/clube/rota/casa-da-boa-menina`.
-- Aluna com Clareira do Chamado concluída em `clube_conclusao_estacoes`: Casa da Boa Menina destravada.
-- Aluna sem conclusão da Estação 1: Casa da Boa Menina permanece travada (cadeado), sem regressão.
-
-## Fora de escopo
-- Não alterar conteúdo da Casa da Boa Menina (já refinado em sprints anteriores).
-- Não mexer no gating de `/clube/rotas` (catálogo) — o warning de console é da rota de catálogo para visitante, comportamento esperado.
-- Não criar tabelas novas, não mexer em RLS (`clube_conclusao_estacoes` e `user_roles` já têm policies).
-- Nenhuma mudança em rotas, auth ou pagamentos.
-
-## Arquivos afetados
-- `src/hooks/useRotaProgresso.ts` (novo)
-- `src/pages/clube/ClubeRotaHub.tsx` (substituir mock de status)
+## Fora do escopo
+- Não vou trocar o ID do vídeo no banco (você fará isso no admin quando tiver o novo).
+- Não vou esconder a seção de vídeo — o fallback amigável é melhor que sumir silenciosamente.

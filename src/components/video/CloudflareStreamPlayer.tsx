@@ -42,6 +42,7 @@ export function CloudflareStreamPlayer({
   const [manifestUrl, setManifestUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<'unavailable' | 'generic' | null>(null);
   const [accessDenied, setAccessDenied] = useState(false);
   const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [shouldLoad, setShouldLoad] = useState(autoPlay);
@@ -49,6 +50,7 @@ export function CloudflareStreamPlayer({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const hlsRef = useRef<Hls | null>(null);
+  const networkRetryRef = useRef(0);
 
   const fetchToken = useCallback(async () => {
     if (!videoId) {
@@ -59,7 +61,9 @@ export function CloudflareStreamPlayer({
 
     setIsLoading(true);
     setError(null);
+    setErrorKind(null);
     setAccessDenied(false);
+    networkRetryRef.current = 0;
 
     try {
       const { data, error: fnError } = await supabase.functions.invoke<TokenResponse>(
@@ -103,6 +107,7 @@ export function CloudflareStreamPlayer({
       console.error('[CloudflareStreamPlayer] Error:', err);
       const errorMsg = err instanceof Error ? err.message : 'Erro desconhecido';
       setError(errorMsg);
+      setErrorKind('generic');
       onError?.(errorMsg);
     } finally {
       setIsLoading(false);
@@ -166,12 +171,29 @@ export function CloudflareStreamPlayer({
 
       hls.on(Hls.Events.ERROR, (event, data) => {
         console.error('[CloudflareStreamPlayer] HLS error:', data);
-        if (data.fatal) {
+        const httpCode = (data.response as { code?: number } | undefined)?.code;
+        const isUnavailable = httpCode === 404 || httpCode === 403 || httpCode === 410;
+
+        if (data.fatal || isUnavailable) {
+          if (isUnavailable) {
+            setError('Vídeo indisponível');
+            setErrorKind('unavailable');
+            onError?.(`Video unavailable (HTTP ${httpCode})`);
+            hls.destroy();
+            return;
+          }
           switch (data.type) {
             case Hls.ErrorTypes.NETWORK_ERROR:
-              // Try to recover network error
-              console.log('[CloudflareStreamPlayer] Network error, attempting recovery...');
-              hls.startLoad();
+              if (networkRetryRef.current < 1) {
+                networkRetryRef.current += 1;
+                console.log('[CloudflareStreamPlayer] Network error, attempting recovery...');
+                hls.startLoad();
+              } else {
+                setError('Não foi possível carregar o vídeo');
+                setErrorKind('generic');
+                onError?.('Fatal network error');
+                hls.destroy();
+              }
               break;
             case Hls.ErrorTypes.MEDIA_ERROR:
               console.log('[CloudflareStreamPlayer] Media error, attempting recovery...');
@@ -179,6 +201,7 @@ export function CloudflareStreamPlayer({
               break;
             default:
               setError('Erro ao reproduzir vídeo');
+              setErrorKind('generic');
               onError?.('Fatal HLS error');
               hls.destroy();
               break;
@@ -265,6 +288,19 @@ export function CloudflareStreamPlayer({
 
   // Error state
   if (error) {
+    if (errorKind === 'unavailable') {
+      return (
+        <div className={`relative aspect-video rounded-xl overflow-hidden bg-muted/20 border border-border/60 flex flex-col items-center justify-center p-6 text-center ${className}`}>
+          <AlertCircle className="w-10 h-10 text-muted-foreground/50 mb-3" />
+          <p className="text-foreground/80 font-medium mb-1">
+            Vídeo temporariamente indisponível
+          </p>
+          <p className="text-muted-foreground text-sm max-w-sm">
+            Este conteúdo está sendo atualizado. Volte em instantes.
+          </p>
+        </div>
+      );
+    }
     return (
       <div className={`relative aspect-video rounded-xl overflow-hidden bg-muted/30 border border-border flex flex-col items-center justify-center p-6 ${className}`}>
         <AlertCircle className="w-12 h-12 text-destructive/60 mb-4" />
