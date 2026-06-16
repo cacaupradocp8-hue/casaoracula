@@ -118,31 +118,25 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
       </Card>
 
       <div className="flex flex-col items-center gap-8 pt-8">
-        <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl justify-center">
+        <div className="flex justify-center w-full max-w-2xl">
           <button
             onClick={() => conclusionMutation.mutate()}
             disabled={conclusionMutation.isPending}
-            className="group relative flex-1 px-10 py-5 rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm text-[11px] font-bold tracking-[0.25em] uppercase text-white/80 hover:text-white hover:bg-white/[0.06] hover:border-white/20 transition-all duration-500 active:scale-[0.98] disabled:opacity-50"
+            className="group relative px-10 py-5 rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_30px_-8px_rgba(212,175,55,0.45)] disabled:opacity-50"
           >
-            <span className="inline-flex items-center justify-center gap-3">
+            <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            <span className="relative inline-flex items-center justify-center gap-3 text-[11px] font-bold tracking-[0.25em] uppercase text-gold">
               {conclusionMutation.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
-              {conclusionMutation.isPending ? 'Finalizando…' : 'Concluir Estação'}
+              {conclusionMutation.isPending
+                ? 'Finalizando…'
+                : proximaEstacaoNome
+                  ? 'Concluir e Entrar na Próxima Travessia'
+                  : 'Concluir Estação'}
+              {!conclusionMutation.isPending && (
+                <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1.5 transition-transform duration-500" />
+              )}
             </span>
           </button>
-
-          {proximaEstacaoNome && (
-            <button
-              disabled={conclusionMutation.isPending}
-              onClick={() => conclusionMutation.mutate()}
-              className="group relative flex-1 px-10 py-5 rounded-full border border-gold/40 bg-gold/[0.04] backdrop-blur-sm overflow-hidden transition-all duration-500 active:scale-[0.98] hover:border-gold/70 hover:shadow-[0_0_30px_-8px_rgba(212,175,55,0.45)] disabled:opacity-50"
-            >
-              <span className="absolute inset-0 bg-gold/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <span className="relative inline-flex items-center justify-center gap-3 text-[11px] font-bold tracking-[0.25em] uppercase text-gold">
-                Entrar na Próxima Travessia
-                <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1.5 transition-transform duration-500" />
-              </span>
-            </button>
-          )}
         </div>
 
         {proximaEstacaoNome && (
