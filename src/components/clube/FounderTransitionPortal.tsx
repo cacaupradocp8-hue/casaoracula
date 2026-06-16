@@ -62,11 +62,11 @@ export function FounderTransitionPortal({ onContinue }: { onContinue?: () => voi
           <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-[#0A0A0B]/60 backdrop-blur-xl p-1 shadow-2xl">
             <div className="relative aspect-[16/10] overflow-hidden rounded-[30px]">
               <img 
-                src="https://pvjiznbfwtjqmpeiqqzk.supabase.co/storage/v1/object/public/content-images/galeria/1781206890341.jpg" 
-                alt="Casa da Boa Menina" 
-                className="w-full h-full object-cover opacity-40 grayscale"
+                src={casaBoaMeninaAsset.url} 
+                alt="Casa da Boa Menina — Rota dos Lobos" 
+                className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B]/30 to-transparent" />
               
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center shadow-lg">
