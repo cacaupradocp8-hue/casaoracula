@@ -338,39 +338,44 @@ export default function RotaDosLobos() {
                     whileHover={!isLocked ? { y: -4 } : undefined}
                     onClick={() => !isLocked && navigate(`/clube/rota/${slug}`)}
                     className={cn(
-                      "group relative w-full aspect-[4/5] rounded-2xl overflow-hidden border bg-black transition-all duration-500",
+                      "group relative w-full aspect-[4/5] rounded-2xl overflow-hidden border bg-[#070710] transition-all duration-500 flex flex-col",
                       isLocked
                         ? "border-white/5 grayscale pointer-events-none opacity-60"
                         : "border-white/10 hover:border-gold/40 cursor-pointer shadow-[0_10px_40px_-20px_rgba(0,0,0,0.8)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.25)]"
                     )}
                   >
-                    <img
-                      src={imgSrc}
-                      alt=""
-                      loading="lazy"
-                      className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out"
-                    />
+                    {/* Moldura interna */}
+                    <div className="pointer-events-none absolute inset-3 rounded-xl border-[0.5px] border-white/10 group-hover:border-gold/30 transition-colors duration-500 z-20" />
+                    <div className="pointer-events-none absolute top-5 left-5 w-3 h-3 border-t border-l border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
+                    <div className="pointer-events-none absolute bottom-5 right-5 w-3 h-3 border-b border-r border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20" />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#020617]/95 via-[#020617]/30 to-transparent" />
-
-                    <div className="pointer-events-none absolute inset-3 rounded-xl border-[0.5px] border-white/10 group-hover:border-gold/30 transition-colors duration-500" />
-
-                    <div className="pointer-events-none absolute top-5 left-5 w-3 h-3 border-t border-l border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    <div className="pointer-events-none absolute bottom-5 right-5 w-3 h-3 border-b border-r border-gold/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                    <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-start">
-                      <span className="text-[9px] font-bold tracking-[0.4em] text-gold/70 uppercase">
+                    {/* Selo no topo */}
+                    <div className="absolute top-0 inset-x-0 p-5 flex justify-between items-start z-10">
+                      <span className="text-[9px] font-bold tracking-[0.4em] text-gold/70 uppercase drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)]">
                         {roman} · Estação {numero}
                       </span>
-                      {isLocked && <Lock className="w-3.5 h-3.5 text-white/30" />}
+                      {isLocked && <Lock className="w-3.5 h-3.5 text-white/40" />}
                     </div>
 
-                    <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end items-center text-center">
-                      <h3 className="font-serif text-xl md:text-2xl leading-tight text-white tracking-wide group-hover:text-gold transition-colors duration-500">
+                    {/* Área da imagem — ~62% superior, dentro da moldura */}
+                    <div className="relative h-[62%] w-full overflow-hidden">
+                      <img
+                        src={imgSrc}
+                        alt=""
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-cover object-center opacity-95 group-hover:scale-105 transition-transform duration-700 ease-out"
+                      />
+                      {/* Desvanecimento para a faixa do título */}
+                      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent via-[#070710]/70 to-[#070710]" />
+                    </div>
+
+                    {/* Faixa do título — sem concorrer com a imagem */}
+                    <div className="relative flex-1 px-6 pb-7 pt-2 flex flex-col items-center justify-center text-center bg-[#070710]">
+                      <h3 className="font-serif text-lg md:text-xl leading-snug text-white/90 tracking-wide group-hover:text-gold transition-colors duration-500 line-clamp-2">
                         {estacao.titulo}
                       </h3>
-                      <div className="mt-4 h-px w-8 bg-gold/50 group-hover:w-20 transition-all duration-500 ease-out" />
-                      <span className="mt-4 text-[9px] tracking-[0.3em] uppercase font-bold text-gold/0 group-hover:text-gold/80 transition-colors duration-500">
+                      <div className="mt-3 h-px w-8 bg-gold/50 group-hover:w-16 transition-all duration-500 ease-out" />
+                      <span className="mt-3 text-[9px] tracking-[0.3em] uppercase font-bold text-gold/40 group-hover:text-gold/90 transition-colors duration-500">
                         {isLocked ? 'Selada' : 'Atravessar'}
                       </span>
                     </div>
