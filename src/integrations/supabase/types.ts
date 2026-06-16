@@ -4558,6 +4558,91 @@ export type Database = {
           },
         ]
       }
+      clube_colheita_rastros_config: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          estacao_id: string
+          id: string
+          perguntas: Json
+          rota_id: string | null
+          salvar_jardim_oficio: boolean
+          texto_abertura: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          estacao_id: string
+          id?: string
+          perguntas?: Json
+          rota_id?: string | null
+          salvar_jardim_oficio?: boolean
+          texto_abertura?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          estacao_id?: string
+          id?: string
+          perguntas?: Json
+          rota_id?: string | null
+          salvar_jardim_oficio?: boolean
+          texto_abertura?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_colheita_rastros_config_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: true
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_colheita_rastros_registros: {
+        Row: {
+          concluido: boolean
+          created_at: string
+          estacao_id: string
+          id: string
+          respostas: Json
+          rota_id: string | null
+          user_id: string
+        }
+        Insert: {
+          concluido?: boolean
+          created_at?: string
+          estacao_id: string
+          id?: string
+          respostas?: Json
+          rota_id?: string | null
+          user_id: string
+        }
+        Update: {
+          concluido?: boolean
+          created_at?: string
+          estacao_id?: string
+          id?: string
+          respostas?: Json
+          rota_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_colheita_rastros_registros_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       clube_conclusao_estacoes: {
         Row: {
           created_at: string | null
@@ -5240,6 +5325,94 @@ export type Database = {
             columns: ["rota_id"]
             isOneToOne: false
             referencedRelation: "clube_rotas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_fundadoras_convite_clicks: {
+        Row: {
+          clicou_grupo_whatsapp: boolean
+          created_at: string
+          estacao_id: string
+          id: string
+          rota_id: string | null
+          user_id: string
+        }
+        Insert: {
+          clicou_grupo_whatsapp?: boolean
+          created_at?: string
+          estacao_id: string
+          id?: string
+          rota_id?: string | null
+          user_id: string
+        }
+        Update: {
+          clicou_grupo_whatsapp?: boolean
+          created_at?: string
+          estacao_id?: string
+          id?: string
+          rota_id?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_fundadoras_convite_clicks_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: false
+            referencedRelation: "clube_estacoes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clube_fundadoras_convite_config: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          data_aula_ao_vivo: string | null
+          descricao_aula: string | null
+          estacao_id: string
+          id: string
+          link_whatsapp: string | null
+          rota_id: string | null
+          texto: string
+          texto_botao: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          data_aula_ao_vivo?: string | null
+          descricao_aula?: string | null
+          estacao_id: string
+          id?: string
+          link_whatsapp?: string | null
+          rota_id?: string | null
+          texto?: string
+          texto_botao?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          data_aula_ao_vivo?: string | null
+          descricao_aula?: string | null
+          estacao_id?: string
+          id?: string
+          link_whatsapp?: string | null
+          rota_id?: string | null
+          texto?: string
+          texto_botao?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clube_fundadoras_convite_config_estacao_id_fkey"
+            columns: ["estacao_id"]
+            isOneToOne: true
+            referencedRelation: "clube_estacoes"
             referencedColumns: ["id"]
           },
         ]
@@ -24622,6 +24795,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { _user_id: string }; Returns: boolean }
+      is_fundadora: { Args: { _user_id: string }; Returns: boolean }
       is_lesson_available: {
         Args: { _lesson_id: string; _user_id: string }
         Returns: boolean
