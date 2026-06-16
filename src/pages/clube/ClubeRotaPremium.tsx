@@ -185,14 +185,6 @@ export default function ClubeRotaPremium() {
       />
     );
   }
-    return (
-      <ColheitaRastrosExperience 
-        onComplete={() => {
-          navigate('/sala-da-visitante');
-        }} 
-      />
-    );
-  }
 
   return (
     <AppLayout>
