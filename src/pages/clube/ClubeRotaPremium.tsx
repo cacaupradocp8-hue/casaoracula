@@ -180,13 +180,11 @@ export default function ClubeRotaPremium() {
       <FounderTransitionPortal 
         onContinue={() => {
           setShowTransitionPortal(false);
-          setShowColheita(true);
+          navigate('/sala-da-visitante');
         }} 
       />
     );
   }
-
-  if (showColheita) {
     return (
       <ColheitaRastrosExperience 
         onComplete={() => {
