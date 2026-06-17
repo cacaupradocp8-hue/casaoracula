@@ -16,6 +16,7 @@ export default function ClubeRotaHub() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useRotaHub(rotaSlug);
   const { data: progresso } = useRotaProgresso(data?.rota?.id);
+  const { isActive: isFounderActive } = useFounderAccess();
 
   const { isPlaying, togglePlay } = useAudioPlayer({
     audioUrl: data?.rota?.audio_acolhimento_url
