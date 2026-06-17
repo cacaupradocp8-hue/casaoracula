@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useRotaHub } from '@/hooks/useClubeTemplate';
 import { useRotaProgresso } from '@/hooks/useRotaProgresso';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RotaHubHero } from '@/components/clube/rota-template/RotaHubHero';
 import { RotaLivroBanner } from '@/components/clube/rota-template/RotaLivroBanner';
@@ -15,6 +16,7 @@ export default function ClubeRotaHub() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useRotaHub(rotaSlug);
   const { data: progresso } = useRotaProgresso(data?.rota?.id);
+  const { isActive: isFounderActive } = useFounderAccess();
 
   const { isPlaying, togglePlay } = useAudioPlayer({
     audioUrl: data?.rota?.audio_acolhimento_url
@@ -90,6 +92,13 @@ export default function ClubeRotaHub() {
                 let status: 'locked' | 'unlocked' | 'completed';
                 if (isAdmin) {
                   status = isConcluida ? 'completed' : 'unlocked';
+                } else if (isFounderActive) {
+                  // Fundadora: só Clareira do Chamado (estação 1) liberada
+                  if (idx === 0) {
+                    status = isConcluida ? 'completed' : 'unlocked';
+                  } else {
+                    status = 'locked';
+                  }
                 } else if (!publicada) {
                   status = 'locked';
                 } else if (prevConcluida) {
