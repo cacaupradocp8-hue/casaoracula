@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useRotaHub } from '@/hooks/useClubeTemplate';
 import { useRotaProgresso } from '@/hooks/useRotaProgresso';
 import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { RotaHubHero } from '@/components/clube/rota-template/RotaHubHero';
 import { RotaLivroBanner } from '@/components/clube/rota-template/RotaLivroBanner';
