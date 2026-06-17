@@ -44,7 +44,7 @@ export const RotaEstacoesGrid: React.FC<EstacaoGridProps> = ({ estacoes, onSelec
             className={cn(
               "group relative w-full aspect-[3/4] rounded-2xl overflow-hidden border bg-black transition-all duration-500",
               isLocked
-                ? "border-white/5 grayscale pointer-events-none opacity-60"
+                ? "border-white/5 pointer-events-none cursor-not-allowed"
                 : "border-white/10 hover:border-[hsl(var(--gold))]/40 cursor-pointer shadow-[0_10px_40px_-20px_rgba(0,0,0,0.8)] hover:shadow-[0_20px_60px_-20px_rgba(212,175,55,0.25)]"
             )}
           >
@@ -54,8 +54,25 @@ export const RotaEstacoesGrid: React.FC<EstacaoGridProps> = ({ estacoes, onSelec
                 src={estacao.imagemUrl}
                 alt=""
                 loading="lazy"
-                className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-70 group-hover:scale-105 transition-all duration-700 ease-out"
+                className={cn(
+                  "absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out",
+                  isLocked
+                    ? "opacity-40 [filter:sepia(0.85)_brightness(0.65)_contrast(0.95)]"
+                    : "opacity-50 group-hover:opacity-70 group-hover:scale-105"
+                )}
               />
+            )}
+
+            {/* Central lock overlay */}
+            {isLocked && (
+              <div className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-3 bg-black/40">
+                <div className="w-14 h-14 rounded-full border border-white/20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-white/70" />
+                </div>
+                <span className="text-[9px] tracking-[0.4em] uppercase font-bold text-white/50">
+                  Selada
+                </span>
+              </div>
             )}
 
             {/* Vignette */}
