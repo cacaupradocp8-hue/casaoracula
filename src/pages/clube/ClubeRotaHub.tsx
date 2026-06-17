@@ -92,6 +92,13 @@ export default function ClubeRotaHub() {
                 let status: 'locked' | 'unlocked' | 'completed';
                 if (isAdmin) {
                   status = isConcluida ? 'completed' : 'unlocked';
+                } else if (isFounderActive) {
+                  // Fundadora: só Clareira do Chamado (estação 1) liberada
+                  if (idx === 0) {
+                    status = isConcluida ? 'completed' : 'unlocked';
+                  } else {
+                    status = 'locked';
+                  }
                 } else if (!publicada) {
                   status = 'locked';
                 } else if (prevConcluida) {
