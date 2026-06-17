@@ -177,7 +177,7 @@ export function EscutaPremium({
           </div>
 
           {titulo && (
-            <h3 className="text-white font-display font-black tracking-widest text-3xl md:text-5xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent">
+            <h3 className="text-white font-display font-black tracking-wider text-lg sm:text-xl md:text-3xl uppercase opacity-95 leading-tight bg-gradient-to-b from-white to-gold/60 bg-clip-text text-transparent break-words px-2">
               {titulo}
             </h3>
           )}
