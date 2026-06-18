@@ -289,7 +289,7 @@ export default function Auth() {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-center mb-6"
         >
-          <Logo size="md" variant="vertical" className="justify-center mb-3 scale-90 xs:scale-100" />
+          <Logo size="xl" variant="vertical" className="justify-center mb-3 scale-110 md:scale-125" />
           <div className="flex items-center justify-center gap-4 mb-2">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-gold/40" />
             <span className="text-[10px] uppercase tracking-[0.4em] text-gold/50 font-medium">Portal de Entrada</span>
