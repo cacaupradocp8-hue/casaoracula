@@ -9,7 +9,8 @@ import { RotaHubHero } from '@/components/clube/rota-template/RotaHubHero';
 import { RotaLivroBanner } from '@/components/clube/rota-template/RotaLivroBanner';
 import { RotaEstacoesGrid } from '@/components/clube/rota-template/RotaEstacoesGrid';
 import { RotaPropositoTese } from '@/components/clube/rota-template/RotaPropositoTese';
-import { Loader2 } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Loader2, MessageSquare, ArrowRight } from 'lucide-react';
 
 export default function ClubeRotaHub() {
   const { rotaSlug = 'rota-dos-lobos' } = useParams();
