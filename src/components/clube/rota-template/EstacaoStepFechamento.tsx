@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, Headphones, Play, Pause, ChevronRight, Sparkles, Footprints, ArrowRight, Loader2, RotateCcw, RotateCw, Gauge } from 'lucide-react';
+import { CheckCircle2, Headphones, Play, Pause, ChevronRight, Sparkles, Footprints, ArrowRight, Loader2, RotateCcw, RotateCw, Gauge, MessageSquare } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useMutation } from '@tanstack/react-query';
@@ -35,6 +36,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
   onFinish
 }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
 
   const conclusionMutation = useMutation({
@@ -117,7 +119,21 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
         </div>
       </Card>
 
+      <div className="flex justify-center">
+        <button
+          onClick={() => navigate(`/clube/chat-livro?estacao=${estacaoId}&rota=${rotaId}&obra=${encodeURIComponent(titulo)}`)}
+          className="group inline-flex items-center gap-3 px-7 py-4 rounded-full border border-gold/30 bg-white/[0.02] backdrop-blur-sm hover:border-gold/60 hover:bg-gold/[0.06] transition-all duration-500"
+        >
+          <MessageSquare className="w-4 h-4 text-gold" />
+          <span className="text-[11px] font-bold tracking-[0.25em] uppercase text-gold">
+            Converse com o Livro
+          </span>
+          <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+
       <div className="flex flex-col items-center gap-8 pt-8">
+
         <div className="flex justify-center w-full max-w-2xl">
           <button
             onClick={() => conclusionMutation.mutate()}
