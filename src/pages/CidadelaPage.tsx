@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCidadelaOverview } from '@/hooks/useCidadelaOverview';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Map, Compass, GraduationCap, Dumbbell, History, ArrowRight } from 'lucide-react';
+import { Map, Compass, GraduationCap, Dumbbell, History, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CidadelaMapSVG from '@/components/cidadela/CidadelaMapSVG';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ResultCard } from '@/components/primeira-leitura/ResultCard';
 
 /**
  * PÁGINA /cidadela V0.3
