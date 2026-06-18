@@ -14,6 +14,7 @@ const BibliotecaTravessiasFamilia = React.lazy(() => import("@/pages/BibliotecaT
 const MinhaJornada = React.lazy(() => import("@/pages/MinhaJornada"));
 const CidadelaPage = React.lazy(() => import("@/pages/CidadelaPage"));
 const CamaraDoSussurroPage = React.lazy(() => import("@/pages/clube/CamaraDoSussurroPage"));
+const ChatLivroPage = React.lazy(() => import("@/pages/clube/ChatLivroPage"));
 
 
 /**
@@ -40,6 +41,7 @@ export const renderJornadaRoutes = (ProtectedRoute: React.ComponentType<any>) =>
       <Route path="/clube/rota/:slug" element={<ProtectedRoute minPortal="assinante"><ClubeRotaPremium /></ProtectedRoute>} />
       <Route path="/clube/acervo" element={<ProtectedRoute minPortal="assinante"><ClubeAcervo /></ProtectedRoute>} />
       <Route path="/clube/camara-do-sussurro" element={<ProtectedRoute minPortal="assinante"><CamaraDoSussurroPage /></ProtectedRoute>} />
+      <Route path="/clube/chat-livro" element={<ProtectedRoute minPortal="assinante"><ChatLivroPage /></ProtectedRoute>} />
       
       {/* Biblioteca de Travessias - Redirects para a Unificada */}
       <Route path="/biblioteca-das-travessias" element={<ProtectedRoute><Navigate to="/biblioteca?aba=travessias" replace /></ProtectedRoute>} />
