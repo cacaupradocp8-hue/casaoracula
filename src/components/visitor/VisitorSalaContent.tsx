@@ -181,7 +181,7 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Iniciar Primeira Leitura</span>
+              <span className="relative z-10">Começar agora</span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
           </div>
