@@ -282,6 +282,16 @@ const CidadelaPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={resultOpen} onOpenChange={setResultOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 bg-transparent border-0 shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Resultado da Primeira Leitura</DialogTitle>
+            <DialogDescription>Sua devolutiva simbólica</DialogDescription>
+          </DialogHeader>
+          {primeiraLeituraResult && <ResultCard type={primeiraLeituraResult} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
