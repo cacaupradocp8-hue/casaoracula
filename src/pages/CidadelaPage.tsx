@@ -33,6 +33,19 @@ const CidadelaPage = () => {
     proximoPasso
   } = useCidadelaOverview();
 
+  const [primeiraLeituraResult, setPrimeiraLeituraResult] = useState<string | null>(null);
+  const [resultOpen, setResultOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('primeira_leitura_result');
+      if (stored) {
+        setPrimeiraLeituraResult(stored);
+        setResultOpen(true);
+      }
+    } catch {}
+  }, []);
+
   if (isLoading) {
     return (
       <div className="container mx-auto p-6 space-y-6">
