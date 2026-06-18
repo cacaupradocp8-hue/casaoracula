@@ -83,7 +83,7 @@ export function VisitorSalaContent() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5, duration: 1 }}
           >
-            <Logo variant="vertical" size="md" className="mb-2" />
+            <Logo variant="vertical" size="xl" className="mb-2 scale-125 md:scale-150" />
           </motion.div>
 
           <div className="space-y-6">
