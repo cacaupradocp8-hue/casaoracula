@@ -17,6 +17,7 @@ const PrimeiraLeituraPage = () => {
     if (currentStep === 'intro') setCurrentStep('case');
     else if (currentStep === 'case' && escutaId) {
       setSelectedEscuta(escutaId);
+      try { localStorage.setItem('primeira_leitura_result', escutaId); } catch {}
       setCurrentStep('result');
     }
     else if (currentStep === 'result') setCurrentStep('paths');

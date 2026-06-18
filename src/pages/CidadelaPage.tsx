@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCidadelaOverview } from '@/hooks/useCidadelaOverview';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Map, Compass, GraduationCap, Dumbbell, History, ArrowRight } from 'lucide-react';
+import { Map, Compass, GraduationCap, Dumbbell, History, ArrowRight, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import CidadelaMapSVG from '@/components/cidadela/CidadelaMapSVG';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { ResultCard } from '@/components/primeira-leitura/ResultCard';
 
 /**
  * PÁGINA /cidadela V0.3
@@ -29,6 +32,19 @@ const CidadelaPage = () => {
     formacao,
     proximoPasso
   } = useCidadelaOverview();
+
+  const [primeiraLeituraResult, setPrimeiraLeituraResult] = useState<string | null>(null);
+  const [resultOpen, setResultOpen] = useState(false);
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('primeira_leitura_result');
+      if (stored) {
+        setPrimeiraLeituraResult(stored);
+        setResultOpen(true);
+      }
+    } catch {}
+  }, []);
 
   if (isLoading) {
     return (
@@ -68,6 +84,27 @@ const CidadelaPage = () => {
           Um mapa simbólico do seu percurso, das travessias já acesas e dos próximos passos possíveis.
         </p>
       </header>
+
+      {/* Mandala da Cidadela */}
+      <section className="relative flex flex-col items-center justify-center py-6">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-[40px]" />
+        <div className="w-full max-w-[420px]">
+          <CidadelaMapSVG forceCircular hideTechnicalLabels maxWidth={420} />
+        </div>
+        <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary/50">
+          Sua Cidadela Interior
+        </p>
+        {primeiraLeituraResult && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setResultOpen(true)}
+            className="mt-3 text-xs text-primary/70 gap-1.5"
+          >
+            <Sparkles className="w-3.5 h-3.5" /> Rever resultado da Primeira Leitura
+          </Button>
+        )}
+      </section>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* 2. Card "Onde estou" */}
@@ -245,6 +282,16 @@ const CidadelaPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={resultOpen} onOpenChange={setResultOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0 bg-transparent border-0 shadow-none">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Resultado da Primeira Leitura</DialogTitle>
+            <DialogDescription>Sua devolutiva simbólica</DialogDescription>
+          </DialogHeader>
+          {primeiraLeituraResult && <ResultCard type={primeiraLeituraResult} />}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
