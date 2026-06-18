@@ -69,12 +69,30 @@ export function AdminFounderInvitesTab() {
 
       const { data: activationsData, error: activationsError } = await supabase
         .from('acessos_fundadora')
-        .select('*, profiles(nome, email)')
+        .select('*')
         .order('data_ativacao', { ascending: false })
         .limit(50);
 
       if (activationsError) throw activationsError;
-      setActivations((activationsData as any) || []);
+
+      const userIds = Array.from(new Set((activationsData || []).map((a: any) => a.user_id).filter(Boolean)));
+      let profilesMap: Record<string, { nome: string | null; email: string | null }> = {};
+      if (userIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, nome, email')
+          .in('id', userIds);
+        if (profilesError) throw profilesError;
+        profilesMap = Object.fromEntries(
+          (profilesData || []).map((p: any) => [p.id, { nome: p.nome, email: p.email }])
+        );
+      }
+
+      const merged = (activationsData || []).map((a: any) => ({
+        ...a,
+        profiles: profilesMap[a.user_id] || null,
+      }));
+      setActivations(merged as any);
     } catch (err) {
       console.error('Erro ao buscar dados:', err);
       toast.error('Erro ao carregar convites.');
