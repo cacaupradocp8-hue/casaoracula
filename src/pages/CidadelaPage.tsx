@@ -85,6 +85,27 @@ const CidadelaPage = () => {
         </p>
       </header>
 
+      {/* Mandala da Cidadela */}
+      <section className="relative flex flex-col items-center justify-center py-6">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/5 via-transparent to-transparent rounded-[40px]" />
+        <div className="w-full max-w-[420px]">
+          <CidadelaMapSVG forceCircular hideTechnicalLabels maxWidth={420} />
+        </div>
+        <p className="mt-4 text-[10px] uppercase tracking-[0.3em] text-primary/50">
+          Sua Cidadela Interior
+        </p>
+        {primeiraLeituraResult && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setResultOpen(true)}
+            className="mt-3 text-xs text-primary/70 gap-1.5"
+          >
+            <Sparkles className="w-3.5 h-3.5" /> Rever resultado da Primeira Leitura
+          </Button>
+        )}
+      </section>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* 2. Card "Onde estou" */}
         <Card className="border-primary/20 bg-primary/5">
