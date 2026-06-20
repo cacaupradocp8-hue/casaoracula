@@ -170,49 +170,73 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
               </div>
             </div>
 
-            <ol className="relative space-y-3 md:space-y-4">
-              {/* Linha vertical da trilha */}
-              <div className="absolute left-5 top-2 bottom-2 w-px bg-gradient-to-b from-gold/30 via-gold/10 to-transparent" aria-hidden />
-
+            <ol className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-md divide-y divide-white/5 overflow-hidden">
               {trilha.map((item) => {
                 const Icon = item.categoriaIcon;
                 const isOpen = openUrl === item.url;
                 return (
-                  <li key={item.url} className="relative pl-14">
-                    {/* Nó numerado */}
+                  <li key={item.url}>
                     <button
                       type="button"
                       onClick={() => setOpenUrl(isOpen ? null : item.url)}
                       className={cn(
-                        "absolute left-0 top-1 w-10 h-10 rounded-full border flex items-center justify-center z-10 transition-all",
-                        isOpen
-                          ? "bg-gold text-midnight border-gold shadow-[0_0_20px_rgba(196,165,74,0.4)]"
-                          : "bg-background text-gold/70 border-gold/30 hover:border-gold/60"
+                        "w-full flex items-center gap-3 md:gap-4 p-3 md:p-4 text-left transition-colors",
+                        isOpen ? "bg-white/[0.04]" : "hover:bg-white/[0.03]"
                       )}
-                      aria-label={`Abrir ${item.title}`}
                     >
-                      <span className="text-[10px] font-mono font-bold tabular-nums">{item.numero}</span>
-                    </button>
+                      {/* Número */}
+                      <span className="w-6 text-[11px] font-mono font-bold tabular-nums text-gold/60 text-center shrink-0">
+                        {item.numero}
+                      </span>
 
-                    <button
-                      type="button"
-                      onClick={() => setOpenUrl(isOpen ? null : item.url)}
-                      className={cn(
-                        "w-full text-left p-3 md:p-4 rounded-2xl border transition-all",
-                        isOpen
-                          ? "bg-white/[0.04] border-gold/30"
-                          : "bg-white/[0.02] border-white/10 hover:border-white/20"
-                      )}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-3.5 h-3.5 text-gold/60 shrink-0" />
-                        <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-gold/60 truncate">
-                          {item.categoriaLabel}
-                        </span>
+                      {/* Disco girando (no lugar da capa) */}
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 shrink-0">
+                        <div
+                          className={cn(
+                            "absolute inset-0 rounded-full bg-gradient-to-br from-neutral-900 via-black to-neutral-800 border border-white/15 shadow-inner",
+                            isOpen && "[animation:spin_4s_linear_infinite]"
+                          )}
+                          style={{
+                            backgroundImage:
+                              "repeating-radial-gradient(circle at center, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 1px, transparent 1px, transparent 3px)",
+                          }}
+                        >
+                          <div className="absolute inset-0 m-auto w-3 h-3 rounded-full bg-gold/80 border border-black/60" />
+                        </div>
                       </div>
-                      <h3 className="mt-1 text-sm md:text-base font-serif text-white/90 leading-snug">
-                        {item.title}
-                      </h3>
+
+                      {/* Título + categoria */}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="text-sm md:text-base font-serif text-white/90 leading-snug truncate">
+                          {item.title}
+                        </h3>
+                        <div className="mt-0.5 flex items-center gap-1.5">
+                          <Icon className="w-3 h-3 text-gold/60 shrink-0" />
+                          <span className="text-[9px] uppercase tracking-[0.25em] font-bold text-gold/60 truncate">
+                            {item.categoriaLabel}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Play indicator */}
+                      <div
+                        className={cn(
+                          "w-8 h-8 rounded-full border flex items-center justify-center shrink-0 transition-all",
+                          isOpen
+                            ? "bg-gold text-midnight border-gold"
+                            : "border-gold/30 text-gold/70"
+                        )}
+                      >
+                        {isOpen ? (
+                          <span className="flex gap-0.5 items-end h-3">
+                            <span className="w-0.5 h-2 bg-midnight animate-pulse" />
+                            <span className="w-0.5 h-3 bg-midnight animate-pulse [animation-delay:150ms]" />
+                            <span className="w-0.5 h-1.5 bg-midnight animate-pulse [animation-delay:300ms]" />
+                          </span>
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5" />
+                        )}
+                      </div>
                     </button>
 
                     <AnimatePresence initial={false}>
@@ -224,7 +248,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden"
                         >
-                          <div className="pt-3">
+                          <div className="px-3 md:px-4 pb-4">
                             <EscutaPremium
                               audioUrl={item.url}
                               titulo={item.title}
