@@ -34,9 +34,10 @@ export const RotaLivroBanner: React.FC<RotaLivroBannerProps> = ({
         {fraseObra && <p className="hidden md:block text-white/45 text-[11px] font-serif italic leading-relaxed line-clamp-2">{fraseObra}</p>}
         <button
           onClick={onAction}
-          className="inline-flex items-center gap-2 mt-1 text-[10px] md:text-[10px] uppercase tracking-[0.25em] text-gold font-bold hover:text-gold/80 transition-colors group/btn"
+          className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-[10px] uppercase tracking-[0.25em] text-gold font-bold hover:bg-gold/15 hover:border-gold/60 transition-all group/btn"
         >
-          Ver Áudio de Abertura
+          <MessageSquare className="w-3 h-3" />
+          Converse com o Livro
           <ArrowRight className="w-3 h-3 transition-transform duration-300 group-hover/btn:translate-x-1.5" />
         </button>
       </div>
