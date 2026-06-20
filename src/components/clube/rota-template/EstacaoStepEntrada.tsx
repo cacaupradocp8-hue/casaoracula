@@ -77,8 +77,7 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
             <EscutaPremium
               audioUrl={audioAberturaUrl}
               titulo="Abertura da Estação"
-              subtitulo="Escuta inicial"
-              icon={<Headphones className="w-4 h-4" />}
+              funcao="Escuta inicial"
             />
           </div>
         )}
