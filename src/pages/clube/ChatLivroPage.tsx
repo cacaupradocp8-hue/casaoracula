@@ -19,7 +19,73 @@ type Categoria = {
   perguntas: string[];
 };
 
-const CATEGORIAS: Categoria[] = [
+// Perguntas específicas para "Mulheres que Correm com os Lobos" (Clarissa Pinkola Estés)
+const CATEGORIAS_LOBOS: Categoria[] = [
+  {
+    key: 'mulher-selvagem',
+    label: 'A Mulher Selvagem',
+    icon: Feather,
+    perguntas: [
+      'O que a Mulher Selvagem, em mim, está pedindo para ser escutado neste momento?',
+      'Em que partes da minha vida eu domestiquei o instinto que Clarissa nomeia como sagrado?',
+      'Como reconheço o cheiro da Loba interior quando ela se aproxima?',
+    ],
+  },
+  {
+    key: 'contos',
+    label: 'Contos & Símbolos',
+    icon: BookOpen,
+    perguntas: [
+      'Que conto desta obra ressoou como um espelho da minha travessia atual?',
+      'Em "Barba Azul", que chave eu insisto em não usar — e o que ela protege?',
+      'O que "A Loba" (La Loba) me ensina sobre juntar meus próprios ossos?',
+      'Que rio seco em mim está pedindo as águas de "Sealskin, Soulskin"?',
+    ],
+  },
+  {
+    key: 'instinto',
+    label: 'Instinto Ferido',
+    icon: Heart,
+    perguntas: [
+      'Onde meu instinto foi capturado, e que armadilha o prendeu?',
+      'Que sinais o meu corpo emite quando eu desobedeço a Loba?',
+      'O que precisa morrer em mim para que o ciclo Vida/Morte/Vida se restaure?',
+    ],
+  },
+  {
+    key: 'sombra',
+    label: 'Sombra & Predador',
+    icon: Compass,
+    perguntas: [
+      'Quem é o Predador Natural dentro da minha psique hoje?',
+      'Que voz interna me convence a entregar a chave do meu mistério?',
+      'Como diferenciar o Predador da própria Mulher Selvagem em mim?',
+    ],
+  },
+  {
+    key: 'clinica',
+    label: 'Aplicação Clínica',
+    icon: Sparkles,
+    perguntas: [
+      'Como trazer a imagem da Loba para uma sessão sem cair em interpretação literal?',
+      'Que pergunta-mãe deste livro eu poderia oferecer a uma cliente em luto criativo?',
+      'Quais riscos éticos preciso cuidar ao usar os contos de Clarissa com mulheres em crise?',
+      'Como escutar, na fala da cliente, os ossos esquecidos pedindo canto?',
+    ],
+  },
+  {
+    key: 'circulos',
+    label: 'Círculos & Mentoria',
+    icon: Users,
+    perguntas: [
+      'Que ritual de abertura "La Loba" inspira para um círculo de mulheres?',
+      'Como conduzir uma roda a partir do ciclo Vida/Morte/Vida sem dramatização?',
+      'Que prática simbólica posso oferecer para mulheres reaprendendo a uivar?',
+    ],
+  },
+];
+
+const CATEGORIAS_PADRAO: Categoria[] = [
   {
     key: 'personagens',
     label: 'Personagens & Símbolos',
@@ -81,6 +147,14 @@ const CATEGORIAS: Categoria[] = [
     ],
   },
 ];
+
+function escolherCategorias(obra?: string, rota?: string): Categoria[] {
+  const alvo = `${obra || ''} ${rota || ''}`.toLowerCase();
+  if (alvo.includes('lobo') || alvo.includes('mulheres que correm')) {
+    return CATEGORIAS_LOBOS;
+  }
+  return CATEGORIAS_PADRAO;
+}
 
 export default function ChatLivroPage() {
   const navigate = useNavigate();
