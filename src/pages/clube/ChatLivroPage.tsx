@@ -209,7 +209,7 @@ export default function ChatLivroPage() {
   };
 
   const categoriaAtiva = useMemo(
-    () => CATEGORIAS.find((c) => c.key === catAtiva) ?? CATEGORIAS[0],
+    () => categorias.find((c) => c.key === catAtiva) ?? categorias[0],
     [catAtiva],
   );
 
@@ -219,7 +219,7 @@ export default function ChatLivroPage() {
   };
 
   const surpreendaMe = () => {
-    const todas = CATEGORIAS.flatMap((c) => c.perguntas);
+    const todas = categorias.flatMap((c) => c.perguntas);
     const escolha = todas[Math.floor(Math.random() * todas.length)];
     usarPergunta(escolha);
   };
@@ -327,7 +327,7 @@ export default function ChatLivroPage() {
 
                     {/* Tabs de categorias */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {CATEGORIAS.map((c) => {
+                      {categorias.map((c) => {
                         const Icon = c.icon;
                         const ativa = c.key === catAtiva;
                         return (
