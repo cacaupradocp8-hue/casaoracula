@@ -19,7 +19,73 @@ type Categoria = {
   perguntas: string[];
 };
 
-const CATEGORIAS: Categoria[] = [
+// Perguntas específicas para "Mulheres que Correm com os Lobos" (Clarissa Pinkola Estés)
+const CATEGORIAS_LOBOS: Categoria[] = [
+  {
+    key: 'mulher-selvagem',
+    label: 'A Mulher Selvagem',
+    icon: Feather,
+    perguntas: [
+      'O que a Mulher Selvagem, em mim, está pedindo para ser escutado neste momento?',
+      'Em que partes da minha vida eu domestiquei o instinto que Clarissa nomeia como sagrado?',
+      'Como reconheço o cheiro da Loba interior quando ela se aproxima?',
+    ],
+  },
+  {
+    key: 'contos',
+    label: 'Contos & Símbolos',
+    icon: BookOpen,
+    perguntas: [
+      'Que conto desta obra ressoou como um espelho da minha travessia atual?',
+      'Em "Barba Azul", que chave eu insisto em não usar — e o que ela protege?',
+      'O que "A Loba" (La Loba) me ensina sobre juntar meus próprios ossos?',
+      'Que rio seco em mim está pedindo as águas de "Sealskin, Soulskin"?',
+    ],
+  },
+  {
+    key: 'instinto',
+    label: 'Instinto Ferido',
+    icon: Heart,
+    perguntas: [
+      'Onde meu instinto foi capturado, e que armadilha o prendeu?',
+      'Que sinais o meu corpo emite quando eu desobedeço a Loba?',
+      'O que precisa morrer em mim para que o ciclo Vida/Morte/Vida se restaure?',
+    ],
+  },
+  {
+    key: 'sombra',
+    label: 'Sombra & Predador',
+    icon: Compass,
+    perguntas: [
+      'Quem é o Predador Natural dentro da minha psique hoje?',
+      'Que voz interna me convence a entregar a chave do meu mistério?',
+      'Como diferenciar o Predador da própria Mulher Selvagem em mim?',
+    ],
+  },
+  {
+    key: 'clinica',
+    label: 'Aplicação Clínica',
+    icon: Sparkles,
+    perguntas: [
+      'Como trazer a imagem da Loba para uma sessão sem cair em interpretação literal?',
+      'Que pergunta-mãe deste livro eu poderia oferecer a uma cliente em luto criativo?',
+      'Quais riscos éticos preciso cuidar ao usar os contos de Clarissa com mulheres em crise?',
+      'Como escutar, na fala da cliente, os ossos esquecidos pedindo canto?',
+    ],
+  },
+  {
+    key: 'circulos',
+    label: 'Círculos & Mentoria',
+    icon: Users,
+    perguntas: [
+      'Que ritual de abertura "La Loba" inspira para um círculo de mulheres?',
+      'Como conduzir uma roda a partir do ciclo Vida/Morte/Vida sem dramatização?',
+      'Que prática simbólica posso oferecer para mulheres reaprendendo a uivar?',
+    ],
+  },
+];
+
+const CATEGORIAS_PADRAO: Categoria[] = [
   {
     key: 'personagens',
     label: 'Personagens & Símbolos',
@@ -82,15 +148,26 @@ const CATEGORIAS: Categoria[] = [
   },
 ];
 
+function escolherCategorias(obra?: string, rota?: string): Categoria[] {
+  const alvo = `${obra || ''} ${rota || ''}`.toLowerCase();
+  if (alvo.includes('lobo') || alvo.includes('mulheres que correm')) {
+    return CATEGORIAS_LOBOS;
+  }
+  return CATEGORIAS_PADRAO;
+}
+
 export default function ChatLivroPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const rota = params.get('rota') || undefined;
   const estacao = params.get('estacao') || undefined;
   const obra = params.get('obra') || undefined;
+  const capa = params.get('capa') || undefined;
+
+  const categorias = useMemo(() => escolherCategorias(obra, rota), [obra, rota]);
 
   const [input, setInput] = useState('');
-  const [catAtiva, setCatAtiva] = useState<string>(CATEGORIAS[0].key);
+  const [catAtiva, setCatAtiva] = useState<string>(categorias[0].key);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -132,7 +209,7 @@ export default function ChatLivroPage() {
   };
 
   const categoriaAtiva = useMemo(
-    () => CATEGORIAS.find((c) => c.key === catAtiva) ?? CATEGORIAS[0],
+    () => categorias.find((c) => c.key === catAtiva) ?? categorias[0],
     [catAtiva],
   );
 
@@ -142,7 +219,7 @@ export default function ChatLivroPage() {
   };
 
   const surpreendaMe = () => {
-    const todas = CATEGORIAS.flatMap((c) => c.perguntas);
+    const todas = categorias.flatMap((c) => c.perguntas);
     const escolha = todas[Math.floor(Math.random() * todas.length)];
     usarPergunta(escolha);
   };
@@ -172,11 +249,26 @@ export default function ChatLivroPage() {
             <div className="w-16" />
           </div>
 
-          {/* Título poético */}
-          {obra && (
-            <div className="text-center mb-4">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-1">Obra em escuta</p>
-              <h1 className="font-serif text-2xl md:text-3xl text-gold italic">{obra}</h1>
+          {/* Capa + Título poético */}
+          {(obra || capa) && (
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-6">
+              {capa && (
+                <div className="relative shrink-0">
+                  <div className="absolute -inset-2 rounded-lg bg-gold/20 blur-xl opacity-60" />
+                  <img
+                    src={capa}
+                    alt={obra ? `Capa de ${obra}` : 'Capa do livro'}
+                    className="relative w-24 sm:w-28 md:w-32 aspect-[2/3] object-cover rounded-md shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] border border-gold/20"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {obra && (
+                <div className="text-center sm:text-left">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-1">Obra em escuta</p>
+                  <h1 className="font-serif text-2xl md:text-3xl text-gold italic leading-tight">{obra}</h1>
+                </div>
+              )}
             </div>
           )}
 
@@ -250,7 +342,7 @@ export default function ChatLivroPage() {
 
                     {/* Tabs de categorias */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                      {CATEGORIAS.map((c) => {
+                      {categorias.map((c) => {
                         const Icon = c.icon;
                         const ativa = c.key === catAtiva;
                         return (

@@ -78,7 +78,7 @@ export default function ClubeRotaHub() {
 
           <div className="max-w-3xl mx-auto">
             <Card
-              onClick={() => navigate(`/clube/chat-livro?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}`)}
+              onClick={() => navigate(`/clube/chat-livro?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}&capa=${encodeURIComponent(rota.livro_capa_url || '')}`)}
               className="group cursor-pointer bg-[#0A0A0B]/80 backdrop-blur-xl border border-gold/20 hover:border-gold/60 transition-all duration-500 rounded-3xl p-6 md:p-8 flex items-center gap-5 hover:shadow-[0_0_40px_-12px_rgba(212,175,55,0.4)]"
             >
               <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0">
