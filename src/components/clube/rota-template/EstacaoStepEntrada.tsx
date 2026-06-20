@@ -72,6 +72,17 @@ export const EstacaoStepEntrada: React.FC<EstacaoStepEntradaProps> = ({
           </p>
         </div>
 
+        {audioAberturaUrl && (
+          <div className="w-full max-w-xl">
+            <EscutaPremium
+              audioUrl={audioAberturaUrl}
+              titulo="Abertura da Estação"
+              subtitulo="Escuta inicial"
+              icon={<Headphones className="w-4 h-4" />}
+            />
+          </div>
+        )}
+
         <Button 
           className="rounded-full bg-gold text-[#020617] font-bold px-10 h-14 hover:bg-gold/90 shadow-[0_10px_40px_rgba(212,175,55,0.3)] active:scale-95 transition-all text-xs tracking-[0.2em] uppercase group"
           onClick={onNext}
