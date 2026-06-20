@@ -249,11 +249,26 @@ export default function ChatLivroPage() {
             <div className="w-16" />
           </div>
 
-          {/* Título poético */}
-          {obra && (
-            <div className="text-center mb-4">
-              <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-1">Obra em escuta</p>
-              <h1 className="font-serif text-2xl md:text-3xl text-gold italic">{obra}</h1>
+          {/* Capa + Título poético */}
+          {(obra || capa) && (
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-6">
+              {capa && (
+                <div className="relative shrink-0">
+                  <div className="absolute -inset-2 rounded-lg bg-gold/20 blur-xl opacity-60" />
+                  <img
+                    src={capa}
+                    alt={obra ? `Capa de ${obra}` : 'Capa do livro'}
+                    className="relative w-24 sm:w-28 md:w-32 aspect-[2/3] object-cover rounded-md shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] border border-gold/20"
+                    loading="lazy"
+                  />
+                </div>
+              )}
+              {obra && (
+                <div className="text-center sm:text-left">
+                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-1">Obra em escuta</p>
+                  <h1 className="font-serif text-2xl md:text-3xl text-gold italic leading-tight">{obra}</h1>
+                </div>
+              )}
             </div>
           )}
 
