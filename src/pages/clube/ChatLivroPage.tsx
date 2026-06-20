@@ -162,9 +162,12 @@ export default function ChatLivroPage() {
   const rota = params.get('rota') || undefined;
   const estacao = params.get('estacao') || undefined;
   const obra = params.get('obra') || undefined;
+  const capa = params.get('capa') || undefined;
+
+  const categorias = useMemo(() => escolherCategorias(obra, rota), [obra, rota]);
 
   const [input, setInput] = useState('');
-  const [catAtiva, setCatAtiva] = useState<string>(CATEGORIAS[0].key);
+  const [catAtiva, setCatAtiva] = useState<string>(categorias[0].key);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
