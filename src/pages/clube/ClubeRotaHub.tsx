@@ -70,30 +70,11 @@ export default function ClubeRotaHub() {
             <RotaLivroBanner 
               obraRegente={rota.obra_regente}
               capaUrl={rota.livro_capa_url}
-              onAction={irParaEstacao1}
+              onAction={() => navigate(`/clube/chat-livro?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}&capa=${encodeURIComponent(rota.livro_capa_url || '')}`)}
             />
           </div>
 
           <RotaPropositoTese />
-
-          <div className="max-w-3xl mx-auto">
-            <Card
-              onClick={() => navigate(`/clube/chat-livro?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}&capa=${encodeURIComponent(rota.livro_capa_url || '')}`)}
-              className="group cursor-pointer bg-[#0A0A0B]/80 backdrop-blur-xl border border-gold/20 hover:border-gold/60 transition-all duration-500 rounded-3xl p-6 md:p-8 flex items-center gap-5 hover:shadow-[0_0_40px_-12px_rgba(212,175,55,0.4)]"
-            >
-              <div className="w-14 h-14 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center flex-shrink-0">
-                <MessageSquare className="w-6 h-6 text-gold" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] uppercase tracking-[0.3em] text-gold/80 font-bold mb-1">Diálogo Simbólico</p>
-                <h3 className="text-xl md:text-2xl font-serif text-white">Converse com o Livro</h3>
-                <p className="text-sm text-white/50 font-serif italic mt-1">
-                  Aprofunde a leitura em um diálogo guiado sobre a obra desta rota.
-                </p>
-              </div>
-              <ArrowRight className="w-5 h-5 text-gold group-hover:translate-x-1 transition-transform" />
-            </Card>
-          </div>
 
           <div className="space-y-12 pt-8">
             <div className="text-center space-y-4">
