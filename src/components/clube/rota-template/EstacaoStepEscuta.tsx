@@ -63,13 +63,7 @@ export const EstacaoStepEscuta: React.FC<EstacaoStepEscutaProps> = ({
     const outros = adminAudios.filter(a => !/rastro|treinamento|treino/i.test(a.title));
 
     return [
-      {
-        key: 'abertura',
-        label: 'Abertura da Estação',
-        descricao: 'Convite inicial — escute antes de prosseguir.',
-        icon: Music,
-        items: audioAberturaUrl ? [{ url: audioAberturaUrl, title: 'Abertura da Estação' }] : [],
-      },
+
       {
         key: 'clareira',
         label: 'A Clareira Onde Tudo Começou',
