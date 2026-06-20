@@ -780,6 +780,14 @@ export const EstacaoStepCamaraEscuta: React.FC<EstacaoStepCamaraEscutaProps> = (
               </p>
             </div>
 
+            <div className="flex items-start gap-3 rounded-2xl border border-gold/20 bg-gold/5 px-4 py-3 text-left">
+              <Info className="w-4 h-4 text-gold mt-0.5 flex-shrink-0" />
+              <p className="text-[11px] sm:text-xs text-gold/80 font-serif italic leading-relaxed">
+                Para escutar a playlist, é necessário estar conectada à sua conta do <span className="font-bold not-italic">Spotify</span>. Caso não esteja, faça login em{' '}
+                <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-gold">open.spotify.com</a> antes de iniciar a escuta.
+              </p>
+            </div>
+
             <SpotifyPlaylistEmbed url={playlistObra.url} territorio={playlistObra.territorio_principal} />
 
             <div className="flex justify-center pt-2">
