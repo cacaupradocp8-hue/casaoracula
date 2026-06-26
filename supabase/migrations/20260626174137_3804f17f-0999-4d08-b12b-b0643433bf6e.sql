@@ -1,0 +1,1 @@
+UPDATE public.app_settings SET value = '6e6e8aacafc908006f317c88eab5cc9e' WHERE key = 'sala_visita_video_url';
