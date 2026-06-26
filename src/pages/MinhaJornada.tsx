@@ -189,10 +189,74 @@ export default function MinhaJornada() {
           </p>
         </motion.div>
 
-        {loading ? (
+        {loading || isFounderLoading ? (
           <div className="flex justify-center py-16">
             <Loader2 className="w-6 h-6 text-primary animate-spin" />
           </div>
+        ) : isFounderActive ? (
+          <>
+            {/* CTA principal — Rota dos Lobos */}
+            <motion.div {...fade(0.1)} className="mb-8">
+              <Card
+                className="border-2 border-gold/40 bg-gradient-to-b from-[#1a1208]/60 to-card/40 shadow-[0_0_60px_-10px_rgba(212,175,55,0.35)] cursor-pointer group"
+                onClick={() => navigate('/clube/rotas/rota-dos-lobos')}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center border-2 bg-gold/10 border-gold/40 ring-2 ring-gold/10 shrink-0">
+                      <BookOpen className="w-5 h-5 text-gold" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-xs font-medium uppercase tracking-wider text-gold">◉ Em jornada</span>
+                      <h3 className="font-display text-lg text-foreground mt-1 mb-1">
+                        Rota dos Lobos — Clareira do Chamado
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                        Sua estação ativa como Fundadora. Siga o rastro pela primeira clareira.
+                      </p>
+                      <Button variant="gold" size="sm" className="gap-2">
+                        Continuar
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Estações informativas (bloqueadas) */}
+            <div className="space-y-3 mb-8">
+              <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground/60 text-center mb-4">
+                Próximas camadas da Casa
+              </p>
+              {STAGES.filter(s => s.key !== 'clube').map((stage, idx) => {
+                const Icon = stage.icon;
+                return (
+                  <motion.div key={stage.key} {...fade(0.2 + idx * 0.05)}>
+                    <Card className="border border-border/20 bg-card/30 opacity-60 cursor-not-allowed select-none">
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center border-2 bg-card border-border/30 shrink-0 relative">
+                            <Icon className="w-5 h-5 text-muted-foreground/40 [filter:sepia(1)]" />
+                            <div className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-background border border-border/40 flex items-center justify-center">
+                              <Lock className="w-2.5 h-2.5 text-muted-foreground/60" />
+                            </div>
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground/50">
+                              ○ Em breve para Fundadoras
+                            </span>
+                            <h3 className="font-display text-lg text-foreground/70 mt-1 mb-1">{stage.title}</h3>
+                            <p className="text-sm text-muted-foreground/70 leading-relaxed">{stage.description}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </>
         ) : (
           <>
             {/* Journey map */}
