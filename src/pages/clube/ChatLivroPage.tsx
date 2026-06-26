@@ -103,9 +103,14 @@ export default function ChatLivroPage() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const intro = obra
-        ? `Estamos diante de **${obra}**. O que pulsa em você nessa leitura? Posso percorrer com você um símbolo, um trecho, uma dúvida ou um eco da sua prática.`
-        : 'Estamos diante do livro. O que pulsa em você nessa leitura? Posso percorrer com você um símbolo, um trecho, uma dúvida ou um eco da sua prática.';
+      const intro = [
+        'Os contos não oferecem respostas prontas.',
+        'Eles ampliam a forma como observamos a vida.',
+        '',
+        obra
+          ? `Estamos diante de **${obra}**. Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.`
+          : 'Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.',
+      ].join('\n');
       addWelcomeMessage(intro);
     }
     inputRef.current?.focus();
