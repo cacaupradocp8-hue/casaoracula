@@ -70,7 +70,7 @@ export default function ClubeRotaHub() {
             <RotaLivroBanner 
               obraRegente={rota.obra_regente}
               capaUrl={rota.livro_capa_url}
-              onAction={() => navigate(`/clube/chat-livro?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}&capa=${encodeURIComponent(rota.livro_capa_url || '')}`)}
+              onAction={() => navigate(`/clube/espelho-do-conto?rota=${rotaSlug}&obra=${encodeURIComponent(rota.obra_regente || '')}&capa=${encodeURIComponent(rota.livro_capa_url || '')}`)}
             />
           </div>
 
