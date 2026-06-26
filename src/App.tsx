@@ -284,6 +284,13 @@ function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; a
 
 // ─── Main routes ──────────────────────────────────────────────
 
+function RootEntry() {
+  const { isAuthenticated, isAuthReady, isLoading } = useAuth();
+  if (!isAuthReady || isLoading) return <SalaDaVisitante />;
+  if (isAuthenticated) return <Navigate to="/minha-jornada" replace />;
+  return <SalaDaVisitante />;
+}
+
 function AppRoutes() {
   const location = useLocation();
 
