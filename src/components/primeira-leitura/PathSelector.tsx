@@ -44,7 +44,7 @@ export const PathSelector: React.FC = () => {
             </p>
           </div>
           <Button 
-            onClick={() => navigate('/cidadela')}
+            onClick={goCidadela}
             variant="gold"
             className="w-full py-6 rounded-2xl"
           >
@@ -61,7 +61,7 @@ export const PathSelector: React.FC = () => {
             </p>
           </div>
           <Button 
-            onClick={() => navigate('/travessia/travessia-zero-o-limiar-da-casa')}
+            onClick={goTravessia}
             variant="outline"
             className="w-full py-6 rounded-2xl border-primary/10 hover:bg-primary/5"
           >
