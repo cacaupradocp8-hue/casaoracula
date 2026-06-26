@@ -3,9 +3,21 @@ import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const PathSelector: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const goCidadela = () => {
+    if (user) navigate('/cidadela');
+    else navigate('/auth?redirect=/cidadela');
+  };
+  const goTravessia = () => {
+    const dest = '/travessia/travessia-zero-o-limiar-da-casa';
+    if (user) navigate(dest);
+    else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
+  };
 
   return (
     <motion.div 
