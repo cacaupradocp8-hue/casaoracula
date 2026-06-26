@@ -276,7 +276,7 @@ export default function ClubeRotasCatalogo() {
                     }}
                   />
                   <RecursoCard 
-                    title="Converse com o Livro"
+                    title="Entrar no Espelho do Conto"
                     description="IA treinada na obra regente para aprofundar sentidos e tirar dúvidas simbólicas."
                     icon={<MessageSquare className="w-5 h-5" />}
                     onClick={() => {

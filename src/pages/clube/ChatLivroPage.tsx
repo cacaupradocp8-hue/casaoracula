@@ -19,141 +19,66 @@ type Categoria = {
   perguntas: string[];
 };
 
-// Perguntas específicas para "Mulheres que Correm com os Lobos" (Clarissa Pinkola Estés)
-const CATEGORIAS_LOBOS: Categoria[] = [
+// Categorias de entrada do Espelho do Conto — não interpretam, ampliam observação
+const CATEGORIAS_ESPELHO: Categoria[] = [
   {
-    key: 'mulher-selvagem',
-    label: 'A Mulher Selvagem',
-    icon: Feather,
-    perguntas: [
-      'O que a Mulher Selvagem, em mim, está pedindo para ser escutado neste momento?',
-      'Em que partes da minha vida eu domestiquei o instinto que Clarissa nomeia como sagrado?',
-      'Como reconheço o cheiro da Loba interior quando ela se aproxima?',
-    ],
-  },
-  {
-    key: 'contos',
-    label: 'Contos & Símbolos',
+    key: 'trecho',
+    label: 'Um trecho do livro',
     icon: BookOpen,
     perguntas: [
-      'Que conto desta obra ressoou como um espelho da minha travessia atual?',
-      'Em "Barba Azul", que chave eu insisto em não usar — e o que ela protege?',
-      'O que "A Loba" (La Loba) me ensina sobre juntar meus próprios ossos?',
-      'Que rio seco em mim está pedindo as águas de "Sealskin, Soulskin"?',
+      'Há um trecho que continua ecoando em mim. Posso trazê-lo aqui para olharmos juntas?',
+      'Quero olhar com mais atenção uma passagem que me parou. O que ela pode estar pedindo para ser visto?',
     ],
   },
   {
-    key: 'instinto',
-    label: 'Instinto Ferido',
-    icon: Heart,
+    key: 'personagem',
+    label: 'Uma personagem',
+    icon: Feather,
     perguntas: [
-      'Onde meu instinto foi capturado, e que armadilha o prendeu?',
-      'Que sinais o meu corpo emite quando eu desobedeço a Loba?',
-      'O que precisa morrer em mim para que o ciclo Vida/Morte/Vida se restaure?',
+      'Uma personagem desta obra ficou habitando em mim. O que ela pode estar espelhando agora?',
+      'Há uma figura do livro que me incomoda. Como observar esse incômodo sem responder rápido demais?',
     ],
   },
   {
-    key: 'sombra',
-    label: 'Sombra & Predador',
-    icon: Compass,
-    perguntas: [
-      'Quem é o Predador Natural dentro da minha psique hoje?',
-      'Que voz interna me convence a entregar a chave do meu mistério?',
-      'Como diferenciar o Predador da própria Mulher Selvagem em mim?',
-    ],
-  },
-  {
-    key: 'clinica',
-    label: 'Aplicação Clínica',
+    key: 'simbolo',
+    label: 'Um símbolo',
     icon: Sparkles,
     perguntas: [
-      'Como trazer a imagem da Loba para uma sessão sem cair em interpretação literal?',
-      'Que pergunta-mãe deste livro eu poderia oferecer a uma cliente em luto criativo?',
-      'Quais riscos éticos preciso cuidar ao usar os contos de Clarissa com mulheres em crise?',
-      'Como escutar, na fala da cliente, os ossos esquecidos pedindo canto?',
+      'Um símbolo desta obra continua aparecendo em mim. Como amplio a escuta dele?',
+      'Quero observar uma imagem do livro sem traduzi-la. Por onde começo?',
     ],
   },
   {
-    key: 'circulos',
-    label: 'Círculos & Mentoria',
+    key: 'emocao',
+    label: 'Uma emoção despertada',
+    icon: Heart,
+    perguntas: [
+      'A leitura acendeu algo em mim que ainda não tem nome. Como me aproximar dessa emoção?',
+      'Há um afeto que esta obra tocou. O que esse afeto pode estar guardando?',
+    ],
+  },
+  {
+    key: 'atendimento',
+    label: 'Uma situação vivida em atendimento',
     icon: Users,
     perguntas: [
-      'Que ritual de abertura "La Loba" inspira para um círculo de mulheres?',
-      'Como conduzir uma roda a partir do ciclo Vida/Morte/Vida sem dramatização?',
-      'Que prática simbólica posso oferecer para mulheres reaprendendo a uivar?',
+      'Lembrei de uma cena clínica enquanto lia. Como observá-la pelo eixo simbólico desta obra, sem interpretar a cliente?',
+      'Há um caso em escuta que dialoga com este livro. Que pergunta-mãe esta obra me oferece para essa escuta?',
+    ],
+  },
+  {
+    key: 'livre',
+    label: 'Uma pergunta livre',
+    icon: Compass,
+    perguntas: [
+      'Tenho uma pergunta que ainda não sei formular. Posso pensar em voz alta com você?',
+      'Quero abrir um campo de observação a partir desta leitura. Por onde podemos começar?',
     ],
   },
 ];
 
-const CATEGORIAS_PADRAO: Categoria[] = [
-  {
-    key: 'personagens',
-    label: 'Personagens & Símbolos',
-    icon: Feather,
-    perguntas: [
-      'Qual personagem desta obra espelha algo que ainda não nomeei em mim?',
-      'Que símbolo deste livro pede para ser escutado com mais atenção?',
-      'Que sombra atravessa a protagonista e como ela me convoca?',
-    ],
-  },
-  {
-    key: 'autor',
-    label: 'Mensagem do Autor',
-    icon: BookOpen,
-    perguntas: [
-      'Que mensagem subjacente o autor parece sussurrar nas entrelinhas?',
-      'O que esta obra tenta proteger e o que tenta revelar?',
-      'Qual é a pergunta secreta que move este livro?',
-    ],
-  },
-  {
-    key: 'pessoal',
-    label: 'Impacto Pessoal',
-    icon: Heart,
-    perguntas: [
-      'Que trecho desta leitura ficou pulsando em mim depois que fechei o livro?',
-      'O que esta obra desfez em mim e o que começou a costurar?',
-      'Onde, na minha vida, este livro abriu uma fresta de luz?',
-    ],
-  },
-  {
-    key: 'conexoes',
-    label: 'Conexões & Continuações',
-    icon: Compass,
-    perguntas: [
-      'Com que outra obra ou mito esta leitura dialoga em mim?',
-      'Se eu pudesse escrever um desfecho alternativo, que travessia ele abriria?',
-      'Que ponte esta obra constrói entre a vida cotidiana e o simbólico?',
-    ],
-  },
-  {
-    key: 'pratica',
-    label: 'Aplicação Clínica',
-    icon: Sparkles,
-    perguntas: [
-      'Como posso usar este eixo simbólico em sessão individual sem cair na interpretação literal?',
-      'Que pergunta-mãe desta obra eu poderia oferecer a uma cliente em travessia?',
-      'Quais riscos clínicos preciso evitar ao trazer este livro para a escuta?',
-    ],
-  },
-  {
-    key: 'circulos',
-    label: 'Círculos & Mentoria',
-    icon: Users,
-    perguntas: [
-      'Como conduzir um círculo feminino a partir do campo simbólico deste livro?',
-      'Que ritual de abertura esta obra inspira para um grupo terapêutico?',
-      'Como usar esta leitura em uma mentoria sem transformá-la em conteúdo?',
-    ],
-  },
-];
-
-function escolherCategorias(obra?: string, rota?: string): Categoria[] {
-  const alvo = `${obra || ''} ${rota || ''}`.toLowerCase();
-  if (alvo.includes('lobo') || alvo.includes('mulheres que correm')) {
-    return CATEGORIAS_LOBOS;
-  }
-  return CATEGORIAS_PADRAO;
+function escolherCategorias(_obra?: string, _rota?: string): Categoria[] {
+  return CATEGORIAS_ESPELHO;
 }
 
 export default function ChatLivroPage() {
@@ -178,9 +103,14 @@ export default function ChatLivroPage() {
 
   useEffect(() => {
     if (messages.length === 0) {
-      const intro = obra
-        ? `Estamos diante de **${obra}**. O que pulsa em você nessa leitura? Posso percorrer com você um símbolo, um trecho, uma dúvida ou um eco da sua prática.`
-        : 'Estamos diante do livro. O que pulsa em você nessa leitura? Posso percorrer com você um símbolo, um trecho, uma dúvida ou um eco da sua prática.';
+      const intro = [
+        'Os contos não oferecem respostas prontas.',
+        'Eles ampliam a forma como observamos a vida.',
+        '',
+        obra
+          ? `Estamos diante de **${obra}**. Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.`
+          : 'Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.',
+      ].join('\n');
       addWelcomeMessage(intro);
     }
     inputRef.current?.focus();
@@ -243,7 +173,7 @@ export default function ChatLivroPage() {
             <div className="flex items-center gap-2 text-gold">
               <BookOpen className="w-4 h-4" />
               <span className="text-[11px] uppercase tracking-[0.3em] font-semibold">
-                Converse com o Livro
+                Espelho do Conto
               </span>
             </div>
             <div className="w-16" />
@@ -328,7 +258,7 @@ export default function ChatLivroPage() {
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-3.5 h-3.5 text-gold" />
                         <p className="text-[11px] uppercase tracking-[0.3em] text-white/60 font-semibold">
-                          Perguntas para abrir a travessia
+                          Por onde deseja começar
                         </p>
                       </div>
                       <button
