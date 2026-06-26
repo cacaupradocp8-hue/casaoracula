@@ -3,13 +3,14 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import {
   DoorOpen, BookOpen, GraduationCap, Wrench, Cog, Users, Sparkles,
-  ArrowRight, Check, Circle, Loader2, ChevronRight,
+  ArrowRight, Check, Circle, Loader2, ChevronRight, Lock,
 } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffectivePortal } from '@/hooks/useEffectivePortal';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { canAccessFeature } from '@/types/portal';
