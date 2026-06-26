@@ -173,7 +173,7 @@ export default function ChatLivroPage() {
             <div className="flex items-center gap-2 text-gold">
               <BookOpen className="w-4 h-4" />
               <span className="text-[11px] uppercase tracking-[0.3em] font-semibold">
-                Converse com o Livro
+                Espelho do Conto
               </span>
             </div>
             <div className="w-16" />
@@ -258,7 +258,7 @@ export default function ChatLivroPage() {
                       <div className="flex items-center gap-2">
                         <Sparkles className="w-3.5 h-3.5 text-gold" />
                         <p className="text-[11px] uppercase tracking-[0.3em] text-white/60 font-semibold">
-                          Perguntas para abrir a travessia
+                          Por onde deseja começar
                         </p>
                       </div>
                       <button
