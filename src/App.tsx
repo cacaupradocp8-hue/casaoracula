@@ -302,7 +302,7 @@ function AppRoutes() {
     <Routes>
       {renderLegacyRedirects()}
       {/* Public */}
-      <Route path="/" element={<SalaDaVisitante />} />
+      <Route path="/" element={<RootEntry />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
