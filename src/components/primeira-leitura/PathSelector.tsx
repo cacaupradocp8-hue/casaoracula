@@ -19,6 +19,12 @@ export const PathSelector: React.FC = () => {
     if (user) navigate(dest);
     else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
   };
+  const goFundadora = () => {
+    const dest = '/clube/rotas/rota-dos-lobos';
+    if (user) navigate(dest);
+    else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
+  };
+
 
   return (
     <motion.div 
