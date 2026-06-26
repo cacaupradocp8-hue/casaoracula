@@ -86,6 +86,7 @@ function getButtonLabel(status: StageStatus) {
 export default function MinhaJornada() {
   const { user } = useAuth();
   const { effectivePortal } = useEffectivePortal();
+  const { isActive: isFounderActive, isLoading: isFounderLoading } = useFounderAccess();
   const navigate = useNavigate();
   const [statuses, setStatuses] = useState<Record<string, StageStatus>>({});
   const [loading, setLoading] = useState(true);
