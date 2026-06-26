@@ -61,8 +61,7 @@ export function renderLegacyRedirects() {
       <Route path="/admin/rotas-da-casa" element={<Navigate to="/admin/rotas" replace />} />
 
       {/* ─── REDIRECIONAMENTOS DE CLUBE E CONTEÚDO ─── */}
-      <Route path="/biblioteca-das-travessias" element={<Navigate to="/clube/acervo" replace />} />
-      <Route path="/biblioteca-das-travessias/*" element={<Navigate to="/clube/acervo" replace />} />
+      {/* /biblioteca-das-travessias é gerenciada em jornadaRoutes (destino: /biblioteca?aba=travessias) */}
       <Route path="/planos-clube" element={<Navigate to="/planos" replace />} />
       
       {/* ─── REDIRECIONAMENTOS DE FORMAÇÃO E CURSOS ─── */}

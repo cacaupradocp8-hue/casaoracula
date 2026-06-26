@@ -284,6 +284,13 @@ function RoleSpecificGuard({ children, allowed }: { children: React.ReactNode; a
 
 // ─── Main routes ──────────────────────────────────────────────
 
+function RootEntry() {
+  const { isAuthenticated, isAuthReady, isLoading } = useAuth();
+  if (!isAuthReady || isLoading) return <SalaDaVisitante />;
+  if (isAuthenticated) return <Navigate to="/minha-jornada" replace />;
+  return <SalaDaVisitante />;
+}
+
 function AppRoutes() {
   const location = useLocation();
 
@@ -302,7 +309,7 @@ function AppRoutes() {
     <Routes>
       {renderLegacyRedirects()}
       {/* Public */}
-      <Route path="/" element={<SalaDaVisitante />} />
+      <Route path="/" element={<RootEntry />} />
       <Route path="/auth" element={<PublicRoute><Auth /></PublicRoute>} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/install" element={<InstallApp />} />
@@ -323,8 +330,7 @@ function AppRoutes() {
       
       {/* Core navigation */}
       
-      {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
-      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="visitante"><RotaDosLobos /></ProtectedRoute>} />
+      {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes (inclui /clube/rotas/rota-dos-lobos) */}
       <Route path="/clube/rotas/:rotaSlug" element={<ProtectedRoute><ClubeRotaHub /></ProtectedRoute>} />
       
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
