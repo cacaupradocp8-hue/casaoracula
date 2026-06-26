@@ -323,8 +323,7 @@ function AppRoutes() {
       
       {/* Core navigation */}
       
-      {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes */}
-      <Route path="/clube/rotas/rota-dos-lobos" element={<ProtectedRoute minPortal="visitante"><RotaDosLobos /></ProtectedRoute>} />
+      {/* As rotas de jornada agora são renderizadas pelo jornadaRoutes (inclui /clube/rotas/rota-dos-lobos) */}
       <Route path="/clube/rotas/:rotaSlug" element={<ProtectedRoute><ClubeRotaHub /></ProtectedRoute>} />
       
       <Route path="/mapa-casa" element={<ProtectedRoute><MapaCasaOracula /></ProtectedRoute>} />
