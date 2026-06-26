@@ -10,8 +10,9 @@ export const PathSelector: React.FC = () => {
   const { user } = useAuth();
 
   const goCidadela = () => {
-    if (user) navigate('/cidadela');
-    else navigate('/auth?redirect=/cidadela');
+    const dest = '/ferramenta/cartografia-psiquica-oracula';
+    if (user) navigate(dest);
+    else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
   };
   const goTravessia = () => {
     const dest = '/travessia/travessia-zero-o-limiar-da-casa';
