@@ -11,7 +11,7 @@ export function RotaAplicacao() {
       label: 'Conversar com o Livro',
       descricao: 'Chat inteligente com a obra atual',
       icon: MessageSquare,
-      rota: '/clube/chat-livro',
+      rota: '/clube/espelho-do-conto',
     },
     {
       label: 'Meu Jardim',
