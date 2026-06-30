@@ -47,7 +47,7 @@ export function VisitorSalaContent() {
   };
 
   return (
-    <main className="relative min-h-screen text-foreground overflow-hidden flex items-center justify-center px-6" style={{ background: 'radial-gradient(ellipse at center, #102a5c 0%, #0a1d44 40%, #061330 75%, #030a1f 100%)' }}>
+    <main className="relative min-h-screen text-foreground overflow-hidden flex items-center justify-center px-6" style={{ background: 'radial-gradient(ellipse at center, #061633 0%, #03102a 45%, #020a1c 75%, #01050f 100%)' }}>
       <div className="absolute inset-0 pointer-events-none">
         <ElectricWaves />
       </div>
