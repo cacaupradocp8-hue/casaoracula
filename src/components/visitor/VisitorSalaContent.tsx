@@ -252,7 +252,7 @@ export function VisitorSalaContent() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.6, duration: 0.9 }}
-              className="w-full flex flex-col items-center gap-3 pt-2"
+              className="w-full flex justify-center pt-2"
             >
               <Button
                 variant="gold"
@@ -261,14 +261,11 @@ export function VisitorSalaContent() {
                 disabled={isTransitioning}
                 className="w-full max-w-sm gap-2.5 py-7 text-base"
               >
-                <span>Começar pela Primeira Leitura</span>
+                <span>Começar Primeira Leitura</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
-              <p className="text-[11px] text-muted-foreground/70 italic font-serif text-center">
-                A Rota dos Lobos será aberta depois da primeira leitura.
-              </p>
-
             </motion.section>
+
 
           </div>
         </div>
