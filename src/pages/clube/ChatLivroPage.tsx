@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { sendMessageToSyntheia } from '@/services/syntheiaChat';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 const LIMITE_SEMANAL = 3;
 const INTERACTION_TYPE = 'mesa_da_obra';
