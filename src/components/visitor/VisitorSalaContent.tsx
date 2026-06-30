@@ -19,6 +19,7 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const { isActive: isFounder } = useFounderAccess();
   const tracked = useRef(false);
 
   useEffect(() => {
