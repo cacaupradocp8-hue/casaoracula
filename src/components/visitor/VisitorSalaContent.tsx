@@ -140,6 +140,7 @@ export function VisitorSalaContent() {
           </motion.section>
         )}
       </AnimatePresence>
+      </div>
     </main>
   );
 }
