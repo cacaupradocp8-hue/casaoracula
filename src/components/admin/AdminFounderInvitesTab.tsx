@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { 
   Gift, Plus, Trash2, CheckCircle, XCircle, 
   Copy, Loader2, Search, Filter, Calendar, Users, 
-  Clock, Hash, Power, PowerOff 
+  Clock, Hash, Power, PowerOff, Footprints
 } from 'lucide-react';
+import { FounderRastrosDialog } from './FounderRastrosDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
