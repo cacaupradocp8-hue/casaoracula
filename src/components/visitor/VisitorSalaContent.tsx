@@ -133,7 +133,7 @@ export function VisitorSalaContent() {
           </div>
         </motion.section>
 
-        {/* SECTION 2 — Video (if configured) */}
+        {/* SECTION 2 — Video de Boas-vindas (sempre acessível) */}
         {videoId && (
           <motion.section
             initial={{ opacity: 0, y: 20 }}
@@ -141,6 +141,11 @@ export function VisitorSalaContent() {
             transition={{ delay: 2, duration: 0.8 }}
             className="relative z-10 w-full max-w-lg mt-10"
           >
+            {isFounder && (
+              <p className="text-center text-[10px] uppercase tracking-[0.3em] text-primary/70 mb-3">
+                A Voz de Boas-vindas da Casa
+              </p>
+            )}
             <div className="relative rounded-2xl p-[1px] bg-gradient-to-br from-primary/20 via-primary/5 to-primary/20">
               <div className="rounded-[15px] overflow-hidden bg-background">
                 <CloudflareStreamPlayer
@@ -151,8 +156,44 @@ export function VisitorSalaContent() {
                 />
               </div>
             </div>
+            {isFounder && (
+              <p className="text-center text-[10px] text-muted-foreground/50 mt-2 italic">
+                Você pode rever este vídeo sempre que voltar.
+              </p>
+            )}
           </motion.section>
         )}
+
+      {/* SECTION 2.5 — Narrativa para Fundadoras */}
+      {isFounder ? (
+        <motion.section
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.1, duration: 1 }}
+          className="relative z-10 w-full max-w-lg mt-10 space-y-5 text-center px-2"
+        >
+          <p className="text-[10px] uppercase tracking-[0.3em] text-primary/60">
+            Experiência Fundadora
+          </p>
+          <h2 className="font-display text-2xl md:text-3xl text-primary leading-tight">
+            Bem-vinda à Casa Orácula
+          </h2>
+          <div className="space-y-4 text-foreground/80 text-sm md:text-base leading-relaxed font-serif text-left max-w-md mx-auto">
+            <p>Você acaba de atravessar o limiar.</p>
+            <p>A Casa Orácula é uma escola de leitura simbólica aplicada. Aqui não estudamos símbolos para acumulá-los — aprendemos a observar pessoas, histórias e travessias com mais profundidade.</p>
+            <p>Sua experiência fundadora será simples. Você percorrerá uma única rota.</p>
+            <p className="text-primary/80 italic">Ao final queremos responder apenas uma pergunta: essa experiência mudaria sua forma de atender?</p>
+            <p className="pt-2">Durante a jornada você irá:</p>
+            <ul className="list-none space-y-1.5 pl-4 text-foreground/75">
+              <li>· atravessar a Rota dos Lobos;</li>
+              <li>· registrar sua experiência no Jardim da Psique;</li>
+              <li>· registrar aplicações no Jardim do Ofício;</li>
+              <li>· compartilhar seu parecer como fundadora.</li>
+            </ul>
+          </div>
+        </motion.section>
+      ) : (
+
 
       {/* SECTION 2.5 — Apresentação narrativa da Casa (3 perguntas) */}
       <motion.section
