@@ -61,6 +61,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
     },
     onSuccess: () => {
       toast.success('Estação concluída com sucesso!');
+      trackLearningEvent({ contextArea: 'clube', actionType: 'completed', objectType: 'estacao', objectId: estacaoId, metadata: { rastro: 'clareira_concluida', rotaId } });
       onFinish();
     },
     onError: (err: any) => {
