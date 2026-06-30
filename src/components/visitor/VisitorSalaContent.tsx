@@ -222,6 +222,9 @@ export function VisitorSalaContent() {
           </p>
         </div>
       </motion.section>
+        </>
+      )}
+
 
       {/* SECTION 3 — Atravessar o Limiar (Convite Principal) */}
       <motion.section
