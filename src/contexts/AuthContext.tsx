@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit, normalizePortalType } from '@/types/portal';
 import { parseDateSafe } from '@/lib/date-safe';
 import { withTimeout } from '@/lib/withTimeout';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 interface User {
   id: string;
@@ -252,6 +253,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
       if (event === 'INITIAL_SESSION') return;
+      if (event === 'SIGNED_IN' && nextSession?.user?.id) {
+        trackLearningEvent({ userId: nextSession.user.id, contextArea: 'clube', actionType: 'returned', metadata: { rastro: 'retorno_plataforma' } });
+      }
       syncSession(nextSession, false);
     });
 

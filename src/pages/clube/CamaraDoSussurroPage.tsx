@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Play, Clock, Trophy, Flame, Music,
@@ -35,6 +36,20 @@ export default function CamaraDoSussurroPage() {
   const { data: allCases = [] } = useCamaraCases();
   const { data: books = [] } = useAllBooks();
   const [searchParams] = useSearchParams();
+  const openedRef = useRef(false);
+
+  useEffect(() => {
+    if (openedRef.current) return;
+    openedRef.current = true;
+    trackLearningEvent({ contextArea: 'clube', actionType: 'opened', objectType: 'sala_treinamento', metadata: { rastro: 'camara_do_sussurro_aberta' } });
+  }, []);
+
+  const handleSussurroExit = () => {
+    if (activeCase) {
+      trackLearningEvent({ contextArea: 'clube', actionType: 'completed', objectType: 'caso_treinamento', objectId: activeCase.id, metadata: { rastro: 'sussurro_concluido' } });
+    }
+    setActiveCase(null);
+  };
 
   const rotaParam = searchParams.get('rota');
   const estacaoParam = searchParams.get('estacao');
@@ -57,7 +72,7 @@ export default function CamaraDoSussurroPage() {
 
   const handleBack = () => {
     if (activeCase) {
-      setActiveCase(null);
+      handleSussurroExit();
     } else {
       window.history.back();
     }

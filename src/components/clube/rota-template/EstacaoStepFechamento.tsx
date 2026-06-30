@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { TextCarousel } from '@/components/clube/TextCarousel';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { cn } from '@/lib/utils';
 
 interface FechamentoStepProps {
@@ -60,6 +61,7 @@ export const EstacaoStepFechamento: React.FC<FechamentoStepProps> = ({
     },
     onSuccess: () => {
       toast.success('Estação concluída com sucesso!');
+      trackLearningEvent({ contextArea: 'clube', actionType: 'completed', objectType: 'estacao', objectId: estacaoId, metadata: { rastro: 'clareira_concluida', rotaId } });
       onFinish();
     },
     onError: (err: any) => {

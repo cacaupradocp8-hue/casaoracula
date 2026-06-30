@@ -27,6 +27,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import {
   Sprout,
   Plus,
@@ -173,6 +174,7 @@ export default function JardimOficioPage() {
     if (error) {
       toast({ title: 'Erro ao salvar', description: error.message, variant: 'destructive' });
     } else {
+      trackLearningEvent({ contextArea: 'jardim-do-oficio', actionType: 'created_entry', objectType: 'registro_jardim', metadata: { rastro: 'jardim_oficio_registro', enviou_supervisao: enviarSupervisao } });
       toast({ title: 'Reflexão registrada ✨' });
       setDialogOpen(false);
       resetForm();

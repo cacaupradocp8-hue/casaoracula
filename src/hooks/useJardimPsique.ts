@@ -8,6 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 export type TipoRegistroJardim = 
   | 'ferramenta' 
@@ -172,6 +173,8 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
         .single();
 
       if (error) throw error;
+
+      trackLearningEvent({ userId: user.id, contextArea: 'jardim-da-psique', actionType: 'created_entry', objectType: 'registro_jardim', objectId: data?.id, metadata: { rastro: 'jardim_psique_registro', tipo: novoRegistro.tipo_registro || 'ferramenta' } });
 
       const messages: Record<TipoRegistroJardim, string> = {
         ferramenta: '🌿 Salvo no Jardim',

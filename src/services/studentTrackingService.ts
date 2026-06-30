@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 
-export type ContextArea = 'clube' | 'treinamento' | 'biblioteca' | 'jardim-da-psique' | 'formacao';
+export type ContextArea = 'clube' | 'treinamento' | 'biblioteca' | 'jardim-da-psique' | 'jardim-do-oficio' | 'ferramenta' | 'formacao';
 
 export type ActionType =
   | 'opened'
