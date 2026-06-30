@@ -193,6 +193,8 @@ export function VisitorSalaContent() {
           </div>
         </motion.section>
       ) : (
+        <>
+
 
 
       {/* SECTION 2.5 — Apresentação narrativa da Casa (3 perguntas) */}
