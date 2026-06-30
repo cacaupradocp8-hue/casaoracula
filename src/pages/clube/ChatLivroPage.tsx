@@ -188,21 +188,35 @@ export default function ChatLivroPage() {
               <h1 className="font-serif text-4xl md:text-5xl text-foreground tracking-wide mb-3">Mesa da Obra</h1>
               <p className="font-serif italic text-muted-foreground text-base">{obra}</p>
               <div className="w-12 h-px bg-gold/40 mx-auto my-10" />
-              <div className="font-serif text-foreground/85 text-lg md:text-xl leading-loose max-w-xl mx-auto space-y-6">
-                <p className="italic text-foreground/75">
-                  Algumas perguntas não pedem respostas rápidas.<br />
-                  Pedem companhia na leitura.
+              <div className="font-serif text-foreground/85 max-w-xl mx-auto">
+                <p className="italic text-foreground/75 text-xl md:text-2xl leading-loose mb-12">
+                  Algumas perguntas não pedem respostas rápidas.
+                  <br />
+                  <span className="text-foreground/60">Pedem companhia na leitura.</span>
                 </p>
-                <p>
-                  Hoje você volta a se sentar diante de <em>{obra}</em>.
+
+                <p className="text-lg md:text-xl leading-loose mb-10">
+                  Hoje você volta a se sentar diante de
+                  <br />
+                  <em className="text-foreground">{obra}</em>.
                 </p>
-                <p>
-                  Não para encontrar respostas.<br />
-                  Mas para aprender uma nova forma de observar.
+
+                <p className="text-lg md:text-xl leading-loose mb-12">
+                  Não para encontrar respostas.
+                  <br />
+                  <span className="text-foreground/70">
+                    Mas para aprender uma nova forma de observar.
+                  </span>
                 </p>
-                <p className="text-foreground/70">
-                  A obra abre algumas portas. Escolha apenas uma.<br />
-                  Ela será suficiente por hoje.
+
+                <div className="w-8 h-px bg-gold/30 mx-auto mb-12" />
+
+                <p className="text-base md:text-lg leading-loose text-foreground/70 italic">
+                  A obra abre algumas portas.
+                  <br />
+                  Escolha apenas uma.
+                  <br />
+                  <span className="text-foreground/55">Ela será suficiente por hoje.</span>
                 </p>
               </div>
             </header>
