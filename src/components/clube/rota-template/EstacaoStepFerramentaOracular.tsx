@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { AmbientAudioPlayer } from '@/components/clube/AmbientAudioPlayer';
 
 interface Eixo {
   id: string;
