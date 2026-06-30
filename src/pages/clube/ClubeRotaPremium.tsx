@@ -33,6 +33,8 @@ import { ColheitaDosRastros } from '@/components/clube/ColheitaDosRastros';
 import { ConviteFundadoras } from '@/components/clube/ConviteFundadoras';
 import { useConviteFundadoraConfig } from '@/hooks/useColheitaRastros';
 import { toast } from 'sonner';
+import { trackLearningEvent } from '@/services/studentTrackingService';
+
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
