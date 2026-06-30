@@ -155,13 +155,22 @@ export default function ChatLivroPage() {
 
   const registrarJardim = async (tipo: 'psique' | 'oficio') => {
     if (!user || !perguntaAtiva) return;
-    const tabela = tipo === 'psique' ? 'jardim_psique_registros' : 'jardim_do_oficio';
-    // @ts-expect-error tabelas dinâmicas
-    const { error } = await supabase.from(tabela).insert({
-      user_id: user.id,
-      titulo: `Mesa da Obra — ${obra}`,
-      conteudo: `Pergunta: ${perguntaAtiva}\n\nA obra responde:\n${respostaObra}`,
-    });
+    const corpo = `Pergunta: ${perguntaAtiva}\n\nA Voz da Obra:\n${respostaObra}`;
+    const { error } = tipo === 'psique'
+      ? await supabase.from('jardim_psique_registros').insert({
+          user_id: user.id,
+          titulo: `Mesa da Obra — ${obra}`,
+          ferramenta_chave: 'mesa_da_obra',
+          ferramenta_nome: 'Mesa da Obra',
+          fonte: 'clube_livro',
+          reflexao_pessoal: corpo,
+          conteudo: { obra, pergunta: perguntaAtiva, resposta: respostaObra },
+        })
+      : await supabase.from('jardim_do_oficio').insert({
+          user_id: user.id,
+          contexto_origem: `Mesa da Obra — ${obra}`,
+          reflexao_profissional: corpo,
+        });
     if (error) {
       toast({ title: 'Não foi possível registrar', description: error.message, variant: 'destructive' });
     } else {
