@@ -39,57 +39,53 @@ interface Rastro {
   match: (e: LearningEvent) => boolean;
 }
 
+const r = (e: LearningEvent) => (e.metadata_short?.rastro || '') as string;
+
 const RASTROS: Rastro[] = [
   {
     key: 'entrada',
     label: 'Entrada na Sala da Visitante',
-    match: (e) =>
-      e.context_area === 'clube' &&
-      (e.metadata_short?.rastro === 'entrada_sala' || e.object_type === null && e.action_type === 'opened' && e.metadata_short?.local === 'sala_visita'),
+    match: (e) => r(e) === 'sala_da_visitante',
   },
   {
     key: 'retorno',
     label: 'Retorno à plataforma',
-    match: (e) => e.action_type === 'returned',
-  },
-  {
-    key: 'primeira_leitura',
-    label: 'Primeira Leitura',
-    match: (e) =>
-      e.metadata_short?.rastro === 'primeira_leitura' ||
-      e.object_type === 'ferramenta' && (e.object_id || '').includes('cartografia'),
+    match: (e) => e.action_type === 'returned' || r(e) === 'retorno_plataforma',
   },
   {
     key: 'rota_lobos',
     label: 'Entrou na Rota dos Lobos',
-    match: (e) => e.metadata_short?.rastro === 'rota_dos_lobos' || (e.context_area === 'clube' && e.object_type === 'estacao' && e.action_type === 'opened'),
+    match: (e) => r(e) === 'rota_dos_lobos',
   },
   {
     key: 'clareira',
     label: 'Concluiu a Clareira do Chamado',
-    match: (e) => e.context_area === 'clube' && e.action_type === 'completed' && (e.metadata_short?.estacao === 'clareira-do-chamado' || e.object_type === 'estacao'),
+    match: (e) => r(e) === 'clareira_concluida',
   },
   {
     key: 'camara_aberta',
     label: 'Abriu a Câmara do Sussurro',
-    match: (e) => e.metadata_short?.rastro === 'camara_sussurro' && e.action_type === 'opened',
+    match: (e) => r(e) === 'camara_do_sussurro_aberta',
   },
   {
     key: 'sussurro_concluido',
     label: 'Concluiu Sussurro',
-    match: (e) => e.metadata_short?.rastro === 'camara_sussurro' && e.action_type === 'completed',
+    match: (e) => r(e) === 'sussurro_concluido',
   },
   {
-    key: 'jardins',
-    label: 'Registro em Jardim (Psique / Ofício)',
-    match: (e) =>
-      e.action_type === 'created_entry' &&
-      (e.context_area === 'jardim-da-psique' || e.context_area === 'jardim-do-oficio'),
+    key: 'jardim_psique',
+    label: 'Registro no Jardim da Psique',
+    match: (e) => e.context_area === 'jardim-da-psique' && e.action_type === 'created_entry',
+  },
+  {
+    key: 'jardim_oficio',
+    label: 'Registro no Jardim do Ofício',
+    match: (e) => e.context_area === 'jardim-do-oficio' && e.action_type === 'created_entry',
   },
   {
     key: 'ferramenta',
-    label: 'Abriu uma Ferramenta',
-    match: (e) => e.context_area === 'ferramenta' && e.action_type === 'opened',
+    label: 'Usou uma Ferramenta Oracular',
+    match: (e) => r(e) === 'ferramenta_uso' || e.object_type === 'ferramenta',
   },
 ];
 
