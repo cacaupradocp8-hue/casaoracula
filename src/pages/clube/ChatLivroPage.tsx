@@ -183,69 +183,99 @@ export default function ChatLivroPage() {
               <ArrowLeft className="w-4 h-4 mr-2" /> voltar
             </Button>
 
-            <header className="text-center mb-10">
-              <img src={capa} alt={obra} className="w-32 h-auto mx-auto rounded-sm shadow-2xl mb-8" />
-              <h1 className="font-serif text-4xl md:text-5xl text-foreground tracking-wide mb-2">Mesa da Obra</h1>
-              <p className="font-serif italic text-muted-foreground text-lg">{obra}</p>
-              <div className="w-16 h-px bg-gold/40 mx-auto my-8" />
-              <div className="font-serif text-foreground/85 text-base md:text-lg leading-relaxed max-w-xl mx-auto space-y-4">
-                <p className="italic">Algumas perguntas não pedem respostas rápidas. Pedem companhia na leitura.</p>
+            <header className="text-center mb-16">
+              <img src={capa} alt={obra} className="w-28 h-auto mx-auto rounded-sm shadow-2xl mb-10 opacity-90" />
+              <h1 className="font-serif text-4xl md:text-5xl text-foreground tracking-wide mb-3">Mesa da Obra</h1>
+              <p className="font-serif italic text-muted-foreground text-base">{obra}</p>
+              <div className="w-12 h-px bg-gold/40 mx-auto my-10" />
+              <div className="font-serif text-foreground/85 text-lg md:text-xl leading-loose max-w-xl mx-auto space-y-6">
+                <p className="italic text-foreground/75">
+                  Algumas perguntas não pedem respostas rápidas.<br />
+                  Pedem companhia na leitura.
+                </p>
                 <p>
-                  Nesta Mesa da Obra, cada diálogo é construído exclusivamente a partir de
-                  <em> {obra}</em>. O objetivo não é resumir capítulos — é desenvolver um modo de
-                  observar, escutar e aplicar a leitura simbólica na vida e na prática clínica.
+                  Hoje você volta a se sentar diante de <em>{obra}</em>.
+                </p>
+                <p>
+                  Não para encontrar respostas.<br />
+                  Mas para aprender uma nova forma de observar.
+                </p>
+                <p className="text-foreground/70">
+                  A obra abre algumas portas. Escolha apenas uma.<br />
+                  Ela será suficiente por hoje.
                 </p>
               </div>
             </header>
 
-            {/* A obra abre portas — narrativa viva */}
-            <div className="text-center mb-10">
-              <p className="font-serif italic text-gold/90 text-base md:text-lg">
-                {restantes > 0
-                  ? `Hoje a obra abre sete portas. Esta semana você poderá atravessar ${restantes === LIMITE_SEMANAL ? 'até três delas' : (restantes === 1 ? 'apenas mais uma' : `mais ${restantes}`)}.`
-                  : 'Esta semana a obra já lhe ofereceu três travessias. Volte na próxima.'}
-              </p>
+            {/* Selo discreto do limite semanal */}
+            <div className="text-center mb-16">
               {!carregandoLimite && (
-                <div className="mt-3 tracking-widest text-gold/80 text-sm">
-                  {'●'.repeat(restantes)}{'○'.repeat(LIMITE_SEMANAL - restantes)}
-                </div>
+                <>
+                  <div className="tracking-[0.5em] text-gold/70 text-sm mb-3" aria-hidden>
+                    {'●'.repeat(restantes)}{'○'.repeat(LIMITE_SEMANAL - restantes)}
+                  </div>
+                  <p className="font-serif italic text-muted-foreground/80 text-sm">
+                    {restantes > 0
+                      ? (restantes === LIMITE_SEMANAL
+                          ? 'Esta semana você pode atravessar até três portas.'
+                          : restantes === 1
+                            ? 'Resta-lhe apenas mais uma travessia esta semana.'
+                            : `Restam-lhe mais ${restantes} travessias esta semana.`)
+                      : 'Esta semana a obra já lhe ofereceu três travessias. Volte na próxima.'}
+                  </p>
+                </>
               )}
             </div>
 
-            <div className="text-center mb-8">
-              <h2 className="font-serif text-2xl md:text-3xl text-foreground/90 tracking-wide">
-                Portas de Investigação
-              </h2>
-              <div className="w-12 h-px bg-gold/30 mx-auto mt-4" />
-            </div>
-
-            {/* Lista editorial — sem cards chamativos */}
-            <div className="divide-y divide-border/40">
-              {portasDoDia.map(porta => (
-                <article key={porta.key} className="py-7 group">
-                  <div className="flex items-start gap-4">
-                    <span className="text-xl mt-1 select-none" aria-hidden>{porta.emoji}</span>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
-                        {porta.label}
+            {/* Lista editorial das Portas — primeira em destaque tipográfico */}
+            <div>
+              {portasDoDia.map((porta, idx) => {
+                const destaque = idx === 0;
+                return (
+                  <article
+                    key={porta.key}
+                    className={cn(
+                      'group',
+                      destaque ? 'pb-12 mb-10 border-b border-gold/20' : 'py-8 border-b border-border/30 last:border-b-0',
+                    )}
+                  >
+                    <div className={cn('flex items-start', destaque ? 'gap-5' : 'gap-4')}>
+                      <span className={cn('select-none', destaque ? 'text-2xl mt-1' : 'text-lg mt-1.5')} aria-hidden>
+                        {porta.emoji}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div
+                          className={cn(
+                            'uppercase tracking-[0.3em] text-muted-foreground mb-3',
+                            destaque ? 'text-[11px] text-gold/80' : 'text-[10px]',
+                          )}
+                        >
+                          {porta.label}
+                        </div>
+                        <p
+                          className={cn(
+                            'font-serif text-foreground/90 leading-relaxed mb-4',
+                            destaque ? 'text-2xl md:text-3xl tracking-wide' : 'text-lg md:text-xl',
+                          )}
+                        >
+                          {porta.pergunta}
+                        </p>
+                        <button
+                          onClick={() => abrirEstudo(porta)}
+                          disabled={restantes <= 0}
+                          className={cn(
+                            'font-serif italic tracking-wide text-gold/85 hover:text-gold transition-colors border-b border-gold/30 hover:border-gold pb-0.5',
+                            destaque ? 'text-base' : 'text-sm',
+                            restantes <= 0 && 'opacity-40 cursor-not-allowed hover:text-gold/85 hover:border-gold/30',
+                          )}
+                        >
+                          Sentar à Mesa →
+                        </button>
                       </div>
-                      <p className="font-serif text-lg md:text-xl text-foreground/90 leading-relaxed mb-3">
-                        {porta.pergunta}
-                      </p>
-                      <button
-                        onClick={() => abrirEstudo(porta)}
-                        disabled={restantes <= 0}
-                        className={cn(
-                          'text-sm tracking-wide text-gold/80 hover:text-gold transition-colors border-b border-gold/30 hover:border-gold pb-0.5',
-                          restantes <= 0 && 'opacity-40 cursor-not-allowed hover:text-gold/80 hover:border-gold/30',
-                        )}
-                      >
-                        Abrir investigação →
-                      </button>
                     </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
         </div>
