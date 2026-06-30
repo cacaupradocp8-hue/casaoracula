@@ -261,12 +261,13 @@ export function VisitorSalaContent() {
                 disabled={isTransitioning}
                 className="w-full max-w-sm gap-2.5 py-7 text-base"
               >
-                <span>Entrar na Rota dos Lobos</span>
+                <span>Começar pela Primeira Leitura</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
               <p className="text-[11px] text-muted-foreground/70 italic font-serif text-center">
-                A primeira estação será a Clareira do Chamado.
+                A Rota dos Lobos será aberta depois da primeira leitura.
               </p>
+
             </motion.section>
 
           </div>
