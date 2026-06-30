@@ -111,7 +111,7 @@ export function ElectricWaves({ className = '' }: { className?: string }) {
     <canvas
       ref={canvasRef}
       className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ opacity: 0.8 }}
+      style={{ opacity: 1 }}
     />
   );
 }
