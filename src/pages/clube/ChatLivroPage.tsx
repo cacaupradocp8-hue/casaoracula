@@ -170,11 +170,16 @@ export default function ChatLivroPage() {
             >
               <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
             </Button>
-            <div className="flex items-center gap-2 text-gold">
-              <BookOpen className="w-4 h-4" />
-              <span className="text-[11px] uppercase tracking-[0.3em] font-semibold">
-                Espelho do Conto
-              </span>
+            <div className="flex flex-col items-center gap-1 text-gold text-center max-w-md">
+              <div className="flex items-center gap-2">
+                <BookOpen className="w-4 h-4" />
+                <span className="text-[11px] uppercase tracking-[0.3em] font-semibold">
+                  🌙 A Voz da Obra
+                </span>
+              </div>
+              <p className="text-[10px] text-white/50 italic font-serif leading-relaxed px-2">
+                Pergunte. A resposta será construída a partir da obra, não da inteligência artificial.
+              </p>
             </div>
             <div className="w-16" />
           </div>
