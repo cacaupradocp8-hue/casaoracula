@@ -246,6 +246,18 @@ export function AdminFounderInvitesTab() {
                         <Badge variant="outline" className="text-[10px] py-0">{act.codigo_utilizado}</Badge>
                         <span className="text-[10px] text-muted-foreground">{format(new Date(act.data_ativacao), 'dd/MM HH:mm')}</span>
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 w-full h-7 gap-2 text-xs text-primary hover:text-primary hover:bg-primary/10"
+                        onClick={() => {
+                          setSelectedFounder(act);
+                          setRastrosOpen(true);
+                        }}
+                      >
+                        <Footprints className="w-3 h-3" />
+                        Ver rastros
+                      </Button>
                     </div>
                   ))}
                 </div>
