@@ -37,8 +37,12 @@ const PrimeiraLeituraPage = () => {
 
   return (
     <AppLayout>
-      <div className="min-h-[calc(100vh-4rem)] bg-background flex flex-col items-center justify-center py-10 pb-32 md:pb-16">
-
+      <div className="relative min-h-[calc(100vh-4rem)] bg-background flex flex-col items-center justify-center py-10 pb-32 md:pb-16 overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none opacity-60">
+          <ElectricWaves />
+        </div>
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_80%)]" />
+        <div className="relative z-10 w-full flex flex-col items-center">
         <AnimatePresence mode="wait">
           {currentStep === 'intro' && (
             <LimiarIntro key="intro" onNext={() => handleNextStep()} />
