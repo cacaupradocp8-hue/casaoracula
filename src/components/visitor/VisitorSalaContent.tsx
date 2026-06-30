@@ -9,6 +9,7 @@ import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 import { trackLearningEvent } from '@/services/studentTrackingService';
+import { useFounderAccess } from '@/hooks/useFounderAccess';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
