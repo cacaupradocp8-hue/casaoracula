@@ -51,7 +51,7 @@ export function VisitorSalaContent() {
       <div className="absolute inset-0 pointer-events-none">
         <ElectricWaves />
       </div>
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(2,5,13,0.7)_100%)]" />
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(2,8,24,0.85)_100%)]" />
       <div className="relative z-10 w-full flex items-center justify-center">
       <AnimatePresence mode="wait">
 
