@@ -93,7 +93,7 @@ export function VisitorSalaContent() {
             transition={{ duration: 1 }}
             className="flex flex-col items-center gap-6"
           >
-            <Logo variant="vertical" size="lg" />
+            <Logo variant="vertical" size="xl" className="scale-125 md:scale-150 drop-shadow-[0_10px_40px_hsl(var(--primary)/0.35)]" />
             <span className="text-[10px] uppercase tracking-[0.45em] text-primary/55 font-serif">
               Carta de Entrada
             </span>
