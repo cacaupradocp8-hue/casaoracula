@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { motion } from 'framer-motion';
 import { 
   ArrowLeft, Play, Clock, Trophy, Flame, Music,
