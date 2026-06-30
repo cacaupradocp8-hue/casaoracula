@@ -4,18 +4,15 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 export const PathSelector: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const goCidadela = () => {
-    const dest = '/ferramenta/cartografia-psiquica-oracula';
-    if (user) navigate(dest);
-    else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
-  };
-  const goTravessia = () => {
-    const dest = '/travessia/travessia-zero-o-limiar-da-casa';
+  const goRota = () => {
+    const dest = '/clube/rotas/rota-dos-lobos';
+    trackLearningEvent({ contextArea: 'clube', actionType: 'opened', objectType: 'estacao', metadata: { from: 'primeira-leitura', destino: 'rota-dos-lobos' } });
     if (user) navigate(dest);
     else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
   };
@@ -25,78 +22,64 @@ export const PathSelector: React.FC = () => {
     else navigate(`/auth?redirect=${encodeURIComponent(dest)}`);
   };
 
-
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center space-y-12 py-12 px-6 max-w-4xl mx-auto w-full"
+      className="flex flex-col items-center space-y-10 py-12 px-6 max-w-4xl mx-auto w-full"
     >
-      <div className="text-center space-y-4">
-        <h3 className="text-2xl md:text-3xl font-display text-primary">
-          Caminhos de Aprofundamento
+      {/* Orientação narrativa — não-componente */}
+      <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50">
+        Atravessando a Casa
+      </p>
+
+      <div className="text-center space-y-5 max-w-xl">
+        <h3 className="text-2xl md:text-3xl font-display text-primary leading-tight">
+          A primeira leitura foi feita.
         </h3>
-        <p className="text-muted-foreground max-w-lg mx-auto text-sm md:text-base leading-relaxed italic font-serif">
-          A Casa se revela por camadas. Onde sua escuta deseja habitar agora?
+        <p className="text-foreground/80 text-sm md:text-base leading-relaxed font-serif italic">
+          Agora que você atravessou a primeira leitura da Casa, existe uma travessia preparada para continuar essa experiência.
+        </p>
+        <p className="text-muted-foreground/70 text-xs md:text-sm leading-relaxed">
+          A próxima porta é a <span className="text-primary/80">Rota dos Lobos</span> — a primeira travessia simbólica da Casa Orácula.
         </p>
       </div>
 
-      {/* Caminho Fundadoras — DESTAQUE PRINCIPAL */}
-      <div className="w-full max-w-2xl bg-gradient-to-b from-[#1a1208]/80 to-[#020617]/90 border-2 border-gold/40 rounded-[32px] p-8 flex flex-col items-center text-center space-y-5 shadow-[0_0_60px_-10px_rgba(212,175,55,0.35)]">
+      {/* CTA principal — Rota dos Lobos */}
+      <div className="w-full max-w-xl bg-card/40 border border-primary/15 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6">
         <div className="space-y-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-gold/70">Acesso Fundadoras</span>
-          <h4 className="text-xl font-display text-white">Entrar na Rota dos Lobos</h4>
-          <p className="text-xs text-white/60 leading-relaxed max-w-md">
-            Já tem o código de fundadora? Acesse direto a rota com sua palavra-passe.
+          <span className="text-[10px] uppercase tracking-[0.3em] text-primary/60">Próxima travessia</span>
+          <h4 className="text-xl font-display text-primary">Rota dos Lobos</h4>
+          <p className="text-xs text-muted-foreground leading-relaxed max-w-md">
+            Onde a escuta encontra território, mito e corpo. Você dará apenas o primeiro passo: a Clareira do Chamado.
           </p>
         </div>
         <Button
-          onClick={goFundadora}
+          onClick={goRota}
           variant="gold"
-          className="w-full h-auto min-h-14 px-6 py-4 rounded-2xl text-xs sm:text-sm font-bold whitespace-normal leading-snug text-center"
+          className="w-full h-auto min-h-14 px-6 py-4 rounded-2xl text-sm font-semibold whitespace-normal leading-snug"
+        >
+          <span>Entrar na Rota dos Lobos</span>
+          <ArrowRight className="ml-2 w-4 h-4 shrink-0" />
+        </Button>
+      </div>
+
+      {/* Caminho Fundadoras — discreto */}
+      <div className="w-full max-w-xl border border-gold/20 rounded-2xl p-5 flex flex-col items-center text-center space-y-3">
+        <span className="text-[10px] uppercase tracking-[0.3em] text-gold/70">Acesso Fundadoras</span>
+        <p className="text-xs text-white/60 leading-relaxed max-w-md">
+          Já tem o código de fundadora? Entre direto na rota com sua palavra-passe.
+        </p>
+        <Button
+          onClick={goFundadora}
+          variant="outline"
+          className="w-full h-auto min-h-12 px-6 py-3 rounded-2xl text-xs sm:text-sm border-gold/40 text-gold hover:bg-gold/10 whitespace-normal leading-snug"
         >
           <span>Sou Fundadora — Entrar agora</span>
           <ArrowRight className="ml-2 w-4 h-4 shrink-0" />
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
-        {/* Caminho 1: Cartografia da Cidadela */}
-        <div className="bg-card/60 border border-primary/20 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 shadow-sm border-2">
-          <div className="space-y-2">
-            <h4 className="text-lg font-display text-primary">Cartografia da Cidadela</h4>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              O mapa simbólico do seu percurso. Onde suas forças habitam e onde a jornada se inicia.
-            </p>
-          </div>
-          <Button 
-            onClick={goCidadela}
-            variant="gold"
-            className="w-full py-6 rounded-2xl"
-          >
-            Ver minha Cidadela
-          </Button>
-        </div>
-
-        {/* Caminho 2: Travessia 00 */}
-        <div className="bg-card/30 border border-primary/5 rounded-[32px] p-8 flex flex-col items-center text-center space-y-6 shadow-sm">
-          <div className="space-y-2">
-            <h4 className="text-lg font-display text-primary">Travessia 00</h4>
-            <p className="text-xs text-muted-foreground leading-relaxed">
-              O primeiro passo oficial. O caminho para entrar na Casa com direção e propósito.
-            </p>
-          </div>
-          <Button 
-            onClick={goTravessia}
-            variant="outline"
-            className="w-full py-6 rounded-2xl border-primary/10 hover:bg-primary/5"
-          >
-            Iniciar Travessia 00
-          </Button>
-        </div>
-      </div>
-
-      
       <button 
         onClick={() => navigate('/sala-da-visitante')}
         className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground/40 hover:text-primary/60 transition-colors"

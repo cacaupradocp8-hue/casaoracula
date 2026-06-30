@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
@@ -8,6 +8,7 @@ import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlaye
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
@@ -17,6 +18,13 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    if (tracked.current) return;
+    tracked.current = true;
+    trackLearningEvent({ contextArea: 'clube', actionType: 'opened', objectType: 'estacao', metadata: { rastro: 'sala_da_visitante' } });
+  }, []);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
@@ -143,6 +151,32 @@ export function VisitorSalaContent() {
             </div>
           </motion.section>
         )}
+
+      {/* SECTION 2.5 — Apresentação narrativa da Casa (3 perguntas) */}
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.1, duration: 1 }}
+        className="relative z-10 w-full max-w-lg mt-10 space-y-6 text-center px-2"
+      >
+        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50">
+          Você está iniciando sua travessia
+        </p>
+        <div className="space-y-5 text-foreground/75 text-sm md:text-base leading-relaxed font-serif">
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">A Casa Orácula</span>
+            é um espaço de formação simbólica para mulheres que escutam histórias — as suas e as de outras.
+          </p>
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">Como funciona</span>
+            a experiência se revela em camadas. Cada etapa abre a próxima, no seu tempo.
+          </p>
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">Nesta primeira visita</span>
+            você fará uma Primeira Leitura — uma demonstração breve do método da Casa.
+          </p>
+        </div>
+      </motion.section>
 
       {/* SECTION 3 — Atravessar o Limiar (Convite Principal) */}
       <motion.section

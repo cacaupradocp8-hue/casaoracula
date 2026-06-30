@@ -1,4 +1,5 @@
-import React from 'react'; // REBUILD_FORCE_V2
+import React, { useEffect, useRef } from 'react'; // REBUILD_FORCE_V2
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, TreePine, Play, Pause, Lock, Ghost, Compass } from 'lucide-react';
@@ -27,6 +28,13 @@ export default function RotaDosLobos() {
   const { isAdmin } = useEffectivePortal();
   const { data: estacoes } = useTodasRotas({ isAdmin });
   const { getSetting } = useAppSettings();
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    if (tracked.current) return;
+    tracked.current = true;
+    trackLearningEvent({ contextArea: 'clube', actionType: 'opened', objectType: 'estacao', metadata: { rastro: 'rota_dos_lobos' } });
+  }, []);
   
   const audioUrl = getSetting('audio_acolhimento_rota_lobos', '1780702648962.mp3');
   const { isPlaying, togglePlay } = useAudioPlayer({ audioUrl });
