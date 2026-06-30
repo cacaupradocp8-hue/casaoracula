@@ -19,15 +19,15 @@ type Porta = {
   fallback: string;
 };
 
-// 7 Portas de Investigação — ordem editorial
+// 7 Portas de Investigação — Convite da Semana primeiro (destaque editorial)
 const PORTAS: Porta[] = [
+  { key: 'pergunta_semana',emoji: '🌙', label: 'O Convite da Semana',     fallback: 'Que pergunta esta obra está fazendo a você nesta semana?' },
   { key: 'sobre_voce',     emoji: '🌿', label: 'Sobre você',              fallback: 'O que continua tentando permanecer vivo em mim?' },
   { key: 'sobre_cliente',  emoji: '🐺', label: 'Sobre uma cliente',        fallback: 'Que parte dessa mulher ainda não encontrou linguagem?' },
   { key: 'sobre_capitulo', emoji: '📖', label: 'Sobre o capítulo',         fallback: 'Por que Clarissa escolheu contar esta história?' },
   { key: 'sobre_simbolo',  emoji: '🦴', label: 'Sobre um símbolo',         fallback: 'O que os ossos preservam?' },
   { key: 'sobre_pratica',  emoji: '🌙', label: 'Sobre a prática clínica', fallback: 'Como esta narrativa muda minha forma de escutar?' },
   { key: 'sobre_oficio',   emoji: '🌿', label: 'Sobre o ofício',           fallback: 'O que esta obra me pede como facilitadora?' },
-  { key: 'pergunta_semana',emoji: '⭐', label: 'Pergunta da semana',       fallback: 'Que pergunta esta obra está fazendo a você nesta semana?' },
 ];
 
 type Estado = 'indice' | 'estudo';
