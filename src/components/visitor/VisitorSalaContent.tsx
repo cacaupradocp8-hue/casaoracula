@@ -18,6 +18,13 @@ export function VisitorSalaContent() {
   const { getSetting } = useAppSettings();
   const { extractVideoId, isCloudflareVideoId } = useCloudflareVideo();
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    if (tracked.current) return;
+    tracked.current = true;
+    trackLearningEvent({ contextArea: 'clube', actionType: 'opened', objectType: 'estacao', metadata: { rastro: 'sala_da_visitante' } });
+  }, []);
 
   const videoUrl = getSetting('sala_visita_video_url', '');
   const videoId = videoUrl ? (
