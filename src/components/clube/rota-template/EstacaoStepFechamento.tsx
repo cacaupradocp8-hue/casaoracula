@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { TextCarousel } from '@/components/clube/TextCarousel';
 import { EscutaPremium } from '@/components/clube/EscutaPremium';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { cn } from '@/lib/utils';
 
 interface FechamentoStepProps {
