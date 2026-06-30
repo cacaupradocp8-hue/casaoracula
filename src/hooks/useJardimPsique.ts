@@ -174,6 +174,8 @@ export function useJardimPsique(filtros?: FiltrosJardim) {
 
       if (error) throw error;
 
+      trackLearningEvent({ userId: user.id, contextArea: 'jardim-da-psique', actionType: 'created_entry', objectType: 'registro_jardim', objectId: data?.id, metadata: { rastro: 'jardim_psique_registro', tipo: novoRegistro.tipo_registro || 'ferramenta' } });
+
       const messages: Record<TipoRegistroJardim, string> = {
         ferramenta: '🌿 Salvo no Jardim',
         sonho: '🌙 Sonho registrado',
