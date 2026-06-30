@@ -321,11 +321,11 @@ export default function RotaDosLobos() {
 
           {/* AS 6 ESTAÇÕES (Fluxo contínuo) */}
           <div className="space-y-12 pt-8 pb-32">
-            <div className="flex flex-col items-center md:items-start gap-3">
+            <div className="flex flex-col items-center gap-3 text-center">
                <h2 className="text-2xl md:text-3xl font-serif italic text-gold/70 tracking-wide">
                 As 6 estações da Rota dos Lobos
               </h2>
-              <div className="h-0.5 w-24 bg-gradient-to-r from-gold/60 to-transparent" />
+              <div className="h-0.5 w-24 bg-gradient-to-r from-transparent via-gold/60 to-transparent" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-8">
