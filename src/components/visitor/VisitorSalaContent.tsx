@@ -48,7 +48,14 @@ export function VisitorSalaContent() {
 
   return (
     <main className="relative min-h-screen bg-background text-foreground overflow-hidden flex items-center justify-center px-6">
+      <div className="absolute inset-0 pointer-events-none opacity-60">
+        <ElectricWaves />
+      </div>
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_0%,hsl(var(--background))_80%)]" />
+      <div className="relative z-10 w-full flex items-center justify-center">
+      <AnimatePresence mode="wait">{/* scenes */}</AnimatePresence>
       <AnimatePresence mode="wait">
+
         {scene === 1 && (
           <motion.section
             key="scene-1"
