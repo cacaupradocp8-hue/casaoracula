@@ -143,7 +143,7 @@ export function VisitorSalaContent() {
               variant="gold"
               size="lg"
               onClick={() => navigate('/primeira-leitura')}
-              className="tracking-[0.25em] uppercase text-xs px-10"
+              className="tracking-[0.2em] md:tracking-[0.25em] uppercase text-[10px] md:text-xs px-6 md:px-10 py-3 h-auto max-w-full whitespace-normal break-words text-center leading-snug"
             >
               Começar minha primeira leitura
             </Button>
