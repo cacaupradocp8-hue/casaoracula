@@ -165,34 +165,50 @@ export function VisitorSalaContent() {
             className="my-20 h-px w-16 bg-gradient-to-r from-transparent via-primary/35 to-transparent origin-center"
           />
 
-          {/* BLOCO 2.5 — POR QUE HABITAR A CASA */}
           <motion.section
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.35, duration: 1 }}
-            className="max-w-[30rem] space-y-7 font-serif text-foreground/80 text-[15px] md:text-base leading-[1.95]"
+            className="max-w-[26rem] font-serif text-foreground/80 text-[15px] md:text-base leading-[1.9]"
           >
-            <h2 className="font-display text-2xl md:text-3xl text-primary leading-snug">
+            {/* 1. Reconhecimento */}
+            <h2 className="font-display text-xl md:text-2xl text-primary leading-snug mb-10">
               Talvez você tenha chegado aqui porque…
             </h2>
 
-            <p>…estudou muito, mas ainda sente dificuldade para organizar tudo o que aprendeu.</p>
-            <p>…às vezes percebe algo importante na história de uma cliente, mas não encontra palavras para sustentar essa percepção.</p>
-            <p>…deseja conduzir atendimentos com mais profundidade, mas sem depender de roteiros prontos.</p>
-            <p>…procura um lugar onde conhecimento, prática e sensibilidade possam caminhar juntos.</p>
+            <div className="space-y-8 pl-4 border-l border-primary/15">
+              <p>estudou muito, mas ainda procura organizar tudo o que aprendeu;</p>
+              <p>percebe algo importante, mas nem sempre encontra linguagem;</p>
+              <p>deseja atender com mais profundidade, sem roteiros prontos;</p>
+              <p>procura um lugar onde conhecimento, prática e sensibilidade caminhem juntos.</p>
+            </div>
 
-            <p className="pt-4 italic text-foreground/70">Se alguma dessas frases encontrou você…</p>
-            <p className="text-primary/85">Talvez esta Casa também encontre.</p>
+            {/* 2. Virada */}
+            <div className="my-16 h-px w-10 mx-auto bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-            <p className="pt-4">Porque existem lugares onde aprendemos novas técnicas.</p>
-            <p>E existem lugares que transformam a forma como passamos a olhar.</p>
-            <p>A Casa Orácula foi criada para ser esse lugar.</p>
-            <p>Um lugar onde conhecimento, prática e sensibilidade deixam de caminhar separados.</p>
-            <p>E começam, finalmente, a habitar a mesma Casa.</p>
+            <p className="text-center text-primary/90 font-display text-lg md:text-xl leading-relaxed">
+              Se alguma dessas frases encontrou você…<br />
+              talvez esta Casa também encontre.
+            </p>
 
-            <p className="pt-6 italic text-primary/80">Há conhecimentos que aprendemos.</p>
-            <p className="italic text-primary/80">Há conhecimentos que finalmente encontram um lugar para habitar.</p>
+            {/* 3. Promessa */}
+            <div className="my-16 h-px w-10 mx-auto bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+            <div className="space-y-6 text-center">
+              <p>Existem lugares onde aprendemos novas técnicas.</p>
+              <p>E existem lugares que transformam a forma como passamos a olhar.</p>
+              <p className="text-primary/85">A Casa Orácula foi criada para ser esse lugar.</p>
+            </div>
+
+            {/* Fechamento */}
+            <div className="my-16 h-px w-10 mx-auto bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+            <p className="text-center italic text-primary/80 leading-loose">
+              Há conhecimentos que aprendemos.<br />
+              Há conhecimentos que finalmente encontram<br />um lugar para habitar.
+            </p>
           </motion.section>
+
 
           {/* Divisor */}
           <motion.div
