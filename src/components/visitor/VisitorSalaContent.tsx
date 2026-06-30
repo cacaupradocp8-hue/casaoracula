@@ -173,24 +173,25 @@ export function VisitorSalaContent() {
             className="max-w-[30rem] space-y-7 font-serif text-foreground/80 text-[15px] md:text-base leading-[1.95]"
           >
             <h2 className="font-display text-2xl md:text-3xl text-primary leading-snug">
-              Por que habitar a Casa?
+              Talvez você tenha chegado aqui porque…
             </h2>
 
-            <p>Há lugares que oferecem respostas prontas.</p>
-            <p>A Casa Orácula oferece algo diferente.</p>
-            <p>Ela ajuda você a desenvolver uma forma de observar.</p>
-            <p>
-              Ao longo das travessias, você aprenderá a reconhecer padrões,
-              escutar símbolos e transformar histórias em caminhos de cuidado.
-            </p>
-            <p>
-              Mais do que acumular conhecimento, a proposta da Casa é cultivar
-              uma presença clínica mais sensível, uma leitura mais profunda das
-              experiências humanas e uma prática que une escuta, linguagem e
-              aplicação.
-            </p>
-            <p>Você não precisa compreender tudo no primeiro dia.</p>
-            <p className="italic text-primary/75">Basta dar o primeiro passo.</p>
+            <p>…estudou muito, mas ainda sente dificuldade para organizar tudo o que aprendeu.</p>
+            <p>…às vezes percebe algo importante na história de uma cliente, mas não encontra palavras para sustentar essa percepção.</p>
+            <p>…deseja conduzir atendimentos com mais profundidade, mas sem depender de roteiros prontos.</p>
+            <p>…procura um lugar onde conhecimento, prática e sensibilidade possam caminhar juntos.</p>
+
+            <p className="pt-4 italic text-foreground/70">Se alguma dessas frases encontrou você…</p>
+            <p className="text-primary/85">Talvez esta Casa também encontre.</p>
+
+            <p className="pt-4">Porque existem lugares onde aprendemos novas técnicas.</p>
+            <p>E existem lugares que transformam a forma como passamos a olhar.</p>
+            <p>A Casa Orácula foi criada para ser esse lugar.</p>
+            <p>Um lugar onde conhecimento, prática e sensibilidade deixam de caminhar separados.</p>
+            <p>E começam, finalmente, a habitar a mesma Casa.</p>
+
+            <p className="pt-6 italic text-primary/80">Há conhecimentos que aprendemos.</p>
+            <p className="italic text-primary/80">Há conhecimentos que finalmente encontram um lugar para habitar.</p>
           </motion.section>
 
           {/* Divisor */}
