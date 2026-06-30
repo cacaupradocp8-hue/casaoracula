@@ -1,16 +1,17 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  ArrowLeft, Send, Bot, User, Loader2, BookOpen,
-  Sparkles, Heart, Users, Compass, Feather, Shuffle,
-} from 'lucide-react';
+import { ArrowLeft, Loader2, BookOpen, Sparkles, Heart, Users, Compass, Feather, Leaf, Flame, RefreshCw, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { useSyntheiaChat } from '@/hooks/useSyntheiaChat';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { sendMessageToSyntheia } from '@/services/syntheiaChat';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+
+const LIMITE_SEMANAL = 3;
+const INTERACTION_TYPE = 'mesa_da_obra';
 
 type Categoria = {
   key: string;
@@ -19,322 +20,297 @@ type Categoria = {
   perguntas: string[];
 };
 
-// Categorias de entrada do Espelho do Conto — não interpretam, ampliam observação
-const CATEGORIAS_ESPELHO: Categoria[] = [
+const CATEGORIAS: Categoria[] = [
   {
-    key: 'trecho',
-    label: 'Um trecho do livro',
-    icon: BookOpen,
-    perguntas: [
-      'Há um trecho que continua ecoando em mim. Posso trazê-lo aqui para olharmos juntas?',
-      'Quero olhar com mais atenção uma passagem que me parou. O que ela pode estar pedindo para ser visto?',
-    ],
-  },
-  {
-    key: 'personagem',
-    label: 'Uma personagem',
+    key: 'sobre_mim',
+    label: 'Sobre mim',
     icon: Feather,
     perguntas: [
-      'Uma personagem desta obra ficou habitando em mim. O que ela pode estar espelhando agora?',
-      'Há uma figura do livro que me incomoda. Como observar esse incômodo sem responder rápido demais?',
+      'Há um trecho desta obra que continua ecoando em mim. O que ele pode estar pedindo para ser visto?',
+      'Uma imagem do livro tocou algo que ainda não tem nome em mim. Como me aproximar?',
     ],
   },
   {
-    key: 'simbolo',
-    label: 'Um símbolo',
-    icon: Sparkles,
-    perguntas: [
-      'Um símbolo desta obra continua aparecendo em mim. Como amplio a escuta dele?',
-      'Quero observar uma imagem do livro sem traduzi-la. Por onde começo?',
-    ],
-  },
-  {
-    key: 'emocao',
-    label: 'Uma emoção despertada',
-    icon: Heart,
-    perguntas: [
-      'A leitura acendeu algo em mim que ainda não tem nome. Como me aproximar dessa emoção?',
-      'Há um afeto que esta obra tocou. O que esse afeto pode estar guardando?',
-    ],
-  },
-  {
-    key: 'atendimento',
-    label: 'Uma situação vivida em atendimento',
+    key: 'sobre_cliente',
+    label: 'Sobre uma cliente',
     icon: Users,
     perguntas: [
       'Lembrei de uma cena clínica enquanto lia. Como observá-la pelo eixo simbólico desta obra, sem interpretar a cliente?',
-      'Há um caso em escuta que dialoga com este livro. Que pergunta-mãe esta obra me oferece para essa escuta?',
+      'Há uma escuta em curso que dialoga com este livro. Que pergunta-mãe a obra me oferece?',
     ],
   },
   {
-    key: 'livre',
-    label: 'Uma pergunta livre',
+    key: 'sobre_simbolo',
+    label: 'Sobre um símbolo',
+    icon: Sparkles,
+    perguntas: [
+      'Um símbolo desta obra continua aparecendo. Como amplio a escuta dele sem traduzir cedo demais?',
+      'Quero observar uma imagem do livro sem reduzi-la a conceito. Por onde começo?',
+    ],
+  },
+  {
+    key: 'sobre_pratica',
+    label: 'Sobre a prática clínica',
     icon: Compass,
     perguntas: [
-      'Tenho uma pergunta que ainda não sei formular. Posso pensar em voz alta com você?',
-      'Quero abrir um campo de observação a partir desta leitura. Por onde podemos começar?',
+      'Como esse eixo simbólico se aplica em sessão individual, sem virar interpretação?',
+      'Como essa obra pode sustentar uma escuta em grupo terapêutico ou círculo?',
+    ],
+  },
+  {
+    key: 'sobre_capitulo',
+    label: 'Sobre este capítulo',
+    icon: BookOpen,
+    perguntas: [
+      'Um capítulo desta obra ficou habitando em mim. Que campo ele abre para a leitura simbólica?',
+      'Há uma passagem que me parou. Como olhar essa pausa como pista clínica?',
     ],
   },
 ];
 
-function escolherCategorias(_obra?: string, _rota?: string): Categoria[] {
-  return CATEGORIAS_ESPELHO;
-}
+type Estado = 'indice' | 'estudo';
 
 export default function ChatLivroPage() {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
   const [params] = useSearchParams();
+  const obra = params.get('obra') || 'Mulheres que Correm com os Lobos';
+  const capa = params.get('capa') || '/capa-mulheres-lobos.webp';
   const rota = params.get('rota') || undefined;
-  const estacao = params.get('estacao') || undefined;
-  const obra = params.get('obra') || undefined;
-  const capa = params.get('capa') || undefined;
 
-  const categorias = useMemo(() => escolherCategorias(obra, rota), [obra, rota]);
+  const [estado, setEstado] = useState<Estado>('indice');
+  const [perguntaAtiva, setPerguntaAtiva] = useState<string | null>(null);
+  const [respostaObra, setRespostaObra] = useState<string>('');
+  const [carregando, setCarregando] = useState(false);
+  const [usadosSemana, setUsadosSemana] = useState<number>(0);
+  const [carregandoLimite, setCarregandoLimite] = useState(true);
 
-  const [input, setInput] = useState('');
-  const [catAtiva, setCatAtiva] = useState<string>(categorias[0].key);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+  // Sortear 1 pergunta por categoria por visita
+  const perguntasDestaque = useMemo(() => {
+    return CATEGORIAS.map(c => ({
+      ...c,
+      pergunta: c.perguntas[Math.floor(Math.random() * c.perguntas.length)],
+    }));
+  }, []);
 
-  const { messages, isLoading, error, sendMessage, addWelcomeMessage } = useSyntheiaChat({
-    mode: 'converse_com_livro',
-    context: { rota, estacao, obra, arquetipo: obra },
-  });
-
-  useEffect(() => {
-    if (messages.length === 0) {
-      const intro = [
-        'Os contos não oferecem respostas prontas.',
-        'Eles ampliam a forma como observamos a vida.',
-        '',
-        obra
-          ? `Estamos diante de **${obra}**. Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.`
-          : 'Escolha por onde deseja começar — um trecho, uma personagem, um símbolo, uma emoção, uma cena de atendimento ou uma pergunta livre.',
-      ].join('\n');
-      addWelcomeMessage(intro);
-    }
-    inputRef.current?.focus();
-  }, [addWelcomeMessage, messages.length, obra]);
+  const restantes = Math.max(0, LIMITE_SEMANAL - usadosSemana);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    if (!user) return;
+    const carregar = async () => {
+      const seteDiasAtras = new Date();
+      seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
+      const { count } = await supabase
+        .from('clube_livro_chat_interactions')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('interaction_type', INTERACTION_TYPE)
+        .gte('created_at', seteDiasAtras.toISOString());
+      setUsadosSemana(count || 0);
+      setCarregandoLimite(false);
+    };
+    carregar();
+  }, [user]);
+
+  const abrirEstudo = async (pergunta: string) => {
+    if (!user) {
+      toast({ title: 'Acesso restrito', description: 'Entre para abrir a Mesa da Obra.', variant: 'destructive' });
+      return;
     }
-  }, [messages, isLoading]);
+    if (restantes <= 0) {
+      toast({ title: 'Limite semanal atingido', description: 'Esta semana você já abriu 3 diálogos. Volte na próxima semana.', variant: 'destructive' });
+      return;
+    }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    const msg = input.trim();
-    setInput('');
-    await sendMessage(msg);
-    inputRef.current?.focus();
-  };
+    setPerguntaAtiva(pergunta);
+    setEstado('estudo');
+    setRespostaObra('');
+    setCarregando(true);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit(e);
+    try {
+      const resp = await sendMessageToSyntheia(
+        'converse_com_livro',
+        [{ role: 'user', content: pergunta }],
+        { obra, rota },
+      );
+      setRespostaObra(resp.message.content);
+
+      await supabase.from('clube_livro_chat_interactions').insert({
+        user_id: user.id,
+        message: pergunta,
+        response: resp.message.content,
+        interaction_type: INTERACTION_TYPE,
+        metadata: { obra, rota },
+      });
+      setUsadosSemana(prev => prev + 1);
+    } catch (err) {
+      console.error('[MesaDaObra]', err);
+      toast({ title: 'A obra está em silêncio', description: 'Não foi possível abrir a página de estudo agora.', variant: 'destructive' });
+      setEstado('indice');
+    } finally {
+      setCarregando(false);
     }
   };
 
-  const categoriaAtiva = useMemo(
-    () => categorias.find((c) => c.key === catAtiva) ?? categorias[0],
-    [catAtiva],
-  );
-
-  const usarPergunta = (p: string) => {
-    setInput(p);
-    inputRef.current?.focus();
+  const registrarJardim = async (tipo: 'psique' | 'oficio') => {
+    if (!user || !perguntaAtiva) return;
+    const corpo = `Pergunta: ${perguntaAtiva}\n\nA Voz da Obra:\n${respostaObra}`;
+    const { error } = tipo === 'psique'
+      ? await supabase.from('jardim_psique_registros').insert({
+          user_id: user.id,
+          titulo: `Mesa da Obra — ${obra}`,
+          ferramenta_chave: 'mesa_da_obra',
+          ferramenta_nome: 'Mesa da Obra',
+          fonte: 'clube_livro',
+          reflexao_pessoal: corpo,
+          conteudo: { obra, pergunta: perguntaAtiva, resposta: respostaObra },
+        })
+      : await supabase.from('jardim_do_oficio').insert({
+          user_id: user.id,
+          contexto_origem: `Mesa da Obra — ${obra}`,
+          reflexao_profissional: corpo,
+        });
+    if (error) {
+      toast({ title: 'Não foi possível registrar', description: error.message, variant: 'destructive' });
+    } else {
+      toast({ title: tipo === 'psique' ? 'Registrado no Jardim da Psique' : 'Registrado no Jardim do Ofício' });
+    }
   };
 
-  const surpreendaMe = () => {
-    const todas = categorias.flatMap((c) => c.perguntas);
-    const escolha = todas[Math.floor(Math.random() * todas.length)];
-    usarPergunta(escolha);
+  const voltarIndice = () => {
+    setEstado('indice');
+    setPerguntaAtiva(null);
+    setRespostaObra('');
   };
 
-  const apenasBoasVindas = messages.length <= 1;
-
-  return (
-    <AppLayout>
-      <div className="bg-[radial-gradient(ellipse_at_top,_rgba(180,140,60,0.08),_transparent_60%)] text-white">
-        <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col h-[80vh] min-h-[640px]">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate(-1)}
-              className="text-white/60 hover:text-gold"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" /> Voltar
+  // ---------- RENDER: ÍNDICE (Mesa da Obra) ----------
+  if (estado === 'indice') {
+    return (
+      <AppLayout>
+        <div className="min-h-screen bg-background">
+          <div className="max-w-3xl mx-auto px-4 py-10">
+            <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6 text-muted-foreground">
+              <ArrowLeft className="w-4 h-4 mr-2" /> voltar
             </Button>
-            <div className="flex flex-col items-center gap-1 text-gold text-center max-w-md">
-              <div className="flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                <span className="text-[11px] uppercase tracking-[0.3em] font-semibold">
-                  🌙 A Voz da Obra
-                </span>
+
+            {/* Cabeçalho editorial */}
+            <header className="text-center mb-12">
+              <img src={capa} alt={obra} className="w-32 h-auto mx-auto rounded-sm shadow-2xl mb-8" />
+              <h1 className="font-serif text-4xl md:text-5xl text-foreground tracking-wide mb-2">Mesa da Obra</h1>
+              <p className="font-serif italic text-muted-foreground text-lg mb-1">{obra}</p>
+              <div className="w-16 h-px bg-gold/40 mx-auto my-8" />
+              <div className="font-serif text-foreground/85 text-base md:text-lg leading-relaxed space-y-4 max-w-xl mx-auto">
+                <p>"Algumas perguntas não pedem respostas rápidas.</p>
+                <p>Pedem companhia na leitura.</p>
+                <p>Nesta mesa de estudo, as respostas são construídas exclusivamente a partir de <em>{obra}</em>.</p>
+                <p>A cada semana você poderá abrir até três diálogos com a obra.</p>
+                <p>Escolha uma pergunta para começar."</p>
               </div>
-              <p className="text-[10px] text-white/50 italic font-serif leading-relaxed px-2">
-                Pergunte. A resposta será construída a partir da obra, não da inteligência artificial.
-              </p>
-            </div>
-            <div className="w-16" />
-          </div>
+            </header>
 
-          {/* Capa + Título poético */}
-          {(obra || capa) && (
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-5 mb-6">
-              {capa && (
-                <div className="relative shrink-0">
-                  <div className="absolute -inset-2 rounded-lg bg-gold/20 blur-xl opacity-60" />
-                  <img
-                    src={capa}
-                    alt={obra ? `Capa de ${obra}` : 'Capa do livro'}
-                    className="relative w-24 sm:w-28 md:w-32 aspect-[2/3] object-cover rounded-md shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] border border-gold/20"
-                    loading="lazy"
-                  />
-                </div>
-              )}
-              {obra && (
-                <div className="text-center sm:text-left">
-                  <p className="text-[10px] uppercase tracking-[0.4em] text-white/40 mb-1">Obra em escuta</p>
-                  <h1 className="font-serif text-2xl md:text-3xl text-gold italic leading-tight">{obra}</h1>
-                </div>
+            {/* Limite semanal — discreto */}
+            <div className="text-center mb-12 text-sm text-muted-foreground">
+              {carregandoLimite ? (
+                <span className="opacity-50">·</span>
+              ) : (
+                <>
+                  Esta semana você pode abrir até {LIMITE_SEMANAL} diálogos. Restam:{' '}
+                  <span className="tracking-widest text-gold ml-1">
+                    {'●'.repeat(restantes)}{'○'.repeat(LIMITE_SEMANAL - restantes)}
+                  </span>
+                </>
               )}
             </div>
-          )}
 
-          <Card className="flex-1 flex flex-col bg-[#0A0A0B]/80 backdrop-blur-xl border-white/10 rounded-3xl overflow-hidden shadow-[0_0_60px_-20px_rgba(180,140,60,0.25)]">
-            <ScrollArea className="flex-1 p-6" ref={scrollRef}>
-              <div className="space-y-5 max-w-3xl mx-auto">
-                {messages.map((m) => (
-                  <div
-                    key={m.id}
+            {/* Perguntas em destaque — coluna editorial */}
+            <div className="space-y-6">
+              {perguntasDestaque.map(cat => {
+                const Icon = cat.icon;
+                return (
+                  <Card
+                    key={cat.key}
+                    onClick={() => abrirEstudo(cat.pergunta)}
                     className={cn(
-                      'flex gap-3',
-                      m.role === 'user' ? 'flex-row-reverse' : 'flex-row'
+                      'p-6 md:p-8 cursor-pointer transition-all border-border/40 bg-card/40 hover:bg-card/70 hover:border-gold/40 group',
+                      restantes <= 0 && 'opacity-50 cursor-not-allowed',
                     )}
                   >
-                    <div
-                      className={cn(
-                        'w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border',
-                        m.role === 'user'
-                          ? 'bg-primary/10 text-primary border-primary/30'
-                          : 'bg-gold/10 text-gold border-gold/30'
-                      )}
-                    >
-                      {m.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                    </div>
-                    <div
-                      className={cn(
-                        'max-w-[80%] rounded-2xl px-5 py-3.5 text-sm leading-relaxed whitespace-pre-wrap font-serif',
-                        m.role === 'user'
-                          ? 'bg-primary/10 text-white/90'
-                          : 'bg-white/[0.04] text-white/85 border border-white/5'
-                      )}
-                    >
-                      {m.content}
-                    </div>
-                  </div>
-                ))}
-
-                {isLoading && (
-                  <div className="flex gap-3">
-                    <div className="w-9 h-9 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center">
-                      <Bot className="w-4 h-4 text-gold" />
-                    </div>
-                    <div className="bg-white/[0.04] border border-white/5 rounded-2xl px-5 py-3.5">
-                      <Loader2 className="w-4 h-4 animate-spin text-gold" />
-                    </div>
-                  </div>
-                )}
-
-                {error && (
-                  <p className="text-center text-sm text-destructive py-2">{error}</p>
-                )}
-
-                {/* Sugestões de Perguntas */}
-                {apenasBoasVindas && !isLoading && (
-                  <div className="pt-6 mt-2 border-t border-white/5">
-                    <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-3.5 h-3.5 text-gold" />
-                        <p className="text-[11px] uppercase tracking-[0.3em] text-white/60 font-semibold">
-                          Por onde deseja começar
+                    <div className="flex items-start gap-4">
+                      <Icon className="w-5 h-5 text-gold/70 mt-1 flex-shrink-0" />
+                      <div>
+                        <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">
+                          {cat.label}
+                        </div>
+                        <p className="font-serif text-lg md:text-xl text-foreground/90 leading-relaxed group-hover:text-gold transition-colors">
+                          "{cat.pergunta}"
                         </p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={surpreendaMe}
-                        className="text-[11px] uppercase tracking-[0.2em] text-gold/80 hover:text-gold flex items-center gap-1.5 transition-colors"
-                      >
-                        <Shuffle className="w-3 h-3" /> Surpreenda-me
-                      </button>
                     </div>
+                  </Card>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
-                    {/* Todas as categorias e perguntas visíveis */}
-                    <div className="space-y-5">
-                      {categorias.map((c) => {
-                        const Icon = c.icon;
-                        return (
-                          <div key={c.key}>
-                            <div className="flex items-center gap-2 mb-2">
-                              <Icon className="w-3.5 h-3.5 text-gold" />
-                              <p className="text-[11px] uppercase tracking-[0.25em] text-gold/80 font-semibold">
-                                {c.label}
-                              </p>
-                            </div>
-                            <div className="grid gap-2 sm:grid-cols-2">
-                              {c.perguntas.map((p) => (
-                                <button
-                                  key={p}
-                                  type="button"
-                                  onClick={() => usarPergunta(p)}
-                                  className="group text-left p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-gold/40 hover:bg-gold/[0.04] transition-all"
-                                >
-                                  <p className="font-serif text-sm text-white/80 group-hover:text-white leading-relaxed italic">
-                                    "{p}"
-                                  </p>
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+  // ---------- RENDER: PÁGINA DE ESTUDO ----------
+  return (
+    <AppLayout>
+      <div className="min-h-screen bg-background">
+        <div className="max-w-3xl mx-auto px-4 py-10">
+          <Button variant="ghost" size="sm" onClick={voltarIndice} className="mb-8 text-muted-foreground">
+            <ArrowLeft className="w-4 h-4 mr-2" /> voltar ao índice
+          </Button>
+
+          {/* A pergunta */}
+          <section className="mb-12">
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-3">A pergunta</div>
+            <blockquote className="font-serif text-2xl md:text-3xl text-foreground leading-snug border-l-2 border-gold/50 pl-6">
+              "{perguntaAtiva}"
+            </blockquote>
+          </section>
+
+          <div className="w-16 h-px bg-gold/30 mx-auto my-10" />
+
+          {/* A obra responde */}
+          <section className="mb-12">
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-4">A Voz da Obra</div>
+            {carregando ? (
+              <div className="flex items-center gap-3 text-muted-foreground py-12">
+                <Loader2 className="w-5 h-5 animate-spin text-gold" />
+                <span className="font-serif italic">a obra está respondendo…</span>
               </div>
-            </ScrollArea>
+            ) : (
+              <div className="font-serif text-foreground/90 text-lg leading-loose whitespace-pre-wrap">
+                {respostaObra}
+              </div>
+            )}
+          </section>
 
-            <form
-              onSubmit={handleSubmit}
-              className="border-t border-white/5 p-4 bg-black/30 flex-shrink-0"
-            >
-              <div className="flex gap-2 max-w-3xl mx-auto">
-                <Textarea
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={handleKeyDown}
-                  placeholder="Compartilhe um trecho, símbolo ou pergunta..."
-                  className="min-h-[48px] max-h-32 resize-none bg-white/[0.03] border-white/10 text-white placeholder:text-white/30 font-serif"
-                  disabled={isLoading}
-                />
-                <Button
-                  type="submit"
-                  size="icon"
-                  disabled={!input.trim() || isLoading}
-                  className="h-12 w-12 flex-shrink-0 bg-gold hover:bg-gold/90 text-black"
-                >
-                  <Send className="w-4 h-4" />
+          {/* CTAs finais */}
+          {!carregando && respostaObra && (
+            <>
+              <div className="w-16 h-px bg-gold/30 mx-auto my-10" />
+              <section className="space-y-3">
+                <Button variant="outline" className="w-full justify-start gap-3 py-6 border-gold/30 hover:border-gold hover:bg-gold/5" onClick={() => registrarJardim('psique')}>
+                  <Leaf className="w-4 h-4 text-gold" /> Registrar no Jardim da Psique
                 </Button>
-              </div>
-            </form>
-          </Card>
+                <Button variant="outline" className="w-full justify-start gap-3 py-6 border-gold/30 hover:border-gold hover:bg-gold/5" onClick={() => registrarJardim('oficio')}>
+                  <Flame className="w-4 h-4 text-gold" /> Registrar no Jardim do Ofício
+                </Button>
+                <Button variant="ghost" className="w-full justify-start gap-3 py-6 text-muted-foreground hover:text-foreground" onClick={voltarIndice}>
+                  <RefreshCw className="w-4 h-4" /> Escolher outra pergunta
+                </Button>
+                <Button variant="ghost" className="w-full justify-start gap-3 py-6 text-muted-foreground hover:text-foreground" onClick={() => navigate(-1)}>
+                  <X className="w-4 h-4" /> Encerrar por hoje
+                </Button>
+              </section>
+            </>
+          )}
         </div>
       </div>
     </AppLayout>
