@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Logo } from '@/components/layout/Logo';
+import casaOraculaLogo from '@/assets/casa-oracula-logo.png.asset.json';
 
 interface LimiarIntroProps {
   onNext: () => void;
@@ -15,13 +15,14 @@ export const LimiarIntro: React.FC<LimiarIntroProps> = ({ onNext }) => {
       exit={{ opacity: 0 }}
       className="flex flex-col items-center text-center space-y-10 py-12 px-6 max-w-xl mx-auto"
     >
-      <motion.div
+      <motion.img
+        src={casaOraculaLogo.url}
+        alt="Casa Orácula"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 1 }}
-      >
-        <Logo variant="vertical" size="lg" className="opacity-100 brightness-125" />
-      </motion.div>
+        className="w-[20rem] md:w-[26rem] h-auto drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]"
+      />
       
       <div className="space-y-8">
         <h1 className="text-xl md:text-2xl font-display tracking-wide text-primary/90">
