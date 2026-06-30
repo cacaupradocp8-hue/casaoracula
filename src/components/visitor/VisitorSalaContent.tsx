@@ -54,9 +54,11 @@ export function VisitorSalaContent() {
             {...sceneTransition}
             className="w-full max-w-xl flex flex-col items-center text-center gap-16 py-24"
           >
-            <div className="scale-125 opacity-90">
-              <Logo size="xl" />
-            </div>
+            <img
+              src={casaOraculaLogo.url}
+              alt="Casa Orácula"
+              className="w-[22rem] md:w-[28rem] h-auto drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]"
+            />
             <p className="font-serif italic text-xl md:text-2xl text-foreground/80 leading-relaxed">
               Você chegou à porta da Casa Orácula.
             </p>
