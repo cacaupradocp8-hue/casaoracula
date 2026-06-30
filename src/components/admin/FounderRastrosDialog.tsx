@@ -126,7 +126,7 @@ export function FounderRastrosDialog({ open, onOpenChange, founder }: FounderRas
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-2xl bg-card/95 backdrop-blur-xl border-primary/20">
+      <DialogContent className="sm:max-w-2xl bg-card/95 backdrop-blur-xl border-primary/20 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display text-primary">
             Rastros da Travessia
