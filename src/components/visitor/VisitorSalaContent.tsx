@@ -240,20 +240,26 @@ export function VisitorSalaContent() {
             </div>
             
             <div className="space-y-4">
-              <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">Primeira Leitura</p>
+              <p className="text-primary/60 text-[10px] tracking-[0.2em] uppercase font-medium">
+                {isFounder ? 'Sua Travessia' : 'Primeira Leitura'}
+              </p>
               <h2 className="font-display text-xl md:text-2xl text-primary leading-tight">
-                Agora faça a Primeira Leitura
+                {isFounder ? 'Comece pela Rota dos Lobos' : 'Agora faça a Primeira Leitura'}
               </h2>
               <div className="space-y-4">
                 <p className="text-foreground/80 text-sm md:text-base leading-relaxed max-w-[340px] mx-auto">
-                  Leia um caso-espelho, escolha o que sua escuta percebe primeiro e receba uma devolutiva breve sobre esse olhar.
+                  {isFounder
+                    ? 'A primeira experiência fundadora. Atravesse a rota, registre seus rastros e devolva-nos seu parecer.'
+                    : 'Leia um caso-espelho, escolha o que sua escuta percebe primeiro e receba uma devolutiva breve sobre esse olhar.'}
                 </p>
               </div>
-              <div className="flex flex-col items-center gap-1.5 pt-2">
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é teste de personalidade.</p>
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é previsão.</p>
-                <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">É uma demonstração prática do método da Casa.</p>
-              </div>
+              {!isFounder && (
+                <div className="flex flex-col items-center gap-1.5 pt-2">
+                  <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é teste de personalidade.</p>
+                  <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">Não é previsão.</p>
+                  <p className="text-[10px] text-muted-foreground/60 italic uppercase tracking-wider">É uma demonstração prática do método da Casa.</p>
+                </div>
+              )}
             </div>
 
             <Button
@@ -263,7 +269,9 @@ export function VisitorSalaContent() {
               disabled={isTransitioning}
               className="w-full gap-2.5 py-7 text-base relative overflow-hidden group/btn bg-primary hover:bg-primary/90"
             >
-              <span className="relative z-10">Começar agora</span>
+              <span className="relative z-10">
+                {isFounder ? 'Entrar na Rota dos Lobos' : 'Começar agora'}
+              </span>
               <ArrowRight className="w-4 h-4 relative z-10 transition-transform group-hover/btn:translate-x-0.5" />
             </Button>
           </div>
