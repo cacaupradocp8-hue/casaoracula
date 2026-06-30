@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
@@ -8,6 +8,7 @@ import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlaye
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { Logo } from '@/components/layout/Logo';
 import { ElectricWaves } from '@/components/visitor/ElectricWaves';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 /**
  * VisitorSalaContent — Portal Vivo de Entrada na Casa Orácula
