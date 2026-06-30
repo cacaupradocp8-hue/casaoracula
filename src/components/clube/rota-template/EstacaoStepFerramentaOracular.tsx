@@ -9,6 +9,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { AmbientAudioPlayer } from '@/components/clube/AmbientAudioPlayer';
 
 interface Eixo {
   id: string;
@@ -123,6 +124,7 @@ export const EstacaoStepFerramentaOracular: React.FC<FerramentaOracularProps> = 
 
   return (
     <div className="max-w-4xl mx-auto space-y-12 pb-20 px-4">
+      <AmbientAudioPlayer destino="ferramenta_ambiente" label="Som ambiente" />
       <AnimatePresence mode="wait">
         {view === 'intro' && (
           <motion.div
