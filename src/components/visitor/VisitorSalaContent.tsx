@@ -72,9 +72,10 @@ export function VisitorSalaContent() {
   );
 
   // =====================================================================
-  // VIEW EXCLUSIVA PARA FUNDADORAS — 4 blocos de travessia
+  // VIEW ÚNICA — Sala de Visita (visível para todas, sem exigir login)
+  // A Fundadora só é identificada APÓS a Primeira Leitura.
   // =====================================================================
-  if (isFounder) {
+  {
     const mapa = [
       'Sala de Visita',
       'Primeira Leitura',
