@@ -56,6 +56,8 @@ export function AdminFounderInvitesTab() {
     limite_uso: 50,
     ativo: true
   });
+  const [rastrosOpen, setRastrosOpen] = useState(false);
+  const [selectedFounder, setSelectedFounder] = useState<AtivacaoFundadora | null>(null);
 
   const fetchData = async () => {
     setIsLoading(true);
