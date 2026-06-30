@@ -37,9 +37,10 @@ export function VisitorSalaContent() {
   const handleStartFirstReading = useCallback(() => {
     setIsTransitioning(true);
     setTimeout(() => {
-      navigate(isFounder ? '/clube/rotas/rota-dos-lobos' : '/primeira-leitura');
+      navigate('/primeira-leitura');
     }, 1400);
-  }, [navigate, isFounder]);
+  }, [navigate]);
+
 
   const transitionOverlay = (
     <AnimatePresence>
