@@ -275,44 +275,35 @@ export default function ChatLivroPage() {
                       </button>
                     </div>
 
-                    {/* Tabs de categorias */}
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    {/* Todas as categorias e perguntas visíveis */}
+                    <div className="space-y-5">
                       {categorias.map((c) => {
                         const Icon = c.icon;
-                        const ativa = c.key === catAtiva;
                         return (
-                          <button
-                            key={c.key}
-                            type="button"
-                            onClick={() => setCatAtiva(c.key)}
-                            className={cn(
-                              'flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs border transition-all',
-                              ativa
-                                ? 'bg-gold/15 border-gold/40 text-gold'
-                                : 'bg-white/[0.02] border-white/10 text-white/60 hover:text-white/90 hover:border-white/20'
-                            )}
-                          >
-                            <Icon className="w-3 h-3" />
-                            {c.label}
-                          </button>
+                          <div key={c.key}>
+                            <div className="flex items-center gap-2 mb-2">
+                              <Icon className="w-3.5 h-3.5 text-gold" />
+                              <p className="text-[11px] uppercase tracking-[0.25em] text-gold/80 font-semibold">
+                                {c.label}
+                              </p>
+                            </div>
+                            <div className="grid gap-2 sm:grid-cols-2">
+                              {c.perguntas.map((p) => (
+                                <button
+                                  key={p}
+                                  type="button"
+                                  onClick={() => usarPergunta(p)}
+                                  className="group text-left p-3.5 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-gold/40 hover:bg-gold/[0.04] transition-all"
+                                >
+                                  <p className="font-serif text-sm text-white/80 group-hover:text-white leading-relaxed italic">
+                                    "{p}"
+                                  </p>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
                         );
                       })}
-                    </div>
-
-                    {/* Lista de perguntas */}
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      {categoriaAtiva.perguntas.map((p) => (
-                        <button
-                          key={p}
-                          type="button"
-                          onClick={() => usarPergunta(p)}
-                          className="group text-left p-4 rounded-2xl bg-white/[0.02] border border-white/10 hover:border-gold/40 hover:bg-gold/[0.04] transition-all"
-                        >
-                          <p className="font-serif text-sm text-white/80 group-hover:text-white leading-relaxed italic">
-                            "{p}"
-                          </p>
-                        </button>
-                      ))}
                     </div>
                   </div>
                 )}
