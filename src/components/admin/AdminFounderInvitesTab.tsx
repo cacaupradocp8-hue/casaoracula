@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { 
   Gift, Plus, Trash2, CheckCircle, XCircle, 
   Copy, Loader2, Search, Filter, Calendar, Users, 
-  Clock, Hash, Power, PowerOff 
+  Clock, Hash, Power, PowerOff, Footprints
 } from 'lucide-react';
+import { FounderRastrosDialog } from './FounderRastrosDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -55,6 +56,8 @@ export function AdminFounderInvitesTab() {
     limite_uso: 50,
     ativo: true
   });
+  const [rastrosOpen, setRastrosOpen] = useState(false);
+  const [selectedFounder, setSelectedFounder] = useState<AtivacaoFundadora | null>(null);
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -243,6 +246,18 @@ export function AdminFounderInvitesTab() {
                         <Badge variant="outline" className="text-[10px] py-0">{act.codigo_utilizado}</Badge>
                         <span className="text-[10px] text-muted-foreground">{format(new Date(act.data_ativacao), 'dd/MM HH:mm')}</span>
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 w-full h-7 gap-2 text-xs text-primary hover:text-primary hover:bg-primary/10"
+                        onClick={() => {
+                          setSelectedFounder(act);
+                          setRastrosOpen(true);
+                        }}
+                      >
+                        <Footprints className="w-3 h-3" />
+                        Ver rastros
+                      </Button>
                     </div>
                   ))}
                 </div>
@@ -284,6 +299,21 @@ export function AdminFounderInvitesTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <FounderRastrosDialog
+        open={rastrosOpen}
+        onOpenChange={setRastrosOpen}
+        founder={
+          selectedFounder
+            ? {
+                user_id: selectedFounder.user_id,
+                nome: selectedFounder.profiles?.nome ?? null,
+                email: selectedFounder.profiles?.email ?? null,
+                data_ativacao: selectedFounder.data_ativacao,
+              }
+            : null
+        }
+      />
     </div>
   );
 }
