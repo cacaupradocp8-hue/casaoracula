@@ -72,7 +72,7 @@ export default function CamaraDoSussurroPage() {
 
   const handleBack = () => {
     if (activeCase) {
-      setActiveCase(null);
+      handleSussurroExit();
     } else {
       window.history.back();
     }
