@@ -200,13 +200,12 @@ export default function ChatLivroPage() {
               <h1 className="font-serif text-4xl md:text-5xl text-foreground tracking-wide mb-2">Mesa da Obra</h1>
               <p className="font-serif italic text-muted-foreground text-lg mb-1">{obra}</p>
               <div className="w-16 h-px bg-gold/40 mx-auto my-8" />
-              <div className="font-serif text-foreground/85 text-base md:text-lg leading-relaxed space-y-4 max-w-xl mx-auto">
-                <p>"Algumas perguntas não pedem respostas rápidas.</p>
-                <p>Pedem companhia na leitura.</p>
-                <p>Nesta mesa de estudo, as respostas são construídas exclusivamente a partir de <em>{obra}</em>.</p>
-                <p>A cada semana você poderá abrir até três diálogos com a obra.</p>
-                <p>Escolha uma pergunta para começar."</p>
+              <div className="font-serif text-foreground/85 text-base md:text-lg leading-relaxed max-w-xl mx-auto">
+                <p className="italic">
+                  Algumas perguntas pedem companhia na leitura.
+                </p>
               </div>
+
             </header>
 
             {/* Limite semanal — discreto */}
