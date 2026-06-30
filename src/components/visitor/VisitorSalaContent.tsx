@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
-import { Logo } from '@/components/layout/Logo';
 import { trackLearningEvent } from '@/services/studentTrackingService';
+import casaOraculaLogo from '@/assets/casa-oracula-logo.png.asset.json';
 
 /**
  * VisitorSalaContent — Experiência cinematográfica em 3 cenas.
