@@ -165,6 +165,42 @@ export function VisitorSalaContent() {
             className="my-20 h-px w-16 bg-gradient-to-r from-transparent via-primary/35 to-transparent origin-center"
           />
 
+          {/* BLOCO 2.5 — POR QUE HABITAR A CASA */}
+          <motion.section
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.35, duration: 1 }}
+            className="max-w-[30rem] space-y-7 font-serif text-foreground/80 text-[15px] md:text-base leading-[1.95]"
+          >
+            <h2 className="font-display text-2xl md:text-3xl text-primary leading-snug">
+              Por que habitar a Casa?
+            </h2>
+
+            <p>Há lugares que oferecem respostas prontas.</p>
+            <p>A Casa Orácula oferece algo diferente.</p>
+            <p>Ela ajuda você a desenvolver uma forma de observar.</p>
+            <p>
+              Ao longo das travessias, você aprenderá a reconhecer padrões,
+              escutar símbolos e transformar histórias em caminhos de cuidado.
+            </p>
+            <p>
+              Mais do que acumular conhecimento, a proposta da Casa é cultivar
+              uma presença clínica mais sensível, uma leitura mais profunda das
+              experiências humanas e uma prática que une escuta, linguagem e
+              aplicação.
+            </p>
+            <p>Você não precisa compreender tudo no primeiro dia.</p>
+            <p className="italic text-primary/75">Basta dar o primeiro passo.</p>
+          </motion.section>
+
+          {/* Divisor */}
+          <motion.div
+            initial={{ opacity: 0, scaleX: 0 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ delay: 1.55, duration: 1.2 }}
+            className="my-20 h-px w-16 bg-gradient-to-r from-transparent via-primary/35 to-transparent origin-center"
+          />
+
           {/* BLOCO 3 — VÍDEO recolhido */}
           {videoId && (
             <motion.section
