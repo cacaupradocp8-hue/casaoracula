@@ -152,6 +152,32 @@ export function VisitorSalaContent() {
           </motion.section>
         )}
 
+      {/* SECTION 2.5 — Apresentação narrativa da Casa (3 perguntas) */}
+      <motion.section
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2.1, duration: 1 }}
+        className="relative z-10 w-full max-w-lg mt-10 space-y-6 text-center px-2"
+      >
+        <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground/50">
+          Você está iniciando sua travessia
+        </p>
+        <div className="space-y-5 text-foreground/75 text-sm md:text-base leading-relaxed font-serif">
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">A Casa Orácula</span>
+            é um espaço de formação simbólica para mulheres que escutam histórias — as suas e as de outras.
+          </p>
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">Como funciona</span>
+            a experiência se revela em camadas. Cada etapa abre a próxima, no seu tempo.
+          </p>
+          <p>
+            <span className="text-primary/80 not-italic font-display text-xs uppercase tracking-widest block mb-1">Nesta primeira visita</span>
+            você fará uma Primeira Leitura — uma demonstração breve do método da Casa.
+          </p>
+        </div>
+      </motion.section>
+
       {/* SECTION 3 — Atravessar o Limiar (Convite Principal) */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
