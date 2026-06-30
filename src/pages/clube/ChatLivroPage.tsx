@@ -73,6 +73,17 @@ export default function ChatLivroPage() {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+    trackLearningEvent({
+      userId: user.id,
+      contextArea: 'clube',
+      actionType: 'opened',
+      objectType: 'converse_com_livro',
+      metadata: { rastro: 'mesa_da_obra_aberta', obra },
+    });
+  }, [user, obra]);
+
+  useEffect(() => {
     if (!user) { setCarregandoLimite(false); return; }
     const carregar = async () => {
       const seteDiasAtras = new Date();
