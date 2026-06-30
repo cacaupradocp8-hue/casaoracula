@@ -866,10 +866,12 @@ NÃO separe por skill. Componha como SINTHEYA.\n`);
     parts.push(`\nCONTEXTO ADICIONAL\n${JSON.stringify(payload.contextSnippet, null, 2)}`);
   }
 
-  parts.push(`\n🔷 DIRETIVA DE COMPOSIÇÃO FINAL
+  if (mode !== "converse_com_livro") {
+    parts.push(`\n🔷 DIRETIVA DE COMPOSIÇÃO FINAL
 Sua resposta DEVE seguir o formato: Núcleo → Leitura → Direção (→ Limite Ético se necessário).
 Mantenha coerência com o tipo de usuária (${ctx.tipoUsuaria}) e a profundidade calibrada.
 A resposta é sempre DA SINTHEYA — nunca de uma skill isolada.`);
+  }
 
   return parts.join("\n\n");
 }
