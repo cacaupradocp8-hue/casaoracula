@@ -65,16 +65,16 @@ export function VisitorSalaContent() {
             <div className="relative flex items-center justify-center">
               <div
                 aria-hidden
-                className="absolute inset-0 -m-32 rounded-full blur-3xl animate-pulse"
+                className="absolute inset-0 -m-20 rounded-full blur-3xl animate-pulse"
                 style={{
                   background:
-                    'radial-gradient(circle, rgba(230,190,90,0.55) 0%, rgba(212,175,55,0.30) 30%, rgba(212,175,55,0.10) 55%, transparent 75%)',
+                    'radial-gradient(circle, rgba(212,175,55,0.18) 0%, rgba(212,175,55,0.10) 35%, rgba(212,175,55,0.04) 60%, transparent 78%)',
                 }}
               />
               <img
                 src={casaOraculaLogo.url}
                 alt="Casa Orácula"
-                className="relative w-[22rem] md:w-[28rem] h-auto drop-shadow-[0_0_60px_rgba(230,190,90,0.6)]"
+                className="relative w-[22rem] md:w-[28rem] h-auto drop-shadow-[0_0_25px_rgba(212,175,55,0.25)]"
               />
             </div>
             <p className="font-serif italic text-xl md:text-2xl text-foreground/80 leading-relaxed">
