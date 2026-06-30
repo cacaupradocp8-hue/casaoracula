@@ -299,6 +299,21 @@ export function AdminFounderInvitesTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <FounderRastrosDialog
+        open={rastrosOpen}
+        onOpenChange={setRastrosOpen}
+        founder={
+          selectedFounder
+            ? {
+                user_id: selectedFounder.user_id,
+                nome: selectedFounder.profiles?.nome ?? null,
+                email: selectedFounder.profiles?.email ?? null,
+                data_ativacao: selectedFounder.data_ativacao,
+              }
+            : null
+        }
+      />
     </div>
   );
 }
