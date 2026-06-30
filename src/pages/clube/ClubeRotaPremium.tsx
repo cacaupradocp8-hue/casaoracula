@@ -33,6 +33,8 @@ import { ColheitaDosRastros } from '@/components/clube/ColheitaDosRastros';
 import { ConviteFundadoras } from '@/components/clube/ConviteFundadoras';
 import { useConviteFundadoraConfig } from '@/hooks/useColheitaRastros';
 import { toast } from 'sonner';
+import { trackLearningEvent } from '@/services/studentTrackingService';
+
 
 export default function ClubeRotaPremium() {
   const { slug } = useParams();
@@ -101,6 +103,21 @@ export default function ClubeRotaPremium() {
       loadProgress();
     }
   }, [user, estacao]);
+
+  // Rastrear cada etapa visitada
+  useEffect(() => {
+    if (!user || !estacao || isInitialLoading) return;
+    const stepId = steps[currentStep]?.id;
+    if (!stepId) return;
+    trackLearningEvent({
+      userId: user.id,
+      contextArea: 'clube',
+      actionType: 'opened',
+      objectType: 'estacao',
+      objectId: estacao.id,
+      metadata: { rastro: `estacao_step:${slug}:${stepId}`, estacao_slug: slug, step_id: stepId, step_index: currentStep },
+    });
+  }, [user, estacao, currentStep, isInitialLoading, steps, slug]);
 
   // Persistir progresso ao mudar de passo
   const saveProgress = async (step: number) => {

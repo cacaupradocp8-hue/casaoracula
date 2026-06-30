@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { sendMessageToSyntheia } from '@/services/syntheiaChat';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 const LIMITE_SEMANAL = 3;
 const INTERACTION_TYPE = 'mesa_da_obra';
@@ -70,6 +71,17 @@ export default function ChatLivroPage() {
     };
     carregarSugestoes();
   }, []);
+
+  useEffect(() => {
+    if (!user) return;
+    trackLearningEvent({
+      userId: user.id,
+      contextArea: 'clube',
+      actionType: 'opened',
+      objectType: 'converse_com_livro',
+      metadata: { rastro: 'mesa_da_obra_aberta', obra },
+    });
+  }, [user, obra]);
 
   useEffect(() => {
     if (!user) { setCarregandoLimite(false); return; }
