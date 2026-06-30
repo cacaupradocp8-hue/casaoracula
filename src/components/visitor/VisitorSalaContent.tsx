@@ -62,11 +62,21 @@ export function VisitorSalaContent() {
             {...sceneTransition}
             className="w-full max-w-xl flex flex-col items-center text-center gap-16 py-24"
           >
-            <img
-              src={casaOraculaLogo.url}
-              alt="Casa Orácula"
-              className="w-[22rem] md:w-[28rem] h-auto drop-shadow-[0_0_40px_rgba(212,175,55,0.35)]"
-            />
+            <div className="relative flex items-center justify-center">
+              <div
+                aria-hidden
+                className="absolute inset-0 -m-32 rounded-full blur-3xl animate-pulse"
+                style={{
+                  background:
+                    'radial-gradient(circle, rgba(230,190,90,0.55) 0%, rgba(212,175,55,0.30) 30%, rgba(212,175,55,0.10) 55%, transparent 75%)',
+                }}
+              />
+              <img
+                src={casaOraculaLogo.url}
+                alt="Casa Orácula"
+                className="relative w-[22rem] md:w-[28rem] h-auto drop-shadow-[0_0_60px_rgba(230,190,90,0.6)]"
+              />
+            </div>
             <p className="font-serif italic text-xl md:text-2xl text-foreground/80 leading-relaxed">
               Você chegou à porta da Casa Orácula.
             </p>
