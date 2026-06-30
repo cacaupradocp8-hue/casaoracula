@@ -1,14 +1,30 @@
+import { useEffect, useRef } from "react";
 import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useFerramentaDinamica } from "@/hooks/useFerramentaDinamica";
 import { ContentPageLayout } from "@/components/shared/ContentPageLayout";
 import { ModularPageRenderer } from "@/components/modular/ModularPageRenderer";
 import { LockedContent, LOCKED_MESSAGES } from "@/components/shared/LockedContent";
 import { Loader2 } from "lucide-react";
+import { trackLearningEvent } from "@/services/studentTrackingService";
 
 export default function FerramentaDinamica() {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { ferramenta, isLoading, error, hasAccess } = useFerramentaDinamica(slug);
+  const trackedRef = useRef<string | null>(null);
+
+  useEffect(() => {
+    if (!ferramenta || !hasAccess) return;
+    if (trackedRef.current === ferramenta.id) return;
+    trackedRef.current = ferramenta.id;
+    trackLearningEvent({
+      contextArea: 'ferramenta',
+      actionType: 'opened',
+      objectType: 'ferramenta',
+      objectId: ferramenta.id,
+      metadata: { rastro: 'ferramenta_uso', slug, nome: ferramenta.ferramenta_nome },
+    });
+  }, [ferramenta, hasAccess, slug]);
 
   if (isLoading) {
     return (
