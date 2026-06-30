@@ -7,6 +7,7 @@ import { useAppSettings } from '@/hooks/useAppSettings';
 import { CloudflareStreamPlayer } from '@/components/video/CloudflareStreamPlayer';
 import { useCloudflareVideo } from '@/hooks/useCloudflareVideo';
 import { trackLearningEvent } from '@/services/studentTrackingService';
+import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 import casaOraculaLogo from '@/assets/casa-oracula-logo.png.asset.json';
 
 /**
