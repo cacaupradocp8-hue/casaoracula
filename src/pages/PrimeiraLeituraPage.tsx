@@ -73,6 +73,7 @@ const PrimeiraLeituraPage = () => {
             <PathSelector key="paths" />
           )}
         </AnimatePresence>
+        </div>
       </div>
     </AppLayout>
   );
