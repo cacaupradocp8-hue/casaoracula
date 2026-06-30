@@ -12076,6 +12076,36 @@ export type Database = {
           },
         ]
       }
+      espelho_conto_sugestoes: {
+        Row: {
+          ativa: boolean
+          categoria: string
+          created_at: string
+          id: string
+          ordem: number
+          pergunta: string
+          updated_at: string
+        }
+        Insert: {
+          ativa?: boolean
+          categoria: string
+          created_at?: string
+          id?: string
+          ordem?: number
+          pergunta: string
+          updated_at?: string
+        }
+        Update: {
+          ativa?: boolean
+          categoria?: string
+          created_at?: string
+          id?: string
+          ordem?: number
+          pergunta?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       estudio_projetos: {
         Row: {
           book_id: string | null
