@@ -158,8 +158,8 @@ export default function ChatLivroPage() {
 
   return (
     <AppLayout>
-      <div className="min-h-screen bg-[radial-gradient(ellipse_at_top,_rgba(180,140,60,0.08),_transparent_60%),_#020617] text-white">
-        <div className="max-w-5xl mx-auto px-4 py-8 flex flex-col h-[calc(100vh-4rem)]">
+      <div className="bg-[radial-gradient(ellipse_at_top,_rgba(180,140,60,0.08),_transparent_60%)] text-white">
+        <div className="max-w-5xl mx-auto px-4 py-6 flex flex-col h-[80vh] min-h-[640px]">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <Button
