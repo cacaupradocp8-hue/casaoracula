@@ -27,6 +27,7 @@ interface EscutaAudio {
 const DESTINOS = [
   { value: 'escuta_ritual', label: 'Escuta Ritual (passo Escuta)' },
   { value: 'entrada', label: 'Entrada da Estação' },
+  { value: 'ferramenta_ambiente', label: 'Ferramenta Oracular — Som Ambiente' },
   { value: 'camara_escuta', label: 'Câmara de Escuta' },
   { value: 'fechamento', label: 'Fechamento' },
 ];
