@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { PortalType, canAccessFeature, getCaseLimit, normalizePortalType } from '@/types/portal';
 import { parseDateSafe } from '@/lib/date-safe';
 import { withTimeout } from '@/lib/withTimeout';
+import { trackLearningEvent } from '@/services/studentTrackingService';
 
 interface User {
   id: string;
