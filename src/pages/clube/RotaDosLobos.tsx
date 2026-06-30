@@ -1,4 +1,5 @@
-import React from 'react'; // REBUILD_FORCE_V2
+import React, { useEffect, useRef } from 'react'; // REBUILD_FORCE_V2
+import { trackLearningEvent } from '@/services/studentTrackingService';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, TreePine, Play, Pause, Lock, Ghost, Compass } from 'lucide-react';
