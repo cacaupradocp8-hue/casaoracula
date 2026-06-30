@@ -319,23 +319,48 @@ export default function ChatLivroPage() {
 
           {!carregando && respostaObra && (
             <>
-              <div className="w-16 h-px bg-gold/30 mx-auto my-10" />
-              <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-4 text-center">
-                Continue observando
-              </div>
-              <section className="space-y-3">
-                <Button variant="outline" className="w-full justify-start gap-3 py-6 border-gold/30 hover:border-gold hover:bg-gold/5" onClick={() => registrarJardim('psique')}>
-                  <Leaf className="w-4 h-4 text-gold" /> Registrar no Jardim da Psique
-                </Button>
-                <Button variant="outline" className="w-full justify-start gap-3 py-6 border-gold/30 hover:border-gold hover:bg-gold/5" onClick={() => registrarJardim('oficio')}>
-                  <Flame className="w-4 h-4 text-gold" /> Registrar no Jardim do Ofício
-                </Button>
-                <Button variant="ghost" className="w-full justify-start gap-3 py-6 text-muted-foreground hover:text-foreground" onClick={voltarIndice}>
-                  <RefreshCw className="w-4 h-4" /> Abrir outra Porta de Investigação
-                </Button>
-                <Button variant="ghost" className="w-full justify-start gap-3 py-6 text-muted-foreground hover:text-foreground" onClick={() => navigate(-1)}>
-                  <X className="w-4 h-4" /> Encerrar por hoje
-                </Button>
+              <div className="w-16 h-px bg-gold/30 mx-auto my-12" />
+
+              {/* Fechamento narrativo */}
+              <section className="text-center max-w-xl mx-auto mb-12">
+                <h3 className="font-serif text-2xl md:text-3xl text-foreground tracking-wide mb-5">
+                  A leitura continua.
+                </h3>
+                <p className="font-serif italic text-foreground/75 text-base md:text-lg leading-loose">
+                  Talvez esta reflexão encontre novos sentidos quando você voltar ao livro,
+                  observar uma cliente, ou registrar aquilo que permaneceu vivo em você.
+                </p>
+              </section>
+
+              {/* Ponte com a Casa — sugestões discretas, sem cards */}
+              <p className="text-center font-serif italic text-muted-foreground/80 text-sm mb-6">
+                Esta reflexão pode continuar em outros lugares da Casa.
+              </p>
+              <section className="flex flex-col items-center gap-5">
+                <button
+                  onClick={() => registrarJardim('psique')}
+                  className="font-serif text-foreground/85 hover:text-gold transition-colors inline-flex items-center gap-2 border-b border-gold/20 hover:border-gold pb-0.5"
+                >
+                  <Leaf className="w-4 h-4 text-gold/80" /> Registrar no Jardim da Psique
+                </button>
+                <button
+                  onClick={() => registrarJardim('oficio')}
+                  className="font-serif text-foreground/85 hover:text-gold transition-colors inline-flex items-center gap-2 border-b border-gold/20 hover:border-gold pb-0.5"
+                >
+                  <Flame className="w-4 h-4 text-gold/80" /> Registrar no Jardim do Ofício
+                </button>
+                <button
+                  onClick={voltarIndice}
+                  className="font-serif italic text-muted-foreground hover:text-foreground transition-colors inline-flex items-center gap-2"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" /> Abrir outra Porta
+                </button>
+                <button
+                  onClick={() => navigate(-1)}
+                  className="font-serif italic text-muted-foreground/70 hover:text-muted-foreground transition-colors text-sm mt-2"
+                >
+                  encerrar por hoje
+                </button>
               </section>
             </>
           )}
