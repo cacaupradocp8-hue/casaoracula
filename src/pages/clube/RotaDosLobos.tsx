@@ -161,7 +161,7 @@ export default function RotaDosLobos() {
                       onClick={() => navigate('/clube/espelho-do-conto?rota=rota-dos-lobos&obra=Mulheres%20que%20Correm%20com%20os%20Lobos&capa=/capa-mulheres-lobos.webp')}
                       className="text-[9px] text-gold uppercase tracking-widest font-bold flex items-center gap-1 mt-2 text-left"
                     >
-                      Entrar no Espelho do Conto
+                      Entrar em A Voz da Obra
                       <ArrowRight className="w-3 h-3" />
                     </button>
                   </div>
@@ -277,7 +277,7 @@ export default function RotaDosLobos() {
                   onClick={() => navigate('/clube/espelho-do-conto?rota=rota-dos-lobos&obra=Mulheres%20que%20Correm%20com%20os%20Lobos&capa=/capa-mulheres-lobos.webp')}
                   className="h-10 text-xs uppercase tracking-widest text-gold hover:bg-gold/10 p-0 flex items-center gap-2 group/btn"
                 >
-                  Entrar no Espelho do Conto
+                  Entrar em A Voz da Obra
                   <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-1" />
                 </Button>
               </div>
