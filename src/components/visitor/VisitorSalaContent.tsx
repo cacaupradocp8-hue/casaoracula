@@ -37,9 +37,10 @@ export function VisitorSalaContent() {
   const handleStartFirstReading = useCallback(() => {
     setIsTransitioning(true);
     setTimeout(() => {
-      navigate(isFounder ? '/clube/rotas/rota-dos-lobos' : '/primeira-leitura');
+      navigate('/primeira-leitura');
     }, 1400);
-  }, [navigate, isFounder]);
+  }, [navigate]);
+
 
   const transitionOverlay = (
     <AnimatePresence>
@@ -76,11 +77,12 @@ export function VisitorSalaContent() {
   if (isFounder) {
     const mapa = [
       'Sala de Visita',
+      'Primeira Leitura',
       'Rota dos Lobos',
       'Clareira do Chamado',
-      'Jardins',
       'Parecer Fundadora',
     ];
+
 
     return (
       <>
@@ -259,12 +261,13 @@ export function VisitorSalaContent() {
                 disabled={isTransitioning}
                 className="w-full max-w-sm gap-2.5 py-7 text-base"
               >
-                <span>Entrar na Rota dos Lobos</span>
+                <span>Começar pela Primeira Leitura</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
               <p className="text-[11px] text-muted-foreground/70 italic font-serif text-center">
-                A primeira estação será a Clareira do Chamado.
+                A Rota dos Lobos será aberta depois da primeira leitura.
               </p>
+
             </motion.section>
 
           </div>
