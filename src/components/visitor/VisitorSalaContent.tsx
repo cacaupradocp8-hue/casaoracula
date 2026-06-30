@@ -77,11 +77,12 @@ export function VisitorSalaContent() {
   if (isFounder) {
     const mapa = [
       'Sala de Visita',
+      'Primeira Leitura',
       'Rota dos Lobos',
       'Clareira do Chamado',
-      'Jardins',
       'Parecer Fundadora',
     ];
+
 
     return (
       <>
