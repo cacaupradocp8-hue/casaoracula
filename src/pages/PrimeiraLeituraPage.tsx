@@ -6,6 +6,7 @@ import { CasePresentation } from '@/components/primeira-leitura/CasePresentation
 import { QuestionStep } from '@/components/primeira-leitura/QuestionStep';
 import { ResultCard } from '@/components/primeira-leitura/ResultCard';
 import { PathSelector } from '@/components/primeira-leitura/PathSelector';
+import { ElectricWaves } from '@/components/visitor/ElectricWaves';
 
 type Step = 'intro' | 'case' | 'result' | 'paths';
 
