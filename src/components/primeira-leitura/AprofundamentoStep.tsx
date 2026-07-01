@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AprofundamentoStepProps {
@@ -6,126 +6,191 @@ interface AprofundamentoStepProps {
 }
 
 type Resposta = 'sim' | 'talvez';
+type Scene = 1 | 2 | 3 | 4 | 5;
 
-const microDevolutivas: Record<Resposta, string> = {
-  sim: 'Isso revela que sua escuta tende a confiar bastante na primeira impressão. Na Casa Orácula aprenderemos quando aprofundá-la e quando permitir que ela seja ampliada.',
-  talvez: 'Isso revela abertura para sustentar novas possibilidades antes de concluir uma leitura. Na Casa Orácula aprendemos que ampliar uma percepção não significa abandonar a anterior.',
+const fade = {
+  initial: { opacity: 0, y: 6 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -4 },
 };
 
 export const AprofundamentoStep: React.FC<AprofundamentoStepProps> = ({ onContinue }) => {
+  const [scene, setScene] = useState<Scene>(1);
   const [resposta, setResposta] = useState<Resposta | null>(null);
+  const [showEchoButton, setShowEchoButton] = useState(false);
+
+  // Scene 1 → 2
+  useEffect(() => {
+    if (scene !== 1) return;
+    const t = setTimeout(() => setScene(2), 7500);
+    return () => clearTimeout(t);
+  }, [scene]);
+
+  // Scene 2 → 3 (total ~ 12s: A 4.5s + B 4x1.2s + last 2s + pausa)
+  useEffect(() => {
+    if (scene !== 2) return;
+    const t = setTimeout(() => setScene(3), 13500);
+    return () => clearTimeout(t);
+  }, [scene]);
+
+  // Scene 3 → 4 (3 frases * 2.2s + 3.5s de permanência)
+  useEffect(() => {
+    if (scene !== 3) return;
+    const t = setTimeout(() => setScene(4), 10500);
+    return () => clearTimeout(t);
+  }, [scene]);
+
+  // Scene 5: mostrar botão depois de 2.5s
+  useEffect(() => {
+    if (scene !== 5) return;
+    setShowEchoButton(false);
+    const t = setTimeout(() => setShowEchoButton(true), 2500);
+    return () => clearTimeout(t);
+  }, [scene]);
+
+  const handleChoice = (r: Resposta) => {
+    setResposta(r);
+    setScene(5);
+  };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 1.2 }}
-      className="flex flex-col items-center space-y-12 py-12 px-6 max-w-3xl mx-auto w-full"
-    >
-      <motion.p
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, delay: 0.2 }}
-        className="text-center font-serif italic text-primary/70 text-base md:text-lg leading-relaxed"
-      >
-        A sua primeira leitura foi importante.
-        <br />
-        Agora permita que a Casa lhe faça outra pergunta.
-      </motion.p>
-
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, delay: 0.9 }}
-        className="text-center space-y-3"
-      >
-        <h2 className="text-2xl md:text-3xl font-display text-primary leading-tight">
-          Toda história admite mais de uma leitura.
-        </h2>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.6, delay: 1.4 }}
-        className="space-y-5 text-foreground/80 font-serif text-base md:text-lg leading-relaxed max-w-2xl text-center"
-      >
-        <p>Até aqui você respondeu apenas com aquilo que sua escuta percebeu primeiro.</p>
-        <p>É exatamente assim que começamos a observar uma história.</p>
-        <p>Mas, na prática clínica, raramente permanecemos apenas na primeira impressão.</p>
-        <p className="text-primary/85">
-          À medida que conhecemos melhor uma pessoa, novas informações começam a aparecer.
-          <br />
-          Elas não anulam a primeira leitura — ampliam aquilo que conseguimos perceber.
-        </p>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, delay: 2.2 }}
-        className="w-full max-w-2xl pt-4 space-y-6"
-      >
-        <div className="w-16 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mx-auto" />
-
-        <h3 className="text-center text-xs uppercase tracking-[0.3em] text-primary/60">Reflexão</h3>
-
-        <p className="text-center font-serif text-lg md:text-xl text-foreground/90 leading-relaxed">
-          Imagine que, ao longo do acompanhamento, você descobrisse novos elementos sobre Marina.
-          <br />
-          <span className="text-primary/90">Sua primeira leitura permaneceria exatamente igual?</span>
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-          {([
-            { id: 'sim' as Resposta, titulo: 'Sim.', sub: 'Minha leitura continuaria praticamente a mesma.' },
-            { id: 'talvez' as Resposta, titulo: 'Talvez.', sub: 'Acho que começaria a observar outras possibilidades.' },
-          ]).map((opt) => {
-            const active = resposta === opt.id;
-            return (
-              <button
-                key={opt.id}
-                onClick={() => setResposta(opt.id)}
-                className={`flex flex-col items-start text-left p-5 rounded-2xl border transition-all duration-500 ${
-                  active
-                    ? 'border-primary/60 bg-primary/10'
-                    : 'border-primary/10 bg-card/40 hover:border-primary/40 hover:bg-primary/5'
-                }`}
-              >
-                <span className="font-display text-primary text-lg">{opt.titulo}</span>
-                <span className="text-sm text-foreground/70 mt-1">{opt.sub}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        <AnimatePresence mode="wait">
-          {resposta && (
-            <motion.div
-              key={resposta}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.8 }}
-              className="pt-6 space-y-6"
+    <div className="flex flex-col items-center justify-center min-h-[60vh] w-full max-w-2xl mx-auto px-6 py-16 text-center">
+      <AnimatePresence mode="wait">
+        {scene === 1 && (
+          <motion.div key="s1" {...fade} transition={{ duration: 1.6 }} className="space-y-10">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2 }}
+              className="font-serif italic text-primary/80 text-lg md:text-xl leading-relaxed"
             >
-              <p className="font-serif italic text-base md:text-lg text-foreground/85 leading-relaxed text-center max-w-xl mx-auto">
-                {microDevolutivas[resposta]}
-              </p>
+              A sua primeira leitura foi importante.
+            </motion.p>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2, delay: 3.5 }}
+              className="font-serif italic text-primary/70 text-lg md:text-xl leading-relaxed"
+            >
+              Agora deixe a Casa fazer apenas uma pergunta.
+            </motion.p>
+          </motion.div>
+        )}
 
-              <div className="flex justify-center">
-                <button
-                  onClick={() => onContinue(resposta)}
-                  className="px-8 py-3 rounded-full bg-primary/90 text-primary-foreground text-sm uppercase tracking-[0.2em] font-display hover:bg-primary transition-all"
-                >
-                  Continuar
-                </button>
-              </div>
+        {scene === 2 && (
+          <motion.div key="s2" {...fade} transition={{ duration: 1.6 }} className="space-y-12">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.6 }}
+              className="font-serif text-foreground/85 text-base md:text-lg leading-loose space-y-3"
+            >
+              <p>Imagine que alguns meses se passaram.</p>
+              <p>Você continua encontrando Marina.</p>
+              <p>A cada encontro, outras partes da história começam a aparecer.</p>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </motion.div>
+
+            <div className="space-y-4">
+              {['Silêncios.', 'Contradições.', 'Pequenos gestos.', 'Proteções.'].map((w, i) => (
+                <motion.p
+                  key={w}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2, delay: 4.5 + i * 1.2 }}
+                  className="font-serif italic text-primary/75 text-lg md:text-xl"
+                >
+                  {w}
+                </motion.p>
+              ))}
+            </div>
+
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 2, delay: 4.5 + 4 * 1.2 + 0.5 }}
+              className="font-serif text-foreground/75 text-base md:text-lg leading-relaxed pt-4"
+            >
+              Aquilo que, no primeiro encontro, ainda não podia ser visto.
+            </motion.p>
+          </motion.div>
+        )}
+
+        {scene === 3 && (
+          <motion.div key="s3" {...fade} transition={{ duration: 1.6 }} className="space-y-10">
+            {['A mesma mulher.', 'A mesma história.', 'Mas será a mesma leitura?'].map((line, i) => (
+              <motion.p
+                key={line}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1.8, delay: i * 2.2 }}
+                className={
+                  i === 2
+                    ? 'font-display text-primary text-2xl md:text-3xl leading-snug'
+                    : 'font-serif text-foreground/85 text-xl md:text-2xl leading-snug'
+                }
+              >
+                {line}
+              </motion.p>
+            ))}
+          </motion.div>
+        )}
+
+        {scene === 4 && (
+          <motion.div key="s4" {...fade} transition={{ duration: 1.4 }} className="space-y-10 w-full">
+            <h2 className="font-display text-primary text-xl md:text-2xl">O que sua escuta faria?</h2>
+
+            <div className="w-16 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent mx-auto" />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <button
+                onClick={() => handleChoice('sim')}
+                className="p-6 rounded-2xl border border-primary/15 bg-card/40 hover:border-primary/50 hover:bg-primary/5 transition-all duration-500 text-left font-serif text-foreground/85 text-base md:text-lg leading-relaxed"
+              >
+                Minha leitura permaneceria praticamente igual.
+              </button>
+              <button
+                onClick={() => handleChoice('talvez')}
+                className="p-6 rounded-2xl border border-primary/15 bg-card/40 hover:border-primary/50 hover:bg-primary/5 transition-all duration-500 text-left font-serif text-foreground/85 text-base md:text-lg leading-relaxed"
+              >
+                Eu começaria a procurar novas possibilidades.
+              </button>
+            </div>
+          </motion.div>
+        )}
+
+        {scene === 5 && resposta && (
+          <motion.div key="s5" {...fade} transition={{ duration: 1.8 }} className="space-y-10">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.8 }}
+              className="font-serif italic text-foreground/85 text-lg md:text-xl leading-relaxed max-w-xl mx-auto"
+            >
+              {resposta === 'sim'
+                ? 'Sustentar uma primeira impressão também faz parte da escuta. A Casa apenas convida você a descobrir quando ela pode crescer.'
+                : 'Uma boa escuta nem sempre muda de direção. Às vezes ela apenas ganha profundidade.'}
+            </motion.p>
+
+            <AnimatePresence>
+              {showEchoButton && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 1.2 }}
+                  className="flex justify-center"
+                >
+                  <button
+                    onClick={() => onContinue(resposta)}
+                    className="text-primary/80 hover:text-primary text-xs uppercase tracking-[0.3em] font-display transition-all"
+                  >
+                    Continuar
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
